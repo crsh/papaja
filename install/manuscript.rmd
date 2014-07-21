@@ -1,0 +1,36 @@
+---
+output:
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    template: apa6.tex
+
+classoption: man
+lang: american
+lineno: true
+
+title: 
+shorttitle: 
+author: 
+affiliation: 
+note: 
+abstract: 
+
+bibliography: 
+csl: apa6.csl
+---
+
+# Methods
+We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+## Sample
+
+## Material
+
+## Procedure
+
+# Results
+
+# Discussion
+
+# References

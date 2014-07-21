@@ -1,0 +1,62 @@
+---
+output:
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    template: apa6.tex
+classoption: man
+lang: american
+lineno: true
+
+title: "Example manuscript to demonstrate the R2APA markdown template"
+shorttitle: RMarkdown to APA
+author: "Frederik Aust"
+affiliation: University of Cologne
+note: The R2APA-template and further instructions can be retrieved from https://github.com/crsh/r2apa.
+  Hail and praises may be sent to frederik.aust@uni-koeln.de.
+
+abstract: This example manuscript demonstrates how to use RStudio and RMarkdown to
+  produce an APA conform manuscript. Using pandoc this file can be converted to HTML,
+  LaTeX/PDF, or Word documents. At this point, only PDF documents conform to the APA
+  mansucript guidelines.
+
+bibliography: references.bib
+csl: apa6.csl
+---
+
+As you may have heard, recently, there has been a growing interest in reproducible research. Reproducible data analysis is an easy to implement yet important aspect of the strive towards reproducibility. For users of the scripting language *R*, RMarkdown has been suggested as one possible framework for reproducible analyses. This example document assumes you have hoped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses. If you're new to RMarkdown I recommend you get to grips with it first.
+
+I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work when using pandoc directly from the command line. When you click RStudio's *Knit* button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+For prettier tables, I suggest you take a look at the `xtable` package (for an example, see last page of this document; as required by the APA guidelines, the table is printed to the final pages of the document) although there are other ways of doing this. Unfortunately, for now, the caption is set to the left page margin. :(
+
+```{r results='asis', warning=FALSE, message=FALSE}
+library(xtable)
+print(
+  xtable(summary(cars), caption = "Pretty table produced with the xtable-package.")
+  , comment = FALSE
+  , booktabs = TRUE
+  , caption.placement = "top"
+  , include.rownames = FALSE
+)
+```
+
+You can also embed plots, for example:
+
+```{r fig.cap="Exmple figure created by in-document R code."}
+plot(cars)
+```
+
+As required by the APA guidelines, the figure is printed to the final pages of the document. In RStudio you may have to click the gear (edit the RMarkdown format options), switch to the tab "Figures" and check the option "Render figures with captions" to make this work.
+
+The line numbering can be deactivated in the header of this document by removing the `lineno` argument.
+
+Finally, you can easily insert citations [e.g., @example_ref]. Citing without parentheses is, of course, also possible: @example_ref. The citation style is set in the header of this document. The relevant references will, of course, be added to the documents references automatically.
+
+That's all I have for now. Enjoy writing your manuscript. If you have an trouble or ideas for improve ments, send me an E-Mail, open an [issue](https://github.com/crsh/r2apa/issues) on GitHub or make a pull request with the fix. ;)
+
+# References
