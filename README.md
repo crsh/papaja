@@ -5,4 +5,4 @@ For now, R2APA is a template for [pandoc](http://johnmacfarlane.net/pandoc/) usi
 Take a look at the [example document](https://github.com/crsh/R2APA/blob/master/example/example.pdf) created in [RStudio](http://www.rstudio.com/) using this template.
 
 # Setup
-To start writing your manuscript, simply copy the files in the install-folder to your computer and start writing in `manuscript.rmd`. Before knitting the manuscript make sure you specify a .bib-file in the document header or remove the `bibliography`.
+To start writing your manuscript, simply copy the files in the install-folder to your computer and start writing in `manuscript.rmd`. Before knitting the manuscript make sure you specify a .bib-file in the document header or remove the `bibliography` parameter.
