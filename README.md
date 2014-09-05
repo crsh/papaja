@@ -15,8 +15,8 @@ To create an APA-manuscript, make sure the following software is installed on yo
 - The R-Package [`knitr`](http://cran.r-project.org/web/packages/knitr/index.html)
 - A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [TeX Live](http://www.tug.org/texlive/), [MacTeX](https://tug.org/mactex/), or [MikTeX](http://miktex.org/))
   - If you are running Ubuntu 14.04 you need a couple extra `texlive` packages for the document class `apa6` to work:
-  
-        apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
+
+            apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
 
 ### Creating a manuscript
 To start writing your manuscript, download `r2apa.zip` and extract the files to your computer. You can now fire up RStudio and start writing by editing `manuscript.rmd`. Before clicking RStudio's knit-button make sure you specify a .bib-file in the document header or remove the `bibliography` parameter.
