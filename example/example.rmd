@@ -4,40 +4,49 @@ output:
     fig_caption: yes
     keep_tex: yes
     template: apa6.tex
+    
 classoption: man
 lang: american
 lineno: true
 
-title: "Example manuscript to demonstrate the R2APA markdown template"
-shorttitle: RMarkdown to APA
+title: "Example manuscript demonstrating the use of the R2APA markdown template"
+shorttitle: Using R2APA
 author: "Frederik Aust"
 affiliation: University of Cologne
-note: The R2APA-template and further instructions can be retrieved from https://github.com/crsh/r2apa.
-  Hail and praises may be sent to frederik.aust@uni-koeln.de.
+note: The R2APA-template, helper functions and further instructions can be retrieved from https://github.com/crsh/r2apa.
 
 abstract: This example manuscript demonstrates how to use RStudio and RMarkdown to
-  produce an APA conform manuscript. Using pandoc this file can be converted to HTML,
-  LaTeX/PDF, or Word documents. At this point, only PDF documents conform to the APA
+  produce an APA conform manuscript. Using pandoc your RMarkdown can be converted to HTML,
+  PDF, or Word documents. At this point, only PDF documents adhere to the APA
   mansucript guidelines.
 
 bibliography: references.bib
 csl: apa6.csl
 ---
 
-As you may have heard, recently, there has been a growing interest in reproducible research. Reproducible data analysis is an easy to implement yet important aspect of the strive towards reproducibility. For users of the scripting language *R*, RMarkdown has been suggested as one possible framework for reproducible analyses. This example document assumes you have hoped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses. If you're new to RMarkdown I recommend you get to grips with it first.
+# What is this?
+As you may have heard, recently, there has been a growing interest in reproducible research. Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility. For *R* users, RMarkdown has been suggested as one possible framework for reproducible analyses. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. This example document assumes you have hoped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses. If you're new to [RMarkdown](http://rmarkdown.rstudio.com/), I recommend you get to grips with it first.
 
-I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work when using pandoc directly from the command line. When you click RStudio's *Knit* button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work when using pandoc directly from the command line.
+
+# How do I use this?
+With the R2APA-template, when you click RStudio's *Knit* button an APA conform manuscript will be generated that includes both your text and the output of any embedded R code chunks within the manuscript.
+
+## Printing R output
+Any output from R is included as you usually would using RMarkdown.
 
 ```{r}
 summary(cars)
 ```
 
-For prettier tables, I suggest you take a look at the `xtable` package (for an example, see last page of this document; as required by the APA guidelines, the table is printed to the final pages of the document) although there are other ways of doing this. Unfortunately, for now, the caption is set to the left page margin. :(
+For prettier tables, I suggest you have a look at my helper function `apa.table()` in the [R2APA repository](https://github.com/crsh/r2apa). Of course, e.g, the popular `xtable` package can also be used to create tables. Unfortunately, `xtable()` captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6) (for an example, see last page of this document). `apa.table()` fixes this problem. As required by the APA guidelines, tables are on the final pages of the manuscript.
 
-```{r results='asis', warning=FALSE, message=FALSE}
-library(xtable)
+```{r results = 'asis', warning = FALSE, message = FALSE}
+library("xtable")
 print(
-  xtable(summary(cars), caption = "Pretty table produced with the xtable-package.")
+  xtable(summary(cars), caption = "Prettier table created using xtable.
+         Note the caption is set to the left page margin
+         instead of aligning wit the table. :(")
   , comment = FALSE
   , booktabs = TRUE
   , caption.placement = "top"
@@ -47,16 +56,29 @@ print(
 
 You can also embed plots, for example:
 
-```{r fig.cap="Exmple figure created by in-document R code."}
+```{r fig.cap = "Exmple figure created by in-document R code."}
 plot(cars)
 ```
 
-As required by the APA guidelines, the figure is printed to the final pages of the document. In RStudio you may have to click the gear (edit the RMarkdown format options), switch to the tab "Figures" and check the option "Render figures with captions" to make this work.
+As required by the APA guidelines, figures, too, are printed to the final pages of the document.
 
-The line numbering can be deactivated in the header of this document by removing the `lineno` argument.
+## Citations
+You can insert citations like this:
 
-Finally, you can easily insert citations [e.g., @example_ref]. Citing without parentheses is, of course, also possible: @example_ref. The citation style is set in the header of this document. The relevant references will, of course, be added to the documents references automatically.
+`[e.g., @bauer_2014; @bem_2011]` &#8594; [e.g., @bauer_2014; @bem_2011].
 
-That's all I have for now. Enjoy writing your manuscript. If you have an trouble or ideas for improve ments, send me an E-Mail, open an [issue](https://github.com/crsh/r2apa/issues) on GitHub or make a pull request with the fix. ;)
+Citing without parentheses is, of course, also possible:
+
+`@bauer_2014` &#8594; @bauer_2014.
+
+The citation style is set in the header of this document with the `csl` parameter. The relevant references will, of course, be added to the documents references automatically. In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the document header. See the [RMarkdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
+
+## Document options
+This text is set as manuscript. If you want a thesis-like document you can change the `classoption` in the document header from `man` to `doc`. You can also preview a polished journal typesetting by changing the `classoption` to `jou`.
+
+Line numbering can be deactivated in by removing the `lineno` argument from the header of this document.
+
+## Last words
+That's all I have. Enjoy writing your manuscript. If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/r2apa/issues) on GitHub or make a pull request with the fix. ;)
 
 # References
