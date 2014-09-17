@@ -6,3 +6,8 @@
 
 # R data files from past sessions
 .Rdata
+
+# System files
+*~
+.DS_Store
+Thumbs.db
