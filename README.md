@@ -14,8 +14,8 @@ To create an APA-manuscript, make sure the following software is installed on yo
 - [RStudio](http://www.rstudio.com/) (0.98.932 or later)
 - The R-Package [`knitr`](http://cran.r-project.org/web/packages/knitr/index.html)
 - A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac obviously, or [TeX Live](http://www.tug.org/texlive/) for Linux)
-  - If you are running **Windows**, use MikTex if possible. Currently, pandoc and Windows-Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6).
-  - If you are running **Ubuntu 14.04** you need a couple extra Tex Live packages for the document class `apa6` to work:
+  - If you are running **Windows**, use MikTex if possible. Currently, pandoc and Windows-Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6). Make sure you install the *complete*---not the basic---version.
+  - If you are running **Ubuntu 14.04** you need a couple Tex Live packages in addition to the ones already installed for the document class `apa6` to work:
 
             sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
 
