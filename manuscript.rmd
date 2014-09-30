@@ -9,10 +9,10 @@ classoption: man
 lang: american
 lineno: true
 
-title:
+title: Manuscript title
 shorttitle:
-author:
-affiliation:
+author: Ernst August Dölle
+affiliation: Konstanz business school
 note:
 abstract:
 

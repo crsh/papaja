@@ -11,16 +11,20 @@ Take a look at the [.pdf](https://raw.githubusercontent.com/crsh/R2APA/master/ex
 To create an APA-manuscript, make sure the following software is installed on your computer:
 
 - [R](http://www.r-project.org/) (2.11.1 or later)
+  - The R-Package [`knitr`](http://cran.r-project.org/web/packages/knitr/index.html)
 - [RStudio](http://www.rstudio.com/) (0.98.932 or later)
-- The R-Package [`knitr`](http://cran.r-project.org/web/packages/knitr/index.html)
-- A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac obviously, or [TeX Live](http://www.tug.org/texlive/) for Linux)
-  - If you are running **Windows**, use MikTex if possible. Currently, pandoc and Windows-Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6). Make sure you install the *complete*---not the basic---version.
-  - If you are running **Ubuntu 14.04** you need a couple Tex Live packages in addition to the ones already installed for the document class `apa6` to work:
+- A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, obviously, or [TeX Live](http://www.tug.org/texlive/) for Linux)
+  - If you are running **Windows**, use MikTex if possible. Currently, pandoc and the Windows version of Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6). Make sure you install the *complete*---not the basic---version.
+  - If you are running **Ubuntu 14.04** you need a couple of Tex packages in addition to the already installed ones for the document class `apa6` to work:
 
             sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
 
 ### Creating a manuscript
-To start writing your manuscript, download this repository (e.g. `Download ZIP`-button on the right). You can now fire up RStudio, set the working directory to the folder containing the files, and start writing by editing `manuscript.rmd`. If you want to add citations specify a .bib-file in the document header and remove the `#` in front of the `bibliography` parameter.
+To start writing your manuscript, download this repository (`Download ZIP`-button on the right). You can now fire up RStudio, set the working directory to the folder containing the files, e.g.
+
+    setwd("path/to/manuscript")
+
+and start writing by editing `manuscript.rmd`. If you want to add citations specify a .bib-file in the document header and remove the `#` in front of the `bibliography` parameter.
 
 ## Known issues
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
