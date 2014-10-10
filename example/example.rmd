@@ -20,7 +20,7 @@ abstract: This example manuscript demonstrates how to use RStudio and RMarkdown 
   PDF, or Word documents. At this point, only PDF documents adhere to the APA
   mansucript guidelines.
 
-bibliography: references.bib
+bibliography: `r (ref_name <- 'references.bib')`"
 csl: apa6.csl
 ---
 
