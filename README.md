@@ -1,10 +1,10 @@
-# R2APA
-R2APA is a [pandoc](http://johnmacfarlane.net/pandoc/) template that can be used with [RStudio](http://www.rstudio.com/) to produce complete manscripts (in PDF format), which conform with the American Psychology Association (APA) manuscript guidelines (6th Edition), from [RMarkdown](http://rmarkdown.rstudio.com/)-files. To do so, R2APA uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6).
+# papar
+papar is a R-package in the making including a [pandoc](http://johnmacfarlane.net/pandoc/) template that can be used with [RStudio](http://www.rstudio.com/) to produce complete manscripts (in PDF format), which conform with the American Psychology Association (APA) manuscript guidelines (6th Edition), from [RMarkdown](http://rmarkdown.rstudio.com/)-files. To do so, papar uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6).
 
 In the future, I hope to add R functions to easily report statistics and wrap everything up nicely in an R-Package to facilitate the setup. Any contributions are welcome.
 
 ## Example
-Take a look at the [.pdf](https://raw.githubusercontent.com/crsh/R2APA/master/example/example.pdf) and the [.rmd](https://github.com/crsh/R2APA/blob/master/example/example.rmd) of the example manuscript in the folder `example`.
+Take a look at the [.pdf](https://raw.githubusercontent.com/crsh/papar/master/example/example.pdf) and the [.rmd](https://github.com/crsh/papar/blob/master/example/example.rmd) of the example manuscript in the folder `example`.
 
 ## Setup
 ### Requirements
@@ -28,5 +28,5 @@ and start writing by editing `manuscript.rmd`. If you want to add citations spec
 
 ## Known issues
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
-- When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/R2APA/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. You may try out my helper function `apa.table()` in the folder `helper`, which should do the trick.
+- When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/papar/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. You may try out my helper function `apa.table()` in the folder `helper`, which should do the trick.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
