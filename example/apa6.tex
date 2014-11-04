@@ -140,6 +140,8 @@ $endif$
 % Essential manuscript parts
 $if(title)$
   \title{$title$}
+  $else$
+  \title{Wider den Optozentrismus!}
 $endif$
 $if(shorttitle)$
   \shorttitle{$shorttitle$}
@@ -149,9 +151,13 @@ $if(leftheader)$
 $endif$
 $if(author)$
   \author{$for(author)$$author$$sep$ \and $endfor$}
+  $else$
+  \author{Ernst August Doelle}
 $endif$
 $if(affiliation)$
   \affiliation{$affiliation$}
+  $else$
+  \affiliation{Konstanz business school}
 $endif$
 $if(note)$
   \note{$note$}

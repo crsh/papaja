@@ -9,14 +9,14 @@ classoption: man
 lang: american
 lineno: true
 
-title: Manuscript title
+title:
 shorttitle:
-author: Ernst August Dölle
-affiliation: Konstanz business school
+author:
+affiliation:
 note:
 abstract:
 
-#bibliography: 
+#bibliography:
 csl: apa6.csl
 ---
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
