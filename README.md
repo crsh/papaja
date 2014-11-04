@@ -19,14 +19,12 @@ To create an APA-manuscript, make sure the following software is installed on yo
 
             sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
 
+
 ### Creating a manuscript
-To start writing your manuscript, download this repository (`Download ZIP`-button on the right). You can now fire up RStudio, set the working directory to the folder containing the files, e.g.
-
-    setwd("path/to/manuscript")
-
-and start writing by editing `manuscript.rmd`. If you want to add citations specify a .bib-file in the document header and remove the `#` in front of the `bibliography` parameter.
+To start writing your manuscript, download this repository (`Download ZIP`-button on the right). You can now fire up RStudio and start writing by editing `manuscript.rmd`. If you want to add citations specify a .bib-file in the document header and remove the `#` in front of the `bibliography` parameter.
 
 ## Known issues
+- If building the example manuscript throws the error `! Incomplete \iffalse; all text was ignored after line 20.`, try updating your TeX-packages.
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 - When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/papar/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. You may try out my helper function `apa.table()` in the folder `helper`, which should do the trick.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
