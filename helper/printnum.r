@@ -1,12 +1,14 @@
 printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE) {
-  if(sign(x) == -1) {
+  if(is.na(x)) return("")
+  x_out <- round(x, digits) + 0 # No sign if x_out == 0
+
+  if(sign(x_out) == -1) {
     xsign <- "-"
     lt <- "> "
   } else {
     xsign <- ""
     lt <- "< "
   }
-  x_out <- round(x, digits)
   if(x_out == 0 & !zero) x_out <- paste0(lt, xsign, ".", paste0(rep(0, digits-1), collapse = ""), "1") # Too small to report
 
   if(!gt1) {
@@ -23,7 +25,7 @@ printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE) {
 
 printnum <- function(x, ...) {
   if(is.matrix(x)) {
-    x_out <- matrix(mapply(printnumber, x, ...), ncol = ncol(x))
+    x_out <- matrix(mapply(printnumber, x, ...), ncol = ncol(x), dimnames = dimnames(x))
   } else if(is.vector(x)) {
     x_out <- sapply(x, printnumber, ...)
   } else {
