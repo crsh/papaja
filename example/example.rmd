@@ -9,11 +9,11 @@ classoption: man
 lang: american
 lineno: true
 
-title: "Example manuscript demonstrating the use of the papar template"
-shorttitle: Using papar
+title: "Example manuscript demonstrating the use of the papaja template"
+shorttitle: Using papaja
 author: "Frederik Aust"
 affiliation: University of Cologne
-note: The papar-template, helper functions and further instructions can be retrieved from https://github.com/crsh/papar.
+note: The papaja-template, helper functions and further instructions can be retrieved from https://github.com/crsh/papaja.
 
 abstract: "This example manuscript demonstrates how to use RStudio and RMarkdown to produce an APA conform manuscript. Using pandoc your RMarkdown can be converted to HTML, PDF, or Word documents. At this point, only PDF documents adhere to the APA mansucript guidelines."
 
@@ -27,7 +27,7 @@ As you may have heard, recently, there has been a growing interest in reproducib
 I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work when using pandoc directly from the command line.
 
 # How do I use this?
-With the papar-template, when you click RStudio's *Knit* button an APA conform manuscript will be generated that includes both your text and the output of any embedded R code chunks within the manuscript.
+With the papaja-template, when you click RStudio's *Knit* button an APA conform manuscript will be generated that includes both your text and the output of any embedded R code chunks within the manuscript.
 
 ## Printing R output
 Any output from R is included as you usually would using RMarkdown.
@@ -36,7 +36,7 @@ Any output from R is included as you usually would using RMarkdown.
 summary(cars)
 ```
 
-For prettier tables, I suggest you have a look at my helper function `apa.table()` in the [papar repository](https://github.com/crsh/papar). Of course, e.g, the popular `xtable` package can also be used to create tables. Unfortunately, `xtable()` captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6) (for an example, see last page of this document). `apa.table()` fixes this problem. As required by the APA guidelines, tables are on the final pages of the manuscript.
+For prettier tables, I suggest you have a look at my helper function `apa.table()` in the [papaja repository](https://github.com/crsh/papaja). Of course, e.g, the popular `xtable` package can also be used to create tables. Unfortunately, `xtable()` captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6) (for an example, see last page of this document). `apa.table()` fixes this problem. As required by the APA guidelines, tables are on the final pages of the manuscript.
 
 ```{r results = 'asis', warning = FALSE, message = FALSE}
 library("xtable")
@@ -76,6 +76,6 @@ This text is set as manuscript. If you want a thesis-like document you can chang
 Line numbering can be deactivated in by removing the `lineno` argument from the header of this document.
 
 ## Last words
-That's all I have. Enjoy writing your manuscript. If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papar/issues) on GitHub or make a pull request with the fix. ;)
+That's all I have. Enjoy writing your manuscript. If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or make a pull request with the fix. ;)
 
 # References
