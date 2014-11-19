@@ -7,18 +7,23 @@ output:
 
 classoption: man
 lang: american
-lineno: true
+lineno: yes
 
 title: "Example manuscript demonstrating the use of the papaja template"
 shorttitle: Using papaja
 author: "Frederik Aust"
 affiliation: University of Cologne
-note: The papaja-template, helper functions and further instructions can be retrieved from https://github.com/crsh/papaja.
 
-abstract: "This example manuscript demonstrates how to use RStudio and RMarkdown to produce an APA conform manuscript. Using pandoc your RMarkdown can be converted to HTML, PDF, or Word documents. At this point, only PDF documents adhere to the APA mansucript guidelines."
+abstract: This example manuscript demonstrates how to use RStudio and RMarkdown to
+  produce an APA conform manuscript. Using pandoc your RMarkdown can be converted
+  to HTML, PDF, or Word documents. At this point, only PDF documents adhere to the
+  APA mansucript guidelines.
 
-bibliography: references.bib
+note: The papaja-template, helper functions and further instructions can be retrieved
+  from https://github.com/crsh/papaja.
+
 csl: apa6.csl
+bibliography: references.bib
 ---
 
 # What is this?
