@@ -1,5 +1,6 @@
-apa.table <- function(output_format = NULL, ...) {
+apa.table <- function(...) {
   require("knitr")
+  output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(output_format == "latex") {
     apa.table.latex(...)
   } else {
