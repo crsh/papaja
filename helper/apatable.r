@@ -8,7 +8,7 @@ apa.table <- function(...) {
   }
 }
 
-apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, merge.names = NULL, ...) {
+apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, var.names = c("", ""), ...) {
   if(landscape) table_env <- "sidewaystable" else table_env <- "table"
   cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
   
@@ -22,25 +22,28 @@ apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
       )
       rownames(prep_table) <- NULL
       second_col <- ifelse(is.null(rownames(x[[i]])), NULL, "")
-      if(is.null(merge.names)) {
-        colnames(prep_table) <- c("", "", colnames(x[[i]]))
-      } else {
-        colnames(prep_table) <- c(merge.names, colnames(x[[i]]))
-      }
+      colnames(prep_table) <- c(var.names, colnames(x[[i]]))
       
       return(prep_table)
-    }
-    )
+    })
     x_merged <- do.call(rbind, prep_table)
     kable(x_merged, format = "latex", booktabs = TRUE, ...)
-  } else kable(x, format = "latex", booktabs = TRUE, ...)
+  } else {
+    if(!is.null(rownames(x)) & !(all(rownames(x) == ""))) {
+      prep_table <- cbind(rownames(x), x)
+      colnames(prep_table) <- c(var.names[1], colnames(x))
+    } else prep_table <- x
+    rownames(prep_table) <- NULL
+    
+    kable(prep_table, format = "latex", booktabs = TRUE, ...)
+  }
   
   cat("\n")
   if(!is.null(note)) cat("\\tablenotes{\\textit{Note.}", note, "}\n")
   cat("\\end{threeparttable}\n\\end{", table_env, "}", sep = "")
 }
 
-apa.table.word <- function(x, caption = NULL, note = NULL, merge.names = NULL, ...) {
+apa.table.word <- function(x, caption = NULL, note = NULL, var.names = c("&nbsp;", "&nbsp;"), ...) {
   if(is.list(x) && !is.data.frame(x)) {
     tables_to_merge <- names(x)
     prep_table <- lapply(seq_along(x), function(i) {
@@ -51,16 +54,14 @@ apa.table.word <- function(x, caption = NULL, note = NULL, merge.names = NULL, .
       )
       rownames(prep_table) <- NULL
       second_col <- ifelse(is.null(rownames(x[[i]])), NULL, "")
-      if(is.null(merge.names)) {
-        colnames(prep_table) <- c("&nbsp;", "&nbsp;", colnames(x[[i]]))
-      } else {
-        colnames(prep_table) <- c(merge.names, colnames(x[[i]]))
-      }
+      colnames(prep_table) <- c(var.names, colnames(x[[i]]))
       
       return(prep_table)
     }
     )
     x_merged <- do.call(rbind, prep_table)
+    
+    cat("\n\n")
     cat("<center>")
     cat("Table. ")
     cat("*", caption, "*", sep = "")
@@ -68,9 +69,17 @@ apa.table.word <- function(x, caption = NULL, note = NULL, merge.names = NULL, .
     kable(x_merged, format = "pandoc", ...)
   } else {
     colnames(x) <- ifelse(colnames(x) == "", "&nbsp;", colnames(x))
-    prep_table <- cbind(rownames(x), x)
-    colnames(prep_table) <- c("&nbsp;", colnames(x))
+    if(!is.null(rownames(x)) & !(all(rownames(x) == ""))) {
+      rownames(x) <- ifelse(rownames(x) == "", "&nbsp;", rownames(x))
+      prep_table <- cbind(rownames(x), x)
+      colnames(prep_table) <- c(var.names[1], colnames(x))
+    } else prep_table <- x
     rownames(prep_table) <- NULL
+    
+    cat("<center>")
+    cat("Table. ")
+    cat("*", caption, "*", sep = "")
+    cat("</center>")
     kable(prep_table, format = "pandoc", ...)
   }
   
@@ -79,6 +88,6 @@ apa.table.word <- function(x, caption = NULL, note = NULL, merge.names = NULL, .
     cat("<center>")
     cat("*Note.*", note)
     cat("</center>")
-    cat("\n\n\n\n")
   }
+  cat("\n\n\n\n")
 }

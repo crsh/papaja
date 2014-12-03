@@ -4,6 +4,11 @@ output:
     fig_caption: yes
     keep_tex: yes
     template: apa6.tex
+  word_document:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 6
+    reference_docx: apa6.docx
 
 classoption: man
 lang: american

@@ -4,6 +4,11 @@ output:
     fig_caption: yes
     keep_tex: yes
     template: apa6.tex
+  word_document:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 6
+    reference_docx: apa6.docx
 
 classoption: man
 lang: american
@@ -18,20 +23,20 @@ abstract: This example manuscript demonstrates how to use RStudio and RMarkdown 
   produce an APA conform manuscript. Using pandoc your RMarkdown can be converted
   to HTML, PDF, or Word documents. At this point, only PDF documents adhere to the
   APA mansucript guidelines.
-
+  
 note: The papaja-template, helper functions and further instructions can be retrieved
   from https://github.com/crsh/papaja.
 
+bibliography: references.bib  
 csl: apa6.csl
-bibliography: references.bib
 ---
 
-# What is this?
+# What is papaja?
 As you may have heard, recently, there has been a growing interest in reproducible research. Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility. For *R* users, RMarkdown has been suggested as one possible framework for reproducible analyses. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. This example document assumes you have hoped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses. If you're new to [RMarkdown](http://rmarkdown.rstudio.com/), I recommend you get to grips with it first.
 
 I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work when using pandoc directly from the command line.
 
-# How do I use this?
+# How do I use papaja?
 With the papaja-template, when you click RStudio's *Knit* button an APA conform manuscript will be generated that includes both your text and the output of any embedded R code chunks within the manuscript.
 
 ## Printing R output
@@ -41,21 +46,27 @@ Any output from R is included as you usually would using RMarkdown.
 summary(cars)
 ```
 
-For prettier tables, I suggest you have a look at my helper function `apa.table()` in the [papaja repository](https://github.com/crsh/papaja). Of course, e.g, the popular `xtable` package can also be used to create tables. Unfortunately, `xtable()` captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6) (for an example, see last page of this document). `apa.table()` fixes this problem. As required by the APA guidelines, tables are on the final pages of the manuscript.
+### Print tables
+For prettier tables, I suggest you have a look at my helper function `apa.table()` in the [papaja repository](https://github.com/crsh/papaja). Of course, e.g, the popular `xtable` or `tables` packages can also be used to create tables when knitting PDF. Unfortunately, `xtable()` captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6). Also, these packages cannot be used when you want to create Microsoft Word documents. `apa.table()` creates tables that conform to APA guidelines and are correctly rendered in PDF and Word documents. However, as of now the formatting of tables is somewhat limited due to missing functionality in pandoc (e.g. it is not possible to have cells span across multiple columns).
+
+As required by the APA guidelines, tables are on the final pages of the manuscript when creating PDF documents. This is not the case in Word documents, however.
 
 ```{r results = 'asis', warning = FALSE, message = FALSE}
-library("xtable")
-print(
-  xtable(summary(cars), caption = "Prettier table created using xtable.
-         Note the caption is set to the left page margin
-         instead of aligning wit the table. :(")
-  , comment = FALSE
-  , booktabs = TRUE
-  , caption.placement = "top"
-  , include.rownames = FALSE
+source("../helper/apatable.r")
+apa.table(
+  apply(cars, 2, function(x) round(
+    c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
+  )
+  , align = c("l", "r", "r")
+  , caption = "A summary table of the cars dataset."
+  , note = "This table was created using apa.table()"
+  , var.names = "Descriptives"
 )
 ```
 
+Please note that Word documents will be less polished than PDF because of the limitly limited functionality of pandoc when it comes to creating Word templates. The resulting documents should be pretty enough to enable collaboration with Wordy colleagues.
+
+### Plots
 You can also embed plots, for example:
 
 ```{r fig.cap = "Exmple figure created by in-document R code."}
@@ -78,7 +89,7 @@ The citation style is set in the header of this document with the `csl` paramete
 ## Document options
 This text is set as manuscript. If you want a thesis-like document you can change the `classoption` in the document header from `man` to `doc`. You can also preview a polished journal typesetting by changing the `classoption` to `jou`.
 
-Line numbering can be deactivated in by removing the `lineno` argument from the header of this document.
+When creating PDF documents, line numbering can be activated by setting the `lineno` argument in the header of this document to true. This option has no effect on Word documents.
 
 ## Last words
 That's all I have. Enjoy writing your manuscript. If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or make a pull request with the fix. ;)

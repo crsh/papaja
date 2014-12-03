@@ -1,10 +1,12 @@
 # papaja
-papaja is a R-package in the making including a [pandoc](http://johnmacfarlane.net/pandoc/) template that can be used with [RStudio](http://www.rstudio.com/) to produce complete manscripts (in PDF format), which conform with the American Psychological Association (APA) manuscript guidelines (6th Edition), from [RMarkdown](http://rmarkdown.rstudio.com/)-files. To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6).
+papaja is a R-package in the making including a [pandoc](http://johnmacfarlane.net/pandoc/) template that can be used with [RStudio](http://www.rstudio.com/) to produce complete manscripts (PDF and Word documents), which conform with the American Psychological Association (APA) manuscript guidelines (6th Edition), from [RMarkdown](http://rmarkdown.rstudio.com/)-files. To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and .docx-reference file. Helper functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
 
-In the future, I hope to add R functions to easily report statistics and wrap everything up nicely in an R-Package to facilitate the setup. Any contributions are welcome.
+In the future, I hope to add R further functions and wrap everything up nicely in an R-Package to facilitate the setup. Any contributions are welcome.
 
 ## Example
-Take a look at the [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf) and the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example`.
+Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf) and [.docx](https://raw.githubusercontent.com/crsh/papaja/master/example/example.docx).
+
+The example document also contains some basic instructions.
 
 ## Setup
 ### Requirements
@@ -18,7 +20,6 @@ To create an APA-manuscript, make sure the following software is installed on yo
   - If you are running **Ubuntu 14.04** you need a couple of Tex packages in addition to the already installed ones for the document class `apa6` to work:
 
             sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
-
 
 ### Creating a manuscript
 To start writing your manuscript, download this repository (`Download ZIP`-button on the right). You can now fire up RStudio and start writing by editing `manuscript.rmd`. If you want to add citations specify a .bib-file in the document header and remove the `#` in front of the `bibliography` parameter.
