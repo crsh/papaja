@@ -1,7 +1,7 @@
-apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0.95, in_paran = FALSE) {
+apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0.95, in_paren = FALSE) {
   # Add alternative method if(is.list(x)) using list names as parameters and values as statistics
   
-  if(in_paran) {
+  if(in_paren) {
     op <- "["; cp <- "]"
   } else {
     op <- "("; cp <- ")"
@@ -54,17 +54,23 @@ apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0
     apa.stat <- c(apa.stat, `F-test` = f, `R2` = r2)
   } else if("anova" %in% class(x)) {
     if(any(apply(x, 1, is.na))) {
-      make_f_test <- function(x) {
-        p_pos <- grep("Pr\\(>F\\)", names(x))
-        p <- printnum(x[p_pos], digits = 3, gt1 = FALSE, zero = FALSE)
-        if(!grepl("<|>", p)) eq <- "= " else eq <- ""
-        f_test <- paste0("$F", op, x["Df"], ",", x["Res.Df"], cp, " = ", printnum(x["F"]), "$, $p ", eq, p, "$")
-      }
       apa.stat <- apply(x[-1,], 1, make_f_test)
     }
   } else {
-    stop("No method defined for object class ", class(x), ".")
+    stop("No method defined for object class", class(x), ".")
   }
 
   return(apa.stat)
 }
+
+
+#############################
+## assumes object of class 'anova' and returns character string
+##
+make_f_test <- function(x) {
+  p_pos <- grep("Pr\\(>F\\)", names(x))
+  p <- printnum(x[p_pos], digits = 3, gt1 = FALSE, zero = FALSE)
+  if(!grepl("<|>", p)) eq <- "= " else eq <- ""
+  f_test <- paste0("$F", op, x["Df"], ",", x["Res.Df"], cp, " = ", printnum(x["F"]), "$, $p ", eq, p, "$")
+}
+
