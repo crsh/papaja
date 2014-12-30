@@ -42,3 +42,8 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1) {
   }
   return(x_out)
 }
+
+printp <- function(x, margin = 1) {
+  p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, margin = margin)
+  return(p)
+}
