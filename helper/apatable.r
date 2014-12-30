@@ -9,7 +9,6 @@ apa.table <- function(...) {
 }
 
 apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added.colnames = NULL, ...) {
-  print(landscape)
   if(landscape) table_env <- "sidewaystable" else table_env <- "table"
   cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
   
