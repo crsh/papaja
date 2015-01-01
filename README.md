@@ -1,5 +1,5 @@
 # papaja
-papaja is a R-package in the making including a [pandoc](http://johnmacfarlane.net/pandoc/) template that can be used with [RStudio](http://www.rstudio.com/) to produce complete manscripts (PDF and Word documents), which conform with the American Psychological Association (APA) manuscript guidelines (6th Edition), from [RMarkdown](http://rmarkdown.rstudio.com/)-files. To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and .docx-reference file. Helper functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
+papaja is a R-package in the making including a [pandoc](http://johnmacfarlane.net/pandoc/) template that can be used with [RStudio](http://www.rstudio.com/) to produce complete manscripts (PDF and Word documents) from [RMarkdown](http://rmarkdown.rstudio.com/)-files, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and .docx-reference file. Helper functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
 
 In the future, I hope to add R further functions and wrap everything up nicely in an R-Package to facilitate the setup. Any contributions are welcome.
 

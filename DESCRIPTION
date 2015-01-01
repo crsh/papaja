@@ -1,0 +1,15 @@
+Package: papaja
+Title: Produces complete APA manscripts (PDF and Word documents) from RMarkdown-files
+Version: 0.0.1
+Authors@R: c(
+    person("Frederik", "Aust", email = "frederik.aust@uni-koeln.de", role = c("aut", "cre"))
+    , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = "crt")
+  )
+Description: ...
+Depends: R (>= 2.11.1)
+License: MIT + file LICENSE
+LazyData: true
+Imports: knitr (>= 1.8)
+Depends: rmarkdown (>= 0.3.10)
+URL: https://github.com/crsh/papaja
+BugReports: https://github.com/crsh/papaja/issues

@@ -1,5 +1,6 @@
+#' @export
 apa.table <- function(...) {
-  require("knitr")
+  requireNamespace("knitr", quietly = TRUE)
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(output_format == "latex") {
     apa.table.latex(...)
@@ -32,12 +33,12 @@ apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
     }
     )
     x_merged <- do.call(rbind, prep_table)
-    print(kable(x_merged, format = "latex", booktabs = TRUE, ...))
+    print(knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...))
   } else {
     prep_table <- cbind(rownames(x), x)
     if(!is.null(added.colnames)) colnames(prep_table) <- c(added.colnames, colnames(x))
     rownames(prep_table) <- NULL
-    print(kable(prep_table, format = "latex", booktabs = TRUE, ...))
+    print(knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...))
   }
   
   cat("\n")
@@ -70,13 +71,13 @@ apa.table.word <- function(x, caption = NULL, note = NULL, added.colnames = NULL
     cat("Table. ")
     cat("*", caption, "*", sep = "")
     cat("</center>")
-    print(kable(x_merged, format = "pandoc", ...))
+    print(knitr::kable(x_merged, format = "pandoc", ...))
   } else {
     colnames(x) <- ifelse(colnames(x) == "", "&nbsp;", colnames(x))
     prep_table <- cbind(rownames(x), x)
     if(!is.na(added.colnames)) colnames(prep_table) <- c(added.colnames, colnames(x)) else colnames(prep_table) <- c("&nbsp;", colnames(x))
     rownames(prep_table) <- NULL
-    print(kable(prep_table, format = "pandoc", ...))
+    print(knitr::kable(prep_table, format = "pandoc", ...))
   }
   
   if(!is.null(note)) {

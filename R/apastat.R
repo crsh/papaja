@@ -1,3 +1,4 @@
+#' @export
 apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0.95, in_paren = FALSE) {
   # Add alternative method if(is.list(x)) using list names as parameters and values as statistics
   
