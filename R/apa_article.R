@@ -7,7 +7,7 @@
 #'    MS Word documents.
 #' @param fig.caption Logical. Indicates if figures are rendered with captions.
 #' @param ... Further arguments to pass to \code{rmarkdown::pdf_document} or \code{rmarkdown::word_document}.
-#' @example ...
+#' @examples NULL
 #' @export
 
 apa_article <- function(

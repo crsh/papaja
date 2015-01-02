@@ -10,7 +10,7 @@ printnum(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1)
 printp(x, margin = 1)
 }
 \arguments{
-\item{x}{Value to format; can be either a single value, vector, or matrix.}
+\item{x}{Numeric. Can be either a single value, vector, or matrix.}
 
 \item{digits}{Integer. Number of decimal places to print.}
 
@@ -22,7 +22,7 @@ printp(x, margin = 1)
 or columns (= 2).}
 }
 \description{
-This function formats numeric values according to APA guidelines (6th edition) for reporting.
+Formats numeric values according to APA guidelines (6th edition) for reporting.
 }
 \details{
 If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
@@ -32,10 +32,17 @@ If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vecto
 }
 \section{Functions}{
 \itemize{
-\item \code{printp}: Convenience wrapper for \code{printnum} to print p-values.
+\item \code{printp}: Convenience wrapper for \code{printnum} to print p-values with three decimal places.
 }}
 \examples{
-...
+printnum(1/3)
+printnum(1/3, gt1 = FALSE)
+printnum(1/3, digits = 5)
+
+printnum(0)
+printnum(0, zero = FALSE)
+
+printp(0.0001)
 }
 \seealso{
 \code{\link{apply}}

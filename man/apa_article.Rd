@@ -7,8 +7,8 @@
 apa_article(class = "man", fig.caption = TRUE, ...)
 }
 \arguments{
-\item{class}{Character. Specifies if the document will be a manuscript (= "man"), a document (= "doc"),
-or a fully typsetted journal article (= "jou"). Currently only manuscripts are supported for
+\item{class}{Character. Specifies if the document will be a manuscript ("man"), a document ("doc"),
+or a fully typsetted journal article ("jou"). Currently only manuscripts are supported for
 MS Word documents.}
 
 \item{fig.caption}{Logical. Indicates if figures are rendered with captions.}
@@ -17,5 +17,8 @@ MS Word documents.}
 }
 \description{
 Template for creating an article according to APA guidelines (6th edition) in PDF format.
+}
+\examples{
+NULL
 }
 

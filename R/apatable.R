@@ -1,4 +1,28 @@
+#' Prepare table for printing
+#'
+#' Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
+#' (6th edition).
+#' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
+#' @param caption Character. Caption to be printed above the table.
+#' @param note Character. Note to be printed below the table.
+#' @param placement Character. Indicates wheter table should be placed at the exact location ("h"), at the
+#'    top ("t"), bottom ("b"), or on a new page ("p"). Arguments can be combined ("htb"); ignored in MS
+#'    Word documents.
+#' @param landscape Logical. If \code{TRUE} the table is printed in landscape format. Ignored in MS Word
+#'    documents.
+#' @param added.colnames Character. Vector of names for first unnamed columns. See details.
+#' @param ... Further arguments to pass to \code{kntir::kable}.
+#' @seealso \code{\link{apply}}
+#' @details If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
+#'    the first column giving the names of elements.
+#'
+#'    If the first column(s) of the table are unnamed, the names for these columns can be supplied using the
+#'    \code{added.colnames} parameter. This is the case when an object has rownames (unless
+#'    \code{row.names = FALSE} is passed to \code{knitr::kable}) and when elements of a \code{list} are
+#'    merged.
+#' @examples ...
 #' @export
+
 apa.table <- function(...) {
   requireNamespace("knitr", quietly = TRUE)
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")

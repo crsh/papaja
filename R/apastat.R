@@ -23,7 +23,18 @@
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
-#' @example ...
+#' @examples
+#' t_stat <- t.test(iris$Sepal.Length, iris$Sepal.Width)
+#' apa.stat(t_stat)
+#'
+#' cor_stat <- cor.test(iris$Sepal.Length, iris$Sepal.Width)
+#' apa.stat(cor_stat)
+#'
+#' iris_lm <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = iris)
+#' apa.stat(summary(iris_lm), ci = confint(iris_lm))
+#'
+#' iris_lm2 <- update(iris_lm, formula = . ~ + Sepal.Length:Sepal.Width)
+#' apa.stat(anova(iris_lm2, iris_lm))
 #' @export
 
 apa.stat <- function(
@@ -43,9 +54,9 @@ apa.stat <- function(
   }
 
   if("htest" %in% class(x)) {
-    apa.stat <- apa_htest(x, op, cp)
+    apa.stat <- apa_htest(x, op, cp, stat_name = stat_name, n = n)
   } else if("summary.lm" %in% class(x)) {
-    apa.stat <- apa_lmsummary(x, op, cp)
+    apa.stat <- apa_lmsummary(x, op, cp, ci = ci, standardized = standardized)
   } else if("anova" %in% class(x)) {
     if(any(apply(x, 1, is.na))) { # Dirty hack
       apa.stat <- apply(x[-1,], 1, make_f_test, op, cp)
@@ -59,17 +70,19 @@ apa.stat <- function(
 
 
 
-apa_htest <- function(x, op = "(", cp = ")") {
+apa_htest <- function(x, op = "(", cp = ")", stat_name = stat_name, n = n) {
   if(is.null(stat_name)) stat_name <- names(x$statistic)
   stat <- printnum(x$statistic)
 
   if(!is.null(x$sample.size)) n <- x$sample.size
 
   if(!is.null(x$parameter)) {
+
+    # Assemble statistic and degrees of freedom
     if(tolower(names(x$parameter)) == "df") {
-      if(x$parameter%%1==0) printdigits <- 0 else printdigits = 2
+      if(x$parameter %%1 == 0) printdigits <- 0 else printdigits = 2
       if(grepl("X|chi", stat_name, ignore.case = TRUE)) {
-        if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.")
+        if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
         stat_name <- paste0(stat_name, op, printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ", n = ", n, cp)
       } else {
         stat_name <- paste0(stat_name, op, printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), cp)
@@ -77,13 +90,15 @@ apa_htest <- function(x, op = "(", cp = ")") {
     }
   }
 
+  # Assemble p-value
   p <- printp(x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
+
   apa.stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
   apa.stat
 }
 
-apa_lmsummary <- function(x, op = "(", cp = ")") {
+apa_lmsummary <- function(x, op = "(", cp = ")", ci = ci, standardized = standardized) {
   coefs <- x$coefficients
   if(is.matrix(ci)) {
     coefs <- cbind(coefs, ci = ci)
@@ -119,4 +134,11 @@ make_f_test <- function(x, op = "(", cp = ")") {
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
   ftest <- paste0("$F", op, x["Df"], ",", x["Res.Df"], cp, " = ", printnum(x["F"]), "$, $p ", eq, p, "$")
   ftest
+}
+
+
+make_confint <- function(x, digits, gt1, zero) {
+  ci <- printnum(x, digits = digits, gt1 = gt1, zero = zero)
+  ci <- paste0("[", paste(ci, collapse = ", "), "]")
+  ci
 }
