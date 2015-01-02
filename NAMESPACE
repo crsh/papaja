@@ -2,7 +2,8 @@
 
 export(apa.stat)
 export(apa.table)
-export(apa_article)
+export(apa6_docx)
+export(apa6_pdf)
 export(printnum)
 export(printp)
 export(rrefs)

@@ -4,6 +4,7 @@ shorttitle:
 author: 
 affiliation: 
 note: null
+output: papaja::apa6_pdf
 
 abstract: 
 
@@ -30,5 +31,5 @@ We report how we determined our sample size, all data exclusions (if any), all m
 
 # References
 ```{r}
-rrefs(file = "r-references.bib")
+# rrefs(file = "r-references.bib")
 ```
