@@ -1,13 +1,47 @@
+#' Format statistics (APA 6th edition)
+#'
+#' Formats output objects from various statistical methods to create formated chraracter strings to report
+#' the results in accordance with APA manuscript guidelines.
+#'
+#' @param x Output object. See details.
+#' @param stat_name Character. Name of the reported statistic; if \code{NULL} the name specified in the
+#'    supplied object is used.
+#' @param n Numeric. Size of the sample. Needed when reporting $\chi^2$, otherwise this parameter is
+#'    ignored.
+#' @param standardized Logical. If \code{x} is an object of class \code{summary.lm} indicates if
+#'    coefficients are standardized or unstandardized.
+#' @param ci Numeric. Matrix containing lower and upper boundaries of confidence intervals for estimated
+#'    coefficients in columns. Ignored if \code{x} is not of class \code{summary.lm}.
+#' @param in_paren Logical. Indicates if the formated string be reported inside parentheses. See details.
+#' @details Currently the following output objects are supported:
+#'
+#'    \itemize{
+#'      \item \code{htest}
+#'      \item \code{summary.lm}
+#'      \item \code{anova}
+#'    }
+#'
+#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
+#'    of freedom, are replaced with brackets.
+#' @example ...
 #' @export
-apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0.95, in_paren = FALSE) {
+
+apa.stat <- function(
+  x
+  , stat_name = NULL
+  , n = NULL
+  , standardized = FALSE
+  , ci = NULL
+  , in_paren = FALSE
+) {
   # Add alternative method if(is.list(x)) using list names as parameters and values as statistics
-  
+
   if(in_paren) {
     op <- "["; cp <- "]"
   } else {
     op <- "("; cp <- ")"
   }
-  
+
   if("htest" %in% class(x)) {
     apa.stat <- apa_htest(x, op, cp)
   } else if("summary.lm" %in% class(x)) {
@@ -20,7 +54,7 @@ apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0
     stop("No method defined for object class", class(x), ".")
   }
 
-  return(apa.stat)
+  apa.stat
 }
 
 
@@ -28,9 +62,9 @@ apa.stat <- function(x, stat_name = NULL, n = NULL, standardized = FALSE, ci = 0
 apa_htest <- function(x, op = "(", cp = ")") {
   if(is.null(stat_name)) stat_name <- names(x$statistic)
   stat <- printnum(x$statistic)
-  
+
   if(!is.null(x$sample.size)) n <- x$sample.size
-  
+
   if(!is.null(x$parameter)) {
     if(tolower(names(x$parameter)) == "df") {
       if(x$parameter%%1==0) printdigits <- 0 else printdigits = 2
@@ -42,11 +76,11 @@ apa_htest <- function(x, op = "(", cp = ")") {
       }
     }
   }
-  
+
   p <- printp(x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
   apa.stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
-  return(apa.stat)
+  apa.stat
 }
 
 apa_lmsummary <- function(x, op = "(", cp = ")") {
@@ -54,11 +88,11 @@ apa_lmsummary <- function(x, op = "(", cp = ")") {
   if(is.matrix(ci)) {
     coefs <- cbind(coefs, ci = ci)
   } else stop("Please supply estimates of confidence intervals.")
-  
+
   p_pos <- grep("Pr|p-value", colnames(coefs))
   if(standardized) stat_name <- "\\beta" else stat_name <- "b"
-  
-  apa.stat <- apply(coefs, 1, function(y) { # DF FOR t!!!
+
+  apa.stat <- apply(coefs, 1, function(y) {
     p <- printp(y[p_pos])
     if(!grepl("<|>", p)) eq <- "= " else eq <- ""
     paste0("$", stat_name, " = ", printnum(y["Estimate"], gt1 = !standardized)
@@ -73,7 +107,7 @@ apa_lmsummary <- function(x, op = "(", cp = ")") {
   )
   r2 <- paste0("$R^2 = ", printnum(x$r.squared, gt1 = FALSE), "$")
   apa.stat <- c(apa.stat, `F-test` = f, `R2` = r2)
-  return(apa.stat)
+  apa.stat
 }
 
 #############################
@@ -84,6 +118,5 @@ make_f_test <- function(x, op = "(", cp = ")") {
   p <- printp(x[p_pos])
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
   ftest <- paste0("$F", op, x["Df"], ",", x["Res.Df"], cp, " = ", printnum(x["F"]), "$, $p ", eq, p, "$")
-  return(ftest)
+  ftest
 }
-

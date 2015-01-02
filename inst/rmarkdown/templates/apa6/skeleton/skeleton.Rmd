@@ -1,0 +1,34 @@
+---
+title: 
+shorttitle: 
+author: 
+affiliation: 
+note: null
+
+abstract: 
+
+class: man
+lang: american
+lineno: yes
+---
+
+
+# Methods
+We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+## Sample
+
+## Material
+
+## Procedure
+
+## Data analysis
+
+# Results
+
+# Discussion
+
+# References
+```{r}
+rrefs(file = "r-references.bib")
+```

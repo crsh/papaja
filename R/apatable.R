@@ -12,7 +12,7 @@ apa.table <- function(...) {
 apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added.colnames = NULL, ...) {
   if(landscape) table_env <- "sidewaystable" else table_env <- "table"
   cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
-  
+
   if(is.list(x) && !is.data.frame(x)) {
     tables_to_merge <- names(x)
     prep_table <- lapply(seq_along(x), function(i) {
@@ -28,8 +28,8 @@ apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
       } else {
         colnames(prep_table) <- c(added.colnames, colnames(x[[i]]))
       }
-      
-      return(prep_table)
+
+      prep_table
     }
     )
     x_merged <- do.call(rbind, prep_table)
@@ -40,7 +40,7 @@ apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
     rownames(prep_table) <- NULL
     print(knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...))
   }
-  
+
   cat("\n")
   if(!is.null(note)) cat("\\tablenotes{\\textit{Note.}", note, "}\n")
   cat("\\end{threeparttable}\n\\end{", table_env, "}", sep = "")
@@ -62,8 +62,8 @@ apa.table.word <- function(x, caption = NULL, note = NULL, added.colnames = NULL
       } else {
         colnames(prep_table) <- c(added.colnames, colnames(x[[i]]))
       }
-      
-      return(prep_table)
+
+      prep_table
     }
     )
     x_merged <- do.call(rbind, prep_table)
@@ -79,7 +79,7 @@ apa.table.word <- function(x, caption = NULL, note = NULL, added.colnames = NULL
     rownames(prep_table) <- NULL
     print(knitr::kable(prep_table, format = "pandoc", ...))
   }
-  
+
   if(!is.null(note)) {
     cat("\n")
     cat("<center>")

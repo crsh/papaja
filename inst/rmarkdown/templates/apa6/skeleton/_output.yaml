@@ -1,0 +1,6 @@
+pdf_document:
+  fig_caption: true
+  template: apa6.tex
+word_document:
+  fig_caption: true
+  reference_docx: apa6_man.docx
