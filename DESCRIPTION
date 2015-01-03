@@ -6,10 +6,11 @@ Authors@R: c(
     , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("ctb"))
   )
 Description: ...
-Depends: R (>= 2.11.1)
+Depends:
+  R (>= 2.11.1),
+  rmarkdown (>= 0.3.10),
+  knitr (>= 1.8)
 License: MIT + file LICENSE
 LazyData: true
-Imports: knitr (>= 1.8)
-Depends: rmarkdown (>= 0.3.10)
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
