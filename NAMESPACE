@@ -2,6 +2,7 @@
 
 export(apa6_pdf)
 export(apa6_word)
+export(apa_before_body)
 export(apa_stat)
 export(apa_table)
 export(printnum)

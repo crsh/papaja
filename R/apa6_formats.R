@@ -9,6 +9,7 @@
 #' @param pandoc_args Additional command line options to pass to pandoc
 #' @param Logical. Keep the intermediate tex file used in the conversion to PDF.
 #' @param ... Further arguments to pass to \code{rmarkdown::pdf_document} or \code{rmarkdown::word_document}.
+#' @seealso \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
 #' @examples NULL
 #' @export
 
@@ -51,6 +52,7 @@ apa6_pdf <- function(
 
   # Set options
   format$knitr$opts_chunk$echo <- FALSE
+  format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
 
   # Set hook to print default numbers
   inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/formatting-sweave-and-knitr-output-for-2-digits/
@@ -108,9 +110,9 @@ apa6_word <- function(
     , ...
   )
 
-
   # Set options
   format$knitr$opts_chunk$echo <- FALSE
+  format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
 
   # Set hook to print default numbers
   inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/formatting-sweave-and-knitr-output-for-2-digits/

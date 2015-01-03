@@ -33,4 +33,7 @@ Template for creating an article according to APA guidelines (6th edition) in PD
 \examples{
 NULL
 }
+\seealso{
+\code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
+}
 

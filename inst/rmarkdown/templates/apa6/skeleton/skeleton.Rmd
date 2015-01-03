@@ -1,11 +1,18 @@
 ---
-title: 
-shorttitle: 
-author: 
-affiliation: 
-note: 
+title: "Wider den Optozentrismus!""
+shorttitle: "Optozentrismus"
+author: "Ernst A. Doelle$^1$ & Theo Herrmann$^2$"
+affiliation: |
+  $^1$Wirtschaftshochschule Konstanz \
+  $^2$Universität Mannheim
 
-abstract: 
+abstract: |
+  In der Rede wird folgende These diskutiert: "Optozentristisch durchseucht sind Philosophie und die Wissenschaft. Sprache verrät sie ebenso, wie sich ihre Tochter, die Psychologie, durch ihre Sprache verrät. Wir alle sprechen gänzlich unreflektiert von Einsicht, von Introspektion, von Betrachtungsweisen, von Nachbildern, von Beschaulichkeit, von Imagination." Die Konstruktion unseres Weltbildes durch das Wort "enthält in abschreckend modriger und fossilisierter Weise den uralten mediterranen Optozentrismus. Er herrscht über uns wie ein uralter böser Dämon." Der Verfasser zeigt, daß diese Weltsicht nicht erst mit der jüdisch-christlichen Bibel, sondern schon mit den alten Griechen anfing.
+  
+note: |
+  Das vorliegende Papier enthält die Universitätsrede, die 1967 aus Anlaß der Zueignung des Ehrenskriptoriums der August-Ernst-Hochschule zu Hildesheim gehalten worden ist. Dieses Vortragsmanuskript von Ernst August Dölle war bislang verschwunden.
+  
+keywords: "Sprache, Philosophie, Psychologie, Bibel, Christentum"
 
 class: man
 lang: american
@@ -15,6 +22,11 @@ bibliography:
 
 output: papaja::apa6_pdf
 ---
+
+```{r message = FALSE, warning = FALSE}
+require("papaja")
+apa_before_body() # Prepare document for rendering
+```
 
 
 # Methods
@@ -34,5 +46,5 @@ We report how we determined our sample size, all data exclusions (if any), all m
 
 # References
 ```{r}
-rrefs(file = "r-references.bib")
+papaja::rrefs(file = "r-references.bib")
 ```
