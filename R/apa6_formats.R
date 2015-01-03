@@ -52,6 +52,7 @@ apa6_pdf <- function(
 
   # Set options
   format$knitr$opts_chunk$echo <- FALSE
+  format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
 
   # Set hook to print default numbers
@@ -112,6 +113,7 @@ apa6_word <- function(
 
   # Set options
   format$knitr$opts_chunk$echo <- FALSE
+  format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
 
   # Set hook to print default numbers
