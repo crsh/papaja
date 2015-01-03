@@ -13,12 +13,10 @@ The example document also contains some basic instructions.
 Before using `papaja` to create an APA-manuscript, make sure the following software is installed on your computer:
 
 - [R](http://www.r-project.org/) (2.11.1 or later)
-  - The R-Package [`knitr`](http://cran.r-project.org/web/packages/knitr/index.html)
-  - The R-Package [`rmarkdown`](http://cran.r-project.org/web/packages/rmarkdown/index.html)
-- [RStudio](http://www.rstudio.com/) (0.98.932 or later)
+- [RStudio](http://www.rstudio.com/) (0.98.932 or later) is optional; if you don't use RStudio, you need to install [pandoc](http://johnmacfarlane.net/pandoc/) using the [instructions for your operating system](https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md)
 - A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, obviously, or [TeX Live](http://www.tug.org/texlive/) for Linux)
   - If you are running **Windows**, use MikTex if possible. Currently, pandoc and the Windows version of Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6). Make sure you install the *complete*---not the basic---version.
-  - If you are running **Ubuntu 14.04** you need a couple of Tex packages in addition to the already installed ones for the document class `apa6` to work:
+  - If you are running **Ubuntu 14.04** you need a couple of TeX packages in addition to the already installed ones for the document class `apa6` to work:
 
 ```S
 sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended texlive-fonts-extra texlive-humanities
@@ -43,7 +41,6 @@ The supplied functions `apa_stat()` and `apa_table()` facilitate reporting of re
 #### Using papaja without RStudio
 In addition to the above, you need to do the following to use `papaja` without RStudio:
 
-- Install [pandoc](http://johnmacfarlane.net/pandoc/) using the [instructions for your platform](https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md).
 - Install the `rmarkdown` package:
 
 ```S
