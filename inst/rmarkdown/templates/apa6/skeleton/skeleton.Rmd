@@ -3,14 +3,17 @@ title:
 shorttitle: 
 author: 
 affiliation: 
-note: null
-output: papaja::apa6_pdf
+note: 
 
 abstract: 
 
 class: man
 lang: american
 lineno: yes
+bibliography:
+  - r-references.bib
+
+output: papaja::apa6_pdf
 ---
 
 
@@ -31,5 +34,5 @@ We report how we determined our sample size, all data exclusions (if any), all m
 
 # References
 ```{r}
-# rrefs(file = "r-references.bib")
+rrefs(file = "r-references.bib")
 ```

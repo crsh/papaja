@@ -25,19 +25,19 @@
 #'    of freedom, are replaced with brackets.
 #' @examples
 #' t_stat <- t.test(iris$Sepal.Length, iris$Sepal.Width)
-#' apa.stat(t_stat)
+#' apa_stat(t_stat)
 #'
 #' cor_stat <- cor.test(iris$Sepal.Length, iris$Sepal.Width)
-#' apa.stat(cor_stat)
+#' apa_stat(cor_stat)
 #'
 #' iris_lm <- lm(Petal.Length ~ Sepal.Length + Sepal.Width, data = iris)
-#' apa.stat(summary(iris_lm), ci = confint(iris_lm))
+#' apa_stat(summary(iris_lm), ci = confint(iris_lm))
 #'
 #' iris_lm2 <- update(iris_lm, formula = . ~ + Sepal.Length:Sepal.Width)
-#' apa.stat(anova(iris_lm2, iris_lm))
+#' apa_stat(anova(iris_lm2, iris_lm))
 #' @export
 
-apa.stat <- function(
+apa_stat <- function(
   x
   , stat_name = NULL
   , n = NULL
@@ -54,18 +54,18 @@ apa.stat <- function(
   }
 
   if("htest" %in% class(x)) {
-    apa.stat <- apa_htest(x, op, cp, stat_name = stat_name, n = n)
+    apa_stat <- apa_htest(x, op, cp, stat_name = stat_name, n = n)
   } else if("summary.lm" %in% class(x)) {
-    apa.stat <- apa_lmsummary(x, op, cp, ci = ci, standardized = standardized)
+    apa_stat <- apa_lmsummary(x, op, cp, ci = ci, standardized = standardized)
   } else if("anova" %in% class(x)) {
     if(any(apply(x, 1, is.na))) { # Dirty hack
-      apa.stat <- apply(x[-1,], 1, make_f_test, op, cp)
+      apa_stat <- apply(x[-1,], 1, make_f_test, op, cp)
     }
   } else {
     stop("No method defined for object class", class(x), ".")
   }
 
-  apa.stat
+  apa_stat
 }
 
 
@@ -94,8 +94,8 @@ apa_htest <- function(x, op = "(", cp = ")", stat_name = stat_name, n = n) {
   p <- printp(x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
-  apa.stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
-  apa.stat
+  apa_stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
+  apa_stat
 }
 
 apa_lmsummary <- function(x, op = "(", cp = ")", ci = ci, standardized = standardized) {
@@ -107,7 +107,7 @@ apa_lmsummary <- function(x, op = "(", cp = ")", ci = ci, standardized = standar
   p_pos <- grep("Pr|p-value", colnames(coefs))
   if(standardized) stat_name <- "\\beta" else stat_name <- "b"
 
-  apa.stat <- apply(coefs, 1, function(y) {
+  apa_stat <- apply(coefs, 1, function(y) {
     p <- printp(y[p_pos])
     if(!grepl("<|>", p)) eq <- "= " else eq <- ""
     paste0("$", stat_name, " = ", printnum(y["Estimate"], gt1 = !standardized)
@@ -121,8 +121,8 @@ apa_lmsummary <- function(x, op = "(", cp = ")", ci = ci, standardized = standar
               , "$, $p ", eq, p, "$"
   )
   r2 <- paste0("$R^2 = ", printnum(x$r.squared, gt1 = FALSE), "$")
-  apa.stat <- c(apa.stat, `F-test` = f, `R2` = r2)
-  apa.stat
+  apa_stat <- c(apa_stat, `F-test` = f, `R2` = r2)
+  apa_stat
 }
 
 #############################

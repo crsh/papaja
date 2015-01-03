@@ -23,17 +23,17 @@
 #' @examples ...
 #' @export
 
-apa.table <- function(...) {
+apa_table <- function(...) {
   requireNamespace("knitr", quietly = TRUE)
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(output_format == "latex") {
-    apa.table.latex(...)
+    apa_table.latex(...)
   } else {
-    apa.table.word(...)
+    apa_table.word(...)
   }
 }
 
-apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added.colnames = NULL, ...) {
+apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added.colnames = NULL, ...) {
   if(landscape) table_env <- "sidewaystable" else table_env <- "table"
   cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
 
@@ -70,7 +70,7 @@ apa.table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
   cat("\\end{threeparttable}\n\\end{", table_env, "}", sep = "")
 }
 
-apa.table.word <- function(x, caption = NULL, note = NULL, added.colnames = NULL, ...) {
+apa_table.word <- function(x, caption = NULL, note = NULL, added.colnames = NULL, ...) {
   if(is.list(x) && !is.data.frame(x)) {
     tables_to_merge <- names(x)
     prep_table <- lapply(seq_along(x), function(i) {

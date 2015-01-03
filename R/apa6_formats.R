@@ -68,10 +68,10 @@ apa6_pdf <- function(
 }
 
 
-#' @describeIn apa6_pdf
+#' @describeIn apa6_pdf Format to create .docx-files. \code{class} parameter is ignored.
 #' @export
 
-apa6_docx <- function(
+apa6_word <- function(
   class = "man"
   , fig_caption = TRUE
   , pandoc_args = NULL
