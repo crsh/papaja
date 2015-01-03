@@ -23,7 +23,7 @@ apa_before_body <- function(x = "default") {
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
     # Only one call allowed while rendering
-    if(!exists("apa_lang", where = .GlobalEnv)) {
+    if(!exists("apa_lang" , envir = papaja:::apa_doc_env)) {
       create_apa_lang()
 
       # Hack MS Word output
@@ -36,10 +36,10 @@ apa_before_body <- function(x = "default") {
         cat(paste0(
           "\n\n\n", paste("#", apa_metadata$affiliation, collapse = "\n\n"),
           "\n\n\n# ", apa_metadata$note,
-          "\n\n\n# ", apa_lang$abstract,
+          "\n\n\n# ", apa_doc_env$apa_lang$abstract,
           "\n\n\n",
           apa_metadata$abstract,
-          "\n\n*", apa_lang$keywords, "* ", apa_metadata$keywords,
+          "\n\n*", apa_doc_env$apa_lang$keywords, "* ", apa_metadata$keywords,
           "\n\n\n# ", apa_metadata$title, "\n"
         )
         )
@@ -48,47 +48,4 @@ apa_before_body <- function(x = "default") {
   }
 
   create_apa_lang()
-}
-
-# Defines phrases used throughout the manuscript
-localize <- function(x) {
-  if(length(x) == 0) x <- "default"
-  switch(
-    x
-    , list( # Default
-      abstract = "Abstract"
-      , keywords = "Keywords:"
-      , table = "Table"
-      , figure = "Figure"
-      , note = "Note."
-    )
-    , german = list(
-      abstract = "Zusammenfassung"
-      , keywords = "Stichwörter:"
-      , table = "Tabelle"
-      , figure = "Abbildung"
-      , note = "Anmerkung."
-    )
-  )
-}
-
-create_apa_lang <- function() {
-  requireNamespace("rmarkdown", quietly = TRUE)
-
-  # Run only if document is being rendered
-  if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
-
-    # Only one call allowed while rendering
-    if(!exists("apa_lang", where = .GlobalEnv)) {
-
-      # Define document language and lock in global environment
-      apa_metadata <- rmarkdown::metadata
-      .GlobalEnv$apa_lang <- localize(apa_metadata$lang)
-      lockBinding("apa_lang", env = .GlobalEnv)
-    }
-  } else {
-    unlockBinding("apa_lang", env = .GlobalEnv)
-    .GlobalEnv$apa_lang <- localize(x)
-    lockBinding("apa_lang", env = .GlobalEnv)
-  }
 }
