@@ -56,17 +56,6 @@ apa6_pdf <- function(
   format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
 
-  # Set hook to print default numbers
-  inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/formatting-sweave-and-knitr-output-for-2-digits/
-    if (is.numeric(x)) {
-      res <- ifelse(
-        x == round(x)
-        , sprintf("%d", x)
-        , sprintf("%.2f", x)
-      )
-      paste(res, collapse = ", ")
-    } else if (is.character(x)) x
-  }
   format$knitr$knit_hooks$inline <- inline_numbers
   format
 }
@@ -118,17 +107,19 @@ apa6_word <- function(
   format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
 
-  # Set hook to print default numbers
-  inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/formatting-sweave-and-knitr-output-for-2-digits/
-    if (is.numeric(x)) {
-      res <- ifelse(
-        x == round(x)
-        , sprintf("%d", x)
-        , sprintf("%.2f", x)
-      )
-      paste(res, collapse = ", ")
-    } else if (is.character(x)) x
-  }
-  format$knitrknit_hooks$inline <- inline_numbers
+  format$knitr$knit_hooks$inline <- inline_numbers
   format
+}
+
+
+# Set hook to print default numbers
+inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/formatting-sweave-and-knitr-output-for-2-digits/
+  if (is.numeric(x)) {
+    res <- ifelse(
+      x == round(x)
+      , sprintf("%d", x)
+      , sprintf("%.2f", x)
+    )
+    paste(res, collapse = ", ")
+  } else if (is.character(x)) x
 }
