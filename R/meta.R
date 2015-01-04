@@ -9,7 +9,7 @@ create_apa_lang <- function() {
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
     # Only one call allowed while rendering
-    if(!exists("apa_lang", envir = papaja:::apa_doc_env)) {
+    if(!exists("apa_lang", envir = papaja:::apa_doc_env, inherits = FALSE)) {
 
       # Define document language and lock in global environment
       apa_metadata <- rmarkdown::metadata

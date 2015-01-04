@@ -1,5 +1,5 @@
 ---
-title: "Wider den Optozentrismus!""
+title: "Wider den Optozentrismus!"
 shorttitle: "Optozentrismus"
 author: "Ernst A. Doelle$^1$ & Theo Herrmann$^2$"
 affiliation: |
@@ -25,7 +25,7 @@ output: papaja::apa6_pdf
 
 ```{r message = FALSE, warning = FALSE}
 require("papaja")
-apa_before_body() # Prepare document for rendering
+apa_prepare_doc() # Prepare document for rendering
 ```
 
 
@@ -46,5 +46,5 @@ We report how we determined our sample size, all data exclusions (if any), all m
 
 # References
 ```{r}
-papaja::rrefs(file = "r-references.bib")
+rrefs(file = "r-references.bib")
 ```

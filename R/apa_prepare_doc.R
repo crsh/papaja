@@ -23,7 +23,7 @@ apa_prepare_doc <- function(x = "default") {
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
     # Only one call allowed while rendering
-    if(!exists("apa_lang" , envir = papaja:::apa_doc_env)) {
+    if(!exists("apa_lang" , envir = papaja:::apa_doc_env, inherits = FALSE)) {
       create_apa_lang()
 
       # Hack MS Word output
