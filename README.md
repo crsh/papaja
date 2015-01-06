@@ -3,6 +3,8 @@ papaja is a R-package in the making including a [RMarkdown](http://rmarkdown.rst
 
 Note, at this point `papaja` is in active development and should be considered an alpha release. If you come across any issues, please [open an issue](https://github.com/crsh/papaja/issues).
 
+If you are looking for other journal article templates, take a look at [the list below](#other-journal-templates).
+
 ## Examples
 Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf) and [.docx](https://raw.githubusercontent.com/crsh/papaja/master/example/example.docx). More examples to come.
 
@@ -59,3 +61,11 @@ rmarkdown::draft("mymanuscript.Rmd", template = "apa6_word", package = "papaja")
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 - When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/papaja/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. Try  `apa_table()`.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
+
+## Other journal templates
+Obiously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of other `rmarkdown`/`pandoc` packages and templates may be helpful:
+
+- [rticles](https://github.com/rstudio/rticles): The rticles package includes a set of R Markdown templates that enable authoring of R related journal and conference submissions.
+- [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
+
+If you know of other packages and templates, drop us a note, so we can add them here.
