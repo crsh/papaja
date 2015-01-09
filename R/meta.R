@@ -17,8 +17,10 @@ create_apa_lang <- function() {
       lockBinding("apa_lang", env = apa_doc_env)
     }
   } else {
-    unlockBinding("apa_lang", env = apa_doc_env)
-    .GlobalEnv$apa_lang <- localize(x)
+    if(exists("apa_lang", envir = papaja:::apa_doc_env, inherits = FALSE)) {
+      unlockBinding("apa_lang", env = apa_doc_env)
+    }
+    apa_doc_env$apa_lang <- localize(NULL)
     lockBinding("apa_lang", env = apa_doc_env)
   }
 }

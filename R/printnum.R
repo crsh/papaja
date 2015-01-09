@@ -29,11 +29,11 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1) {
     vprintnumber <- function(i, x) printnumber(x[i], digits = print_args[[1]][i], gt1 = print_args[[2]][i], zero = print_args[[3]][i])
   }
 
-  if(is.matrix(x)) { # | is.data.frame(x) ?
+  if(is.matrix(x) | is.data.frame(x)) {
     x_out <- apply(x, margin, printnum, digits = print_args[[1]], gt1 = print_args[[2]], zero = print_args[[3]]) # Inception!
     if(margin == 1) x_out <- t(x_out)
     colnames(x_out) <- colnames(x)
-  } else if(is.vector(x) & length(x) > 1) {
+  } else if(class(x) == "numeric" & length(x) > 1) {
     print_args <- lapply(print_args, rep, length = length(x)) # Recycle arguments
     x_out <- sapply(seq_along(x), vprintnumber, x)
   } else {
