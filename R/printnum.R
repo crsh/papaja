@@ -7,6 +7,7 @@
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
 #' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (= 1)
 #'    or columns (= 2).
+#' @na_string Character. String to print if \code{x} is \code{NA}.
 #' @seealso \code{\link{apply}}
 #' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
 #'    according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
@@ -23,42 +24,53 @@
 #' printp(0.0001)
 #' @export
 
-printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1) {
+printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_string = "") {
   if(length(x) > 1) {
     print_args <- list(digits, gt1, zero)
-    vprintnumber <- function(i, x) printnumber(x[i], digits = print_args[[1]][i], gt1 = print_args[[2]][i], zero = print_args[[3]][i])
+    vprintnumber <- function(i, x) printnumber(x[i], digits = print_args[[1]][i], gt1 = print_args[[2]][i], zero = print_args[[3]][i], na_string = na_string)
   }
 
   if(is.matrix(x) | is.data.frame(x)) {
-    x_out <- apply(x, margin, printnum, digits = print_args[[1]], gt1 = print_args[[2]], zero = print_args[[3]]) # Inception!
+    x_out <- apply(x, margin, printnum, digits = print_args[[1]], gt1 = print_args[[2]], zero = print_args[[3]], na_string = na_string) # Inception!
+
     if(margin == 1) x_out <- t(x_out)
-    colnames(x_out) <- colnames(x)
+    dimnames(x_out) <- dimnames(x)
+    if(is.data.frame(x)) x_out <- as.data.frame(x_out)
+
   } else if(is.numeric(x) & length(x) > 1) {
     print_args <- lapply(print_args, rep, length = length(x)) # Recycle arguments
     x_out <- sapply(seq_along(x), vprintnumber, x)
   } else {
-    x_out <- printnumber(x, digits, gt1, zero)
+    x_out <- printnumber(x, digits, gt1, zero, na_string = na_string)
   }
   x_out
 }
 
 
-printnumber <- function(x, digits, gt1, zero) {
-  if(is.na(x)) return("")
+printnumber <- function(x, digits, gt1, zero, na_string) {
+  if(!gt1 & x > 1) error("You specified gt1 = FALSE, but passed value(s) that exceed 1.")
+
+  if(is.na(x)) return(na_string)
   x_out <- round(x, digits) + 0 # No sign if x_out == 0
 
   if(sign(x_out) == -1) {
     xsign <- "-"
     lt <- "> "
+    gt <- "< "
   } else {
     xsign <- ""
     lt <- "< "
+    gt <- "> "
   }
 
   if(x_out == 0 & !zero) x_out <- paste0(lt, xsign, ".", paste0(rep(0, digits-1), collapse = ""), "1") # Too small to report
 
   if(!gt1) {
-    if(x_out %in% c(-1,1)) x_out <- paste0(lt, xsign, ".", paste0(rep(9, digits), collapse = "")) # Never report 1
+    if(x_out == 1) {
+      x_out <- paste0(gt, xsign, ".", paste0(rep(9, digits), collapse = "")) # Never report 1
+    } else if(x_out == -1) {
+      x_out <- paste0(lt, xsign, ".", paste0(rep(9, digits), collapse = "")) # Never report 1
+    }
 
     x_out <- formatC(x_out, format = "f", digits = digits, flag = "0") # Fill to desired number of digits
     x_out <- gsub("0\\.", "\\.", x_out)
@@ -72,7 +84,10 @@ printnumber <- function(x, digits, gt1, zero) {
 #' @describeIn printnum Convenience wrapper for \code{printnum} to print p-values with three decimal places.
 #' @export
 
-printp <- function(x, margin = 1) {
-  p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, margin = margin)
+printp <- function(x, na_string = "") {
+  if(any(sign(x) == -1)) error("P-values cannot be negative.")
+  if(any(sign(x) > 1)) error("P-values cannot be greater than 1.")
+
+  p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)
   p
 }
