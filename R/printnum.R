@@ -27,19 +27,35 @@
 printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_string = "") {
   if(length(x) > 1) {
     print_args <- list(digits, gt1, zero)
-    vprintnumber <- function(i, x) printnumber(x[i], digits = print_args[[1]][i], gt1 = print_args[[2]][i], zero = print_args[[3]][i], na_string = na_string)
+    vprintnumber <- function(i, x)
+      printnumber(
+        x[i]
+        , digits = print_args[[1]][i]
+        , gt1 = print_args[[2]][i]
+        , zero = print_args[[3]][i]
+        , na_string = na_string
+      )
   }
 
   if(is.matrix(x) | is.data.frame(x)) {
-    x_out <- apply(x, margin, printnum, digits = print_args[[1]], gt1 = print_args[[2]], zero = print_args[[3]], na_string = na_string) # Inception!
+    x_out <- apply(
+      x
+      , (3 - margin) # Paramters are applied according to margin
+      , printnum # Inception!
+      , digits = print_args[[1]]
+      , gt1 = print_args[[2]]
+      , zero = print_args[[3]]
+      , na_string = na_string
+    )
 
-    if(margin == 1) x_out <- t(x_out)
+    if(margin == 2) x_out <- t(x_out) # Reverse transposition caused by apply
     dimnames(x_out) <- dimnames(x)
     if(is.data.frame(x)) x_out <- as.data.frame(x_out)
 
   } else if(is.numeric(x) & length(x) > 1) {
     print_args <- lapply(print_args, rep, length = length(x)) # Recycle arguments
     x_out <- sapply(seq_along(x), vprintnumber, x)
+    names(x_out) <- names(x)
   } else {
     x_out <- printnumber(x, digits, gt1, zero, na_string = na_string)
   }
@@ -48,7 +64,7 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
 
 
 printnumber <- function(x, digits, gt1, zero, na_string) {
-  if(!gt1 & x > 1) error("You specified gt1 = FALSE, but passed value(s) that exceed 1.")
+  if(!gt1 & abs(x) > 1) stop("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
 
   if(is.na(x)) return(na_string)
   x_out <- round(x, digits) + 0 # No sign if x_out == 0
@@ -85,8 +101,8 @@ printnumber <- function(x, digits, gt1, zero, na_string) {
 #' @export
 
 printp <- function(x, na_string = "") {
-  if(any(sign(x) == -1)) error("P-values cannot be negative.")
-  if(any(sign(x) > 1)) error("P-values cannot be greater than 1.")
+  if(any(sign(x) == -1)) stop("P-values cannot be negative.")
+  if(any(sign(x) > 1)) stop("P-values cannot be greater than 1.")
 
   p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)
   p
