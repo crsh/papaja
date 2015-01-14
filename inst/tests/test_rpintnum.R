@@ -49,6 +49,8 @@ test_that(
 
     to_print[1] <- 0
     expect_that(printnum(to_print, zero = c(T, F, F)), is_identical_to(c("0.00", "9.00", "0.10", "1.00", "< .01")))
+
+    expect_that(printnum(c(1, 2, NA)), equals(c("1.00", "2.00", "")))
   }
 )
 
@@ -59,6 +61,7 @@ test_that(
     expect_that(printnum(to_print, gt1 = FALSE), throws_error())
     expect_that(printnum(as.data.frame(to_print)), throws_error())
 
+    # Matrix
     m_num <- matrix(rep(c(0.0001, 123, 0.1, -12), 2), ncol = 2)
     colnames(m_num) <- paste0("Col", 1:2)
     apa_num <- printnum(m_num)
@@ -79,6 +82,10 @@ test_that(
     colnames(m_correct) <- colnames(m_num)
     expect_that(apa_num, is_identical_to(m_correct))
 
+    expect_that(printnum(matrix(c(1, 2, NA, 4), ncol = 2)), is_identical_to(matrix(c("1.00", "2.00", "", "4.00"), ncol = 2)))
+
+
+    # Data.frame
     df_num <- as.data.frame(m_num)
     colnames(df_num) <- paste0("Col", 1:2)
     apa_num <- printnum(df_num)
@@ -98,6 +105,8 @@ test_that(
     df_correct <- as.data.frame(matrix(c("0.00", "123.000", "0.10", "-12.000", "0.00", "123.000", "0.10", "-12.000"), ncol = 2))
     colnames(df_correct) <- colnames(m_num)
     expect_that(apa_num, is_equivalent_to(df_correct))
+
+    expect_that(printnum(as.data.frame(matrix(c(1, 2, NA, 4), ncol = 2))), is_equivalent_to(as.data.frame(matrix(c("1.00", "2.00", "", "4.00"), ncol = 2))))
   }
 )
 
