@@ -25,6 +25,20 @@
 #' @export
 
 printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_string = "") {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+
+  validate.logical(gt1, "gt1")
+  validate.logical(zero, "zero")
+
+  validate.numeric(digits, "digits", type="integer")
+  validate.numeric.range(digits, "digits", lower=0, upper=Inf)
+
+  validate.character(na_string, "na_string")
+
+  validate.numeric(margin, "margin", type="integer")
+  validate.numeric.range(margin, "margin", lower=1, upper=2)
+
+
   if(length(x) > 1) {
     print_args <- list(digits, gt1, zero)
     vprintnumber <- function(i, x)
@@ -40,7 +54,7 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
   if(is.matrix(x) | is.data.frame(x)) {
     x_out <- apply(
       x
-      , (3 - margin) # Paramters are applied according to margin
+      , (3 - margin) # Parameters are applied according to margin
       , printnum # Inception!
       , digits = print_args[[1]]
       , gt1 = print_args[[2]]
