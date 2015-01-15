@@ -33,7 +33,6 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
   validate(margin, "margin", check.class="numeric", check.integer=TRUE, check.length=1, check.range=c(1,2))
   validate(na_string, "na_string", check.class="character", check.length=1)
 
-
   if(length(x) > 1) {
     print_args <- list(digits, gt1, zero)
     vprintnumber <- function(i, x)
