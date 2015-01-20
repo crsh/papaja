@@ -110,6 +110,39 @@ test_that(
   }
 )
 
+test_that(
+  "Input validation"
+  , {
+    expect_error(printnum(x=NULL), "The parameter 'x' is NULL.")
+
+    expect_error(printnum(1, digits=NULL), "The parameter 'digits' must be a single integer")
+    expect_error(printnum(1, digits=NA), "The parameter 'digits' is NA")
+    expect_error(printnum(1, digits="A"), "The parameter 'digits' must be a single integer")
+    expect_error(printnum(1, digits=1.1), "The parameter 'digits' must be a single integer")
+    expect_error(printnum(1, digits=1:2), "The parameter 'digits' must be a single integer")
+    expect_error(printnum(1, digits=Inf), "The parameter 'digits' must be a single integer")
+
+    expect_error(printnum(1, gt1=NULL), "The parameter 'gt1' must be a single logical value")
+    expect_error(printnum(1, gt1=NA), "The parameter 'gt1' is NA")
+    expect_error(printnum(1, gt1=1), "The parameter 'gt1' must be a single logical value")
+    expect_error(printnum(1, gt1="A"), "The parameter 'gt1' must be a single logical value")
+    expect_error(printnum(1, gt1=c(TRUE, FALSE)), "The parameter 'gt1' must be a single logical value")
+
+    expect_error(printnum(1, zero=NULL), "The parameter 'zero' must be a single logical value")
+    expect_error(printnum(1, zero=NA), "The parameter 'zero' is NA")
+    expect_error(printnum(1, zero=1), "The parameter 'zero' must be a single logical value")
+    expect_error(printnum(1, zero="A"), "The parameter 'zero' must be a single logical value")
+    expect_error(printnum(1, zero=c(TRUE, FALSE)), "The parameter 'zero' must be a single logical value")
+
+    expect_error(printnum(1, margin=NULL), "The parameter 'margin' must be a single integer")
+    expect_error(printnum(1, margin=NA), "The parameter 'margin' is NA")
+    expect_error(printnum(1, margin="A"), "The parameter 'margin' must be a single integer")
+    expect_error(printnum(1, margin=1.1), "The parameter 'margin' must be a single integer")
+    expect_error(printnum(1, margin=1:2), "The parameter 'margin' must be a single integer")
+    expect_error(printnum(1, margin=0), "The parameter 'margin' must be a single number between 1 and 2")
+    expect_error(printnum(1, margin=3), "The parameter 'margin' must be a single number between 1 and 2")
+  }
+)
 
 
 context("printp()")
