@@ -1,4 +1,3 @@
-
 validate <- function(x, name, check.class=NULL, check.integer=FALSE, check.NA=TRUE, check.infinite=TRUE, check.length=NULL, check.dim=NULL, check.range=NULL) {
   if(is.null(x)) stop(paste("The parameter '", name, "' is NULL.", sep=""))
 
