@@ -141,6 +141,11 @@ test_that(
     expect_error(printnum(1, margin=1:2), "The parameter 'margin' must be a single integer.")
     expect_error(printnum(1, margin=0), "The parameter 'margin' must be a single number between 1 and 2.")
     expect_error(printnum(1, margin=3), "The parameter 'margin' must be a single number between 1 and 2.")
+
+    expect_error(printnum(1, na_string=NULL), "The parameter 'na_string' must be a single character string.")
+    expect_error(printnum(1, na_string=NA), "The parameter 'na_string' must be a single character string.")
+    expect_error(printnum(1, na_string=letters[1:2]), "The parameter 'na_string' must be a single character string.")
+    expect_error(printnum(1, na_string=3), "The parameter 'na_string' must be a single character string.")
   }
 )
 
