@@ -231,3 +231,20 @@ test_that(
     expect_that(printp(as.data.frame(pvals)), throws_error())
   }
 )
+
+test_that(
+  "Input validation"
+  , {
+    expect_error(printp(NULL), "The parameter 'x' must be a single number.")
+    expect_error(printp(NA), "The parameter 'x' is NA.")
+    expect_error(printp("A"), "The parameter 'x' must be a single number.")
+    expect_error(printp(c(0.2, 0.3)), "The parameter 'x' must be a single number.")
+    expect_error(printp(1.01), "The parameter 'x' must be a single number between 0 and 1.")
+    expect_error(printp(-0.01), "The parameter 'x' must be a single number between 0 and 1.")
+
+    expect_error(printp(1, na_string=NULL), "The parameter 'na_string' must be a single character string.")
+    expect_error(printp(1, na_string=NA), "The parameter 'na_string' is NA.")
+    expect_error(printp(1, na_string=letters[1:2]), "The parameter 'na_string' must be a single character string.")
+    expect_error(printp(1, na_string=3), "The parameter 'na_string' must be a single character string.")
+  }
+)
