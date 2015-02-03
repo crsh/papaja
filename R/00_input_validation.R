@@ -1,18 +1,21 @@
-validate.numeric <- function(x, name, type="number") {
-  if(!is.null(x) && any(is.na(x))) stop(paste("The parameter '", name, "' is NA.", sep=""))
-  if(!is(x, "numeric") || any(is.infinite(x)) || length(x) != 1 || (type == "integer" && x %% 1 != 0)) stop(paste("The parameter '", name, "' must be a single ", type, ".", sep=""))
-}
+validate <- function(x, name, check.class=NULL, check.integer=FALSE, check.NA=TRUE, check.infinite=TRUE, check.length=NULL, check.dim=NULL, check.range=NULL) {
+  if(is.null(x)) stop(paste("The parameter '", name, "' is NULL.", sep=""))
 
-validate.character <- function(x, name, vector.length=1) {
-  if(!is.null(x) && any(is.na(x))) stop(paste("The parameter '", name, "' is NA.", sep=""))
-  if(!is(x, "character") || !(length(x) %in% vector.length)) stop(paste("The parameter '", name, "' must be a ", ifelse(length(vector.length) == 1 && vector.length == 1, "single", paste0("vector of ", paste(vector.length, collapse=" or "))), " character string", if(any(vector.length > 1)) "s", ".", sep=""))
-}
+  if(!is.null(check.dim) && !all(dim(x) == check.dim)) stop(paste("The parameter '", name, "' must have dimensions " , paste(check.dim, collapse=""), ".", sep=""))
+  if(!is.null(check.length) && length(x) != check.length) stop(paste("The parameter '", name, "' must be of length ", check.length, ".", sep=""))
 
-validate.numeric.range <- function(x, name, lower, upper) {
-  if(x < lower || x > upper) stop(paste("The parameter '", name, "' must be a single number between ", lower, " and ", upper, ".", sep=""))
-}
+  if(is.na(x)) {
+    if(check.NA) stop(paste("The parameter '", name, "' is NA.", sep=""))
+    else return(TRUE)
+  }
 
-validate.logical <- function(x, name) {
-  if(!is.null(x) && any(is.na(x))) stop(paste("The parameter '", name, "' is NA.", sep=""))
-  if(!is(x, "logical") || length(x) != 1) stop(paste("The parameter '", name, "' must be a single logical value.", sep=""))
+  if(check.infinite && "numeric" %in% is(x) && is.infinite(x)) stop(paste("The parameter '", name, "' must be finite.", sep=""))
+  if(check.integer && "numeric" %in% is(x) && x %% 1 != 0) stop(paste("The parameter '", name, "' must be an integer.", sep=""))
+
+  for(x.class in check.class) {
+    if(!is(x, x.class)) stop(paste("The parameter '", name, "' must be of class '", x.class, "'.", sep=""))
+  }
+
+  if(!is.null(check.range) && any(x < check.range[1] | x > check.range[2])) stop(paste("The parameter '", name, "' must be between ", check.range[1], " and ", check.range[2], ".", sep=""))
+  TRUE
 }

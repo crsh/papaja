@@ -27,16 +27,11 @@
 printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_string = "") {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
 
-  validate.logical(gt1, "gt1")
-  validate.logical(zero, "zero")
-
-  validate.numeric(digits, "digits", type="integer")
-  validate.numeric.range(digits, "digits", lower=0, upper=Inf)
-
-  validate.character(na_string, "na_string")
-
-  validate.numeric(margin, "margin", type="integer")
-  validate.numeric.range(margin, "margin", lower=1, upper=2)
+  validate(digits, "digits", check.class="numeric", check.integer=TRUE, check.length=1, check.range=c(0,Inf))
+  validate(gt1, "gt1", check.class="logical", check.length=1)
+  validate(zero, "zero", check.class="logical", check.length=1)
+  validate(margin, "margin", check.class="numeric", check.integer=TRUE, check.length=1, check.range=c(1,2))
+  validate(na_string, "na_string", check.class="character", check.length=1)
 
 
   if(length(x) > 1) {
@@ -78,18 +73,14 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
 
 
 printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, na_string = "") {
-  if(any(is.na(x))) return(na_string)
-  validate.numeric(x, "x")
+  validate(x, "x", check.class="numeric", check.NA=FALSE, check.length=1)
+  if(is.na(x)) return(na_string)
 
-  validate.logical(gt1, "gt1")
+  validate(gt1, "gt1", check.class="logical", check.length=1)
+  validate(zero, "zero", check.class="logical", check.length=1)
+  validate(digits, "digits", check.class="numeric", check.integer=TRUE, check.length=1, check.range=c(0,Inf))
+  validate(na_string, "na_string", check.class="character", check.length=1)
   if(!gt1 & abs(x) > 1) stop("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
-
-  validate.logical(zero, "zero")
-
-  validate.numeric(digits, "digits", type="integer")
-  validate.numeric.range(digits, "digits", lower=0, upper=Inf)
-
-  validate.character(na_string, "na_string")
 
 
   x_out <- round(x, digits) + 0 # No sign if x_out == 0
@@ -126,11 +117,8 @@ printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, na_string = "") 
 #' @export
 
 printp <- function(x, na_string = "") {
-  validate.numeric(x, "x")
-  validate.numeric.range(x, "x", 0, 1)
-
-  validate.character(na_string, "na_string")
-
+  validate(x, "x", check.class="numeric", check.range=c(0,1))
+  validate(na_string, "na_string", check.class="character", check.length=1)
 
   p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)
   p
