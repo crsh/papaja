@@ -78,8 +78,19 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
 
 
 printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, na_string = "") {
-  if(is.na(x)) return(na_string)
+  if(any(is.na(x))) return(na_string)
+  validate.numeric(x, "x")
+
+  validate.logical(gt1, "gt1")
   if(!gt1 & abs(x) > 1) stop("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
+
+  validate.logical(zero, "zero")
+
+  validate.numeric(digits, "digits", type="integer")
+  validate.numeric.range(digits, "digits", lower=0, upper=Inf)
+
+  validate.character(na_string, "na_string")
+
 
   x_out <- round(x, digits) + 0 # No sign if x_out == 0
 
