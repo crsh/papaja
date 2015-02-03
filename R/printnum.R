@@ -126,8 +126,11 @@ printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, na_string = "") 
 #' @export
 
 printp <- function(x, na_string = "") {
-  if(any(sign(x) == -1)) stop("P-values cannot be negative.")
-  if(any(sign(x) > 1)) stop("P-values cannot be greater than 1.")
+  validate.numeric(x, "x")
+  validate.numeric.range(x, "x", 0, 1)
+
+  validate.character(na_string, "na_string")
+
 
   p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)
   p
