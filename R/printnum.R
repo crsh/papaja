@@ -7,7 +7,7 @@
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
 #' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (= 1)
 #'    or columns (= 2).
-#' @na_string Character. String to print if \code{x} is \code{NA}.
+#' @param na_string Character. String to print if \code{x} is \code{NA}.
 #' @seealso \code{\link{apply}}
 #' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
 #'    according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
