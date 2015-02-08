@@ -9,7 +9,8 @@ Description: ...
 Depends:
   R (>= 2.11.1),
   rmarkdown (>= 0.3.10),
-  knitr (>= 1.8)
+  knitr (>= 1.8),
+  dplyr
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/crsh/papaja
