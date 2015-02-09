@@ -46,6 +46,7 @@ apa6_pdf <- function(
     format <- rmarkdown::pdf_document(
       template = template
       , fig_caption = fig_caption
+      , keep.tex = keep.tex
       , pandoc_args = pandoc_args
       , ...
     )
