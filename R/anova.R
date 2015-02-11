@@ -129,7 +129,6 @@ arrange_summary.aov<-function(aov){
   x<-arrange_aov(aov[[1]])
 }
 
-
 #load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
 #library(afex)
 #library(broom)
