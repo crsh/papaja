@@ -129,7 +129,6 @@ arrange_summary.aov<-function(aov){
   x<-arrange_aov(aov[[1]])
 }
 
-
 #load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
 #library(afex)
 #library(broom)
@@ -143,4 +142,3 @@ arrange_summary.aov<-function(aov){
 #class(object)
 
 #object<-Anova(ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm"),type=3)
-
