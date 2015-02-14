@@ -13,9 +13,14 @@
 #' @examples ...
 #' @export
 
-rrefs <- function(file, prefix = "R-", ...) {
+r_refs <- function(file, prefix = "R-", ...) {
   requireNamespace("knitr", quietly = TRUE)
+
+  validate(file, "file", check.class = "character", check.NA = TRUE, check.length = 1)
+  validate(prefix, "prefix", check.class = "character", check.NA = TRUE, check.length = 1)
+
   package_list <- c("base", names(sessionInfo()$otherPkgs))
+
   if(file.exists(file)) {
     bib_file <- readLines(file)
     missing_packages <- sapply(package_list, function(x) !any(grep(paste0(prefix, x), bib_file)))
