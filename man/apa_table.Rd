@@ -22,7 +22,7 @@ Word documents.}
 \item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format. Ignored in MS Word
 documents.}
 
-\item{added.colnames}{Character. Vector of names for first unnamed columns. See details.}
+\item{added_colnames}{Character. Vector of names for first unnamed columns. See details.}
 }
 \description{
 Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
@@ -33,9 +33,12 @@ If \code{x} is a \code{list}, all list elements are merged by columns into a sin
    the first column giving the names of elements.
 
    If the first column(s) of the table are unnamed, the names for these columns can be supplied using the
-   \code{added.colnames} parameter. This is the case when an object has rownames (unless
+   \code{added_colnames} parameter. This is the case when an object has rownames (unless
    \code{row.names = FALSE} is passed to \code{knitr::kable}) and when elements of a \code{list} are
    merged.
+
+   The syntax of the ouput is determined automatically by the rendered document type. If no rendering is
+   in progress the output default is LaTeX.
 }
 \examples{
 ...

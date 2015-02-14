@@ -4,7 +4,7 @@
 \alias{apa_prepare_doc}
 \title{Prepare APA document}
 \usage{
-apa_prepare_doc(x = "default")
+apa_prepare_doc(lang = "english")
 }
 \arguments{
 \item{x}{Character. Document language to set. Ignored and replaced by yaml-header parameter \code{lang}

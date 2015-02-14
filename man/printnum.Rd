@@ -5,9 +5,10 @@
 \alias{printp}
 \title{Prepare numeric values for printing}
 \usage{
-printnum(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1)
+printnum(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1,
+  na_string = "")
 
-printp(x, margin = 1)
+printp(x, na_string = "")
 }
 \arguments{
 \item{x}{Numeric. Can be either a single value, vector, or matrix.}
@@ -20,6 +21,8 @@ printp(x, margin = 1)
 
 \item{margin}{Integer. If \code{x} is a matrix, the function is applied either across rows (= 1)
 or columns (= 2).}
+
+\item{na_string}{Character. String to print if \code{x} is \code{NA}.}
 }
 \description{
 Formats numeric values according to APA guidelines (6th edition) for reporting.

@@ -2,7 +2,7 @@
 apa_doc_env <- new.env()
 
 # Create localization object in apa_doc_env
-create_apa_lang <- function() {
+create_apa_lang <- function(lang) {
   requireNamespace("rmarkdown", quietly = TRUE)
 
   # Run only if document is being rendered
@@ -20,16 +20,15 @@ create_apa_lang <- function() {
     if(exists("apa_lang", envir = papaja:::apa_doc_env, inherits = FALSE)) {
       unlockBinding("apa_lang", env = apa_doc_env)
     }
-    apa_doc_env$apa_lang <- localize(NULL)
+    apa_doc_env$apa_lang <- localize(lang)
     lockBinding("apa_lang", env = apa_doc_env)
   }
 }
 
 # Defines phrases used throughout the manuscript
-localize <- function(x) {
-  if(length(x) == 0) x <- "default"
+localize <- function(lang) {
   switch(
-    x
+    lang
     , list( # Default
       abstract = "Abstract"
       , keywords = "Keywords:"
