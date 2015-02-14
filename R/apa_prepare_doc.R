@@ -16,15 +16,17 @@
 #' @examples apa_prepare_doc()
 #' @export
 
-apa_prepare_doc <- function(x = "default") {
+apa_prepare_doc <- function(lang = "american") {
   requireNamespace("rmarkdown", quietly = TRUE)
+
+  validate(lang, "lang", check.class = "character", check.NA = TRUE, check.length = 1)
 
   # Run only if document is being rendered
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
     # Only one call allowed while rendering
     if(!exists("apa_lang" , envir = papaja:::apa_doc_env, inherits = FALSE)) {
-      create_apa_lang()
+      create_apa_lang(lang)
 
       # Hack MS Word output
       requireNamespace("knitr", quietly = TRUE)
@@ -55,5 +57,5 @@ apa_prepare_doc <- function(x = "default") {
     } else warning("Only one call to apa_before_body() can be executed.")
   }
 
-  create_apa_lang()
+  create_apa_lang(lang)
 }

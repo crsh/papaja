@@ -6,7 +6,7 @@
 \title{APA article (6th edition)}
 \usage{
 apa6_pdf(class = "man", fig_caption = TRUE, pandoc_args = NULL,
-  keep.tex = TRUE, ...)
+  keep_tex = TRUE, ...)
 
 apa6_word(class = "man", fig_caption = TRUE, pandoc_args = NULL, ...)
 }
