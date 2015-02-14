@@ -17,7 +17,7 @@ apa6_pdf <- function(
   class = "man"
   , fig_caption = TRUE
   , pandoc_args = NULL
-  , keep.tex = TRUE
+  , keep_tex = TRUE
   , ...
 ) {
 
@@ -46,7 +46,7 @@ apa6_pdf <- function(
     format <- rmarkdown::pdf_document(
       template = template
       , fig_caption = fig_caption
-      , keep.tex = keep.tex
+      , keep_tex = keep_tex
       , pandoc_args = pandoc_args
       , ...
     )
