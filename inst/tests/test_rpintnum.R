@@ -1,5 +1,6 @@
 library("testthat")
 source("../../R/printnum.R")
+source("../../R/utils.R")
 
 context("printnum()")
 
