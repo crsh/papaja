@@ -46,5 +46,5 @@ We report how we determined our sample size, all data exclusions (if any), all m
 
 # References
 ```{r}
-rrefs(file = "r-references.bib")
+r_refs(file = "r-references.bib")
 ```

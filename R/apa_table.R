@@ -38,6 +38,12 @@ apa_table <- function(...) {
 }
 
 apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added_colnames = NULL, ...) {
+  if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
+  if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
+  validate(placement, check_class = "character", check_length = 1)
+  validate(landscape, check_class = "logical")
+  if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
+
   if(landscape) table_env <- "sidewaystable" else table_env <- "table"
   cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
 
@@ -75,6 +81,10 @@ apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
 }
 
 apa_table.word <- function(x, caption = NULL, note = NULL, added_colnames = NULL, ...) {
+  if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
+  if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
+  if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
+
   if(is.list(x) && !is.data.frame(x)) {
     tables_to_merge <- names(x)
     prep_table <- lapply(seq_along(x), function(i) {

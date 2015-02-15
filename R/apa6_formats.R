@@ -21,6 +21,11 @@ apa6_pdf <- function(
   , ...
 ) {
 
+  validate(class, check_class = "character", check_length = 1)
+  if(!(class %in% c("man", "doc", "jou"))) stop("Document class must be either 'man', 'doc', or 'jou'.")
+  validate(fig_caption, check_class = "logical", check_length = 1)
+  validate(keep_tex, check_class = "character", check_length = 1)
+
   requireNamespace("knitr", quietly = TRUE)
   requireNamespace("rmarkdown", quietly = TRUE)
 
