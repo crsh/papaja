@@ -11,9 +11,7 @@
 #'    according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
 #'    exceeds length of the parameter vectors. If \code{x} is a matrix, the vectors specify the formating
 #'    of either rows or columns according to the value of \code{margin}.
-#' @examples
-#' printnum(1/3)
-#' @export
+#' @examples ...
 
 .aggregate<-function(data,factors,dv,fun,na.rm=FALSE){
 

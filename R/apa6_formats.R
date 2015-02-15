@@ -26,9 +26,6 @@ apa6_pdf <- function(
   validate(fig_caption, check_class = "logical", check_length = 1)
   validate(keep_tex, check_class = "character", check_length = 1)
 
-  requireNamespace("knitr", quietly = TRUE)
-  requireNamespace("rmarkdown", quietly = TRUE)
-
   # Get CSL template for APA6 citations
   csl_template <- system.file(
     "rmarkdown", "templates", "apa6", "resources"
@@ -76,9 +73,6 @@ apa6_word <- function(
   , pandoc_args = NULL
   , ...
 ) {
-
-  requireNamespace("knitr", quietly = TRUE)
-  requireNamespace("rmarkdown", quietly = TRUE)
 
   # Get CSL template for APA6 citations
   csl_template <- system.file(

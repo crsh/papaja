@@ -17,9 +17,6 @@
 #' @export
 
 apa_prepare_doc <- function() {
-  requireNamespace("rmarkdown", quietly = TRUE)
-  requireNamespace("knitr", quietly = TRUE)
-
   # Run only if document is being rendered
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
     apa_metadata <- rmarkdown::metadata

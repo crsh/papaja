@@ -27,7 +27,6 @@
 #' @export
 
 apa_table <- function(...) {
-  requireNamespace("knitr", quietly = TRUE)
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(length(output_format) == 0) output_format <- "latex"
   if(output_format == "latex") {
@@ -38,6 +37,7 @@ apa_table <- function(...) {
 }
 
 apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added_colnames = NULL, ...) {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   validate(placement, check_class = "character", check_length = 1)
@@ -81,6 +81,7 @@ apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
 }
 
 apa_table.word <- function(x, caption = NULL, note = NULL, added_colnames = NULL, ...) {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")

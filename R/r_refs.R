@@ -14,8 +14,6 @@
 #' @export
 
 r_refs <- function(file, prefix = "R-", ...) {
-  requireNamespace("knitr", quietly = TRUE)
-
   validate(file, check_class = "character", check_NA = TRUE, check_length = 1)
   validate(prefix, check_class = "character", check_NA = TRUE, check_length = 1)
 
