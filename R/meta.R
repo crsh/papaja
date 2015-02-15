@@ -3,8 +3,6 @@ apa_doc_env <- new.env()
 
 # Create localization object in apa_doc_env
 create_apa_lang <- function(lang) {
-  requireNamespace("rmarkdown", quietly = TRUE)
-
   # Run only if document is being rendered
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
