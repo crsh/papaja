@@ -45,6 +45,18 @@ apa_stat <- function(
   , ci = NULL
   , in_paren = FALSE
 ) {
+
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+
+  if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
+  if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf))
+  validate(standardized, check_class = "logical")
+  if(!is.null(ci)) {
+    validate(ci, check_class = "matrix")
+    sapply(confint(lm(dist ~ speed, cars)), validate, check_class = "numeric")
+  }
+  validate(in_paren, check_class = "logical")
+
   # Add alternative method if(is.list(x)) using list names as parameters and values as statistics
 
   if(in_paren) {

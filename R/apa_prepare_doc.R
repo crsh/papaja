@@ -16,26 +16,22 @@
 #' @examples apa_prepare_doc()
 #' @export
 
-apa_prepare_doc <- function(lang = "american") {
+apa_prepare_doc <- function() {
   requireNamespace("rmarkdown", quietly = TRUE)
-
-  validate(lang, "lang", check.class = "character", check.NA = TRUE, check.length = 1)
+  requireNamespace("knitr", quietly = TRUE)
 
   # Run only if document is being rendered
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
+    apa_metadata <- rmarkdown::metadata
 
     # Only one call allowed while rendering
     if(!exists("apa_lang" , envir = papaja:::apa_doc_env, inherits = FALSE)) {
-      create_apa_lang(lang)
+      create_apa_lang(apa_metadata$lang)
 
       # Hack MS Word output
-      requireNamespace("knitr", quietly = TRUE)
       output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
       if(output_format == "word") {
         # Create title page and abstract
-        requireNamespace("rmarkdown", quietly = TRUE)
-        apa_metadata <- rmarkdown::metadata
-
         # Hack together tables for centered elements -.-
         padding <- paste0(rep("&nbsp;", 148), collapse = "") # Add spacer to last row
         affiliations <- paste0(apa_metadata$affiliation, padding)
@@ -57,5 +53,5 @@ apa_prepare_doc <- function(lang = "american") {
     } else warning("Only one call to apa_before_body() can be executed.")
   }
 
-  create_apa_lang(lang)
+  create_apa_lang("american")
 }

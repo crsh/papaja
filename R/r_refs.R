@@ -10,14 +10,14 @@
 #'    at the specified location, the function reads the file and appends missing citation information to the
 #'    end of the file. It is recommended to create a new .bib-file dedicated to R-related references and
 #'    adding it to the \code{bibliography} parameter in the document's yaml-header.
-#' @examples ...
+#' @examples r_refs("test_bibliography.bib")
 #' @export
 
 r_refs <- function(file, prefix = "R-", ...) {
   requireNamespace("knitr", quietly = TRUE)
 
-  validate(file, "file", check.class = "character", check.NA = TRUE, check.length = 1)
-  validate(prefix, "prefix", check.class = "character", check.NA = TRUE, check.length = 1)
+  validate(file, check_class = "character", check_NA = TRUE, check_length = 1)
+  validate(prefix, check_class = "character", check_NA = TRUE, check_length = 1)
 
   package_list <- c("base", names(sessionInfo()$otherPkgs))
 

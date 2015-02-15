@@ -12,8 +12,7 @@ create_apa_lang <- function(lang) {
     if(!exists("apa_lang", envir = papaja:::apa_doc_env, inherits = FALSE)) {
 
       # Define document language and lock in global environment
-      apa_metadata <- rmarkdown::metadata
-      assign("apa_lang", localize(apa_metadata$lang), envir = apa_doc_env)
+      assign("apa_lang", localize(lang), envir = apa_doc_env)
       lockBinding("apa_lang", env = apa_doc_env)
     }
   } else {
