@@ -13,7 +13,7 @@ Imports:
   rmarkdown (>= 0.3.10),
   knitr (>= 1.8)
 Suggests:
-  dplyr
+  dplyr,
   testthat
 License: MIT + file LICENSE
 LazyData: true
