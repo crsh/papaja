@@ -14,6 +14,7 @@ keywords: APA, knitr, R, RMarkdown, papaja
 
 class: man
 lang: american
+figsintext: yes
 lineno: yes
 bibliography: references.bib
 
@@ -71,6 +72,7 @@ Table formatting is somewhat limited in Word documents due to missing functional
 
 As required by the APA guidelines, in manuscripts tables are pushed to the final pages of the document when creating a PDF.
 Again, this is not the case in Word documents due to limited pandoc functionality.
+To place figures and tables in your text instead, set the `figsintext` parameter in the document header to `yes` or `true` as I have done in this document.
 
 ```{r results = 'asis', warning = FALSE, message = FALSE, echo = TRUE}
 my_table <- apply(cars, 2, function(x) round(
@@ -96,7 +98,7 @@ You can also embed plots, for example:
 plot(cars)
 ```
 
-Again, as required by the APA guidelines, figures are pushed to the final pages of the document.
+Again, as required by the APA guidelines, figures are pushed to the final pages of the document unless you set `figsintext` to `yes`.
 
 ### Report statistical analyses
 `apa_stat()` will help you report the results of your statistical analyses.
@@ -130,10 +132,16 @@ Citing without parentheses is, of course, also possible:
 
 `@bauer_2014` &#8594; @bauer_2014.
 
-The citation style is set in the header of this document with the `csl` parameter. The relevant references will, of course, be added to the documents references automatically. In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the document header. See the [RMarkdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
+The citation style is set in the header of this document with the `csl` parameter.
+The relevant references will, of course, be added to the documents references automatically.
+In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the document header.
+See the [RMarkdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
 
 ## Document options
-This text is set as manuscript. If you want a thesis-like document you can change the `classoption` in the document header from `man` to `doc`. You can also preview a polished journal typesetting by changing the `classoption` to `jou`.
+This text is set as manuscript.
+If you want a thesis-like document you can change the `class` in the document header from `man` to `doc`.
+You can also preview a polished journal typesetting by changing the `class` to `jou`.
+Refer to the `apa6` document class [documentation](ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf) for further class options, such as paper size or draft watermarks.
 
 When creating PDF documents, line numbering can be activated by setting the `lineno` argument in the header of this document to true. This option has no effect on Word documents.
 

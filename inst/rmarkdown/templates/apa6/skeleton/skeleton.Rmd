@@ -16,6 +16,7 @@ keywords: "Sprache, Philosophie, Psychologie, Bibel, Christentum"
 
 class: man
 lang: american
+figsintext: no
 lineno: yes
 bibliography:
   - r-references.bib
