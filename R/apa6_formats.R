@@ -58,8 +58,11 @@ apa6_pdf <- function(
   format$knitr$opts_chunk$message <- FALSE
   format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
-
   format$knitr$knit_hooks$inline <- inline_numbers
+
+  format$knitr$opts_chunk$dev <- c("pdf", "svg", "png", "tiff")
+  format$knitr$opts_chunk$dpi <- 300
+  format$clean_supporting <- FALSE # Always keep images files
   format
 }
 
@@ -106,8 +109,11 @@ apa6_word <- function(
   format$knitr$opts_chunk$message <- FALSE
   format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
-
   format$knitr$knit_hooks$inline <- inline_numbers
+
+  format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
+  format$knitr$opts_chunk$dpi <- 300
+  format$clean_supporting <- FALSE # Always keep images files
   format
 }
 
