@@ -1,12 +1,12 @@
 Package: papaja
-Title: Produces complete APA manscripts (PDF and Word documents) from RMarkdown-files
+Title: APA manscripts from RMarkdown
 Version: 0.0.1
 Authors@R: c(
     person("Frederik", "Aust", email = "frederik.aust@uni-koeln.de", role = c("aut", "cre"))
     , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("ctb"))
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
   )
-Description: ...
+Description: Papaja provides document foramts and helper functions to produces complete APA manscripts from RMarkdown-files (PDF and Word documents).
 Depends:
   R (>= 2.11.1)
 Imports:
@@ -15,6 +15,8 @@ Imports:
 Suggests:
   dplyr,
   testthat
+Enhances:
+  rmarkdown
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/crsh/papaja
