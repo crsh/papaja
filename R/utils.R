@@ -83,8 +83,10 @@ convert_stat_name <- function(x) {
     , cor = "r"
     , rho = "r_{\\mathrm{s}}"
     , tau = "r_{\\uptau}"
-    , `mean of the differences` = "M_d"
     , `mean of x` = "M"
+    , `(pseudo)median` = "Mdn^*"
+    , `mean of the differences` = "M_d"
+    , `difference in location` = "Mdn_d"
     , `bartlett's k^2` = "K^2"
   )
 
@@ -106,7 +108,6 @@ convert_stat_name <- function(x) {
 #' @seealso \code{\link{printnum}}
 #'
 #' @examples
-
 
 make_confint <- function(
   x

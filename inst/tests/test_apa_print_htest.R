@@ -48,7 +48,53 @@ test_that(
 )
 
 test_that(
-  "t-Test for correlations"
+  "Wilcoxon tests"
+  , {
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep)
+    wilcox_test_output <- apa_print(wilcox_test)
+
+    expect_that(wilcox_test_output, is_a("list"))
+    expect_that(length(wilcox_test_output), equals(1))
+    expect_that(names(wilcox_test_output), equals("stat"))
+    expect_that(wilcox_test_output$stat, is_a("character"))
+
+    expect_that(wilcox_test_output$stat, equals("$W = 25.50$, $p = .069$"))
+
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep, conf.int = TRUE)
+    wilcox_test_output <- apa_print(wilcox_test)
+
+    expect_that(length(wilcox_test_output), equals(3))
+    expect_that(names(wilcox_test_output), equals(c("stat", "est", "full")))
+    expect_that(wilcox_test_output$stat, is_a("character"))
+    expect_that(wilcox_test_output$est, is_a("character"))
+    expect_that(wilcox_test_output$full, is_a("character"))
+
+    expect_that(wilcox_test_output$stat, equals("$W = 25.50$, $p = .069$"))
+    expect_that(wilcox_test_output$est, equals("$Mdn_d = -1.35$, 95% CI $[-3.60$, $0.10]$"))
+    expect_that(wilcox_test_output$full, equals("$Mdn_d = -1.35$, 95% CI $[-3.60$, $0.10]$, $W = 25.50$, $p = .069$"))
+
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE)
+    wilcox_test_output <- apa_print(wilcox_test)
+
+    expect_that(wilcox_test_output$stat, equals("$V = 0.00$, $p = .009$"))
+
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, conf.int = TRUE)
+    wilcox_test_output <- apa_print(wilcox_test)
+    expect_that(wilcox_test_output$stat, equals("$V = 0.00$, $p = .009$"))
+    expect_that(wilcox_test_output$est, equals("$Mdn^* = -1.40$, 95% CI $[-2.95$, $-1.05]$"))
+    expect_that(wilcox_test_output$full, equals("$Mdn^* = -1.40$, 95% CI $[-2.95$, $-1.05]$, $V = 0.00$, $p = .009$"))
+
+    wilcox_test <- wilcox.test(sleep$extra, mu = 0, conf.int = TRUE)
+    wilcox_test_output <- apa_print(wilcox_test)
+
+    expect_that(wilcox_test_output$stat, equals("$V = 162.50$, $p = .007$"))
+    expect_that(wilcox_test_output$est, equals("$Mdn^* = 1.60$, 95% CI $[0.45$, $2.65]$"))
+    expect_that(wilcox_test_output$full, equals("$Mdn^* = 1.60$, 95% CI $[0.45$, $2.65]$, $V = 162.50$, $p = .007$"))
+  }
+)
+
+test_that(
+  "Tests for correlations"
   , {
     x <- c(44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1)
     y <- c( 2.6,  3.1,  2.5,  5.0,  3.6,  4.0,  5.2,  2.8,  3.8)
