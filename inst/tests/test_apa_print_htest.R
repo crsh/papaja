@@ -38,6 +38,12 @@ test_that(
     expect_that(t_test_output$stat, equals("$t(9) = -4.06$, $p = .003$"))
     expect_that(t_test_output$est, equals("$M_d = -1.58$, 95% CI $[-2.46$, $-0.70]$"))
     expect_that(t_test_output$full, equals("$M_d = -1.58$, 95% CI $[-2.46$, $-0.70]$, $t(9) = -4.06$, $p = .003$"))
+
+    t_test <- t.test(sleep$extra, mu = 0)
+    t_test_output <- apa_print(t_test)
+    expect_that(t_test_output$stat, equals("$t(19) = 3.41$, $p = .003$"))
+    expect_that(t_test_output$est, equals("$M = 1.54$, 95% CI $[0.60$, $2.48]$"))
+    expect_that(t_test_output$full, equals("$M = 1.54$, 95% CI $[0.60$, $2.48]$, $t(19) = 3.41$, $p = .003$"))
   }
 )
 
@@ -99,14 +105,17 @@ test_that(
 
     prop_test_output <- apa_print(prop_test, n = sum(patients))
 
-    expect_that(prop_test_output, is_a("character"))
-    expect_that(prop_test_output, equals("$\\Chi^2(3, n = 397) = 12.60$, $p = .006$"))
+    expect_that(prop_test_output, is_a("list"))
+    expect_that(length(prop_test_output), equals(1))
+    expect_that(names(prop_test_output), equals("stat"))
+    expect_that(prop_test_output$stat, is_a("character"))
+
+    expect_that(prop_test_output$stat, equals("$\\Chi^2(3, n = 397) = 12.60$, $p = .006$"))
 
     prop_test_output <- apa_print(prop_test, n = sum(patients), in_paren = TRUE)
-    expect_that(prop_test_output, equals("$\\Chi^2[3, n = 397] = 12.60$, $p = .006$"))
+    expect_that(prop_test_output$stat, equals("$\\Chi^2[3, n = 397] = 12.60$, $p = .006$"))
   }
 )
-
 
 test_that(
   "Bartlett test"
@@ -114,11 +123,14 @@ test_that(
     bartlett_test <- bartlett.test(count ~ spray, data = InsectSprays)
 
     bartlett_test_output <- apa_print(bartlett_test)
-    expect_that(bartlett_test_output, is_a("character"))
-#     expect_that(bartlett_test_output, equals("$K^2(5) = 25.96$, $p < .001$"))
+    expect_that(bartlett_test_output, is_a("list"))
+    expect_that(length(bartlett_test_output), equals(1))
+    expect_that(names(bartlett_test_output), equals("stat"))
+    expect_that(bartlett_test_output$stat, is_a("character"))
+    expect_that(bartlett_test_output$stat, equals("$K^2(5) = 25.96$, $p < .001$"))
 
     bartlett_test_output <- apa_print(bartlett_test, in_paren = TRUE)
-#     expect_that(bartlett_test_output, equals("$K^2[5] = 25.96$, $p < .001$"))
+    expect_that(bartlett_test_output$stat, equals("$K^2[5] = 25.96$, $p < .001$"))
   }
 )
 
