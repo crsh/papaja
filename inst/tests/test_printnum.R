@@ -188,43 +188,6 @@ test_that(
 )
 
 
-context("printnumber()")
-
-test_that(
-  "Input validation"
-  , {
-    expect_that(printnumber(NA), is_equivalent_to(""))
-    expect_that(printnumber(NA, na_string="foo"), is_equivalent_to("foo"))
-
-    expect_error(printnumber(1, digits=NULL), "The parameter 'digits' is NULL.")
-    expect_error(printnumber(1, digits=NA), "The parameter 'digits' is NA.")
-    expect_error(printnumber(1, digits="A"), "The parameter 'digits' must be of class 'numeric'.")
-    expect_error(printnumber(1, digits=1.1), "The parameter 'digits' must be an integer.")
-    expect_error(printnumber(1, digits=1:2), "The parameter 'digits' must be of length 1.")
-    expect_error(printnumber(1, digits=Inf), "The parameter 'digits' must be finite.")
-
-    expect_error(printnumber(1, gt1=NULL), "The parameter 'gt1' is NULL.")
-    expect_error(printnumber(1, gt1=NA), "The parameter 'gt1' is NA.")
-    expect_error(printnumber(1, gt1=1), "The parameter 'gt1' must be of class 'logical'.")
-    expect_error(printnumber(1, gt1="A"), "The parameter 'gt1' must be of class 'logical'.")
-    expect_error(printnumber(1, gt1=c(TRUE, FALSE)), "The parameter 'gt1' must be of length 1.")
-
-    expect_error(printnumber(1, zero=NULL), "The parameter 'zero' is NULL.")
-    expect_error(printnumber(1, zero=NA), "The parameter 'zero' is NA.")
-    expect_error(printnumber(1, zero=1), "The parameter 'zero' must be of class 'logical'.")
-    expect_error(printnumber(1, zero="A"), "The parameter 'zero' must be of class 'logical'.")
-    expect_error(printnumber(1, zero=c(TRUE, FALSE)), "The parameter 'zero' must be of length 1.")
-
-    expect_error(printnumber(1, na_string=NULL), "The parameter 'na_string' is NULL.")
-    expect_error(printnumber(1, na_string=NA), "The parameter 'na_string' is NA.")
-    expect_error(printnumber(1, na_string=letters[1:2]), "The parameter 'na_string' must be of length 1.")
-    expect_error(printnumber(1, na_string=3), "The parameter 'na_string' must be of class 'character'.")
-
-    expect_error(printnumber(2, gt1=FALSE), "You specified gt1 = FALSE, but passed absolute value\\(s\\) that exceed 1.")
-  }
-)
-
-
 context("printp()")
 
 test_that(
