@@ -110,7 +110,7 @@ make_confint <- function(
 
   if(is.null(conf_level)) {
     if(!is.matrix(x)) {
-      conf_level <- attr(cor_test$conf.int, "conf.level")
+      conf_level <- attr(x, "conf.level")
       if(conf_level < 1) conf_level <- conf_level * 100
 
       apa_ci <- paste0(conf_level, "% CI $[", paste(ci, collapse = "$, $"), "]$")

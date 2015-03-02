@@ -34,7 +34,7 @@ test_that(
   "Vector"
   , {
     to_print <- c(12.1, 9, 0.1, 1, -0.0003)
-    expect_that(printnum(to_print, gt1 = FALSE), throws_error())
+    expect_error(printnum(to_print, gt1 = FALSE), throws_error())
 
     apa_num <- printnum(to_print)
     expect_that(apa_num, is_a("character"))
