@@ -43,26 +43,31 @@ apa_print.htest <- function(
   apa_stat$stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
 
   # Estimate
-  est_name <- convert_stat_name(names(x$estimate))
+  if(!is.null(names(x$estimate))) est_name <- convert_stat_name(names(x$estimate)) else est_name <- NULL
   est_gt1 <- TRUE
 
-  if(est_name == "\\Delta M") {
+  if(is.null(est_name)) {
+    est <- NULL
+  } else if(est_name == "\\Delta M") {
     est <- printnum(diff(x$estimate))
-  } else {
+  } else if(length(x$estimate) == 1) {
     if(names(x$estimate) %in% c("cor", "rho", "tau")) est_gt1 <- FALSE
     est <- printnum(x$estimate, gt1 = est_gt1)
   }
-  if(!grepl("<|>", est)) eq <- " = " else eq <- ""
 
-  if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-    apa_stat$est <- paste0("$", est_name, eq, est, "$, ", make_confint(x$conf.int, gt1 = est_gt1))
-  } else if(!is.null(ci)) { # Use supplied CI
-    apa_stat$est <- paste0("$", est_name, eq, est, "$, ", make_confint(ci, gt1 = est_gt1))
-  } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
-    apa_stat$est <- paste0("$", est_name, eq, est, "$")
+  if(!is.null(est)) {
+    if(!grepl("<|>", est)) eq <- " = " else eq <- ""
+
+    if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
+      apa_stat$est <- paste0("$", est_name, eq, est, "$, ", make_confint(x$conf.int, gt1 = est_gt1))
+    } else if(!is.null(ci)) { # Use supplied CI
+      apa_stat$est <- paste0("$", est_name, eq, est, "$, ", make_confint(ci, gt1 = est_gt1))
+    } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
+      apa_stat$est <- paste0("$", est_name, eq, est, "$")
+    }
+
+    apa_stat$full <- paste(apa_stat$est, apa_stat$stat, sep = ", ")
   }
-
-  apa_stat$full <- paste(apa_stat$est, apa_stat$stat, sep = ", ")
 
   apa_stat
 }

@@ -69,7 +69,13 @@ convert_stat_name <- function(x) {
 
   new_stat_name <- tolower(x)
 
+  new_stat_name <- gsub("-squared", "^2", new_stat_name)
+
   if(length(new_stat_name) == 2 && grepl("mean", new_stat_name)) new_stat_name <- "\\Delta M"
+  if(all(grepl("prop \\d", new_stat_name))) {
+    new_stat_name <- NULL
+    return(new_stat_name)
+  }
 
   new_stat_name <- switch(
     new_stat_name
@@ -78,10 +84,11 @@ convert_stat_name <- function(x) {
     , rho = "r_{\\mathrm{s}}"
     , tau = "r_{\\uptau}"
     , `mean of the differences` = "M_d"
+    , `mean of x` = "M"
+    , `bartlett's k^2` = "K^2"
   )
 
   new_stat_name <- gsub("x|chi", "\\\\Chi", new_stat_name)
-  new_stat_name <- gsub("-squared", "^2", new_stat_name)
 
   new_stat_name
 }
