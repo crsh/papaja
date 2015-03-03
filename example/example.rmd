@@ -101,25 +101,24 @@ plot(cars)
 Again, as required by the APA guidelines, figures are pushed to the final pages of the document unless you set `figsintext` to `yes`.
 
 ### Report statistical analyses
-`apa_stat()` will help you report the results of your statistical analyses.
+`apa_print()` will help you report the results of your statistical analyses.
 The function will format your input to produce readily reportable text.
 
 ```{r echo = TRUE}
 my_regression <- lm(dist ~ speed, cars)
-my_confint <- confint(my_regression)
-my_results <- apa_stat(summary(my_regression), ci = my_confint)
+my_results <- apa_print(my_regression)
 ```
 
-In this case speed is a significant precitor of the distance taken to stop, `r my_results["speed"]`.
-The regression explains `r my_results["R2"]` variance, which is of course statistically significant, `r my_results["F-test"]`.
+In this case speed is a significant precitor of the distance taken to stop, `r my_results$full$speed`.
+The regression explains `r my_results$est$modelfit$r2` variance, which is of course statistically significant, `r my_results$stat$modelfit$r2`.
 
 The previous paragraph was produced by the following text:
 
 ```{r eval = FALSE, echo = TRUE}
-In this case speed is a significant precitor of the distance taken to stop,
-`r my_results["speed"]`. The regression explains `r my_results["R2"]`
-variance, which is of course statistically significant,
-`r my_results["F-test"]`.
+In this case speed is a significant precitor of the distance taken
+to stop, `r my_results$full$speed`. The regression explains
+`r my_results$est$modelfit$r2` variance, which is of course
+statistically significant, `r my_results$stat$modelfit$r2`.
 ```
 
 

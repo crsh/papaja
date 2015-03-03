@@ -105,7 +105,7 @@ apa_print.lm <- function(
   if(standardized) rownames(tidy_x) <- gsub("scale\\(", "z_", rownames(tidy_x)) # Sanitize term names
   rownames(tidy_x) <- gsub("\\(|\\)", "", rownames(tidy_x)) # Sanitize term names
   rownames(tidy_x) <- gsub("\\W", "_", rownames(tidy_x)) # Sanitize term names
-  glance_x <- glance(x)
+  glance_x <- broom::glance(x)
 
   apa_res <- list()
   apa_res$stat <- apply(tidy_x[, -1], 1, function(y) {
