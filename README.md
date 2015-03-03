@@ -1,12 +1,12 @@
 # papaja
-papaja is a R-package in the making including a [RMarkdown](http://rmarkdown.rstudio.com/) template that can be used with [RStudio](http://www.rstudio.com/) (or without) to produce complete manscripts (PDF and Word documents), which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file. The supplied R-functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
+papaja is a R-package in the making including a [RMarkdown](http://rmarkdown.rstudio.com/) template that can be used with [RStudio](http://www.rstudio.com/) (or without) to produce complete manuscripts (PDF and Word documents), which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file. The supplied R-functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
 
 Note, at this point `papaja` is in active development and should be considered alpha. If you experience any problems, please [open an issue](https://github.com/crsh/papaja/issues).
 
 If you are looking for other journal article templates, take a look at [the list below](#other-journal-templates). Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
 
 ## Examples
-Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf) and [.docx](https://raw.githubusercontent.com/crsh/papaja/master/example/example.docx). More examples to come.
+Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf) <!--and [.docx](https://raw.githubusercontent.com/crsh/papaja/master/example/example.docx)-->. More examples to come.
 
 The example document also contains some basic instructions.
 
