@@ -41,7 +41,7 @@ If \code{x} is a \code{list}, all list elements are merged by columns into a sin
    in progress the output default is LaTeX.
 }
 \examples{
-...
+rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
 }
 \seealso{
 \code{\link{apply}}

@@ -10,7 +10,7 @@
 #'    at the specified location, the function reads the file and appends missing citation information to the
 #'    end of the file. It is recommended to create a new .bib-file dedicated to R-related references and
 #'    adding it to the \code{bibliography} parameter in the document's yaml-header.
-#' @examples r_refs("test_bibliography.bib")
+#' @examples r_refs("test_bibliography.bib") # Creates file in current working directory
 #' @export
 
 r_refs <- function(file, prefix = "R-", ...) {

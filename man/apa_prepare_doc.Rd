@@ -4,11 +4,7 @@
 \alias{apa_prepare_doc}
 \title{Prepare APA document}
 \usage{
-apa_prepare_doc(lang = "english")
-}
-\arguments{
-\item{x}{Character. Document language to set. Ignored and replaced by yaml-header parameter \code{lang}
-when document is rendered.}
+apa_prepare_doc()
 }
 \description{
 Prepares objekts to be used in the rendering process and creates title page and abstract in MS Word
@@ -17,11 +13,12 @@ documents.
 \details{
 The function creates and locks a non-exported object \code{apa_lang} that is used by other
    \pkg{papaja}-functions. \code{apa_lang} is a \code{list} containing localizations for document
-   elements such as abstract title. The selected language is defined by the \code{lang}-parameter
+   elements such as abstract and title. The selected language is defined by the \code{lang}-parameter
    in the documents yaml-header. Currently, English (default) and German ("german") are supported.
 
    If the output document is MS Word (\code{output: \link{apa6_word}}) the function additionally creates
-   a title page and adds the abstract.
+   a title page and adds the abstract. You should, therefore, allways call \code{apa_prepare_doc} at the
+   very beginning of the RMarkdown document.
 }
 \examples{
 apa_prepare_doc()

@@ -23,7 +23,7 @@
 #'
 #'    The syntax of the ouput is determined automatically by the rendered document type. If no rendering is
 #'    in progress the output default is LaTeX.
-#' @examples ...
+#' @examples rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
 #' @export
 
 apa_table <- function(...) {

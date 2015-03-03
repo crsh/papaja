@@ -147,8 +147,13 @@ test_that(
     trt <- c(4.81, 4.17, 4.41, 3.59, 5.87, 3.83, 6.03, 4.89, 4.32, 4.69)
     group <- gl(2, 10, 20, labels = c("Ctl", "Trt"))
     weight <- c(ctl, trt)
+
     lm_fit <- lm(weight ~ group)
+    lm_fit_output <- apa_print(lm_fit)
+
     lm_summary <- summary(lm_fit)
-    expect_that(apa_print(lm_summary), throws_error())
+    lm_summary_output <- apa_print(lm_summary)
+
+    expect_that(lm_summary_output, is_identical_to(lm_fit_output))
   }
 )

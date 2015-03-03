@@ -24,7 +24,7 @@ This function is a wrapper for \code{write_bib} from the \pkg{knitr} package. If
    adding it to the \code{bibliography} parameter in the document's yaml-header.
 }
 \examples{
-...
+r_refs("test_bibliography.bib") # Creates file in current working directory
 }
 \seealso{
 \code{\link[knitr]{write_bib}}
