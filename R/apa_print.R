@@ -10,8 +10,10 @@
 #'    ignored.
 #' @param standardized Logical. If \code{x} is an object of class \code{summary.lm} indicates if
 #'    coefficients are standardized or unstandardized; otherwise ignored.
-#' @param ci Numeric. Matrix containing lower and upper boundaries of confidence intervals for estimated
-#'    coefficients in columns. If \code{NULL} the function tries to obtain confidence intervals from \code{x}.
+#' @param ci Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column
+#'    \code{matrix} and confidence region bounds as column names (e.g. "2.5 %" and "97.5 %") and coefficient
+#'    names as row names. If \code{x} is of class \code{htest} and \code{ci = NULL} the function tries
+#'    to obtain confidence intervals from \code{x}.
 #' @param in_paren Logical. Indicates if the formated string be reported inside parentheses. See details.
 #' @details Currently the following output objects are supported:
 #'

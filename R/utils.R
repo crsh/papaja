@@ -82,7 +82,7 @@ convert_stat_name <- function(x) {
     , new_stat_name
     , cor = "r"
     , rho = "r_{\\mathrm{s}}"
-    , tau = "r_{\\uptau}"
+    , tau = "\\uptau"
     , `mean of x` = "M"
     , `(pseudo)median` = "Mdn^*"
     , `mean of the differences` = "M_d"
@@ -114,32 +114,35 @@ make_confint <- function(
   , conf_level = NULL
   , ...
 ) {
+  if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, ...)
 
-  if(is.null(conf_level)) {
-    if(!is.matrix(x)) {
-      conf_level <- attr(x, "conf.level")
-      if(conf_level < 1) conf_level <- conf_level * 100
+  if(!is.matrix(x)) {
+    if(is.null(conf_level)) conf_level <- attr(x, "conf.level")
+    validate(conf_level, check_class = "numeric", check_length = 1)
+    if(conf_level < 1) conf_level <- conf_level * 100
 
-      apa_ci <- paste0(conf_level, "% CI $[", paste(ci, collapse = "$, $"), "]$")
-    } else {
+    apa_ci <- paste0(conf_level, "% CI $[", paste(ci, collapse = "$, $"), "]$")
+  } else {
+    if(is.null(conf_level)) {
       conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
       conf_level <- 100 - conf_level[1] * 2
-
-      if(!is.null(rownames(ci))) {
-        terms <- rownames(ci)
-        terms <- gsub("\\W", "", terms) # Sanitize term names
-      } else {
-        terms <- 1:nrow(ci)
-      }
-
-      apa_ci <- list()
-      for(i in 1:length(terms)) {
-        apa_ci[[terms[i]]] <- paste0(conf_level, "% CI $[", paste(ci[i, ], collapse = "$, $"), "]$")
-      }
-
-      if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     }
+
+    if(!is.null(rownames(ci))) {
+      terms <- rownames(ci)
+      terms <- gsub("\\(|\\)", "", terms) # Sanitize term names
+      terms <- gsub("\\W", "_", terms) # Sanitize term names
+    } else {
+      terms <- 1:nrow(ci)
+    }
+
+    apa_ci <- list()
+    for(i in 1:length(terms)) {
+      apa_ci[[terms[i]]] <- paste0(conf_level, "% CI $[", paste(ci[i, ], collapse = "$, $"), "]$")
+    }
+
+    if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
   }
 
   apa_ci

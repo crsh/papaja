@@ -41,8 +41,8 @@ apa_print.htest <- function(
   p <- printp(x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
-  apa_stat <- list()
-  apa_stat$stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
+  apa_res <- list()
+  apa_res$stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
 
   # Estimate
   if(!is.null(names(x$estimate))) est_name <- convert_stat_name(names(x$estimate)) else est_name <- NULL
@@ -61,15 +61,15 @@ apa_print.htest <- function(
     if(!grepl("<|>", est)) eq <- " = " else eq <- ""
 
     if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-      apa_stat$est <- paste0("$", est_name, eq, est, "$, ", make_confint(x$conf.int, gt1 = est_gt1))
+      apa_res$est <- paste0("$", est_name, eq, est, "$, ", make_confint(x$conf.int, gt1 = est_gt1))
     } else if(!is.null(ci)) { # Use supplied CI
-      apa_stat$est <- paste0("$", est_name, eq, est, "$, ", make_confint(ci, gt1 = est_gt1, margin = 2))
+      apa_res$est <- paste0("$", est_name, eq, est, "$, ", make_confint(ci, gt1 = est_gt1, margin = 2))
     } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
-      apa_stat$est <- paste0("$", est_name, eq, est, "$")
+      apa_res$est <- paste0("$", est_name, eq, est, "$")
     }
 
-    apa_stat$full <- paste(apa_stat$est, apa_stat$stat, sep = ", ")
+    apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
   }
 
-  apa_stat
+  apa_res
 }
