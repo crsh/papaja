@@ -38,7 +38,7 @@ Once you have installed the `papaja` package you can select the APA template whe
 
 If you want to add citations specify your .bib-file in the document header and under the `bibliography` parameter and you can start citing.
 
-The supplied functions `apa_stat()` and `apa_table()` facilitate reporting of results.
+The supplied functions `apa_print()` and `apa_table()` facilitate reporting of results.
 
 #### Using papaja without RStudio
 In addition to the above, you need to do the following to use `papaja` without RStudio:
