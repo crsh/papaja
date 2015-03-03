@@ -56,8 +56,10 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
       , na_string = na_string
     )
 
-    if(margin == 2) x_out <- t(x_out) # Reverse transposition caused by apply
-    dimnames(x_out) <- dimnames(x)
+    if(margin == 2) {
+      x_out <- t(x_out) # Reverse transposition caused by apply
+      dimnames(x_out) <- dimnames(x)
+    }
     if(is.data.frame(x)) x_out <- as.data.frame(x_out)
 
   } else if(is.numeric(x) & length(x) > 1) {

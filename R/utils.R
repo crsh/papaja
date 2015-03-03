@@ -126,19 +126,41 @@ make_confint <- function(
       conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
       conf_level <- 100 - conf_level[1] * 2
 
-      terms <- rownames(ci)
-      terms <- gsub("\\W", "", terms) # Sanitize term names
+      if(!is.null(rownames(ci))) {
+        terms <- rownames(ci)
+        terms <- gsub("\\W", "", terms) # Sanitize term names
+      } else {
+        terms <- 1:nrow(ci)
+      }
 
       apa_ci <- list()
       for(i in 1:length(terms)) {
         apa_ci[[terms[i]]] <- paste0(conf_level, "% CI $[", paste(ci[i, ], collapse = "$, $"), "]$")
       }
+
+      if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     }
   }
 
   apa_ci
 }
 
+
+#' Create variables from ellipsis
+#'
+#' Variables passed to a function using the ellipsis are assigned to the calling environment according to their list names.
+#'
+#' @param ... Variable names and values to create in the calling environment.
+#'
+#' @examples
+#' parse_ellipsis(a = 10, b = 10)
+#' a
+#' b
+
+parse_ellipsis <- function(...) {
+  list2env(list(...), envir = parent.env(environment()))
+  TRUE
+}
 
 
 #############################
