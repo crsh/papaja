@@ -2,7 +2,7 @@
 #'
 #' This function returns barplots.
 #' @param data A \code{data.frame} that contains your data
-#' @param id Character. Number of decimal places to print.
+#' @param id Character. Variable name that identifies subjects.
 #' @param factors Character. A vector of variable names that shall be used to stratify data.
 #' @param dv Character. The dependent variable.
 #' @param tendency Closure. A function that will be used as measure of central tendency.
