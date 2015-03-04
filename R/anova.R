@@ -1,58 +1,69 @@
 apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(", cp = ")"){
 
   ## Weiche:
-  if ("aovlist" %in% class(object)){
-    x<-lapply(summary(object),arrange_summary.aov)
-    df<-do.call("rbind",x)
-    df<-data.frame(df,row.names=1:nrow(df))
-  } else
+apa_print.aovlist <- function(x, ...){
+  x<-lapply(summary(x),arrange_summary.aov)
+  df<-do.call("rbind",x)
+  df<-data.frame(df,row.names=NULL)
+  values <- .anova(df, ...)
+  return(values)
+}
 
-  if("summary.aov" %in% class(object)){
-    df<-arrange_summary.aov(object)
-  } else
+apa_print.summary.aov <- function(x, ...){
+  df<-arrange_summary.aov(x)
+  values <- .anova(df)
+  return(values)
+}
 
-  if("anova" %in% class(object)){
-    df<-arrange_anova(object)
-  } else
+apa_print.anova <- function(x, ...){
+  df<-arrange_anova(x)
+  values <- .anova(df, ...)
+  return(values)
+}
 
-  if("aov" %in% class(object)){
-    df<-arrange_aov(object)
-  } else
+apa_print.aov <- function(x, ...){
+  df<-arrange_aov(x)
+  values <- .anova(x=df, ...)
+  return(values)
+}
 
-  if("Anova.mlm" %in% class(object)){
-    # copy from Henrik Singmann to handle his output objects
-    x<-suppressWarnings(afex::univ(object))
-    t.out <- x[["anova"]]
-    if (correction[1] == "GG") {
-      t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * x[["sphericity.correction"]][,"GG eps"]
-      t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * x[["sphericity.correction"]][,"GG eps"]
-      t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[GG])"]
+apa_print.Anova.mlm <- function(x, correction="GG", ...){
+  # copy from Henrik Singmann to handle his output objects
+  x<-suppressWarnings(afex::univ(x))
+  t.out <- x[["anova"]]
+  if (correction[1] == "GG") {
+    t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * x[["sphericity.correction"]][,"GG eps"]
+    t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * x[["sphericity.correction"]][,"GG eps"]
+    t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[GG])"]
+  } else {
+    if (correction[1] == "HF") {
+      if (any(x[["sphericity.correction"]][,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+      t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
+      t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
+      t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[HF])"]
     } else {
-      if (correction[1] == "HF") {
-        if (any(x[["sphericity.correction"]][,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
-        t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
-        t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
-        t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[HF])"]
-      } else {
-        if (correction[1] == "none") {
-          TRUE
-        } else stop("None supported argument to correction.")
-      }
+      if (correction[1] == "none") {
+        TRUE
+      } else stop("None supported argument to correction.")
     }
-    df <- as.data.frame(t.out)
-    # obtain positons of statistics in data.frame
-    old<-c("SS","num Df","Error SS","den Df", "F", "Pr(>F)")
-    nu<-c("sumsq","df","sumsq_err","df2","statistic","p.value")
-    colnames(df)==old
-    for (i in 1:length(old)){
-      colnames(df)[colnames(df)==old[i]]<-nu[i]
-    }
-    df[["term"]]<-rownames(df)
-    df<-data.frame(df,row.names=1:nrow(df))
-  }   else stop("Non-supported object class")
+  }
+  df <- as.data.frame(t.out)
+  # obtain positons of statistics in data.frame
+  old<-c("SS","num Df","Error SS","den Df", "F", "Pr(>F)")
+  nu<-c("sumsq","df","sumsq_err","df2","statistic","p.value")
+  colnames(df)==old
+  for (i in 1:length(old)){
+    colnames(df)[colnames(df)==old[i]]<-nu[i]
+  }
+  df[["term"]]<-rownames(df)
+  df<-data.frame(df,row.names=NULL)
+  values <- .anova(df, ...)
+  return(values)
+}
+
+.anova <- function(x, observed=NULL, es="ges", op = "(", cp = ")"){
 
   # from here on every class of input object is handled the same way
-  x<-df
 
   # calculate generalized eta squared
   # This code is as copy from afex by Henrik Singmann who said that it is basically a copy from ezANOVA by Mike Lawrence
@@ -62,8 +73,8 @@ apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(
       if (!any(str_detect(rownames(x),str_c("\\<",i,"\\>")))) stop(str_c("Observed variable not in data: ", i))
       obs <- obs | str_detect(rownames(x),str_c("\\<",i,"\\>"))
     }
-    obs_SSn1 <- sum(x$SS*obs)
-    obs_SSn2 <- x$SS*obs
+    obs_SSn1 <- sum(x$sumsq*obs)
+    obs_SSn2 <- x$sumsq*obs
   }else{
     obs_SSn1 <- 0
     obs_SSn2 <- 0
@@ -102,6 +113,9 @@ apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(
   names(values)<-x[["term"]]
   return(values)
 }
+
+
+## Helper functions
 
 ## class 'anova'
 arrange_anova<-function(anova){
