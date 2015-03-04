@@ -21,7 +21,7 @@
 #'   NULL
 #' @export
 
-apa.barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf.int, level=.95, fun.aggregate=mean, na.rm=TRUE, ylim=NULL, main=NULL, ylab=NULL, intercepts=NULL, ...){
+apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf.int, level=.95, fun.aggregate=mean, na.rm=TRUE, ylim=NULL, main=NULL, ylab=NULL, intercepts=NULL, ...){
 
   # save original plot architecture
   old.mfrow<-par()$mfrow
