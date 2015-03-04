@@ -1,6 +1,3 @@
-apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(", cp = ")"){
-
-  ## Weiche:
 apa_print.aovlist <- function(x, ...){
   x<-lapply(summary(x),arrange_summary.aov)
   df<-do.call("rbind",x)
