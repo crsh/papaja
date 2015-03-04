@@ -12,14 +12,14 @@
 #' @param op
 #' @param cp
 #' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
-#' @details
+#' @details details
 #'
 #'
 #' @return a named list
 #'
 #' @family apa_print
 #' @examples
-#'
+#' NULL
 #' @export
 
 apa_print.aovlist <- function(x, ...){
@@ -30,12 +30,18 @@ apa_print.aovlist <- function(x, ...){
   return(values)
 }
 
+
+#' @rdname apa_print.aovlist
+#' @method apa_print summary.aov
+#' @S3method apa_print summary.aov
+#' @export
+
 apa_print.summary.aov <- function(x, ...){
   df<-arrange_summary.aov(x)
   values <- .anova(df)
   return(values)
 }
-
+??apa_print
 apa_print.anova <- function(x, ...){
   df<-arrange_anova(x)
   values <- .anova(df, ...)
@@ -49,23 +55,30 @@ apa_print.aov <- function(x, ...){
 }
 
 apa_print.Anova.mlm <- function(x, correction="GG", ...){
-  # copy from Henrik Singmann to handle his output objects
-  x<-suppressWarnings(afex::univ(x))
-  t.out <- x[["anova"]]
-  if (correction[1] == "GG") {
-    t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * x[["sphericity.correction"]][,"GG eps"]
-    t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * x[["sphericity.correction"]][,"GG eps"]
-    t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[GG])"]
-  } else {
-    if (correction[1] == "HF") {
-      if (any(x[["sphericity.correction"]][,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
-      t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
-      t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
-      t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[HF])"]
+
+  x <- summary(x)
+  x$sphericity.tests
+  tmp <- x[["univariate.tests"]]
+  class(tmp) <- NULL
+  t.out <- data.frame(tmp)
+  colnames(t.out) <- colnames(tmp)
+
+  if(nrow(x[["sphericity.tests"]])>0){
+    if (correction[1] == "GG") {
+      t.out[row.names(x[["pval.adjustments"]]), "num Df"] <- t.out[row.names(x[["pval.adjustments"]]), "num Df"] * x[["pval.adjustments"]][,"GG eps"]
+      t.out[row.names(x[["pval.adjustments"]]), "den Df"] <- t.out[row.names(x[["pval.adjustments"]]), "den Df"] * x[["pval.adjustments"]][,"GG eps"]
+      t.out[row.names(x[["pval.adjustments"]]), "Pr(>F)"] <- x[["pval.adjustments"]][,"Pr(>F[GG])"]
     } else {
-      if (correction[1] == "none") {
-        TRUE
-      } else stop("None supported argument to correction.")
+      if (correction[1] == "HF") {
+        if (any(x[["pval.adjustments"]][,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+        t.out[row.names(x[["pval.adjustments"]]), "num Df"] <- t.out[row.names(x[["pval.adjustments"]]), "num Df"] * pmin(1, x[["pval.adjustments"]][,"HF eps"])
+        t.out[row.names(x[["pval.adjustments"]]), "den Df"] <- t.out[row.names(x[["pval.adjustments"]]), "den Df"] * pmin(1, x[["pval.adjustments"]][,"HF eps"])
+        t.out[row.names(x[["pval.adjustments"]]), "Pr(>F)"] <- x[["pval.adjustments"]][,"Pr(>F[HF])"]
+      } else {
+        if (correction[1] == "none") {
+          TRUE
+        } else stop("None supported argument to correction.")
+      }
     }
   }
   df <- as.data.frame(t.out)
@@ -171,13 +184,15 @@ arrange_summary.aov<-function(aov){
 # library(afex)
 # library(broom)
 # object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="Anova")
+# object <- ez.glm(data=Daten.Lrn,id="id",dv="Reaktionszeit",between=c("Material"),within="Block.Nr",fun.aggregate=mean,na.rm=TRUE,return="Anova")
 # object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm")
 # object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="univ")
 # object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="nice")
 # object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="aov")
 # object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="aov")
 
-#class(object)
+# class(object)
+# x <- object
+# apa_print(object)
 
-#apa_print(object)
 

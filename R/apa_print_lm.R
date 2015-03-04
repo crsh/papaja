@@ -160,9 +160,27 @@ apa_print.lm <- function(
 }
 
 
-apa_print.summary.lm <- function(x, ...) {
+#' @rdname apa_print.lm
+#' @method apa_print summary.lm
+#' @S3method apa_print summary.lm
+#' @export
+
+apa_print.summary.lm <- function(
+  x
+  , stat_name = NULL
+  , standardized = FALSE
+  , ci = 0.95
+  , in_paren = FALSE
+) {
   validate(x, check_class = "summary.lm")
 
   x <- eval(x$call)
-  apa_print(x)
+??apa_print
+  apa_print(
+    x
+    , stat_name = stat_name
+    , standardized = standardized
+    , ci = ci
+    , in_paren = in_paren
+  )
 }
