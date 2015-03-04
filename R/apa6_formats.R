@@ -2,13 +2,18 @@
 #'
 #' Template for creating an article according to APA guidelines (6th edition) in PDF format.
 #'
-#' @param class Character. Specifies if the document will be a manuscript ("man"), a document ("doc"),
-#'    or a fully typsetted journal article ("jou"). Currently only manuscripts are supported for
-#'    MS Word documents.
+#' @param class Character. Specifies if the document will be a manuscript (\code{man}), a document (\code{doc}),
+#'    or a fully typsetted journal article (\code{jou}). Currently only manuscripts are supported for
+#'    MS Word documents. See details.
 #' @param fig_caption Logical. Indicates if figures are rendered with captions.
 #' @param pandoc_args Additional command line options to pass to pandoc
 #' @param Logical. Keep the intermediate tex file used in the conversion to PDF.
-#' @param ... Further arguments to pass to \code{rmarkdown::pdf_document} or \code{rmarkdown::word_document}.
+#' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}.
+#' @details
+#'    When creating PDF documents \code{class} is passed to the class options of the LaTeX apa6 document class. In this case,
+#'    additional options are available. Refer to the apa6 document class
+#'    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
+#'    such as paper size or draft watermarks.
 #' @seealso \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
 #' @examples NULL
 #' @export
@@ -22,7 +27,7 @@ apa6_pdf <- function(
 ) {
 
   validate(class, check_class = "character", check_length = 1)
-  if(!(class %in% c("man", "doc", "jou"))) stop("Document class must be either 'man', 'doc', or 'jou'.")
+  if(!any(class %in% c("man", "doc", "jou"))) stop("Document class must be either 'man', 'doc', or 'jou'.")
   validate(fig_caption, check_class = "logical", check_length = 1)
   validate(keep_tex, check_class = "logical", check_length = 1)
 
