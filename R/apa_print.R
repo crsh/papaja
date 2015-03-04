@@ -11,7 +11,8 @@
 #'    \itemize{
 #'      \item \code{htest}
 #'      \item \code{lm} and \code{summary.lm}
-#'      %\item \code{anova}
+#'      \item \code{aov}, \code{aovlist}, and \code{summary.aov}
+#'      \item \code{anova} and \code{Anova.mlm}
 #'    }
 #'
 #' @return The form of the valued returned by \code{apa_print} depends on the class of \code{x}. See the

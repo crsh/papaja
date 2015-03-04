@@ -1,3 +1,25 @@
+#' Format statistics (APA 6th edition)
+#'
+#' \code{apa_print.aov}
+#' \code{apa_print.aovlist}
+#' \code{apa_print.summary.aov}
+#' \code{apa_print.anova}
+#' \code{apa_print.Anova.mlm}
+#'
+#' @param x Output object. See details.
+#' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
+#' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
+#' @param op
+#' @param cp
+#' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
+#' @details
+#'
+#'
+#' @return a named list
+#'
+#' @family apa_print
+#' @examples
+#'
 #' @export
 
 apa_print.aovlist <- function(x, ...){
