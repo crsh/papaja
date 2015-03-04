@@ -2,9 +2,13 @@
 % Please edit documentation in R/apa_print_lm.R
 \name{apa_print.lm}
 \alias{apa_print.lm}
+\alias{apa_print.summary.lm}
 \title{Format statistics (APA 6th edition)}
 \usage{
 \method{apa_print}{lm}(x, stat_name = NULL, standardized = FALSE,
+  ci = 0.95, in_paren = FALSE)
+
+\method{apa_print}{summary.lm}(x, stat_name = NULL, standardized = FALSE,
   ci = 0.95, in_paren = FALSE)
 }
 \arguments{
@@ -81,7 +85,8 @@ doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164
 \seealso{
 \code{\link{confint}}, \code{\link[MBESS]{ci.pvaf}}
 
-Other apa_print: \code{\link{apa_print.htest}};
-  \code{\link{apa_print}}
+Other apa_print: \code{\link{apa_print.aovlist}},
+  \code{\link{apa_print.summary.aov}};
+  \code{\link{apa_print.htest}}; \code{\link{apa_print}}
 }
 

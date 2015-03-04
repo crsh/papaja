@@ -1,58 +1,103 @@
-apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(", cp = ")"){
+#' Format statistics (APA 6th edition)
+#'
+#' \code{apa_print.aov}
+#' \code{apa_print.aovlist}
+#' \code{apa_print.summary.aov}
+#' \code{apa_print.anova}
+#' \code{apa_print.Anova.mlm}
+#'
+#' @param x Output object. See details.
+#' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
+#' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
+#' @param op
+#' @param cp
+#' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
+#' @details details
+#'
+#'
+#' @return a named list
+#'
+#' @family apa_print
+#' @examples
+#' NULL
+#' @export
 
-  ## Weiche:
-  if ("aovlist" %in% class(object)){
-    x<-lapply(summary(object),arrange_summary.aov)
-    df<-do.call("rbind",x)
-    df<-data.frame(df,row.names=1:nrow(df))
-  } else
+apa_print.aovlist <- function(x, ...){
+  x<-lapply(summary(x),arrange_summary.aov)
+  df<-do.call("rbind",x)
+  df<-data.frame(df,row.names=NULL)
+  values <- .anova(df, ...)
+  return(values)
+}
 
-  if("summary.aov" %in% class(object)){
-    df<-arrange_summary.aov(object)
-  } else
 
-  if("anova" %in% class(object)){
-    df<-arrange_anova(object)
-  } else
+#' @rdname apa_print.aovlist
+#' @method apa_print summary.aov
+#' @S3method apa_print summary.aov
+#' @export
 
-  if("aov" %in% class(object)){
-    df<-arrange_aov(object)
-  } else
+apa_print.summary.aov <- function(x, ...){
+  df<-arrange_summary.aov(x)
+  values <- .anova(df)
+  return(values)
+}
+??apa_print
+apa_print.anova <- function(x, ...){
+  df<-arrange_anova(x)
+  values <- .anova(df, ...)
+  return(values)
+}
 
-  if("Anova.mlm" %in% class(object)){
-    # copy from Henrik Singmann to handle his output objects
-    x<-suppressWarnings(afex::univ(object))
-    t.out <- x[["anova"]]
+apa_print.aov <- function(x, ...){
+  df<-arrange_aov(x)
+  values <- .anova(x=df, ...)
+  return(values)
+}
+
+apa_print.Anova.mlm <- function(x, correction="GG", ...){
+
+  x <- summary(x)
+  x$sphericity.tests
+  tmp <- x[["univariate.tests"]]
+  class(tmp) <- NULL
+  t.out <- data.frame(tmp)
+  colnames(t.out) <- colnames(tmp)
+
+  if(nrow(x[["sphericity.tests"]])>0){
     if (correction[1] == "GG") {
-      t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * x[["sphericity.correction"]][,"GG eps"]
-      t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * x[["sphericity.correction"]][,"GG eps"]
-      t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[GG])"]
+      t.out[row.names(x[["pval.adjustments"]]), "num Df"] <- t.out[row.names(x[["pval.adjustments"]]), "num Df"] * x[["pval.adjustments"]][,"GG eps"]
+      t.out[row.names(x[["pval.adjustments"]]), "den Df"] <- t.out[row.names(x[["pval.adjustments"]]), "den Df"] * x[["pval.adjustments"]][,"GG eps"]
+      t.out[row.names(x[["pval.adjustments"]]), "Pr(>F)"] <- x[["pval.adjustments"]][,"Pr(>F[GG])"]
     } else {
       if (correction[1] == "HF") {
-        if (any(x[["sphericity.correction"]][,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
-        t.out[row.names(x[["sphericity.correction"]]), "num Df"] <- t.out[row.names(x[["sphericity.correction"]]), "num Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
-        t.out[row.names(x[["sphericity.correction"]]), "den Df"] <- t.out[row.names(x[["sphericity.correction"]]), "den Df"] * pmin(1, x[["sphericity.correction"]][,"HF eps"])
-        t.out[row.names(x[["sphericity.correction"]]), "Pr(>F)"] <- x[["sphericity.correction"]][,"Pr(>F[HF])"]
+        if (any(x[["pval.adjustments"]][,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+        t.out[row.names(x[["pval.adjustments"]]), "num Df"] <- t.out[row.names(x[["pval.adjustments"]]), "num Df"] * pmin(1, x[["pval.adjustments"]][,"HF eps"])
+        t.out[row.names(x[["pval.adjustments"]]), "den Df"] <- t.out[row.names(x[["pval.adjustments"]]), "den Df"] * pmin(1, x[["pval.adjustments"]][,"HF eps"])
+        t.out[row.names(x[["pval.adjustments"]]), "Pr(>F)"] <- x[["pval.adjustments"]][,"Pr(>F[HF])"]
       } else {
         if (correction[1] == "none") {
           TRUE
         } else stop("None supported argument to correction.")
       }
     }
-    df <- as.data.frame(t.out)
-    # obtain positons of statistics in data.frame
-    old<-c("SS","num Df","Error SS","den Df", "F", "Pr(>F)")
-    nu<-c("sumsq","df","sumsq_err","df2","statistic","p.value")
-    colnames(df)==old
-    for (i in 1:length(old)){
-      colnames(df)[colnames(df)==old[i]]<-nu[i]
-    }
-    df[["term"]]<-rownames(df)
-    df<-data.frame(df,row.names=1:nrow(df))
-  }   else stop("Non-supported object class")
+  }
+  df <- as.data.frame(t.out)
+  # obtain positons of statistics in data.frame
+  old<-c("SS","num Df","Error SS","den Df", "F", "Pr(>F)")
+  nu<-c("sumsq","df","sumsq_err","df2","statistic","p.value")
+  colnames(df)==old
+  for (i in 1:length(old)){
+    colnames(df)[colnames(df)==old[i]]<-nu[i]
+  }
+  df[["term"]]<-rownames(df)
+  df<-data.frame(df,row.names=NULL)
+  values <- .anova(df, ...)
+  return(values)
+}
+
+.anova <- function(x, observed=NULL, es="ges", op = "(", cp = ")"){
 
   # from here on every class of input object is handled the same way
-  x<-df
 
   # calculate generalized eta squared
   # This code is as copy from afex by Henrik Singmann who said that it is basically a copy from ezANOVA by Mike Lawrence
@@ -62,8 +107,8 @@ apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(
       if (!any(str_detect(rownames(x),str_c("\\<",i,"\\>")))) stop(str_c("Observed variable not in data: ", i))
       obs <- obs | str_detect(rownames(x),str_c("\\<",i,"\\>"))
     }
-    obs_SSn1 <- sum(x$SS*obs)
-    obs_SSn2 <- x$SS*obs
+    obs_SSn1 <- sum(x$sumsq*obs)
+    obs_SSn2 <- x$sumsq*obs
   }else{
     obs_SSn1 <- 0
     obs_SSn2 <- 0
@@ -103,6 +148,9 @@ apa_glm<-function(object=NULL, observed=NULL, es="ges", correction="GG", op = "(
   return(values)
 }
 
+
+## Helper functions
+
 ## class 'anova'
 arrange_anova<-function(anova){
   object<-as.data.frame(anova)
@@ -117,7 +165,7 @@ arrange_anova<-function(anova){
 
 ## class 'aov'
 arrange_aov<-function(aov){
-  x<-tidy(aov)
+  x<-broom::tidy(aov)
   x[["sumsq_err"]]<-x[nrow(x),"sumsq"]
   x[["df2"]]<-x[nrow(x),"df"]
   x<-x[-nrow(x),]
@@ -130,16 +178,21 @@ arrange_summary.aov<-function(aov){
 }
 
 
-#load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
-#library(afex)
-#library(broom)
-#library(papaja)
-#object<-ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="A")
-#object<-ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm")
-#univ<-ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="univ")
-#object<-ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="nice")
-## Functions to arrange different classes of anova output
-## class 'anova'
-#class(object)
+# load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
 
-#object<-Anova(ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm"),type=3)
+# library(papaja)
+# library(afex)
+# library(broom)
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="Anova")
+# object <- ez.glm(data=Daten.Lrn,id="id",dv="Reaktionszeit",between=c("Material"),within="Block.Nr",fun.aggregate=mean,na.rm=TRUE,return="Anova")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="univ")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="nice")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="aov")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="aov")
+
+# class(object)
+# x <- object
+# apa_print(object)
+
+

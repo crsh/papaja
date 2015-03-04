@@ -27,7 +27,8 @@ Currently the following output objects are supported:
    \itemize{
      \item \code{htest}
      \item \code{lm} and \code{summary.lm}
-     %\item \code{anova}
+     \item \code{aov}, \code{aovlist}, and \code{summary.aov}
+     \item \code{anova} and \code{Anova.mlm}
    }
 }
 \examples{
@@ -35,7 +36,10 @@ Currently the following output objects are supported:
 methods("apa_print")
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.htest}};
-  \code{\link{apa_print.lm}}
+Other apa_print: \code{\link{apa_print.aovlist}},
+  \code{\link{apa_print.summary.aov}};
+  \code{\link{apa_print.htest}};
+  \code{\link{apa_print.lm}},
+  \code{\link{apa_print.summary.lm}}
 }
 

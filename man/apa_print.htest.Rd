@@ -75,7 +75,10 @@ prop_stat <- prop.test(smokers, patients)
 apa_print(prop_stat, n = sum(patients))
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.lm}};
+Other apa_print: \code{\link{apa_print.aovlist}},
+  \code{\link{apa_print.summary.aov}};
+  \code{\link{apa_print.lm}},
+  \code{\link{apa_print.summary.lm}};
   \code{\link{apa_print}}
 }
 

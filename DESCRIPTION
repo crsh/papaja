@@ -1,4 +1,5 @@
 Package: papaja
+Title: APA manuscripts from RMarkdown
 Version: 0.0.1
 Title: APA manscripts from RMarkdown
 Description: Papaja provides document foramts and helper functions to produces complete APA manscripts from RMarkdown-files (PDF and Word documents).
