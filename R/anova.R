@@ -33,8 +33,7 @@ apa_print.aovlist <- function(x, ...){
 
 #' @rdname apa_print.aovlist
 #' @method apa_print summary.aov
-#' @S3method apa_print summary.aov
-#' @export
+#' @export apa_print summary.aov
 
 apa_print.summary.aov <- function(x, ...){
   df<-arrange_summary.aov(x)
