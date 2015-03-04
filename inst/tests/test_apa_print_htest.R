@@ -13,10 +13,11 @@ test_that(
     t_test_output <- apa_print(t_test)
 
     expect_that(t_test_output, is_a("list"))
-    expect_that(names(cor_test_output), equals(c("stat", "est", "full")))
-    expect_that(cor_test_output$stat, is_a("character"))
-    expect_that(cor_test_output$est, is_a("character"))
-    expect_that(cor_test_output$full, is_a("character"))
+    expect_that(length(t_test_output), equals(3))
+    expect_that(names(t_test_output), equals(c("stat", "est", "full")))
+    expect_that(t_test_output$stat, is_a("character"))
+    expect_that(t_test_output$est, is_a("character"))
+    expect_that(t_test_output$full, is_a("character"))
 
     expect_that(t_test_output$stat, equals("$t(17.78) = -1.86$, $p = .079$"))
     expect_that(t_test_output$est, equals("$\\Delta M = 1.58$, 95% CI $[-3.37$, $0.21]$"))
@@ -44,6 +45,12 @@ test_that(
     expect_that(t_test_output$stat, equals("$t(19) = 3.41$, $p = .003$"))
     expect_that(t_test_output$est, equals("$M = 1.54$, 95% CI $[0.60$, $2.48]$"))
     expect_that(t_test_output$full, equals("$M = 1.54$, 95% CI $[0.60$, $2.48]$, $t(19) = 3.41$, $p = .003$"))
+
+    t_test_output <- apa_print(t_test, ci = matrix(c(1, 2), ncol = 2, dimnames = list(NULL, c("2.5 %", "97.5 %"))))
+    expect_that(t_test_output$est, equals("$M = 1.54$, 95% CI $[1.00$, $2.00]$"))
+
+    t_test_output <- apa_print(t_test, stat_name = "foobar")
+    expect_that(t_test_output$stat, equals("$foobar(19) = 3.41$, $p = .003$"))
   }
 )
 
@@ -128,15 +135,15 @@ test_that(
     cor_test_output <- apa_print(cor_test)
 
     expect_that(cor_test_output$stat, equals("$T = 26.00$, $p = .119$"))
-    expect_that(cor_test_output$est, equals("$r_{\\uptau} = .44$"))
-    expect_that(cor_test_output$full, equals("$r_{\\uptau} = .44$, $T = 26.00$, $p = .119$"))
+    expect_that(cor_test_output$est, equals("$\\uptau = .44$"))
+    expect_that(cor_test_output$full, equals("$\\uptau = .44$, $T = 26.00$, $p = .119$"))
 
     cor_test <- cor.test(x, y, method = "kendall", exact = FALSE)
     cor_test_output <- apa_print(cor_test)
 
     expect_that(cor_test_output$stat, equals("$z = 1.67$, $p = .095$"))
-    expect_that(cor_test_output$est, equals("$r_{\\uptau} = .44$"))
-    expect_that(cor_test_output$full, equals("$r_{\\uptau} = .44$, $z = 1.67$, $p = .095$"))
+    expect_that(cor_test_output$est, equals("$\\uptau = .44$"))
+    expect_that(cor_test_output$full, equals("$\\uptau = .44$, $z = 1.67$, $p = .095$"))
   }
 )
 

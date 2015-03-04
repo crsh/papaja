@@ -16,7 +16,7 @@ test_that(
 
     expect_that(printnum(1/3, digits = 5), equals("0.33333"))
 
-    expect_that(printnum(-1.3, gt1 = FALSE), throws_error())
+    expect_that(printnum(-1.3, gt1 = FALSE), gives_warning())
     expect_that(printnum(-1/3, gt1 = TRUE), equals("-0.33"))
     expect_that(printnum(-1/3, gt1 = FALSE), equals("-.33"))
 
@@ -34,7 +34,7 @@ test_that(
   "Vector"
   , {
     to_print <- c(12.1, 9, 0.1, 1, -0.0003)
-    expect_that(printnum(to_print, gt1 = FALSE), throws_error())
+    expect_that(printnum(to_print, gt1 = FALSE), gives_warning())
 
     apa_num <- printnum(to_print)
     expect_that(apa_num, is_a("character"))
@@ -59,7 +59,7 @@ test_that(
   "Matrix and data.frame"
   , {
     to_print <- matrix(c(12.1, 9, 0.1, 1, -0.0003))
-    expect_that(printnum(to_print, gt1 = FALSE), throws_error())
+    expect_that(printnum(to_print, gt1 = FALSE), gives_warning())
     expect_that(printnum(as.data.frame(to_print)), throws_error())
 
     # Matrix
@@ -183,7 +183,7 @@ test_that(
     expect_error(printnumber(1, na_string = letters[1:2]), "The parameter 'na_string' must be of length 1.")
     expect_error(printnumber(1, na_string = 3), "The parameter 'na_string' must be of class 'character'.")
 
-    expect_error(printnumber(2, gt1 = FALSE), "You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
+    expect_that(printnumber(2, gt1 = FALSE), gives_warning())
   }
 )
 
