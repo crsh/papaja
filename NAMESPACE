@@ -2,6 +2,11 @@
 
 S3method(apa_print,htest)
 S3method(apa_print,lm)
+S3method(apa_print,aovlist)
+S3method(apa_print,aov)
+S3method(apa_print,summary.aov)
+S3method(apa_print,anova)
+S3method(apa_print,Anova.mlm)
 export(apa6_pdf)
 export(apa6_word)
 export(apa_prepare_doc)
