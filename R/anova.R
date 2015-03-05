@@ -55,7 +55,7 @@ apa_print.aov <- function(x, ...){
 
 apa_print.Anova.mlm <- function(x, correction="GG", ...){
 
-  x <- summary(x)
+  x <- car::summary(x)
   x$sphericity.tests
   tmp <- x[["univariate.tests"]]
   class(tmp) <- NULL

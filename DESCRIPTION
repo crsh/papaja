@@ -17,7 +17,8 @@ Imports:
   rmarkdown (>= 0.3.10),
   knitr (>= 1.8),
   broom (>= 0.3.6),
-  MBESS
+  MBESS,
+  car
 Suggests:
   dplyr,
   testthat
