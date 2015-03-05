@@ -8,7 +8,7 @@
 #' @param fig_caption Logical. Indicates if figures are rendered with captions.
 #' @param pandoc_args Additional command line options to pass to pandoc
 #' @param Logical. Keep the intermediate tex file used in the conversion to PDF.
-#' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}.
+#' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
 #' @details
 #'    When creating PDF documents \code{class} is passed to the class options of the LaTeX apa6 document class. In this case,
 #'    additional options are available. Refer to the apa6 document class
