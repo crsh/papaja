@@ -40,7 +40,7 @@ apa_print.summary.aov <- function(x, ...){
   values <- .anova(df)
   return(values)
 }
-??apa_print
+
 apa_print.anova <- function(x, ...){
   df<-arrange_anova(x)
   values <- .anova(df, ...)
