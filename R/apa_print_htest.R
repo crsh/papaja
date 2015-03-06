@@ -73,14 +73,9 @@ apa_print.htest <- function(
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
+  in_paren(in_paren)
 
   if(is.null(stat_name)) stat_name <- names(x$statistic)
-
   stat <- printnum(x$statistic)
 
   if(!is.null(x$sample.size)) n <- x$sample.size

@@ -89,12 +89,7 @@ apa_print.lm <- function(
   } else validate(ci)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
-
+  in_paren(in_paren)
 
   # Model coefficients
   if(is.null(stat_name)) if(standardized) stat_name <- "b^*" else stat_name <- "b"
@@ -164,7 +159,6 @@ apa_print.lm <- function(
 #' @method apa_print summary.lm
 #' @export apa_print summary.lm
 
-
 apa_print.summary.lm <- function(
   x
   , stat_name = NULL
@@ -175,7 +169,6 @@ apa_print.summary.lm <- function(
   validate(x, check_class = "summary.lm")
 
   x <- eval(x$call)
-??apa_print
   apa_print(
     x
     , stat_name = stat_name

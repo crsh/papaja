@@ -9,9 +9,8 @@
 #' @param x Output object. See details.
 #' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
 #' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
-#' @param op
-#' @param cp
 #' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
+#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @details details
 #'
 #'
@@ -97,7 +96,9 @@ apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
   values
 }
 
-.anova <- function(x, observed = NULL, es = "ges", op = "(", cp = ")") {
+.anova <- function(x, observed = NULL, es = "ges", in_paren = FALSE) {
+
+  in_paren(in_paren)
 
   # from here on every class of input object is handled the same way
 
