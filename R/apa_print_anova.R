@@ -36,9 +36,14 @@ apa_print.aovlist <- function(x, ...) {
 
 apa_print.summary.aov <- function(x, ...) {
   df <- arrange_summary.aov(x)
-  values <- .anova(df)
+  values <- .anova(df, ...)
   values
 }
+
+
+#' @rdname apa_print.aovlist
+#' @method apa_print anova
+#' @export apa_print anova
 
 apa_print.anova <- function(x, ...) {
   df <- arrange_anova(x)
@@ -46,11 +51,21 @@ apa_print.anova <- function(x, ...) {
   values
 }
 
+
+#' @rdname apa_print.aovlist
+#' @method apa_print aov
+#' @export apa_print aov
+
 apa_print.aov <- function(x, ...) {
   df <- arrange_aov(x)
   values <- .anova(df, ...)
   values
 }
+
+
+#' @rdname apa_print.aovlist
+#' @method apa_print Anova.mlm
+#' @export apa_print Anova.mlm
 
 apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
 
@@ -154,8 +169,9 @@ apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
 
 ## Helper functions
 
-## class 'anova'
-arrange_anova <- function(anova) {
+arrange_anova <- function(x, ...) UseMethod("arrange_anova", x)
+
+arrange_anova.anova <- function(x, ...) {
   object <- as.data.frame(anova)
   x <- data.frame(array(NA, dim = c(nrow(object)-1, 7)), row.names = NULL)
   colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df2", "statistic", "p.value")
@@ -166,8 +182,7 @@ arrange_anova <- function(anova) {
   x
 }
 
-## class 'aov'
-arrange_aov <- function(aov) {
+arrange_anova.aov <- function(x, ...) {
   x <- broom::tidy(aov)
   x$sumsq_err <- x[nrow(x), "sumsq"]
   x$df2 <- x[nrow(x), "df"]
@@ -175,8 +190,7 @@ arrange_aov <- function(aov) {
   x
 }
 
-## class 'summary.aov'
-arrange_summary.aov <- function(aov) {
+arrange_anova.summary.aov <- function(x, ...) {
   x <- arrange_aov(aov[[1]])
 }
 
