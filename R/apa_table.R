@@ -2,28 +2,30 @@
 #'
 #' Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
 #' (6th edition).
+#'
 #' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
 #' @param placement Character. Indicates wheter table should be placed at the exact location ("h"), at the
-#'    top ("t"), bottom ("b"), or on a new page ("p"). Arguments can be combined ("htb"); ignored in MS
+#'    top (\code{t}), bottom (\code{b}), or on a new page (\code{p}). Arguments can be combined (\code{htb}); ignored in MS
 #'    Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format. Ignored in MS Word
 #'    documents.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See details.
-#' @param ... Further arguments to pass to \code{kntir::kable}.
-#' @seealso \code{\link{apply}}
+#' @param ... Further arguments to pass to \code{\link[kntir]{kable}}.
+#'
 #' @details If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
 #'    the first column giving the names of elements.
 #'
 #'    If the first column(s) of the table are unnamed, the names for these columns can be supplied using the
 #'    \code{added_colnames} parameter. This is the case when an object has rownames (unless
-#'    \code{row.names = FALSE} is passed to \code{knitr::kable}) and when elements of a \code{list} are
-#'    merged.
+#'    \code{row.names = FALSE} is passed to \code{\link[kntir]{kable}} via \code{...}) and when elements of
+#'    a \code{list} are merged.
 #'
 #'    The syntax of the ouput is determined automatically by the rendered document type. If no rendering is
 #'    in progress the output default is LaTeX.
-#' @examples rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
+#' @seealso \code{\link{apply}}, \code{\link[kntir]{kable}}
+#' @examples NULL
 #' @export
 
 apa_table <- function(...) {

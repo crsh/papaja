@@ -15,7 +15,7 @@
 #'    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
 #'    such as paper size or draft watermarks.
 #' @seealso \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
-#' @examples NULL
+#' @examples rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
 #' @export
 
 apa6_pdf <- function(
