@@ -37,7 +37,7 @@ When creating PDF documents \code{class} is passed to the class options of the L
 \item \code{apa6_word}: Format to create .docx-files. \code{class} parameter is ignored.
 }}
 \examples{
-NULL
+rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
 }
 \seealso{
 \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
