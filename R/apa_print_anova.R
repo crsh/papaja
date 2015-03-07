@@ -22,7 +22,7 @@
 #' @export
 
 apa_print.aovlist <- function(x, ...) {
-  x <- lapply(summary(x), arrange_summary.aov)
+  x <- lapply(summary(x), arrange_anova)
   df <- do.call("rbind", x)
   df <- data.frame(df, row.names = NULL)
   values <- .anova(df, ...)
@@ -35,7 +35,7 @@ apa_print.aovlist <- function(x, ...) {
 #' @export apa_print summary.aov
 
 apa_print.summary.aov <- function(x, ...) {
-  df <- arrange_summary.aov(x)
+  df <- arrange_anova(x)
   values <- .anova(df, ...)
   values
 }
@@ -57,7 +57,7 @@ apa_print.anova <- function(x, ...) {
 #' @export apa_print aov
 
 apa_print.aov <- function(x, ...) {
-  df <- arrange_aov(x)
+  df <- arrange_anova(x)
   values <- .anova(df, ...)
   values
 }
@@ -191,7 +191,7 @@ arrange_anova.aov <- function(x, ...) {
 }
 
 arrange_anova.summary.aov <- function(x, ...) {
-  x <- arrange_aov(aov[[1]])
+  x <- arrange_anova(aov[[1]])
 }
 
 
