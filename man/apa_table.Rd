@@ -2,12 +2,19 @@
 % Please edit documentation in R/apa_table.R
 \name{apa_table}
 \alias{apa_table}
+\alias{apa_table.latex}
+\alias{apa_table.word}
 \title{Prepare table for printing}
 \usage{
 apa_table(...)
+
+apa_table.latex(x, caption = NULL, note = NULL, placement = "tbp",
+  landscape = FALSE, added_colnames = NULL, ...)
+
+apa_table.word(x, caption = NULL, note = NULL, added_colnames = NULL, ...)
 }
 \arguments{
-\item{...}{Further arguments to pass to \code{kntir::kable}.}
+\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
 
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
 
@@ -15,11 +22,11 @@ apa_table(...)
 
 \item{note}{Character. Note to be printed below the table.}
 
-\item{placement}{Character. Indicates wheter table should be placed at the exact location ("h"), at the
-top ("t"), bottom ("b"), or on a new page ("p"). Arguments can be combined ("htb"); ignored in MS
-Word documents.}
+\item{placement}{Character. Indicates whether table should be placed at the exact location (\code{h}),
+at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
+to indicate order of preference (\code{htb}); ignored in MS Word documents.}
 
-\item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format. Ignored in MS Word
+\item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 documents.}
 
 \item{added_colnames}{Character. Vector of names for first unnamed columns. See details.}
@@ -29,21 +36,31 @@ Formats \code{matrices} and \code{data.frames} to report them as tables accordin
 (6th edition).
 }
 \details{
-If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-   the first column giving the names of elements.
+When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is determined automatically
+   by the rendered document type. If no rendering is in progress the output default is LaTeX.
 
-   If the first column(s) of the table are unnamed, the names for these columns can be supplied using the
-   \code{added_colnames} parameter. This is the case when an object has rownames (unless
-   \code{row.names = FALSE} is passed to \code{knitr::kable}) and when elements of a \code{list} are
+   If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
+   the first column giving the names of the list elements elements.
+
+   If the first column(s) of the table are unnamed, names for these columns can be supplied using the
+   \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
+   \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
    merged.
-
-   The syntax of the ouput is determined automatically by the rendered document type. If no rendering is
-   in progress the output default is LaTeX.
 }
 \examples{
-rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
+my_table <- apply(cars, 2, function(x) # Create data
+   round(c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
+)
+
+apa_table(
+   my_table
+   , align = c("l", "r", "r")
+   , caption = "A summary table of the cars dataset."
+   , note = "This table was created using apa\\\\_table()"
+   , added_colnames = "Descriptives"
+)
 }
 \seealso{
-\code{\link{apply}}
+\code{\link[knitr]{kable}}
 }
 

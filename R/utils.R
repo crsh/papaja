@@ -168,6 +168,28 @@ parse_ellipsis <- function(...) {
 }
 
 
+
+#' Set parentheses or brackets
+#'
+#' Define \code{op} and \code{cp} to generate strings in the calling environment. \emph{This function is not exported.}
+#'
+#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
+#'
+#' @examples
+#' set_op_cp()
+
+in_paren <- function(in_paren = FALSE) {
+  if(in_paren) {
+    assign("op", "[", envir = parent.env(environment()))
+    assign("cp", "]", envir = parent.env(environment()))
+  } else {
+    assign("op", "(", envir = parent.env(environment()))
+    assign("cp", ")", envir = parent.env(environment()))
+  }
+  TRUE
+}
+
+
 #############################
 ## assumes object of class 'anova' and returns character string
 ##

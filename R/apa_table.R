@@ -5,25 +5,39 @@
 #' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
-#' @param placement Character. Indicates wheter table should be placed at the exact location ("h"), at the
-#'    top ("t"), bottom ("b"), or on a new page ("p"). Arguments can be combined ("htb"); ignored in MS
-#'    Word documents.
-#' @param landscape Logical. If \code{TRUE} the table is printed in landscape format. Ignored in MS Word
+#' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
+#'    at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
+#'    to indicate order of preference (\code{htb}); ignored in MS Word documents.
+#' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See details.
-#' @param ... Further arguments to pass to \code{kntir::kable}.
-#' @seealso \code{\link{apply}}
-#' @details If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-#'    the first column giving the names of elements.
+#' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
-#'    If the first column(s) of the table are unnamed, the names for these columns can be supplied using the
-#'    \code{added_colnames} parameter. This is the case when an object has rownames (unless
-#'    \code{row.names = FALSE} is passed to \code{knitr::kable}) and when elements of a \code{list} are
+#' @details
+#'    When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is determined automatically
+#'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
+#'
+#'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
+#'    the first column giving the names of the list elements elements.
+#'
+#'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
+#'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
+#'    \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
 #'    merged.
+#' @seealso \code{\link[knitr]{kable}}
+#' @examples
 #'
-#'    The syntax of the ouput is determined automatically by the rendered document type. If no rendering is
-#'    in progress the output default is LaTeX.
-#' @examples rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
+#' my_table <- apply(cars, 2, function(x) # Create data
+#'    round(c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
+#' )
+#'
+#' apa_table(
+#'    my_table
+#'    , align = c("l", "r", "r")
+#'    , caption = "A summary table of the cars dataset."
+#'    , note = "This table was created using apa\\_table()"
+#'    , added_colnames = "Descriptives"
+#' )
 #' @export
 
 apa_table <- function(...) {
@@ -36,7 +50,18 @@ apa_table <- function(...) {
   }
 }
 
-apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", landscape = FALSE, added_colnames = NULL, ...) {
+#' @rdname apa_table
+#' @export
+
+apa_table.latex <- function(
+  x
+  , caption = NULL
+  , note = NULL
+  , placement = "tbp"
+  , landscape = FALSE
+  , added_colnames = NULL
+  , ...
+) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
@@ -80,7 +105,16 @@ apa_table.latex <- function(x, caption = NULL, note = NULL, placement = "tbp", l
   cat("\\end{threeparttable}\n\\end{", table_env, "}", sep = "")
 }
 
-apa_table.word <- function(x, caption = NULL, note = NULL, added_colnames = NULL, ...) {
+#' @rdname apa_table
+#' @export
+
+apa_table.word <- function(
+  x
+  , caption = NULL
+  , note = NULL
+  , added_colnames = NULL
+  , ...
+) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
