@@ -130,7 +130,7 @@ apa_print.lm <- function(
   p <- printp(glance_x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
-  apa_res$stat$modelfit$r2 <- paste0("$F", op, summary_x$fstatistic[2], ",", glance_x$df.residual, cp, " = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
+  apa_res$stat$modelfit$r2 <- paste0("$F", op, summary_x$fstatistic[2], ", ", glance_x$df.residual, cp, " = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
 
   ci_conf_level <- (100 - ((100 - conf_level) * 2))
   # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
