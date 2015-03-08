@@ -1,10 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' \code{apa_print.aov}
-#' \code{apa_print.aovlist}
-#' \code{apa_print.summary.aov}
-#' \code{apa_print.anova}
-#' \code{apa_print.Anova.mlm}
+#' S3 methods...
 #'
 #' @param x Output object. See details.
 #' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
@@ -22,6 +18,15 @@
 #' NULL
 #' @export
 
+apa_print.aov <- function(x, ...){
+  df<-arrange_aov(x)
+  values <- .anova(x=df, ...)
+  return(values)
+}
+
+#' @rdname apa_print.aov
+#' @S3method apa_print aovlist
+
 apa_print.aovlist <- function(x, ...){
   x<-lapply(summary(x),arrange_summary.aov)
   df<-do.call("rbind",x)
@@ -30,10 +35,8 @@ apa_print.aovlist <- function(x, ...){
   return(values)
 }
 
-
-#' @rdname apa_print.aovlist
-#' @method apa_print summary.aov
-#' @export apa_print summary.aov
+#' @rdname apa_print.aov
+#' @S3method apa_print summary.aov
 
 apa_print.summary.aov <- function(x, ...){
   df<-arrange_summary.aov(x)
@@ -41,17 +44,14 @@ apa_print.summary.aov <- function(x, ...){
   return(values)
 }
 
+
+
 apa_print.anova <- function(x, ...){
   df<-arrange_anova(x)
   values <- .anova(df, ...)
   return(values)
 }
 
-apa_print.aov <- function(x, ...){
-  df<-arrange_aov(x)
-  values <- .anova(x=df, ...)
-  return(values)
-}
 
 apa_print.Anova.mlm <- function(x, correction="GG", ...){
 
