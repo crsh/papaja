@@ -11,13 +11,12 @@
 #'    \itemize{
 #'      \item \code{htest}
 #'      \item \code{lm} and \code{summary.lm}
-#'      \item \code{aov}, \code{aovlist}, and \code{summary.aov}
+#'      \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
 #'      \item \code{anova} and \code{Anova.mlm}
 #'    }
 #'
-#' @return The form of the valued returned by \code{apa_print} depends on the class of \code{x}. See the
-#'    documentation of the particular methods for details of what is produced by that method (e.g.,
-#'    \code{?apa_print.htest}).
+#' @return The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the
+#'    documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
 #'
 #' @family apa_print
 #' @examples
@@ -26,7 +25,6 @@
 #' @export
 
 apa_print <- function(x, ...) {
-  validate(x)
   UseMethod("apa_print", x)
 }
 

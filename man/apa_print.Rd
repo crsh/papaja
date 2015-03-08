@@ -12,9 +12,8 @@ apa_print(x, ...)
 \item{...}{Additional arguments passed to other methods. See details.}
 }
 \value{
-The form of the valued returned by \code{apa_print} depends on the class of \code{x}. See the
-   documentation of the particular methods for details of what is produced by that method (e.g.,
-   \code{?apa_print.htest}).
+The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the
+   documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
 }
 \description{
 \code{apa_print} is a generic function that takes objects from various statistical methods to create
@@ -27,7 +26,7 @@ Currently the following output objects are supported:
    \itemize{
      \item \code{htest}
      \item \code{lm} and \code{summary.lm}
-     \item \code{aov}, \code{aovlist}, and \code{summary.aov}
+     \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
      \item \code{anova} and \code{Anova.mlm}
    }
 }
@@ -37,10 +36,18 @@ methods("apa_print")
 }
 \seealso{
 Other apa_print: \code{\link{apa_print.Anova.mlm}},
+<<<<<<< HEAD
   \code{\link{apa_print.anova}};
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
   \code{\link{apa_print.summary.aov}};
+=======
+  \code{\link{apa_print.anova}},
+  \code{\link{apa_print.aov}},
+  \code{\link{apa_print.aovlist}},
+  \code{\link{apa_print.summary.aov}},
+  \code{\link{apa_print.summary.aovlist}};
+>>>>>>> Refactored, tested, and debugged apa_print.aov()-family; added summary.aovlist-method and updated documentation.
   \code{\link{apa_print.htest}};
   \code{\link{apa_print.lm}},
   \code{\link{apa_print.summary.lm}}

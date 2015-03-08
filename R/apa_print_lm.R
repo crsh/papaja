@@ -89,7 +89,7 @@ apa_print.lm <- function(
   } else validate(ci)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  in_paren(in_paren)
+  set_paren(in_paren)
 
   # Model coefficients
   if(is.null(stat_name)) if(standardized) stat_name <- "b^*" else stat_name <- "b"
@@ -97,9 +97,7 @@ apa_print.lm <- function(
   summary_x <- summary(x)
   tidy_x <- broom::tidy(x)
   tidy_x <- cbind(tidy_x, ci) # Adds term rownames
-  if(standardized) rownames(tidy_x) <- gsub("scale\\(", "z_", rownames(tidy_x)) # Sanitize term names
-  rownames(tidy_x) <- gsub("\\(|\\)", "", rownames(tidy_x)) # Sanitize term names
-  rownames(tidy_x) <- gsub("\\W", "_", rownames(tidy_x)) # Sanitize term names
+  rownames(tidy_x) <- sanitize_terms(rownames(tidy_x), standardized)
   glance_x <- broom::glance(x)
 
   apa_res <- list()
@@ -168,7 +166,7 @@ apa_print.summary.lm <- function(
 ) {
   validate(x, check_class = "summary.lm")
 
-  x <- eval(x$call)
+  x <- eval.parent(x$call, n = 1)
   apa_print(
     x
     , stat_name = stat_name

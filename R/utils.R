@@ -178,7 +178,7 @@ parse_ellipsis <- function(...) {
 #' @examples
 #' set_op_cp()
 
-in_paren <- function(in_paren = FALSE) {
+set_paren <- function(in_paren = FALSE) {
   if(in_paren) {
     assign("op", "[", envir = parent.env(environment()))
     assign("cp", "]", envir = parent.env(environment()))
@@ -190,13 +190,20 @@ in_paren <- function(in_paren = FALSE) {
 }
 
 
-#############################
-## assumes object of class 'anova' and returns character string
-##
-make_f_test <- function(x, op = "(", cp = ")") {
-  p_pos <- grep("Pr\\(>F\\)", names(x))
-  p <- printp(x[p_pos])
-  if(!grepl("<|>", p)) eq <- "= " else eq <- ""
-  ftest <- paste0("$F", op, x["Df"], ",", x["Res.Df"], cp, " = ", printnum(x["F"]), "$, $p ", eq, p, "$")
-  ftest
+
+#' Sanitize term names
+#'
+#' Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is not exported.}
+#'
+#' @param x Character. Vector of term-names to be sanitized.
+#' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
+#'    removed from term names.
+#'
+#' @examples
+#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B"))
+
+sanitize_terms <- function(x, standardized = FALSE) {
+  if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
+  x <- gsub("\\(|\\)", "", x)                       # Remove parentheses
+  x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
 }

@@ -1,80 +1,139 @@
 #' Format statistics (APA 6th edition) from ANOVAs
 #'
-#' These methods take input objects of the \code{aov} type and return them in a format that is suitable for in-line printing.
+#' \code{apa_print.aov} and related functions take objects from various R functions that calculate ANOVA to create formated chraracter
+#' strings to report the results in accordance with APA manuscript guidelines. \code{anova}-objects from e.g. model comparisons are currently
+#' not supported.
 #'
 #' @param x Output object. See details.
-#' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
-#' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
-#' @param in_paren \code{logical}. Indicates if the formated string will be reported inside parentheses. See details.
-#' @details details
+#' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
+#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared; otherwise ignored.
+#' @param correction Character In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
+#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @details
+#'    Currently, methods for the following objects exist:
+#'    \itemize{
+#'      \item{\code{aov}}
+#'      \item{\code{summary.aov}}
+#'      \item{\code{aovlist}}
+#'      \item{\code{summary.aovlist}}
+#'      \item{\code{anova}}
+#'      \item{\code{Anova.mlm}}
+#'    }
 #'
+#'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
+#'    are omitted and other non-word characters are replaced by \code{_}.
 #'
-#' @return a named list
+#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
+#'    of freedom, are replaced with brackets.
 #'
+#' @return
+#'    \code{apa_print.aov} and related functions return a list containing the following components according to the input:
+#'
+#'    \describe{
+#'      \item{\code{stat}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
+#'          value for each factor.}
+#'      \item{\code{est}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
+#'      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each factor.}
+#'    }
+#' @references
+#'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}, 37 (3), 379-384.
 #' @family apa_print
+#' @seealso \code{\link{aov}}, \code{\link[car]{Anova}}
 #' @examples
-#' NULL
+#'    ## From Venables and Ripley (2002) p. 165.
+#'    npk_aov <- aov(yield ~ block + N * P * K, npk)
+#'    apa_print(npk_aov)
 #' @export
 
-apa_print.aov <- function(x, ...) {
+apa_print.aov <- function(
+  x
+  , es = "ges"
+  , observed = NULL
+  , in_paren = FALSE
+) {
   df <- arrange_anova(x)
-  values <- .anova(df, ...)
-  values
+
+  print_anova(df, es = es, observed = observed, in_paren = in_paren)
 }
 
 
 #' @rdname apa_print.aov
 #' @method apa_print summary.aov
+#' @export
 
-apa_print.summary.aov <- function(x, ...) {
+apa_print.summary.aov <- function(
+  x
+  , es = "ges"
+  , observed = NULL
+  , in_paren = FALSE
+) {
   df <- arrange_anova(x)
-  values <- .anova(df, ...)
-  values
+
+  print_anova(df, es = es, observed = observed, in_paren = in_paren)
 }
 
 
 #' @rdname apa_print.aov
 #' @method apa_print aovlist
-
-apa_print.aovlist <- function(x, ...) {
-  x <- lapply(summary(x), arrange_anova)
-  df <- do.call("rbind", x)
-  df <- data.frame(df, row.names = NULL)
-  values <- .anova(df, ...)
-  values
-}
-
-
-#' Format statistics (APA 6th edition) from ANOVAs
-#'
-#' These methods take input objects of the \code{anova} type and return them in a format that is suitable for in-line printing.
-#'
-#' @param x Output object. See details.
-#' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
-#' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
-#' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
-#' @param in_paren \code{logical}. Indicates if the formatted string will be reported inside parentheses. See details.
-#' @details details
-#'
-#'
-#' @return a named list
-#'
-#' @family apa_print
-#' @examples
-#' NULL
 #' @export
 
-apa_print.anova <- function(x, ...) {
-  df <- arrange_anova(x)
-  values <- .anova(df, ...)
-  values
+apa_print.aovlist <- function(
+  x
+  , es = "ges"
+  , observed = NULL
+  , in_paren = FALSE
+) {
+  summary_x <- summary(x)
+
+  apa_print(summary_x, es = es, observed = observed, in_paren = in_paren)
 }
 
 
-#' @rdname apa_print.anova
-#' @method apa_print Anova.mlm
+#' @rdname apa_print.aov
+#' @method apa_print summary.aovlist
+#' @export
 
-apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
+apa_print.summary.aovlist <- function(
+  x
+  , es = "ges"
+  , observed = NULL
+  , in_paren = FALSE
+) {
+  x <- lapply(x, arrange_anova)
+  df <- do.call("rbind", x)
+  df <- data.frame(df, row.names = NULL)
+
+  print_anova(df, es = es, observed = observed, in_paren = in_paren)
+}
+
+
+#' @rdname apa_print.aov
+#' @method apa_print anova
+#' @export
+
+apa_print.anova <- function(
+  x
+  , es = "ges"
+  , observed = NULL
+  , in_paren = FALSE
+) {
+  df <- arrange_anova(x)
+
+  print_anova(df, es = es, observed = observed, in_paren = in_paren)
+}
+
+
+#' @rdname apa_print.aov
+#' @method apa_print Anova.mlm
+#' @export
+
+apa_print.Anova.mlm <- function(
+  x
+  , correction = "GG"
+  , es = "pes"
+  , observed = NULL
+  , in_paren = FALSE
+) {
 
   x <- car::summary(x)
   x$sphericity.tests
@@ -106,7 +165,7 @@ apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
 
   # obtain positons of statistics in data.frame
   old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
-  nu <- c("sumsq", "df", "sumsq_err", "df2", "statistic", "p.value")
+  nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
   colnames(df) == old
   for (i in 1:length(old)){
     colnames(df)[colnames(df) == old[i]] <- nu[i]
@@ -114,18 +173,30 @@ apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
 
   df$term <- rownames(df)
   df <- data.frame(df, row.names = NULL)
-  values <- .anova(df, ...)
-  values
+
+  print_anova(df, es = es, observed = observed, in_paren = in_paren)
 }
 
-.anova <- function(x, observed = NULL, es = "ges", in_paren = FALSE) {
 
-  in_paren(in_paren)
 
-  # from here on every class of input object is handled the same way
+print_anova <- function(
+  x
+  , observed = NULL
+  , es = "ges"
+  , in_paren = FALSE
+) {
+  validate(x, check_class = "data.frame")
+  if(!is.null(observed)) validate(observed, check_class = "character")
+  validate(es, check_class = "character")
+  validate(in_paren, check_class = "logical", check_length = 1)
 
-  # calculate generalized eta squared
-  # This code is as copy from afex by Henrik Singmann who said that it is basically a copy from ezANOVA by Mike Lawrence
+  set_paren(in_paren)
+
+  rownames(x) <- sanitize_terms(x$term)
+
+  # Calculate generalized eta squared
+  ## This code is a copy from afex by Henrik Singmann who said that it is basically a copy
+  ## from ezANOVA by Mike Lawrence
   if(!is.null(observed)) {
     obs <- rep(FALSE, nrow(x))
     for(i in observed){
@@ -138,67 +209,74 @@ apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
     obs_SSn1 <- 0
     obs_SSn2 <- 0
   }
-  x$ges <- x$sumsq / (x$sumsq+sum(unique(x$sumsq_err)) + obs_SSn1-obs_SSn2)
-  # calculate partial eta squared
-  x$pes <- x$sumsq / (x$sumsq+x$sumsq_err)
+  x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
 
-  # rounding and filling with zeros
-  x[, "statistic"] <- printnum(x[, "statistic"], digits = 2, margin = 2)
-  x["p.value"] <- printp(x[, "p.value"])
-  x[, c("df", "df2")] <- round(x[, c("df","df2")], digits = 2)
-  x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 3, margin = 2, gt1 = FALSE)
+  # Calculate partial eta squared
+  x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
 
-  # add 'equals' where necessary
-  eq <- (1:nrow(x))[!grepl(x[, "p.value"], pattern="<|>|=")]
+  # Rounding and filling with zeros
+  x$statistic <- printnum(x$statistic, digits = 2)
+  x$p.value <- printp(x$p.value)
+  x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
+  x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 2, margin = 2, gt1 = FALSE)
+
+  # Add 'equals' where necessary
+  eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
   for (i in eq) {
-    x[, "p.value"][i] <- paste0("= ", x[, "p.value"][i])
+    x$p.value[i] <- paste0("= ", x$p.value[i])
   }
 
-  # concatenate character strings
-  x$md.text <- as.character(NA)
+  # Concatenate character strings and return as names list
+  apa_res <- list()
 
-  for (i in 1:nrow(x)) {
-    x$md.text[i] <- paste0("*F*", op, x$df[i], ", ", x$df2[i], cp, " = ", x$statistic[i], ", *p* ", x$p.value[i])
-    if("ges" %in% es) {
-      x$md.text[i] <- paste0(x$md.text[i],", $\\eta^2_G$ = ", x$ges[i])
-    }
+  apa_res$stat <- apply(x[, -1], 1, function(y) {
+    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], "$, $p ", y["p.value"], "$")
+  })
+
+  apa_res$est <- apply(x[, -1], 1, function(y) {
+    apa_est <- c()
     if("pes" %in% es) {
-      x$md.text[i] <- paste0(x$md.text[i], ", $\\eta^2_p$ = ", x$pes[i])
+      apa_est <- c(apa_est, paste0("$\\eta^2_p = ", y["pes"], "$"))
     }
-  }
+    if("ges" %in% es) {
+      apa_est <- c(apa_est, paste0("$\\eta^2_G = ", y["ges"], "$"))
+    }
+    apa_est <- paste(apa_est, collapse = ", ")
+  })
 
-  # return as named list
-  values <- as.list(x$md.text)
-  names(values) <- x$term
-  values
+  apa_res$full <- paste(apa_res$stat, apa_res$est, sep = ", ")
+  names(apa_res$full) <- names(apa_res$est)
+  apa_res <- lapply(apa_res, as.list)
+  apa_res
 }
 
 
 ## Helper functions
 
-arrange_anova <- function(x, ...) UseMethod("arrange_anova", x)
+arrange_anova <- function(x) UseMethod("arrange_anova", x)
 
-arrange_anova.anova <- function(x, ...) {
-  object <- as.data.frame(anova)
-  x <- data.frame(array(NA, dim = c(nrow(object)-1, 7)), row.names = NULL)
-  colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df2", "statistic", "p.value")
+arrange_anova.anova <- function(x) {
+  object <- as.data.frame(x)
+  x <- data.frame(array(NA, dim = c(nrow(object) - 1, 7)), row.names = NULL)
+  colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
   x[, c("sumsq", "df", "statistic", "p.value")] <- object[-nrow(object), c("Sum Sq", "Df", "F value", "Pr(>F)")]
   x$sumsq_err <- object[nrow(object), "Sum Sq"]
-  x$df2 <- object[nrow(object), "Df"]
+  x$df_res <- object[nrow(object), "Df"]
   x$term <- rownames(object)[-nrow(object)]
   x
 }
 
-arrange_anova.aov <- function(x, ...) {
-  x <- broom::tidy(aov)
-  x$sumsq_err <- x[nrow(x), "sumsq"]
-  x$df2 <- x[nrow(x), "df"]
-  x <- x[-nrow(x), ]
-  x
+arrange_anova.aov <- function(x) {
+  tidy_x <- broom::tidy(x)
+  tidy_x$sumsq_err <- tidy_x[nrow(tidy_x), "sumsq"]
+  tidy_x$df_res <- tidy_x[nrow(tidy_x), "df"]
+  tidy_x <- tidy_x[-nrow(tidy_x), ]
+  tidy_x
 }
 
-arrange_anova.summary.aov <- function(x, ...) {
-  x <- arrange_anova(aov[[1]])
+arrange_anova.summary.aov <- function(x) {
+  arranged_aov <- arrange_anova.aov(x[[1]])
+  arranged_aov
 }
 
 
