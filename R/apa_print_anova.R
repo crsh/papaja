@@ -1,16 +1,11 @@
-#' Format statistics (APA 6th edition)
+#' Format statistics (APA 6th edition) from ANOVAs
 #'
-#' \code{apa_print.aov}
-#' \code{apa_print.aovlist}
-#' \code{apa_print.summary.aov}
-#' \code{apa_print.anova}
-#' \code{apa_print.Anova.mlm}
+#' These methods take input objects of the \code{aov} type and return them in a format that is suitable for in-line printing.
 #'
 #' @param x Output object. See details.
 #' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
 #' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
-#' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren \code{logical}. Indicates if the formated string will be reported inside parentheses. See details.
 #' @details details
 #'
 #'
@@ -21,6 +16,26 @@
 #' NULL
 #' @export
 
+apa_print.aov <- function(x, ...) {
+  df <- arrange_anova(x)
+  values <- .anova(df, ...)
+  values
+}
+
+
+#' @rdname apa_print.aov
+#' @method apa_print summary.aov
+
+apa_print.summary.aov <- function(x, ...) {
+  df <- arrange_anova(x)
+  values <- .anova(df, ...)
+  values
+}
+
+
+#' @rdname apa_print.aov
+#' @method apa_print aovlist
+
 apa_print.aovlist <- function(x, ...) {
   x <- lapply(summary(x), arrange_anova)
   df <- do.call("rbind", x)
@@ -30,20 +45,24 @@ apa_print.aovlist <- function(x, ...) {
 }
 
 
-#' @rdname apa_print.aovlist
-#' @method apa_print summary.aov
-#' @export apa_print summary.aov
-
-apa_print.summary.aov <- function(x, ...) {
-  df <- arrange_anova(x)
-  values <- .anova(df, ...)
-  values
-}
-
-
-#' @rdname apa_print.aovlist
-#' @method apa_print anova
-#' @export apa_print anova
+#' Format statistics (APA 6th edition) from ANOVAs
+#'
+#' These methods take input objects of the \code{anova} type and return them in a format that is suitable for in-line printing.
+#'
+#' @param x Output object. See details.
+#' @param es \code{character} The effect-size measure to be calculated. Either "ges" for generalized eta-squared or "pes" for partial eta-squared.
+#' @param observed \code{character} The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared.
+#' @param correction \code{character} In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either "GG" for Greenhouse-Geisser or "HF" for Huyn-Feldt methods. "none" is also possible.
+#' @param in_paren \code{logical}. Indicates if the formatted string will be reported inside parentheses. See details.
+#' @details details
+#'
+#'
+#' @return a named list
+#'
+#' @family apa_print
+#' @examples
+#' NULL
+#' @export
 
 apa_print.anova <- function(x, ...) {
   df <- arrange_anova(x)
@@ -52,20 +71,8 @@ apa_print.anova <- function(x, ...) {
 }
 
 
-#' @rdname apa_print.aovlist
-#' @method apa_print aov
-#' @export apa_print aov
-
-apa_print.aov <- function(x, ...) {
-  df <- arrange_anova(x)
-  values <- .anova(df, ...)
-  values
-}
-
-
-#' @rdname apa_print.aovlist
+#' @rdname apa_print.anova
 #' @method apa_print Anova.mlm
-#' @export apa_print Anova.mlm
 
 apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
 
