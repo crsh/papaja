@@ -177,7 +177,13 @@ individual.n<-function(x,na.rm){
   return(y)
 }
 
-# returns confidence intervals
+#' Between-subjects confidence intervals
+#'
+#' returns confidence intervals
+#' @param x \code{numeric}. A vector of observations from your dependent variable.
+#' @param level \code{numeric}. The area of the cdf that will be covered. Defaults to .95 for 95\% confidence intervals.
+#' @param na.rm \code{logical}. Shall missing values (i.e., \code{NA}s) be removed?
+#' @export
 conf.int<-function(x,level=.95,na.rm=TRUE){
   a<-(1-level)/2
   n<-sum(!is.na(x))

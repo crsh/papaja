@@ -1,16 +1,14 @@
 ---
-title: Example manuscript demonstrating the use of the papaja template
-shorttitle: Using papaja
-author: Frederik Aust
+title: Reporting and displaying your results using papaja
+shorttitle: 
+author: Marius Barth
 affiliation: University of Cologne
 
-abstract: This example manuscript demonstrates how to use RStudio and RMarkdown to
-  produce an APA conform manuscript. Using pandoc your RMarkdown can be converted
-  to PDF or Word documents.
+abstract: 
 
 note: Currently, a development version of `papaja` is available at https://github.com/crsh/papaja.
 
-keywords: APA, knitr, R, RMarkdown, papaja
+keywords: 
 
 class: man
 lang: american
@@ -21,130 +19,32 @@ bibliography: references.bib
 output: papaja::apa6_pdf
 ---
 ```{r message = FALSE, warning = FALSE}
-require("papaja")
+library(papaja)
+library(dplyr)
+
 apa_prepare_doc() # Prepare document for rendering
+
+# set some defaults
+knitr::opts_chunk$set(cache=FALSE, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8.8, fig.height=4.4)
+
+# load data
+load("./data/exp1.RData")
 ```
 
-# What is papaja?
-As you may have heard, recently, interest in reproducible research has been growing.
-Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility.
-For *R* users, RMarkdown has been suggested as one possible framework for reproducible analyses.
-`papaja` is a R-package in the making including a RMarkdown template that can be used with RStudio (or without) to produce complete manscripts (PDF and Word documents), which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
-To do so, papaja uses the \LaTeX document class `apa6` and a `.docx`-reference file. The supplied R-functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
+# Results
+
+```{r}
+# first calculate the proportion of correct responses
+tmp <- aggregate(correct~material+generation+order+instruction+id,data=pd.data,FUN=mean,na.rm=TRUE)
+
+# visualize your data
+apa_barplot(data=tmp,id="id",factors=c("material","instruction"),dv="correct",fun.aggregate=mean,tendency=mean,,dispersion=,level=.98,ylim=c(0,1))
 
 
-Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents (among others).
-In the following I will assume you have hoped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses.
-If this is not the case, I recommend you get to grips with [RMarkdown](http://rmarkdown.rstudio.com/) first.
-I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work using any other R-editor.
-
-# How do I use papaja?
-Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja) you can select the APA template when creating a new Markdown file through the menus in RStudio.
-When you click RStudio's *Knit* button, `papaja`, `rmarkdown,` and `knitr` together create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
-Don't worry about the first chunk of R code at the beginning of the document.
-It sets the stage for the creation of your document.
-
-```{r echo = TRUE, eval = FALSE}
-require("papaja")
-apa_prepare_doc() # Prepare document for rendering
 ```
 
-## Printing R output
-Any output from R is included as you usually would using RMarkdown.
-By default the R code will not be displayed in the final documents.
-If you wish to show off your code you need to set `echo = TRUE` in the chunk options.
-
-```{r echo = TRUE}
-summary(cars)
-```
-
-But, surely, this is not what you want your submission to look like.
-I think we can do better.
-
-### Print tables
-For prettier tables, I suggest you have a look at `apa_table()`.
-Of course, e.g, the popular `xtable` or `tables` packages can also be used to create tables when knitting PDF documents.
-Unfortunately, `xtable()` captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6).
-More importantly, these packages cannot be used when you want to create Microsoft Word documents because they rely on \LaTeX for typesetting.
-`apa_table()` creates tables that conform to APA guidelines and are correctly rendered in PDF and Word documents.
-But don't fool yourself.
-Table formatting is somewhat limited in Word documents due to missing functionality in pandoc (e.g., it is not possible to have cells span across multiple columns).
-
-As required by the APA guidelines, in manuscripts tables are pushed to the final pages of the document when creating a PDF.
-Again, this is not the case in Word documents due to limited pandoc functionality.
-To place figures and tables in your text instead, set the `figsintext` parameter in the document header to `yes` or `true` as I have done in this document.
-
-```{r results = 'asis', warning = FALSE, message = FALSE, echo = TRUE}
-my_table <- apply(cars, 2, function(x) round(
-    c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
-  )
-
-apa_table(
-  my_table
-  , align = c("l", "r", "r")
-  , caption = "A summary table of the cars dataset."
-  , note = "This table was created using apa\\_table()"
-  , added_colnames = "Descriptives"
-)
-```
-
-The bottom line is, Word documents will be less polished than PDF.
-The resulting documents should suffice to enable collaboration with Wordy colleagues and prepare a journal submission.
-
-### Plots
-You can also embed plots, for example:
-
-```{r fig.cap = "Exmple figure created by in-document R code.", echo = TRUE}
-plot(cars)
-```
-
-Again, as required by the APA guidelines, figures are pushed to the final pages of the document unless you set `figsintext` to `yes`.
-
-### Report statistical analyses
-`apa_print()` will help you report the results of your statistical analyses.
-The function will format your input to produce readily reportable text.
-
-```{r echo = TRUE}
-my_regression <- lm(dist ~ speed, cars)
-my_results <- apa_print(my_regression)
-```
-
-In this case speed is a significant precitor of the distance taken to stop, `r my_results$full$speed`.
-The regression explains `r my_results$est$modelfit$r2` variance, which is of course statistically significant, `r my_results$stat$modelfit$r2`.
-
-The previous paragraph was produced by the following text:
-
-```{r eval = FALSE, echo = TRUE}
-In this case speed is a significant precitor of the distance taken
-to stop, `r my_results$full$speed`. The regression explains
-`r my_results$est$modelfit$r2` variance, which is of course
-statistically significant, `r my_results$stat$modelfit$r2`.
-```
+For each participant, we calculated the proportion of correctly generated *second order conditionals*. We then conducted a
 
 
-## Citations
-You can insert citations like this:
-
-`[e.g., @bauer_2014; @bem_2011]` &#8594; [e.g., @bauer_2014; @bem_2011].
-
-Citing without parentheses is, of course, also possible:
-
-`@bauer_2014` &#8594; @bauer_2014.
-
-The citation style is set in the header of this document with the `csl` parameter.
-The relevant references will, of course, be added to the documents references automatically.
-In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the document header.
-See the [RMarkdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
-
-## Document options
-This text is set as manuscript.
-If you want a thesis-like document you can change the `class` in the document header from `man` to `doc`.
-You can also preview a polished journal typesetting by changing the `class` to `jou`.
-Refer to the `apa6` document class [documentation](ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf) for further class options, such as paper size or draft watermarks.
-
-When creating PDF documents, line numbering can be activated by setting the `lineno` argument in the header of this document to true. This option has no effect on Word documents.
-
-## Last words
-That's all I have. Enjoy writing your manuscript. If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or make a pull request with the fix. ;)
 
 # References
