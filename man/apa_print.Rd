@@ -36,18 +36,11 @@ methods("apa_print")
 }
 \seealso{
 Other apa_print: \code{\link{apa_print.Anova.mlm}},
-<<<<<<< HEAD
-  \code{\link{apa_print.anova}};
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.aovlist}},
-  \code{\link{apa_print.summary.aov}};
-=======
   \code{\link{apa_print.anova}},
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
   \code{\link{apa_print.summary.aov}},
   \code{\link{apa_print.summary.aovlist}};
->>>>>>> Refactored, tested, and debugged apa_print.aov()-family; added summary.aovlist-method and updated documentation.
   \code{\link{apa_print.htest}};
   \code{\link{apa_print.lm}},
   \code{\link{apa_print.summary.lm}}

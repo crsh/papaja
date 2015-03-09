@@ -86,18 +86,11 @@ doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164
 \code{\link{confint}}, \code{\link[MBESS]{ci.pvaf}}
 
 Other apa_print: \code{\link{apa_print.Anova.mlm}},
-<<<<<<< HEAD
-  \code{\link{apa_print.anova}};
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.aovlist}},
-  \code{\link{apa_print.summary.aov}};
-=======
   \code{\link{apa_print.anova}},
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
   \code{\link{apa_print.summary.aov}},
   \code{\link{apa_print.summary.aovlist}};
->>>>>>> Refactored, tested, and debugged apa_print.aov()-family; added summary.aovlist-method and updated documentation.
   \code{\link{apa_print.htest}}; \code{\link{apa_print}}
 }
 
