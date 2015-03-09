@@ -7,8 +7,9 @@
 #' @param x Output object. See details.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param correction Character In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
+# @param correction Character In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param ... Additional arguments passed to or from other methods.
 #' @details
 #'    Currently, methods for the following objects exist:
 #'    \itemize{
@@ -17,7 +18,7 @@
 #'      \item{\code{aovlist}}
 #'      \item{\code{summary.aovlist}}
 #'      \item{\code{anova}}
-#'      \item{\code{Anova.mlm}}
+#      \item{\code{Anova.mlm}}
 #'    }
 #'
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
@@ -35,10 +36,11 @@
 #'      \item{\code{est}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
 #'      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each factor.}
 #'    }
-#' @references
-#'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}, 37 (3), 379-384.
+# @references
+#    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}, 37 (3), 379-384.
 #' @family apa_print
-#' @seealso \code{\link{aov}}, \code{\link[car]{Anova}}
+#' @seealso \code{\link{aov}}
+#   , \code{\link[car]{Anova}}
 #' @examples
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
@@ -50,6 +52,7 @@ apa_print.aov <- function(
   , es = "ges"
   , observed = NULL
   , in_paren = FALSE
+  , ...
 ) {
   df <- arrange_anova(x)
 
@@ -66,6 +69,7 @@ apa_print.summary.aov <- function(
   , es = "ges"
   , observed = NULL
   , in_paren = FALSE
+  , ...
 ) {
   df <- arrange_anova(x)
 
@@ -82,6 +86,7 @@ apa_print.aovlist <- function(
   , es = "ges"
   , observed = NULL
   , in_paren = FALSE
+  , ...
 ) {
   summary_x <- summary(x)
 
@@ -98,6 +103,7 @@ apa_print.summary.aovlist <- function(
   , es = "ges"
   , observed = NULL
   , in_paren = FALSE
+  , ...
 ) {
   x <- lapply(x, arrange_anova)
   df <- do.call("rbind", x)
@@ -116,6 +122,7 @@ apa_print.anova <- function(
   , es = "ges"
   , observed = NULL
   , in_paren = FALSE
+  , ...
 ) {
   df <- arrange_anova(x)
 
@@ -123,59 +130,60 @@ apa_print.anova <- function(
 }
 
 
-#' @rdname apa_print.aov
-#' @method apa_print Anova.mlm
-#' @export
+# @rdname apa_print.aov
+# @method apa_print Anova.mlm
+# @export
 
-apa_print.Anova.mlm <- function(
-  x
-  , correction = "GG"
-  , es = "pes"
-  , observed = NULL
-  , in_paren = FALSE
-) {
-
-  x <- car::summary(x)
-  x$sphericity.tests
-  tmp <- x$univariate.tests
-  class(tmp) <- NULL
-  t.out <- data.frame(tmp)
-  colnames(t.out) <- colnames(tmp)
-
-  if(nrow(x$sphericity.tests) > 0) {
-    if (correction[1] == "GG") {
-      t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * x$pval.adjustments[, "GG eps"]
-      t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * x$pval.adjustments[, "GG eps"]
-      t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[GG])"]
-    } else {
-      if (correction[1] == "HF") {
-        if (any(x$pval.adjustments[,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
-        t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
-        t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
-        t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[HF])"]
-      } else {
-        if (correction[1] == "none") {
-          TRUE
-        } else stop("None supported argument to correction.")
-      }
-    }
-  }
-
-  df <- as.data.frame(t.out)
-
-  # obtain positons of statistics in data.frame
-  old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
-  nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
-  colnames(df) == old
-  for (i in 1:length(old)){
-    colnames(df)[colnames(df) == old[i]] <- nu[i]
-  }
-
-  df$term <- rownames(df)
-  df <- data.frame(df, row.names = NULL)
-
-  print_anova(df, es = es, observed = observed, in_paren = in_paren)
-}
+# apa_print.Anova.mlm <- function(
+#   x
+#   , correction = "GG"
+#   , es = "pes"
+#   , observed = NULL
+#   , in_paren = FALSE
+#   , ...
+# ) {
+#
+#   x <- car::summary(x)
+#   x$sphericity.tests
+#   tmp <- x$univariate.tests
+#   class(tmp) <- NULL
+#   t.out <- data.frame(tmp)
+#   colnames(t.out) <- colnames(tmp)
+#
+#   if(nrow(x$sphericity.tests) > 0) {
+#     if (correction[1] == "GG") {
+#       t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * x$pval.adjustments[, "GG eps"]
+#       t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * x$pval.adjustments[, "GG eps"]
+#       t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[GG])"]
+#     } else {
+#       if (correction[1] == "HF") {
+#         if (any(x$pval.adjustments[,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+#         t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
+#         t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
+#         t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[HF])"]
+#       } else {
+#         if (correction[1] == "none") {
+#           TRUE
+#         } else stop("Correction not supported. 'correction' must either be 'pes' or 'ges'.")
+#       }
+#     }
+#   }
+#
+#   df <- as.data.frame(t.out)
+#
+#   # obtain positons of statistics in data.frame
+#   old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
+#   nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+#   colnames(df) == old
+#   for (i in 1:length(old)){
+#     colnames(df)[colnames(df) == old[i]] <- nu[i]
+#   }
+#
+#   df$term <- rownames(df)
+#   df <- data.frame(df, row.names = NULL)
+#
+#   print_anova(df, es = es, observed = observed, in_paren = in_paren)
+# }
 
 
 
@@ -190,7 +198,11 @@ print_anova <- function(
   validate(es, check_class = "character")
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  set_paren(in_paren)
+  if(in_paren) {
+    op <- "["; cp <- "]"
+  } else {
+    op <- "("; cp <- ")"
+  }
 
   rownames(x) <- sanitize_terms(x$term)
 
@@ -200,8 +212,8 @@ print_anova <- function(
   if(!is.null(observed)) {
     obs <- rep(FALSE, nrow(x))
     for(i in observed){
-      if (!any(str_detect(rownames(x),str_c("\\<", i, "\\>")))) stop(str_c("Observed variable not in data: ", i))
-      obs <- obs | str_detect(rownames(x), str_c("\\<", i, "\\>"))
+      if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) stop(paste0("Observed variable not in data: ", i, collapse = " "))
+      obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
     }
     obs_SSn1 <- sum(x$sumsq*obs)
     obs_SSn2 <- x$sumsq*obs
@@ -278,23 +290,3 @@ arrange_anova.summary.aov <- function(x) {
   arranged_aov <- arrange_anova.aov(x[[1]])
   arranged_aov
 }
-
-
-# load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
-
-# library(papaja)
-# library(afex)
-# library(broom)
-# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="Anova")
-# object <- ez.glm(data=Daten.Lrn,id="id",dv="Reaktionszeit",between=c("Material"),within="Block.Nr",fun.aggregate=mean,na.rm=TRUE,return="Anova")
-# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm")
-# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="univ")
-# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="nice")
-# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="aov")
-# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="aov")
-
-# class(object)
-# x <- object
-# apa_print(object)
-
-

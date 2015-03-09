@@ -1,9 +1,3 @@
-library("testthat")
-source("../../R/apa_print.R")
-source("../../R/apa_print_htest.R")
-source("../../R/printnum.R")
-source("../../R/utils.R")
-
 context("apa_print.htest()")
 
 test_that(

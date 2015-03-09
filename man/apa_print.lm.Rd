@@ -6,10 +6,10 @@
 \title{Format statistics (APA 6th edition)}
 \usage{
 \method{apa_print}{lm}(x, stat_name = NULL, standardized = FALSE,
-  ci = 0.95, in_paren = FALSE)
+  ci = 0.95, in_paren = FALSE, ...)
 
 \method{apa_print}{summary.lm}(x, stat_name = NULL, standardized = FALSE,
-  ci = 0.95, in_paren = FALSE)
+  ci = 0.95, in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{\code{lm} object.}
@@ -27,6 +27,8 @@ coefficient names as row names (in the same order as they appear in \code{summar
 See details.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+
+\item{...}{Additional arguments passed to or from other methods.}
 }
 \value{
 \code{apa_print.lm} returns a list containing the following components according to the input:
@@ -85,8 +87,7 @@ doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164
 \seealso{
 \code{\link{confint}}, \code{\link[MBESS]{ci.pvaf}}
 
-Other apa_print: \code{\link{apa_print.Anova.mlm}},
-  \code{\link{apa_print.anova}},
+Other apa_print: \code{\link{apa_print.anova}},
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
   \code{\link{apa_print.summary.aov}},

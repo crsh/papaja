@@ -9,7 +9,7 @@ validate(x, name = NULL, check_class = NULL, check_integer = FALSE,
   check_dim = NULL, check_range = NULL)
 }
 \arguments{
-\item{x}{}
+\item{x}{Function input.}
 
 \item{name}{Character. Name of variable to validate; if \code{NULL} variable name of object supplied to \code{x} is used.}
 

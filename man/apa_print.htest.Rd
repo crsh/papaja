@@ -5,7 +5,7 @@
 \title{Format statistics (APA 6th edition)}
 \usage{
 \method{apa_print}{htest}(x, stat_name = NULL, n = NULL, ci = NULL,
-  in_paren = FALSE)
+  in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{\code{htest} object. See details.}
@@ -14,7 +14,7 @@
 adaptation, such as \eqn{r_S} instead of "rho") is used, otherwise the name is overwritten by the one
 supplied. See details.}
 
-\item{n}{Numeric. Size of the sample; required when reporting \eqn{\Chi^2} tests, otherwise this parameter
+\item{n}{Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
 is ignored.}
 
 \item{ci}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
@@ -22,6 +22,8 @@ Other confidence intervals can be supplied as a \code{vector} of length 2 (lower
 with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+
+\item{...}{Additional arguments passed to or from other methods.}
 }
 \value{
 \code{apa_print()} returns a list containing the following components according to the input:
@@ -75,8 +77,7 @@ prop_stat <- prop.test(smokers, patients)
 apa_print(prop_stat, n = sum(patients))
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.Anova.mlm}},
-  \code{\link{apa_print.anova}},
+Other apa_print: \code{\link{apa_print.anova}},
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
   \code{\link{apa_print.summary.aov}},

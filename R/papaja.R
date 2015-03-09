@@ -6,7 +6,7 @@
 #' \href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file. The supplied R-functions (e.g., \code{\link{apa_print}}
 #' or \code{\link{apa_table}} facilitate the reporting of statistics in accordance with APA guidelines.
 #'
-#' Note, at this point `papaja` is in active development and should be considered alpha. If you experience any problems, please
+#' Note, at this point coversion to MS word is considered experimental. If you experience any problems, please
 #' \href{https://github.com/crsh/papaja/issues}{open an issue} with a reproducible example of the encountered problem.
 #' @section Functions:
 #'    To get a list of all functions try \code{ls("package:papaja")}.
@@ -33,11 +33,11 @@
 #'    texlive-fonts-extra texlive-humanities}
 #'
 #' @section Author and maintainer:
-#'    Frederik Aust, University of Cologne, frederik.aust at uni-koeln.de.
+#'    Frederik Aust frederik.aust@uni-koeln.de.
 #' @section Contributors:
 #'  \itemize{
-#'    \item{Marius Barth, University of Cologne}
-#'    \item{Birk Diedenhofen, University of Duesseldorf}
+#'    \item{Marius Barth}
+#'    \item{Birk Diedenhofen}
 #'  }
 #' @docType package
 #' @name papaja

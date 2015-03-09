@@ -14,6 +14,7 @@
 #'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 #'    See details.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param ... Additional arguments passed to or from other methods.
 #' @details
 #'    The coefficients names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
@@ -73,6 +74,7 @@ apa_print.lm <- function(
   , standardized = FALSE
   , ci = 0.95
   , in_paren = FALSE
+  , ...
 ) {
 
   validate(x, check_class = "lm")
@@ -89,7 +91,11 @@ apa_print.lm <- function(
   } else validate(ci)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  set_paren(in_paren)
+  if(in_paren) {
+    op <- "["; cp <- "]"
+  } else {
+    op <- "("; cp <- ")"
+  }
 
   # Model coefficients
   if(is.null(stat_name)) if(standardized) stat_name <- "b^*" else stat_name <- "b"
@@ -155,7 +161,7 @@ apa_print.lm <- function(
 
 #' @rdname apa_print.lm
 #' @method apa_print summary.lm
-#' @export apa_print summary.lm
+#' @export
 
 apa_print.summary.lm <- function(
   x
@@ -163,6 +169,7 @@ apa_print.summary.lm <- function(
   , standardized = FALSE
   , ci = 0.95
   , in_paren = FALSE
+  , ...
 ) {
   validate(x, check_class = "summary.lm")
 

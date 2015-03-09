@@ -2,7 +2,7 @@
 #'
 #' This functions can be used to validate the input to functions. \emph{This function is not exported.}
 #'
-#' @param x
+#' @param x Function input.
 #' @param name Character. Name of variable to validate; if \code{NULL} variable name of object supplied to \code{x} is used.
 #' @param check_class Character. Name of class to expect.
 #' @param check_integer Logical. If \code{TRUE} an object of type \code{integer} or an whole number \code{numeric} is expected.
@@ -164,28 +164,6 @@ make_confint <- function(
 
 parse_ellipsis <- function(...) {
   list2env(list(...), envir = parent.env(environment()))
-  TRUE
-}
-
-
-
-#' Set parentheses or brackets
-#'
-#' Define \code{op} and \code{cp} to generate strings in the calling environment. \emph{This function is not exported.}
-#'
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
-#'
-#' @examples
-#' set_op_cp()
-
-set_paren <- function(in_paren = FALSE) {
-  if(in_paren) {
-    assign("op", "[", envir = parent.env(environment()))
-    assign("cp", "]", envir = parent.env(environment()))
-  } else {
-    assign("op", "(", envir = parent.env(environment()))
-    assign("cp", ")", envir = parent.env(environment()))
-  }
   TRUE
 }
 

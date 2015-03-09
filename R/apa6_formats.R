@@ -4,10 +4,10 @@
 #'
 #' @param class Character. Specifies if the document will be a manuscript (\code{man}), a document (\code{doc}),
 #'    or a fully typsetted journal article (\code{jou}). Currently only manuscripts are supported for
-#'    MS Word documents. See details.
+#'    MS Word documents. At this point coversion to MS word is considered experimental. See details.
 #' @param fig_caption Logical. Indicates if figures are rendered with captions.
 #' @param pandoc_args Additional command line options to pass to pandoc
-#' @param Logical. Keep the intermediate tex file used in the conversion to PDF.
+#' @param keep_tex Logical. Keep the intermediate tex file used in the conversion to PDF.
 #' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
 #' @details
 #'    When creating PDF documents \code{class} is passed to the class options of the LaTeX apa6 document class. In this case,
@@ -15,7 +15,12 @@
 #'    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
 #'    such as paper size or draft watermarks.
 #' @seealso \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
-#' @examples rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
+#' @examples
+#' ## Not run:
+#'
+#' rmarkdown::draft("mymanuscript.Rmd", template = "apa6", package = "papaja")
+#'
+#' ## End(Not run)
 #' @export
 
 apa6_pdf <- function(
@@ -72,7 +77,8 @@ apa6_pdf <- function(
 }
 
 
-#' @describeIn apa6_pdf Format to create .docx-files. \code{class} parameter is ignored.
+#' @describeIn apa6_pdf Format to create .docx-files. \code{class} parameter is ignored. \emph{This function
+#'    should be considered experimental.}
 #' @export
 
 apa6_word <- function(
@@ -116,8 +122,8 @@ apa6_word <- function(
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
   format$knitr$knit_hooks$inline <- inline_numbers
 
-  format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
-  format$knitr$opts_chunk$dpi <- 300
+#   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
+#   format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
   format
 }

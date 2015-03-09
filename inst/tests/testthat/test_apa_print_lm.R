@@ -1,9 +1,3 @@
-library("testthat")
-source("../../R/apa_print.R")
-source("../../R/apa_print_lm.R")
-source("../../R/printnum.R")
-source("../../R/utils.R")
-
 context("apa_print.lm()")
 
 test_that(

@@ -1,10 +1,3 @@
-library("testthat")
-source("../../R/apa_print.R")
-source("../../R/apa_print_anova.R")
-source("../../R/printnum.R")
-source("../../R/utils.R")
-
-
 context("apa_print() for ANOVA")
 
 # Data and examples from http://personality-project.org/r/r.guide.html#anova
@@ -202,6 +195,15 @@ test_that(
     # Other classes
     tw_rm_aov_summary_output <- apa_print(summary(tw_rm_aov))
     expect_that(tw_rm_aov_summary_output, is_identical_to(tw_rm_aov_output))
+
+    # Observed
+
+    tw_rm_aov_output <- apa_print(tw_rm_aov, observed = "Task")
+
+    expect_that(tw_rm_aov_output$est$Valence, is_a("character"))
+    expect_that(tw_rm_aov_output$est$Valence, equals("$\\eta^2_G = .10$"))
+    expect_that(tw_rm_aov_output$est$Task_Valence, is_a("character"))
+    expect_that(tw_rm_aov_output$est$Task_Valence, equals("$\\eta^2_G = .01$"))
   }
 )
 
@@ -284,3 +286,25 @@ test_that(
 # )
 
 # Model comparison
+
+
+
+
+
+
+# load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
+
+# library(papaja)
+# library(afex)
+# library(broom)
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="Anova")
+# object <- ez.glm(data=Daten.Lrn,id="id",dv="Reaktionszeit",between=c("Material"),within="Block.Nr",fun.aggregate=mean,na.rm=TRUE,return="Anova")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="lm")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="univ")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="nice")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="aov")
+# object <- ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),fun.aggregate=mean,na.rm=TRUE,return="aov")
+
+# class(object)
+# x <- object
+# apa_print(object)

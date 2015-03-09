@@ -19,9 +19,9 @@ MS Word documents. See details.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
 
-\item{...}{Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.}
+\item{keep_tex}{Logical. Keep the intermediate tex file used in the conversion to PDF.}
 
-\item{Logical.}{Keep the intermediate tex file used in the conversion to PDF.}
+\item{...}{Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.}
 }
 \description{
 Template for creating an article according to APA guidelines (6th edition) in PDF format.
@@ -34,10 +34,15 @@ When creating PDF documents \code{class} is passed to the class options of the L
 }
 \section{Functions}{
 \itemize{
-\item \code{apa6_word}: Format to create .docx-files. \code{class} parameter is ignored.
+\item \code{apa6_word}: Format to create .docx-files. \code{class} parameter is ignored. \emph{This function
+should be considered experimental.}
 }}
 \examples{
-rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
+## Not run:
+
+rmarkdown::draft("mymanuscript.Rmd", template = "apa6", package = "papaja")
+
+## End(Not run)
 }
 \seealso{
 \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}

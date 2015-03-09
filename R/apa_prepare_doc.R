@@ -21,7 +21,7 @@ apa_prepare_doc <- function() {
     apa_metadata <- rmarkdown::metadata
 
     # Only one call allowed while rendering
-    if(!exists("apa_lang" , envir = papaja:::apa_doc_env, inherits = FALSE)) {
+    if(!exists("apa_lang" , envir = apa_doc_env, inherits = FALSE)) {
       create_apa_lang(apa_metadata$lang)
 
       # Hack MS Word output

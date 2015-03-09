@@ -1,6 +1,3 @@
-library("testthat")
-source("../../R/utils.R")
-
 context("Utility functions")
 
 test_that(

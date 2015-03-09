@@ -52,8 +52,7 @@ install.packages("rmarkdown")
 - Use the `rmarkdown::draft` function to create articles:
 
 ```S
-rmarkdown::draft("mymanuscript.Rmd", template = "apa6_pdf", package = "papaja")
-rmarkdown::draft("mymanuscript.Rmd", template = "apa6_word", package = "papaja")
+rmarkdown::draft("mymanuscript.Rmd", template = "apa6", package = "papaja")
 ```
 
 ## Known issues

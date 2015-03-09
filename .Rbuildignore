@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^NEWS\.md$
+^cran-comments\.md$
+^\./example/$

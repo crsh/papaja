@@ -198,4 +198,3 @@ se<-function(x, na.rm=TRUE, level){
   ee<-sd(x, na.rm=na.rm)/sqrt(n)
   return(ee)
 }
-

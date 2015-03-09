@@ -7,12 +7,13 @@
 #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
 #'    adaptation, such as \eqn{r_S} instead of "rho") is used, otherwise the name is overwritten by the one
 #'    supplied. See details.
-#' @param n Numeric. Size of the sample; required when reporting \eqn{\Chi^2} tests, otherwise this parameter
+#' @param n Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
 #'    is ignored.
 #' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param ... Additional arguments passed to or from other methods.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
@@ -66,6 +67,7 @@ apa_print.htest <- function(
   , n = NULL
   , ci = NULL
   , in_paren = FALSE
+  , ...
 ) {
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
@@ -73,7 +75,11 @@ apa_print.htest <- function(
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  set_paren(in_paren)
+  if(in_paren) {
+    op <- "["; cp <- "]"
+  } else {
+    op <- "("; cp <- ")"
+  }
 
   if(is.null(stat_name)) stat_name <- names(x$statistic)
   stat <- printnum(x$statistic)

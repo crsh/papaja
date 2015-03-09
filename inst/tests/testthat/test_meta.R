@@ -1,6 +1,3 @@
-library("testthat")
-source("../../R/meta.R")
-
 context("localize()")
 
 test_that(

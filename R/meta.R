@@ -7,18 +7,15 @@ create_apa_lang <- function(lang) {
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
     # Only one call allowed while rendering
-    if(!exists("apa_lang", envir = papaja:::apa_doc_env, inherits = FALSE)) {
+    if(!exists("apa_lang", envir = apa_doc_env, inherits = FALSE)) {
 
       # Define document language and lock in global environment
       assign("apa_lang", localize(lang), envir = apa_doc_env)
-      lockBinding("apa_lang", env = apa_doc_env)
     }
   } else {
-    if(exists("apa_lang", envir = papaja:::apa_doc_env, inherits = FALSE)) {
-      unlockBinding("apa_lang", env = apa_doc_env)
+    if(exists("apa_lang", envir = apa_doc_env, inherits = FALSE)) {
     }
     apa_doc_env$apa_lang <- localize(lang)
-    lockBinding("apa_lang", env = apa_doc_env)
   }
 }
 
@@ -35,7 +32,7 @@ localize <- function(lang) {
     )
     , german = list(
       abstract = "Zusammenfassung"
-      , keywords = "Stichwörter:"
+      , keywords = "Stichwoerter:"
       , table = "Tabelle"
       , figure = "Abbildung"
       , note = "Anmerkung."
