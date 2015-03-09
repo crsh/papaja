@@ -13,7 +13,7 @@ apa6_word(class = "man", fig_caption = TRUE, pandoc_args = NULL, ...)
 \arguments{
 \item{class}{Character. Specifies if the document will be a manuscript (\code{man}), a document (\code{doc}),
 or a fully typsetted journal article (\code{jou}). Currently only manuscripts are supported for
-MS Word documents. See details.}
+MS Word documents. At this point coversion to MS word is considered experimental. See details.}
 
 \item{fig_caption}{Logical. Indicates if figures are rendered with captions.}
 

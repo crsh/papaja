@@ -33,7 +33,7 @@
 #'    texlive-fonts-extra texlive-humanities}
 #'
 #' @section Author and maintainer:
-#'    Frederik Aust frederik.aust@uni-koeln.de.
+#'    Frederik Aust (frederik.aust at uni-koeln.de).
 #' @section Contributors:
 #'  \itemize{
 #'    \item{Marius Barth}
