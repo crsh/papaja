@@ -11,7 +11,7 @@ r_refs(file, prefix = "R-", ...)
 
 \item{prefix}{Character. A prefix to be used for all R-package reference handles.}
 
-\item{...}{Further arguments to pass to \code{knitr::write_bib}.}
+\item{...}{Further arguments to pass to \code{\link[knitr]{write_bib}}.}
 }
 \description{
 Creates a .bib-reference file for the used R version and all attached R-packages, so they can be cited
@@ -24,7 +24,11 @@ This function is a wrapper for \code{write_bib} from the \pkg{knitr} package. If
    adding it to the \code{bibliography} parameter in the document's yaml-header.
 }
 \examples{
+## Not run:
+
 r_refs("test_bibliography.bib") # Creates file in current working directory
+
+## End(Not run)
 }
 \seealso{
 \code{\link[knitr]{write_bib}}

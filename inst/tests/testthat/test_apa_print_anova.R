@@ -38,8 +38,22 @@ test_that(
     ow_aov_summary_output <- apa_print(summary(ow_aov))
     expect_that(ow_aov_summary_output, is_identical_to(ow_aov_output))
 
+    library("car")
     ow_aov_Anova_output <- apa_print(car::Anova(ow_aov))
     expect_that(ow_aov_Anova_output, is_identical_to(ow_aov_output))
+
+    library("afex")
+    ow_afex_data <- cbind(id = 1:nrow(ow_data), ow_data)
+    ow_afex_aov <- afex::ez.glm(
+      data = ow_afex_data
+      , id = "id"
+      , dv = "Alertness"
+      , between = "Dosage"
+      , return = "aov"
+    )
+
+    ow_afex_aov_output <- apa_print(ow_afex_aov)
+    expect_that(ow_afex_aov_output, is_identical_to(ow_aov_output))
 
     # Other effect sizes
     ow_aov_output <- apa_print(ow_aov, es = "pes")
@@ -100,11 +114,26 @@ test_that(
     expect_that(tw_aov_output$full$Gender_Dosage, equals("$F(1, 12) = 0.00$, $p = .962$, $\\eta^2_G = .00$"))
 
     # Other classes
+    library("car")
+    tw_aov_Anova_output <- apa_print(car::Anova(tw_aov))
+    expect_that(tw_aov_Anova_output, is_identical_to(tw_aov_output))
+
     tw_aov_summary_output <- apa_print(summary(tw_aov))
     expect_that(tw_aov_summary_output, is_identical_to(tw_aov_output))
 
-    tw_aov_Anova_output <- apa_print(car::Anova(tw_aov))
-    expect_that(tw_aov_Anova_output, is_identical_to(tw_aov_output))
+
+    library("afex")
+    tw_afex_data <- cbind(id = 1:nrow(tw_data), tw_data)
+    tw_afex_aov <- afex::ez.glm(
+      data = tw_afex_data
+      , id = "id"
+      , dv = "Alertness"
+      , between = c("Gender", "Dosage")
+      , return = "aov"
+    )
+
+    tw_afex_aov_output <- apa_print(tw_afex_aov)
+    expect_that(tw_afex_aov_output, is_identical_to(tw_aov_output))
   }
 )
 
@@ -144,6 +173,18 @@ test_that(
     # Other classes
     rm_aov_summary_output <- apa_print(summary(rm_aov))
     expect_that(rm_aov_summary_output, is_identical_to(rm_aov_output))
+
+    library("afex")
+    rm_afex_aov <- afex::ez.glm(
+      data = rm_data
+      , id = "Subject"
+      , dv = "Recall"
+      , within = "Valence"
+      , return = "aov"
+    )
+
+    rm_afex_aov_output <- apa_print(rm_afex_aov)
+    expect_that(rm_afex_aov_output, is_identical_to(rm_aov_output))
   }
 )
 
@@ -196,8 +237,19 @@ test_that(
     tw_rm_aov_summary_output <- apa_print(summary(tw_rm_aov))
     expect_that(tw_rm_aov_summary_output, is_identical_to(tw_rm_aov_output))
 
-    # Observed
+    library("afex")
+    tw_rm_afex_aov <- afex::ez.glm(
+      data = tw_rm_data
+      , id = "Subject"
+      , dv = "Recall"
+      , within = c("Task", "Valence")
+      , return = "aov"
+    )
 
+    tw_rm_afex_aov_output <- apa_print(tw_rm_afex_aov)
+    expect_that(tw_rm_afex_aov_output, is_identical_to(tw_rm_aov_output))
+
+    # Observed
     tw_rm_aov_output <- apa_print(tw_rm_aov, observed = "Task")
 
     expect_that(tw_rm_aov_output$est$Valence, is_a("character"))
@@ -266,10 +318,6 @@ test_that(
     )
 
     expect_that(mixed_aov_output, is_identical_to(correct_output))
-
-    # Other classes
-    mixed_aov_summary_output <- apa_print(summary(mixed_aov))
-    expect_that(mixed_aov_summary_output, is_identical_to(mixed_aov_output))
   }
 )
 

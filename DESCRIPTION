@@ -19,6 +19,7 @@ Imports:
   broom (>= 0.3.6),
   MBESS
 Suggests:
-  testthat
+  testthat,
+  afex
 License: MIT + file LICENSE
 LazyData: yes

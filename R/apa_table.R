@@ -2,6 +2,7 @@
 #'
 #' Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
 #' (6th edition).
+#'
 #' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.

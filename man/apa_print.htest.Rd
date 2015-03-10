@@ -37,7 +37,7 @@ with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.}
    }
 }
 \description{
-\code{apa_print.htest} takes \code{htest} objects from various statistical methods to create
+Takes \code{htest} objects from various statistical methods to create
 formated chraracter strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{

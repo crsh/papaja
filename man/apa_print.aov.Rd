@@ -45,7 +45,7 @@
    }
 }
 \description{
-\code{apa_print.aov} and related functions take objects from various R functions that calculate ANOVA to create formated chraracter
+These methods take objects from various R functions that calculate ANOVA to create formated chraracter
 strings to report the results in accordance with APA manuscript guidelines. \code{anova}-objects from e.g. model comparisons are currently
 not supported.
 }

@@ -32,7 +32,7 @@ localize <- function(lang) {
     )
     , german = list(
       abstract = "Zusammenfassung"
-      , keywords = "Stichwoerter:"
+      , keywords = "Stichw\u00F6rter:"
       , table = "Tabelle"
       , figure = "Abbildung"
       , note = "Anmerkung."

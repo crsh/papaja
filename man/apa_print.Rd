@@ -16,9 +16,9 @@ The form of the value returned by \code{apa_print} depends on the class of \code
    documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
 }
 \description{
-\code{apa_print} is a generic function that takes objects from various statistical methods to create
-formated chraracter strings to report the results in accordance with APA manuscript guidelines. The
-function invokes particular methods which depend on the \code{\link{class}} of the first argument.
+A generic function that takes objects from various statistical methods to create formated chraracter
+strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
+methods which depend on the \code{\link{class}} of the first argument.
 }
 \details{
 Currently the following output objects are supported:

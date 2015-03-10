@@ -1,8 +1,8 @@
 #' Format statistics (APA 6th edition)
 #'
-#' \code{apa_print} is a generic function that takes objects from various statistical methods to create
-#' formated chraracter strings to report the results in accordance with APA manuscript guidelines. The
-#' function invokes particular methods which depend on the \code{\link{class}} of the first argument.
+#' A generic function that takes objects from various statistical methods to create formated chraracter
+#' strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
+#' methods which depend on the \code{\link{class}} of the first argument.
 #'
 #' @param x Output object. See details.
 #' @param ... Additional arguments passed to other methods. See details.

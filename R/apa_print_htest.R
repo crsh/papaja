@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' \code{apa_print.htest} takes \code{htest} objects from various statistical methods to create
+#' Takes \code{htest} objects from various statistical methods to create
 #' formated chraracter strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{htest} object. See details.

@@ -1,6 +1,6 @@
 #' APA manscripts from RMarkdown
 #'
-#' \pkg{papaja} is a R-package in the making including a \href{http://rmarkdown.rstudio.com/}{RMarkdown} template
+#' An R-package in the making including a \href{http://rmarkdown.rstudio.com/}{RMarkdown} template
 #' to produce complete manscripts (PDF and Word documents), which conform to the American Psychological Association (APA)
 #' manuscript guidelines (6th Edition). To do so, \pkg{papaja} uses the LaTeX document class
 #' \href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file. The supplied R-functions (e.g., \code{\link{apa_print}}

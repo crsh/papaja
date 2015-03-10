@@ -1,6 +1,7 @@
 #' Prepare numeric values for printing
 #'
 #' Formats numeric values according to APA guidelines (6th edition) for reporting.
+#'
 #' @param x Numeric. Can be either a single value, vector, or matrix.
 #' @param digits Integer. Number of decimal places to print.
 #' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, exceed 1.

@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition) from ANOVAs
 #'
-#' \code{apa_print.aov} and related functions take objects from various R functions that calculate ANOVA to create formated chraracter
+#' These methods take objects from various R functions that calculate ANOVA to create formated chraracter
 #' strings to report the results in accordance with APA manuscript guidelines. \code{anova}-objects from e.g. model comparisons are currently
 #' not supported.
 #'
@@ -90,7 +90,7 @@ apa_print.aovlist <- function(
 ) {
   summary_x <- summary(x)
 
-  apa_print(summary_x, es = es, observed = observed, in_paren = in_paren)
+  apa_print.summary.aovlist(summary_x, es = es, observed = observed, in_paren = in_paren)
 }
 
 
@@ -105,7 +105,7 @@ apa_print.summary.aovlist <- function(
   , in_paren = FALSE
   , ...
 ) {
-  x <- lapply(x, arrange_anova)
+  x <- lapply(x, arrange_anova.summary.aov)
   df <- do.call("rbind", x)
   df <- data.frame(df, row.names = NULL)
 

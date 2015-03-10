@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' \code{apa_print.lm} takes \code{lm} objects from various statistical methods to create formated chraracter
+#' Takes \code{lm} objects from various statistical methods to create formated chraracter
 #' strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{lm} object.
