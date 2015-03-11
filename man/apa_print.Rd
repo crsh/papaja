@@ -27,7 +27,7 @@ Currently the following output objects are supported:
      \item \code{htest}
      \item \code{lm} and \code{summary.lm}
      \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
-     \item \code{anova} and \code{Anova.mlm}
+     \item \code{anova} % and \code{Anova.mlm}
    }
 }
 \examples{

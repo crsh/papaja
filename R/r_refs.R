@@ -11,12 +11,7 @@
 #'    end of the file. It is recommended to create a new .bib-file dedicated to R-related references and
 #'    adding it to the \code{bibliography} parameter in the document's yaml-header.
 #' @seealso \code{\link[knitr]{write_bib}}
-#' @examples
-#' ## Not run:
-#'
-#' r_refs("test_bibliography.bib") # Creates file in current working directory
-#'
-#' ## End(Not run)
+#' @examples NULL
 #' @export
 
 r_refs <- function(file, prefix = "R-", ...) {

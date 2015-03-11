@@ -149,7 +149,7 @@ apa_table.word <- function(
   } else {
     colnames(x) <- ifelse(colnames(x) == "", "&nbsp;", colnames(x))
     prep_table <- cbind(rownames(x), x)
-    if(!is.na(added_colnames)) colnames(prep_table) <- c(added_colnames, colnames(x)) else colnames(prep_table) <- c("&nbsp;", colnames(x))
+    if(!is.null(added_colnames)) colnames(prep_table) <- c(added_colnames, colnames(x)) else colnames(prep_table) <- c("&nbsp;", colnames(x))
     rownames(prep_table) <- NULL
     print(knitr::kable(prep_table, format = "pandoc", ...))
   }

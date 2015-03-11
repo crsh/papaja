@@ -12,7 +12,7 @@
 #'      \item \code{htest}
 #'      \item \code{lm} and \code{summary.lm}
 #'      \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
-#'      \item \code{anova} and \code{Anova.mlm}
+#'      \item \code{anova} % and \code{Anova.mlm}
 #'    }
 #'
 #' @return The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the

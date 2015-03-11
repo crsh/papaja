@@ -38,11 +38,7 @@ When creating PDF documents \code{class} is passed to the class options of the L
 should be considered experimental.}
 }}
 \examples{
-## Not run:
-
-rmarkdown::draft("mymanuscript.Rmd", template = "apa6", package = "papaja")
-
-## End(Not run)
+NULL
 }
 \seealso{
 \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
