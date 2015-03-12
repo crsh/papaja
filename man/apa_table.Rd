@@ -8,19 +8,24 @@
 \usage{
 apa_table(...)
 
-apa_table.latex(x, caption = NULL, note = NULL, placement = "tbp",
-  landscape = FALSE, added_colnames = NULL, ...)
+apa_table.latex(x, caption = NULL, note = NULL, row_names = TRUE,
+  placement = "tbp", landscape = FALSE, added_colnames = NULL, ...)
 
-apa_table.word(x, caption = NULL, note = NULL, added_colnames = NULL, ...)
+apa_table.word(x, caption = NULL, note = NULL, row_names = TRUE,
+  added_colnames = NULL, ...)
 }
 \arguments{
-\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
+\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}. \code{row.names} argument is overwritten
+   by \code{row_names}.}
 
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
 
 \item{caption}{Character. Caption to be printed above the table.}
 
 \item{note}{Character. Note to be printed below the table.}
+
+\item{row_names}{Logical. Indicates whether to include row names; by default, row names are included if
+\code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.}
 
 \item{placement}{Character. Indicates whether table should be placed at the exact location (\code{h}),
 at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined

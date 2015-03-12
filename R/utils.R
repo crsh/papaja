@@ -150,25 +150,6 @@ make_confint <- function(
 }
 
 
-#' Create variables from ellipsis
-#'
-#' Variables passed to a function using the ellipsis are assigned to the calling environment according to their
-#' list names. \emph{This function is not exported.}
-#'
-#' @param ... Variable names and values to create in the calling environment.
-#'
-#' @examples
-#' parse_ellipsis(a = 10, b = 10)
-#' a
-#' b
-
-parse_ellipsis <- function(...) {
-  list2env(list(...), envir = parent.env(environment()))
-  TRUE
-}
-
-
-
 #' Sanitize term names
 #'
 #' Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is not exported.}
