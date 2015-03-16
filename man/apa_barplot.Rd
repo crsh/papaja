@@ -5,7 +5,7 @@
 \title{APA-compatible barplot}
 \usage{
 apa_barplot(data, id, factors, dv, tendency = mean, dispersion = conf_int,
-  level = 0.95, fun.aggregate = mean, na.rm = TRUE, ylim = NULL,
+  level = 0.95, fun_aggregate = mean, na.rm = TRUE, ylim = NULL,
   main = NULL, xlab = NULL, ylab = NULL, intercepts = NULL, ...)
 }
 \arguments{
@@ -23,7 +23,7 @@ apa_barplot(data, id, factors, dv, tendency = mean, dispersion = conf_int,
 
 \item{level}{Numeric. If confidence intervals are printed, this determines the area of the cdf that will be covered. Defaults to .95 for 95\% confidence intervals. If \code{level} is specified, confidence intervals are printed and \code{dispersion} is ignored.}
 
-\item{fun.aggregate}{Closure. The function that will be used to aggregate data. Defaults to \code{mean}}
+\item{fun_aggregate}{Closure. The function that will be used to aggregate data. Defaults to \code{mean}}
 
 \item{na.rm}{Logical. Specifies if missing values will be removed. Defaults to \code{TRUE}.}
 
