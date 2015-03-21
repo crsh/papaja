@@ -4,7 +4,8 @@
 #'
 #' @param file Character. The path and name of the \code{.bib}-file holding the references.
 #' @param prefix Character. The prefix used for all R-package reference handles.
-#' @param footnote Logical. Indicates if packages should be cited in a footnote.
+#' @param footnote Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
+#'    is available.
 #' @param pkgs Character. Vector of package names to cite. If \code{pkgs = "all"} (default) all loaded packages
 #'    are cited.
 #' @details
@@ -15,7 +16,7 @@
 #'    to be a separate paragraph.
 #' @return If \code{footnote = FALSE} a character string is returned and a named list with the elements \code{r}
 #'    and \code{pkgs} otherwise.
-#' @examples NULL
+#' @examples cite_r()
 #' @export
 
 cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
