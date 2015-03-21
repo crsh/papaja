@@ -18,18 +18,33 @@ r_refs <- function(file, prefix = "R-", ...) {
   validate(file, check_class = "character", check_NA = TRUE, check_length = 1)
   validate(prefix, check_class = "character", check_NA = TRUE, check_length = 1)
 
-  package_list <- c("base", names(sessionInfo()$otherPkgs))
-
-  if(file.exists(file)) {
-    bib_file <- readLines(file)
-    missing_packages <- sapply(package_list, function(x) !any(grep(paste0(prefix, x), bib_file)))
-    missing_packages <- names(missing_packages[missing_packages])
+  # Ensure that cached packages are also citable
+  cache_path <- knitr::opts_chunk$get("cache.path")
+  if (!is.null(cache_path) && file_test("-d", cache_path)) {
+    cached_pkgs <- readLines(paste0(cache_path, "__packages"))
+    cached_pkgs <- setdiff(cached_pkgs, r_session$basePkgs)
+    pkgs_to_cite <- unique(c(names(r_session$otherPkgs), cached_pkgs))
   } else {
-    missing_packages <- package_list
+    pkgs_to_cite <- names(r_session$otherPkgs)
   }
-  if(is.null(file)) knitr::write_bib(missing_packages, prefix = prefix, ...) else {
-    sink(file, append = TRUE)
-    knitr::write_bib(missing_packages, prefix = prefix, ...)
-    sink()
+
+  pkg_list <- c("base", sort(pkgs_to_cite))
+
+  if(file_test("-f", file)) {
+    bib_file <- readLines(file)
+    missing_pkgs <- sapply(pkg_list, function(x) !any(grep(paste0(prefix, x), bib_file)))
+    missing_pkgs <- names(missing_pkgs[missing_pkgs])
+  } else {
+    missing_pkgs <- pkg_list
+  }
+
+  if(!is.null(missing_pkgs)) {
+    if(is.null(file)) {
+      knitr::write_bib(missing_pkgs, prefix = prefix, ...)
+    } else {
+      sink(file, append = TRUE)
+      knitr::write_bib(missing_pkgs, prefix = prefix, ...)
+      sink()
+    }
   }
 }
