@@ -4,12 +4,14 @@
 \alias{r_refs}
 \title{Create a reference file for R and its packages}
 \usage{
-r_refs(file, prefix = "R-", ...)
+r_refs(file, prefix = "R-", overwrite = FALSE, ...)
 }
 \arguments{
 \item{file}{Character. The path and name of the file to be created or updated.}
 
 \item{prefix}{Character. A prefix to be used for all R-package reference handles.}
+
+\item{overwrite}{Logical. Indicates if existing \code{.bib}-files should be overwritten. See details.}
 
 \item{...}{Further arguments to pass to \code{\link[knitr]{write_bib}}.}
 }
@@ -18,15 +20,24 @@ Creates a .bib-reference file for the used R version and all attached R-packages
 in a Markdown-document using pandoc or LaTeX.
 }
 \details{
-This function is a wrapper for \code{write_bib} from the \pkg{knitr} package. If a file exists
-   at the specified location, the function reads the file and appends missing citation information to the
-   end of the file. It is recommended to create a new .bib-file dedicated to R-related references and
-   adding it to the \code{bibliography} parameter in the document's yaml-header.
+This function is a wrapper for \code{write_bib} from the \pkg{knitr} package.
+
+   By default a file exists at the specified location, the function reads the file and
+   appends missing citation information to the end of the file. This behavior may result in unused package
+   references in your \code{.bib}-file that will be cited when using \code{\link{cite_r}}.
+
+   It is recommended to use a \code{.bib}-file dedicated to R-references, setting \code{overwrite = TRUE},
+   and adding the file to the \code{bibliography} parameter in the document's yaml-header.
+
+   Beware that chunks loading packags should \emph{not} be cached. \code{r_refs} will make all packages
+   loaded in cached chunks citable, but it won't know when you remove a package from a cached chunk. This
+   can result in unused package references in your \code{.bib}-file that will be cited when using
+   \code{\link{cite_r}}.
 }
 \examples{
 NULL
 }
 \seealso{
-\code{\link[knitr]{write_bib}}
+\code{\link{cite_r}}, \code{\link[knitr]{write_bib}}
 }
 

@@ -25,15 +25,11 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
   validate(footnote, check_class = "logical", check_length = 1)
   validate(pkgs, check_class = "character")
 
-  r_version <- sessionInfo()$R.version
+  r_version <- as.character(packageVersion("base"))
+  cite_just_r <- paste0("R [", r_version, ", @", prefix, "base]")
 
   if(is.null(file) || !file_test("-f", file)) { # Print R-reference if r_refs() was not run, yet.
     if(!is.null(file) || pkgs != "all") warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
-    cite_just_r <- paste0(
-      "R ["
-      , paste(r_version$major, r_version$minor, sep = ".")
-      , ", @", prefix, "base]"
-    )
     return(cite_just_r)
   }
 
@@ -60,11 +56,6 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
   }
 
   if(length(pkg_citations) == 0) {
-    cite_just_r <- paste0(
-      "R ["
-      , paste(r_version$major, r_version$minor, sep = ".")
-      , ", @", prefix, "base]"
-    )
     return(cite_just_r)
   }
 
@@ -83,19 +74,13 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
 
   if(footnote) {
     res <- list()
-    res$r <- paste0(
-      "R ["
-      , paste(r_version$major, r_version$minor, sep = ".")
-      , ", @", bib$base, "][^papaja_pkg_citations]"
-    )
+    res$r <- paste0("R [", r_version, ", @", bib$base, "][^papaja_pkg_citations]")
 
     res$pkgs <- paste0("\n\n[^papaja_pkg_citations]: We, furthermore, used the R-packages ", pkg_info, ".\n\n")
   } else {
     res <- paste0(
-      "R ["
-      , paste(r_version$major, r_version$minor, sep = ".")
-      , ", @", bib$base, "] and the R-package", if(length(pkg_texts) > 1) "s", " "
-      , pkg_info
+      "R [", r_version, ", @", bib$base, "] and the R-package"
+      , if(length(pkg_texts) > 1) "s", " " , pkg_info
     )
   }
 
