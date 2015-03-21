@@ -2,7 +2,7 @@
 % Please edit documentation in R/cite_r.R
 \name{cite_r}
 \alias{cite_r}
-\title{Cite R and loaded R-packages}
+\title{Cite R and R-packages}
 \usage{
 cite_r(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all")
 }
@@ -14,7 +14,7 @@ cite_r(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all")
 \item{footnote}{Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
 is available.}
 
-\item{pkgs}{Character. Vector of package names to cite. If \code{pkgs = "all"} (default) all loaded packages
+\item{pkgs}{Character. Vector of package names to cite. If \code{pkgs = "all"} (default) packages in \code{file}
 are cited.}
 }
 \value{
@@ -22,7 +22,7 @@ If \code{footnote = FALSE} a character string is returned and a named list with 
    and \code{pkgs} otherwise.
 }
 \description{
-Creates a character string citing R and all loaded R-packages.
+Creates a character string citing R and  R-packages.
 }
 \details{
 If \code{footnote = FALSE} a character string citing R and R-packages including version

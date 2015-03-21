@@ -1,12 +1,12 @@
-#' Cite R and loaded R-packages
+#' Cite R and R-packages
 #'
-#' Creates a character string citing R and all loaded R-packages.
+#' Creates a character string citing R and  R-packages.
 #'
 #' @param file Character. The path and name of the \code{.bib}-file holding the references.
 #' @param prefix Character. The prefix used for all R-package reference handles.
 #' @param footnote Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
 #'    is available.
-#' @param pkgs Character. Vector of package names to cite. If \code{pkgs = "all"} (default) all loaded packages
+#' @param pkgs Character. Vector of package names to cite. If \code{pkgs = "all"} (default) packages in \code{file}
 #'    are cited.
 #' @details
 #'    If \code{footnote = FALSE} a character string citing R and R-packages including version
