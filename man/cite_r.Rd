@@ -22,7 +22,7 @@ If \code{footnote = FALSE} a character string is returned and a named list with 
    and \code{pkgs} otherwise.
 }
 \description{
-Creates a character string citing R and  R-packages.
+Creates a character string citing R and R-packages.
 }
 \details{
 If \code{footnote = FALSE} a character string citing R and R-packages including version
@@ -35,6 +35,6 @@ If \code{footnote = FALSE} a character string citing R and R-packages including 
 cite_r()
 }
 \seealso{
-\code{\link{r_refs}}
+\code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
 }
 

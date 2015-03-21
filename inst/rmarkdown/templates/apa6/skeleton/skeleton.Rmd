@@ -25,7 +25,7 @@ output: papaja::apa6_pdf
 ---
 
 ```{r message = FALSE, warning = FALSE}
-require("papaja")
+library("papaja")
 apa_prepare_doc() # Prepare document for rendering
 ```
 
@@ -40,12 +40,14 @@ We report how we determined our sample size, all data exclusions (if any), all m
 ## Procedure
 
 ## Data analysis
+We used `r cite_r("r-references.bib")` for all our analyses.
+
 
 # Results
 
 # Discussion
 
 # References
-```{r}
+```{r create_r-references}
 r_refs(file = "r-references.bib")
 ```

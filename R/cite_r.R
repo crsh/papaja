@@ -1,6 +1,6 @@
 #' Cite R and R-packages
 #'
-#' Creates a character string citing R and  R-packages.
+#' Creates a character string citing R and R-packages.
 #'
 #' @param file Character. The path and name of the \code{.bib}-file holding the references.
 #' @param prefix Character. The prefix used for all R-package reference handles.
@@ -16,7 +16,7 @@
 #'    to be a separate paragraph.
 #' @return If \code{footnote = FALSE} a character string is returned and a named list with the elements \code{r}
 #'    and \code{pkgs} otherwise.
-#' @seealso \code{\link{r_refs}}
+#' @seealso \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
 #' @examples cite_r()
 #' @export
 
@@ -29,13 +29,13 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
   r_version <- as.character(packageVersion("base"))
   cite_just_r <- paste0("R [", r_version, ", @", prefix, "base]")
 
-  if(is.null(file) || !file_test("-f", file)) { # Print R-reference if r_refs() was not run, yet.
+  if(is.null(file) || !file_test("-f", file)) { # Print R-reference if there is no .bib-file
     if(!is.null(file) || pkgs != "all") warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
     return(cite_just_r)
   }
 
   r_bib <- readLines(file)
-  cite_keys <- r_bib[grepl("\\@Manual", r_bib)]
+  cite_keys <- r_bib[grepl(paste0("\\@Manual\\{", prefix), r_bib)]
   cite_keys <- gsub("\\@Manual\\{", "", cite_keys)
   cite_keys <- gsub("\\,", "", cite_keys)
 
@@ -50,8 +50,8 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
   )
 
   r_citation <- bib$base
-  if(pkgs != "all") {
-    pkg_citations <- bib[names(bib) == pkgs]
+  if(length(pkgs) > 1 && pkgs != "all") {
+    pkg_citations <- bib[names(bib) %in% pkgs]
   } else {
     pkg_citations <- bib[!names(bib) == "base"]
   }
