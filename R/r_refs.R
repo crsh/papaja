@@ -5,18 +5,32 @@
 #'
 #' @param file Character. The path and name of the file to be created or updated.
 #' @param prefix Character. A prefix to be used for all R-package reference handles.
+#' @param overwrite Logical. Indicates if existing \code{.bib}-files should be overwritten. See details.
 #' @param ... Further arguments to pass to \code{\link[knitr]{write_bib}}.
-#' @details This function is a wrapper for \code{write_bib} from the \pkg{knitr} package. If a file exists
-#'    at the specified location, the function reads the file and appends missing citation information to the
-#'    end of the file. It is recommended to create a new .bib-file dedicated to R-related references and
-#'    adding it to the \code{bibliography} parameter in the document's yaml-header.
-#' @seealso \code{\link[knitr]{write_bib}}
+#' @details
+#'    This function is a wrapper for \code{write_bib} from the \pkg{knitr} package.
+#'
+#'    By default a file exists at the specified location, the function reads the file and
+#'    appends missing citation information to the end of the file. This behavior may result in unused package
+#'    references in your \code{.bib}-file that will be cited when using \code{\link{cite_r}}.
+#'
+#'    It is recommended to use a \code{.bib}-file dedicated to R-references, setting \code{overwrite = TRUE},
+#'    and adding the file to the \code{bibliography} parameter in the document's yaml-header.
+#'
+#'    Beware that chunks loading packags should \emph{not} be cached. \code{r_refs} will make all packages
+#'    loaded in cached chunks citable, but it won't know when you remove a package from a cached chunk. This
+#'    can result in unused package references in your \code{.bib}-file that will be cited when using
+#'    \code{\link{cite_r}}.
+#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}
 #' @examples NULL
 #' @export
 
-r_refs <- function(file, prefix = "R-", ...) {
+r_refs <- function(file, prefix = "R-", overwrite = FALSE, ...) {
   validate(file, check_class = "character", check_NA = TRUE, check_length = 1)
   validate(prefix, check_class = "character", check_NA = TRUE, check_length = 1)
+  validate(overwrite, check_class = "logical", check_NA = TRUE, check_length = 1)
+
+  r_session <- sessionInfo()
 
   # Ensure that cached packages are also citable
   cache_path <- knitr::opts_chunk$get("cache.path")
@@ -30,7 +44,7 @@ r_refs <- function(file, prefix = "R-", ...) {
 
   pkg_list <- c("base", sort(pkgs_to_cite))
 
-  if(file_test("-f", file)) {
+  if(file_test("-f", file) && !overwrite) {
     bib_file <- readLines(file)
     missing_pkgs <- sapply(pkg_list, function(x) !any(grep(paste0(prefix, x), bib_file)))
     missing_pkgs <- names(missing_pkgs[missing_pkgs])
@@ -38,12 +52,12 @@ r_refs <- function(file, prefix = "R-", ...) {
     missing_pkgs <- pkg_list
   }
 
-  if(!is.null(missing_pkgs)) {
-    if(is.null(file)) {
-      knitr::write_bib(missing_pkgs, prefix = prefix, ...)
+  if(!is.null(missing_pkgs) || overwrite) {
+    if(!file_test("-f", file) || overwrite) {
+      knitr::write_bib(missing_pkgs, file, prefix = prefix, ...)
     } else {
       sink(file, append = TRUE)
-      knitr::write_bib(missing_pkgs, prefix = prefix, ...)
+      knitr::write_bib(missing_pkgs, file, prefix = prefix, ...)
       sink()
     }
   }
