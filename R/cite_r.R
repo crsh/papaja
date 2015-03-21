@@ -5,27 +5,31 @@
 #' @param file Character. The path and name of the \code{.bib}-file holding the references.
 #' @param prefix Character. The prefix used for all R-package reference handles.
 #' @param footnote Logical. Indicates if packages should be cited in a footnote.
-#' @param cite Character. Vector of package names to cite. If \code{cite = "all"} (default) all loaded packages
+#' @param pkgs Character. Vector of package names to cite. If \code{pkgs = "all"} (default) all loaded packages
 #'    are cited.
 #' @details
-#'
-#'    \code{\link{cite_r}}.
-#' @return If \code{footnote = FALSE} a character string citing R and R-packages including version
+#'    If \code{footnote = FALSE} a character string citing R and R-packages including version
 #'    numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
 #'    former element holds a character string citing R and a reference to a footnote; the latter element contains
 #'    a character string for the footnote citing R-packages. For correct rendering, the footnote string needs
 #'    to be a separate paragraph.
+#' @return If \code{footnote = FALSE} a character string is returned and a named list with the elements \code{r}
+#'    and \code{pkgs} otherwise.
 #' @examples NULL
 #' @export
 
-cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, cite = "all") {
+cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
+  if(!is.null(file)) validate(file, check_class = "character", check_length = 1)
+  validate(prefix, check_class = "character", check_length = 1)
+  validate(footnote, check_class = "logical", check_length = 1)
+  validate(pkgs, check_class = "character")
 
   r_version <- sessionInfo()$R.version
 
-  if(!file_test("-f", file)) { # Print R-reference if r_refs() was not run, yet.
-    warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
+  if(is.null(file) || !file_test("-f", file)) { # Print R-reference if r_refs() was not run, yet.
+    if(!is.null(file) || pkgs != "all") warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
     cite_just_r <- paste0(
-      sentence_beginning
+      "R ["
       , paste(r_version$major, r_version$minor, sep = ".")
       , ", @", prefix, "base]"
     )
@@ -48,8 +52,8 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, cite = "all") {
   )
 
   r_citation <- bib$base
-  if(cite != "all") {
-    pkg_citations <- bib[names(bib) == cite]
+  if(pkgs != "all") {
+    pkg_citations <- bib[names(bib) == pkgs]
   } else {
     pkg_citations <- bib[!names(bib) == "base"]
   }
