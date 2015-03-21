@@ -34,4 +34,7 @@ If \code{footnote = FALSE} a character string citing R and R-packages including 
 \examples{
 cite_r()
 }
+\seealso{
+\code{\link{r_refs}}
+}
 

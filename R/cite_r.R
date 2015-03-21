@@ -16,6 +16,7 @@
 #'    to be a separate paragraph.
 #' @return If \code{footnote = FALSE} a character string is returned and a named list with the elements \code{r}
 #'    and \code{pkgs} otherwise.
+#' @seealso \code{\link{r_refs}}
 #' @examples cite_r()
 #' @export
 
