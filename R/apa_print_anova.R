@@ -126,7 +126,14 @@ apa_print.anova <- function(
 ) {
   df <- arrange_anova(x)
 
-  print_anova(df, es = es, observed = observed, in_paren = in_paren)
+  if(
+    any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading"))) ||
+      is.null(object[["Sum Sq"]])
+  ) {
+    return(print_model_comp(df, in_paren = in_paren))
+  } else {
+    return(print_anova(df, es = es, observed = observed, in_paren = in_paren))
+  }
 }
 
 
@@ -238,7 +245,7 @@ print_anova <- function(
     x$p.value[i] <- paste0("= ", x$p.value[i])
   }
 
-  # Concatenate character strings and return as names list
+  # Concatenate character strings and return as named list
   apa_res <- list()
 
   apa_res$stat <- apply(x[, -1], 1, function(y) {
@@ -263,18 +270,93 @@ print_anova <- function(
 }
 
 
-## Helper functions
+print_model_comp <- function(
+  x
+  , in_paren = FALSE
+) {
+  validate(x, check_class = "data.frame")
+  validate(in_paren, check_class = "logical", check_length = 1)
 
+  if(in_paren) {
+    op <- "["; cp <- "]"
+  } else {
+    op <- "("; cp <- ")"
+  }
+
+  rownames(x) <- sanitize_terms(x$term)
+
+  # Rounding and filling with zeros
+  x$statistic <- printnum(x$statistic, digits = 2)
+  x$p.value <- printp(x$p.value)
+  x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
+
+  # Add 'equals' where necessary
+  eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
+  for (i in eq) {
+    x$p.value[i] <- paste0("= ", x$p.value[i])
+  }
+
+  # Concatenate character strings and return as named list
+  apa_res <- list()
+
+  apa_res$stat <- apply(x[, -1], 1, function(y) {
+    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], "$, $p ", y["p.value"], "$")
+  })
+
+#   apa_res$est <- apply(x[, -1], 1, function(y) {
+#     apa_est <- c()
+#     if("pes" %in% es) {
+#       apa_est <- c(apa_est, paste0("$\\eta^2_p = ", y["pes"], "$"))
+#     }
+#     if("ges" %in% es) {
+#       apa_est <- c(apa_est, paste0("$\\eta^2_G = ", y["ges"], "$"))
+#     }
+#     apa_est <- paste(apa_est, collapse = ", ")
+#   })
+#
+#   apa_res$full <- paste(apa_res$stat, apa_res$est, sep = ", ")
+#   names(apa_res$full) <- names(apa_res$stat)
+  apa_res <- lapply(apa_res, as.list)
+  apa_res
+}
+
+
+
+
+## Helper functions
 arrange_anova <- function(x) UseMethod("arrange_anova", x)
 
 arrange_anova.anova <- function(x) {
   object <- as.data.frame(x)
-  x <- data.frame(array(NA, dim = c(nrow(object) - 1, 7)), row.names = NULL)
+  resid_row <- apply(object, 1, function(x) any(is.na(x)))
+  x <- data.frame(array(NA, dim = c(nrow(object) - 1, 7)), row.names = NULL) # Create empty object
   colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
-  x[, c("sumsq", "df", "statistic", "p.value")] <- object[-nrow(object), c("Sum Sq", "Df", "F value", "Pr(>F)")]
-  x$sumsq_err <- object[nrow(object), "Sum Sq"]
-  x$df_res <- object[nrow(object), "Df"]
-  x$term <- rownames(object)[-nrow(object)]
+
+  # Model comparison
+  if(any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading")))) {
+
+    x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum of Sq", "Df", "F", "Pr(>F)")]
+    x$df <- abs(x$df) # Objects give difference in Df
+    x$sumsq_err <- object[!resid_row, "RSS"]
+    x$df_res <- object[resid_row, "Res.Df"]
+    x$term <- paste0("model", 2:nrow(object))
+
+  } else if(is.null(object[["Sum Sq"]])) {
+      x <- subset(x, select = -c(sumsq, sumsq_err))
+
+      x[, c("df", "statistic", "p.value")] <- object[!resid_row, c("Df", "F value", "Pr(>F)")]
+      x$df_res <- object[resid_row, "Df"]
+      x$term <- rownames(object)[!resid_row]
+
+  } else { # Analysis of variance
+
+    x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum Sq", "Df", "F value", "Pr(>F)")]
+    x$sumsq_err <- object[resid_row, "Sum Sq"]
+    x$df_res <- object[resid_row, "Df"]
+    x$term <- rownames(object)[!resid_row]
+
+  }
+
   x
 }
 

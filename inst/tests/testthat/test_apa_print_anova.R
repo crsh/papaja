@@ -322,19 +322,37 @@ test_that(
 )
 
 
-# test_that(
-#   "Levene test"
-#   , {
-#     levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = car::Moore)
-#
-#     levene_test_output <- apa_print(levene_test)
-#     expect_that(levene_test_output, is_a("character"))
-#     expect_that(levene_test_output, equals(""))
-#   }
-# )
+test_that(
+  "Levene test"
+  , {
+    levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = car::Moore)
+
+    levene_test_output <- apa_print(levene_test)
+    expect_that(levene_test_output, is_a("list"))
+    expect_that(length(levene_test_output), equals(1))
+    expect_that(levene_test_output$stat$group, equals("$F(5, 39) = 1.47$, $p = .222$"))
+  }
+)
 
 # Model comparison
 
+test_that(
+  "lm model comparison"
+  , {
+    baseline <- lm(formula = Fertility ~ ., data = swiss)
+    model_1 <- update(baseline, formula = . ~ . - Examination)
+    model_comp <- anova(baseline, model_1)
+
+    model_comp_output <- apa_print(model_comp)
+
+    expect_that(model_comp_output, is_a("list"))
+    expect_that(length(model_comp_output), equals(1))
+    expect_that(model_comp_output$stat$model2, equals("$F(1, 41) = 1.03$, $p = .315$"))
+
+#     drop1(baseline, test = "F")
+#     drop1(baseline, test = "Chisq")
+  }
+)
 
 
 
