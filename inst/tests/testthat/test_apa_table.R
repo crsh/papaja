@@ -3,7 +3,7 @@ context("apa_table()")
 test_that(
   ""
   , {
-    load("mixed_data.rdata")
+    load("data/mixed_data.rdata")
 
     library("dplyr")
     descriptives <- mixed_data %>% group_by(Dosage) %>%

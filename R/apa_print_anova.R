@@ -127,8 +127,8 @@ apa_print.anova <- function(
   df <- arrange_anova(x)
 
   if(
-    any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading"))) ||
-      is.null(object[["Sum Sq"]])
+    any(grepl("Model 1", attr(x, "heading")) & grepl("Model 2", attr(x, "heading"))) ||
+      is.null(x[["Sum Sq"]])
   ) {
     return(print_model_comp(df, in_paren = in_paren))
   } else {
