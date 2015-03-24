@@ -8,12 +8,14 @@
 #' @param note Character. Note to be printed below the table.
 #' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
 #'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.
+#' @param added_colnames Character. Vector of names for first unnamed columns. See details.
+#' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
+#'    followed by a horizontal rule; ignored in MS Word documents.
 #' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
 #'    at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
 #'    to indicate order of preference (\code{htb}); ignored in MS Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
-#' @param added_colnames Character. Vector of names for first unnamed columns. See details.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}. \code{row.names} argument is overwritten
 #'    by \code{row_names}.
 #'
@@ -62,9 +64,10 @@ apa_table.latex <- function(
   , caption = NULL
   , note = NULL
   , row_names = TRUE
+  , added_colnames = NULL
+  , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
-  , added_colnames = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -72,7 +75,7 @@ apa_table.latex <- function(
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   validate(row_names, check_class = "logical", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
-
+  if(!is.null(midrules)) validate(midrules, check_class = "numeric", check_range = c(1, nrow(x)))
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
@@ -86,7 +89,7 @@ apa_table.latex <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
-    
+
     x_merged <- do.call(rbind, prep_table)
     print(knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...))
   } else {
@@ -100,7 +103,18 @@ apa_table.latex <- function(
       if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
       colnames(prep_table) <- new_colnames
     }
-    print(knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...))
+
+    res_table <- knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...)
+    if(!is.null(midrules)) {
+      table_lines <- unlist(strsplit(res_table, "\n"))
+      table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
+      table_lines[table_content_boarders[1] + midrules] <- sapply(
+        table_lines[table_content_boarders[1] + midrules]
+        , paste, "\\midrule"
+      )
+      res_table <- paste(table_lines, collapse = "\n")
+    }
+    cat(res_table)
   }
 
   cat("\n")
@@ -132,14 +146,14 @@ apa_table.word <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
-    
+
     x_merged <- do.call(rbind, prep_table)
-    
+
     cat("<center>")
     cat("Table. ")
     cat("*", caption, "*", sep = "")
     cat("</center>")
-    
+
     print(knitr::kable(x_merged, format = "pandoc", ...))
   } else {
     prep_table <- x
@@ -154,7 +168,7 @@ apa_table.word <- function(
     }
     print(knitr::kable(prep_table, format = "pandoc", ...))
   }
-  
+
   if(!is.null(note)) {
     cat("\n")
     cat("<center>")
@@ -182,7 +196,7 @@ apa_table.word <- function(
 merge_tables <- function(x, empty_cells, row_names, added_colnames) {
   tables_to_merge <- names(x)
   prep_table <- lapply(seq_along(x), function(i) {
-    
+
     # Add rownames
     if(row_names && !is.null(rownames(x[[i]])) && rownames(x[[i]]) != 1:nrow(x[[i]])) {
       i_table <- cbind(rownames(x[[i]]), x[[i]])
@@ -193,7 +207,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
       , i_table
     )
     rownames(prep_table) <- NULL
-    
+
     # Add colnames
     if(row_names && !is.null(rownames(x[[i]])) && rownames(x[[i]]) != 1:nrow(x[[i]]) && length(added_colnames) < 2) {
       second_col <- ""
@@ -205,7 +219,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
       if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
       colnames(prep_table) <- new_colnames
     }
-    
+
     prep_table
   })
 }
