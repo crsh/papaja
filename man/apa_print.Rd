@@ -35,7 +35,8 @@ Currently the following output objects are supported:
 methods("apa_print")
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.anova}},
+Other apa_print: \code{\link{apa_print.Anova.mlm}},
+  \code{\link{apa_print.anova}},
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
   \code{\link{apa_print.summary.aov}},

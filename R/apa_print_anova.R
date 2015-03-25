@@ -7,7 +7,7 @@
 #' @param x Output object. See details.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared; otherwise ignored.
-# @param correction Character In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
+#' @param correction Character In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param ... Additional arguments passed to or from other methods.
 #' @details
@@ -137,60 +137,63 @@ apa_print.anova <- function(
 }
 
 
-# @rdname apa_print.aov
-# @method apa_print Anova.mlm
-# @export
+#' @rdname apa_print.aov
+#' @method apa_print Anova.mlm
+#' @export
+#load("~/Dropbox/Pudel/Pudel1/Daten/Daten_Pudel1.RData")
+#library(afex)
+#object<-ez.glm(data=Daten.Gen,id="id",dv="korrekt.2nd",between=c("Material","Generierung","Reihenfolge"),within="Instruktion",fun.aggregate=mean,na.rm=TRUE,return="Anova")
+#str(object)
+#str(summary(object))
+apa_print.Anova.mlm <- function(
+  x
+  , correction = "GG"
+  , es = "pes"
+  , observed = NULL
+  , in_paren = FALSE
+  , ...
+) {
+  x <- car::summary.Anova.mlm(x)
+  #x$sphericity.tests
+  tmp <- x$univariate.tests
+  class(tmp) <- NULL
+  t.out <- data.frame(tmp)
+  colnames(t.out) <- colnames(tmp)
 
-# apa_print.Anova.mlm <- function(
-#   x
-#   , correction = "GG"
-#   , es = "pes"
-#   , observed = NULL
-#   , in_paren = FALSE
-#   , ...
-# ) {
-#
-#   x <- car::summary(x)
-#   x$sphericity.tests
-#   tmp <- x$univariate.tests
-#   class(tmp) <- NULL
-#   t.out <- data.frame(tmp)
-#   colnames(t.out) <- colnames(tmp)
-#
-#   if(nrow(x$sphericity.tests) > 0) {
-#     if (correction[1] == "GG") {
-#       t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * x$pval.adjustments[, "GG eps"]
-#       t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * x$pval.adjustments[, "GG eps"]
-#       t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[GG])"]
-#     } else {
-#       if (correction[1] == "HF") {
-#         if (any(x$pval.adjustments[,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
-#         t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
-#         t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
-#         t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[HF])"]
-#       } else {
-#         if (correction[1] == "none") {
-#           TRUE
-#         } else stop("Correction not supported. 'correction' must either be 'GG' or 'HF'.")
-#       }
-#     }
-#   }
-#
-#   df <- as.data.frame(t.out)
-#
-#   # obtain positons of statistics in data.frame
-#   old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
-#   nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
-#   colnames(df) == old
-#   for (i in 1:length(old)){
-#     colnames(df)[colnames(df) == old[i]] <- nu[i]
-#   }
-#
-#   df$term <- rownames(df)
-#   df <- data.frame(df, row.names = NULL)
-#
-#   print_anova(df, es = es, observed = observed, in_paren = in_paren)
-# }
+  if(nrow(x$sphericity.tests) > 0) {
+    if (correction[1] == "GG") {
+      t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * x$pval.adjustments[, "GG eps"]
+      t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * x$pval.adjustments[, "GG eps"]
+      t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[GG])"]
+    } else {
+      if (correction[1] == "HF") {
+        if (any(x$pval.adjustments[,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+        t.out[row.names(x$pval.adjustments), "num Df"] <- t.out[row.names(x$pval.adjustments), "num Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
+        t.out[row.names(x$pval.adjustments), "den Df"] <- t.out[row.names(x$pval.adjustments), "den Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
+        t.out[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[HF])"]
+      } else {
+        if (correction[1] == "none") {
+          TRUE
+        } else stop("Correction not supported. 'correction' must either be 'GG' or 'HF'.")
+      }
+    }
+  }
+
+  df <- as.data.frame(t.out)
+
+  # obtain positons of statistics in data.frame
+  old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
+  nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+  colnames(df) == old
+  for (i in 1:length(old)){
+    colnames(df)[colnames(df) == old[i]] <- nu[i]
+  }
+
+  df$term <- rownames(df)
+  df <- data.frame(df, row.names = NULL)
+
+  print_anova(df, es = es, observed = observed, in_paren = in_paren)
+}
 
 
 
@@ -268,7 +271,6 @@ print_anova <- function(
   apa_res <- lapply(apa_res, as.list)
   apa_res
 }
-
 
 print_model_comp <- function(
   x

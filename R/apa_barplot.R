@@ -49,10 +49,10 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
   }
 
   if(length(factors)<1){
-    stop("not enough stratifying factors")
+    stop("Not enough stratifying factors. Specify at least one factor.")
   }
   if(length(factors)>4){
-    stop("too many stratifying factors")
+    stop("Too many stratifying factors. Specify not more than four factors.")
   }
 
   ## aggregate data

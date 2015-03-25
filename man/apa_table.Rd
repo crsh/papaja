@@ -9,7 +9,8 @@
 apa_table(...)
 
 apa_table.latex(x, caption = NULL, note = NULL, row_names = TRUE,
-  placement = "tbp", landscape = FALSE, added_colnames = NULL, ...)
+  added_colnames = NULL, midrules = NULL, placement = "tbp",
+  landscape = FALSE, ...)
 
 apa_table.word(x, caption = NULL, note = NULL, row_names = TRUE,
   added_colnames = NULL, ...)
@@ -27,14 +28,17 @@ apa_table.word(x, caption = NULL, note = NULL, row_names = TRUE,
 \item{row_names}{Logical. Indicates whether to include row names; by default, row names are included if
 \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.}
 
+\item{added_colnames}{Character. Vector of names for first unnamed columns. See details.}
+
+\item{midrules}{Numeric. Vector of line numbers in table (not counting column headings) that should be
+followed by a horizontal rule; ignored in MS Word documents.}
+
 \item{placement}{Character. Indicates whether table should be placed at the exact location (\code{h}),
 at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
 to indicate order of preference (\code{htb}); ignored in MS Word documents.}
 
 \item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 documents.}
-
-\item{added_colnames}{Character. Vector of names for first unnamed columns. See details.}
 }
 \description{
 Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
