@@ -171,7 +171,7 @@ apa_print.anova <- function(
 #       } else {
 #         if (correction[1] == "none") {
 #           TRUE
-#         } else stop("Correction not supported. 'correction' must either be 'pes' or 'ges'.")
+#         } else stop("Correction not supported. 'correction' must either be 'GG' or 'HF'.")
 #       }
 #     }
 #   }
