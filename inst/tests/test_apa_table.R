@@ -15,6 +15,6 @@ test_that(
         , Max = printnum( max(Recall) )
       )
 
-    expect_error(apa_table(descriptives, added_colnames = letters[1:5]), "Too many column names. Please check length of 'added_colnames'. ")
+    expect_that(apa_table(descriptives, added_colnames = letters[1:5]), throws_error())
   }
 )

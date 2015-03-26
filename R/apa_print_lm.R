@@ -120,7 +120,7 @@ apa_print.lm <- function(
   apa_res$est <- apply(tidy_x[, -1], 1, function(y) {
     paste0(
       "$", stat_name, " = ", printnum(y["estimate"], gt1 = !standardized), "$, "
-      , make_confint(y[tail(names(y), 2)], conf_level = conf_level, gt1 = !standardized)
+      , print_confint(y[tail(names(y), 2)], conf_level = conf_level, gt1 = !standardized)
     )
   })
 
@@ -148,7 +148,7 @@ apa_print.lm <- function(
     , conf.level = ci_conf_level / 100
   ))
 
-  apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE), "$, ", make_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+  apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
   apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE), "$")
   apa_res$est$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
   apa_res$est$modelfit$bic <- paste0("$AIC = ", printnum(glance_x$BIC), "$")

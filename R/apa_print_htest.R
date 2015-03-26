@@ -91,7 +91,7 @@ apa_print.htest <- function(
     if(tolower(names(x$parameter)) == "df") {
       if(x$parameter %%1 == 0) printdigits <- 0 else printdigits = 2
       stat_name <- convert_stat_name(stat_name)
-      if(stat_name == "\\Chi^2") {
+      if(stat_name == "\\chi^2") {
         if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
         stat_name <- paste0(stat_name, op, printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ", n = ", n, cp)
       } else {
@@ -124,9 +124,9 @@ apa_print.htest <- function(
     if(!grepl("<|>", est)) eq <- " = " else eq <- ""
 
     if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-      apa_res$est <- paste0("$", est_name, eq, est, "$, ", make_confint(x$conf.int, gt1 = est_gt1))
+      apa_res$est <- paste0("$", est_name, eq, est, "$, ", print_confint(x$conf.int, gt1 = est_gt1))
     } else if(!is.null(ci)) { # Use supplied CI
-      apa_res$est <- paste0("$", est_name, eq, est, "$, ", make_confint(ci, gt1 = est_gt1, margin = 2))
+      apa_res$est <- paste0("$", est_name, eq, est, "$, ", print_confint(ci, gt1 = est_gt1, margin = 2))
     } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
       apa_res$est <- paste0("$", est_name, eq, est, "$")
     }

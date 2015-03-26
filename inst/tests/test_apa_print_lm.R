@@ -50,27 +50,27 @@ test_that(
 
     correct_output <- structure(list(stat = structure(list(Intercept = "$t(18) = 22.85$, $p < .001$",
       groupTrt = "$t(18) = -1.19$, $p = .249$", modelfit = structure(list(r2 = "$F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")),
-      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$b = 5.03$, 95% CI $[4.57$, $5.49]$",
-      groupTrt = "$b = -0.37$, 95% CI $[-1.03$, $0.28]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$",
+      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$b = 5.03$, 95\\% CI $[4.57$, $5.49]$",
+      groupTrt = "$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$",
       r2_adj = "$R^2_{adj} = .02$", aic = "$AIC = 46.18$", bic = "$AIC = 49.16$"), .Names = c("r2", "r2_adj", "aic", "bic"))),
-      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$b = 5.03$, 95% CI $[4.57$, $5.49]$, $t(18) = 22.85$, $p < .001$",
-      groupTrt = "$b = -0.37$, 95% CI $[-1.03$, $0.28]$, $t(18) = -1.19$, $p = .249$", modelfit = structure(list(
-      r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
+      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$b = 5.03$, 95\\% CI $[4.57$, $5.49]$, $t(18) = 22.85$, $p < .001$",
+      groupTrt = "$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$, $t(18) = -1.19$, $p = .249$", modelfit = structure(list(
+      r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
       .Names = c("stat", "est", "full")
     )
 
     expect_that(lm_fit_output, is_identical_to(correct_output))
 
-    lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 %", "97.5 %"))))
+    lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
 
     correct_output <- structure(list(stat = structure(list(Intercept = "$t(18) = 22.85$, $p < .001$",
       groupTrt = "$t(18) = -1.19$, $p = .249$", modelfit = structure(list(r2 = "$F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")),
-      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$b = 5.03$, 95% CI $[1.00$, $2.00]$",
-      groupTrt = "$b = -0.37$, 95% CI $[1.00$, $2.00]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$",
+      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$b = 5.03$, 95\\% CI $[1.00$, $2.00]$",
+      groupTrt = "$b = -0.37$, 95\\% CI $[1.00$, $2.00]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$",
       r2_adj = "$R^2_{adj} = .02$", aic = "$AIC = 46.18$", bic = "$AIC = 49.16$"), .Names = c("r2", "r2_adj", "aic", "bic"))),
-      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$b = 5.03$, 95% CI $[1.00$, $2.00]$, $t(18) = 22.85$, $p < .001$",
-      groupTrt = "$b = -0.37$, 95% CI $[1.00$, $2.00]$, $t(18) = -1.19$, $p = .249$", modelfit = structure(list(
-      r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
+      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$b = 5.03$, 95\\% CI $[1.00$, $2.00]$, $t(18) = 22.85$, $p < .001$",
+      groupTrt = "$b = -0.37$, 95\\% CI $[1.00$, $2.00]$, $t(18) = -1.19$, $p = .249$", modelfit = structure(list(
+      r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
       .Names = c("stat", "est", "full")
     )
 
@@ -80,12 +80,12 @@ test_that(
 
     correct_output <- structure(list(stat = structure(list(Intercept = "$t(18) = 22.85$, $p < .001$",
       groupTrt = "$t(18) = -1.19$, $p = .249$", modelfit = structure(list(r2 = "$F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")),
-      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$\\beta = 5.03$, 95% CI $[4.57$, $5.49]$",
-      groupTrt = "$\\beta = -0.37$, 95% CI $[-1.03$, $0.28]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$",
+      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$\\beta = 5.03$, 95\\% CI $[4.57$, $5.49]$",
+      groupTrt = "$\\beta = -0.37$, 95\\% CI $[-1.03$, $0.28]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$",
       r2_adj = "$R^2_{adj} = .02$", aic = "$AIC = 46.18$", bic = "$AIC = 49.16$"), .Names = c("r2", "r2_adj", "aic", "bic"))),
-      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$\\beta = 5.03$, 95% CI $[4.57$, $5.49]$, $t(18) = 22.85$, $p < .001$",
-      groupTrt = "$\\beta = -0.37$, 95% CI $[-1.03$, $0.28]$, $t(18) = -1.19$, $p = .249$", modelfit = structure(list(
-      r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
+      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$\\beta = 5.03$, 95\\% CI $[4.57$, $5.49]$, $t(18) = 22.85$, $p < .001$",
+      groupTrt = "$\\beta = -0.37$, 95\\% CI $[-1.03$, $0.28]$, $t(18) = -1.19$, $p = .249$", modelfit = structure(list(
+      r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
       .Names = c("stat", "est", "full")
     )
 
@@ -95,12 +95,12 @@ test_that(
 
     correct_output <- structure(list(stat = structure(list(Intercept = "$t[18] = 22.85$, $p < .001$",
       groupTrt = "$t[18] = -1.19$, $p = .249$", modelfit = structure(list(r2 = "$F[1, 18] = 1.42$, $p = .249$"), .Names = "r2")),
-      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$b = 5.03$, 95% CI $[4.57$, $5.49]$",
-      groupTrt = "$b = -0.37$, 95% CI $[-1.03$, $0.28]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$",
+      .Names = c("Intercept", "groupTrt", "modelfit")), est = structure(list(Intercept = "$b = 5.03$, 95\\% CI $[4.57$, $5.49]$",
+      groupTrt = "$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$", modelfit = structure(list(r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$",
       r2_adj = "$R^2_{adj} = .02$", aic = "$AIC = 46.18$", bic = "$AIC = 49.16$"), .Names = c("r2", "r2_adj", "aic", "bic"))),
-      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$b = 5.03$, 95% CI $[4.57$, $5.49]$, $t[18] = 22.85$, $p < .001$",
-      groupTrt = "$b = -0.37$, 95% CI $[-1.03$, $0.28]$, $t[18] = -1.19$, $p = .249$", modelfit = structure(list(
-      r2 = "$R^2 = .07$, 90% CI $[0.00$, $0.29]$, $F[1, 18] = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
+      .Names = c("Intercept", "groupTrt", "modelfit")), full = structure(list(Intercept = "$b = 5.03$, 95\\% CI $[4.57$, $5.49]$, $t[18] = 22.85$, $p < .001$",
+      groupTrt = "$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$, $t[18] = -1.19$, $p = .249$", modelfit = structure(list(
+      r2 = "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F[1, 18] = 1.42$, $p = .249$"), .Names = "r2")), .Names = c("Intercept", "groupTrt", "modelfit"))),
       .Names = c("stat", "est", "full")
     )
 
@@ -114,14 +114,14 @@ test_that(
     correct_output <- structure(list(stat = structure(list(Intercept = "$t(18) = 0.00$, $p > .999$",
       z_ctl = "$t(18) = -2.18$, $p = .042$", modelfit = structure(list(
       r2 = "$F(1, 18) = 4.77$, $p = .042$"), .Names = "r2")), .Names = c("Intercept",
-      "z_ctl", "modelfit")), est = structure(list(Intercept = "$b^* = .00$, 95% CI $[-.43$, $.43]$",
-      z_ctl = "$b^* = -.46$, 95% CI $[-.90$, $-.02]$", modelfit = structure(list(
-      r2 = "$R^2 = .21$, 90% CI $[0.00$, $0.43]$", r2_adj = "$R^2_{adj} = .17$",
+      "z_ctl", "modelfit")), est = structure(list(Intercept = "$b^* = .00$, 95\\% CI $[-.43$, $.43]$",
+      z_ctl = "$b^* = -.46$, 95\\% CI $[-.90$, $-.02]$", modelfit = structure(list(
+      r2 = "$R^2 = .21$, 90\\% CI $[0.00$, $0.43]$", r2_adj = "$R^2_{adj} = .17$",
       aic = "$AIC = 57.03$", bic = "$AIC = 60.02$"), .Names = c("r2",
       "r2_adj", "aic", "bic"))), .Names = c("Intercept", "z_ctl",
-      "modelfit")), full = structure(list(Intercept = "$b^* = .00$, 95% CI $[-.43$, $.43]$, $t(18) = 0.00$, $p > .999$",
-      z_ctl = "$b^* = -.46$, 95% CI $[-.90$, $-.02]$, $t(18) = -2.18$, $p = .042$",
-      modelfit = structure(list(r2 = "$R^2 = .21$, 90% CI $[0.00$, $0.43]$, $F(1, 18) = 4.77$, $p = .042$"), .Names = "r2")), .Names = c("Intercept",
+      "modelfit")), full = structure(list(Intercept = "$b^* = .00$, 95\\% CI $[-.43$, $.43]$, $t(18) = 0.00$, $p > .999$",
+      z_ctl = "$b^* = -.46$, 95\\% CI $[-.90$, $-.02]$, $t(18) = -2.18$, $p = .042$",
+      modelfit = structure(list(r2 = "$R^2 = .21$, 90\\% CI $[0.00$, $0.43]$, $F(1, 18) = 4.77$, $p = .042$"), .Names = "r2")), .Names = c("Intercept",
       "z_ctl", "modelfit"))), .Names = c("stat", "est", "full")
     )
 

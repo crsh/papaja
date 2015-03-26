@@ -13,9 +13,11 @@
 #' @param check_range Numeric. Vector of length 2 defining the expected range of the object.
 #'
 #' @examples
+#' \dontrun{
 #' in_paren <- TRUE # Taken from printnum()
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
+#' }
 
 validate <- function(
   x
@@ -60,9 +62,11 @@ validate <- function(
 #' @param x Chracter.
 #'
 #' @examples
+#' \dontrun{
 #' convert_stat_name("rho")
 #' convert_stat_name("mean of the differences")
 #' convert_stat_name("t")
+#' }
 
 convert_stat_name <- function(x) {
   validate(x, check_class = "character")
@@ -90,7 +94,7 @@ convert_stat_name <- function(x) {
     , `bartlett's k^2` = "K^2"
   )
 
-  new_stat_name <- gsub("x|chi", "\\\\Chi", new_stat_name)
+  new_stat_name <- gsub("x|chi", "\\\\chi", new_stat_name)
 
   new_stat_name
 }
@@ -108,45 +112,53 @@ convert_stat_name <- function(x) {
 #'
 #' @seealso \code{\link{printnum}}
 #' @examples
-#' make_confint(c(1, 2), conf_level = 0.95)
+#' \dontrun{
+#' print_confint(c(1, 2), conf_level = 0.95)
+#' }
 
-make_confint <- function(
+print_confint <- function(
   x
   , conf_level = NULL
   , ...
 ) {
+  sapply(x, validate, check_class = "numeric")
+
   if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, ...)
 
-  if(!is.matrix(x)) {
-    if(is.null(conf_level)) conf_level <- attr(x, "conf.level")
-    validate(conf_level, check_class = "numeric", check_length = 1)
+  if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
+
+  if(!is.null(conf_level)) {
+    validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
     if(conf_level < 1) conf_level <- conf_level * 100
+    conf_level <- paste0(conf_level, "\\% CI ")
+  }
 
-    apa_ci <- paste0(conf_level, "% CI $[", paste(ci, collapse = "$, $"), "]$")
+  if(!is.matrix(x)) {
+    validate(ci, "x", check_length = 2)
+    apa_ci <- paste0(conf_level, "$[", paste(ci, collapse = "$, $"), "]$")
+    return(apa_ci)
   } else {
-    if(is.null(conf_level)) {
-      conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
-      conf_level <- 100 - conf_level[1] * 2
-    }
-
     if(!is.null(rownames(ci))) {
-      terms <- rownames(ci)
-      terms <- gsub("\\(|\\)", "", terms) # Sanitize term names
-      terms <- gsub("\\W", "_", terms) # Sanitize term names
+      terms <- sanitize_terms(rownames(ci))
     } else {
       terms <- 1:nrow(ci)
     }
 
+    if(!is.null(colnames(ci))) {
+      conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
+      conf_level <- 100 - conf_level[1] * 2
+      conf_level <- paste0(conf_level, "\\% CI ")
+    }
+
     apa_ci <- list()
     for(i in 1:length(terms)) {
-      apa_ci[[terms[i]]] <- paste0(conf_level, "% CI $[", paste(ci[i, ], collapse = "$, $"), "]$")
+      apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
     }
 
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
+    return(apa_ci)
   }
-
-  apa_ci
 }
 
 
@@ -159,7 +171,9 @@ make_confint <- function(
 #'    removed from term names.
 #'
 #' @examples
-#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B"))
+#' \dontrun{
+#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
+#' }
 
 sanitize_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
