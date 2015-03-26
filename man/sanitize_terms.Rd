@@ -16,6 +16,8 @@ sanitize_terms(x, standardized = FALSE)
 Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is not exported.}
 }
 \examples{
-sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B"))
+\dontrun{
+sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
+}
 }
 

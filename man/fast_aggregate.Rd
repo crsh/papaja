@@ -26,6 +26,6 @@ If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vecto
    of either rows or columns according to the value of \code{margin}.
 }
 \examples{
-...
+NULL
 }
 

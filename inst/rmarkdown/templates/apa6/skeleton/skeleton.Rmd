@@ -1,7 +1,7 @@
 ---
 title: "Wider den Optozentrismus!"
 shorttitle: "Optozentrismus"
-author: "Ernst A. Doelle$^1$ & Theo Herrmann$^2$"
+author: "Ernst A. Doelle^1^ & Theo Herrmann^2^"
 affiliation: |
   $^1$Wirtschaftshochschule Konstanz \
   $^2$Universität Mannheim

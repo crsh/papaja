@@ -7,7 +7,8 @@
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
 #' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
-#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.
+#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}. Overwrites the corresponding
+#'    \code{\link[knitr]{kable}} argument.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See details.
 #' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
 #'    followed by a horizontal rule; ignored in MS Word documents.
@@ -29,7 +30,7 @@
 #'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
 #'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
 #'    \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
-#'    merged.
+#'    merged. It is generally recommended to use \code{row_names} instead of \code{row.names}.
 #' @seealso \code{\link[knitr]{kable}}
 #' @examples
 #'
@@ -75,7 +76,6 @@ apa_table.latex <- function(
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   validate(row_names, check_class = "logical", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
-  if(!is.null(midrules)) validate(midrules, check_class = "numeric", check_range = c(1, nrow(x)))
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
@@ -83,6 +83,7 @@ apa_table.latex <- function(
   cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
 
   if(is.list(x) && !is.data.frame(x)) {
+    n_rows <- sum(sapply(x, nrow))
     prep_table <- merge_tables(
       x
       , ""
@@ -91,12 +92,14 @@ apa_table.latex <- function(
     )
 
     x_merged <- do.call(rbind, prep_table)
-    print(knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...))
+    res_table <- knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...)
   } else {
+    n_rows <- nrow(x)
     prep_table <- x
-    if(row_names && !is.null(rownames(x)) && rownames(x) != 1:nrow(x)) {
+    if(row_names && !is.null(rownames(x)) && !identical(rownames(x), 1:nrow(x))) {
       prep_table <- cbind(rownames(x), x)
       colnames(prep_table) <- c("", colnames(x))
+      rownames(prep_table) <- NULL
     }
     if(!is.null(added_colnames)) {
       new_colnames <- c(added_colnames, colnames(x))
@@ -105,17 +108,22 @@ apa_table.latex <- function(
     }
 
     res_table <- knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...)
-    if(!is.null(midrules)) {
-      table_lines <- unlist(strsplit(res_table, "\n"))
-      table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
-      table_lines[table_content_boarders[1] + midrules] <- sapply(
-        table_lines[table_content_boarders[1] + midrules]
-        , paste, "\\midrule"
-      )
-      res_table <- paste(table_lines, collapse = "\n")
-    }
-    cat(res_table)
   }
+
+  if(!is.null(midrules)) {
+    validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
+
+    table_lines <- unlist(strsplit(res_table, "\n"))
+    table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \addlinespace so midrules are in accurate place
+    table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
+    table_lines[table_content_boarders[1] + midrules] <- sapply(
+      table_lines[table_content_boarders[1] + midrules]
+      , paste, "\\midrule"
+    )
+    res_table <- paste(table_lines, collapse = "\n")
+  }
+
+  cat(res_table)
 
   cat("\n")
   if(!is.null(note)) cat("\\tablenotes{\\textit{Note.}", note, "}\n")
@@ -160,6 +168,7 @@ apa_table.word <- function(
     if(row_names && !is.null(rownames(x)) && rownames(x) != 1:nrow(x)) {
       prep_table <- cbind(rownames(x), x)
       colnames(prep_table) <- c("", colnames(x))
+      rownames(prep_table) <- NULL
     }
     if(!is.null(added_colnames)) {
       new_colnames <- c(added_colnames, colnames(x))

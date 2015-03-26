@@ -52,7 +52,7 @@ r_refs <- function(file, prefix = "R-", overwrite = FALSE, ...) {
     missing_pkgs <- pkg_list
   }
 
-  if(!(length(missing_pkgs) > 0) || overwrite) {
+  if(length(missing_pkgs) > 0 || overwrite) {
     if(!file_test("-f", file) || overwrite) {
       knitr::write_bib(missing_pkgs, file, prefix = prefix, ...)
     } else {

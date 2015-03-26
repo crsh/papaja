@@ -31,8 +31,10 @@ validate(x, name = NULL, check_class = NULL, check_integer = FALSE,
 This functions can be used to validate the input to functions. \emph{This function is not exported.}
 }
 \examples{
+\dontrun{
 in_paren <- TRUE # Taken from printnum()
 validate(in_paren, check_class = "logical", check_length = 1)
 validate(in_paren, check_class = "numeric", check_length = 1)
+}
 }
 
