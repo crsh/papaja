@@ -12,8 +12,10 @@
 #' @param na.rm Logical. Specifies if missing values will be removed. Defaults to \code{TRUE}.
 #' @param ylim Numeric. A vector specifying upper and lower limit of the y-axis.
 #' @param main Character.The main title for your plot.
+#' @param xlab Character. Specifies the label of your x-axis. Defauls to the first element of \code{factors}.
 #' @param ylab Character. Specifies the label of your y-axis. Defaults to \code{dv}.
 #' @param intercepts Numeric. Draws horizontal lines into your plot. Specify one or multiple y-values.
+#' @param ... Further arguments than can be passed to the underlying \code{barplot} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative distribution function that will be covered.
 #'    For instance, if you want a 98\% confindence interval, specify \code{level=.98}. \code{level} defaults to .95.
