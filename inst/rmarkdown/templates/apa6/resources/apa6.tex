@@ -62,14 +62,15 @@ $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
-$if(tables)$
-  % Table formatting
-  \usepackage{longtable,booktabs}
-  \usepackage{lscape}    % Landscape page setup for large tables
-  \usepackage{multirow}		% Table styling
-  \usepackage{tabularx}		% Control Column width
-  \usepackage[flushleft]{threeparttable}	% For table notes
-$endif$
+% Table formatting
+\usepackage{longtable,booktabs}
+\usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+\usepackage{longtable}              % Allows tables to break across pages
+
 $if(graphics)$
   \usepackage{graphicx}
   \makeatletter
@@ -160,7 +161,7 @@ $if(abstract)$
   \abstract{$abstract$}
 $endif$
 $if(keywords)$
-  \keywords{$keywords$}
+  \keywords{$keywords$$if(wordcount)$\\\vspace{1cm}Word count: $wordcount$$endif$}
 $endif$
 
 $for(header-includes)$
