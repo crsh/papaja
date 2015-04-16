@@ -20,6 +20,8 @@ test_that(
     t_test_output <- apa_print(t_test, in_paren = TRUE)
     expect_that(t_test_output$stat, equals("$t[17.78] = -1.86$, $p = .079$"))
 
+    t_test_output <- apa_print(t_test, est_name = "foobar")
+    expect_that(t_test_output$est, equals("$foobar = 1.58$, 95\\% CI $[-3.37$, $0.21]$"))
 
     t_test <- t.test(extra ~ group, data = sleep, var.equal = TRUE)
     t_test_output <- apa_print(t_test)
@@ -45,6 +47,12 @@ test_that(
 
     t_test_output <- apa_print(t_test, stat_name = "foobar")
     expect_that(t_test_output$stat, equals("$foobar(19) = 3.41$, $p = .003$"))
+
+    t_test_output <- apa_print(t_test, est_name = "foobar")
+    expect_that(t_test_output$est, equals("$foobar = 1.54$, 95\\% CI $[0.60$, $2.48]$"))
+
+    t_test_output <- apa_print(t_test, est_name = "foobar", digits = 3)
+    expect_that(t_test_output$est, equals("$foobar = 1.540$, 95\\% CI $[0.596$, $2.484]$"))
   }
 )
 

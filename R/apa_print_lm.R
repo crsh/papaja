@@ -4,7 +4,7 @@
 #' strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{lm} object.
-#' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+#' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
 #'    adaptation, such as \eqn{b^*} instead of "b" for standardized regression coefficients) is used,
 #'    otherwise the name is overwritten by the one supplied. See details.
 #' @param standardized Logical. Indicates if coefficients are standardized or unstandardized and leading
@@ -14,7 +14,7 @@
 #'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 #'    See details.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param ... Additional arguments passed to or from other methods.
+#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details
 #'    The coefficients names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
@@ -22,7 +22,7 @@
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
-#'    \code{stat_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.
+#'    \code{est_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.
 #'    Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
 #'    text (e.g., \code{\\\\beta} yields \eqn{\beta}).
 #'
@@ -70,7 +70,7 @@
 
 apa_print.lm <- function(
   x
-  , stat_name = NULL
+  , est_name = NULL
   , standardized = FALSE
   , ci = 0.95
   , in_paren = FALSE
@@ -78,7 +78,7 @@ apa_print.lm <- function(
 ) {
 
   validate(x, check_class = "lm")
-  if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
+  if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   validate(standardized, check_class = "logical", check_length = 1)
   if(!is.null(ci)) {
     if(length(ci) == 1) {
@@ -97,8 +97,11 @@ apa_print.lm <- function(
     op <- "("; cp <- ")"
   }
 
+  ellipsis <- list(...)
+
   # Model coefficients
-  if(is.null(stat_name)) if(standardized) stat_name <- "b^*" else stat_name <- "b"
+  if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
+  if(standardized) ellipsis$gt1 <- FALSE
 
   summary_x <- summary(x)
   tidy_x <- broom::tidy(x)
@@ -119,8 +122,8 @@ apa_print.lm <- function(
 
   apa_res$est <- apply(tidy_x[, -1], 1, function(y) {
     paste0(
-      "$", stat_name, " = ", printnum(y["estimate"], gt1 = !standardized), "$, "
-      , print_confint(y[tail(names(y), 2)], conf_level = conf_level, gt1 = !standardized)
+      "$", est_name, " = ", do.call(function(...) printnum(y["estimate"], ...), ellipsis), "$, "
+      , do.call(function(...) print_confint(y[tail(names(y), 2)], conf_level, ...), ellipsis)
     )
   })
 
@@ -165,7 +168,7 @@ apa_print.lm <- function(
 
 apa_print.summary.lm <- function(
   x
-  , stat_name = NULL
+  , est_name = NULL
   , standardized = FALSE
   , ci = 0.95
   , in_paren = FALSE
@@ -176,9 +179,10 @@ apa_print.summary.lm <- function(
   x <- eval.parent(x$call, n = 1)
   apa_print(
     x
-    , stat_name = stat_name
+    , est_name = est_name
     , standardized = standardized
     , ci = ci
     , in_paren = in_paren
+    , ...
   )
 }

@@ -76,7 +76,7 @@ test_that(
 
     expect_that(lm_fit_output, is_identical_to(correct_output))
 
-    lm_fit_output <- apa_print(lm_fit, stat_name = "\\beta")
+    lm_fit_output <- apa_print(lm_fit, est_name = "\\beta")
 
     correct_output <- structure(list(stat = structure(list(Intercept = "$t(18) = 22.85$, $p < .001$",
       groupTrt = "$t(18) = -1.19$, $p = .249$", modelfit = structure(list(r2 = "$F(1, 18) = 1.42$, $p = .249$"), .Names = "r2")),
@@ -149,5 +149,8 @@ test_that(
     lm_summary_output <- apa_print(lm_summary)
 
     expect_that(lm_summary_output, is_identical_to(lm_fit_output))
+
+    lm_fit_output <- apa_print(lm_fit, digits = 0)
+    expect_that(lm_fit_output$est$Intercept, equals("$b = 5$, 95\\% CI $[5$, $5]$"))
   }
 )

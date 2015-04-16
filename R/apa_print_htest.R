@@ -16,7 +16,7 @@
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param ... Further arguments to pass to \code{\link{printnum}} to format estimate.
+#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
@@ -79,7 +79,6 @@ apa_print.htest <- function(
   if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf), check_length = 1)
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
-  if(!is.null(est_gt1)) validate(est_gt1, check_class = "logical", check_length = 1)
 
   if(in_paren) {
     op <- "["; cp <- "]"
@@ -128,7 +127,7 @@ apa_print.htest <- function(
     if(is.null(est_name)) {
       warning("Cannot determine name of estimate supplied in", deparse(substitute(x)), " of class 'htest'. Estimate is omitted in output string. Please set parameter 'est_name'.")
       est <- NULL
-    } else if(est_name == "\\Delta M") {
+    } else if(convert_stat_name(names(x$estimate)) == "\\Delta M") {
       est <- do.call(function(...) printnum(diff(x$estimate), ...), ellipsis)
     } else if(length(x$estimate) == 1) {
       if(est_name %in% c("r", "r_{\\mathrm{s}}", "\\uptau") & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
