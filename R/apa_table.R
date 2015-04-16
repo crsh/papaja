@@ -79,8 +79,26 @@ apa_table.latex <- function(
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
-  if(landscape) table_env <- "sidewaystable" else table_env <- "table"
-  cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
+  elipsis <- list(...)
+  longtable <- if(!is.null(elipsis$longtable)) elipsis$longtable else FALSE
+  if(longtable) {
+    table_env <-  "ThreePartTable"
+    table_note_env <- "TableNotes"
+  } else {
+    table_env <- "threeparttable"
+    table_note_env <- "tablenotes"
+  }
+
+  place_opt <- paste0("[", placement, "]")
+  if(landscape) {
+    cat("\\begin{sidewaystable}", place_opt, sep = "")
+    place_opt <- NULL
+  }
+  if(!longtable) cat("\\begin{table}", place_opt, sep = "")
+  cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
+  if(!is.null(note) & !longtable) cat("\n\\caption{", caption, "}", sep = "")
+  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  cat("\n")
 
   if(is.list(x) && !is.data.frame(x)) {
     n_rows <- sum(sapply(x, nrow))
@@ -110,24 +128,29 @@ apa_table.latex <- function(
     res_table <- knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...)
   }
 
+  table_lines <- unlist(strsplit(res_table, "\n"))
+  if(!is.null(note) & longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+
   if(!is.null(midrules)) {
     validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
 
-    table_lines <- unlist(strsplit(res_table, "\n"))
     table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \addlinespace so midrules are in accurate place
     table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
     table_lines[table_content_boarders[1] + midrules] <- sapply(
       table_lines[table_content_boarders[1] + midrules]
       , paste, "\\midrule"
     )
-    res_table <- paste(table_lines, collapse = "\n")
   }
+
+  if(!is.null(note) & longtable) table_lines <- c(table_lines[-length(table_lines)], "\\insertTableNotes", table_lines[length(table_lines)])
+  res_table <- paste(table_lines, collapse = "\n")
 
   cat(res_table)
 
-  cat("\n")
-  if(!is.null(note)) cat("\\tablenotes{\\textit{Note.}", note, "}\n")
-  cat("\\end{threeparttable}\n\\end{", table_env, "}", sep = "")
+  if(!is.null(note) & !longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
+  if(!longtable) cat("\n\\end{table}")
+  if(landscape) cat("\n\\end{sidewaystable}")
 }
 
 #' @rdname apa_table
