@@ -15,6 +15,6 @@ test_that(
         , Max = printnum( max(Recall) )
       )
 
-    expect_that(apa_table(descriptives, added_colnames = letters[1:5]), throws_error())
+    expect_that(x <- capture.output(apa_table(descriptives, added_colnames = letters[1:5])), throws_error())
   }
 )

@@ -71,9 +71,7 @@ validate <- function(
 convert_stat_name <- function(x) {
   validate(x, check_class = "character")
 
-  new_stat_name <- tolower(x)
-
-  new_stat_name <- gsub("-squared", "^2", new_stat_name)
+  new_stat_name <- gsub("-squared", "^2", x, ignore.case = TRUE)
 
   if(length(new_stat_name) == 2 && grepl("mean", new_stat_name)) new_stat_name <- "\\Delta M"
   if(all(grepl("prop \\d", new_stat_name))) {
@@ -91,10 +89,10 @@ convert_stat_name <- function(x) {
     , `(pseudo)median` = "Mdn^*"
     , `mean of the differences` = "M_d"
     , `difference in location` = "Mdn_d"
-    , `bartlett's k^2` = "K^2"
+    , `Bartlett's K^2` = "K^2"
   )
 
-  new_stat_name <- gsub("x|chi", "\\\\chi", new_stat_name)
+  new_stat_name <- gsub("x|chi", "\\\\chi", new_stat_name, ignore.case = TRUE)
 
   new_stat_name
 }

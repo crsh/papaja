@@ -4,15 +4,19 @@
 \alias{apa_print.htest}
 \title{Format statistics (APA 6th edition)}
 \usage{
-\method{apa_print}{htest}(x, stat_name = NULL, n = NULL, ci = NULL,
-  in_paren = FALSE, ...)
+\method{apa_print}{htest}(x, stat_name = NULL, est_name = NULL, n = NULL,
+  ci = NULL, in_paren = FALSE, est_gt1 = NULL, ...)
 }
 \arguments{
 \item{x}{\code{htest} object. See details.}
 
 \item{stat_name}{Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-adaptation, such as \eqn{r_S} instead of "rho") is used, otherwise the name is overwritten by the one
-supplied. See details.}
+adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
+name is overwritten by the one supplied. See details.}
+
+\item{est_name}{Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the name is
+overwritten by the one supplied. See details.}
 
 \item{n}{Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
 is ignored.}
@@ -23,7 +27,7 @@ with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
-\item{...}{Additional arguments passed to or from other methods.}
+\item{...}{Further arguments to pass to \code{\link{printnum}} to format estimate.}
 }
 \value{
 \code{apa_print()} returns a list containing the following components according to the input:
@@ -46,9 +50,9 @@ The function should work on a wide range of \code{htest} objects. Due to the lar
    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
    a reproducible example in your report!).
 
-   \code{stat_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.
-   Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
-   text (e.g., \code{\\\\tau} yields \eqn{\tau}).
+   \code{stat_name} and \code{est_name} are placed in the output string and is thus passed to pandoc or LaTeX through
+   \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
+   final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 
    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
    of freedom, are replaced with brackets.

@@ -79,8 +79,8 @@ apa_table.latex <- function(
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
-  elipsis <- list(...)
-  longtable <- if(!is.null(elipsis$longtable)) elipsis$longtable else FALSE
+  ellipsis <- list(...)
+  longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
   if(longtable) {
     table_env <-  "ThreePartTable"
     table_note_env <- "TableNotes"
