@@ -129,6 +129,7 @@ apa_table.latex <- function(
   }
 
   table_lines <- unlist(strsplit(res_table, "\n"))
+  table_lines <- c(table_lines[-length(table_lines)], "\\addlinespace", table_lines[length(table_lines)]) # Add space before table note
   if(!is.null(note) & longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
 
   if(!is.null(midrules)) {
