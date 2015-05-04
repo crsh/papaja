@@ -1,4 +1,4 @@
-# papaja
+# papaja: Create APA manuscripts with RMarkdown
 papaja is a R-package in the making including a [RMarkdown](http://rmarkdown.rstudio.com/) template that can be used with [RStudio](http://www.rstudio.com/) (or without) to produce complete manuscripts (PDF and Word documents), which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). To do so, papaja uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file. The supplied R-functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
 
 Note, at this point `papaja` is in active development and should be considered alpha. If you experience any problems, please [open an issue](https://github.com/crsh/papaja/issues).
@@ -6,7 +6,7 @@ Note, at this point `papaja` is in active development and should be considered a
 If you are looking for other journal article templates, take a look at [the list below](#other-journal-templates). Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
 
 ## Examples
-Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf) <!--and [.docx](https://raw.githubusercontent.com/crsh/papaja/master/example/example.docx)-->. More examples to come.
+Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf). More examples to come.
 
 The example document also contains some basic instructions.
 
@@ -49,17 +49,18 @@ In addition to the above, you need to do the following to use `papaja` without R
 install.packages("rmarkdown")
 ```
 
-- Use the `rmarkdown::draft` function to create articles:
+- Use the `rmarkdown::render` function to create articles:
 
 ```S
-rmarkdown::draft("mymanuscript.Rmd", template = "apa6", package = "papaja")
+rmarkdown::render("mymanuscript.Rmd")
 ```
 
 ## Known issues
-- If building the example manuscript throws the error `! Incomplete \iffalse; all text was ignored after line 20.`, try updating your TeX-packages.
+- If building the example manuscript throws the error `! Incomplete \iffalse; all text was ignored after line 20.` make sure you have saved the .Rmd and are not working from a temporary directory or restart RStudio. If this doesn't work try updating your TeX-packages.
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
-- When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/papaja/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. Try  `apa_table()`.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
+- When creating a word document on Windows, special characters in title, abstract, and note are not rendered correctly. This is a bug in [`r-yaml`](https://github.com/viking/r-yaml/issues/6) and has been for a while, but it will soon be addressed by a [workaround](https://github.com/rstudio/rmarkdown/issues/420) in `knitr`.
+- When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/papaja/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. Try  `apa_table()`.
 
 ## Other journal templates
 Obiously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of other `rmarkdown`/`pandoc` packages and templates may be helpful:
