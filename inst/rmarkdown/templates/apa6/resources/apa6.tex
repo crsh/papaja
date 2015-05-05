@@ -155,7 +155,14 @@ $if(affiliation)$
   \affiliation{\vspace{0.5cm}$affiliation$}
 $endif$
 $if(note)$
-  \note{$note$}
+  \note{
+    \vspace{1cm}
+    Author Note
+
+    \raggedright
+    \setlength{\parindent}{36pt}
+    $note$
+  }
 $endif$
 $if(abstract)$
   \abstract{$abstract$}

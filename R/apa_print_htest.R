@@ -88,7 +88,7 @@ apa_print.htest <- function(
 
   ellipsis <- list(...)
 
-  if(is.null(stat_name)) {
+  if(is.null(stat_name) & !is.null(names(x$statistic))) {
     stat_name <- names(x$statistic)
     stat_name <- convert_stat_name(stat_name)
   }
@@ -125,9 +125,9 @@ apa_print.htest <- function(
     est <- NULL
   } else {
     if(is.null(est_name)) {
-      warning("Cannot determine name of estimate supplied in", deparse(substitute(x)), " of class 'htest'. Estimate is omitted in output string. Please set parameter 'est_name'.")
+      warning("Cannot determine name of estimate supplied in", deparse(substitute(x)), " of class 'htest'. Estimate is omitted from output string. Please set parameter 'est_name'.")
       est <- NULL
-    } else if(convert_stat_name(names(x$estimate)) == "\\Delta M") {
+    } else if(!is.null(names(x$estimate)) && convert_stat_name(names(x$estimate)) == "\\Delta M") {
       est <- do.call(function(...) printnum(diff(x$estimate), ...), ellipsis)
     } else if(length(x$estimate) == 1) {
       if(est_name %in% c("r", "r_{\\mathrm{s}}", "\\uptau") & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
