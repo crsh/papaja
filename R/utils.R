@@ -35,7 +35,7 @@ validate <- function(
   if(!is.null(check_dim) && !all(dim(x) == check_dim)) stop(paste("The parameter '", name, "' must have dimensions " , paste(check_dim, collapse=""), ".", sep = ""))
   if(!is.null(check_length) && length(x) != check_length) stop(paste("The parameter '", name, "' must be of length ", check_length, ".", sep = ""))
 
-  if(any(is.na(x))) {
+  if(!check_class=="function"&&any(is.na(x))) {
     if(check_NA) stop(paste("The parameter '", name, "' is NA.", sep = ""))
     else return(TRUE)
   }
