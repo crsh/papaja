@@ -62,7 +62,7 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
 
   ## one factor
   if(length(factors)==1){
-    apa.barplot.one(data=aggregated,id=id,dv=dv,factors=factors,ylim=ylim,main=main,tendency=tendency, dispersion=dispersion, level=level,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
+    apa.barplot.one(data=aggregated,id=id,dv=dv,factors=factors,ylim=ylim,main=main,tendency=tendency, dispersion=dispersion, level=level, intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
   }
 
   ## two factors
@@ -135,15 +135,15 @@ apa.barplot.core<-function(data, id, dv, factors, main=NULL,tendency=mean, ylim=
   }
 }
 
-apa.barplot.one<-function(data,id,dv,factors,main=NULL,tendency=mean,dispersion=conf_int, level=.95,intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
+apa.barplot.one<-function(data, id, dv, factors, main=NULL, tendency=mean, dispersion=conf_int, level=.95, intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
 
   if(nrow(data)>0){
 
     yy <- tapply(data[[dv]],list(data[[factors[1]]]), tendency, na.rm=TRUE)
-    if(level==.95){
-      ee <- tapply(data[[dv]],list(data[[factors[1]]]), dispersion, na.rm=TRUE)
+    if (level==.95){
+      ee <- tapply(data[[dv]], list(data[[factors[1]]]), FUN=dispersion, na.rm=TRUE)
     } else {
-      ee <- tapply(data[[dv]],list(data[[factors[1]]]), dispersion, na.rm=TRUE, level=level)
+      ee <- tapply(data[[dv]], list(data[[factors[1]]]), FUN=conf_int, na.rm=TRUE, level=level)
     }
 
     names<-levels(data[[factors[1]]])
