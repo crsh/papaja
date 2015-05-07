@@ -35,8 +35,8 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all") {
   }
 
   r_bib <- readLines(file)
-  cite_keys <- r_bib[grepl(paste0("\\@Manual\\{", prefix), r_bib)]
-  cite_keys <- gsub("\\@Manual\\{", "", cite_keys)
+  cite_keys <- r_bib[grepl(paste0("\\@\\w+\\{", prefix), r_bib)]
+  cite_keys <- gsub("\\@\\w+\\{", "", cite_keys)
   cite_keys <- gsub("\\,", "", cite_keys)
 
   bib <- sapply(
