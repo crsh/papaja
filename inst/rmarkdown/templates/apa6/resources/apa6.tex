@@ -96,7 +96,7 @@ $endif$
             colorlinks=true,
             citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
             urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$black$endif$,
             pdfborder={0 0 0}}
 \urlstyle{same}  % don't use monospace font for urls
 $if(links-as-notes)$
@@ -109,7 +109,7 @@ $if(strikeout)$
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
 $endif$
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\parskip}{0pt plus 0pt minus 0pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 $if(numbersections)$
 \setcounter{secnumdepth}{5}

@@ -65,7 +65,7 @@ apa6_pdf <- function(
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   format$knitr$knit_hooks$inline <- inline_numbers
 
-  format$knitr$opts_chunk$dev <- c("pdf", "svg", "png", "tiff")
+  format$knitr$opts_chunk$dev <- c("pdf", "postscript", "png", "tiff")
   format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
   format
