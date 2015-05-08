@@ -91,7 +91,6 @@ $endif$
   \usepackage[unicode=true]{hyperref}
 \fi
 \hypersetup{breaklinks=true,
-            bookmarks=true,
             pdfauthor={$author-meta$},
             pdftitle={$title-meta$},
             colorlinks=true,
@@ -138,6 +137,7 @@ $if(lineno)$ % Line numbering
   \linenumbers
 $endif$
 
+\usepackage{tikz} % Variable definition to generate author note
 
 % Essential manuscript parts
 $if(title)$
@@ -150,10 +150,28 @@ $if(leftheader)$
   \leftheader{$leftheader$}
 $endif$
 $if(author)$
-  \author{$for(author)$$author$$sep$ \and $endfor$}
+  \author{
+    $for(author)$
+      $author.name$$if(author.affiliation)$\textsuperscript{$author.affiliation$}$endif$$sep$,
+    $endfor$
+  }
+
+  \def\affdep{{$for(author)$"$author.department$"$sep$, $endfor$}}%
+  \def\affcity{{$for(author)$"$author.city$"$sep$, $endfor$}}%
 $endif$
 $if(affiliation)$
-  \affiliation{\vspace{0.5cm}$affiliation$}
+  \affiliation{
+    \vspace{0.5cm}
+    $for(affiliation)$
+      \textsuperscript{$affiliation.id$} $if(affiliation.institution)$$affiliation.institution$$else$$if(affiliation.city)$$affiliation.city$$endif$$if(affiliation.state)$, $affiliation.state$$endif$$if(affiliation.country)$, $affiliation.country$$endif$$endif$$sep$\\
+    $endfor$
+  }
+
+
+  \def\affinst{{$for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
+  \def\affstate{{$for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
+  \def\affcntry{{$for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
+
 $endif$
 $if(note)$
   \note{
@@ -162,9 +180,41 @@ $if(note)$
 
     \raggedright
     \setlength{\parindent}{36pt}
+
+    \newcounter{author}
+
+    $for(author)$
+      $if(author.affiliation)$
+      \setcounter{author}{-1}
+        $if(author.primaryaffiliation)$
+          \addtocounter{author}{$author.primaryaffiliation$}
+        $else$
+          \addtocounter{author}{$author.affiliation$}
+        $endif$
+        \expandafter\edef\csname authorid\endcsname{\theauthor}
+        $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
+      $endif$
+    $sep$;
+    $endfor$.
+
     $note$
+
+    $for(author)$
+      $if(author.corresponding)$
+        $if(author.affiliation)$
+          \setcounter{author}{-1}
+          \addtocounter{author}{$author.affiliation$}
+          \expandafter\edef\csname authorid\endcsname{\theauthor}
+          Correspondence concerning this article should be addressed to $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+        $endif$
+      $endif$
+    $endfor$
   }
+$else$
+
 $endif$
+
+
 $if(abstract)$
   \abstract{$abstract$}
 $endif$
