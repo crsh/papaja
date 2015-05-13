@@ -179,7 +179,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
 
 
 prettify_terms <- function(x){
-  x <- gsub("\\(|\\)", "", x)                       # Remove parentheses
+  x <- gsub("\\(|\\)|`", "", x)                       # Remove parentheses and backticks
   for (i in 1:length(x)){
     x2 <- unlist(strsplit(x=x[i],split=":"))
     substring(x2,first=1,last=1) <- toupper(substring(x2,first=1,last=1))

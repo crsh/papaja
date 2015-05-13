@@ -238,8 +238,8 @@ print_anova <- function(
   x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
   x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 2, margin = 2, gt1 = FALSE)
 
-  y <- x[,c("term","statistic","df","df2","p.value",es)]
-  y[["terms"]]<-prettify_terms(y[["terms"]])
+  y <- data.frame(x[,c("term","statistic","df","df_res","p.value",es)],row.names=NULL)
+  y[["term"]]<-prettify_terms(y[["term"]])
   if("ges" %in% es){
     es_long <-"$\\eta^2_G$"
   } else if("pes" %in% es){
@@ -272,9 +272,10 @@ print_anova <- function(
   })
 
   apa_res$full <- paste(apa_res$stat, apa_res$est, sep = ", ")
-  apa_res$table <- y
+
   names(apa_res$full) <- names(apa_res$est)
   apa_res <- lapply(apa_res, as.list)
+  apa_res$table <- as.data.frame(y)
   apa_res
 }
 
