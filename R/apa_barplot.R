@@ -77,6 +77,7 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
       this.title<-paste(main,c(factors[3],"==",i),collapse="")
       apa.barplot.core(data=aggregated[aggregated[[factors[3]]]==i,],id=id,dv=dv,factors=factors[1:2],ylim=ylim,main=this.title,tendency=tendency,dispersion=dispersion, level=level,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
     }
+    par(mfrow=old.mfrow)
   }
   # four factors
   if(length(factors)==4){
@@ -87,8 +88,8 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
         apa.barplot.core(data=aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,],id=id,dv=dv,factors=factors[1:2],ylim=ylim,main=this.title,tendency=tendency,dispersion=dispersion, level=level,intercepts=intercepts, xlab=xlab, ylab=ylab, fun_aggregate=fun_aggregate, ...)
       }
     }
+    par(mfrow=old.mfrow)
   }
-  par(mfrow=old.mfrow)
 }
 
 
