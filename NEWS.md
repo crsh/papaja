@@ -7,8 +7,10 @@ Template:
 
 Existing functions:
 - `apa_print()`
-    - Refactored and tested for different ANOVA objects
-    - First experimental implementation of F-test model comparisons (e.g., `lm` objects)
+    - Added `table` output-element to `apa_print.lm()` containing complete regression table
+    - Refactored and tested `apa_print()`-family for ANOVA objects
+    - Added `table` output-element to `apa_print()`-family for ANOVA objects containing complete ANOVA table
+    - First experimental implementation of F-test model comparisons (`car::leveneTest` objects)
     - Estimates in `apa_print.htest()` and `apa_print.lm()` can be formatted by passing options to `printnum()`
 - `apa_table()`
     - Added `midrules` option for `apa_table.latex()` and cleaned up LaTeX output
@@ -21,6 +23,7 @@ Existing functions:
     - Fixed bug when `lang` was not set in YAML header
 
 New functions:
+- `apa_print.anova.mlm()`
 - `apa_barplot()`
 - `cite_r()`
 

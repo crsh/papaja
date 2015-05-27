@@ -43,6 +43,7 @@
 #'      \item{\code{est}}{A named list of character strings giving the descriptive estimates and confidence intervals
 #'          for each term.} % , either in units of the analyzed scale or as standardized effect size.
 #'      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each term.}
+#'      \item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #'
 #' @references
@@ -105,10 +106,11 @@ apa_print.lm <- function(
 
   summary_x <- summary(x)
   tidy_x <- broom::tidy(x)
-  tidy_x <- cbind(tidy_x, ci) # Adds term rownames
+  tidy_x <- cbind(tidy_x, ci) # Also adds term rownames
   rownames(tidy_x) <- sanitize_terms(rownames(tidy_x), standardized)
   glance_x <- broom::glance(x)
 
+  # Concatenate character strings and return as named list
   apa_res <- list()
   apa_res$stat <- apply(tidy_x[, -1], 1, function(y) {
     p <- printp(y["p.value"])
@@ -132,6 +134,22 @@ apa_print.lm <- function(
 
   apa_res <- lapply(apa_res, as.list)
 
+  ## Assamble regression table
+  regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
+  regression_table$ci <- apply(tidy_x[, tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
+  regression_table$df <- glance_x$df.residual # Add degrees of freedom
+  regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "df", "p.value")] # Change order of columns
+  regression_table$term <- prettify_terms(regression_table$term)
+
+  regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
+  regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
+  regression_table$p.value <- printp(regression_table$p.value)
+  regression_table$df <- round(regression_table$df, digits = 2)
+
+  colnames(regression_table) <- c("Term", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), "$t$", "$df$", "$p$")
+
+  apa_res$table <- regression_table
+
 
   # Model fit
   p <- printp(glance_x$p.value)
@@ -154,7 +172,7 @@ apa_print.lm <- function(
   apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
   apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE), "$")
   apa_res$est$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
-  apa_res$est$modelfit$bic <- paste0("$AIC = ", printnum(glance_x$BIC), "$")
+  apa_res$est$modelfit$bic <- paste0("$BIC = ", printnum(glance_x$BIC), "$")
 
   apa_res$full$modelfit$r2 <- paste(apa_res$est$modelfit$r2, apa_res$stat$modelfit$r2, sep = ", ")
 

@@ -182,20 +182,20 @@ sanitize_terms <- function(x, standardized = FALSE) {
 
 #' Prettify term names
 #'
-#' Remove parentheses, replace colons with "$\\times$". Useful to prettify term names in ANOVA tables. \emph{This function is not exported.}
+#' Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables. \emph{This function is not exported.}
 #'
 #' @param x Character. Vector of term-names to be prettified
 #'
 #' @examples
 #' prettify_terms(c("material:valence", "material:valence:measurement"))
 
-
-prettify_terms <- function(x){
+prettify_terms <- function(x, standardized = FALSE) {
+  if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                       # Remove parentheses and backticks
-  for (i in 1:length(x)){
-    x2 <- unlist(strsplit(x=x[i],split=":"))
-    substring(x2,first=1,last=1) <- toupper(substring(x2,first=1,last=1))
-    x[i] <- paste(x2,collapse=" $\\times$ ")
+  for (i in 1:length(x)) {
+    x2 <- unlist(strsplit(x[i], split = ":"))
+    substring(x2, first = 1, last = 1) <- toupper(substring(x2, first = 1, last = 1))
+    x[i] <- paste(x2, collapse = " $\\times$ ")
   }
   x
 }
