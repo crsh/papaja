@@ -37,7 +37,7 @@ validate <- function(
   if(!is.null(check_dim) && !all(dim(x) == check_dim)) stop(paste("The parameter '", name, "' must have dimensions " , paste(check_dim, collapse=""), ".", sep = ""))
   if(!is.null(check_length) && length(x) != check_length) stop(paste("The parameter '", name, "' must be of length ", check_length, ".", sep = ""))
 
-  if(any(is.na(x))) {
+  if(!check_class=="function"&&any(is.na(x))) {
     if(check_NA) stop(paste("The parameter '", name, "' is NA.", sep = ""))
     else return(TRUE)
   }
@@ -178,3 +178,25 @@ sanitize_terms <- function(x, standardized = FALSE) {
   x <- gsub("\\(|\\)", "", x)                       # Remove parentheses
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
 }
+
+
+#' Prettify term names
+#'
+#' Remove parentheses, replace colons with "$\\times$". Useful to prettify term names in ANOVA tables. \emph{This function is not exported.}
+#'
+#' @param x Character. Vector of term-names to be prettified
+#'
+#' @examples
+#' prettify_terms(c("material:valence", "material:valence:measurement"))
+
+
+prettify_terms <- function(x){
+  x <- gsub("\\(|\\)|`", "", x)                       # Remove parentheses and backticks
+  for (i in 1:length(x)){
+    x2 <- unlist(strsplit(x=x[i],split=":"))
+    substring(x2,first=1,last=1) <- toupper(substring(x2,first=1,last=1))
+    x[i] <- paste(x2,collapse=" $\\times$ ")
+  }
+  x
+}
+

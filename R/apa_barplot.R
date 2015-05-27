@@ -12,8 +12,10 @@
 #' @param na.rm Logical. Specifies if missing values will be removed. Defaults to \code{TRUE}.
 #' @param ylim Numeric. A vector specifying upper and lower limit of the y-axis.
 #' @param main Character.The main title for your plot.
+#' @param xlab Character. Specifies the label of your x-axis. Defauls to the first element of \code{factors}.
 #' @param ylab Character. Specifies the label of your y-axis. Defaults to \code{dv}.
 #' @param intercepts Numeric. Draws horizontal lines into your plot. Specify one or multiple y-values.
+#' @param ... Further arguments than can be passed to the underlying \code{barplot} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative distribution function that will be covered.
 #'    For instance, if you want a 98\% confindence interval, specify \code{level=.98}. \code{level} defaults to .95.
@@ -49,10 +51,10 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
   }
 
   if(length(factors)<1){
-    stop("not enough stratifying factors")
+    stop("Not enough stratifying factors. Specify at least one factor.")
   }
   if(length(factors)>4){
-    stop("too many stratifying factors")
+    stop("Too many stratifying factors. Specify not more than four factors.")
   }
 
   ## aggregate data
@@ -60,7 +62,7 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
 
   ## one factor
   if(length(factors)==1){
-    apa.barplot.one(data=aggregated,id=id,dv=dv,factors=factors,ylim=ylim,main=main,tendency=tendency, dispersion=dispersion, level=level,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
+    apa.barplot.one(data=aggregated,id=id,dv=dv,factors=factors,ylim=ylim,main=main,tendency=tendency, dispersion=dispersion, level=level, intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
   }
 
   ## two factors
@@ -75,6 +77,7 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
       this.title<-paste(main,c(factors[3],"==",i),collapse="")
       apa.barplot.core(data=aggregated[aggregated[[factors[3]]]==i,],id=id,dv=dv,factors=factors[1:2],ylim=ylim,main=this.title,tendency=tendency,dispersion=dispersion, level=level,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
     }
+    par(mfrow=old.mfrow)
   }
   # four factors
   if(length(factors)==4){
@@ -85,8 +88,8 @@ apa_barplot<-function(data, id, factors, dv, tendency=mean, dispersion=conf_int,
         apa.barplot.core(data=aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,],id=id,dv=dv,factors=factors[1:2],ylim=ylim,main=this.title,tendency=tendency,dispersion=dispersion, level=level,intercepts=intercepts, xlab=xlab, ylab=ylab, fun_aggregate=fun_aggregate, ...)
       }
     }
+    par(mfrow=old.mfrow)
   }
-  par(mfrow=old.mfrow)
 }
 
 
@@ -133,15 +136,15 @@ apa.barplot.core<-function(data, id, dv, factors, main=NULL,tendency=mean, ylim=
   }
 }
 
-apa.barplot.one<-function(data,id,dv,factors,main=NULL,tendency=mean,dispersion=conf_int, level=.95,intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
+apa.barplot.one<-function(data, id, dv, factors, main=NULL, tendency=mean, dispersion=conf_int, level=.95, intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
 
   if(nrow(data)>0){
 
     yy <- tapply(data[[dv]],list(data[[factors[1]]]), tendency, na.rm=TRUE)
-    if(level==.95){
-      ee <- tapply(data[[dv]],list(data[[factors[1]]]), dispersion, na.rm=TRUE)
+    if (level==.95){
+      ee <- tapply(data[[dv]], list(data[[factors[1]]]), FUN=dispersion, na.rm=TRUE)
     } else {
-      ee <- tapply(data[[dv]],list(data[[factors[1]]]), dispersion, na.rm=TRUE, level=level)
+      ee <- tapply(data[[dv]], list(data[[factors[1]]]), FUN=conf_int, na.rm=TRUE, level=level)
     }
 
     names<-levels(data[[factors[1]]])
