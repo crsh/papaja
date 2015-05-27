@@ -143,12 +143,15 @@ $endif$
 $if(title)$
   \title{$title$}
 $endif$
+
 $if(shorttitle)$
   \shorttitle{$shorttitle$}
 $endif$
+
 $if(leftheader)$
   \leftheader{$leftheader$}
 $endif$
+
 $if(author)$
   \author{
     $for(author)$
@@ -159,6 +162,7 @@ $if(author)$
   \def\affdep{{$for(author)$"$author.department$"$sep$, $endfor$}}%
   \def\affcity{{$for(author)$"$author.city$"$sep$, $endfor$}}%
 $endif$
+
 $if(affiliation)$
   \affiliation{
     \vspace{0.5cm}
@@ -171,9 +175,51 @@ $if(affiliation)$
   \def\affinst{{$for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
   \def\affstate{{$for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
   \def\affcntry{{$for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
-
 $endif$
+
 $if(note)$
+  \note{
+    \vspace{1cm}
+    Author note
+
+    \raggedright
+    \setlength{\parindent}{36pt}
+
+    \newcounter{author}
+
+%     $if(author)$
+%     $for(author)$
+%       $if(author.affiliation)$
+%       \setcounter{author}{-1}
+%         $if(author.primaryaffiliation)$
+%           \addtocounter{author}{$author.primaryaffiliation$}
+%         $else$
+%           \addtocounter{author}{$author.affiliation$}
+%         $endif$
+%         \expandafter\edef\csname authorid\endcsname{\theauthor}
+%         $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
+%       $endif$
+%     $sep$;
+%     $endfor$.
+%     $endif$
+
+    $note$
+
+    $if(author)$
+    $for(author)$
+      $if(author.corresponding)$
+        $if(author.affiliation)$
+          \setcounter{author}{-1}
+          \addtocounter{author}{$author.affiliation$}
+          \expandafter\edef\csname authorid\endcsname{\theauthor}
+          Correspondence concerning this article should be addressed to $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+        $endif$
+      $endif$
+    $endfor$
+    $endif$
+  }
+$else$ % If no note is define give only author information if available
+  $if(author)$
   \note{
     \vspace{1cm}
     Author note
@@ -197,8 +243,7 @@ $if(note)$
     $sep$;
     $endfor$.
 
-    $note$
-
+    $if(author)$
     $for(author)$
       $if(author.corresponding)$
         $if(author.affiliation)$
@@ -209,11 +254,10 @@ $if(note)$
         $endif$
       $endif$
     $endfor$
+    $endif$
   }
-$else$
-
+  $endif$
 $endif$
-
 
 $if(abstract)$
   \abstract{$abstract$}
@@ -241,30 +285,31 @@ $endfor$
 \maketitle
 
 $for(include-before)$
-$include-before$
-
+  $include-before$
 $endfor$
+
 $if(toc)$
-{
-\hypersetup{linkcolor=black}
-\setcounter{tocdepth}{$toc-depth$}
-\tableofcontents
-}
+  {
+  \hypersetup{linkcolor=black}
+  \setcounter{tocdepth}{$toc-depth$}
+  \tableofcontents
+  }
 $endif$
+
 $body$
 
 $if(natbib)$
-$if(biblio-files)$
-$if(biblio-title)$
-$if(book-class)$
-  \renewcommand\bibname{$biblio-title$}
-$else$
-  \renewcommand\refname{$biblio-title$}
-$endif$
-$endif$
-\bibliography{$biblio-files$}
+  $if(biblio-files)$
+    $if(biblio-title)$
+      $if(book-class)$
+        \renewcommand\bibname{$biblio-title$}
+      $else$
+        \renewcommand\refname{$biblio-title$}
+      $endif$
+    $endif$
+  \bibliography{$biblio-files$}
 
-$endif$
+  $endif$
 $endif$
 $if(biblatex)$
   \printbibliography

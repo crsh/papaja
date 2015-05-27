@@ -25,14 +25,12 @@ affiliation:
     country: USA
 
 abstract: |
-  Enter your abstract here (note the indentation, if you start a new paragraph).
+  Enter abstract here (note the indentation, if you start a new paragraph).
   
-note: |
-  Complete departmental affiliations for each author ().
-  
-  Enter your author note here (note the indentation, if you start a new paragraph).
-  
-  Corresponding author information ().
+note: |  
+  Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
+
+  Enter author note here.
   
 keywords: "keywords"
 
