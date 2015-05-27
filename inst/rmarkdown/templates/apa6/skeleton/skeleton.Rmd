@@ -10,7 +10,7 @@ author:
     address: Postal address
     email: my@email.com
   - name: Second Author
-    affiliation: 1,2
+    affiliation: "1,2"
     primaryaffiliation: 2
     department: Department 2
     city: City
