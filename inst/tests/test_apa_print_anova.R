@@ -208,10 +208,10 @@ test_that(
 
     ## DF corrections
     rm_afex_anova.mlm_output <- apa_print(rm_afex_anova.mlm)
-    expect_that(rm_afex_anova.mlm_output$full$Valence, equals("$F(1.15, 4.6) = 189.11$, $p < .001$, $\\eta^2_G = .98$"))
+    expect_that(rm_afex_anova.mlm_output$full$Valence, equals("$F(1.15, 4.6) = 189.11$, $p < .001$, $\\eta^2_G = .93$"))
 
     rm_afex_anova.mlm_output <- apa_print(rm_afex_anova.mlm, correction = "HF")
-    expect_that(rm_afex_anova.mlm_output$full$Valence, equals("$F(1.32, 5.26) = 189.11$, $p < .001$, $\\eta^2_G = .98$"))
+    expect_that(rm_afex_anova.mlm_output$full$Valence, equals("$F(1.32, 5.26) = 189.11$, $p < .001$, $\\eta^2_G = .93$"))
 
     rm_afex_anova.mlm_output <- apa_print(rm_afex_anova.mlm, correction = "none")
     expect_that(rm_afex_anova.mlm_output$full$Valence, is_identical_to(rm_afex_anova.mlm_output$full$Valence))
