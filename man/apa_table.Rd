@@ -34,11 +34,6 @@ apa_table.word(x, caption = NULL, note = NULL, row_names = TRUE,
 \item{midrules}{Numeric. Vector of line numbers in table (not counting column headings) that should be
 followed by a horizontal rule; ignored in MS Word documents.}
 
-\item{added_colnames}{Character. Vector of names for first unnamed columns. See details.}
-
-\item{midrules}{Numeric. Vector of line numbers in table (not counting column headings) that should be
-followed by a horizontal rule; ignored in MS Word documents.}
-
 \item{placement}{Character. Indicates whether table should be placed at the exact location (\code{h}),
 at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
 to indicate order of preference (\code{htb}); ignored in MS Word documents.}

@@ -31,9 +31,13 @@ apa_barplot(data, id, factors, dv, tendency = mean, dispersion = conf_int,
 
 \item{main}{Character.The main title for your plot.}
 
+\item{xlab}{Character. Specifies the label of your x-axis. Defauls to the first element of \code{factors}.}
+
 \item{ylab}{Character. Specifies the label of your y-axis. Defaults to \code{dv}.}
 
 \item{intercepts}{Numeric. Draws horizontal lines into your plot. Specify one or multiple y-values.}
+
+\item{...}{Further arguments than can be passed to the underlying \code{barplot} function.}
 }
 \description{
 This function returns barplots.

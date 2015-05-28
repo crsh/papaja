@@ -5,10 +5,10 @@
 #'
 #' @param x \code{lm} object.
 #' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{b^*} instead of "b" for standardized regression coefficients) is used,
-#'    otherwise the name is overwritten by the one supplied. See details.
+#'    adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
+#'    otherwise the supplied name is used. See details.
 #' @param standardized Logical. Indicates if coefficients are standardized or unstandardized and leading
-#'    zeros are omitted of appropriate. See details.
+#'    zeros are omitted if appropriate. See details.
 #' @param ci Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
 #'    \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 #'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
