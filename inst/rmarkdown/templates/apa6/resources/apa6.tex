@@ -215,13 +215,13 @@ $if(note)$
           \setcounter{author}{-1}
           \addtocounter{author}{$author.affiliation$}
           \expandafter\edef\csname authorid\endcsname{\theauthor}
-          Correspondence concerning this article should be addressed to $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+          Correspondence concerning this article should be addressed to $author.name$, $author.department$, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
         $endif$
       $endif$
     $endfor$
     $endif$
   }
-$else$ % If no note is define give only author information if available
+$else$ % If no note is defined give only author information if available
   $if(author)$
   \note{
     \vspace{1cm}
@@ -232,19 +232,19 @@ $else$ % If no note is define give only author information if available
 
     \newcounter{author}
 
-    $for(author)$
-      $if(author.affiliation)$
-      \setcounter{author}{-1}
-        $if(author.primaryaffiliation)$
-          \addtocounter{author}{$author.primaryaffiliation$}
-        $else$
-          \addtocounter{author}{$author.affiliation$}
-        $endif$
-        \expandafter\edef\csname authorid\endcsname{\theauthor}
-        $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
-      $endif$
-    $sep$;
-    $endfor$.
+%     $for(author)$
+%       $if(author.affiliation)$
+%       \setcounter{author}{-1}
+%         $if(author.primaryaffiliation)$
+%           \addtocounter{author}{$author.primaryaffiliation$}
+%         $else$
+%           \addtocounter{author}{$author.affiliation$}
+%         $endif$
+%         \expandafter\edef\csname authorid\endcsname{\theauthor}
+%         $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
+%       $endif$
+%     $sep$;
+%     $endfor$.
 
     $if(author)$
     $for(author)$
@@ -253,7 +253,7 @@ $else$ % If no note is define give only author information if available
           \setcounter{author}{-1}
           \addtocounter{author}{$author.affiliation$}
           \expandafter\edef\csname authorid\endcsname{\theauthor}
-          Correspondence concerning this article should be addressed to $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+          Correspondence concerning this article should be addressed to $author.name$, $author.department$, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
         $endif$
       $endif$
     $endfor$
