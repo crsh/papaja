@@ -25,6 +25,9 @@
 #'    distribution function that will be covered. For instance, if you want a 98\% confindence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #' @examples NULL
+#' apa_barplot(data=npk, id = "block", dv= "yield", factors=c("N"))
+#' apa_barplot(data=npk, id = "block", dv= "yield", factors=c("N", "P"))
+#' apa_barplot(data=npk, id = "block", dv= "yield", factors=c("N", "P", "K"), ylim = c(0, 80), level = .34)
 #' @export
 
 apa_barplot <- function(
@@ -47,7 +50,8 @@ apa_barplot <- function(
 
   validate(data, check_class = "data.frame", check_NA = FALSE)
   validate(id, check_class="character", check_length = 1)
-  validate(factors, check_class = "character", check_length = 1)
+  validate(factors, check_class = "character")
+  validate(length(factors), check_range = c(1,4))
   validate(tendency, check_class = "function", check_length = 1, check_NA =FALSE)
   validate(dispersion, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(level, check_class = "numeric", check_range = c(0,1))
@@ -75,45 +79,33 @@ apa_barplot <- function(
   }
 
   ## aggregate data
-  aggregated <- fast_aggregate(data=data, dv=dv, factors=c(id, factors), fun=fun_aggregate, na.rm=na.rm)
+  aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
 
-
-
-  ## calculate central tendency
-  #yy <- tapply(data[[dv]], list(data[[factors[2]]], data[[factors[1]]]), FUN=tendency, na.rm=TRUE)
-  fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency, na.rm=TRUE)
-
-  ## calculate measure of dispersion
-  if ## wenn conf_int
-    ee <- tapply(data[[dv]], list(data[[factors[2]]], data[[factors[1]]]), FUN=dispersion, na.rm=TRUE)
-    ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency, na.rm=TRUE, level = level)
-  } else {
-   ## ee <- tapply(data[[dv]], list(data[[factors[2]]], data[[factors[1]]]), FUN=conf_int, na.rm=TRUE, level=level)
-    ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency, na.rm=TRUE)
 
   ## Calculate central tendencies
+  yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
 
   ## Calculate dispersions
   fun_dispersion <- deparse(substitute(dispersion))
   if(fun_dispersion == "conf_int") {
-
+    ee <- aggregate(formula = as.formula(paste0(dv,"~",paste(factors,collapse="+"))), data = aggregated, FUN = dispersion, level= level)
   } else {
-
+    ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
   }
 
-  if(is.null(ylim)) { # Make sure that complete error bars are plotted
-    # ylim <- c(min(0, aggregated[, dv]), )
-
+  # Make sure that complete error bars are plotted
+  if(is.null(ylim)) {
+    ylim <- c(min(0, yy[, dv] + ee[, dv]), max(yy[, dv] - ee[, dv]))
   }
 
   ## one factor
   if(length(factors)==1){
-    apa.barplot.one(data=aggregated,id=id,dv=dv,factors=factors, ylim=ylim, main=main, intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
+      apa.barplot.one(yy = yy, ee = ee, id = id, dv = dv, factors = factors, ylim=ylim, main=main,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
   }
 
   ## two factors
   if(length(factors)==2){
-    apa.barplot.core(data=aggregated,id=id,dv=dv,factors=factors,ylim=ylim,main=main,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
+    apa.barplot.core(yy = yy, ee = ee, id = id, dv = dv, factors = factors, ylim=ylim, main=main,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
   }
 
   ## three factors
@@ -121,7 +113,7 @@ apa_barplot <- function(
     par(mfrow=c(1,nlevels(data[[factors[3]]])))
     for (i in levels(data[[factors[3]]])){
       this.title<-paste(main,c(factors[3],"==",i),collapse="")
-      apa.barplot.core(data=aggregated[aggregated[[factors[3]]]==i,],id=id,dv=dv,factors=factors[1:2],ylim=ylim,main=this.title,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
+      apa.barplot.core(yy = yy[yy[[factors[3]]]==i,], ee = ee[ee[[factors[3]]]==i,], id = id, dv = dv, factors = factors, ylim=ylim, main=this.title,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
     }
     par(mfrow=old.mfrow)
   }
@@ -131,7 +123,7 @@ apa_barplot <- function(
     for (i in levels(data[[factors[3]]])){
       for (j in levels(data[[factors[4]]])){
         this.title<-paste(c(main,factors[3],"==",i,"&",factors[4],"==",j),collapse="")
-        apa.barplot.core(data=aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,],id=id,dv=dv,factors=factors[1:2],ylim=ylim,main=this.title,intercepts=intercepts, xlab=xlab, ylab=ylab, fun_aggregate=fun_aggregate, ...)
+        apa.barplot.core(yy = yy[yy[[factors[3]]]==i&yy[[factors[4]]]==j,], ee = ee[ee[[factors[3]]]==i&ee[[factors[4]]]==j,], id = id, dv = dv, factors = factors, ylim=ylim, main=this.title,intercepts=intercepts, xlab=xlab, ylab=ylab, ...)
       }
     }
     par(mfrow=old.mfrow)
@@ -139,15 +131,15 @@ apa_barplot <- function(
 }
 
 
-apa.barplot.core<-function(data, id, dv, factors, main=NULL, ylim=NULL, intercepts=NULL, xlab=NULL, ylab=NULL, col=NULL, ...){
+apa.barplot.core<-function(yy, ee, id, dv, factors, main=NULL, ylim=NULL, intercepts=NULL, xlab=NULL, ylab=NULL, col=NULL, ...){
 
   if(nrow(data)>0){
 
-    names<-levels(data[[factors[1]]])
+    names<-levels(yy[[factors[1]]])
 
     #default greyscale colors
     if(is.null(col)){
-      nc<-nlevels(data[[factors[2]]])
+      nc<-nlevels(yy[[factors[2]]])
       colors<-(nc:1/(nc))^.6
       col<-grey(colors)
     }
@@ -162,20 +154,23 @@ apa.barplot.core<-function(data, id, dv, factors, main=NULL, ylim=NULL, intercep
       ylab<-paste(dv)
     }
 
-    barx <- barplot(yy, beside=TRUE, col=col, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, legend=levels(data[[factors[2]]]), ylab=ylab, main=main, ...)
+    # convert to matrices
+    y <- tapply(yy[, dv],list(yy[, factors[2]], yy[, factors[1]]), FUN=as.numeric)
+    e <- tapply(ee[, dv],list(ee[, factors[2]], ee[, factors[1]]), FUN=as.numeric)
 
-    error.bar(barx, yy, ee)
+    # barplot()
+    barx <- barplot(height = y, beside=TRUE, col=col, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, legend=levels(yy[[factors[2]]]), args.legend = list(title = factors[2]), ...)
+
+    # error bars
+    error.bar(barx, y, e)
 
     if(!is.null(intercepts)){
       segments(x0=colMeans(barx)-barx[1], y0=intercepts, x1=colMeans(barx)+barx[1], y1=intercepts)
     }
   }
-  if(nrow(data)==0){
-    plot(x=c(0,1),ylim=c(0,1),type="l",main=main,ylab=NULL,xlab="No observations")
-  }
 }
 
-apa.barplot.one<-function(data, id, dv, factors, main=NULL, intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
+apa.barplot.one<-function(yy, ee, id, dv, factors, main=NULL, intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
 
   if(nrow(data)>0){
 
@@ -192,15 +187,12 @@ apa.barplot.one<-function(data, id, dv, factors, main=NULL, intercepts=NULL, xla
     }
 
     # plot
-    barx <- barplot(yy, beside=TRUE, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, col=col, ...)
-    error.bar(barx,yy,ee)
+    barx <- barplot(yy[, dv], beside=TRUE, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, col=col, ...)
+    error.bar(barx,yy[, dv],ee[, dv])
 
     if(!is.null(intercepts)){
       segments(x0=colMeans(barx)-barx[1], y0=intercepts, x1=colMeans(barx)+barx[1], y1=intercepts)
     }
-  }
-  if(nrow(data)==0){
-    plot(x=c(0,1),ylim=c(0,1),type="l",main=main, ylab=paste(c("M +-",dispersion,dv),collapse=" "),xlab="No observations")
   }
 }
 
