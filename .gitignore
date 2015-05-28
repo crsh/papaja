@@ -11,3 +11,5 @@
 .DS_Store
 Thumbs.db
 .RData
+# Manual files
+*.Rd
