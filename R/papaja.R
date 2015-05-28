@@ -32,13 +32,18 @@
 #'    \code{sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended
 #'    texlive-fonts-extra texlive-humanities}
 #'
-#' @section Author and maintainer:
+#' @section Authors:
+#'    Frederik Aust (frederik.aust at uni-koeln.de).
+#'    Marius Barth (marius.bart at uni-koeln.de).
+#' @section Maintainer:
 #'    Frederik Aust (frederik.aust at uni-koeln.de).
 #' @section Contributors:
 #'  \itemize{
-#'    \item{Marius Barth}
 #'    \item{Birk Diedenhofen}
 #'  }
+#' @references
+#' American Psychological Association. (2010). Publication Manual of the American Psychological Association (6th edition).
+#' Washington, DC: American Psychological Association.
 #' @docType package
 #' @name papaja
 

@@ -162,7 +162,8 @@ print_confint <- function(
 
 #' Sanitize term names
 #'
-#' Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is not exported.}
+#' Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is
+#' not exported.}
 #'
 #' @param x Character. Vector of term-names to be sanitized.
 #' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
@@ -182,12 +183,15 @@ sanitize_terms <- function(x, standardized = FALSE) {
 
 #' Prettify term names
 #'
-#' Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables. \emph{This function is not exported.}
+#' Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables.
+#' \emph{This function is not exported.}
 #'
 #' @param x Character. Vector of term-names to be prettified
+#' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
+#'    removed from term names.
 #'
 #' @examples
-#' prettify_terms(c("material:valence", "material:valence:measurement"))
+#' NULL
 
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()

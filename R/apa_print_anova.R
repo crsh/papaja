@@ -352,7 +352,7 @@ arrange_anova.anova <- function(x) {
     x$term <- paste0("model", 2:nrow(object))
 
   } else if(is.null(object[["Sum Sq"]])) {
-      x <- subset(x, select = -c(sumsq, sumsq_err))
+      x <- x[, -which(colnames(x) %in% c("sumsq", "sumsq_err"))]
 
       x[, c("df", "statistic", "p.value")] <- object[!resid_row, c("Df", "F value", "Pr(>F)")]
       x$df_res <- object[resid_row, "Df"]

@@ -1,21 +1,21 @@
 #' Cite R and R-packages
 #'
-#' Creates a character string citing R and R-packages.
+#' Creates a character string to cite R and R-packages.
 #'
 #' @param file Character. The path and name of the \code{.bib}-file holding the references.
 #' @param prefix Character. The prefix used for all R-package reference handles.
 #' @param footnote Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
 #'    is available.
-#' @param pkgs Character. Vector of package names to cite. If \code{pkgs = "all"} (default) packages in \code{file}
+#' @param pkgs Character. Vector of package names to cite. If \code{pkgs = "all"} (default) all packages in \code{file}
 #'    are cited.
 #' @details
 #'    If \code{footnote = FALSE} a character string citing R and R-packages including version
 #'    numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
 #'    former element holds a character string citing R and a reference to a footnote; the latter element contains
 #'    a character string for the footnote citing R-packages. For correct rendering, the footnote string needs
-#'    to be a separate paragraph.
-#' @return If \code{footnote = FALSE} a character string is returned and a named list with the elements \code{r}
-#'    and \code{pkgs} otherwise.
+#'    to be a separate paragraph in the Markdown document.
+#' @return If \code{footnote = FALSE} a character string is returned, otherwise a named list with the elements \code{r}
+#'    and \code{pkgs}.
 #' @seealso \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
 #' @examples cite_r()
 #' @export

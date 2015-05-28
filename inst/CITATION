@@ -1,0 +1,8 @@
+utils::citEntry(
+  "manual"
+  , "Aust, F. & Barth, M. (2015). papaja: Create APA manuscripts with RMarkdown. R package version 0.1.0.9054, retrieved from https://github.com/crsh/papaja"
+  , author = c("Frederik Aust and Marius Barth")
+  , title = "papaja: Create APA manuscripts with RMarkdown"
+  , year = "2015"
+  , note = "R package version 0.1.0.9054, retrieved from https://github.com/crsh/papaja"
+)

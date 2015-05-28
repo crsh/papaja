@@ -25,7 +25,7 @@
 #'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
 #'
 #'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-#'    the first column giving the names of the list elements elements.
+#'    the first column giving the names of the list elements.
 #'
 #'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
 #'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
@@ -218,8 +218,10 @@ apa_table.word <- function(
 #' \emph{This function is not exported.}
 #'
 #' @param x List containing one or more \code{matrix} or \code{data.frame}.
-#' @param empty_cell Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
+#' @param empty_cells Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
 #'    \code{"&nbsp;"} if the target document is Word.
+#' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
+#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @seealso \code{\link{apa_table}}
 #'

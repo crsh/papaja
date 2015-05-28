@@ -1,6 +1,6 @@
 #' Create a reference file for R and its packages
 #'
-#' Creates a .bib-reference file for the installed R version and R-packages, so they can be cited
+#' Creates a \code{.bib}-reference file for the installed R version and R-packages, so they can be cited
 #' in a Markdown-document using pandoc or LaTeX.
 #'
 #' @param x Character. Names of packages to include in bibliography.
@@ -13,11 +13,11 @@
 #' @param tweak Logical. Indicates whether to fix some known problems in the citations (based on
 #'    \code{\link[knitr]{write_bib}}).
 #' @details
-#'    \code{r_refs} is a wrapper for \code{create_bib} to create a bibliography for R and all attached or
+#'    \code{r_refs} is a wrapper for \code{\link{create_bib}} to create a bibliography for R and all attached or
 #'    cached packages.
 #'
 #'    By default, if a file exists at the specified location, \code{r_refs} reads the file and
-#'    appends missing citation information to the end of the file (\code{create_bib} always overwrites
+#'    appends missing citation information to the end of the file (\code{\link{create_bib}} always overwrites
 #'    existing files). This behavior may result in redundant package references in your \code{.bib}-file,
 #'    which will be cited when using \code{\link{cite_r}}. It is recommended to use a \code{.bib}-file
 #'    dedicated to R-references, setting \code{append = FALSE}, and adding the file to the

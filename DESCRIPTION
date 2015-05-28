@@ -4,7 +4,7 @@ Version: 0.1.0.9000
 Description: Papaja provides document foramts and helper functions to produces complete APA manscripts from RMarkdown-files (PDF and Word documents).
 Authors@R: c(
     person("Frederik", "Aust", email = "frederik@studio-aust.com", role = c("aut", "cre"))
-    , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("ctb"))
+    , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("aut"))
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
   )
 Maintainer: Frederik Aust, <frederik.aust@uni-koeln.de>
@@ -18,6 +18,7 @@ Imports:
   broom (>= 0.3.6),
   MBESS
 Suggests:
+  dplyr,
   testthat,
   afex
 License: MIT + file LICENSE
