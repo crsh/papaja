@@ -4,25 +4,17 @@ shorttitle: "Title"
 author: 
   - name: First Author
     affiliation: 1
-    department: Department 1
-    city: City
     corresponding: yes    # Define only one corresponding author
+    department: Psychology Department
     address: Postal address
     email: my@email.com
-  - name: Second Author
+  - name: Ernst-August Doelle
     affiliation: "1,2"
-    primaryaffiliation: 2
-    department: Department 2
-    city: City
 affiliation:
   - id: 1
-    institution: University
-    state: WY
-    country: USA
+    institution: Wilhelm-Wundt-University
   - id: 2
-    institution: Business School
-    state: WY
-    country: USA
+    institution: Konstanz Business School
 
 abstract: |
   Enter abstract here (note the indentation, if you start a new paragraph).
