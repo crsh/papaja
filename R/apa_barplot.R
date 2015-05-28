@@ -133,68 +133,63 @@ apa_barplot <- function(
 
 apa.barplot.core<-function(yy, ee, id, dv, factors, main=NULL, ylim=NULL, intercepts=NULL, xlab=NULL, ylab=NULL, col=NULL, ...){
 
-  if(nrow(data)>0){
+  names<-levels(yy[[factors[1]]])
 
-    names<-levels(yy[[factors[1]]])
+  #default greyscale colors
+  if(is.null(col)){
+    nc<-nlevels(yy[[factors[2]]])
+    colors<-(nc:1/(nc))^.6
+    col<-grey(colors)
+  }
 
-    #default greyscale colors
-    if(is.null(col)){
-      nc<-nlevels(yy[[factors[2]]])
-      colors<-(nc:1/(nc))^.6
-      col<-grey(colors)
-    }
+  # default label for x-axis
+  if(is.null(xlab)){
+    xlab <- factors[1]
+  }
 
-    # default label for x-axis
-    if(is.null(xlab)){
-      xlab <- factors[1]
-    }
+  # default label for y-axis
+  if(is.null(ylab)){
+    ylab<-paste(dv)
+  }
 
-    # default label for y-axis
-    if(is.null(ylab)){
-      ylab<-paste(dv)
-    }
+  # convert to matrices
+  y <- tapply(yy[, dv],list(yy[, factors[2]], yy[, factors[1]]), FUN=as.numeric)
+  e <- tapply(ee[, dv],list(ee[, factors[2]], ee[, factors[1]]), FUN=as.numeric)
 
-    # convert to matrices
-    y <- tapply(yy[, dv],list(yy[, factors[2]], yy[, factors[1]]), FUN=as.numeric)
-    e <- tapply(ee[, dv],list(ee[, factors[2]], ee[, factors[1]]), FUN=as.numeric)
+  # barplot()
+  barx <- barplot(height = y, beside=TRUE, col=col, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, legend=levels(yy[[factors[2]]]), args.legend = list(title = factors[2]), ...)
 
-    # barplot()
-    barx <- barplot(height = y, beside=TRUE, col=col, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, legend=levels(yy[[factors[2]]]), args.legend = list(title = factors[2]), ...)
+  # error bars
+  error.bar(barx, y, e)
 
-    # error bars
-    error.bar(barx, y, e)
-
-    if(!is.null(intercepts)){
-      segments(x0=colMeans(barx)-barx[1], y0=intercepts, x1=colMeans(barx)+barx[1], y1=intercepts)
-    }
+  if(!is.null(intercepts)){
+    segments(x0=colMeans(barx)-barx[1], y0=intercepts, x1=colMeans(barx)+barx[1], y1=intercepts)
   }
 }
 
 apa.barplot.one<-function(yy, ee, id, dv, factors, main=NULL, intercepts=NULL, xlab=NULL, ylab=NULL, ylim=NULL, col="white", ...){
 
-  if(nrow(data)>0){
+  names<-levels(data[[factors[1]]])
 
-    names<-levels(data[[factors[1]]])
+  # default label for x-axis
+  if(is.null(xlab)){
+    xlab <- factors[1]
+  }
 
-    # default label for x-axis
-    if(is.null(xlab)){
-      xlab <- factors[1]
-    }
+  # default label for y-axis
+  if(is.null(ylab)){
+    ylab<-paste(dv)
+  }
 
-    # default label for y-axis
-    if(is.null(ylab)){
-      ylab<-paste(dv)
-    }
+  # plot
+  barx <- barplot(yy[, dv], beside=TRUE, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, col=col, ...)
+  error.bar(barx,yy[, dv],ee[, dv])
 
-    # plot
-    barx <- barplot(yy[, dv], beside=TRUE, ylim=ylim, names.arg=names, axis.lty=1, xlab=xlab, ylab=ylab, main=main, col=col, ...)
-    error.bar(barx,yy[, dv],ee[, dv])
-
-    if(!is.null(intercepts)){
-      segments(x0=colMeans(barx)-barx[1], y0=intercepts, x1=colMeans(barx)+barx[1], y1=intercepts)
-    }
+  if(!is.null(intercepts)){
+    segments(x0=colMeans(barx)-barx[1], y0=intercepts, x1=colMeans(barx)+barx[1], y1=intercepts)
   }
 }
+
 
 
 
