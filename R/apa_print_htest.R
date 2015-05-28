@@ -6,15 +6,15 @@
 #' @param x \code{htest} object. See details.
 #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
 #'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
-#'    name is overwritten by the one supplied. See details.
+#'    supplied name is used. See details.
 #' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the name is
-#'    overwritten by the one supplied. See details.
+#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the supplied name is
+#'    used. See details.
 #' @param n Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
 #'    is ignored.
 #' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
-#'    with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.
+#'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
@@ -22,7 +22,7 @@
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
 #'    a reproducible example in your report!).
 #'
-#'    \code{stat_name} and \code{est_name} are placed in the output string and is thus passed to pandoc or LaTeX through
+#'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
 #'    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
 #'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'

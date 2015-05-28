@@ -26,6 +26,7 @@ New functions:
 - `apa_print.anova.mlm()`
 - `apa_barplot()`
 - `cite_r()`
+- `fetch_web_refs()`
 
 Misc:
 - Set up proper package structure for automatic unit testing

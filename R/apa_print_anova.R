@@ -1,4 +1,4 @@
-#' Format statistics (APA 6th edition) from ANOVA
+#' Format statistics from ANOVA (APA 6th edition)
 #'
 #' These methods take objects from various R functions that calculate ANOVA to create formated chraracter
 #' strings to report the results in accordance with APA manuscript guidelines. \code{anova}-objects from e.g. model comparisons are currently
@@ -6,12 +6,12 @@
 #'
 #' @param x Output object. See details.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
-#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Is necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param correction Character In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
+#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
+#' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param ... Additional arguments passed to or from other methods.
 #' @details
-#'    Currently, methods for the following objects exist:
+#'    Currently, methods for the following objects are available:
 #'    \itemize{
 #'      \item{\code{aov}}
 #'      \item{\code{summary.aov}}

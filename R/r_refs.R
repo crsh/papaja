@@ -33,7 +33,7 @@
 #'    available rather than books. If no reference of the specified types is available, the first reference
 #'    is used. Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
 #'    \code{\link{citation}}.
-#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link{citation}}, \code{\link{toBibtex}}
+#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link{fetch_web_refs}}, \code{\link{citation}}, \code{\link{toBibtex}}
 #' @examples NULL
 #' @export
 

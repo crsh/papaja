@@ -1,6 +1,6 @@
 #' Prepare APA document
 #'
-#' Prepares objekts to be used in the rendering process and creates title page and abstract in MS Word
+#' Prepares objevts to be used in the rendering process and creates title page and abstract for MS Word
 #' documents.
 #'
 #' @details The function creates and locks a non-exported object \code{apa_lang} that is used by other

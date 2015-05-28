@@ -7,7 +7,7 @@
 \alias{apa_print.aovlist}
 \alias{apa_print.summary.aov}
 \alias{apa_print.summary.aovlist}
-\title{Format statistics (APA 6th edition) from ANOVAs}
+\title{Format statistics (APA 6th edition) from ANOVA}
 \usage{
 \method{apa_print}{aov}(x, es = "ges", observed = NULL, in_paren = FALSE,
   ...)
@@ -24,7 +24,7 @@
 \method{apa_print}{anova}(x, es = "ges", observed = NULL,
   in_paren = FALSE, ...)
 
-\method{apa_print}{Anova.mlm}(x, correction = "GG", es = "pes",
+\method{apa_print}{Anova.mlm}(x, correction = "GG", es = "ges",
   observed = NULL, in_paren = FALSE, ...)
 }
 \arguments{
@@ -48,6 +48,7 @@
          value for each factor.}
      \item{\code{est}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each factor.}
+     \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
    }
 }
 \description{
@@ -63,6 +64,7 @@ Currently, methods for the following objects exist:
      \item{\code{aovlist}}
      \item{\code{summary.aovlist}}
      \item{\code{anova}}
+     \item{\code{Anova.mlm}}
    }
 
    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
@@ -76,8 +78,12 @@ Currently, methods for the following objects exist:
    npk_aov <- aov(yield ~ block + N * P * K, npk)
    apa_print(npk_aov)
 }
+\references{
+Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
+   , 37 (3), 379-384. doi:\href{http://dx.doi.org/10.3758/BF03192707}{10.3758/BF03192707}
+}
 \seealso{
-\code{\link{aov}}
+\code{\link{aov}}, \code{\link[car]{Anova}}
 
 Other apa_print: \code{\link{apa_print.htest}};
   \code{\link{apa_print.lm}},

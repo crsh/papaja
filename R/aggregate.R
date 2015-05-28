@@ -1,12 +1,13 @@
 #' Aggregate data much faster using dplyr
 #'
-#' This is a convenience wrapper for aggregating your data using dplyr functions that tend to be much faster than the usual \code{aggregate} command.
-#' It is also easy to call from within a function.
+#' This is a convenience wrapper for aggregating your data using dplyr functions that tend to be much faster than the
+#' usual \code{aggregate} command. It is also easy to call from within a function. \emph{This function is not exported.}
 #'
 #' @param data A \code{data.frame} that contains the data.
-#' @param factors Character. Data is intended to be aggregated by these factors.
-#' @param dv Character. The dependent variable that is aggregated. All variables in \code{data} that contain this string will be aggregated separately.
-#' @param fun The function used for aggregation.
+#' @param factors Character. A vector of factor names to aggregate data by.
+#' @param dv Character. The dependent variable to aggregate. All variables in \code{data} that contain this substring
+#'    will be aggregated separately.
+#' @param fun Closure. The function used for aggregation.
 #' @param na.rm Logical. Is passed to \code{fun} and specifies if missing values will be removed.
 #' @examples NULL
 
