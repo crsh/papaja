@@ -160,6 +160,14 @@ Citing without parentheses is, of course, also possible:
 
 `@bauer_2014` &#8594; @bauer_2014.
 
+We have made citing R particularly easy:
+
+```{r echo = TRUE}
+my_citation <- cite_r(file = "r-references.bib")
+```
+
+`my_citation` now contains the following text that you can use in your document: `r my_citation`
+
 The citation style is set in the header of this document with the `csl` parameter.
 The relevant references will, of course, be added to the documents references automatically.
 In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the document header.
