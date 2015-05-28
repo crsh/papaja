@@ -10,14 +10,14 @@
 #' @param na.rm Logical. Is passed to \code{fun} and specifies if missing values will be removed.
 #' @examples NULL
 
-fast_aggregate<-function(data, factors, dv, fun, na.rm=FALSE){
+fast_aggregate<-function(data, factors, dv, fun, ...){
 
   fl <- lapply(as.list(factors),FUN=as.name)
 
   data <- data[, colnames(data) %in% c(factors) |  grepl(dv, colnames(data))]
 
   grouped<-dplyr::grouped_df(data,vars=fl,drop=TRUE)
-  agg.data<-as.data.frame(dplyr::summarise_each(grouped,dplyr::funs(fun(., na.rm=na.rm))))
+  agg.data<-as.data.frame(dplyr::summarise_each(grouped,dplyr::funs(fun(., ...))))
 
   return(agg.data)
 }
