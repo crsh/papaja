@@ -13,9 +13,11 @@
 #' @param check_range Numeric. Vector of length 2 defining the expected range of the object.
 #'
 #' @examples
+#' \dontrun{
 #' in_paren <- TRUE # Taken from printnum()
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
+#' }
 
 validate <- function(
   x
@@ -35,7 +37,7 @@ validate <- function(
   if(!is.null(check_dim) && !all(dim(x) == check_dim)) stop(paste("The parameter '", name, "' must have dimensions " , paste(check_dim, collapse=""), ".", sep = ""))
   if(!is.null(check_length) && length(x) != check_length) stop(paste("The parameter '", name, "' must be of length ", check_length, ".", sep = ""))
 
-  if(any(is.na(x))) {
+  if(!check_class=="function"&&any(is.na(x))) {
     if(check_NA) stop(paste("The parameter '", name, "' is NA.", sep = ""))
     else return(TRUE)
   }
@@ -60,16 +62,16 @@ validate <- function(
 #' @param x Chracter.
 #'
 #' @examples
+#' \dontrun{
 #' convert_stat_name("rho")
 #' convert_stat_name("mean of the differences")
 #' convert_stat_name("t")
+#' }
 
 convert_stat_name <- function(x) {
   validate(x, check_class = "character")
 
-  new_stat_name <- tolower(x)
-
-  new_stat_name <- gsub("-squared", "^2", new_stat_name)
+  new_stat_name <- gsub("-squared", "^2", x, ignore.case = TRUE)
 
   if(length(new_stat_name) == 2 && grepl("mean", new_stat_name)) new_stat_name <- "\\Delta M"
   if(all(grepl("prop \\d", new_stat_name))) {
@@ -87,10 +89,10 @@ convert_stat_name <- function(x) {
     , `(pseudo)median` = "Mdn^*"
     , `mean of the differences` = "M_d"
     , `difference in location` = "Mdn_d"
-    , `bartlett's k^2` = "K^2"
+    , `Bartlett's K^2` = "K^2"
   )
 
-  new_stat_name <- gsub("x|chi", "\\\\Chi", new_stat_name)
+  new_stat_name <- gsub("x|chi", "\\\\chi", new_stat_name, ignore.case = TRUE)
 
   new_stat_name
 }
@@ -108,61 +110,97 @@ convert_stat_name <- function(x) {
 #'
 #' @seealso \code{\link{printnum}}
 #' @examples
-#' make_confint(c(1, 2), conf_level = 0.95)
+#' \dontrun{
+#' print_confint(c(1, 2), conf_level = 0.95)
+#' }
 
-make_confint <- function(
+print_confint <- function(
   x
   , conf_level = NULL
   , ...
 ) {
+  sapply(x, validate, check_class = "numeric")
+
   if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, ...)
 
-  if(!is.matrix(x)) {
-    if(is.null(conf_level)) conf_level <- attr(x, "conf.level")
-    validate(conf_level, check_class = "numeric", check_length = 1)
+  if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
+
+  if(!is.null(conf_level)) {
+    validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
     if(conf_level < 1) conf_level <- conf_level * 100
+    conf_level <- paste0(conf_level, "\\% CI ")
+  }
 
-    apa_ci <- paste0(conf_level, "% CI $[", paste(ci, collapse = "$, $"), "]$")
+  if(!is.matrix(x)) {
+    validate(ci, "x", check_length = 2)
+    apa_ci <- paste0(conf_level, "$[", paste(ci, collapse = "$, $"), "]$")
+    return(apa_ci)
   } else {
-    if(is.null(conf_level)) {
-      conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
-      conf_level <- 100 - conf_level[1] * 2
-    }
-
     if(!is.null(rownames(ci))) {
-      terms <- rownames(ci)
-      terms <- gsub("\\(|\\)", "", terms) # Sanitize term names
-      terms <- gsub("\\W", "_", terms) # Sanitize term names
+      terms <- sanitize_terms(rownames(ci))
     } else {
       terms <- 1:nrow(ci)
     }
 
+    if(!is.null(colnames(ci))) {
+      conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
+      conf_level <- 100 - conf_level[1] * 2
+      conf_level <- paste0(conf_level, "\\% CI ")
+    }
+
     apa_ci <- list()
     for(i in 1:length(terms)) {
-      apa_ci[[terms[i]]] <- paste0(conf_level, "% CI $[", paste(ci[i, ], collapse = "$, $"), "]$")
+      apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
     }
 
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
+    return(apa_ci)
   }
-
-  apa_ci
 }
 
 
 #' Sanitize term names
 #'
-#' Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is not exported.}
+#' Remove characters from term names that will be difficult to adress using the \code{$}-operator. \emph{This function is
+#' not exported.}
 #'
 #' @param x Character. Vector of term-names to be sanitized.
 #' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
 #'    removed from term names.
 #'
 #' @examples
-#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B"))
+#' \dontrun{
+#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
+#' }
 
 sanitize_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)", "", x)                       # Remove parentheses
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
 }
+
+
+#' Prettify term names
+#'
+#' Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables.
+#' \emph{This function is not exported.}
+#'
+#' @param x Character. Vector of term-names to be prettified
+#' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
+#'    removed from term names.
+#'
+#' @examples
+#' NULL
+
+prettify_terms <- function(x, standardized = FALSE) {
+  if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
+  x <- gsub("\\(|\\)|`", "", x)                       # Remove parentheses and backticks
+  for (i in 1:length(x)) {
+    x2 <- unlist(strsplit(x[i], split = ":"))
+    substring(x2, first = 1, last = 1) <- toupper(substring(x2, first = 1, last = 1))
+    x[i] <- paste(x2, collapse = " $\\times$ ")
+  }
+  x
+}
+

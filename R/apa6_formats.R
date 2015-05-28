@@ -14,6 +14,9 @@
 #'    additional options are available. Refer to the apa6 document class
 #'    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
 #'    such as paper size or draft watermarks.
+#'
+#'    When creating PDF documents the output device for figures defaults to \code{c("pdf", "postscript", "png", "tiff")},
+#'    so that each figure is saved in all four formats at a resolution of 300 dpi.
 #' @seealso \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
 #' @examples NULL
 #' @export
@@ -65,7 +68,7 @@ apa6_pdf <- function(
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   format$knitr$knit_hooks$inline <- inline_numbers
 
-  format$knitr$opts_chunk$dev <- c("pdf", "svg", "png", "tiff")
+  format$knitr$opts_chunk$dev <- c("pdf", "postscript", "png", "tiff")
   format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
   format

@@ -62,14 +62,16 @@ $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
-$if(tables)$
-  % Table formatting
-  \usepackage{longtable,booktabs}
-  \usepackage{lscape}    % Landscape page setup for large tables
-  \usepackage{multirow}		% Table styling
-  \usepackage{tabularx}		% Control Column width
-  \usepackage[flushleft]{threeparttable}	% For table notes
-$endif$
+
+% Table formatting
+\usepackage{longtable,booktabs}
+\usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+\usepackage{longtable}              % Allows tables to break across pages
+
 $if(graphics)$
   \usepackage{graphicx}
   \makeatletter
@@ -89,13 +91,12 @@ $endif$
   \usepackage[unicode=true]{hyperref}
 \fi
 \hypersetup{breaklinks=true,
-            bookmarks=true,
             pdfauthor={$author-meta$},
             pdftitle={$title-meta$},
             colorlinks=true,
             citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
             urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$black$endif$,
             pdfborder={0 0 0}}
 \urlstyle{same}  % don't use monospace font for urls
 $if(links-as-notes)$
@@ -107,6 +108,9 @@ $if(strikeout)$
 % avoid problems with \sout in headers with hyperref:
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
 $endif$
+
+\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0pt plus 0pt minus 0pt}
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 
@@ -127,40 +131,152 @@ $if(lang)$
 \fi
 $endif$
 
+% Manuscript styling
+\captionsetup{font=singlespacing,justification=justified}
+\usepackage{csquotes}
+
 $if(lineno)$ % Line numbering
   \usepackage{lineno}
   \linenumbers
 $endif$
 
-% Manuscript styling
-\captionsetup{font=singlespacing,justification=justified}
-\usepackage{csquotes}
-
+\usepackage{tikz} % Variable definition to generate author note
 
 % Essential manuscript parts
 $if(title)$
   \title{$title$}
 $endif$
+
 $if(shorttitle)$
   \shorttitle{$shorttitle$}
 $endif$
+
 $if(leftheader)$
   \leftheader{$leftheader$}
 $endif$
+
 $if(author)$
-  \author{$for(author)$$author$$sep$ \and $endfor$}
+  \author{
+    $for(author)$
+      $author.name$$if(author.affiliation)$\textsuperscript{$author.affiliation$}$endif$$sep$,
+    $endfor$
+  }
+
+  \def\affdep{{$for(author)$"$author.department$"$sep$, $endfor$}}%
+  \def\affcity{{$for(author)$"$author.city$"$sep$, $endfor$}}%
 $endif$
+
 $if(affiliation)$
-  \affiliation{\vspace{0.5cm}$affiliation$}
+  \affiliation{
+    \vspace{0.5cm}
+    $for(affiliation)$
+      \textsuperscript{$affiliation.id$} $if(affiliation.institution)$$affiliation.institution$$else$$if(affiliation.city)$$affiliation.city$$endif$$if(affiliation.state)$, $affiliation.state$$endif$$if(affiliation.country)$, $affiliation.country$$endif$$endif$$sep$\\
+    $endfor$
+  }
+
+
+  \def\affinst{{$for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
+  \def\affstate{{$for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
+  \def\affcntry{{$for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
 $endif$
+
 $if(note)$
-  \note{$note$}
+  \note{
+    \vspace{1cm}
+    Author note
+
+    \raggedright
+    \setlength{\parindent}{36pt}
+
+    \newcounter{author}
+
+%     $if(author)$
+%     $for(author)$
+%       $if(author.affiliation)$
+%       \setcounter{author}{-1}
+%         $if(author.primaryaffiliation)$
+%           \addtocounter{author}{$author.primaryaffiliation$}
+%         $else$
+%           \addtocounter{author}{$author.affiliation$}
+%         $endif$
+%         \expandafter\edef\csname authorid\endcsname{\theauthor}
+%         $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
+%       $endif$
+%     $sep$;
+%     $endfor$.
+%     $endif$
+
+    $note$
+
+    $if(author)$
+    $for(author)$
+      $if(author.corresponding)$
+        $if(author.affiliation)$
+          \setcounter{author}{-1}
+          \addtocounter{author}{$author.affiliation$}
+          \expandafter\edef\csname authorid\endcsname{\theauthor}
+          Correspondence concerning this article should be addressed to $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+        $endif$
+      $endif$
+    $endfor$
+    $endif$
+  }
+$else$ % If no note is define give only author information if available
+  $if(author)$
+  \note{
+    \vspace{1cm}
+    Author note
+
+    \raggedright
+    \setlength{\parindent}{36pt}
+
+    \newcounter{author}
+
+    $for(author)$
+      $if(author.affiliation)$
+      \setcounter{author}{-1}
+        $if(author.primaryaffiliation)$
+          \addtocounter{author}{$author.primaryaffiliation$}
+        $else$
+          \addtocounter{author}{$author.affiliation$}
+        $endif$
+        \expandafter\edef\csname authorid\endcsname{\theauthor}
+        $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
+      $endif$
+    $sep$;
+    $endfor$.
+
+    $if(author)$
+    $for(author)$
+      $if(author.corresponding)$
+        $if(author.affiliation)$
+          \setcounter{author}{-1}
+          \addtocounter{author}{$author.affiliation$}
+          \expandafter\edef\csname authorid\endcsname{\theauthor}
+          Correspondence concerning this article should be addressed to $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+        $endif$
+      $endif$
+    $endfor$
+    $endif$
+  }
+  $endif$
 $endif$
+
 $if(abstract)$
   \abstract{$abstract$}
 $endif$
 $if(keywords)$
-  \keywords{$keywords$}
+  \keywords{$keywords$ \\
+
+    $if(wordcount)$\indent Word count: $wordcount$$endif$
+  }
+$else$
+  $if(wordcount)$
+    \keywords{\\
+
+      $if(wordcount)$\indent $word_count$ $wordcount$$endif$
+    }
+  $endif$
 $endif$
 
 $for(header-includes)$
@@ -172,30 +288,31 @@ $endfor$
 \maketitle
 
 $for(include-before)$
-$include-before$
-
+  $include-before$
 $endfor$
+
 $if(toc)$
-{
-\hypersetup{linkcolor=black}
-\setcounter{tocdepth}{$toc-depth$}
-\tableofcontents
-}
+  {
+  \hypersetup{linkcolor=black}
+  \setcounter{tocdepth}{$toc-depth$}
+  \tableofcontents
+  }
 $endif$
+
 $body$
 
 $if(natbib)$
-$if(biblio-files)$
-$if(biblio-title)$
-$if(book-class)$
-  \renewcommand\bibname{$biblio-title$}
-$else$
-  \renewcommand\refname{$biblio-title$}
-$endif$
-$endif$
-\bibliography{$biblio-files$}
+  $if(biblio-files)$
+    $if(biblio-title)$
+      $if(book-class)$
+        \renewcommand\bibname{$biblio-title$}
+      $else$
+        \renewcommand\refname{$biblio-title$}
+      $endif$
+    $endif$
+  \bibliography{$biblio-files$}
 
-$endif$
+  $endif$
 $endif$
 $if(biblatex)$
   \printbibliography

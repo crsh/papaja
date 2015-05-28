@@ -7,13 +7,16 @@
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
 #' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
-#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.
+#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}. Overwrites the corresponding
+#'    \code{\link[knitr]{kable}} argument.
+#' @param added_colnames Character. Vector of names for first unnamed columns. See details.
+#' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
+#'    followed by a horizontal rule; ignored in MS Word documents.
 #' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
 #'    at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
 #'    to indicate order of preference (\code{htb}); ignored in MS Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
-#' @param added_colnames Character. Vector of names for first unnamed columns. See details.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}. \code{row.names} argument is overwritten
 #'    by \code{row_names}.
 #'
@@ -22,12 +25,12 @@
 #'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
 #'
 #'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-#'    the first column giving the names of the list elements elements.
+#'    the first column giving the names of the list elements.
 #'
 #'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
 #'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
 #'    \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
-#'    merged.
+#'    merged. It is generally recommended to use \code{row_names} instead of \code{row.names}.
 #' @seealso \code{\link[knitr]{kable}}
 #' @examples
 #'
@@ -62,9 +65,10 @@ apa_table.latex <- function(
   , caption = NULL
   , note = NULL
   , row_names = TRUE
+  , added_colnames = NULL
+  , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
-  , added_colnames = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -72,40 +76,82 @@ apa_table.latex <- function(
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   validate(row_names, check_class = "logical", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
-
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
-  if(landscape) table_env <- "sidewaystable" else table_env <- "table"
-  cat("\\begin{", table_env, "}[", placement, "]\n\\centering\n\\begin{threeparttable}\n\\caption{", caption, "}", sep = "")
+  ellipsis <- list(...)
+  longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
+  if(longtable) {
+    table_env <-  "ThreePartTable"
+    table_note_env <- "TableNotes"
+  } else {
+    table_env <- "threeparttable"
+    table_note_env <- "tablenotes"
+  }
+
+  place_opt <- paste0("[", placement, "]")
+  if(landscape) {
+    cat("\\begin{sidewaystable}", place_opt, sep = "")
+    place_opt <- NULL
+  }
+  if(!longtable) cat("\\begin{table}", place_opt, sep = "")
+  cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
+  if(!is.null(note) & !longtable) cat("\n\\caption{", caption, "}", sep = "")
+  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  cat("\n")
 
   if(is.list(x) && !is.data.frame(x)) {
+    n_rows <- sum(sapply(x, nrow))
     prep_table <- merge_tables(
       x
       , ""
       , row_names = row_names
       , added_colnames = added_colnames
     )
-    
+
     x_merged <- do.call(rbind, prep_table)
-    print(knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...))
+    res_table <- knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...)
   } else {
+    n_rows <- nrow(x)
     prep_table <- x
-    if(row_names && !is.null(rownames(x)) && rownames(x) != 1:nrow(x)) {
+    if(row_names && !is.null(rownames(x)) && !identical(rownames(x), 1:nrow(x))) {
       prep_table <- cbind(rownames(x), x)
       colnames(prep_table) <- c("", colnames(x))
+      rownames(prep_table) <- NULL
     }
     if(!is.null(added_colnames)) {
       new_colnames <- c(added_colnames, colnames(x))
       if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
       colnames(prep_table) <- new_colnames
     }
-    print(knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...))
+
+    res_table <- knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...)
   }
 
-  cat("\n")
-  if(!is.null(note)) cat("\\tablenotes{\\textit{Note.}", note, "}\n")
-  cat("\\end{threeparttable}\n\\end{", table_env, "}", sep = "")
+  table_lines <- unlist(strsplit(res_table, "\n"))
+  table_lines <- c(table_lines[-length(table_lines)], "\\addlinespace", table_lines[length(table_lines)]) # Add space before table note
+  if(!is.null(note) & longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+
+  if(!is.null(midrules)) {
+    validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
+
+    table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \addlinespace so midrules are in accurate place
+    table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
+    table_lines[table_content_boarders[1] + midrules] <- sapply(
+      table_lines[table_content_boarders[1] + midrules]
+      , paste, "\\midrule"
+    )
+  }
+
+  if(!is.null(note) & longtable) table_lines <- c(table_lines[-length(table_lines)], "\\insertTableNotes", table_lines[length(table_lines)])
+  res_table <- paste(table_lines, collapse = "\n")
+
+  cat(res_table)
+
+  if(!is.null(note) & !longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
+  if(!longtable) cat("\n\\end{table}")
+  if(landscape) cat("\n\\end{sidewaystable}")
 }
 
 #' @rdname apa_table
@@ -132,20 +178,21 @@ apa_table.word <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
-    
+
     x_merged <- do.call(rbind, prep_table)
-    
+
     cat("<center>")
     cat("Table. ")
     cat("*", caption, "*", sep = "")
     cat("</center>")
-    
+
     print(knitr::kable(x_merged, format = "pandoc", ...))
   } else {
     prep_table <- x
     if(row_names && !is.null(rownames(x)) && rownames(x) != 1:nrow(x)) {
       prep_table <- cbind(rownames(x), x)
       colnames(prep_table) <- c("", colnames(x))
+      rownames(prep_table) <- NULL
     }
     if(!is.null(added_colnames)) {
       new_colnames <- c(added_colnames, colnames(x))
@@ -154,7 +201,7 @@ apa_table.word <- function(
     }
     print(knitr::kable(prep_table, format = "pandoc", ...))
   }
-  
+
   if(!is.null(note)) {
     cat("\n")
     cat("<center>")
@@ -171,8 +218,10 @@ apa_table.word <- function(
 #' \emph{This function is not exported.}
 #'
 #' @param x List containing one or more \code{matrix} or \code{data.frame}.
-#' @param empty_cell Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
+#' @param empty_cells Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
 #'    \code{"&nbsp;"} if the target document is Word.
+#' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
+#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @seealso \code{\link{apa_table}}
 #'
@@ -182,7 +231,7 @@ apa_table.word <- function(
 merge_tables <- function(x, empty_cells, row_names, added_colnames) {
   tables_to_merge <- names(x)
   prep_table <- lapply(seq_along(x), function(i) {
-    
+
     # Add rownames
     if(row_names && !is.null(rownames(x[[i]])) && rownames(x[[i]]) != 1:nrow(x[[i]])) {
       i_table <- cbind(rownames(x[[i]]), x[[i]])
@@ -193,7 +242,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
       , i_table
     )
     rownames(prep_table) <- NULL
-    
+
     # Add colnames
     if(row_names && !is.null(rownames(x[[i]])) && rownames(x[[i]]) != 1:nrow(x[[i]]) && length(added_colnames) < 2) {
       second_col <- ""
@@ -205,7 +254,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
       if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
       colnames(prep_table) <- new_colnames
     }
-    
+
     prep_table
   })
 }

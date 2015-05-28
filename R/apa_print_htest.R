@@ -5,23 +5,26 @@
 #'
 #' @param x \code{htest} object. See details.
 #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{r_S} instead of "rho") is used, otherwise the name is overwritten by the one
-#'    supplied. See details.
+#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
+#'    supplied name is used. See details.
+#' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the supplied name is
+#'    used. See details.
 #' @param n Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
 #'    is ignored.
 #' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
-#'    with attribute \code{conf.level}, e.g., bootstrapped confidence intervals.
+#'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param ... Additional arguments passed to or from other methods.
+#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
 #'    a reproducible example in your report!).
 #'
-#'    \code{stat_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.
-#'    Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
-#'    text (e.g., \code{\\\\tau} yields \eqn{\tau}).
+#'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
+#'    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
+#'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
@@ -64,6 +67,7 @@
 apa_print.htest <- function(
   x
   , stat_name = NULL
+  , est_name = NULL
   , n = NULL
   , ci = NULL
   , in_paren = FALSE
@@ -71,6 +75,7 @@ apa_print.htest <- function(
 ) {
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
+  if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf), check_length = 1)
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
@@ -81,7 +86,12 @@ apa_print.htest <- function(
     op <- "("; cp <- ")"
   }
 
-  if(is.null(stat_name)) stat_name <- names(x$statistic)
+  ellipsis <- list(...)
+
+  if(is.null(stat_name) & !is.null(names(x$statistic))) {
+    stat_name <- names(x$statistic)
+    stat_name <- convert_stat_name(stat_name)
+  }
   stat <- printnum(x$statistic)
 
   if(!is.null(x$sample.size)) n <- x$sample.size
@@ -90,8 +100,7 @@ apa_print.htest <- function(
     # Statistic and degrees of freedom
     if(tolower(names(x$parameter)) == "df") {
       if(x$parameter %%1 == 0) printdigits <- 0 else printdigits = 2
-      stat_name <- convert_stat_name(stat_name)
-      if(stat_name == "\\Chi^2") {
+      if(stat_name == "\\chi^2") {
         if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
         stat_name <- paste0(stat_name, op, printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ", n = ", n, cp)
       } else {
@@ -108,25 +117,32 @@ apa_print.htest <- function(
   apa_res$stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
 
   # Estimate
-  if(!is.null(names(x$estimate))) est_name <- convert_stat_name(names(x$estimate)) else est_name <- NULL
-  est_gt1 <- TRUE
+  if(is.null(est_name) & !is.null(names(x$estimate))) {
+    est_name <- convert_stat_name(names(x$estimate))
+  }
 
-  if(is.null(est_name)) {
+  if(is.null(x$estimate)) {
     est <- NULL
-  } else if(est_name == "\\Delta M") {
-    est <- printnum(diff(x$estimate))
-  } else if(length(x$estimate) == 1) {
-    if(names(x$estimate) %in% c("cor", "rho", "tau")) est_gt1 <- FALSE
-    est <- printnum(x$estimate, gt1 = est_gt1)
+  } else {
+    if(is.null(est_name)) {
+      warning("Cannot determine name of estimate supplied in", deparse(substitute(x)), " of class 'htest'. Estimate is omitted from output string. Please set parameter 'est_name'.")
+      est <- NULL
+    } else if(!is.null(names(x$estimate)) && convert_stat_name(names(x$estimate)) == "\\Delta M") {
+      est <- do.call(function(...) printnum(diff(x$estimate), ...), ellipsis)
+    } else if(length(x$estimate) == 1) {
+      if(est_name %in% c("r", "r_{\\mathrm{s}}", "\\uptau") & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
+      est <- do.call(function(...) printnum(x$estimate, ...), ellipsis)
+    }
   }
 
   if(!is.null(est)) {
     if(!grepl("<|>", est)) eq <- " = " else eq <- ""
 
     if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-      apa_res$est <- paste0("$", est_name, eq, est, "$, ", make_confint(x$conf.int, gt1 = est_gt1))
+      apa_res$est <- paste0("$", est_name, eq, est, "$, ", do.call(function(...) print_confint(x$conf.int, ...), ellipsis))
     } else if(!is.null(ci)) { # Use supplied CI
-      apa_res$est <- paste0("$", est_name, eq, est, "$, ", make_confint(ci, gt1 = est_gt1, margin = 2))
+      ellipsis$margin <- 2 # Ignore margin argument passed by user
+      apa_res$est <- paste0("$", est_name, eq, est, "$, ", do.call(function(...) print_confint(ci, ...), ellipsis))
     } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
       apa_res$est <- paste0("$", est_name, eq, est, "$")
     }

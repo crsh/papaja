@@ -1,15 +1,14 @@
 #' Prepare numeric values for printing
 #'
-#' Formats numeric values according to APA guidelines (6th edition) for reporting.
+#' Converts numeric values to character strings for reporting.
 #'
 #' @param x Numeric. Can be either a single value, vector, or matrix.
 #' @param digits Integer. Number of decimal places to print.
-#' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, exceed 1.
+#' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
-#' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (= 1)
-#'    or columns (= 2).
-#' @param na_string Character. String to print if \code{x} is \code{NA}.
-#' @seealso \code{\link{apply}}
+#' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (\code{margin = 1})
+#'    or columns (\code{margin = 2}).
+#' @param na_string Character. String to print if element of \code{x} is \code{NA}.
 #' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
 #'    according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
 #'    exceeds length of the parameter vectors. If \code{x} is a matrix, the vectors specify the formating

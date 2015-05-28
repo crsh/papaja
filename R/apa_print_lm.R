@@ -4,17 +4,17 @@
 #' strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{lm} object.
-#' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{b^*} instead of "b" for standardized regression coefficients) is used,
-#'    otherwise the name is overwritten by the one supplied. See details.
+#' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+#'    adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
+#'    otherwise the supplied name is used. See details.
 #' @param standardized Logical. Indicates if coefficients are standardized or unstandardized and leading
-#'    zeros are omitted of appropriate. See details.
+#'    zeros are omitted if appropriate. See details.
 #' @param ci Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
 #'    \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 #'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 #'    See details.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param ... Additional arguments passed to or from other methods.
+#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details
 #'    The coefficients names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
@@ -22,7 +22,7 @@
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
-#'    \code{stat_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.
+#'    \code{est_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.
 #'    Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
 #'    text (e.g., \code{\\\\beta} yields \eqn{\beta}).
 #'
@@ -43,6 +43,7 @@
 #'      \item{\code{est}}{A named list of character strings giving the descriptive estimates and confidence intervals
 #'          for each term.} % , either in units of the analyzed scale or as standardized effect size.
 #'      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each term.}
+#'      \item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #'
 #' @references
@@ -70,7 +71,7 @@
 
 apa_print.lm <- function(
   x
-  , stat_name = NULL
+  , est_name = NULL
   , standardized = FALSE
   , ci = 0.95
   , in_paren = FALSE
@@ -78,7 +79,7 @@ apa_print.lm <- function(
 ) {
 
   validate(x, check_class = "lm")
-  if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
+  if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   validate(standardized, check_class = "logical", check_length = 1)
   if(!is.null(ci)) {
     if(length(ci) == 1) {
@@ -97,15 +98,19 @@ apa_print.lm <- function(
     op <- "("; cp <- ")"
   }
 
+  ellipsis <- list(...)
+
   # Model coefficients
-  if(is.null(stat_name)) if(standardized) stat_name <- "b^*" else stat_name <- "b"
+  if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
+  if(standardized) ellipsis$gt1 <- FALSE
 
   summary_x <- summary(x)
   tidy_x <- broom::tidy(x)
-  tidy_x <- cbind(tidy_x, ci) # Adds term rownames
+  tidy_x <- cbind(tidy_x, ci) # Also adds term rownames
   rownames(tidy_x) <- sanitize_terms(rownames(tidy_x), standardized)
   glance_x <- broom::glance(x)
 
+  # Concatenate character strings and return as named list
   apa_res <- list()
   apa_res$stat <- apply(tidy_x[, -1], 1, function(y) {
     p <- printp(y["p.value"])
@@ -119,8 +124,8 @@ apa_print.lm <- function(
 
   apa_res$est <- apply(tidy_x[, -1], 1, function(y) {
     paste0(
-      "$", stat_name, " = ", printnum(y["estimate"], gt1 = !standardized), "$, "
-      , make_confint(y[tail(names(y), 2)], conf_level = conf_level, gt1 = !standardized)
+      "$", est_name, " = ", do.call(function(...) printnum(y["estimate"], ...), ellipsis), "$, "
+      , do.call(function(...) print_confint(y[tail(names(y), 2)], conf_level, ...), ellipsis)
     )
   })
 
@@ -128,6 +133,22 @@ apa_print.lm <- function(
   names(apa_res$full) <- names(apa_res$est)
 
   apa_res <- lapply(apa_res, as.list)
+
+  ## Assamble regression table
+  regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
+  regression_table$ci <- apply(tidy_x[, tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
+  regression_table$df <- glance_x$df.residual # Add degrees of freedom
+  regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "df", "p.value")] # Change order of columns
+  regression_table$term <- prettify_terms(regression_table$term)
+
+  regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
+  regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
+  regression_table$p.value <- printp(regression_table$p.value)
+  regression_table$df <- round(regression_table$df, digits = 2)
+
+  colnames(regression_table) <- c("Term", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), "$t$", "$df$", "$p$")
+
+  apa_res$table <- regression_table
 
 
   # Model fit
@@ -148,10 +169,10 @@ apa_print.lm <- function(
     , conf.level = ci_conf_level / 100
   ))
 
-  apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE), "$, ", make_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+  apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
   apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE), "$")
   apa_res$est$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
-  apa_res$est$modelfit$bic <- paste0("$AIC = ", printnum(glance_x$BIC), "$")
+  apa_res$est$modelfit$bic <- paste0("$BIC = ", printnum(glance_x$BIC), "$")
 
   apa_res$full$modelfit$r2 <- paste(apa_res$est$modelfit$r2, apa_res$stat$modelfit$r2, sep = ", ")
 
@@ -165,7 +186,7 @@ apa_print.lm <- function(
 
 apa_print.summary.lm <- function(
   x
-  , stat_name = NULL
+  , est_name = NULL
   , standardized = FALSE
   , ci = 0.95
   , in_paren = FALSE
@@ -176,9 +197,10 @@ apa_print.summary.lm <- function(
   x <- eval.parent(x$call, n = 1)
   apa_print(
     x
-    , stat_name = stat_name
+    , est_name = est_name
     , standardized = standardized
     , ci = ci
     , in_paren = in_paren
+    , ...
   )
 }

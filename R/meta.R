@@ -3,6 +3,8 @@ apa_doc_env <- new.env()
 
 # Create localization object in apa_doc_env
 create_apa_lang <- function(lang) {
+  if(is.null(lang)) lang <- "american"
+
   # Run only if document is being rendered
   if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
 
@@ -24,15 +26,17 @@ localize <- function(lang) {
   switch(
     lang
     , list( # Default
-      abstract = "Abstract"
-      , keywords = "Keywords:"
+      author_note = "Author note"
+      , abstract = "Abstract"
+      , word_count = "Word count:"
       , table = "Table"
       , figure = "Figure"
       , note = "Note."
     )
     , german = list(
-      abstract = "Zusammenfassung"
-      , keywords = "Stichw\u00F6rter:"
+      author_note = "Anmerkung des Autors"
+      , abstract = "Zusammenfassung"
+      , word_count = "Wortanzahl:"
       , table = "Tabelle"
       , figure = "Abbildung"
       , note = "Anmerkung."

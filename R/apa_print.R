@@ -2,7 +2,7 @@
 #'
 #' A generic function that takes objects from various statistical methods to create formated chraracter
 #' strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
-#' methods which depend on the \code{\link{class}} of the first argument.
+#' methods, which depend on the \code{\link{class}} of the first argument.
 #'
 #' @param x Output object. See details.
 #' @param ... Additional arguments passed to other methods. See details.
@@ -12,7 +12,7 @@
 #'      \item \code{htest}
 #'      \item \code{lm} and \code{summary.lm}
 #'      \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
-#'      \item \code{anova} % and \code{Anova.mlm}
+#'      \item \code{anova} and \code{Anova.mlm}
 #'    }
 #'
 #' @return The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the

@@ -1,18 +1,32 @@
 ---
-title: "Wider den Optozentrismus!"
-shorttitle: "Optozentrismus"
-author: "Ernst A. Doelle$^1$ & Theo Herrmann$^2$"
-affiliation: |
-  $^1$Wirtschaftshochschule Konstanz \
-  $^2$Universität Mannheim
+title: "The title"
+shorttitle: "Title"
+author: 
+  - name: First Author
+    affiliation: 1
+    corresponding: yes    # Define only one corresponding author
+    department: Psychology Department
+    address: Postal address
+    email: my@email.com
+  - name: Ernst-August Doelle
+    affiliation: "1,2"
+affiliation:
+  - id: 1
+    institution: Wilhelm-Wundt-University
+  - id: 2
+    institution: Konstanz Business School
 
 abstract: |
-  In der Rede wird folgende These diskutiert: "Optozentristisch durchseucht sind Philosophie und die Wissenschaft. Sprache verrät sie ebenso, wie sich ihre Tochter, die Psychologie, durch ihre Sprache verrät. Wir alle sprechen gänzlich unreflektiert von Einsicht, von Introspektion, von Betrachtungsweisen, von Nachbildern, von Beschaulichkeit, von Imagination." Die Konstruktion unseres Weltbildes durch das Wort "enthält in abschreckend modriger und fossilisierter Weise den uralten mediterranen Optozentrismus. Er herrscht über uns wie ein uralter böser Dämon." Der Verfasser zeigt, daß diese Weltsicht nicht erst mit der jüdisch-christlichen Bibel, sondern schon mit den alten Griechen anfing.
+  Enter abstract here (note the indentation, if you start a new paragraph).
   
-note: |
-  Das vorliegende Papier enthält die Universitätsrede, die 1967 aus Anlaß der Zueignung des Ehrenskriptoriums der August-Ernst-Hochschule zu Hildesheim gehalten worden ist. Dieses Vortragsmanuskript von Ernst August Dölle war bislang verschwunden.
+note: |  
+  Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
+
+  Enter author note here.
   
-keywords: "Sprache, Philosophie, Psychologie, Bibel, Christentum"
+keywords: "keywords"
+
+wordcount: X
 
 class: man
 lang: american
@@ -25,7 +39,7 @@ output: papaja::apa6_pdf
 ---
 
 ```{r message = FALSE, warning = FALSE}
-require("papaja")
+library("papaja")
 apa_prepare_doc() # Prepare document for rendering
 ```
 
@@ -40,12 +54,14 @@ We report how we determined our sample size, all data exclusions (if any), all m
 ## Procedure
 
 ## Data analysis
+We used `r cite_r("r-references.bib")` for all our analyses.
+
 
 # Results
 
 # Discussion
 
 # References
-```{r}
+```{r create_r-references}
 r_refs(file = "r-references.bib")
 ```
