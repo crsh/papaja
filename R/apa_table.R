@@ -25,7 +25,7 @@
 #'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
 #'
 #'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-#'    the first column giving the names of the list elements.
+#'    the first column giving the names of the list elements elements.
 #'
 #'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
 #'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
@@ -96,9 +96,8 @@ apa_table.latex <- function(
   }
   if(!longtable) cat("\\begin{table}", place_opt, sep = "")
   cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
-  if(!is.null(note) & !longtable) cat("\n\\caption{", caption, "}", sep = "")
+  if(!longtable) cat("\n\\caption{", caption, "}", sep = "")
   if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
-  cat("\n")
 
   if(is.list(x) && !is.data.frame(x)) {
     n_rows <- sum(sapply(x, nrow))
@@ -125,12 +124,14 @@ apa_table.latex <- function(
       colnames(prep_table) <- new_colnames
     }
 
+    colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
+
     res_table <- knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...)
   }
 
   table_lines <- unlist(strsplit(res_table, "\n"))
-  table_lines <- c(table_lines[-length(table_lines)], "\\addlinespace", table_lines[length(table_lines)]) # Add space before table note
-  if(!is.null(note) & longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+
+  if(longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
 
   if(!is.null(midrules)) {
     validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
@@ -218,10 +219,8 @@ apa_table.word <- function(
 #' \emph{This function is not exported.}
 #'
 #' @param x List containing one or more \code{matrix} or \code{data.frame}.
-#' @param empty_cells Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
+#' @param empty_cell Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
 #'    \code{"&nbsp;"} if the target document is Word.
-#' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
-#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @seealso \code{\link{apa_table}}
 #'
