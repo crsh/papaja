@@ -56,11 +56,11 @@ rmarkdown::render("mymanuscript.Rmd")
 ```
 
 ## Known issues
+- The references violates the APA guidelines in that there is no hanging indentation (i.e. indentation of all lines but the first one). See the [related issue](https://github.com/crsh/papaja/issues/37) for a fix.
 - If building the example manuscript throws the error `! Incomplete \iffalse; all text was ignored after line 20.` make sure you have saved the .Rmd and are not working from a temporary directory or restart RStudio. If this doesn't work try updating your TeX-packages.
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
 - When creating a word document on Windows, special characters in title, abstract, and note are not rendered correctly. This is a bug in [`r-yaml`](https://github.com/viking/r-yaml/issues/6) and has been for a while, but it will soon be addressed by a [workaround](https://github.com/rstudio/rmarkdown/issues/420) in `knitr`.
-- When using the R-Package [`xtable`](http://cran.r-project.org/web/packages/xtable/index.html) to produce LaTeX-tables, the caption is set to the left page margin (s. the [example manuscript](https://github.com/crsh/papaja/blob/master/example/example.pdf)). This is a more general issue of the `apa6` document class. It can be resolved using `\captionbox` instead of `\caption` (see my [SE question](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6)), which is AFAIK not possible with `xtable()`. Try  `apa_table()`.
 
 ## Other journal templates
 Obiously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of other `rmarkdown`/`pandoc` packages and templates may be helpful:

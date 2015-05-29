@@ -65,3 +65,7 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 ```{r create_r-references}
 r_refs(file = "r-references.bib")
 ```
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+\setlength{\parskip}{8pt}

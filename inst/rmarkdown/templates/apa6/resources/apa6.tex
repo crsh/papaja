@@ -175,9 +175,9 @@ $if(affiliation)$
   }
 
 
-  \def\affinst{{$for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
-  \def\affstate{{$for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
-  \def\affcntry{{$for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
+  \def\affinst{{"init", $for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
+  \def\affstate{{"init", $for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
+  \def\affcntry{{"init", $for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
 $endif$
 
 $if(note)$
@@ -193,7 +193,7 @@ $if(note)$
 %     $if(author)$
 %     $for(author)$
 %       $if(author.affiliation)$
-%       \setcounter{author}{-1}
+%       \setcounter{author}{0}
 %         $if(author.primaryaffiliation)$
 %           \addtocounter{author}{$author.primaryaffiliation$}
 %         $else$
@@ -212,7 +212,7 @@ $if(note)$
     $for(author)$
       $if(author.corresponding)$
         $if(author.affiliation)$
-          \setcounter{author}{-1}
+          \setcounter{author}{0}
           \addtocounter{author}{$author.affiliation$}
           \expandafter\edef\csname authorid\endcsname{\theauthor}
           Correspondence concerning this article should be addressed to $author.name$, $author.department$, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
@@ -234,7 +234,7 @@ $else$ % If no note is defined give only author information if available
 
 %     $for(author)$
 %       $if(author.affiliation)$
-%       \setcounter{author}{-1}
+%       \setcounter{author}{0}
 %         $if(author.primaryaffiliation)$
 %           \addtocounter{author}{$author.primaryaffiliation$}
 %         $else$
@@ -250,7 +250,7 @@ $else$ % If no note is defined give only author information if available
     $for(author)$
       $if(author.corresponding)$
         $if(author.affiliation)$
-          \setcounter{author}{-1}
+          \setcounter{author}{0}
           \addtocounter{author}{$author.affiliation$}
           \expandafter\edef\csname authorid\endcsname{\theauthor}
           Correspondence concerning this article should be addressed to $author.name$, $author.department$, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
