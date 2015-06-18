@@ -158,8 +158,10 @@ apa_barplot <- function(
   # Plot
   ## One factor
   if(length(factors) == 1){
+    if(is.null(ellipsis$col)) {
       ellipsis$col <- "white"
-      do.call(function(...) apa.barplot.core(yy = yy, ee = ee, id = id, dv = dv, factors = factors,intercept=intercept, ...), ellipsis)
+    }
+    do.call(function(...) apa.barplot.core(yy = yy, ee = ee, id = id, dv = dv, factors = factors, intercept=intercept, ...), ellipsis)
   }
 
   ## Two factors
