@@ -175,9 +175,9 @@ $if(affiliation)$
   }
 
 
-  \def\affinst{{"init", $for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
-  \def\affstate{{"init", $for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
-  \def\affcntry{{"init", $for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
+%   \def\affinst{{"init", $for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
+%   \def\affstate{{"init", $for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
+%   \def\affcntry{{"init", $for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
 $endif$
 
 $if(note)$
@@ -186,7 +186,7 @@ $if(note)$
     Author note
 
     \raggedright
-    \setlength{\parindent}{36pt}
+    \setlength{\parindent}{0.4in}
 
     \newcounter{author}
 
@@ -211,15 +211,11 @@ $if(note)$
     $if(author)$
     $for(author)$
       $if(author.corresponding)$
-        $if(author.affiliation)$
-          \setcounter{author}{0}
-          \addtocounter{author}{$author.affiliation$}
-          \expandafter\edef\csname authorid\endcsname{\theauthor}
-          Correspondence concerning this article should be addressed to $author.name$, $author.department$, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
-        $endif$
+        Correspondence concerning this article should be addressed to $author.name$$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
       $endif$
     $endfor$
     $endif$
+    \center
   }
 $else$ % If no note is defined give only author information if available
   $if(author)$
@@ -228,7 +224,7 @@ $else$ % If no note is defined give only author information if available
     Author note
 
     \raggedright
-    \setlength{\parindent}{36pt}
+    \setlength{\parindent}{0.4in}
 
     \newcounter{author}
 
@@ -249,15 +245,11 @@ $else$ % If no note is defined give only author information if available
     $if(author)$
     $for(author)$
       $if(author.corresponding)$
-        $if(author.affiliation)$
-          \setcounter{author}{0}
-          \addtocounter{author}{$author.affiliation$}
-          \expandafter\edef\csname authorid\endcsname{\theauthor}
-          Correspondence concerning this article should be addressed to $author.name$, $author.department$, \pgfmathparse{\affinst[\authorid]} \pgfmathresult$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
-        $endif$
+        Correspondence concerning this article should be addressed to $author.name$, $if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
       $endif$
     $endfor$
     $endif$
+    \center
   }
   $endif$
 $endif$
