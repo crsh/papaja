@@ -5,13 +5,12 @@ author:
   - name:  Frederik Aust
     affiliation: 1
     corresponding: yes    # Define only one corresponding author
-    department: "Department Psychology"
-    address: "Herbert-Lewin-Str. 2, 50931 Köln, Germany"
+    department:
+    address: "Department Psychology, University of Cologne, Herbert-Lewin-Str. 2, 50931 Köln, Germany"
     email: "frederik.aust@uni-koeln.de"
 affiliation:
   - id: 1
     institution: "University of Cologne"
-  - id: 
 
 abstract: |
   This example manuscript demonstrates how to use RStudio and RMarkdown to
@@ -19,7 +18,7 @@ abstract: |
   to PDF or Word documents.
   
 note: |  
-  Currently, a development version of `papaja` is available at https://github.com/crsh/papaja.
+  `papaja` has currently not been submitted to CRAN; a development version is available at https://github.com/crsh/papaja.
   
 keywords: "APA, knitr, R, RMarkdown, papaja"
 
@@ -45,12 +44,12 @@ apa_prepare_doc() # Prepare document for rendering
 As you may have heard, recently, interest in reproducible research has been growing.
 Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility.
 For *R* users, RMarkdown has been suggested as one possible framework for reproducible analyses.
-`papaja` is a R-package in the making including a RMarkdown template that can be used with RStudio (or without) to produce complete manscripts (PDF and Word documents), which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
+`papaja` is a R-package in the making including a RMarkdown template that can be used with RStudio (or without) to produce complete manuscripts (PDF and Word documents), which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 To do so, papaja uses the \LaTeX document class `apa6` and a `.docx`-reference file. The supplied R-functions are ment to facilitate the reporting of statistics in accordance with APA guidelines.
 
 
 Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents (among others).
-In the following I will assume you have hoped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses.
+In the following I will assume you have hopped onto the band wagon and know how to use RMarkdown to conduct and comment your analyses.
 If this is not the case, I recommend you get to grips with [RMarkdown](http://rmarkdown.rstudio.com/) first.
 I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process should work using any other R-editor.
 
@@ -86,7 +85,7 @@ More importantly, these packages cannot be used when you want to create Microsof
 But don't fool yourself.
 Table formatting is somewhat limited in Word documents due to missing functionality in pandoc (e.g., it is not possible to have cells span across multiple columns).
 
-As required by the APA guidelines, in manuscripts tables are pushed to the final pages of the document when creating a PDF.
+As required by the APA guidelines, tables are pushed to the final pages of the manuscript when creating a PDF.
 Again, this is not the case in Word documents due to limited pandoc functionality.
 To place figures and tables in your text instead, set the `figsintext` parameter in the document header to `yes` or `true` as I have done in this document.
 
