@@ -249,7 +249,7 @@ $else$ % If no note is defined give only author information if available
     $if(author)$
     $for(author)$
       $if(author.corresponding)$
-        Correspondence concerning this article should be addressed to $author.name$, $if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
+        Correspondence concerning this article should be addressed to $author.name$$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
       $endif$
     $endfor$
     $endif$
