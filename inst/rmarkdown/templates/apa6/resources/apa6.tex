@@ -142,6 +142,10 @@ $endif$
 
 \usepackage{tikz} % Variable definition to generate author note
 
+% fix for \tightlist problem in pandoc 1.14
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
 % Essential manuscript parts
 $if(title)$
   \title{$title$}
