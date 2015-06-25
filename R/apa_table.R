@@ -6,9 +6,6 @@
 #' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
-#' @param row_names Logical. Indicates whether to include row names; by default, row names are included if
-#'    \code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}. Overwrites the corresponding
-#'    \code{\link[knitr]{kable}} argument.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See details.
 #' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
 #'    followed by a horizontal rule; ignored in MS Word documents.
@@ -30,7 +27,7 @@
 #'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
 #'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
 #'    \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
-#'    merged. It is generally recommended to use \code{row_names} instead of \code{row.names}.
+#'    merged.
 #' @seealso \code{\link[knitr]{kable}}
 #' @examples
 #'
@@ -64,7 +61,6 @@ apa_table.latex <- function(
   x
   , caption = NULL
   , note = NULL
-  , row_names = TRUE
   , added_colnames = NULL
   , midrules = NULL
   , placement = "tbp"
@@ -74,12 +70,14 @@ apa_table.latex <- function(
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
-  validate(row_names, check_class = "logical", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
+  # Parse ellipsis
   ellipsis <- list(...)
+  ellipsis$format <- "latex"
+  ellipsis$booktabs <- TRUE
   longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
   if(longtable) {
     table_env <-  "ThreePartTable"
@@ -89,6 +87,25 @@ apa_table.latex <- function(
     table_note_env <- "tablenotes"
   }
 
+  if(!is.null(ellipsis$escape) && ellipsis$escape) {
+       x <- escape_latex(x)
+       colnames(x) <- escape_latex(colnames(x))
+       rownames(x) <- escape_latex(rownames(x))
+  }
+  ellipsis$escape <- FALSE
+
+  if(!is.null(ellipsis$row.names)) {
+    row_names <- ellipsis$row.names
+  } else { # Default to FALSE if rownames are 1:x or NULL
+    if(is.list(x) && !is.data.frame(x)) {
+      row_names <- !all(sapply(x, function(x) all(rownames(x) == 1:nrow(x))))
+    } else {
+      row_names <- !all(rownames(x) == 1:nrow(x))
+    }
+  }
+  ellipsis$row.names <- FALSE
+
+  # Assemble table
   place_opt <- paste0("[", placement, "]")
   if(landscape) {
     cat("\\begin{sidewaystable}", place_opt, sep = "")
@@ -109,11 +126,11 @@ apa_table.latex <- function(
     )
 
     x_merged <- do.call(rbind, prep_table)
-    res_table <- knitr::kable(x_merged, format = "latex", booktabs = TRUE, ...)
+    res_table <- do.call(function(...) knitr::kable(x_merged, ...), ellipsis)
   } else {
     n_rows <- nrow(x)
     prep_table <- x
-    if(row_names && !is.null(rownames(x)) && !identical(rownames(x), 1:nrow(x))) {
+    if(row_names && !is.null(rownames(x))) {
       prep_table <- cbind(rownames(x), x)
       colnames(prep_table) <- c("", colnames(x))
       rownames(prep_table) <- NULL
@@ -126,7 +143,7 @@ apa_table.latex <- function(
 
     colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
 
-    res_table <- knitr::kable(prep_table, format = "latex", booktabs = TRUE, ...)
+    res_table <- do.call(function(...) knitr::kable(prep_table, ...), ellipsis)
   }
 
   table_lines <- unlist(strsplit(res_table, "\n"))
@@ -162,16 +179,37 @@ apa_table.word <- function(
   x
   , caption = NULL
   , note = NULL
-  , row_names = TRUE
   , added_colnames = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
-  validate(row_names, check_class = "logical", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
 
+  # Parse ellipsis
+  ellipsis <- list(...)
+  if(!is.null(ellipsis$format)) ellipsis$format <- "pandoc"
+
+  if(!is.null(ellipsis$escape) && ellipsis$escape) {
+    x <- escape_latex(x)
+    colnames(x) <- escape_latex(colnames(x))
+    rownames(x) <- escape_latex(rownames(x))
+  }
+  ellipsis$escape <- FALSE
+
+  if(!is.null(ellipsis$row.names)) {
+    row_names <- ellipsis$row.names
+  } else { # Default to FALSE if rownames are 1:x or NULL
+    if(is.list(x) && !is.data.frame(x)) {
+      row_names <- !all(sapply(x, function(x) all(rownames(x) == 1:nrow(x))))
+    } else {
+      row_names <- !all(rownames(x) == 1:nrow(x))
+    }
+  }
+  ellipsis$row.names <- FALSE
+
+  # Assemble table
   if(is.list(x) && !is.data.frame(x)) {
     prep_table <- merge_tables(
       x
@@ -187,10 +225,10 @@ apa_table.word <- function(
     cat("*", caption, "*", sep = "")
     cat("</center>")
 
-    print(knitr::kable(x_merged, format = "pandoc", ...))
+    print(do.call(function(...) knitr::kable(x_merged, ...), ellipsis))
   } else {
     prep_table <- x
-    if(row_names && !is.null(rownames(x)) && rownames(x) != 1:nrow(x)) {
+    if(row_names && !is.null(rownames(x))) {
       prep_table <- cbind(rownames(x), x)
       colnames(prep_table) <- c("", colnames(x))
       rownames(prep_table) <- NULL
@@ -200,7 +238,7 @@ apa_table.word <- function(
       if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
       colnames(prep_table) <- new_colnames
     }
-    print(knitr::kable(prep_table, format = "pandoc", ...))
+    print(do.call(function(...) knitr::kable(prep_table, ...), ellipsis))
   }
 
   if(!is.null(note)) {
@@ -232,7 +270,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
   prep_table <- lapply(seq_along(x), function(i) {
 
     # Add rownames
-    if(row_names && !is.null(rownames(x[[i]])) && rownames(x[[i]]) != 1:nrow(x[[i]])) {
+    if(row_names && !is.null(rownames(x[[i]]))) {
       i_table <- cbind(rownames(x[[i]]), x[[i]])
       colnames(i_table) <- c("", colnames(x[[i]]))
     } else i_table <- x[[i]]
@@ -243,7 +281,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
     rownames(prep_table) <- NULL
 
     # Add colnames
-    if(row_names && !is.null(rownames(x[[i]])) && rownames(x[[i]]) != 1:nrow(x[[i]]) && length(added_colnames) < 2) {
+    if(row_names && !is.null(rownames(x[[i]])) && length(added_colnames) < 2) {
       second_col <- ""
     } else second_col <- NULL
     if(is.null(added_colnames)) {
