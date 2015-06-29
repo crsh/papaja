@@ -17,7 +17,7 @@ fetch_web_refs <- function(x, bib_name) {
   validate(bib_name, check_class = "character", check_NA = TRUE, check_length = 1)
 
   tmp_bib_file <- paste(sample(c(letters, LETTERS, 0:9), size = 32, replace = TRUE), collapse = "")
-  tmp_bib_file <- paste0(tmp_name, ".txt")
+  tmp_bib_file <- paste0(tmp_bib_file, ".txt")
   downloader::download(x, destfile = tmp_bib_file, quiet = TRUE)
   bib_file <- readLines(tmp_bib_file, warn = FALSE)
   writeLines(tmp_bib_file, bib_name)
