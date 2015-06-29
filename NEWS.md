@@ -1,3 +1,21 @@
+# Pre release
+
+Template:
+- Removed author field 'department' from the YAML header
+- Added LaTeX fix for tightlist-bug in pandoc 1.14
+- Fixed extra comma in automatically generated corresponding author line when no note is provided
+
+Exisiting functions:
+- `apa_barplot()`
+    - Fixed ignorance of user specified color for one factorial plots
+    - Fixed default ylim choice to consider the lower bound of confidence intervals
+- `apa_table()`
+    - Removed redundant `row_name` parameter
+    - Fixed escaped multicolumn-headings in `apa_table.latex()`
+    
+Misc:
+- Fixed some typos in the example document
+
 # papaja 0.1.0.9054
 
 Template:
