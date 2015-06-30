@@ -20,7 +20,7 @@ fetch_web_refs <- function(x, bib_name) {
   tmp_bib_file <- paste0(tmp_bib_file, ".txt")
   downloader::download(x, destfile = tmp_bib_file, quiet = TRUE)
   bib_file <- readLines(tmp_bib_file, warn = FALSE)
-  writeLines(tmp_bib_file, bib_name)
+  writeLines(bib_file, bib_name)
   file.remove(tmp_bib_file)
 
   invisible(0)
