@@ -6,7 +6,7 @@ Note, at this point `papaja` is in active development and should be considered a
 If you are looking for other journal article templates, take a look at [the list below](#other-journal-templates). Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
 
 ## Examples
-Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf). More examples to come.
+Take a look at the [.rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf). More examples to come.
 
 The example document also contains some basic instructions.
 

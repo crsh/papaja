@@ -5,7 +5,6 @@ author:
   - name: First Author
     affiliation: 1
     corresponding: yes    # Define only one corresponding author
-    department: Psychology Department
     address: Postal address
     email: my@email.com
   - name: Ernst-August Doelle
