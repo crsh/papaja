@@ -115,6 +115,12 @@ apa_barplot <- function(
   }
   data[[id]]<-as.factor(data[[id]])
 
+  # strip whitespace from factor names
+  factors <- gsub(pattern = " ", replacement = "_", factors)
+  id <- gsub(pattern = " ", replacement = "_", id)
+  colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
+
+
   if(use_dplyr) {
     ## Aggregate subject data
     aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
