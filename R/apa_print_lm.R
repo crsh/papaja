@@ -146,7 +146,7 @@ apa_print.lm <- function(
   regression_table$p.value <- printp(regression_table$p.value)
   regression_table$df <- round(regression_table$df, digits = 2)
 
-  colnames(regression_table) <- c("Term", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), "$t$", "$df$", "$p$")
+  colnames(regression_table) <- c("Variable", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), "$t$", "$df$", "$p$")
 
   apa_res$table <- regression_table
 
@@ -157,7 +157,7 @@ apa_print.lm <- function(
 
   apa_res$stat$modelfit$r2 <- paste0("$F", op, summary_x$fstatistic[2], ", ", glance_x$df.residual, cp, " = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
 
-  ci_conf_level <- (100 - ((100 - conf_level) * 2))
+  ci_conf_level <- 100 - ((100 - conf_level) * 2)
   # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
   # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
   # See also http://daniellakens.blogspot.de/2014/06/calculating-confidence-intervals-for.html
@@ -169,8 +169,8 @@ apa_print.lm <- function(
     , conf.level = ci_conf_level / 100
   ))
 
-  apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
-  apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE), "$")
+  apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+  apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
   apa_res$est$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
   apa_res$est$modelfit$bic <- paste0("$BIC = ", printnum(glance_x$BIC), "$")
 
