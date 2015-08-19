@@ -7,6 +7,8 @@
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See details.
+#' @param grouping_colnames List. A named list of vectors of length 2 giving the first and second column to
+#'    span with a grouping column name.
 #' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
 #'    followed by a horizontal rule; ignored in MS Word documents.
 #' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
@@ -62,6 +64,7 @@ apa_table.latex <- function(
   , caption = NULL
   , note = NULL
   , added_colnames = NULL
+  , grouping_colnames = NULL
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
@@ -71,6 +74,7 @@ apa_table.latex <- function(
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
+  if(!is.null(grouping_colnames)) validate(grouping_colnames, check_class = "list")
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
@@ -95,12 +99,14 @@ apa_table.latex <- function(
   ellipsis$escape <- FALSE
 
   if(!is.null(ellipsis$row.names)) {
-    row_names <- ellipsis$row.names
+    if(is.list(x) && !is.data.frame(x)) {
+      row_names <- rep(ellipsis$row.names, length(x))
+    } else row_names <- ellipsis$row.names
   } else { # Default to FALSE if rownames are 1:x or NULL
     if(is.list(x) && !is.data.frame(x)) {
-      row_names <- !all(sapply(x, function(x) all(rownames(x) == 1:nrow(x))))
+      row_names <- !(sapply(x, function(x) all(rownames(x) == seq_along(1:nrow(x)))))
     } else {
-      row_names <- !all(rownames(x) == 1:nrow(x))
+      row_names <- !(rownames(x) == 1:nrow(x))
     }
   }
   ellipsis$row.names <- FALSE
@@ -124,11 +130,13 @@ apa_table.latex <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
+    n_cols <- ncol(prep_table[[1]])
 
     x_merged <- do.call(rbind, prep_table)
     res_table <- do.call(function(...) knitr::kable(x_merged, ...), ellipsis)
   } else {
     n_rows <- nrow(x)
+    n_cols <- ncol(x)
     prep_table <- x
     if(row_names && !is.null(rownames(x))) {
       prep_table <- cbind(rownames(x), x)
@@ -147,13 +155,15 @@ apa_table.latex <- function(
   }
 
   table_lines <- unlist(strsplit(res_table, "\n"))
+  table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \\addlinespace
+
+  if(!is.null(grouping_colnames)) table_lines <- add_grouping_colnames(table_lines, grouping_colnames, n_cols)
 
   if(longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
 
   if(!is.null(midrules)) {
     validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
 
-    table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \addlinespace so midrules are in accurate place
     table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
     table_lines[table_content_boarders[1] + midrules] <- sapply(
       table_lines[table_content_boarders[1] + midrules]
@@ -256,9 +266,11 @@ apa_table.word <- function(
 #' Takes a list of containing one or more \code{matrix} or \code{data.frame} and merges them into a single table.
 #' \emph{This function is not exported.}
 #'
-#' @param x List containing one or more \code{matrix} or \code{data.frame}.
-#' @param empty_cell Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
+#' @param x List. A named list containing one or more \code{matrix} or \code{data.frame}.
+#' @param empty_cells Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
 #'    \code{"&nbsp;"} if the target document is Word.
+#' @param row_names Logical. Vector of boolean values specifying whether to print column names for the corresponding list
+#'    element.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @seealso \code{\link{apa_table}}
 #'
@@ -270,9 +282,12 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
   prep_table <- lapply(seq_along(x), function(i) {
 
     # Add rownames
-    if(row_names && !is.null(rownames(x[[i]]))) {
+    if(row_names[i] && !is.null(rownames(x[[i]]))) {
       i_table <- cbind(rownames(x[[i]]), x[[i]])
       colnames(i_table) <- c("", colnames(x[[i]]))
+    } else if(!row_names[i] & any(row_names)) {
+      i_table <- cbind("", x[[i]])
+      colnames(i_table) <- c(" ", colnames(x[[i]]))
     } else i_table <- x[[i]]
     prep_table <- cbind(
       c(tables_to_merge[i], rep("", nrow(x[[i]])-1))
@@ -281,7 +296,7 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
     rownames(prep_table) <- NULL
 
     # Add colnames
-    if(row_names && !is.null(rownames(x[[i]])) && length(added_colnames) < 2) {
+    if(row_names[i] && !is.null(rownames(x[[i]])) && length(added_colnames) < 2) {
       second_col <- ""
     } else second_col <- NULL
     if(is.null(added_colnames)) {
@@ -292,7 +307,75 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
       colnames(prep_table) <- new_colnames
     }
 
-    prep_table
+    as.data.frame(prep_table, stringsAsFactors = FALSE)
   })
+
+  prep_table
 }
 
+
+
+#' Add table headings to group columns
+#'
+#' Takes a named list of containing column numbers to group with a heading
+#' \emph{This function is not exported.}
+#'
+#' @param table_lines Character. Vector of characters containing one line of a LaTeX table each.
+#' @param grouping_colnames List. A named list containing the indices of the first and last columns to group, where the names are the headings.
+#' @param n_cols Numeric. Number of columns of the table.
+#' @seealso \code{\link{apa_table}}
+#'
+#' @examples
+#' NULL
+
+add_grouping_colnames <- function(table_lines, grouping_colnames, n_cols) {
+
+  # Grouping column names
+  multicols <- sapply(
+    seq_along(grouping_colnames)
+    , function(i, names) {
+      paste0("\\multicolumn{", diff(grouping_colnames[[i]]) + 1, "}{c}{", names[i], "}")
+    }
+    , names(grouping_colnames)
+  )
+
+  ## Calculate group distances
+  n_ampersands <- c()
+  if(length(grouping_colnames) > 1) {
+    group_indices <- sort(unlist(grouping_colnames))
+    group_indices <- group_indices[-c(1, length(group_indices))] # Remove first and last column number
+    n_ampersands <- diff(group_indices)[-seq(from = 2, to = length(group_indices), by = 2)] # Remove differences between column numbers of the same group
+  }
+  n_ampersands <- c(n_ampersands, 0)
+
+  ## Add ampersands for empty columns
+  leading_amps <- paste(rep(" &", min(unlist(grouping_colnames)) - 1), collapse = " ")
+  trailing_amps <- paste(rep(" &", n_cols - max(unlist(grouping_colnames))), collapse = " ")
+
+  group_headings <- c()
+  for(i in 1:(length(multicols))) {
+    group_headings <- paste(group_headings, multicols[i], paste(rep("&", n_ampersands[i]), collapse = " "))
+  }
+  group_headings <- paste(leading_amps, group_headings, trailing_amps, "\\\\", sep = "")
+
+  # Grouping midrules
+  group_midrules <- sapply(
+    seq_along(grouping_colnames)
+    , function(i) {
+      paste0("\\cmidrule(r){", min(grouping_colnames[[i]]), "-", max(grouping_colnames[[i]]), "}")
+    }
+  )
+  group_midrules <- paste(group_midrules, collapse = " ")
+
+
+  table_environment <- which(grepl("\\\\toprule", table_lines))
+
+  table_lines <- c(
+    table_lines[1:table_environment]
+    , group_headings
+    , group_midrules
+    , table_lines[(table_environment + 1):length(table_lines)]
+  )
+
+  table_lines
+}

@@ -56,11 +56,11 @@ validate <- function(
 
 #' Escape symbols for LaTex output
 #'
-#' This functions is a copy of the non-exported function \code{\link[knitr]{escape_latex}}) from the \pkg{knitr} package.
+#' This functions is a copy of the non-exported function \code{escape_latex} from the \pkg{knitr} package.
 #' \emph{This function is not exported.}
 #'
 #' @param x Character.
-#' @param newlines Logical. Determines if \code{\n} are escaped.
+#' @param newlines Logical. Determines if \code{\\n} are escaped.
 #' @param spaces Logical. Determines if multiple spaces are escaped.
 #'
 #' @examples
