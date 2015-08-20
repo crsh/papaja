@@ -209,6 +209,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)", "", x)                       # Remove parentheses
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
+  x
 }
 
 

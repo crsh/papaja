@@ -10,8 +10,8 @@
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.
-#' @param ci Numeric. Confidence level for the confidence interval for \eqn{\DeltaR^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
-#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\DeltaR^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
+#' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
+#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
 #' @param ... Additional arguments passed to or from other methods.
 #' @details
 #'    Currently, methods for the following objects are available:
@@ -30,7 +30,7 @@
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
-#'    As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\DeltaR^2}
+#'    As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\Delta R^2}
 #'    are often unreliable. Confidence intervals for model comparisons of \code{lm}-objects are, therefore, estimated
 #'    using their modified percentile bootstrap method. Note that the accuracy of the confidence intervals depends on
 #'    the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
@@ -343,7 +343,9 @@ print_model_comp <- function(
     apa_res$est <- sapply(
       seq_along(delta_r2s)
       , function(y) {
-        paste0("$\\DeltaR^2 = ", printnum(delta_r2s[y], gt1 = FALSE), "$")
+        delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
+        eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
+        paste0("$\\Delta R^2 ", eq, delta_r2_res, "$")
       }
     )
   } else { # Bootstrap CI
@@ -381,8 +383,11 @@ print_model_comp <- function(
         boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = 0.95, type = "perc")
         if(x[y, "p.value"] >= 0.05) boot_r2_ci$percent[1, 4] <- 0 # Algina, Keselman & Penfield (2007), p. 210
 
+        delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
+        eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
+
         paste0(
-          "$\\DeltaR^2 = ", printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE), "$, "
+          "$\\Delta R^2 ", eq, delta_r2_res, "$, "
           , print_confint(boot_r2_ci$percent[1, 4:5], conf_level = boot_r2_ci$percent[1, 1], gt1 = FALSE)
         )
       }
@@ -423,7 +428,7 @@ print_model_comp <- function(
 
   ## Sort models
   n_terms <- sapply(model_summaries, nrow)
-  model_summaries[sort(n_terms, index.return = TRUE)$ix]
+  model_summaries <- model_summaries[sort(n_terms, index.return = TRUE)$ix]
   n_models <- length(models)
   n_terms <- max(n_terms)
   model_summaries <- lapply(model_summaries, function(x) { # Fill data.frames with empty rows
@@ -461,7 +466,7 @@ print_model_comp <- function(
     , zero = c(FALSE, TRUE, TRUE)
   )
   model_diffs <- rbind("", model_diffs)
-  colnames(model_diffs) <- c("$\\DeltaR^2$", "$\\DeltaAIC$", "$\\DeltaBIC$")
+  colnames(model_diffs) <- c("$\\Delta R^2$", "$\\Delta AIC$", "$\\Delta BIC$")
 
   diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
   rownames(diff_stats) <- paste("Model", 2:n_models)
