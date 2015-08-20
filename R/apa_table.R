@@ -68,6 +68,7 @@ apa_table.latex <- function(
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
+  , small = FALSE
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -114,10 +115,11 @@ apa_table.latex <- function(
   # Assemble table
   place_opt <- paste0("[", placement, "]")
   if(landscape) {
-    cat("\\begin{sidewaystable}", place_opt, sep = "")
+    cat("\\begin{sidewaystable}\n", place_opt, sep = "")
     place_opt <- NULL
   }
-  if(!longtable) cat("\\begin{table}", place_opt, sep = "")
+  if(!longtable & !landscape) cat("\\begin{table}", place_opt, sep = "")
+  if(small) cat("\n\\small{")
   cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
   if(!longtable) cat("\n\\caption{", caption, "}", sep = "")
   if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
@@ -130,6 +132,7 @@ apa_table.latex <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
+    colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
     n_cols <- ncol(prep_table[[1]])
 
     x_merged <- do.call(rbind, prep_table)
@@ -178,7 +181,8 @@ apa_table.latex <- function(
 
   if(!is.null(note) & !longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
   cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
-  if(!longtable) cat("\n\\end{table}")
+  if(small) cat("\n}")
+  if(!longtable & !landscape) cat("\n\\end{table}")
   if(landscape) cat("\n\\end{sidewaystable}")
 }
 
