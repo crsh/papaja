@@ -236,7 +236,11 @@ print_anova <- function(
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
-  x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
+
+  x[, c("df", "df_res")] <- apply(X = x[, c("df", "df_res")], MARGIN = c(1, 2), FUN = function(y){
+    as.character(round(y, digits = 2))
+    }
+  )
   x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 2, margin = 2, gt1 = FALSE)
 
   anova_table <- data.frame(x[, c("term", "statistic", "df", "df_res", "p.value", es)], row.names = NULL)
