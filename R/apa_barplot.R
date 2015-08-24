@@ -149,9 +149,9 @@ apa_barplot <- function(
 
   }
 
-  ## Adjust ylim to hight of error bars
+  ## Adjust ylim to height of error bars
   if(is.null(ellipsis$ylim)) {
-    ellipsis$ylim <- c(min(0, yy[, dv] + ee[, dv]), max(yy[, dv] - ee[, dv]))
+    ellipsis$ylim <- c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
   }
 
 
@@ -246,7 +246,7 @@ error.bar <- function(x, y, upper, lower=upper, length=0.1,...){
 conf_int<-function(x, level = 0.95, na.rm = TRUE){
   a <- (1-level)/2
   n <- sum(!is.na(x))
-  fac <- qt(a,df=n-1)
+  fac <- -qt(a,df=n-1)
   ee <- (sd(x,na.rm=na.rm)*fac)/sqrt(n)
   return(ee)
 }
