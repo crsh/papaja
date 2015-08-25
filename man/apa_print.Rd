@@ -36,9 +36,11 @@ methods("apa_print")
 }
 \seealso{
 Other apa_print: \code{\link{apa_print.Anova.mlm}},
+  \code{\link{apa_print.afex_aov}},
   \code{\link{apa_print.anova}},
   \code{\link{apa_print.aov}},
   \code{\link{apa_print.aovlist}},
+  \code{\link{apa_print.summary.Anova.mlm}},
   \code{\link{apa_print.summary.aov}},
   \code{\link{apa_print.summary.aovlist}};
   \code{\link{apa_print.htest}};

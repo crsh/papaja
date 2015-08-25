@@ -43,11 +43,9 @@ test_that(
     ow_aov_summary_output <- apa_print(summary(ow_aov))
     expect_that(ow_aov_summary_output, is_identical_to(ow_aov_output))
 
-    library("car")
     ow_aov_Anova_output <- apa_print(car::Anova(ow_aov))
     expect_that(ow_aov_Anova_output, is_identical_to(ow_aov_output))
 
-    library("afex")
     ow_afex_data <- cbind(id = 1:nrow(ow_data), ow_data)
     ow_afex_aov <- afex::ez.glm(
       data = ow_afex_data
@@ -125,7 +123,6 @@ test_that(
     expect_that(tw_aov_output$table$Term, equals(c("Gender", "Dosage", "Gender $\\times$ Dosage")))
 
     # Other classes
-    library("car")
     tw_aov_Anova_output <- apa_print(car::Anova(tw_aov))
     expect_that(tw_aov_Anova_output, is_identical_to(tw_aov_output))
 
@@ -133,7 +130,6 @@ test_that(
     expect_that(tw_aov_summary_output, is_identical_to(tw_aov_output))
 
 
-    library("afex")
     tw_afex_data <- cbind(id = 1:nrow(tw_data), tw_data)
     tw_afex_aov <- afex::ez.glm(
       data = tw_afex_data
@@ -185,7 +181,6 @@ test_that(
     rm_aov_summary_output <- apa_print(summary(rm_aov))
     expect_that(rm_aov_summary_output, is_identical_to(rm_aov_output))
 
-    library("afex")
     rm_afex_aov <- afex::ez.glm(
       data = rm_data
       , id = "Subject"
@@ -267,7 +262,6 @@ test_that(
     tw_rm_aov_summary_output <- apa_print(summary(tw_rm_aov))
     expect_that(tw_rm_aov_summary_output, is_identical_to(tw_rm_aov_output))
 
-    library("afex")
     tw_rm_afex_aov <- afex::ez.glm(
       data = tw_rm_data
       , id = "Subject"
@@ -307,17 +301,36 @@ test_that(
 test_that(
   "lm model comparison"
   , {
-    baseline <- lm(formula = Fertility ~ ., data = swiss)
-    model_1 <- update(baseline, formula = . ~ . - Examination)
-    model_comp <- anova(baseline, model_1)
-
-    model_comp_output <- apa_print(model_comp)
-
-    expect_that(model_comp_output, is_a("list"))
-    expect_that(length(model_comp_output), equals(1))
-    expect_that(model_comp_output$stat$model2, equals("$F(1, 41) = 1.03$, $p = .315$"))
+#     baseline <- lm(formula = Fertility ~ ., data = swiss)
+#     model_1 <- update(baseline, formula = . ~ . - Examination)
+#     model_comp <- anova(baseline, model_1)
+#
+#     model_comp_output <- apa_print(model_comp)
+#
+#     expect_that(model_comp_output, is_a("list"))
+#     expect_that(length(model_comp_output), equals(1))
+#     expect_that(model_comp_output$stat$model2, equals("$F(1, 41) = 1.03$, $p = .315$"))
 
 #     drop1(baseline, test = "F")
 #     drop1(baseline, test = "Chisq")
   }
 )
+
+
+
+# library("afex")
+# data(sk2011.1)
+#
+# a1 <- aov_ez("id", "response", sk2011.1, between = "instruction", within = c("inference", "plausibility"))
+# # object of class afex_aov
+#
+# a1$anova_table # object of class anova and data.frame
+# a1$Anova # Anova.mlm
+#
+# summary(a1) # Summary Anova.mlm -> Can we just use the existing methods?
+#
+# anova(a1, correction = "HF") # Get different es and corrections
+#
+# library("papaja")
+# apa_print(a1$Anova, es = "pes")
+# apa_print(summary(a1))

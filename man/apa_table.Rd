@@ -8,12 +8,11 @@
 \usage{
 apa_table(...)
 
-apa_table.latex(x, caption = NULL, note = NULL, row_names = TRUE,
-  added_colnames = NULL, midrules = NULL, placement = "tbp",
-  landscape = FALSE, ...)
+apa_table.latex(x, caption = NULL, note = NULL, added_colnames = NULL,
+  grouping_colnames = NULL, midrules = NULL, placement = "tbp",
+  landscape = FALSE, small = FALSE, ...)
 
-apa_table.word(x, caption = NULL, note = NULL, row_names = TRUE,
-  added_colnames = NULL, ...)
+apa_table.word(x, caption = NULL, note = NULL, added_colnames = NULL, ...)
 }
 \arguments{
 \item{...}{Further arguments to pass to \code{\link[knitr]{kable}}. \code{row.names} argument is overwritten
@@ -25,11 +24,10 @@ apa_table.word(x, caption = NULL, note = NULL, row_names = TRUE,
 
 \item{note}{Character. Note to be printed below the table.}
 
-\item{row_names}{Logical. Indicates whether to include row names; by default, row names are included if
-\code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}. Overwrites the corresponding
-\code{\link[knitr]{kable}} argument.}
-
 \item{added_colnames}{Character. Vector of names for first unnamed columns. See details.}
+
+\item{grouping_colnames}{List. A named list of vectors of length 2 giving the first and second column to
+span with a grouping column name.}
 
 \item{midrules}{Numeric. Vector of line numbers in table (not counting column headings) that should be
 followed by a horizontal rule; ignored in MS Word documents.}
@@ -50,12 +48,12 @@ When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is deter
    by the rendered document type. If no rendering is in progress the output default is LaTeX.
 
    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-   the first column giving the names of the list elements.
+   the first column giving the names of the list elements elements.
 
    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
    \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
-   merged. It is generally recommended to use \code{row_names} instead of \code{row.names}.
+   merged.
 }
 \examples{
 my_table <- apply(cars, 2, function(x) # Create data

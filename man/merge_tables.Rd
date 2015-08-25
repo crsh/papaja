@@ -7,13 +7,13 @@
 merge_tables(x, empty_cells, row_names, added_colnames)
 }
 \arguments{
-\item{x}{List containing one or more \code{matrix} or \code{data.frame}.}
+\item{x}{List. A named list containing one or more \code{matrix} or \code{data.frame}.}
 
 \item{empty_cells}{Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
 \code{"&nbsp;"} if the target document is Word.}
 
-\item{row_names}{Logical. Indicates whether to include row names; by default, row names are included if
-\code{rownames(x)} is neither \code{NULL} nor identical to \code{1:nrow(x)}.}
+\item{row_names}{Logical. Vector of boolean values specifying whether to print column names for the corresponding list
+element.}
 
 \item{added_colnames}{Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.}
 }

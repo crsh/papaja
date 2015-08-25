@@ -20,8 +20,9 @@ Imports:
   downloader,
   boot
 Suggests:
-  dplyr,
   testthat,
+  dplyr,
+  car,
   afex
 License: MIT + file LICENSE
 LazyData: yes
