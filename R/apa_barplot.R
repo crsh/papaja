@@ -235,7 +235,7 @@ error.bar <- function(x, y, upper, lower=upper, length=0.1,...){
 
 #' Between-subjects confidence intervals
 #'
-#' Returns the negative deviation that is needed to construct confidence intervals for a vector of observations.
+#' Returns the deviation that is needed to construct confidence intervals for a vector of observations.
 #'
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
