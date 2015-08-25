@@ -132,10 +132,10 @@ apa_table.latex <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
-    colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
     n_cols <- ncol(prep_table[[1]])
 
     x_merged <- do.call(rbind, prep_table)
+    colnames(x_merged)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x_merged), "}")[-1] # Center title row
     res_table <- do.call(function(...) knitr::kable(x_merged, ...), ellipsis)
   } else {
     n_rows <- nrow(x)
@@ -213,12 +213,14 @@ apa_table.word <- function(
   ellipsis$escape <- FALSE
 
   if(!is.null(ellipsis$row.names)) {
-    row_names <- ellipsis$row.names
+    if(is.list(x) && !is.data.frame(x)) {
+      row_names <- rep(ellipsis$row.names, length(x))
+    } else row_names <- ellipsis$row.names
   } else { # Default to FALSE if rownames are 1:x or NULL
     if(is.list(x) && !is.data.frame(x)) {
-      row_names <- !all(sapply(x, function(x) all(rownames(x) == 1:nrow(x))))
+      row_names <- !(sapply(x, function(x) all(rownames(x) == seq_along(1:nrow(x)))))
     } else {
-      row_names <- !all(rownames(x) == 1:nrow(x))
+      row_names <- !(rownames(x) == 1:nrow(x))
     }
   }
   ellipsis$row.names <- FALSE
@@ -227,11 +229,10 @@ apa_table.word <- function(
   if(is.list(x) && !is.data.frame(x)) {
     prep_table <- merge_tables(
       x
-      , "&nbsp;"
+      , ""
       , row_names = row_names
       , added_colnames = added_colnames
     )
-
     x_merged <- do.call(rbind, prep_table)
 
     cat("<center>")
