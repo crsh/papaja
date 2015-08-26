@@ -104,7 +104,7 @@ arrange_anova.summary.aovlist <- function(x) {
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
   tmp <- x$univariate.tests
   class(tmp) <- NULL
-  variance_table <- data.frame(tmp)
+  variance_table <- data.frame(tmp)[-1, ] # Remove intercept term
   colnames(variance_table) <- colnames(tmp)
 
   # Correct degrees of freedom
