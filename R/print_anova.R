@@ -81,7 +81,13 @@ print_anova <- function(
   } else if("pes" %in% es) {
     es_long <-"$\\eta^2_p$"
   }
-  colnames(anova_table) <- c("Term", "$F$", "$df_1$", "$df_2$", "$p$", es_long)
+
+  correction_type <- attr(x, "correction")
+  if(!is.null(correction_type) && correction_type != "none") {
+    colnames(anova_table) <- c("Term", "$F$", paste0("$df_1^{", correction_type, "}$"), paste0("$df_2^{", correction_type, "}$"), "$p$", es_long)
+  } else {
+    colnames(anova_table) <- c("Term", "$F$", "$df_1$", "$df_2$", "$p$", es_long)
+  }
 
   # Add 'equals' where necessary
   eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
