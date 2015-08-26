@@ -137,16 +137,14 @@ apa_print.lm <- function(
   ## Assamble regression table
   regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
   regression_table$ci <- apply(tidy_x[, tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
-  regression_table$df <- glance_x$df.residual # Add degrees of freedom
-  regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "df", "p.value")] # Change order of columns
+  regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "p.value")] # Change order of columns
   regression_table$term <- sanitize_terms(regression_table$term, standardized)
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
   regression_table$p.value <- printp(regression_table$p.value)
-  regression_table$df <- round(regression_table$df, digits = 2)
 
-  colnames(regression_table) <- c("Variable", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), "$t$", "$df$", "$p$")
+  colnames(regression_table) <- c("Variable", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), paste0("$t(", glance_x$df.residual, ")$"), "$p$")
 
   apa_res$table <- regression_table
 
@@ -184,23 +182,9 @@ apa_print.lm <- function(
 #' @method apa_print summary.lm
 #' @export
 
-apa_print.summary.lm <- function(
-  x
-  , est_name = NULL
-  , standardized = FALSE
-  , ci = 0.95
-  , in_paren = FALSE
-  , ...
-) {
+apa_print.summary.lm <- function(x, ...) {
   validate(x, check_class = "summary.lm")
 
   x <- eval.parent(x$call, n = 1)
-  apa_print(
-    x
-    , est_name = est_name
-    , standardized = standardized
-    , ci = ci
-    , in_paren = in_paren
-    , ...
-  )
+  apa_print(x, ...)
 }
