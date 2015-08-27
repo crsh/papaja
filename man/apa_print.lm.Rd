@@ -8,8 +8,7 @@
 \method{apa_print}{lm}(x, est_name = NULL, standardized = FALSE,
   ci = 0.95, in_paren = FALSE, ...)
 
-\method{apa_print}{summary.lm}(x, est_name = NULL, standardized = FALSE,
-  ci = 0.95, in_paren = FALSE, ...)
+\method{apa_print}{summary.lm}(x, ...)
 }
 \arguments{
 \item{x}{\code{lm} object.}

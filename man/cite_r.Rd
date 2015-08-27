@@ -4,18 +4,22 @@
 \alias{cite_r}
 \title{Cite R and R-packages}
 \usage{
-cite_r(file = NULL, prefix = "R-", footnote = FALSE, pkgs = "all")
+cite_r(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL,
+  withhold = TRUE)
 }
 \arguments{
-\item{file}{Character. The path and name of the \code{.bib}-file holding the references.}
+\item{file}{Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL} only R
+is cited.}
 
 \item{prefix}{Character. The prefix used for all R-package reference handles.}
 
 \item{footnote}{Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
 is available.}
 
-\item{pkgs}{Character. Vector of package names to cite. If \code{pkgs = "all"} (default) all packages in \code{file}
-are cited.}
+\item{pkgs}{Character. Vector of package names to cite or withhold depending on \code{withhold}.}
+
+\item{withhold}{Logical. If \code{TRUE}, \code{pkgs} constitutes a list of packages \emph{not} to cite (a blacklist).
+If \code{FALSE}, \code{pkgs} constitutes a list of packages to cite (a whitelist).}
 }
 \value{
 If \code{footnote = FALSE} a character string is returned, otherwise a named list with the elements \code{r}
