@@ -72,7 +72,7 @@ print_anova <- function(
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
   x[, c("df", "df_res")] <- apply(X = x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
-  x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 2, margin = 2, gt1 = FALSE)
+  x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 3, margin = 2, gt1 = FALSE)
 
   anova_table <- data.frame(x[, c("term", "statistic", "df", "df_res", "p.value", es)], row.names = NULL)
   anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
@@ -84,9 +84,9 @@ print_anova <- function(
 
   correction_type <- attr(x, "correction")
   if(!is.null(correction_type) && correction_type != "none") {
-    colnames(anova_table) <- c("Term", "$F$", paste0("$df_1^{", correction_type, "}$"), paste0("$df_2^{", correction_type, "}$"), "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", paste0("$df_1^{", correction_type, "}$"), paste0("$df_2^{", correction_type, "}$"), "$p$", es_long)
   } else {
-    colnames(anova_table) <- c("Term", "$F$", "$df_1$", "$df_2$", "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", es_long)
   }
 
   # Add 'equals' where necessary
