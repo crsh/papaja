@@ -6,7 +6,7 @@
 \usage{
 apa_barplot(data, id, factors, dv, tendency = mean, dispersion = conf_int,
   level = 0.95, fun_aggregate = mean, na.rm = TRUE, intercept = NULL,
-  ...)
+  args_legend = list(), ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}

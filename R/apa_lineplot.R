@@ -176,25 +176,22 @@ apa_lineplot <- function(
   plot.new()
 
   ## One factor
-  if(length(factors) == 1){
-    if(is.null(ellipsis$lty)){
-      ellipsis$lty <- "solid"
-    }
-    do.call(function(...) apa.lineplot.core(yy = yy, ee = ee, ...), ellipsis)
-  }
+  if(length(factors) < 3){
+#     if(is.null(ellipsis$lty)){
+#       ellipsis$lty <- "solid"
+#     }
 
-  ## Two factors
-  if(length(factors) >= 2) { # Set default bar colors
-    if(is.null(ellipsis$lty)) {
-      nc <- nlevels(data[[factors[2]]])
-      # colors <- (nc:1/(nc)) ^ 0.6
-      # ellipsis$col <- grey(colors)
-      ellipsis$lty <- 1:nc
-    }
-  }
+    ellipsis <- defaults(
+      ellipsis
+      , set = list(
+        yy = yy
+        , ee = ee
+      )
+      , set.if.null = list(
 
-  if(length(factors) == 2){
-    do.call(function(...) apa.lineplot.core(yy = yy, ee = ee, ...), ellipsis)
+      ))
+
+    do.call("apa.lineplot.core", ellipsis)
   }
 
   ## Three factors

@@ -60,6 +60,7 @@ apa_barplot <- function(
   , fun_aggregate = mean
   , na.rm = TRUE
   , intercept = NULL
+  , args_legend = list()
   , ...
 ){
   validate(data, check_class = "data.frame", check_NA = FALSE)
@@ -74,38 +75,6 @@ apa_barplot <- function(
   if(!is.null(intercept)) validate(intercept, check_class = "numeric")
 
   ellipsis <- list(...)
-
-  # Set defaults
-  ## Labels
-  if(is.null(ellipsis$xlab)){
-    ellipsis$xlab <- factors[1]
-  }
-
-  if(is.null(ellipsis$ylab)){
-    ellipsis$ylab<-paste(dv)
-  }
-
-  if(length(ellipsis$args.legend$title) == 0) {
-    ellipsis$args.legend$title <- factors[2]
-  } else if(ellipsis$args.legend$title == "") {
-    ellipsis$args.legend$title <- NULL # Save space
-  }
-
-  if(is.null(ellipsis$legend.text)) {
-    ellipsis$legend.text <- levels(data[[factors[2]]])
-  }
-
-  if(is.null(ellipsis$names.arg)) ellipsis$names.arg <- levels(data[[factors[1]]])
-
-  ## Plot options
-  if(is.null(ellipsis$axis.lty)) {
-    ellipsis$axis.lty <- 1
-  }
-
-  if(is.null(ellipsis$beside) || !(ellipsis$beside)) {
-    if(!is.null(ellipsis$beside) && !(ellipsis$beside)) warning("Stacked barplots are not supported. Ignoring parameter 'beside = FALSE'.")
-    ellipsis$beside <- TRUE
-  }
 
   use_dplyr <- "dplyr" %in% rownames(installed.packages())
 
@@ -149,32 +118,77 @@ apa_barplot <- function(
 
   }
 
-  ## Adjust ylim to height of error bars
-  if(is.null(ellipsis$ylim)) {
-    ellipsis$ylim <- c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
+  print(yy)
+
+  # Set defaults
+  ellipsis <- defaults(
+    ellipsis
+    , set = list(
+      id = id
+      , dv = dv
+      , factors = factors
+      , intercept = intercept
+      , legend.text = FALSE
+    )
+    , set.if.null = list(
+      xlab = factors[1]
+      , ylab = as.character(dv)
+      #, bty = "n"
+      , names.arg = levels(data[[factors[1]]])
+      , axis.lty = 1
+      , ylim = c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
+    ))
+
+  # defaults for legend, only necessary if more than one factor is supplied
+  if(length(factors) > 1) {
+    ellipsis$args_legend <- defaults(
+      ellipsis$args_legend
+      , set = list(
+        # nothing
+      )
+      , set.if.null = list(
+        title = factors[2]
+      ))
   }
 
-
-  # Plot
-  ## One factor
-  if(length(factors) == 1){
-    if(is.null(ellipsis$col)) {
-      ellipsis$col <- "white"
+  # additional cheat that enables the user to suppress legend title via ""
+  if(!is.null(ellipsis$args.legend$title)) {
+    if(ellipsis$args.legend$title == "") {
+      ellipsis$args.legend$title <- NULL # Save space
     }
-    do.call(function(...) apa.barplot.core(yy = yy, ee = ee, id = id, dv = dv, factors = factors, intercept=intercept, ...), ellipsis)
   }
 
-  ## Two factors
-  if(length(factors) >= 2) { # Set default bar colors
-    if(is.null(ellipsis$col)) {
+  # warning if "beside = FALSE" is specified
+  if(is.null(ellipsis$beside) || !(ellipsis$beside)) {
+    if(!is.null(ellipsis$beside) && !(ellipsis$beside)) warning("Stacked barplots are not supported. Ignoring parameter 'beside = FALSE'.")
+    ellipsis$beside <- TRUE
+  }
+
+
+  # colors
+  if(is.null(ellipsis$col)) {
+    if(length(factors) == 1){
+      ellipsis$col <- "white"
+    } else {
       nc <- nlevels(data[[factors[2]]])
       colors <- (nc:1/(nc)) ^ 0.6
       ellipsis$col <- grey(colors)
     }
   }
 
-  if(length(factors) == 2){
-    do.call(function(...) apa.barplot.core(yy = yy, ee = ee, id = id, dv = dv, factors = factors,intercept=intercept, ...), ellipsis)
+  # Plot
+  ## One or two factors
+  if(length(factors) < 3){
+
+    ellipsis <- defaults(
+      ellipsis
+      , set = list(
+        yy = yy
+        , ee = ee
+      )
+    )
+
+    do.call("apa.barplot.core", ellipsis)
   }
 
   ## Three factors
@@ -184,8 +198,15 @@ apa_barplot <- function(
     par(mfrow = c(1, nlevels(data[[factors[3]]])))
     tmp_main <- ellipsis$main
     for (i in levels(data[[factors[3]]])) {
-      ellipsis$main <- paste0(tmp_main, c(factors[3],": ",i),collapse="")
-      do.call(function(...) apa.barplot.core(yy = yy[yy[[factors[3]]]==i,], ee = ee[ee[[factors[3]]]==i,], id = id, dv = dv, factors = factors,intercept=intercept, ...), ellipsis)
+      ellipsis.i <-defaults(
+        ellipsis
+        , set = list(
+          main = paste0(tmp_main, c(factors[3],": ",i),collapse="")
+          , yy = yy[yy[[factors[3]]]==i,]
+          , ee = ee[ee[[factors[3]]]==i,]
+        )
+      )
+      do.call("apa.barplot.core", ellipsis.i)
     }
     par(mfrow=old.mfrow)
   }
@@ -196,8 +217,16 @@ apa_barplot <- function(
     tmp_main <- ellipsis$main
     for (i in levels(data[[factors[3]]])){
       for (j in levels(data[[factors[4]]])){
-        ellipsis$main<-paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
-        do.call(function(...) apa.barplot.core(yy = yy[yy[[factors[3]]]==i&yy[[factors[4]]]==j,], ee = ee[ee[[factors[3]]]==i&ee[[factors[4]]]==j,], id = id, dv = dv, factors = factors,intercept=intercept, ...), ellipsis)
+
+        ellipsis.ij <- defaults(
+          ellipsis
+          , set = list(
+            main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
+            , yy = yy[yy[[factors[3]]]==i&yy[[factors[4]]]==j,]
+            , ee = ee[ee[[factors[3]]]==i&ee[[factors[4]]]==j,]
+          )
+        )
+        do.call("apa.barplot.core", ellipsis.ij)
       }
     }
     par(mfrow=old.mfrow)
@@ -211,13 +240,44 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
     # convert to matrices
     y <- tapply(yy[, dv],list(yy[, factors[2]], yy[, factors[1]]), FUN=as.numeric)
     e <- tapply(ee[, dv],list(ee[, factors[2]], ee[, factors[1]]), FUN=as.numeric)
+    # xlabels <- colnames(y)
   } else {
     y <- yy[, dv]
     e <- ee[, dv]
+    # xlabels <- yy[[factors[1]]]
   }
 
-  # barplot()
-  barx <- barplot(height = y, ...)
+
+  args.barplot <- list(...)
+
+  args.barplot$height <- y
+  args.barplot$args_legend <- NULL
+  args.barplot$xpd <- FALSE
+  # args.barplot$xaxt <- "n"
+
+  barx <- do.call("barplot", args.barplot)
+  print(barx)
+  # axis(side = 1, pos = args.barplot$xlim, at = colMeans(barx), labels = xlabels, line = 0)
+
+
+#   if(args.barplot$ylim[1]!=0){
+#     xl <- matrix(c(par("usr")[1], colMeans(barx)[1], colMeans(barx)[ncol(barx)], par("usr")[2]), ncol=2)
+#   }
+
+#   # always drawm on bottom of plot
+#   xl <- matrix(c(par("usr")[1], colMeans(barx)[1], colMeans(barx)[ncol(barx)], par("usr")[2]), ncol=2)
+#   yl <- array(args.barplot$ylim[1], dim = dim(xl))
+#   lines(x = xl, y = yl)
+
+  if(args.barplot$ylim[1]!=0){
+    xl <- matrix(c(par("usr")[1], par("usr")[2]))
+    yl <- array(0, dim = dim(xl))
+    lines(x = xl, y = yl)
+    xl <- matrix(c(par("usr")[1], colMeans(barx)[1], colMeans(barx)[ncol(barx)], par("usr")[2]), ncol=2)
+    yl <- array(args.barplot$ylim[1], dim = dim(xl))
+    lines(x = xl, y = yl)
+  }
+
 
   # error bars
   error.bar(barx, y, e)
