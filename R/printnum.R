@@ -76,8 +76,9 @@ printnum <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, margin = 1, na_stri
 
 
 printnumber <- function(x, digits = 2, gt1 = TRUE, zero = TRUE, na_string = "") {
-  validate(x, "x", check_class = "numeric", check_NA = FALSE, check_length = 1)
+  validate(x, check_class = "numeric", check_NA = FALSE, check_length = 1, check_infinite = FALSE)
   if(is.na(x)) return(na_string)
+  if(is.infinite(x)) return("$\\infty$")
 
   validate(gt1, check_class = "logical", check_length = 1)
   validate(zero, check_class = "logical", check_length = 1)

@@ -107,7 +107,11 @@ Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for 
 \seealso{
 \code{\link{aov}}, \code{\link[car]{Anova}}
 
-Other apa_print: \code{\link{apa_print.htest}};
+Other apa_print: \code{\link{apa_print.glht}},
+  \code{\link{apa_print.lsmobj}},
+  \code{\link{apa_print.summary.glht}},
+  \code{\link{apa_print.summary.ref.grid}};
+  \code{\link{apa_print.htest}};
   \code{\link{apa_print.lm}},
   \code{\link{apa_print.summary.lm}};
   \code{\link{apa_print}}

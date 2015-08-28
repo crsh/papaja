@@ -95,6 +95,10 @@ Other apa_print: \code{\link{apa_print.Anova.mlm}},
   \code{\link{apa_print.summary.Anova.mlm}},
   \code{\link{apa_print.summary.aov}},
   \code{\link{apa_print.summary.aovlist}};
+  \code{\link{apa_print.glht}},
+  \code{\link{apa_print.lsmobj}},
+  \code{\link{apa_print.summary.glht}},
+  \code{\link{apa_print.summary.ref.grid}};
   \code{\link{apa_print.htest}}; \code{\link{apa_print}}
 }
 

@@ -150,7 +150,7 @@ print_confint <- function(
   , conf_level = NULL
   , ...
 ) {
-  sapply(x, validate, check_class = "numeric")
+  sapply(x, validate, check_class = "numeric", check_infinite = FALSE)
 
   if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, ...)
@@ -174,7 +174,7 @@ print_confint <- function(
       terms <- 1:nrow(ci)
     }
 
-    if(!is.null(colnames(ci))) {
+    if(!is.null(colnames(ci)) && is.null(conf_level)) {
       conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
       conf_level <- 100 - conf_level[1] * 2
       conf_level <- paste0(conf_level, "\\% CI ")
@@ -184,6 +184,8 @@ print_confint <- function(
     for(i in 1:length(terms)) {
       apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
     }
+
+    apa_ci <- lapply(apa_ci, function(x) sub("$\\infty$", "\\infty", x, fixed = TRUE)) # Fix extra $
 
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     return(apa_ci)
