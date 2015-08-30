@@ -115,6 +115,12 @@ apa_lineplot <- function(
     ellipsis$args.legend$title <- NULL # Save space
   }
 
+  # compatibility: allows aggregation function to be specified via "fun.aggregate"
+  if(!is.null(ellipsis$fun.aggregate)) {
+    fun_aggregate <- ellipsis$fun.aggregate
+  }
+  ellipsis$fun.aggregate <- NULL
+
   # is dplyr available?
   use_dplyr <- "dplyr" %in% rownames(installed.packages())
 
