@@ -77,16 +77,18 @@ apa_barplot <- function(
   ellipsis <- list(...)
 
   # compatibility stuff
-  ellipsis$args_legend <- args_legend
-  ellipsis <- defaults(ellipsis, set.if.null = list(args_legend = args.legend))
-  ellipsis <- defaults(ellipsis, set.if.null = list(args_legend = list()))
-  ellipsis$args.legend <- NULL
+  if(is.null(args_legend)) {
+    args_legend <- ellipsis$args.legend
+
+  }
 
   if(!is.null(ellipsis$fun.aggregate)) {
     fun_aggregate <- ellipsis$fun.aggregate
-    ellipsis$fun.aggregate <- NULL
   }
 
+  ellipsis$fun.aggregate <- NULL
+  ellipsis$args.legend <- NULL
+  ellipsis$args_legend <- args_legend
 
 
 
@@ -268,7 +270,7 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
   # args.barplot$xaxt <- "n"
 
   barx <- do.call("barplot", args.barplot)
-  print(barx)
+
   # axis(side = 1, pos = args.barplot$xlim, at = colMeans(barx), labels = xlabels, line = 0)
 
 
