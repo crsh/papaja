@@ -60,7 +60,7 @@ apa_barplot <- function(
   , fun_aggregate = mean
   , na.rm = TRUE
   , intercept = NULL
-  , args_legend = list()
+  , args_legend = NULL
   , ...
 ){
   validate(data, check_class = "data.frame", check_NA = FALSE)
@@ -75,6 +75,20 @@ apa_barplot <- function(
   if(!is.null(intercept)) validate(intercept, check_class = "numeric")
 
   ellipsis <- list(...)
+
+  # compatibility stuff
+  ellipsis$args_legend <- args_legend
+  ellipsis <- defaults(ellipsis, set.if.null = list(args_legend = args.legend))
+  ellipsis <- defaults(ellipsis, set.if.null = list(args_legend = list()))
+  ellipsis$args.legend <- NULL
+
+  if(!is.null(ellipsis$fun.aggregate)) {
+    fun_aggregate <- ellipsis$fun.aggregate
+    ellipsis$fun.aggregate <- NULL
+  }
+
+
+
 
   use_dplyr <- "dplyr" %in% rownames(installed.packages())
 
@@ -117,8 +131,6 @@ apa_barplot <- function(
     }
 
   }
-
-  print(yy)
 
   # Set defaults
   ellipsis <- defaults(
@@ -313,11 +325,14 @@ conf_int<-function(x, level = 0.95, na.rm = TRUE){
   return(ee)
 }
 
+conf.int <- conf_int
+
+
 #' Standard errors
 #'
 #' Returns the standard error of a vector
 #'
-#' @param x Nnumeric. A vector of observations from your dependent variable.
+#' @param x Numeric. A vector of observations from your dependent variable.
 #' @param na.rm Logical. Specifies if missing values are removed.
 #' @export
 
