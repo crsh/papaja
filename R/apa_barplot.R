@@ -327,6 +327,8 @@ conf_int<-function(x, level = 0.95, na.rm = TRUE){
   return(ee)
 }
 
+#' @rdname conf_int
+#' @export
 conf.int <- conf_int
 
 
