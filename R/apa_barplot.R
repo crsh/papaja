@@ -16,6 +16,7 @@
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
 #' @param intercept Numeric. Adds a horizontal line to the plot.
+#' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
 #' @param ... Further arguments than can be passed to \code{\link{barplot}} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
