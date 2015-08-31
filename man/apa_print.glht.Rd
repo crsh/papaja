@@ -9,11 +9,12 @@
 \usage{
 \method{apa_print}{glht}(x, test = adjusted(), ...)
 
-\method{apa_print}{summary.glht}(x)
+\method{apa_print}{summary.glht}(x, ci = 0.95, in_paren = FALSE, ...)
 
 \method{apa_print}{lsmobj}(x, ...)
 
-\method{apa_print}{summary.ref.grid}(x, ci = 0.95, ...)
+\method{apa_print}{summary.ref.grid}(x, ci = 0.95, in_paren = FALSE,
+  contrast_names = NULL, ...)
 }
 \arguments{
 \item{x}{See details.}
@@ -46,6 +47,8 @@ The function should work on a wide range of \code{htest} objects. Due to the lar
    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
    a reproducible example in your report!).
+
+   ADJUSTED CONFIDENCE INTERVALS
 
    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the

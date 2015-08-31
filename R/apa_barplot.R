@@ -166,9 +166,9 @@ apa_barplot <- function(
   }
 
   # additional cheat that enables the user to suppress legend title via ""
-  if(!is.null(ellipsis$args.legend$title)) {
-    if(ellipsis$args.legend$title == "") {
-      ellipsis$args.legend$title <- NULL # Save space
+  if(!is.null(ellipsis$args_legend$title)) {
+    if(ellipsis$args_legend$title == "") {
+      ellipsis$args_legend$title <- NULL # Save space
     }
   }
 
@@ -255,14 +255,18 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
     y <- tapply(yy[, dv],list(yy[, factors[2]], yy[, factors[1]]), FUN=as.numeric)
     e <- tapply(ee[, dv],list(ee[, factors[2]], ee[, factors[1]]), FUN=as.numeric)
     # xlabels <- colnames(y)
+    onedim <- FALSE
   } else {
     y <- yy[, dv]
     e <- ee[, dv]
     # xlabels <- yy[[factors[1]]]
+    onedim <- TRUE
   }
 
 
   args.barplot <- list(...)
+
+  args.legend <- args.barplot$args_legend
 
   args.barplot$height <- y
   args.barplot$args_legend <- NULL
@@ -295,6 +299,22 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
 
   # error bars
   error.bar(barx, y, e)
+
+  # prepare and draw legend
+  if(onedim==FALSE) {
+
+    args.legend <- defaults(args.legend
+                            , set.if.null = list(
+                              x = "topright"
+                              , legend = levels(yy[[factors[2]]])
+                              , fill = args.barplot$col
+                              , bty = "n"
+                            ))
+
+    do.call("legend", args.legend)
+  }
+
+
 
   if(!is.null(intercept)){
     segments(x0=colMeans(barx)-barx[1], y0=intercept, x1=colMeans(barx)+barx[1], y1=intercept)

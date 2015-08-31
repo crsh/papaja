@@ -7,7 +7,7 @@
 se(x, na.rm = TRUE)
 }
 \arguments{
-\item{x}{Nnumeric. A vector of observations from your dependent variable.}
+\item{x}{Numeric. A vector of observations from your dependent variable.}
 
 \item{na.rm}{Logical. Specifies if missing values are removed.}
 }
