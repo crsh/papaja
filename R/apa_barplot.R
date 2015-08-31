@@ -211,6 +211,25 @@ apa_barplot <- function(
   if(length(factors) == 3) {
     par(mfrow = c(1, nlevels(data[[factors[3]]])))
     tmp_main <- ellipsis$main
+    tmp_plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
+    names(tmp_plot) <- levels(data[[factors[3]]])
+
+    ellipsis$args_legend <- defaults(ellipsis$args_legend
+                                     , set = list(
+
+                                     )
+                                     , set.if.null = list(
+                                       plot = tmp_plot
+                                     )
+    )
+
+    if(length(ellipsis$args_legend$plot)!=nlevels(data[[factors[3]]])) {
+      rec <- length(ellipsis$args_legend$plot) / nlevels(data[[factors[3]]])
+      ellipsis$args_legend$plot <- rep(ellipsis$args_legend$plot, round(rec+1))
+    }
+
+    names(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
+
     for (i in levels(data[[factors[3]]])) {
       ellipsis.i <-defaults(
         ellipsis
@@ -220,6 +239,10 @@ apa_barplot <- function(
           , ee = ee[ee[[factors[3]]]==i,]
         )
       )
+
+      # by default, only draw legend in very right plot
+      ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i]))
+
       do.call("apa.barplot.core", ellipsis.i)
     }
     par(mfrow=old.mfrow)
@@ -229,6 +252,20 @@ apa_barplot <- function(
   if(length(factors)==4){
     par(mfrow=c(nlevels(data[[factors[3]]]),nlevels(data[[factors[4]]])))
     tmp_main <- ellipsis$main
+    legend.plot <- array(FALSE, dim=c(nlevels(data[[factors[3]]]), nlevels(data[[factors[4]]])))
+    legend.plot[1,nlevels(data[[factors[4]]])] <- TRUE
+
+    ellipsis$args_legend <- defaults(ellipsis$args_legend
+                                     , set = list(
+
+                                     )
+                                     , set.if.null = list(
+                                       plot = legend.plot
+                                     )
+    )
+    rownames(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
+    colnames(ellipsis$args_legend$plot) <- levels(data[[factors[4]]])
+
     for (i in levels(data[[factors[3]]])){
       for (j in levels(data[[factors[4]]])){
 
@@ -240,6 +277,10 @@ apa_barplot <- function(
             , ee = ee[ee[[factors[3]]]==i&ee[[factors[4]]]==j,]
           )
         )
+
+        # by default, only draw legend in topright plot
+        ellipsis.ij$args_legend <- defaults(ellipsis.ij$args_legend, set = list(plot = ellipsis$args_legend$plot[i, j]))
+
         do.call("apa.barplot.core", ellipsis.ij)
       }
     }
