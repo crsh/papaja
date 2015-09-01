@@ -16,6 +16,7 @@
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
 #' @param intercept Numeric. Adds a horizontal line to the plot.
+#' #' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
 #' @param ... Further arguments than can be passed to \code{\link{barplot}} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
@@ -61,7 +62,8 @@ apa_barplot <- function(
   , fun_aggregate = mean
   , na.rm = TRUE
   , intercept = NULL
-  , args_legend = NULL
+  , args_arrows = list()
+  , args_legend = list()
   , ...
 ){
   validate(data, check_class = "data.frame", check_NA = FALSE)
@@ -75,37 +77,29 @@ apa_barplot <- function(
   validate(na.rm, check_class = "logical", check_length = 1)
   if(!is.null(intercept)) validate(intercept, check_class = "numeric")
 
-  ellipsis <- list(...)
-
-  # compatibility stuff
-  if(is.null(args_legend)) {
-    args_legend <- ellipsis$args.legend
-
-  }
-
-  if(!is.null(ellipsis$fun.aggregate)) {
-    fun_aggregate <- ellipsis$fun.aggregate
-  }
-
-  ellipsis$fun.aggregate <- NULL
-  ellipsis$args.legend <- NULL
-  ellipsis$args_legend <- args_legend
-
-
-
-  use_dplyr <- "dplyr" %in% rownames(installed.packages())
-
   # Prepare data
   for (i in factors){
     data[[i]]<-as.factor(data[[i]])
   }
   data[[id]]<-as.factor(data[[id]])
 
+
+  ellipsis <- list(...)
+
+  # compatibility: allows aggregation function to be specified via "fun.aggregate"
+  if(!is.null(ellipsis$fun.aggregate)) {
+    fun_aggregate <- ellipsis$fun.aggregate
+  }
+  ellipsis$fun.aggregate <- NULL
+
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
+  dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
+  # is dplyr available?
+  use_dplyr <- "dplyr" %in% rownames(installed.packages())
 
   if(use_dplyr) {
     ## Aggregate subject data
@@ -136,39 +130,42 @@ apa_barplot <- function(
   }
 
   # Set defaults
-  ellipsis <- defaults(
-    ellipsis
-    , set = list(
-      id = id
-      , dv = dv
-      , factors = factors
-      , intercept = intercept
-      , legend.text = FALSE
-    )
-    , set.if.null = list(
-      xlab = factors[1]
-      , ylab = as.character(dv)
-      #, bty = "n"
-      , names.arg = levels(data[[factors[1]]])
-      , axis.lty = 1
-      , ylim = c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
-    ))
+  ellipsis <- defaults(ellipsis,
+                       set = list(
+                         id = id
+                         , dv = dv
+                         , factors = factors
+                         , intercept = intercept
+                         , legend.text = FALSE
+                       )
+                       , set.if.null = list(
+                         xlab = factors[1]
+                         , ylab = as.character(dv)
+                         #, bty = "n"
+                         , names.arg = levels(data[[factors[1]]])
+                         , axis.lty = 1
+                         , ylim = c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
+                         , args.arrows = args_arrows
+                         , args.legend = args_legend
+                       ))
+
+
 
   # defaults for legend, only necessary if more than one factor is supplied
   if(length(factors) > 1) {
-    ellipsis$args_legend <- defaults(
-      ellipsis$args_legend
+    ellipsis$args.legend <- defaults(
+      ellipsis$args.legend
       , set = list(
         # nothing
       )
       , set.if.null = list(
-        title = gsub(factors[2], pattern = "_", replacement = " ")
+        title = gsub(factors[2], pattern = "_", replacement = " ") # pretty printing
       ))
   }
 
-  # additional cheat that enables the user to suppress legend title via ""
-  if(ellipsis$args_legend$title == "") {
-    ellipsis$args_legend$title <- NULL # Save space
+  # allows use to suppress legend title via specifying title = ""
+  if(ellipsis$args.legend$title == "") {
+    ellipsis$args.legend$title <- NULL # Save space
   }
 
   # warning if "beside = FALSE" is specified
@@ -213,7 +210,7 @@ apa_barplot <- function(
     tmp_plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
     names(tmp_plot) <- levels(data[[factors[3]]])
 
-    ellipsis$args_legend <- defaults(ellipsis$args_legend
+    ellipsis$args.legend <- defaults(ellipsis$args.legend
                                      , set = list(
 
                                      )
@@ -222,12 +219,12 @@ apa_barplot <- function(
                                      )
     )
 
-    if(length(ellipsis$args_legend$plot)!=nlevels(data[[factors[3]]])) {
-      rec <- length(ellipsis$args_legend$plot) / nlevels(data[[factors[3]]])
-      ellipsis$args_legend$plot <- rep(ellipsis$args_legend$plot, round(rec+1))
+    if(length(ellipsis$args.legend$plot)!=nlevels(data[[factors[3]]])) {
+      rec <- length(ellipsis$args.legend$plot) / nlevels(data[[factors[3]]])
+      ellipsis$args.legend$plot <- rep(ellipsis$args.legend$plot, round(rec+1))
     }
 
-    names(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
+    names(ellipsis$args.legend$plot) <- levels(data[[factors[3]]])
 
     for (i in levels(data[[factors[3]]])) {
       ellipsis.i <-defaults(
@@ -240,7 +237,7 @@ apa_barplot <- function(
       )
 
       # by default, only draw legend in very right plot
-      ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i]))
+      ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i]))
 
       do.call("apa.barplot.core", ellipsis.i)
     }
@@ -254,7 +251,7 @@ apa_barplot <- function(
     legend.plot <- array(FALSE, dim=c(nlevels(data[[factors[3]]]), nlevels(data[[factors[4]]])))
     legend.plot[1,nlevels(data[[factors[4]]])] <- TRUE
 
-    ellipsis$args_legend <- defaults(ellipsis$args_legend
+    ellipsis$args.legend <- defaults(ellipsis$args.legend
                                      , set = list(
 
                                      )
@@ -262,8 +259,8 @@ apa_barplot <- function(
                                        plot = legend.plot
                                      )
     )
-    rownames(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
-    colnames(ellipsis$args_legend$plot) <- levels(data[[factors[4]]])
+    rownames(ellipsis$args.legend$plot) <- levels(data[[factors[3]]])
+    colnames(ellipsis$args.legend$plot) <- levels(data[[factors[4]]])
 
     for (i in levels(data[[factors[3]]])){
       for (j in levels(data[[factors[4]]])){
@@ -278,7 +275,7 @@ apa_barplot <- function(
         )
 
         # by default, only draw legend in topright plot
-        ellipsis.ij$args_legend <- defaults(ellipsis.ij$args_legend, set = list(plot = ellipsis$args_legend$plot[i, j]))
+        ellipsis.ij$args.legend <- defaults(ellipsis.ij$args.legend, set = list(plot = ellipsis$args.legend$plot[i, j]))
 
         do.call("apa.barplot.core", ellipsis.ij)
       }
@@ -306,10 +303,12 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
 
   args.barplot <- list(...)
 
-  args.legend <- args.barplot$args_legend
+  args.arrows <- args.barplot$args.arrows
+  args.legend <- args.barplot$args.legend
 
   args.barplot$height <- y
-  args.barplot$args_legend <- NULL
+  args.barplot$args.arrows <- NULL
+  args.barplot$args.legend <- NULL
   args.barplot$xpd <- FALSE
   # args.barplot$xaxt <- "n"
 
@@ -336,9 +335,23 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
     lines(x = xl, y = yl)
   }
 
+  # prepare and draw arrows (i.e., error bars)
+  args.arrows <- defaults(args.arrows
+                          , set = list(
+                            x0 = barx
+                            , x1 = barx
+                            , y0 = y-e
+                            , y1 = y+e
+                          )
+                          , set.if.null = list(
+                            angle = 90
+                            , code = 3
+                            , length = .1
+                          )
+  )
 
-  # error bars
-  error.bar(barx, y, e)
+
+  do.call("arrows", args.arrows)
 
   # prepare and draw legend
   if(onedim==FALSE) {
