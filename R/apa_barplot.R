@@ -92,6 +92,11 @@ apa_barplot <- function(
   }
   ellipsis$fun.aggregate <- NULL
 
+  # save names for beautiful plotting
+  p.factors <- factors
+  p.id <- id
+  p.dv <- dv
+
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
@@ -139,8 +144,8 @@ apa_barplot <- function(
                          , legend.text = FALSE
                        )
                        , set.if.null = list(
-                         xlab = factors[1]
-                         , ylab = as.character(dv)
+                         xlab = p.factors[1]
+                         , ylab = p.dv
                          #, bty = "n"
                          , names.arg = levels(data[[factors[1]]])
                          , axis.lty = 1
@@ -159,7 +164,7 @@ apa_barplot <- function(
         # nothing
       )
       , set.if.null = list(
-        title = gsub(factors[2], pattern = "_", replacement = " ") # pretty printing
+        title = p.factors[2]
       ))
   }
 
