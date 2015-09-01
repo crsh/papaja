@@ -162,15 +162,13 @@ apa_barplot <- function(
         # nothing
       )
       , set.if.null = list(
-        title = factors[2]
+        title = gsub(factors[2], pattern = "_", replacement = " ")
       ))
   }
 
   # additional cheat that enables the user to suppress legend title via ""
-  if(!is.null(ellipsis$args_legend$title)) {
-    if(ellipsis$args_legend$title == "") {
-      ellipsis$args_legend$title <- NULL # Save space
-    }
+  if(ellipsis$args_legend$title == "") {
+    ellipsis$args_legend$title <- NULL # Save space
   }
 
   # warning if "beside = FALSE" is specified

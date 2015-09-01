@@ -128,7 +128,7 @@ apa_lineplot <- function(
   for (i in factors){
     data[[i]]<-droplevels(as.factor(data[[i]]))
   }
-  data[[id]]<-as.factor(data[[id]])
+  data[[id]]<-droplevels(as.factor(data[[id]]))
 
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
@@ -136,13 +136,9 @@ apa_lineplot <- function(
   dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
-
-
   if(is.null(ellipsis$jit)){
     ellipsis$jit <- .4
   }
-
-
 
   if(use_dplyr) {
     ## Aggregate subject data
@@ -229,7 +225,7 @@ apa_lineplot <- function(
 
     names(ellipsis$args.legend$plot) <- levels(data[[factors[3]]])
 
-    for (i in levels(data[[factors[3]]])) {
+    for (i in levels(yy[[factors[3]]])) {
 
       ellipsis.i <- defaults(ellipsis, set = list(
         main = paste0(tmp_main, c(factors[3],": ",i),collapse="")
@@ -268,8 +264,8 @@ apa_lineplot <- function(
 
 
 
-    for (i in levels(data[[factors[3]]])){
-      for (j in levels(data[[factors[4]]])) {
+    for (i in levels(yy[[factors[3]]])){
+      for (j in levels(yy[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
           main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
           , yy = yy[yy[[factors[3]]]==i&yy[[factors[4]]]==j,]
@@ -296,6 +292,10 @@ apa.lineplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
   # jittering of x coordinates
   jit <- ellipsis$jit
 
+
+  factors <- gsub(factors, pattern = " ", replacement = "_")
+  id <- gsub(id, pattern = " ", replacement = "_")
+  dv <- gsub(dv, pattern = " ", replacement = "_")
 
   # move to apa_lineplot???
   if(length(factors) > 1){
