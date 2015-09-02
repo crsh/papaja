@@ -168,6 +168,25 @@ apa_lineplot <- function(
 
   }
 
+  ## within-subjects confidence intervals
+  if(fun_dispersion == "within_subjects_conf_int") {
+    # check which factors are between/within
+
+    splitted <- split(aggregated, f=as.list(aggregated[, c(between)]))
+
+    Morey_CI <- lapply(X = splitted, FUN = function(x){
+      y <- tapply(x[[dv]], as.list(x[, c(id, within)]), FUN = as.numeric) # transform to matrix
+      z <- y - array(rowMeans(y, na.rm = TRUE), dim(y)) + mean(y, na.rm=TRUE) # normalise
+      CI <- apply(z, MARGIN = (1:(length(within)+1))[-1], FUN = papaja:::conf_int) # calculate CIs for each condition
+
+      # Morey correction
+      M <- prod(apply(X = x[, within], MARGIN = 2, FUN = function(x){nlevels(as.factor(x))}))
+      Morey_CI <- CI * M/(M-1)
+    })
+  }
+
+
+
   ## Adjust ylim to height of error bars
   if(is.null(ellipsis$ylim)) {
     ellipsis$ylim <- c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
