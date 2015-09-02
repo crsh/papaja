@@ -6,7 +6,7 @@
 \usage{
 apa_barplot(data, id, factors, dv, tendency = mean, dispersion = conf_int,
   level = 0.95, fun_aggregate = mean, na.rm = TRUE, intercept = NULL,
-  args_legend = NULL, ...)
+  args_arrows = list(), args_legend = list(), ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}
@@ -30,7 +30,10 @@ before calculating descriptive statistics for each cell of the design. Defaults 
 
 \item{na.rm}{Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.}
 
-\item{intercept}{Numeric. Adds a horizontal line to the plot.}
+\item{intercept}{Numeric. Adds a horizontal line to the plot.
+#'}
+
+\item{args_arrows}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}}
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
