@@ -89,6 +89,7 @@ apa_lineplot <- function(
   if(!is.null(intercept)) validate(intercept, check_class = "numeric")
 
   ellipsis <- list(...)
+  output <- list()
 
   # Set defaults
   ellipsis <- defaults(ellipsis,
@@ -187,7 +188,7 @@ apa_lineplot <- function(
     if (is.null(between)) {
       splitted <- list(aggregated)
     } else if(length(between)>1){
-      splitted <- split(aggregated, f=as.list(aggregated[, c(between)]), sep =":")
+      splitted <- split(aggregated, f=as.list(aggregated[, c(between)]), sep = ":")
     } else if (length(between)==1) {
       splitted <- split(aggregated, f=aggregated[, c(between)])
     }
@@ -215,25 +216,25 @@ apa_lineplot <- function(
     }
 
     if(is.null(between)) {
-    ee <- data.frame(unlist(Morey_CI, recursive=FALSE))
-    }
-
-    names <- strsplit(names(Morey_CI), split =":")
-    for (i in 1:length(Morey_CI)) {
-      for ( j in 1:length(between)){
-      Morey_CI[[i]][[between[j]]] <- names[[i]][j]
+      ee <- data.frame(unlist(Morey_CI, recursive=FALSE))
+    } else {
+      names <- strsplit(names(Morey_CI), split = ":")
+      for (i in 1:length(Morey_CI)) {
+        for ( j in 1:length(between)){
+        Morey_CI[[i]][[between[j]]] <- names[[i]][j]
+        }
       }
     }
-    # print(Morey_CI)
     ee <- papaja:::fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun =mean)
-
+    output$Morey_CI <- Morey_CI
   }
 #   print(ee)
 #   print(yy)
 #
 #   print(yy[,dv]+ee[,dv])
 
-
+output$yy <- yy
+output$ee <- ee
 
 
 
@@ -352,6 +353,7 @@ apa_lineplot <- function(
     }
     par(mfrow=old.mfrow)
   }
+  invisible(output)
 }
 
 
