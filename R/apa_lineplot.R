@@ -243,7 +243,7 @@ output$ee <- ee
   if(is.null(ellipsis$ylim)) {
     ellipsis$ylim <- c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
   }
-  print(ellipsis$ylim)
+  # print(ellipsis$ylim)
 
   # Plot
   plot.new()
