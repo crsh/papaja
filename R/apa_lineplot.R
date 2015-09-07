@@ -169,7 +169,7 @@ apa_lineplot <- function(
 
   }
   ## within-subjects confidence intervals
-  if(fun_dispersion == "within_subjects_conf_int") {
+  if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
 
     # check which factors are between/within
     between <- ellipsis$between
@@ -213,7 +213,6 @@ apa_lineplot <- function(
         # return
         Morey_CI
       })
-    }
 
     if(is.null(between)) {
       ee <- data.frame(unlist(Morey_CI, recursive=FALSE))
@@ -227,26 +226,18 @@ apa_lineplot <- function(
     }
     ee <- papaja:::fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun =mean)
     output$Morey_CI <- Morey_CI
+    } else {
+      stop("No within-subjects factors specified.")
+    }
   }
-#   print(ee)
-#   print(yy)
-#
-#   print(yy[,dv]+ee[,dv])
 
-output$yy <- yy
-output$ee <- ee
-
-
-
+  output$yy <- yy
+  output$ee <- ee
 
   ## Adjust ylim to height of error bars
   if(is.null(ellipsis$ylim)) {
     ellipsis$ylim <- c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
   }
-  # print(ellipsis$ylim)
-
-  # Plot
-  plot.new()
 
   ## One factor
   if(length(factors) < 3){
@@ -264,15 +255,18 @@ output$ee <- ee
 
       ))
 
+    # par(mfrow=par("mfrow"))
     do.call("apa.lineplot.core", ellipsis)
   }
 
   ## Three factors
-  old.mfrow <- par()$mfrow # Save original plot architecture
+  old.mfrow <- par("mfrow") # Save original plot architecture
 
   if(length(factors) == 3) {
     par(mfrow = c(1, nlevels(data[[factors[3]]])))
     tmp_main <- ellipsis$main
+
+    # by default, only plot legend in topright plot:
     tmp_plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
     names(tmp_plot) <- levels(data[[factors[3]]])
 
@@ -308,6 +302,11 @@ output$ee <- ee
 
       # by default, only draw legend in very right plot
       ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i]))
+
+      # suppresses ylab
+      if(i!=levels(yy[[factors[3]]])[1]){
+        ellipsis.i$ylab <- ""
+      }
 
       do.call("apa.lineplot.core", ellipsis.i)
     }
@@ -348,6 +347,10 @@ output$ee <- ee
         # by default, only draw legend in topright plot
         ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i, j]))
 
+        # suppresses ylab
+        if(j!=levels(yy[[factors[4]]])[1]){
+          ellipsis.i$ylab <- ""
+        }
         do.call("apa.lineplot.core", ellipsis.i)
       }
     }
@@ -360,6 +363,9 @@ output$ee <- ee
 apa.lineplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
 
   ellipsis <- list(...)
+
+  # Plot
+  # plot.new()
 
   # jittering of x coordinates
   jit <- ellipsis$jit
@@ -583,3 +589,6 @@ sel <- function(x, i){
 
 #' @export
 within_subjects_conf_int <- function(...) return(100)
+
+#' @export
+wsci <- within_subjects_conf_int
