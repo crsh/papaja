@@ -236,7 +236,7 @@ apa_barplot <- function(
   }
 
   # allows use to suppress legend title via specifying title = ""
-  if(ellipsis$args.legend$title == "") {
+  if(!is.null(ellipsis$args.legend$title)&&ellipsis$args.legend$title == "") {
     ellipsis$args.legend$title <- NULL # Save space
   }
 
@@ -419,7 +419,7 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
                           , set.if.null = list(
                             angle = 90
                             , code = 3
-                            , length = .1
+                            , length = ifelse(prod(dim(as.matrix(barx))) < 8, .1, 1/max(barx))
                           )
   )
 
