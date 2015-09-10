@@ -378,11 +378,13 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
 
   args.arrows <- args.barplot$args.arrows
   args.legend <- args.barplot$args.legend
+  intercept <- args.barplot$intercept
 
   args.barplot$height <- y
   args.barplot$args.arrows <- NULL
   args.barplot$args.legend <- NULL
   args.barplot$xpd <- FALSE
+  args.barplot$intercept <- NULL
   # args.barplot$xaxt <- "n"
 
   barx <- do.call("barplot", args.barplot)
