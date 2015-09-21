@@ -302,7 +302,7 @@ apa_barplot <- function(
       ellipsis.i <-defaults(
         ellipsis
         , set = list(
-          main = paste0(tmp_main, c(factors[3],": ",i),collapse="")
+          main = gsub(paste0(tmp_main, c(factors[3],": ",i),collapse=""), pattern = "_", replacement = " ")
           , yy = yy[yy[[factors[3]]]==i,]
           , ee = ee[ee[[factors[3]]]==i,]
         )
