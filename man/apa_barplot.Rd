@@ -37,6 +37,8 @@ before calculating descriptive statistics for each cell of the design. Defaults 
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
+\item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
+
 \item{...}{Further arguments than can be passed to \code{\link{barplot}} function.}
 }
 \description{
