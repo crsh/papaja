@@ -457,7 +457,7 @@ apa.lineplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
     )
   )
 
-  do.call("points", args.points)
+  do.call("points.matrix", args.points)
 
   # prepare and draw lines
   args.lines <- defaults(args.lines
@@ -580,6 +580,10 @@ arrows.matrix <- function(x0, x1, y0, y1, ...) {
     do.call("arrows", args.i)
   }
 }
+
+
+
+
 
 # helper function
 sel <- function(x, i){
