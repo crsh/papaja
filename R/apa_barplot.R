@@ -207,7 +207,6 @@ apa_barplot <- function(
                          id = id
                          , dv = dv
                          , factors = factors
-                         , intercept = intercept
                          , legend.text = FALSE
                        )
                        , set.if.null = list(
@@ -257,6 +256,8 @@ apa_barplot <- function(
       ellipsis$col <- grey(colors)
     }
   }
+
+  ellipsis$intercept <- intercept
 
   # Plot
   ## One or two factors
@@ -325,7 +326,6 @@ apa_barplot <- function(
 
     ellipsis$args.legend <- defaults(ellipsis$args.legend
                                      , set = list(
-
                                      )
                                      , set.if.null = list(
                                        plot = legend.plot
@@ -358,7 +358,7 @@ apa_barplot <- function(
 }
 
 
-apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
+apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
 
   if(length(factors) >= 2) {
     # convert to matrices
@@ -441,7 +441,6 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
 
     do.call("legend", args.legend)
   }
-
 
 
   if(!is.null(intercept)){
