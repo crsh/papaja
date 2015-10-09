@@ -70,7 +70,8 @@ apa_print.summary.glht <- function(
 
   # Assamble table
   ## Add (adjusted) confidence intervall
-  print_ci <- confint(x, level = ci)$confint
+  multcomp_adjustment <- if(x$test$type == "none") univariate_calpha() else adjusted_calpha()
+  print_ci <- confint(x, level = ci, calpha = multcomp_adjustment)$confint
   dimnames(print_ci) <- NULL
   table_ci <- unlist(print_confint(print_ci[, -1], ...)) # Remove point estimate from matrix
   contrast_table <- cbind(estimate = tidy_x$estimate, confint = table_ci, tidy_x[, c("statistic", "p.value")])
