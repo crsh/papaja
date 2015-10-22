@@ -154,12 +154,7 @@ apa_print.anova <- function(
 
   variance_table <- arrange_anova(x)
 
-  if(
-    any(
-      grepl("Model 1", attr(x, "heading")) &
-      grepl("Model 2", attr(x, "heading"))
-    ) || is.null(x[["Sum Sq"]])
-  ) {
+  if(class(variance_table) == "apa_model_comp") {
     return(print_model_comp(variance_table, in_paren = in_paren, models = models, ci = ci, boot_samples = boot_samples))
   } else {
     return(print_anova(variance_table, ...))
