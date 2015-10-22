@@ -142,7 +142,7 @@ apa_print.summary.ref.grid <- function(
 
   split_by <- attr(x, "by.vars")
   x <- data.frame(x)
-  colnames(x) <- c("contrast", "estimate", "std.error", "df", "statistic", "p.value")
+  colnames(x) <- c("contrast", split_by, "estimate", "std.error", "df", "statistic", "p.value")
 
   # Assamble table
   if(!is.null(split_by)) {
