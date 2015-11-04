@@ -149,9 +149,7 @@ apa_print.lm <- function(
   regression_table$p.value <- printp(regression_table$p.value)
 
   colnames(regression_table) <- c("Predictor", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), paste0("$t(", glance_x$df.residual, ")$"), "$p$")
-
   apa_res$table <- regression_table
-
 
   # Model fit
   p <- printp(glance_x$p.value)
