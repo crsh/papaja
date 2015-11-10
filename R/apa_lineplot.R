@@ -507,7 +507,7 @@ apa.lineplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
   # draw intercept
 
   if(!is.null(intercept)){
-    lines(x=xlim, y=rep(intercept,2))
+    lines(x=ellipsis$xlim, y=rep(intercept,2))
   }
   return(list(ellipsis, args.axis, args.points, args.lines, args.legend))
 }
