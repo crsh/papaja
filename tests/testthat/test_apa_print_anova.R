@@ -25,19 +25,19 @@ test_that(
     expect_that(length(ow_aov_output$est), equals(1))
     expect_that(names(ow_aov_output$est), equals("Dosage"))
     expect_that(ow_aov_output$est$Dosage, is_a("character"))
-    expect_that(ow_aov_output$est$Dosage, equals("$\\eta^2_G = .54$"))
+    expect_that(ow_aov_output$est$Dosage, equals("$\\eta^2_G = .540$"))
 
     # full
     expect_that(ow_aov_output$full, is_a("list"))
     expect_that(length(ow_aov_output$full), equals(1))
     expect_that(names(ow_aov_output$full), equals("Dosage"))
     expect_that(ow_aov_output$full$Dosage, is_a("character"))
-    expect_that(ow_aov_output$full$Dosage, equals("$F(2, 15) = 8.79$, $p = .003$, $\\eta^2_G = .54$"))
+    expect_that(ow_aov_output$full$Dosage, equals("$F(2, 15) = 8.79$, $p = .003$, $\\eta^2_G = .540$"))
 
     # table
     expect_that(ow_aov_output$table, is_a("data.frame"))
     expect_that(nrow(ow_aov_output$table), equals(1))
-    expect_that(colnames(ow_aov_output$table), equals(c("Term", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
+    expect_that(colnames(ow_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
 
     # Other classes
     ow_aov_summary_output <- apa_print(summary(ow_aov))
@@ -47,7 +47,7 @@ test_that(
     expect_that(ow_aov_Anova_output, is_identical_to(ow_aov_output))
 
     ow_afex_data <- cbind(id = 1:nrow(ow_data), ow_data)
-    ow_afex_aov <- afex::ez.glm(
+    ow_afex_aov <- afex::aov_ez(
       data = ow_afex_data
       , id = "id"
       , dv = "Alertness"
@@ -60,10 +60,10 @@ test_that(
 
     # Other effect sizes
     ow_aov_output <- apa_print(ow_aov, es = "pes")
-    expect_that(ow_aov_output$est$Dosage, equals("$\\eta^2_p = .54$"))
+    expect_that(ow_aov_output$est$Dosage, equals("$\\eta^2_p = .540$"))
 
     ow_aov_output <- apa_print(ow_aov, es = c("pes", "ges"))
-    expect_that(ow_aov_output$est$Dosage, equals("$\\eta^2_p = .54$, $\\eta^2_G = .54$"))
+    expect_that(ow_aov_output$est$Dosage, equals("$\\eta^2_p = .540$, $\\eta^2_G = .540$"))
 
     # In parentheses
     ow_aov_output <- apa_print(ow_aov, in_paren = TRUE)
@@ -99,28 +99,28 @@ test_that(
     expect_that(length(tw_aov_output$est), equals(3))
     expect_that(names(tw_aov_output$est), equals(c("Gender", "Dosage", "Gender_Dosage")))
     expect_that(tw_aov_output$est$Gender, is_a("character"))
-    expect_that(tw_aov_output$est$Gender, equals("$\\eta^2_G = .20$"))
+    expect_that(tw_aov_output$est$Gender, equals("$\\eta^2_G = .197$"))
     expect_that(tw_aov_output$est$Dosage, is_a("character"))
-    expect_that(tw_aov_output$est$Dosage, equals("$\\eta^2_G = .02$"))
+    expect_that(tw_aov_output$est$Dosage, equals("$\\eta^2_G = .016$"))
     expect_that(tw_aov_output$est$Gender_Dosage, is_a("character"))
-    expect_that(tw_aov_output$est$Gender_Dosage, equals("$\\eta^2_G = .00$"))
+    expect_that(tw_aov_output$est$Gender_Dosage, equals("$\\eta^2_G = .000$"))
 
     # full
     expect_that(tw_aov_output$full, is_a("list"))
     expect_that(length(tw_aov_output$full), equals(3))
     expect_that(names(tw_aov_output$full), equals(c("Gender", "Dosage", "Gender_Dosage")))
     expect_that(tw_aov_output$full$Gender, is_a("character"))
-    expect_that(tw_aov_output$full$Gender, equals("$F(1, 12) = 2.95$, $p = .111$, $\\eta^2_G = .20$"))
+    expect_that(tw_aov_output$full$Gender, equals("$F(1, 12) = 2.95$, $p = .111$, $\\eta^2_G = .197$"))
     expect_that(tw_aov_output$full$Dosage, is_a("character"))
-    expect_that(tw_aov_output$full$Dosage, equals("$F(1, 12) = 0.20$, $p = .666$, $\\eta^2_G = .02$"))
+    expect_that(tw_aov_output$full$Dosage, equals("$F(1, 12) = 0.20$, $p = .666$, $\\eta^2_G = .016$"))
     expect_that(tw_aov_output$full$Gender_Dosage, is_a("character"))
-    expect_that(tw_aov_output$full$Gender_Dosage, equals("$F(1, 12) = 0.00$, $p = .962$, $\\eta^2_G = .00$"))
+    expect_that(tw_aov_output$full$Gender_Dosage, equals("$F(1, 12) = 0.00$, $p = .962$, $\\eta^2_G = .000$"))
 
     # table
     expect_that(tw_aov_output$table, is_a("data.frame"))
     expect_that(nrow(tw_aov_output$table), equals(3))
-    expect_that(colnames(tw_aov_output$table), equals(c("Term", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
-    expect_that(tw_aov_output$table$Term, equals(c("Gender", "Dosage", "Gender $\\times$ Dosage")))
+    expect_that(colnames(tw_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
+    expect_that(tw_aov_output$table$Effect, equals(c("Gender", "Dosage", "Gender $\\times$ Dosage")))
 
     # Other classes
     tw_aov_Anova_output <- apa_print(car::Anova(tw_aov))
@@ -131,7 +131,7 @@ test_that(
 
 
     tw_afex_data <- cbind(id = 1:nrow(tw_data), tw_data)
-    tw_afex_aov <- afex::ez.glm(
+    tw_afex_aov <- afex::aov_ez(
       data = tw_afex_data
       , id = "id"
       , dv = "Alertness"
@@ -168,20 +168,20 @@ test_that(
     expect_that(length(rm_aov_output$est), equals(1))
     expect_that(names(rm_aov_output$est), equals("Valence"))
     expect_that(rm_aov_output$est$Valence, is_a("character"))
-    expect_that(rm_aov_output$est$Valence, equals("$\\eta^2_G = .98$"))
+    expect_that(rm_aov_output$est$Valence, equals("$\\eta^2_G = .93$"))
 
     # full
     expect_that(rm_aov_output$full, is_a("list"))
     expect_that(length(rm_aov_output$full), equals(1))
     expect_that(names(rm_aov_output$full), equals("Valence"))
     expect_that(rm_aov_output$full$Valence, is_a("character"))
-    expect_that(rm_aov_output$full$Valence, equals("$F(2, 8) = 189.11$, $p < .001$, $\\eta^2_G = .98$"))
+    expect_that(rm_aov_output$full$Valence, equals("$F(2, 8) = 189.11$, $p < .001$, $\\eta^2_G = .93$"))
 
     # Other classes
     rm_aov_summary_output <- apa_print(summary(rm_aov))
     expect_that(rm_aov_summary_output, is_identical_to(rm_aov_output))
 
-    rm_afex_aov <- afex::ez.glm(
+    rm_afex_aov <- afex::aov_ez(
       data = rm_data
       , id = "Subject"
       , dv = "Recall"
@@ -193,7 +193,7 @@ test_that(
     expect_that(rm_afex_aov_output, is_identical_to(rm_aov_output))
 
 
-    rm_afex_anova.mlm <- afex::ez.glm(
+    rm_afex_anova.mlm <- afex::aov_ez(
       data = rm_data
       , id = "Subject"
       , dv = "Recall"
@@ -241,28 +241,28 @@ test_that(
     expect_that(length(tw_rm_aov_output$est), equals(3))
     expect_that(names(tw_rm_aov_output$est), equals(c("Task", "Valence", "Task_Valence")))
     expect_that(tw_rm_aov_output$est$Task, is_a("character"))
-    expect_that(tw_rm_aov_output$est$Task, equals("$\\eta^2_G = .32$"))
+    expect_that(tw_rm_aov_output$est$Task, equals("$\\eta^2_G = .324$"))
     expect_that(tw_rm_aov_output$est$Valence, is_a("character"))
-    expect_that(tw_rm_aov_output$est$Valence, equals("$\\eta^2_G = .14$"))
+    expect_that(tw_rm_aov_output$est$Valence, equals("$\\eta^2_G = .136$"))
     expect_that(tw_rm_aov_output$est$Task_Valence, is_a("character"))
-    expect_that(tw_rm_aov_output$est$Task_Valence, equals("$\\eta^2_G = .02$"))
+    expect_that(tw_rm_aov_output$est$Task_Valence, equals("$\\eta^2_G = .022$"))
 
     # full
     expect_that(tw_rm_aov_output$full, is_a("list"))
     expect_that(length(tw_rm_aov_output$full), equals(3))
     expect_that(names(tw_rm_aov_output$full), equals(c("Task", "Valence", "Task_Valence")))
     expect_that(tw_rm_aov_output$full$Task, is_a("character"))
-    expect_that(tw_rm_aov_output$full$Task, equals("$F(1, 4) = 7.35$, $p = .054$, $\\eta^2_G = .32$"))
+    expect_that(tw_rm_aov_output$full$Task, equals("$F(1, 4) = 7.35$, $p = .054$, $\\eta^2_G = .324$"))
     expect_that(tw_rm_aov_output$full$Valence, is_a("character"))
-    expect_that(tw_rm_aov_output$full$Valence, equals("$F(2, 8) = 1.46$, $p = .288$, $\\eta^2_G = .14$"))
+    expect_that(tw_rm_aov_output$full$Valence, equals("$F(2, 8) = 1.46$, $p = .288$, $\\eta^2_G = .136$"))
     expect_that(tw_rm_aov_output$full$Task_Valence, is_a("character"))
-    expect_that(tw_rm_aov_output$full$Task_Valence, equals("$F(2, 8) = 0.29$, $p = .755$, $\\eta^2_G = .02$"))
+    expect_that(tw_rm_aov_output$full$Task_Valence, equals("$F(2, 8) = 0.29$, $p = .755$, $\\eta^2_G = .022$"))
 
     # Other classes
     tw_rm_aov_summary_output <- apa_print(summary(tw_rm_aov))
     expect_that(tw_rm_aov_summary_output, is_identical_to(tw_rm_aov_output))
 
-    tw_rm_afex_aov <- afex::ez.glm(
+    tw_rm_afex_aov <- afex::aov_ez(
       data = tw_rm_data
       , id = "Subject"
       , dv = "Recall"
@@ -277,9 +277,9 @@ test_that(
     tw_rm_aov_output <- apa_print(tw_rm_aov, observed = "Task")
 
     expect_that(tw_rm_aov_output$est$Valence, is_a("character"))
-    expect_that(tw_rm_aov_output$est$Valence, equals("$\\eta^2_G = .10$"))
+    expect_that(tw_rm_aov_output$est$Valence, equals("$\\eta^2_G = .096$"))
     expect_that(tw_rm_aov_output$est$Task_Valence, is_a("character"))
-    expect_that(tw_rm_aov_output$est$Task_Valence, equals("$\\eta^2_G = .01$"))
+    expect_that(tw_rm_aov_output$est$Task_Valence, equals("$\\eta^2_G = .015$"))
   }
 )
 

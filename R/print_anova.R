@@ -38,6 +38,7 @@ print_anova <- function(
   validate(x, check_class = "apa_variance_table")
   if(!is.null(observed)) validate(observed, check_class = "character")
   validate(es, check_class = "character")
+  if(!all(es %in% c("pes", "ges"))) stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
   validate(in_paren, check_class = "logical", check_length = 1)
 
   if(in_paren) {
@@ -71,15 +72,20 @@ print_anova <- function(
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
-  x[, c("df", "df_res")] <- apply(X = x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
+  x[, c("df", "df_res")] <- apply(x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
   x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 3, margin = 2, gt1 = FALSE)
 
+  # Assemble table
   anova_table <- data.frame(x[, c("term", "statistic", "df", "df_res", "p.value", es)], row.names = NULL)
   anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
+
+  ## Define appropriate column names
+  es_long <- c()
+  if("pes" %in% es) {
+    es_long <- c(es_long, "$\\eta^2_p$")
+  }
   if("ges" %in% es) {
-    es_long <-"$\\eta^2_G$"
-  } else if("pes" %in% es) {
-    es_long <-"$\\eta^2_p$"
+    es_long <- c(es_long, "$\\eta^2_G$")
   }
 
   correction_type <- attr(x, "correction")
@@ -89,7 +95,7 @@ print_anova <- function(
     colnames(anova_table) <- c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", es_long)
   }
 
-  # Add 'equals' where necessary
+  ## Add 'equals' where necessary
   eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
   for (i in eq) {
     x$p.value[i] <- paste0("= ", x$p.value[i])
@@ -98,11 +104,11 @@ print_anova <- function(
   # Concatenate character strings and return as named list
   apa_res <- list()
 
-  apa_res$stat <- apply(x[, -1], 1, function(y) {
+  apa_res$stat <- apply(x, 1, function(y) {
     paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], "$, $p ", y["p.value"], "$")
   })
 
-  apa_res$est <- apply(x[, -1], 1, function(y) {
+  apa_res$est <- apply(x, 1, function(y) {
     apa_est <- c()
     if("pes" %in% es) {
       apa_est <- c(apa_est, paste0("$\\eta^2_p = ", y["pes"], "$"))

@@ -26,6 +26,10 @@ test_that(
     expect_that(names(lm_fit_output$stat$modelfit), equals("r2"))
     expect_that(lm_fit_output$stat$modelfit$r2, is_a("character"))
 
+    expect_that(lm_fit_output$stat$Intercept, equals("$t(18) = 22.85$, $p < .001$"))
+    expect_that(lm_fit_output$stat$groupTrt, equals("$t(18) = -1.19$, $p = .249$"))
+    expect_that(lm_fit_output$stat$modelfit$r2, equals("$F(1, 18) = 1.42$, $p = .249$"))
+
     # est
     expect_that(lm_fit_output$est, is_a("list"))
     expect_that(length(lm_fit_output$est), equals(3))
@@ -36,6 +40,13 @@ test_that(
     expect_that(length(lm_fit_output$est$modelfit), equals(4))
     expect_that(names(lm_fit_output$est$modelfit), equals(c("r2", "r2_adj", "aic", "bic")))
     expect_that(all(unlist(lapply(lm_fit_output$est$modelfit, is.character))), is_true())
+
+    expect_that(lm_fit_output$est$Intercept, equals("$b = 5.03$, 95\\% CI $[4.57$, $5.49]$"))
+    expect_that(lm_fit_output$est$groupTrt, equals("$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$"))
+    expect_that(lm_fit_output$est$modelfit$r2, equals("$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$"))
+    expect_that(lm_fit_output$est$modelfit$r2_adj, equals("$R^2_{adj} = .02$"))
+    expect_that(lm_fit_output$est$modelfit$aic, equals("$AIC = 46.18$"))
+    expect_that(lm_fit_output$est$modelfit$bic, equals("$BIC = 49.16$"))
 
     # full
     expect_that(lm_fit_output$full, is_a("list"))
@@ -48,34 +59,49 @@ test_that(
     expect_that(names(lm_fit_output$full$modelfit), equals("r2"))
     expect_that(lm_fit_output$full$modelfit$r2, is_a("character"))
 
+    expect_that(lm_fit_output$full$Intercept, equals("$b = 5.03$, 95\\% CI $[4.57$, $5.49]$, $t(18) = 22.85$, $p < .001$"))
+    expect_that(lm_fit_output$full$groupTrt, equals("$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$, $t(18) = -1.19$, $p = .249$"))
+    expect_that(lm_fit_output$full$modelfit$r2, equals("$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"))
+
     # table
     expect_that(lm_fit_output$table, is_a("data.frame"))
     expect_that(nrow(lm_fit_output$table), equals(2))
-    expect_that(colnames(lm_fit_output$table), equals(c("Term", "$b$", "95\\% CI", "$t$", "$df$", "$p$")))
+    expect_that(colnames(lm_fit_output$table), equals(c("Predictor", "$b$", "95\\% CI", "$t(18)$", "$p$")))
 
-    load("data/lm_fit_output1.Rdata")
-    expect_that(lm_fit_output, is_identical_to(correct_output))
-
+    # Manual CI
     lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
-    load("data/lm_fit_output2.Rdata")
-    expect_that(lm_fit_output, is_identical_to(correct_output))
+    expect_that(lm_fit_output$full$Intercept, equals("$b = 5.03$, 95\\% CI $[1.00$, $2.00]$, $t(18) = 22.85$, $p < .001$"))
+    expect_that(lm_fit_output$full$groupTrt, equals("$b = -0.37$, 95\\% CI $[1.00$, $2.00]$, $t(18) = -1.19$, $p = .249$"))
+    expect_that(lm_fit_output$full$modelfit$r2, equals("$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$"))
 
+    # Set name of estimate
     lm_fit_output <- apa_print(lm_fit, est_name = "\\beta")
-    load("data/lm_fit_output3.Rdata")
-    expect_that(lm_fit_output, is_identical_to(correct_output))
+    expect_that(lm_fit_output$est$Intercept, equals("$\\beta = 5.03$, 95\\% CI $[4.57$, $5.49]$"))
+    expect_that(lm_fit_output$est$groupTrt, equals("$\\beta = -0.37$, 95\\% CI $[-1.03$, $0.28]$"))
+    expect_that(lm_fit_output$est$modelfit$r2, equals("$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$"))
+    expect_that(lm_fit_output$est$modelfit$r2_adj, equals("$R^2_{adj} = .02$"))
+    expect_that(lm_fit_output$est$modelfit$aic, equals("$AIC = 46.18$"))
+    expect_that(lm_fit_output$est$modelfit$bic, equals("$BIC = 49.16$"))
+    expect_that(colnames(lm_fit_output$table), equals(c("Predictor", "$\\beta$", "95\\% CI", "$t(18)$", "$p$")))
 
+    # In parentheses
     lm_fit_output <- apa_print(lm_fit, in_paren = TRUE)
-    load("data/lm_fit_output4.Rdata")
-    expect_that(lm_fit_output, is_identical_to(correct_output))
+    expect_that(lm_fit_output$full$Intercept, equals("$b = 5.03$, 95\\% CI $[4.57$, $5.49]$, $t[18] = 22.85$, $p < .001$"))
+    expect_that(lm_fit_output$full$groupTrt, equals("$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$, $t[18] = -1.19$, $p = .249$"))
+    expect_that(lm_fit_output$full$modelfit$r2, equals("$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F[1, 18] = 1.42$, $p = .249$"))
+    expect_that(colnames(lm_fit_output$table), equals(c("Predictor", "$b$", "95\\% CI", "$t(18)$", "$p$")))
 
+    # Standardized regression coefficients
     trt <- rep(trt, 2)
     ctl <- rep(ctl, 2)
     lm_fit <- lm(scale(trt) ~ scale(ctl))
     lm_fit_output <- apa_print(lm_fit, standardized = TRUE)
 
-    load("data/lm_fit_output5.Rdata")
-    expect_that(lm_fit_output, is_identical_to(correct_output))
+    expect_that(lm_fit_output$full$Intercept, equals("$b^* = .00$, 95\\% CI $[-.43$, $.43]$, $t(18) = 0.00$, $p > .999$"))
+    expect_that(lm_fit_output$full$z_ctl, equals("$b^* = -.46$, 95\\% CI $[-.90$, $-.02]$, $t(18) = -2.18$, $p = .042$"))
+    expect_that(colnames(lm_fit_output$table), equals(c("Predictor", "$b^*$", "95\\% CI", "$t(18)$", "$p$")))
 
+    # No CI information
     expect_that(apa_print(lm_fit, ci = NULL), throws_error("The parameter 'ci' is NULL."))
   }
 )

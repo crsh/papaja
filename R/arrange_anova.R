@@ -129,7 +129,7 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
 
   variance_table <- as.data.frame(variance_table)
 
-  # Obtain positons of statistics in data.frame
+  # Obtain positions of statistics in data.frame
   old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
   nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
   colnames(variance_table) == old

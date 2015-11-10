@@ -125,7 +125,7 @@ apa_print.htest <- function(
     est <- NULL
   } else {
     if(is.null(est_name)) {
-      warning("Cannot determine name of estimate supplied in", deparse(substitute(x)), " of class 'htest'. Estimate is omitted from output string. Please set parameter 'est_name'.")
+      warning("Cannot determine name of estimate supplied in ", deparse(substitute(x)), " of class 'htest'. Estimate is omitted from output string. Please set parameter 'est_name' to obtain an estimate.")
       est <- NULL
     } else if(!is.null(names(x$estimate)) && convert_stat_name(names(x$estimate)) == "\\Delta M") {
       est <- do.call(function(...) printnum(diff(x$estimate), ...), ellipsis)
