@@ -18,7 +18,8 @@
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param intercept Numeric. Adds a horizontal line to the plot.
+#' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
+#'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}
@@ -86,7 +87,7 @@ apa_lineplot <- function(
   validate(level, check_class = "numeric", check_range = c(0,1))
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
-  if(!is.null(intercept)) validate(intercept, check_class = "numeric")
+  if(!is.null(intercept)) validate(intercept, check_mode = "numeric")
 
   ellipsis <- list(...)
   output <- list()
@@ -507,7 +508,18 @@ apa.lineplot.core<-function(yy, ee, id, dv, factors, intercept=NULL, ...) {
   # draw intercept
 
   if(!is.null(intercept)){
-    lines(x=ellipsis$xlim, y=rep(intercept,2))
+    if(is.matrix(intercept)) {
+      diff <- (ellipsis$xlim[2] - ellipsis$xlim[1])/(ncol(intercept)-1)
+      x.vector <- seq(ellipsis$xlim[1], ellipsis$xlim[2], diff)
+      for(i in 1:nrow(intercept)) {
+        for (j in 1:ncol(intercept)) {
+          lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2))
+          print(list(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2)))
+        }
+      }
+    } else {
+      lines(x = ellipsis$xlim, y = rep(intercept,2))
+    }
   }
   return(list(ellipsis, args.axis, args.points, args.lines, args.legend))
 }
