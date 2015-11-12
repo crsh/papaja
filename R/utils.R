@@ -5,7 +5,8 @@
 #' @param x Function input.
 #' @param name Character. Name of variable to validate; if \code{NULL} variable name of object supplied to \code{x} is used.
 #' @param check_class Character. Name of class to expect.
-#' @param check_integer Logical. If \code{TRUE} an object of type \code{integer} or an whole number \code{numeric} is expected.
+#' @param check_mode Character. Name of mode to expect.
+#' @param check_integer Logical. If \code{TRUE} an object of type \code{integer} or a whole number \code{numeric} is expected.
 #' @param check_NA Logical. If \code{TRUE} an non-\code{NA} object is expected.
 #' @param check_infinite Logical. If \code{TRUE} a finite object is expected.
 #' @param check_length Integer. Length of the object to expect.
@@ -23,6 +24,7 @@ validate <- function(
   x
   , name = NULL
   , check_class = NULL
+  , check_mode = NULL
   , check_integer = FALSE
   , check_NA = TRUE
   , check_infinite = TRUE
@@ -47,6 +49,10 @@ validate <- function(
 
   for(x.class in check_class) {
     if(!is(x, x.class)) stop(paste("The parameter '", name, "' must be of class '", x.class, "'.", sep = ""))
+  }
+
+  for (x.mode in check_mode) {
+    if(!check_mode %in% mode(x)) stop(paste("The parameter '", name, "' must be of mode '", x.mode, "'.", sep = ""))
   }
 
   if(!is.null(check_range) && any(x < check_range[1] | x > check_range[2])) stop(paste("The parameter '", name, "' must be between ", check_range[1], " and ", check_range[2], ".", sep = ""))
