@@ -133,9 +133,12 @@ apa_print.summary.Anova.mlm <- function(x, correction = "GG", ...) {
 #' @export
 
 apa_print.afex_aov <- function(x, correction = "GG", ...) {
-  summary_x <- summary(x$Anova)
-
-  apa_print(summary_x, correction = correction, ...)
+  if("Anova.mlm" %in% class(x$Anova)) {
+    summary_x <- summary(x$Anova)
+    apa_print(summary_x, correction = correction, ...)
+  } else {
+    apa_print(x$Anova, ...)
+  }
 }
 
 
