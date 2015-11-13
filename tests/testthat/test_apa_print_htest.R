@@ -59,7 +59,7 @@ test_that(
 test_that(
   "Wilcoxon tests"
   , {
-    wilcox_test <- wilcox.test(extra ~ group, data = sleep)
+    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep))
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_that(wilcox_test_output, is_a("list"))
@@ -69,7 +69,7 @@ test_that(
 
     expect_that(wilcox_test_output$stat, equals("$W = 25.50$, $p = .069$"))
 
-    wilcox_test <- wilcox.test(extra ~ group, data = sleep, conf.int = TRUE)
+    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep, conf.int = TRUE))
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_that(length(wilcox_test_output), equals(3))
@@ -82,18 +82,18 @@ test_that(
     expect_that(wilcox_test_output$est, equals("$Mdn_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$"))
     expect_that(wilcox_test_output$full, equals("$Mdn_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$, $W = 25.50$, $p = .069$"))
 
-    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE)
+    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep, paired = TRUE))
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_that(wilcox_test_output$stat, equals("$V = 0.00$, $p = .009$"))
 
-    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, conf.int = TRUE)
+    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep, paired = TRUE, conf.int = TRUE))
     wilcox_test_output <- apa_print(wilcox_test)
     expect_that(wilcox_test_output$stat, equals("$V = 0.00$, $p = .009$"))
     expect_that(wilcox_test_output$est, equals("$Mdn^* = -1.40$, 95\\% CI $[-2.95$, $-1.05]$"))
     expect_that(wilcox_test_output$full, equals("$Mdn^* = -1.40$, 95\\% CI $[-2.95$, $-1.05]$, $V = 0.00$, $p = .009$"))
 
-    wilcox_test <- wilcox.test(sleep$extra, mu = 0, conf.int = TRUE)
+    wilcox_test <- suppressWarnings(wilcox.test(sleep$extra, mu = 0, conf.int = TRUE))
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_that(wilcox_test_output$stat, equals("$V = 162.50$, $p = .007$"))
@@ -158,7 +158,7 @@ test_that(
 
     expect_error(apa_print(prop_test), "Please provide the sample size to report.")
 
-    prop_test_output <- apa_print(prop_test, n = sum(patients))
+    prop_test_output <- suppressWarnings(apa_print(prop_test, n = sum(patients)))
 
     expect_that(prop_test_output, is_a("list"))
     expect_that(length(prop_test_output), equals(1))
@@ -167,7 +167,7 @@ test_that(
 
     expect_that(prop_test_output$stat, equals("$\\chi^2(3, n = 397) = 12.60$, $p = .006$"))
 
-    prop_test_output <- apa_print(prop_test, n = sum(patients), in_paren = TRUE)
+    prop_test_output <- suppressWarnings(apa_print(prop_test, n = sum(patients), in_paren = TRUE))
     expect_that(prop_test_output$stat, equals("$\\chi^2[3, n = 397] = 12.60$, $p = .006$"))
   }
 )
