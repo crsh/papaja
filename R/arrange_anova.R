@@ -109,14 +109,8 @@ arrange_anova.summary.aovlist <- function(x) {
 #' @method arrange_anova summary.Anova.mlm
 
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
-  tmp <- x$univariate.tests
-  class(tmp) <- NULL
 
-  #################################### Don't loose error strata
-  variance_table <- data.frame(tmp)[-1, ] # Remove intercept term
-
-
-  colnames(variance_table) <- colnames(tmp)
+  variance_table <- as.data.frame(x$univariate.tests)
 
   # Correct degrees of freedom
   if(nrow(x$sphericity.tests) > 0) {
@@ -137,8 +131,6 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
       }
     }
   }
-
-  variance_table <- as.data.frame(variance_table)
 
   # Obtain positions of statistics in data.frame
   old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
