@@ -50,30 +50,34 @@ print_anova <- function(
   rownames(x) <- sanitize_terms(x$term)
 
   # Calculate generalized eta squared
-  ## This code is a copy from afex by Henrik Singmann who said that it is basically a copy
-  ## from ezANOVA by Mike Lawrence
-  if(!is.null(observed)) {
-    obs <- rep(FALSE, nrow(x))
-    for(i in observed){
-      if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) stop(paste0("Observed variable not in data: ", i, collapse = " "))
-      obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+  if("ges" %in% es) {
+    ## This code is a copy from afex by Henrik Singmann who said that it is basically a copy
+    ## from ezANOVA by Mike Lawrence
+    if(!is.null(observed)) {
+      obs <- rep(FALSE, nrow(x))
+      for(i in observed){
+        if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) stop(paste0("Observed variable not in data: ", i, collapse = " "))
+        obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+      }
+      obs_SSn1 <- sum(x$sumsq*obs)
+      obs_SSn2 <- x$sumsq*obs
+    } else {
+      obs_SSn1 <- 0
+      obs_SSn2 <- 0
     }
-    obs_SSn1 <- sum(x$sumsq*obs)
-    obs_SSn2 <- x$sumsq*obs
-  } else {
-    obs_SSn1 <- 0
-    obs_SSn2 <- 0
+    x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
   }
-  x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
 
   # Calculate partial eta squared
-  x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+  if("pes" %in% es) {
+    x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+  }
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
   x[, c("df", "df_res")] <- apply(x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
-  x[, c("ges","pes")] <- printnum(x[, c("ges","pes")], digits = 3, margin = 2, gt1 = FALSE)
+  x[, es] <- printnum(x[, es], digits = 3, margin = 2, gt1 = FALSE)
 
   # Assemble table
   anova_table <- data.frame(x[, c("term", "statistic", "df", "df_res", "p.value", es)], row.names = NULL)

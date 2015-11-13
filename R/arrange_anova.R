@@ -76,6 +76,14 @@ arrange_anova.anova <- function(x) {
 
 arrange_anova.summary.aov <- function(x) {
   variance_table <- broom::tidy(x[[1]])
+
+  #################################### Don't loose error strata
+  if(nrow(variance_table) == 1 && rownames(variance_table) == "Residuals") {
+    variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
+  } else {
+
+  }
+  ####################################
   variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
   variance_table$df_res <- variance_table[nrow(variance_table), "df"]
   variance_table <- variance_table[-nrow(variance_table), ]
@@ -89,9 +97,8 @@ arrange_anova.summary.aov <- function(x) {
 arrange_anova.summary.aovlist <- function(x) {
   x <- lapply(x, arrange_anova.summary.aov)
   variance_table <- do.call("rbind", x)
-  variance_table <- data.frame(variance_table, row.names = NULL)
+  rownames(variance_table) <- NULL
 
-  class(variance_table) <- c("apa_variance_table", class(variance_table))
   attr(variance_table, "correction") <- "none"
 
   variance_table
@@ -104,7 +111,11 @@ arrange_anova.summary.aovlist <- function(x) {
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
   tmp <- x$univariate.tests
   class(tmp) <- NULL
+
+  #################################### Don't loose error strata
   variance_table <- data.frame(tmp)[-1, ] # Remove intercept term
+
+
   colnames(variance_table) <- colnames(tmp)
 
   # Correct degrees of freedom
