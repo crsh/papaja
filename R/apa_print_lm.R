@@ -119,7 +119,7 @@ apa_print.lm <- function(
     paste0("$t", op, glance_x$df.residual, cp, " = ",  printnum(y["statistic"]), "$, $p ", eq, p, "$")
   })
 
-  if(is.matrix(ci)) {  
+  if(is.matrix(ci)) {
     conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
     conf_level <- 100 - conf_level[1] * 2
   } else {
@@ -148,7 +148,7 @@ apa_print.lm <- function(
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
   regression_table$p.value <- printp(regression_table$p.value)
 
-  colnames(regression_table) <- c("Variable", paste0("$", est_name, "$"), paste0("$", conf_level, "\\% $CI$"), paste0("$t(", glance_x$df.residual, ")$"), "$p$")
+  colnames(regression_table) <- c("Predictor", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), paste0("$t(", glance_x$df.residual, ")$"), "$p$")
 
   apa_res$table <- regression_table
 
@@ -176,7 +176,7 @@ apa_print.lm <- function(
   } else {
     apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
   }
-  
+
   apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
   apa_res$est$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
   apa_res$est$modelfit$bic <- paste0("$BIC = ", printnum(glance_x$BIC), "$")
