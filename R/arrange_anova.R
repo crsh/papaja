@@ -49,12 +49,13 @@ arrange_anova.anova <- function(x) {
 
     class(x) <- c("apa_model_comp", class(x))
 
-  } else if(is.null(object[["Sum Sq"]])) {
+  } else if(is.null(object[["Sum Sq"]])) { # car::levenTest
     x <- x[, -which(colnames(x) %in% c("sumsq", "sumsq_err"))]
 
     x[, c("df", "statistic", "p.value")] <- object[!resid_row, c("Df", "F value", "Pr(>F)")]
     x$df_res <- object[resid_row, "Df"]
     x$term <- rownames(object)[!resid_row]
+    class(x) <- c("apa_variance_table", class(x))
 
   } else { # Analysis of variance
 

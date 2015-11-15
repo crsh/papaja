@@ -390,8 +390,8 @@ test_that(
 
     levene_test_output <- apa_print(levene_test)
     expect_that(levene_test_output, is_a("list"))
-    expect_that(length(levene_test_output), equals(1))
-    expect_that(levene_test_output$stat$group, equals("$F(5, 39) = 1.47$, $p = .222$"))
+    expect_that(length(levene_test_output), equals(2))
+    expect_equal(levene_test_output$stat, "$F(5, 39) = 1.47$, $p = .222$", check.attributes = FALSE)
   }
 )
 
