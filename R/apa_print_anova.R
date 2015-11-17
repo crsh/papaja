@@ -134,6 +134,13 @@ apa_print.summary.Anova.mlm <- function(x, correction = "GG", intercept = FALSE,
 #' @export
 
 apa_print.afex_aov <- function(x, correction = "GG", intercept = FALSE, ...) {
+  validate(intercept, check_class = "logical", check_length = 1)
+
+  afex_aov_intercept <- "(Intercept)" %in% rownames(x$anova_table)
+  if(afex_aov_intercept != intercept & afex_aov_intercept) {
+    warning("In your call of afex::aov_car() you requested the intercept term, but now you did not (in apa_print 'intercept = FALSE' is the default). Thus, the intercept term will be omitted; make sure this is what you want.")
+  }
+
   if("Anova.mlm" %in% class(x$Anova)) {
     summary_x <- summary(x$Anova)
     apa_print(summary_x, correction = correction, intercept = intercept, ...)
