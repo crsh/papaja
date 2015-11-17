@@ -5,7 +5,7 @@
 #' guidelines. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
-#' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
+#' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 
@@ -39,7 +39,7 @@ print_anova <- function(
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
     validate(es, check_class = "character")
-    if(!all(es %in% c("pes", "ges"))) stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
+    if(!all(es %in% c("pes", "ges", "es"))) stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
   }
   validate(in_paren, check_class = "logical", check_length = 1)
 
@@ -75,6 +75,11 @@ print_anova <- function(
     x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
   }
 
+  # Calculate eta squared
+  if("es" %in% es) {
+    x$es <- x$sumsq / sum(x$sumsq + unique(x$sumsq_err))
+  }
+
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
@@ -92,6 +97,9 @@ print_anova <- function(
   }
   if("ges" %in% es) {
     es_long <- c(es_long, "$\\eta^2_G$")
+  }
+  if("es" %in% es) {
+    es_long <- c(es_long, "$\\eta^2$")
   }
 
   correction_type <- attr(x, "correction")
@@ -122,6 +130,9 @@ print_anova <- function(
       }
       if("ges" %in% es) {
         apa_est <- c(apa_est, paste0("$\\eta^2_G = ", y["ges"], "$"))
+      }
+      if("es" %in% es) {
+        apa_est <- c(apa_est, paste0("$\\eta^2 = ", y["es"], "$"))
       }
       apa_est <- paste(apa_est, collapse = ", ")
     })
