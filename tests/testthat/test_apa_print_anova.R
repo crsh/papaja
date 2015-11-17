@@ -58,6 +58,13 @@ test_that(
     expect_that(ow_afex_aov_output, is_identical_to(ow_aov_output))
 
     ow_afex_aov_output <- apa_print(ow_afex_aov$Anova)
+    expect_that(ow_afex_aov_output, is_identical_to(ow_aov_output))
+
+    ow_afex_aov_output <- apa_print(ow_afex_aov)
+    expect_that(ow_afex_aov_output, is_identical_to(ow_aov_output))
+
+    # With intercept
+    ow_afex_aov_output <- apa_print(ow_afex_aov$Anova, intercept = TRUE)
 
     expect_that(ow_afex_aov_output, is_a("list"))
     expect_that(length(ow_afex_aov_output), equals(4))
@@ -96,8 +103,9 @@ test_that(
     expect_that(colnames(ow_afex_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
     expect_that(ow_afex_aov_output$table$Effect, equals(c("Intercept", "Dosage")))
 
-    ow_afex_aov_output2 <- apa_print(ow_afex_aov)
+    ow_afex_aov_output2 <- apa_print(ow_afex_aov, intercept = TRUE)
     expect_that(ow_afex_aov_output2, is_identical_to(ow_afex_aov_output))
+
 
     # Other effect sizes
     ow_aov_output <- apa_print(ow_aov, es = "pes")
@@ -182,7 +190,8 @@ test_that(
     tw_afex_aov_output <- apa_print(tw_afex_aov$aov)
     expect_that(tw_afex_aov_output, is_identical_to(tw_aov_output))
 
-    tw_afex_aov_output <- apa_print(tw_afex_aov$Anova)
+    # With intercept
+    tw_afex_aov_output <- apa_print(tw_afex_aov$Anova, intercept = TRUE)
 
     expect_that(tw_afex_aov_output, is_a("list"))
     expect_that(length(tw_afex_aov_output), equals(4))
@@ -233,7 +242,7 @@ test_that(
     expect_that(colnames(tw_afex_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
     expect_that(tw_afex_aov_output$table$Effect, equals(c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage")))
 
-    tw_afex_aov_output2 <- apa_print(tw_afex_aov)
+    tw_afex_aov_output2 <- apa_print(tw_afex_aov, intercept = TRUE)
     expect_that(tw_afex_aov_output2, is_identical_to(tw_afex_aov_output))
 
     # Observed effects

@@ -8,6 +8,7 @@
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
+#' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.
 #' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
@@ -110,10 +111,10 @@ apa_print.summary.aovlist <- function(x, ...) {
 #' @method apa_print Anova.mlm
 #' @export
 
-apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
+apa_print.Anova.mlm <- function(x, correction = "GG", intercept = FALSE, ...) {
   summary_x <- summary(x, multivariate = FALSE) # car:::summary.Anova.mlm
 
-  apa_print(summary_x, correction = correction, ...)
+  apa_print(summary_x, correction = correction, intercept = intercept, ...)
 }
 
 
@@ -121,10 +122,10 @@ apa_print.Anova.mlm <- function(x, correction = "GG", ...) {
 #' @method apa_print summary.Anova.mlm
 #' @export
 
-apa_print.summary.Anova.mlm <- function(x, correction = "GG", ...) {
+apa_print.summary.Anova.mlm <- function(x, correction = "GG", intercept = FALSE, ...) {
   variance_table <- arrange_anova(x, correction)
 
-  print_anova(variance_table, ...)
+  print_anova(variance_table, intercept = intercept, ...)
 }
 
 
@@ -132,12 +133,12 @@ apa_print.summary.Anova.mlm <- function(x, correction = "GG", ...) {
 #' @method apa_print afex_aov
 #' @export
 
-apa_print.afex_aov <- function(x, correction = "GG", ...) {
+apa_print.afex_aov <- function(x, correction = "GG", intercept = FALSE, ...) {
   if("Anova.mlm" %in% class(x$Anova)) {
     summary_x <- summary(x$Anova)
-    apa_print(summary_x, correction = correction, ...)
+    apa_print(summary_x, correction = correction, intercept = intercept, ...)
   } else {
-    apa_print(x$Anova, ...)
+    apa_print(x$Anova, intercept = intercept, ...)
   }
 }
 

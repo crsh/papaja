@@ -5,6 +5,7 @@
 #' guidelines. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
+#' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
@@ -30,6 +31,7 @@
 
 print_anova <- function(
   x
+  , intercept = FALSE
   , observed = NULL
   , es = "ges"
   , in_paren = FALSE
@@ -45,6 +47,7 @@ print_anova <- function(
     validate(x, check_class = "apa_variance_table")
   }
 
+  validate(intercept, check_class = "logical", check_length = 1)
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
     validate(es, check_class = "character")
@@ -91,8 +94,9 @@ print_anova <- function(
     x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
   }
 
-  # Remove dummy term for aovlists
+  # Remove dummy term for aovlists and intercept if necessary
   if("aovlist_residuals" %in% x$term) x <- x[x$term != "aovlist_residuals", ]
+  if(!intercept) x <- x[x$term != "(Intercept)", ]
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
