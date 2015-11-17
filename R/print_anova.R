@@ -34,8 +34,17 @@ print_anova <- function(
   , es = "ges"
   , in_paren = FALSE
 ) {
-  validate(x, check_class = "data.frame")
-  validate(x, check_class = "apa_variance_table")
+  # When processing aovlist objects a dummy term "aovlist_residuals" is kept to preserve the SS_error of the intercept
+  # term to calculate generalized eta squared correctly. This term contains NAs.
+  if("aovlist_residuals" %in% x$term) {
+    tmp <- x[x$term != "aovlist_residuals", ]
+    validate(tmp, check_class = "data.frame")
+    validate(tmp, check_class = "apa_variance_table")
+  } else {
+    validate(x, check_class = "data.frame")
+    validate(x, check_class = "apa_variance_table")
+  }
+
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
     validate(es, check_class = "character")
@@ -57,11 +66,13 @@ print_anova <- function(
     ## from ezANOVA by Mike Lawrence
     if(!is.null(observed)) {
       obs <- rep(FALSE, nrow(x))
-      for(i in observed){
-        if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) stop(paste0("Observed variable not in data: ", i, collapse = " "))
+      for(i in observed) {
+        if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
+          stop(paste0("Observed variable not in data: ", i, collapse = " "))
+        }
         obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
       }
-      obs_SSn1 <- sum(x$sumsq*obs)
+      obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
       obs_SSn2 <- x$sumsq*obs
     } else {
       obs_SSn1 <- 0
@@ -70,15 +81,18 @@ print_anova <- function(
     x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
   }
 
+  # Calculate eta squared
+  if("es" %in% es) {
+    x$es <- x$sumsq / sum(x$sumsq + unique(x$sumsq_err))
+  }
+
   # Calculate partial eta squared
   if("pes" %in% es) {
     x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
   }
 
-  # Calculate eta squared
-  if("es" %in% es) {
-    x$es <- x$sumsq / sum(x$sumsq + unique(x$sumsq_err))
-  }
+  # Remove dummy term for aovlists
+  if("aovlist_residuals" %in% x$term) x <- x[x$term != "aovlist_residuals", ]
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)

@@ -78,16 +78,20 @@ arrange_anova.anova <- function(x) {
 arrange_anova.summary.aov <- function(x) {
   variance_table <- broom::tidy(x[[1]])
 
-  #################################### Don't loose error strata
-  if(nrow(variance_table) == 1 && rownames(variance_table) == "Residuals") {
-    variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
+  # When processing aovlist via lapply a dummy term "aovlist_residuals" preserves the SS_error of the intercept
+  # term to calculate generalized eta squared correctly later on.
+  if(nrow(variance_table) == 1 && variance_table$term == "Residuals") {
+    variance_table$sumsq_err <- variance_table$sumsq
+    variance_table$sumsq <- NA
+    variance_table$df_res <- variance_table$df
+    variance_table$df <- NA
+    variance_table$meansq <- NA
+    variance_table$term <- "aovlist_residuals"
   } else {
-
+    variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
+    variance_table$df_res <- variance_table[nrow(variance_table), "df"]
+    variance_table <- variance_table[-nrow(variance_table), ]
   }
-  ####################################
-  variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
-  variance_table$df_res <- variance_table[nrow(variance_table), "df"]
-  variance_table <- variance_table[-nrow(variance_table), ]
 
   class(variance_table) <- c("apa_variance_table", class(variance_table))
   attr(variance_table, "correction") <- "none"
@@ -110,6 +114,8 @@ arrange_anova.summary.aovlist <- function(x) {
 #' @method arrange_anova summary.Anova.mlm
 
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
+  validate(correction, check_class = "character", check_length = 1)
+
   variance_table <- as.data.frame(unclass(x$univariate.tests))
 
   # Correct degrees of freedom
@@ -132,13 +138,11 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
     }
   }
 
-  # Obtain positions of statistics in data.frame
-  old <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
-  nu <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
-  colnames(variance_table) == old
-  for (i in 1:length(old)){
-    colnames(variance_table)[colnames(variance_table) == old[i]] <- nu[i]
-  }
+  # Rearrange and rename columns
+  univariate_names <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
+  broom_names <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+  variance_table <- variance_table[, univariate_names]
+  colnames(variance_table) <- broom_names
 
   variance_table$term <- rownames(variance_table)
   variance_table <- data.frame(variance_table, row.names = NULL)
