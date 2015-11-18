@@ -15,16 +15,6 @@
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
 #' @param ... Additional arguments passed to or from other methods.
 #' @details
-#'    Currently, methods for the following objects are available:
-#'    \itemize{
-#'      \item{\code{aov}}
-#'      \item{\code{summary.aov}}
-#'      \item{\code{aovlist}}
-#'      \item{\code{summary.aovlist}}
-#'      \item{\code{anova}}
-#'      \item{\code{Anova.mlm}}
-#'    }
-#'
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
 #'
@@ -37,8 +27,9 @@
 #'    the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
 #'
 #'    \emph{"When the predictor distribution is multivariate normal, one can obtain accurate CIs for \eqn{\rho^2} with
-#'    \eqn{n \geq 50} when \eqn{p = 3}. For \eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq 100} is advisable. When the
-#'    predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939)}
+#'    \eqn{n \geq~50} when \eqn{p = 3}. For \eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq~100} is advisable. When the
+#'    predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
+#'    Algina, Keselman & Penfield, 2010)}
 #' @return
 #'    \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
 #'
