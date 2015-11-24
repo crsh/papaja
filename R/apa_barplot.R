@@ -104,6 +104,9 @@ apa_barplot <- function(
   dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
+  # remove extraneous columns from dataset
+  data <- data[, c(id, factors, dv)]
+
   # is dplyr available?
   use_dplyr <- "dplyr" %in% rownames(installed.packages())
 
