@@ -98,14 +98,18 @@ print_anova <- function(
   if("aovlist_residuals" %in% x$term) x <- x[x$term != "aovlist_residuals", ]
   if(!intercept) x <- x[x$term != "(Intercept)", ]
 
+  # Calculate MSE
+  x$MSE <- x$sumsq_err / x$df_res
+
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
   x[, c("df", "df_res")] <- apply(x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
   if(!is.null(es)) x[, es] <- printnum(x[, es], digits = 3, margin = 2, gt1 = FALSE)
+  x$MSE <- printnum(x$MSE, digits =2)
 
   # Assemble table
-  anova_table <- data.frame(x[, c("term", "statistic", "df", "df_res", "p.value", es)], row.names = NULL)
+  anova_table <- data.frame(x[, c("term", "statistic", "MSE","df", "df_res", "p.value", es)], row.names = NULL)
   anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
 
   ## Define appropriate column names
@@ -122,9 +126,9 @@ print_anova <- function(
 
   correction_type <- attr(x, "correction")
   if(!is.null(correction_type) && correction_type != "none") {
-    colnames(anova_table) <- c("Effect", "$F$", paste0("$df_1^{", correction_type, "}$"), paste0("$df_2^{", correction_type, "}$"), "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", "$MSE$", paste0("$df_1^{", correction_type, "}$"), paste0("$df_2^{", correction_type, "}$"), "$p$", es_long)
   } else {
-    colnames(anova_table) <- c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", "$MSE$", "$df_1$", "$df_2$", "$p$", es_long)
   }
 
   ## Add 'equals' where necessary

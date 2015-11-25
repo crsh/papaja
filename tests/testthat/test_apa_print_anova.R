@@ -37,7 +37,7 @@ test_that(
     # table
     expect_that(ow_aov_output$table, is_a("data.frame"))
     expect_that(nrow(ow_aov_output$table), equals(1))
-    expect_that(colnames(ow_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
+    expect_that(colnames(ow_aov_output$table), equals(c("Effect", "$F$", "$MSE$","$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
 
     # Other classes
     ow_aov_summary_output <- apa_print(summary(ow_aov))
@@ -100,7 +100,7 @@ test_that(
     # table
     expect_that(ow_afex_aov_output$table, is_a("data.frame"))
     expect_that(nrow(ow_afex_aov_output$table), equals(2))
-    expect_that(colnames(ow_afex_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
+    expect_that(colnames(ow_afex_aov_output$table), equals(c("Effect", "$F$", "$MSE$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
     expect_that(ow_afex_aov_output$table$Effect, equals(c("Intercept", "Dosage")))
 
     ow_afex_aov_output2 <- apa_print(ow_afex_aov, intercept = TRUE)
@@ -168,7 +168,7 @@ test_that(
     # table
     expect_that(tw_aov_output$table, is_a("data.frame"))
     expect_that(nrow(tw_aov_output$table), equals(3))
-    expect_that(colnames(tw_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
+    expect_that(colnames(tw_aov_output$table), equals(c("Effect", "$F$", "$MSE$","$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
     expect_that(tw_aov_output$table$Effect, equals(c("Gender", "Dosage", "Gender $\\times$ Dosage")))
 
     # Other classes
@@ -239,7 +239,7 @@ test_that(
     ## table
     expect_that(tw_afex_aov_output$table, is_a("data.frame"))
     expect_that(nrow(tw_afex_aov_output$table), equals(4))
-    expect_that(colnames(tw_afex_aov_output$table), equals(c("Effect", "$F$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
+    expect_that(colnames(tw_afex_aov_output$table), equals(c("Effect", "$F$", "$MSE$", "$df_1$", "$df_2$", "$p$", "$\\eta^2_G$")))
     expect_that(tw_afex_aov_output$table$Effect, equals(c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage")))
 
     tw_afex_aov_output2 <- apa_print(tw_afex_aov, intercept = TRUE)
