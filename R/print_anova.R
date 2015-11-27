@@ -34,6 +34,7 @@ print_anova <- function(
   , intercept = FALSE
   , observed = NULL
   , es = "ges"
+  , MSE = TRUE
   , in_paren = FALSE
 ) {
   # When processing aovlist objects a dummy term "aovlist_residuals" is kept to preserve the SS_error of the intercept
@@ -109,7 +110,11 @@ print_anova <- function(
   x$MSE <- printnum(x$MSE, digits = 2)
 
   # Assemble table
-  anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", "MSE", "p.value", es)], row.names = NULL)
+  if(MSE == TRUE){
+    anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", "MSE", "p.value", es)], row.names = NULL)
+  } else {
+    anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", "p.value", es)], row.names = NULL)
+  }
   anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
 
   ## Define appropriate column names
@@ -124,12 +129,16 @@ print_anova <- function(
     es_long <- c(es_long, "$\\eta^2$")
   }
 
+
+  MSE_long <- if(MSE) "$\\mathit{MSE}$" else NULL
   correction_type <- attr(x, "correction")
+
   if(!is.null(correction_type) && correction_type != "none") {
-    colnames(anova_table) <- c("Effect", "$F$", paste0("$df_1^{", correction_type, "}$"), paste0("$df_2^{", correction_type, "}$"), "$MSE$", "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", paste0("$\\mathit{df}_1^{", correction_type, "}$"), paste0("$\\mathit{df}_2^{", correction_type, "}$"), MSE_long, "$p$", es_long)
   } else {
-    colnames(anova_table) <- c("Effect", "$F$", "$df_1$", "$df_2$", "$MSE$", "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", MSE_long, "$p$", es_long)
   }
+
 
   ## Add 'equals' where necessary
   eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
@@ -141,7 +150,7 @@ print_anova <- function(
   apa_res <- list()
 
   apa_res$stat <- apply(x, 1, function(y) {
-    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], "$, $MSE = ", y["MSE"],"$, $p ", y["p.value"], "$")
+    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], if(MSE){ paste0("$, $\\mathit{MSE} = ", y["MSE"])} else {NULL}, "$, $p ", y["p.value"], "$")
   })
 
   if(!is.null(es)) {
