@@ -195,14 +195,14 @@ apa_barplot <- function(
         }
       }
       ee <- papaja:::fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun =mean)
-      output$Morey_CI <- Morey_CI
+
     } else {
       stop("No within-subjects factors specified.")
     }
   }
 
-
-
+  output$yy <- yy
+  output$ee <- ee
 
   # Set defaults
   ellipsis <- defaults(ellipsis,
