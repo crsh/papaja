@@ -53,6 +53,7 @@ print_anova <- function(
   if(!is.null(es)) {
     validate(es, check_class = "character")
     if(!all(es %in% c("pes", "ges", "es"))) stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
+    es <- sort(es, decreasing = TRUE)
   }
   validate(in_paren, check_class = "logical", check_length = 1)
 
