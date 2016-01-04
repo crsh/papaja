@@ -71,48 +71,18 @@ print_model_comp <- function(
       }
     )
   } else { # Bootstrap CI
+    boot_r2_ci <- delta_r2_ci(x, models, conf = ci, R = boot_samples)
+
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     model_hierarchy <- sort(r2s, index.return = TRUE)$ix
     delta_r2s <- diff(r2s[model_hierarchy])
-    model_summaries <- model_summaries[model_hierarchy]
+    delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
+    eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
 
-    apa_res$est <- sapply(
-      seq_along(delta_r2s)
-      , function(y) {
-
-        # Modified percentile bootstrap
-        # Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for an Effect Size Measure in Multiple Linear Regression.
-        # Educational and Psychological Measurement, 67(2), 207–218. http://doi.org/10.1177/0013164406292030
-
-        delta_r2_samples <- boot::boot(
-          get(as.character(model_summaries[[y]]$call$data))
-          , function(data, i, calls) {
-            bdata <- data[i, ]
-
-            calls[[1]]$data <- bdata
-            mod1 <- eval(calls[[1]])
-
-            calls[[2]]$data <- bdata
-            mod2 <- eval(calls[[2]])
-
-            summary(mod2)$r.squared - summary(mod1)$r.squared
-          }
-          , calls = list(model_summaries[[y]]$call, model_summaries[[y + 1]]$call)
-          , R = boot_samples
-        )
-
-        boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = 0.95, type = "perc")
-        if(x[y, "p.value"] >= 0.05) boot_r2_ci$percent[1, 4] <- 0 # Algina, Keselman & Penfield (2007), p. 210
-
-        delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
-        eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
-
-        paste0(
-          "$\\Delta R^2 ", eq, delta_r2_res, "$, "
-          , print_confint(boot_r2_ci$percent[1, 4:5], conf_level = boot_r2_ci$percent[1, 1], gt1 = FALSE)
-        )
-      }
+    apa_res$est <- paste0(
+      "$\\Delta R^2", eq, delta_r2_res, "$, "
+      , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
     )
   }
 
@@ -164,7 +134,7 @@ print_model_comp <- function(
   }
   )
   coef_table <- do.call(cbind, model_summaries)[, seq(2, (2 * n_models), 2)] # Removes Term columns
-  rownames(coef_table) <- model_summaries[[n_models]][, "Variable"]
+  rownames(coef_table) <- model_summaries[[n_models]][, "Predictor"]
   colnames(coef_table) <- paste("Model", 1:n_models)
 
   model_fits <- lapply(models, broom::glance)
@@ -191,6 +161,7 @@ print_model_comp <- function(
   colnames(model_diffs) <- c("$\\Delta R^2$", "$\\Delta AIC$", "$\\Delta BIC$")
 
   diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
+  diff_stats$p.value <- gsub("= ", "", diff_stats$p.value) # Remove 'equals' for table
   rownames(diff_stats) <- paste("Model", 2:n_models)
   colnames(diff_stats) <- c("$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ") # Space enable duplicate row names
   diff_stats <- rbind("", diff_stats)
@@ -198,7 +169,8 @@ print_model_comp <- function(
   model_stats_table <- t(cbind(model_fits, model_diffs, diff_stats))
   colnames(model_stats_table) <- paste("Model", 1:n_models)
   apa_res$table <- rbind(coef_table, model_stats_table)
+  apa_res$table[is.na(apa_res$table)] <- ""
 
-  apa_res <- lapply(apa_res, as.list)
+  apa_res[c("est", "stat", "full")] <- lapply(apa_res[c("est", "stat", "full")], as.list)
   apa_res
 }

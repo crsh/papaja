@@ -160,7 +160,7 @@ apa_print.anova <- function(
   variance_table <- arrange_anova(x)
 
   if("apa_model_comp" %in% class(variance_table)) { # Model comparison object
-    return(print_model_comp(variance_table, in_paren = in_paren, models = models, ci = ci, boot_samples = boot_samples))
+    return(print_model_comp(variance_table, models = models, ci = ci, boot_samples = boot_samples, ...))
   } else if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
     if(grepl("Levene", attr(x, "heading"))) {
       ellipsis <- list(...)
