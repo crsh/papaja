@@ -149,7 +149,7 @@ apa_print.afex_aov <- function(x, correction = "GG", intercept = FALSE, ...) {
 apa_print.anova <- function(
   x
   , models = NULL
-  , ci = 0.90
+  , ci = 0.95
   , boot_samples = 1000
   , ...
 ) {

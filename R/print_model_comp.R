@@ -46,6 +46,10 @@ print_model_comp <- function(
     op <- "("; cp <- ")"
   }
 
+  # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
+  # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
+  r2_conf_level <- 1 - ((1 - ci) * 2)
+
   if(!is.null(names(models))) {
     rownames(x) <- names(models)[-1]
   } else rownames(x) <- sanitize_terms(x$term)
@@ -61,6 +65,7 @@ print_model_comp <- function(
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     model_hierarchy <- sort(r2s, index.return = TRUE)$ix
     delta_r2s <- diff(r2s[model_hierarchy])
+    models <- models[model_hierarchy]
 
     apa_res$est <- sapply(
       seq_along(delta_r2s)
@@ -71,7 +76,7 @@ print_model_comp <- function(
       }
     )
   } else { # Bootstrap CI
-    boot_r2_ci <- delta_r2_ci(x, models, conf = ci, R = boot_samples)
+    boot_r2_ci <- delta_r2_ci(x, models, conf = r2_conf_level, R = boot_samples)
 
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
@@ -81,7 +86,7 @@ print_model_comp <- function(
     eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
 
     apa_res$est <- paste0(
-      "$\\Delta R^2", eq, delta_r2_res, "$, "
+      "$\\Delta R^2", eq, delta_r2_res, "$, ", r2_conf_level * 100, "\\% CI "
       , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
     )
   }
@@ -112,8 +117,8 @@ print_model_comp <- function(
 
   # Assemble table
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
-    lm_table <- apa_print(x)$table[, c(1:3)]
-    lm_table[, 2] <- apply(lm_table[, 2:3], 1, paste, collapse = " ")
+    lm_table <- apa_print(x, ci = ci)$table[, c(1:3)]
+    lm_table[, 2] <- apply(cbind(paste0("$", lm_table[, 2], "$"), lm_table[, 3]), 1, paste, collapse = " ")
     lm_table[, -3]
   }
   )
@@ -137,6 +142,7 @@ print_model_comp <- function(
   rownames(coef_table) <- model_summaries[[n_models]][, "Predictor"]
   colnames(coef_table) <- paste("Model", 1:n_models)
 
+  ## Add model fits
   model_fits <- lapply(models, broom::glance)
   model_fits <- do.call(rbind, model_fits)
   model_fits <- model_fits[, c("r.squared", "statistic", "df", "df.residual", "p.value", "AIC", "BIC")]
@@ -149,16 +155,24 @@ print_model_comp <- function(
     , zero = c(FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
     , digits = c(2, 2, 0, 0, 3, 2, 2)
   )
-  colnames(model_fits) <- c("$R^2$", "$F$", "$df_1$", "$df_2$", "$p$", "$AIC$", "$BIC$")
+  model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
+    r2 <- apa_print(x, ci = ci)$est$modelfit$r2
+    r2 <- gsub("R\\^2 = ", "", r2)
+    r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
+    r2
+  })
+  colnames(model_fits) <- c(paste0("$R^2$ [", r2_conf_level * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$AIC$", "$BIC$")
 
+  ## Add differences in model fits
   model_diffs <- printnum(
     model_diffs
     , margin = 2
     , gt1 = c(FALSE, TRUE, TRUE)
     , zero = c(FALSE, TRUE, TRUE)
   )
+  model_diffs[["r.squared"]] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$est))) # Replace by previously estimate with CI
   model_diffs <- rbind("", model_diffs)
-  colnames(model_diffs) <- c("$\\Delta R^2$", "$\\Delta AIC$", "$\\Delta BIC$")
+  colnames(model_diffs) <- c(paste0("$\\Delta R^2$ [", r2_conf_level * 100, "\\% CI]"), "$\\Delta AIC$", "$\\Delta BIC$")
 
   diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
   diff_stats$p.value <- gsub("= ", "", diff_stats$p.value) # Remove 'equals' for table
