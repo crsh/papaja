@@ -192,14 +192,24 @@ test_that(
 test_that(
   "Mauchly test"
   , {
+    tmp <- capture.output(utils::example(SSD))
     mauchly_data <- data.frame(deg = gl(3, 1, 6, labels = c(0,4,8)), noise = gl(2, 3, 6, labels = c("A","P")))
 
     mauchly_test <- mauchly.test(mlmfit, X = ~ deg + noise, idata = mauchly_data)
-    apa_print(mauchly_test)
-
+    mauchly_output <- apa_print(mauchly_test)
+    expect_is(mauchly_output, "list")
+    expect_equal(length(mauchly_output), 1)
+    expect_that(names(mauchly_output), equals("stat"))
+    expect_that(mauchly_output$stat, is_a("character"))
+    expect_that(mauchly_output$stat, equals("$W = 0.89$, $p = .638$"))
 
     mauchly_test <- mauchly.test(mlmfit, M = ~ deg + noise, X = ~ noise, idata = mauchly_data)
-    apa_print(mauchly_test)
+    mauchly_output <- apa_print(mauchly_test)
+    expect_is(mauchly_output, "list")
+    expect_equal(length(mauchly_output), 1)
+    expect_that(names(mauchly_output), equals("stat"))
+    expect_that(mauchly_output$stat, is_a("character"))
+    expect_that(mauchly_output$stat, equals("$W = 0.96$, $p = .850$"))
   }
 )
 
