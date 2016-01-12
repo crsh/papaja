@@ -7,6 +7,7 @@
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
+#' @param mse Logical. Indicates if mean squared errors should be included in output.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 
@@ -34,7 +35,7 @@ print_anova <- function(
   , intercept = FALSE
   , observed = NULL
   , es = "ges"
-  , MSE = TRUE
+  , mse = TRUE
   , in_paren = FALSE
 ) {
   # When processing aovlist objects a dummy term "aovlist_residuals" is kept to preserve the SS_error of the intercept
@@ -101,21 +102,17 @@ print_anova <- function(
   if(!intercept) x <- x[x$term != "(Intercept)", ]
 
   # Calculate MSE
-  x$MSE <- x$sumsq_err / x$df_res
+  if(mse) x$mse <- x$sumsq_err / x$df_res
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
   x[, c("df", "df_res")] <- apply(x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
   if(!is.null(es)) x[, es] <- printnum(x[, es], digits = 3, margin = 2, gt1 = FALSE)
-  x$MSE <- printnum(x$MSE, digits = 2)
+  if(mse) x$mse <- printnum(x$mse, digits = 2)
 
   # Assemble table
-  if(MSE == TRUE){
-    anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", "MSE", "p.value", es)], row.names = NULL)
-  } else {
-    anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", "p.value", es)], row.names = NULL)
-  }
+  anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", if(mse) "mse" else NULL, "p.value", es)], row.names = NULL)
   anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
 
   ## Define appropriate column names
@@ -131,13 +128,13 @@ print_anova <- function(
   }
 
 
-  MSE_long <- if(MSE) "$\\mathit{MSE}$" else NULL
+  mse_long <- if(mse) "$\\mathit{MSE}$" else NULL
   correction_type <- attr(x, "correction")
 
   if(!is.null(correction_type) && correction_type != "none") {
-    colnames(anova_table) <- c("Effect", "$F$", paste0("$\\mathit{df}_1^{", correction_type, "}$"), paste0("$\\mathit{df}_2^{", correction_type, "}$"), MSE_long, "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", paste0("$\\mathit{df}_1^{", correction_type, "}$"), paste0("$\\mathit{df}_2^{", correction_type, "}$"), mse_long, "$p$", es_long)
   } else {
-    colnames(anova_table) <- c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", MSE_long, "$p$", es_long)
+    colnames(anova_table) <- c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", mse_long, "$p$", es_long)
   }
 
 
@@ -151,7 +148,7 @@ print_anova <- function(
   apa_res <- list()
 
   apa_res$stat <- apply(x, 1, function(y) {
-    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], if(MSE){ paste0("$, $\\mathit{MSE} = ", y["MSE"])} else {NULL}, "$, $p ", y["p.value"], "$")
+    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], if(mse){ paste0("$, $\\mathit{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
   })
 
   if(!is.null(es)) {
