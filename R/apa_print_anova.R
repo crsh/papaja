@@ -148,25 +148,22 @@ apa_print.afex_aov <- function(x, correction = "GG", intercept = FALSE, ...) {
 
 apa_print.anova <- function(
   x
-  , models = NULL
-  , ci = 0.95
-  , boot_samples = 1000
+  # , ci = 0.95
   , ...
 ) {
-  if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
-  validate(boot_samples, check_class = "numeric", check_length = 1)
+  # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
 
   variance_table <- arrange_anova(x)
 
-  if("apa_model_comp" %in% class(variance_table)) { # Model comparison object
-    return(print_model_comp(variance_table, models = models, ci = ci, boot_samples = boot_samples, ...))
-  } else if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
+  if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
     if(grepl("Levene", attr(x, "heading"))) {
       ellipsis <- list(...)
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
-      return(print_anova(variance_table, es = NULL, ...))
+      return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
     return(print_anova(variance_table, ...))
+  } else if("apa_model_comp" %in% class(variance_table)) {
+    stop("Model comparison objects of class 'anova' are not supported. See ?apa_print.list to report model comparisons.")
   }
 }

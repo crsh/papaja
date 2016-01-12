@@ -46,10 +46,6 @@ print_model_comp <- function(
     op <- "("; cp <- ")"
   }
 
-  # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
-  # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
-  r2_conf_level <- 1 - ((1 - ci) * 2)
-
   if(!is.null(names(models))) {
     rownames(x) <- names(models)[-1]
   } else rownames(x) <- sanitize_terms(x$term)
@@ -63,9 +59,7 @@ print_model_comp <- function(
   } else if(is.null(ci)) { # No CI
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
-    model_hierarchy <- sort(r2s, index.return = TRUE)$ix
-    delta_r2s <- diff(r2s[model_hierarchy])
-    models <- models[model_hierarchy]
+    delta_r2s <- diff(r2s)
 
     apa_res$est <- sapply(
       seq_along(delta_r2s)
@@ -76,17 +70,16 @@ print_model_comp <- function(
       }
     )
   } else { # Bootstrap CI
-    boot_r2_ci <- delta_r2_ci(x, models, conf = r2_conf_level, R = boot_samples)
+    boot_r2_ci <- delta_r2_ci(x, models, ci = ci, R = boot_samples)
 
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
-    model_hierarchy <- sort(r2s, index.return = TRUE)$ix
-    delta_r2s <- diff(r2s[model_hierarchy])
+    delta_r2s <- diff(r2s)
     delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
-    eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
+    eq <- ifelse(grepl(delta_r2_res, pattern = "<|>|="), "", " = ")
 
     apa_res$est <- paste0(
-      "$\\Delta R^2", eq, delta_r2_res, "$, ", r2_conf_level * 100, "\\% CI "
+      "$\\Delta R^2", eq, delta_r2_res, "$, ", ci * 100, "\\% CI "
       , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
     )
   }
@@ -116,37 +109,29 @@ print_model_comp <- function(
   }
 
   # Assemble table
+  n_models <- length(models)
+
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
-    lm_table <- apa_print(x, ci = ci)$table[, c(1:3)]
+    lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c(1:3)]
     lm_table[, 2] <- apply(cbind(paste0("$", lm_table[, 2], "$"), lm_table[, 3]), 1, paste, collapse = " ")
     lm_table[, -3]
   }
   )
 
-  ## Sort models
-  n_terms <- sapply(model_summaries, nrow)
-  model_summaries <- model_summaries[sort(n_terms, index.return = TRUE)$ix]
-  n_models <- length(models)
-  n_terms <- max(n_terms)
-  model_summaries <- lapply(model_summaries, function(x) { # Fill data.frames with empty rows
-    term_diff <- n_terms - nrow(x)
-    if(term_diff > 0) {
-      for(i in 1:(term_diff)) {
-        x <- rbind(x, "")
-      }
-    }
-    x
-  }
-  )
-  coef_table <- do.call(cbind, model_summaries)[, seq(2, (2 * n_models), 2)] # Removes Term columns
-  rownames(coef_table) <- model_summaries[[n_models]][, "Predictor"]
+  ## Merge coefficient tables
+  coef_table <- Reduce(function(...) merge(..., by = "Predictor", all = TRUE), model_summaries)
+  rownames(coef_table) <- coef_table$Predictor
+  coef_table <- subset(coef_table, select = -Predictor)
+  coef_table <- coef_table[names(sort(apply(coef_table, 1, function(x) sum(is.na(x))))), ] # Sort predictors to create steps in table
+  coef_table <- coef_table[c("Intercept", rownames(coef_table)[rownames(coef_table) != "Intercept"]), ] # Make Intercept first Predictor
+  coef_table[is.na(coef_table)] <- ""
   colnames(coef_table) <- paste("Model", 1:n_models)
 
   ## Add model fits
   model_fits <- lapply(models, broom::glance)
   model_fits <- do.call(rbind, model_fits)
   model_fits <- model_fits[, c("r.squared", "statistic", "df", "df.residual", "p.value", "AIC", "BIC")]
-  model_diffs <- apply(model_fits[, c("r.squared", "AIC", "BIC")], 2, diff)
+  model_diffs <- apply(model_fits[c("r.squared", "AIC", "BIC")], 2, diff)
 
   model_fits <- printnum(
     model_fits
@@ -161,7 +146,7 @@ print_model_comp <- function(
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
     r2
   })
-  colnames(model_fits) <- c(paste0("$R^2$ [", r2_conf_level * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$AIC$", "$BIC$")
+  colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$AIC$", "$BIC$")
 
   ## Add differences in model fits
   model_diffs <- printnum(
@@ -170,9 +155,9 @@ print_model_comp <- function(
     , gt1 = c(FALSE, TRUE, TRUE)
     , zero = c(FALSE, TRUE, TRUE)
   )
-  model_diffs[["r.squared"]] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$est))) # Replace by previously estimate with CI
+  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$est))) # Replace by previously estimate with CI
   model_diffs <- rbind("", model_diffs)
-  colnames(model_diffs) <- c(paste0("$\\Delta R^2$ [", r2_conf_level * 100, "\\% CI]"), "$\\Delta AIC$", "$\\Delta BIC$")
+  colnames(model_diffs) <- c(paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]"), "$\\Delta AIC$", "$\\Delta BIC$")
 
   diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
   diff_stats$p.value <- gsub("= ", "", diff_stats$p.value) # Remove 'equals' for table
