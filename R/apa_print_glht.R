@@ -58,12 +58,6 @@ apa_print.summary.glht <- function(
   validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
-
   tidy_x <- broom::tidy(x)
   test_stat <- ifelse(x$df == 0, "z", paste0("t(", x$df, ")"))
   conf_level <- paste0(ci * 100, "\\% CI")
@@ -133,12 +127,6 @@ apa_print.summary.ref.grid <- function(
   validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
-
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
 
   split_by <- attr(x, "by.vars")
   x <- data.frame(x)

@@ -40,12 +40,6 @@ print_model_comp <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(models)) validate(models, check_class = "list", check_length = nrow(x) + 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
-
   if(!is.null(names(models))) {
     rownames(x) <- names(models)[-1]
   } else rownames(x) <- sanitize_terms(x$term)
@@ -96,7 +90,9 @@ print_model_comp <- function(
   }
 
   apa_res$stat <- apply(x, 1, function(y) {
-    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], "$, $p ", y["p.value"], "$")
+    stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], "$, $p ", y["p.value"], "$")
+    if(in_paren) stat <- in_paren(stat)
+    stat
   })
   names(apa_res$stat) <- x$term
 

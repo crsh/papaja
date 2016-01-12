@@ -80,12 +80,6 @@ apa_print.htest <- function(
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
-
   ellipsis <- list(...)
 
   if(is.null(stat_name) & !is.null(names(x$statistic))) {
@@ -102,9 +96,9 @@ apa_print.htest <- function(
       if(x$parameter %%1 == 0) printdigits <- 0 else printdigits = 2
       if(stat_name == "\\chi^2") {
         if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
-        stat_name <- paste0(stat_name, op, printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ", n = ", n, cp)
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ", n = ", n, ")")
       } else {
-        stat_name <- paste0(stat_name, op, printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), cp)
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ")")
       }
     }
   }
@@ -115,6 +109,7 @@ apa_print.htest <- function(
 
   apa_res <- list()
   apa_res$stat <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
+  if(in_paren) apa_res$stat <- in_paren(apa_res$stat)
 
   # Estimate
   if(is.null(est_name) & !is.null(names(x$estimate))) {

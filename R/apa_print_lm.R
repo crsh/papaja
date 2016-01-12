@@ -92,12 +92,6 @@ apa_print.lm <- function(
   } else validate(ci)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
-
   ellipsis <- list(...)
 
   # Model coefficients
@@ -116,7 +110,9 @@ apa_print.lm <- function(
     p <- printp(y["p.value"])
     if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
-    paste0("$t", op, glance_x$df.residual, cp, " = ",  printnum(y["statistic"]), "$, $p ", eq, p, "$")
+    stat <- paste0("$t(", glance_x$df.residual, ") = ",  printnum(y["statistic"]), "$, $p ", eq, p, "$")
+    if(in_paren) stat <- in_paren(stat)
+    stat
   })
 
   if(is.matrix(ci)) {
@@ -155,7 +151,8 @@ apa_print.lm <- function(
   p <- printp(glance_x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
-  apa_res$stat$modelfit$r2 <- paste0("$F", op, summary_x$fstatistic[2], ", ", glance_x$df.residual, cp, " = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
+  apa_res$stat$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
+  if(in_paren) apa_res$stat$modelfit$r2 <- in_paren(apa_res$stat$modelfit$r2)
 
   ci_conf_level <- 100 - ((100 - conf_level) * 2)
   # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.

@@ -58,12 +58,6 @@ print_anova <- function(
   }
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  if(in_paren) {
-    op <- "["; cp <- "]"
-  } else {
-    op <- "("; cp <- ")"
-  }
-
   rownames(x) <- sanitize_terms(x$term)
 
   # Calculate generalized eta squared
@@ -148,7 +142,9 @@ print_anova <- function(
   apa_res <- list()
 
   apa_res$stat <- apply(x, 1, function(y) {
-    paste0("$F", op, y["df"], ", ", y["df_res"], cp, " = ", y["statistic"], if(mse){ paste0("$, $\\mathit{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
+    stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], if(mse){ paste0("$, $\\mathit{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
+    if(in_paren) stat <- in_paren(stat)
+    stat
   })
 
   if(!is.null(es)) {
