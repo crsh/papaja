@@ -65,6 +65,8 @@ Although papaja is not yet on CRAN and is still undergoing a lot of changes, the
 
 Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. doi:[10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003)
 
+Aust, F., & Edwards, J. D. (in press). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. Journal of Clinical and Experimental Neuropsychology. doi:[10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453)
+
 
 ## Contribute
 Like papaja and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
@@ -72,6 +74,7 @@ Like papaja and want to contribute? Take a look at the [open issues](https://git
 
 ## Known issues
 - The references violates the APA guidelines in that there is no hanging indentation (i.e. indentation of all lines but the first one). See the [related issue](https://github.com/crsh/papaja/issues/37) for a fix.
+- Intext citation incorrectly use ampersands instead of "and". This is a current limitation of the [pandoc-citeproc](https://hackage.haskell.org/package/pandoc-citeproc) filter.
 - If building the example manuscript throws the error `! Incomplete \iffalse; all text was ignored after line 20.` make sure you have saved the .Rmd and are not working from a temporary directory or restart RStudio. If this doesn't work try updating your TeX-packages.
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
