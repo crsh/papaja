@@ -376,59 +376,95 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
     onedim <- TRUE
   }
 
-
-  args.barplot <- list(...)
-
-  args.arrows <- args.barplot$args.arrows
-  args.legend <- args.barplot$args.legend
-  intercept <- args.barplot$intercept
-
-  args.barplot$height <- y
-  args.barplot$args.arrows <- NULL
-  args.barplot$args.legend <- NULL
-  args.barplot$xpd <- FALSE
-  args.barplot$intercept <- NULL
-  # args.barplot$xaxt <- "n"
-
-  barx <- do.call("barplot", args.barplot)
-
-  # axis(side = 1, pos = args.barplot$xlim, at = colMeans(barx), labels = xlabels, line = 0)
-
-
-#   if(args.barplot$ylim[1]!=0){
-#     xl <- matrix(c(par("usr")[1], colMeans(barx)[1], colMeans(barx)[ncol(barx)], par("usr")[2]), ncol=2)
-#   }
-
-#   # always drawm on bottom of plot
-#   xl <- matrix(c(par("usr")[1], colMeans(barx)[1], colMeans(barx)[ncol(barx)], par("usr")[2]), ncol=2)
-#   yl <- array(args.barplot$ylim[1], dim = dim(xl))
-#   lines(x = xl, y = yl)
-
-  if(args.barplot$ylim[1]!=0){
-    xl <- matrix(c(par("usr")[1], par("usr")[2]))
-    yl <- array(0, dim = dim(xl))
-    lines(x = xl, y = yl)
-    xl <- matrix(c(par("usr")[1], colMeans(barx)[1], colMeans(barx)[ncol(barx)], par("usr")[2]), ncol=2)
-    yl <- array(args.barplot$ylim[1], dim = dim(xl))
-    lines(x = xl, y = yl)
+  space <- .2
+  # move to apa_lineplot???
+  if(length(factors) > 1){
+    yy$x0 <- as.integer(yy[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(yy[[factors[[2]]]]) * (as.integer(yy[[factors[2]]])-1)
+    yy$x1 <- as.integer(yy[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(yy[[factors[[2]]]]) * (as.integer(yy[[factors[2]]]))
+    yy$x <- (yy$x0 + yy$x1)/2
+    l2 <- levels(yy[[factors[2]]])
+    onedim <- FALSE
+  } else {
+    # stuff to do ##############################################################################################
+    yy$x <- as.integer(yy[[factors[1]]])
+    l2 <- 1
+    factors[2] <- "f2"
+    yy[["f2"]] <- 1
+    ee[["f2"]] <- 1
+    onedim <- TRUE
   }
+
+  ellipsis <- list(...)
+
+  # save parameters for multiple plot functions
+  args.legend <- ellipsis$args.legend
+  args.points <- ellipsis$args.points
+  args.lines <- ellipsis$args.lines
+  args.axis <- ellipsis$args.axis
+  args.arrows <- ellipsis$args.arrows
+
+  # basic plot
+  ellipsis <- defaults(
+    ellipsis
+    , set.if.null = list(
+      xlim = c(0, max(as.integer(yy[[factors[1]]])))
+    )
+    , set = list(
+      xaxt = "n"
+      , x = 1
+      , xaxt = FALSE
+      , type = "n"
+      , jit = NULL
+      , args.legend = NULL
+      , args.points = NULL
+      , args.lines = NULL
+      , args.axis = NULL
+      , args.arrows = NULL
+    )
+  )
+
+  do.call("plot.default", ellipsis)
+
+  # prepare defaults for x axis
+  args.axis <- defaults(args.axis
+                        , set = list(
+                          side = 1
+                        )
+                        , set.if.null = list(
+                          at = 1:nlevels(yy[[factors[1]]]) - .5
+                          , labels = levels(yy[[factors[1]]])
+                        )
+  )
+
+
+  # only draw axis if axis type is not specified or not specified as "n"
+  if(is.null(args.axis$xaxt)||args.axis$xaxt!="n") {
+    do.call("axis", args.axis)
+  }
+
+  # convert to matrices
+  x <- tapply(yy[, "x"],list(yy[[factors[1]]], yy[[factors[2]]]), as.numeric)
+  y <- tapply(yy[, dv],list(yy[[factors[1]]], yy[[factors[2]]]), as.numeric)
+  e <- tapply(ee[, dv],list(ee[[factors[1]]], ee[[factors[2]]]), as.numeric)
+
+  rect(xleft = yy$x0, xright = yy$x1, ybottom = 0, ytop = yy[[dv]], density = 2)
 
   # prepare and draw arrows (i.e., error bars)
   args.arrows <- defaults(args.arrows
                           , set = list(
-                            x0 = barx
-                            , x1 = barx
+                            x0 = x
+                            , x1 = x
                             , y0 = y-e
                             , y1 = y+e
                           )
                           , set.if.null = list(
                             angle = 90
                             , code = 3
-                            , length = ifelse(prod(dim(as.matrix(barx))) < 8, .1, 1/max(barx))
+                            #, length = ifelse(prod(dim(as.matrix(barx))) < 8, .1, 1/max(barx))
                           )
   )
 
-
+  print(yy)
   do.call("arrows", args.arrows)
 
   # prepare and draw legend
@@ -438,7 +474,7 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
                             , set.if.null = list(
                               x = "topright"
                               , legend = levels(yy[[factors[2]]])
-                              , fill = args.barplot$col
+                              , fill = ellipsis$col
                               , bty = "n"
                             ))
 
@@ -446,9 +482,9 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
   }
 
 
-  if(!is.null(intercept)){
-    segments(x0=colMeans(barx)-barx[1], y0=intercept, x1=colMeans(barx)+barx[1], y1=intercept)
-  }
+#   if(!is.null(intercept)){
+#     segments(x0=colMeans(barx)-barx[1], y0=intercept, x1=colMeans(barx)+barx[1], y1=intercept)
+#   }
 }
 
 
