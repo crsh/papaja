@@ -201,8 +201,15 @@ apa_barplot <- function(
     }
   }
 
-  output$yy <- yy
-  output$ee <- ee
+
+  tmp1 <- yy
+  tmp2 <- ee
+  colnames(tmp1)[which(colnames(tmp1)==dv)] <- "tendency"
+  colnames(tmp2)[which(colnames(tmp2)==dv)] <- "dispersion"
+
+  y.values <- merge(tmp1, tmp2, by = factors)
+
+  output$y <- y.values
 
   # Set defaults
   ellipsis <- defaults(ellipsis,
@@ -218,7 +225,7 @@ apa_barplot <- function(
                          #, bty = "n"
                          , names.arg = levels(data[[factors[1]]])
                          , axis.lty = 1
-                         , ylim = c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
+                         , ylim = c(min(0, y.values[, "tendency"] - y.values[, "dispersion"]), max(y.values[, "tendency"] + y.values[, "dispersion"]))
                          , args.arrows = args_arrows
                          , args.legend = args_legend
                        ))
@@ -269,8 +276,7 @@ apa_barplot <- function(
     ellipsis <- defaults(
       ellipsis
       , set = list(
-        yy = yy
-        , ee = ee
+        y.values = y.values
       )
     )
 
@@ -307,8 +313,7 @@ apa_barplot <- function(
         ellipsis
         , set = list(
           main = gsub(paste0(tmp_main, c(factors[3],": ",i),collapse=""), pattern = "_", replacement = " ")
-          , yy = yy[yy[[factors[3]]]==i,]
-          , ee = ee[ee[[factors[3]]]==i,]
+          , y.values = y.values[y.values[[factors[3]]]==i,]
         )
       )
 
@@ -344,8 +349,7 @@ apa_barplot <- function(
           ellipsis
           , set = list(
             main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
-            , yy = yy[yy[[factors[3]]]==i&yy[[factors[4]]]==j,]
-            , ee = ee[ee[[factors[3]]]==i&ee[[factors[4]]]==j,]
+            , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           )
         )
 
@@ -361,36 +365,36 @@ apa_barplot <- function(
 }
 
 
-apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
+apa.barplot.core<-function(y.values, id, dv, factors, ...) {
 
   if(length(factors) >= 2) {
     # convert to matrices
-    y <- tapply(yy[, dv],list(yy[, factors[2]], yy[, factors[1]]), FUN=as.numeric)
-    e <- tapply(ee[, dv],list(ee[, factors[2]], ee[, factors[1]]), FUN=as.numeric)
+    y <- tapply(y.values[, "tendency"],list(y.values[, factors[2]], y.values[, factors[1]]), FUN=as.numeric)
+    e <- tapply(y.values[, "dispersion"],list(y.values[, factors[2]], y.values[, factors[1]]), FUN=as.numeric)
     # xlabels <- colnames(y)
     onedim <- FALSE
   } else {
-    y <- yy[, dv]
-    e <- ee[, dv]
-    # xlabels <- yy[[factors[1]]]
+    y <- y.values[, "tendency"]
+    e <- y.values[, "dispersion"]
+    # xlabels <- y.values[[factors[1]]]
     onedim <- TRUE
   }
 
   space <- .2
   # move to apa_lineplot???
   if(length(factors) > 1){
-    yy$x0 <- as.integer(yy[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(yy[[factors[[2]]]]) * (as.integer(yy[[factors[2]]])-1)
-    yy$x1 <- as.integer(yy[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(yy[[factors[[2]]]]) * (as.integer(yy[[factors[2]]]))
-    yy$x <- (yy$x0 + yy$x1)/2
-    l2 <- levels(yy[[factors[2]]])
+    x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
+    x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
+    xf1 <- (x0 + x1)/2
+    l2 <- levels(y.values[[factors[2]]])
     onedim <- FALSE
   } else {
     # stuff to do ##############################################################################################
-    yy$x <- as.integer(yy[[factors[1]]])
+    y.values$x <- as.integer(y.values[[factors[1]]])
     l2 <- 1
     factors[2] <- "f2"
-    yy[["f2"]] <- 1
-    ee[["f2"]] <- 1
+    y.values[["f2"]] <- 1
+    y.values[["f2"]] <- 1
     onedim <- TRUE
   }
 
@@ -398,32 +402,29 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
 
   # save parameters for multiple plot functions
   args.legend <- ellipsis$args.legend
+  args.plot.window <- ellipsis$args.plot.window
   args.points <- ellipsis$args.points
   args.lines <- ellipsis$args.lines
   args.axis <- ellipsis$args.axis
   args.arrows <- ellipsis$args.arrows
+  args.y.axis <- list()
+  args.title <- list()
 
   # basic plot
-  ellipsis <- defaults(
-    ellipsis
+  plot.new()
+
+  # plot.window
+  args.plot.window <- defaults(
+    args.plot.window
     , set.if.null = list(
-      xlim = c(0, max(as.integer(yy[[factors[1]]])))
+      xlim = c(0, max(as.integer(y.values[[factors[1]]])))
+      , ylim = ellipsis$ylim
     )
     , set = list(
-      xaxt = "n"
-      , x = 1
-      , xaxt = FALSE
-      , type = "n"
-      , jit = NULL
-      , args.legend = NULL
-      , args.points = NULL
-      , args.lines = NULL
-      , args.axis = NULL
-      , args.arrows = NULL
     )
   )
 
-  do.call("plot.default", ellipsis)
+  do.call("plot.window", args.plot.window)
 
   # prepare defaults for x axis
   args.axis <- defaults(args.axis
@@ -431,8 +432,9 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
                           side = 1
                         )
                         , set.if.null = list(
-                          at = 1:nlevels(yy[[factors[1]]]) - .5
-                          , labels = levels(yy[[factors[1]]])
+                          at = 1:nlevels(y.values[[factors[1]]]) - .5
+                          , labels = levels(y.values[[factors[1]]])
+                          , tick = ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
                         )
   )
 
@@ -442,12 +444,55 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
     do.call("axis", args.axis)
   }
 
-  # convert to matrices
-  x <- tapply(yy[, "x"],list(yy[[factors[1]]], yy[[factors[2]]]), as.numeric)
-  y <- tapply(yy[, dv],list(yy[[factors[1]]], yy[[factors[2]]]), as.numeric)
-  e <- tapply(ee[, dv],list(ee[[factors[1]]], ee[[factors[2]]]), as.numeric)
+  # prepare defaults for x axis
+  args.y.axis <- defaults(
+    args.y.axis
+    , set = list(
+      side = 2
+    )
+    , set.if.null = list(
+      labels = TRUE
+      , las = ellipsis$las
+    )
+  )
 
-  rect(xleft = yy$x0, xright = yy$x1, ybottom = 0, ytop = yy[[dv]], density = 2)
+  do.call("axis", args.y.axis)
+
+  # prepare defaults for title and labels
+  args.title <- defaults(
+    args.title
+    , set = list(
+
+    )
+    , set.if.null = list(
+      main = ellipsis$main
+      , xlab = as.character(factors[1])
+      , ylab = as.character(dv)
+    )
+  )
+
+  do.call("title", args.title)
+
+  args.rect <- defaults(
+    list()
+    , set.if.null = list(
+
+      xleft = x0
+      , xright = x1
+      , ytop = y.values[["tendency"]]
+      , ybottom = 0
+    )
+    , set = list(
+      col = ellipsis$col
+    )
+  )
+  # print(args.rect)
+  do.call("rect", args.rect)
+
+  # convert to matrices
+  x <- tapply(xf1 ,list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
+  y <- tapply(y.values[, "tendency"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
+  e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
   # prepare and draw arrows (i.e., error bars)
   args.arrows <- defaults(args.arrows
@@ -464,7 +509,7 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
                           )
   )
 
-  print(yy)
+  # print(y.values)
   do.call("arrows", args.arrows)
 
   # prepare and draw legend
@@ -473,7 +518,7 @@ apa.barplot.core<-function(yy, ee, id, dv, factors, ...) {
     args.legend <- defaults(args.legend
                             , set.if.null = list(
                               x = "topright"
-                              , legend = levels(yy[[factors[2]]])
+                              , legend = levels(y.values[[factors[2]]])
                               , fill = ellipsis$col
                               , bty = "n"
                             ))
