@@ -7,8 +7,10 @@
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
 #' @param added_colnames Character. Vector of names for first unnamed columns. See details.
-#' @param grouping_colnames List. A named list of vectors of length 2 giving the first and second column to
+#' @param col_spanners List. A named list of vectors of length 2 giving the first and second column to
 #'    span with a grouping column name.
+#' @param stub_indents List. A named list of vectors of length 2 giving the first and second row to
+#'    indent. Names of list elements will be used as titles for indented sections.
 #' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
 #'    followed by a horizontal rule; ignored in MS Word documents.
 #' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
@@ -64,7 +66,8 @@ apa_table.latex <- function(
   , caption = NULL
   , note = NULL
   , added_colnames = NULL
-  , grouping_colnames = NULL
+  , col_spanners = NULL
+  , stub_indents = NULL
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
@@ -75,7 +78,8 @@ apa_table.latex <- function(
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
-  if(!is.null(grouping_colnames)) validate(grouping_colnames, check_class = "list")
+  if(!is.null(col_spanners)) validate(col_spanners, check_class = "list")
+  if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
@@ -160,17 +164,35 @@ apa_table.latex <- function(
   table_lines <- unlist(strsplit(res_table, "\n"))
   table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \\addlinespace
 
-  if(!is.null(grouping_colnames)) table_lines <- add_grouping_colnames(table_lines, grouping_colnames, n_cols)
+  if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
 
   if(longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+
+  table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
 
   if(!is.null(midrules)) {
     validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
 
-    table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
-    table_lines[table_content_boarders[1] + midrules] <- sapply(
+    table_lines[table_content_boarders[1] + midrules] <- paste(
       table_lines[table_content_boarders[1] + midrules]
-      , paste, "\\midrule"
+      , "\\midrule"
+    )
+  }
+
+  if(!is.null(stub_indents)) {
+    indent_starts <- sapply(stub_indents, function(x) x[[1]])
+    indent_lines <- unlist(stub_indents)
+
+    table_lines[table_content_boarders[1] + indent_lines] <- paste(
+      "~~~"
+      , table_lines[table_content_boarders[1] + indent_lines]
+    )
+
+    stub_names <- paste(names(stub_indents), "\\\\\n")
+    stub_names[stub_names == " \\\\\n"] <- "" # No empty section headings
+    table_lines[table_content_boarders[1] + indent_starts] <- paste0(
+      stub_names
+      , table_lines[table_content_boarders[1] + indent_starts]
     )
   }
 
@@ -185,6 +207,7 @@ apa_table.latex <- function(
   if(!longtable & !landscape) cat("\n\\end{table}")
   if(landscape) cat("\n\\end{sidewaystable}")
 }
+
 
 #' @rdname apa_table
 #' @export
@@ -286,6 +309,8 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
   tables_to_merge <- names(x)
   prep_table <- lapply(seq_along(x), function(i) {
 
+  # MERGE AS IS, AS INDENTED SECTIONS OR SEPARATED BY TABLE SPANNERS?
+
     # Add rownames
     if(row_names[i] && !is.null(rownames(x[[i]]))) {
       i_table <- cbind(rownames(x[[i]]), x[[i]])
@@ -326,36 +351,39 @@ merge_tables <- function(x, empty_cells, row_names, added_colnames) {
 #' \emph{This function is not exported.}
 #'
 #' @param table_lines Character. Vector of characters containing one line of a LaTeX table each.
-#' @param grouping_colnames List. A named list containing the indices of the first and last columns to group, where the names are the headings.
+#' @param col_spanners List. A named list containing the indices of the first and last columns to group, where the names are the headings.
 #' @param n_cols Numeric. Number of columns of the table.
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
 #' NULL
 
-add_grouping_colnames <- function(table_lines, grouping_colnames, n_cols) {
+add_col_spanners <- function(table_lines, col_spanners, n_cols) {
 
   # Grouping column names
   multicols <- sapply(
-    seq_along(grouping_colnames)
+    seq_along(col_spanners)
     , function(i, names) {
-      paste0("\\multicolumn{", diff(grouping_colnames[[i]]) + 1, "}{c}{", names[i], "}")
+      paste0("\\multicolumn{", diff(col_spanners[[i]]) + 1, "}{c}{", names[i], "}")
     }
-    , names(grouping_colnames)
+    , names(col_spanners)
   )
 
   ## Calculate group distances
   n_ampersands <- c()
-  if(length(grouping_colnames) > 1) {
-    group_indices <- sort(unlist(grouping_colnames))
+  if(length(col_spanners) > 1) {
+    group_indices <- sort(unlist(col_spanners))
     group_indices <- group_indices[-c(1, length(group_indices))] # Remove first and last column number
     n_ampersands <- diff(group_indices)[-seq(from = 2, to = length(group_indices), by = 2)] # Remove differences between column numbers of the same group
   }
   n_ampersands <- c(n_ampersands, 0)
 
   ## Add ampersands for empty columns
-  leading_amps <- paste(rep(" &", min(unlist(grouping_colnames)) - 1), collapse = " ")
-  trailing_amps <- paste(rep(" &", n_cols - max(unlist(grouping_colnames))), collapse = " ")
+  leading_amps <- paste(rep(" &", min(unlist(col_spanners)) - 1), collapse = " ")
+  trailing_amps <- if(n_cols - max(unlist(col_spanners)) > 0) {
+    paste(rep(" &", n_cols - max(unlist(col_spanners))), collapse = " ")
+  } else ""
+
 
   group_headings <- c()
   for(i in 1:(length(multicols))) {
@@ -365,9 +393,9 @@ add_grouping_colnames <- function(table_lines, grouping_colnames, n_cols) {
 
   # Grouping midrules
   group_midrules <- sapply(
-    seq_along(grouping_colnames)
+    seq_along(col_spanners)
     , function(i) {
-      paste0("\\cmidrule(r){", min(grouping_colnames[[i]]), "-", max(grouping_colnames[[i]]), "}")
+      paste0("\\cmidrule(r){", min(col_spanners[[i]]), "-", max(col_spanners[[i]]), "}")
     }
   )
   group_midrules <- paste(group_midrules, collapse = " ")
