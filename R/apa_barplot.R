@@ -477,7 +477,7 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
       xleft = x0
       , xright = x1
       , ytop = y.values[["tendency"]]
-      , ybottom = ifelse(ellipsis$ylim[1]<ellipsis$ylim[2]&ellipsis$ylim[2]>ellipsis$reference, ellipsis$ylim[1], ellipsis$reference)
+      , ybottom = ifelse((ellipsis$ylim[1]<ellipsis$ylim[2]&ellipsis$ylim[2]>ellipsis$reference)|(ellipsis$ylim[1]>ellipsis$ylim[2]&ellipsis$ylim[2]<ellipsis$reference), ellipsis$ylim[1], ellipsis$reference)
     )
     , set = list(
       col = ellipsis$col
