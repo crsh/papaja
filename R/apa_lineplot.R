@@ -384,18 +384,37 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   id <- gsub(id, pattern = " ", replacement = "_")
   dv <- gsub(dv, pattern = " ", replacement = "_")
 
-  # move to apa_lineplot???
-  if(length(factors) > 1){
-    y.values$x <- as.integer(y.values[[factors[1]]]) + (as.integer(y.values[[factors[2]]])-.5)/(nlevels(y.values[[factors[2]]]))*(jit)-.5*jit
-    l2 <- levels(y.values[[factors[2]]])
+#   # move to apa_lineplot???
+#   if(length(factors) > 1){
+#     y.values$x <- as.integer(y.values[[factors[1]]]) + (as.integer(y.values[[factors[2]]])-.5)/(nlevels(y.values[[factors[2]]]))*(jit)-.5*jit
+#     l2 <- levels(y.values[[factors[2]]])
+#     onedim <- FALSE
+#   } else {
+#     y.values$x <- as.integer(y.values[[factors[1]]])
+#     l2 <- 1
+#     factors[2] <- "f2"
+#     y.values[["f2"]] <- 1
+#     onedim <- TRUE
+#   }
+
+
+  if(length(factors) > 1) {
+    # convert to matrices
+    y <- tapply(y.values[, "tendency"],list(y.values[, factors[2]], y.values[, factors[1]]), FUN=as.numeric)
+    e <- tapply(y.values[, "dispersion"],list(y.values[, factors[2]], y.values[, factors[1]]), FUN=as.numeric)
     onedim <- FALSE
   } else {
-    y.values$x <- as.integer(y.values[[factors[1]]])
-    l2 <- 1
     factors[2] <- "f2"
-    y.values[["f2"]] <- 1
+    y.values[["f2"]] <- as.factor(1)
+    y <- y.values[, "tendency"]
+    e <- y.values[, "dispersion"]
     onedim <- TRUE
   }
+
+  space <-1-jit
+
+  y.values$x <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/(nlevels(y.values[[factors[[2]]]])-1) * (as.integer(y.values[[factors[2]]])-1)
+  l2 <- levels(y.values[[factors[2]]])
 
   # save parameters for multiple plot functions
   args.legend <- ellipsis$args.legend
@@ -408,7 +427,7 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   ellipsis <- defaults(
     ellipsis
     , set.if.null = list(
-      xlim = c(min(y.values$x), max(y.values$x))
+      xlim = c(0, max(as.integer(y.values[[factors[1]]])))
     )
     , set = list(
       xaxt = "n"
@@ -425,18 +444,20 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
 
   do.call("plot.default", ellipsis)
 
-
-
   # prepare defaults for x axis
   args.axis <- defaults(args.axis
     , set = list(
       side = 1
     )
     , set.if.null = list(
-      at = 1:nlevels(y.values[[factors[1]]])
+      at = 1:nlevels(y.values[[factors[1]]])-.5
       , labels = levels(y.values[[factors[1]]])
+      , lwd = 0
+      , lwd.ticks = 1
+      , pos = ellipsis$ylim[1]
     )
   )
+  abline(h = ellipsis$ylim[1])
 
 
   # only draw axis if axis type is not specified or not specified as "n"
@@ -487,7 +508,9 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
                             , y1 = y+e
                           )
                           , set.if.null = list(
-                              angle = 90, code = 3, length = .1
+                              angle = 90
+                              , code = 3
+                              , length = (1-space)/nlevels(y.values[[factors[[2]]]]) * 2
                             )
                           )
 

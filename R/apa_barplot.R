@@ -15,6 +15,7 @@
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
+#' @param reference Numeric. Height of the x-axis. A reference point that is used for calculating, i.e. default limits of the y axis. Defaults to \code{0}.
 #' @param intercept Numeric. Adds a horizontal line to the plot.
 #' #' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
@@ -61,6 +62,7 @@ apa_barplot <- function(
   , level = 0.95
   , fun_aggregate = mean
   , na.rm = TRUE
+  , reference = 0
   , intercept = NULL
   , args_arrows = list()
   , args_legend = list()
@@ -225,7 +227,7 @@ apa_barplot <- function(
                          #, bty = "n"
                          , names.arg = levels(data[[factors[1]]])
                          , axis.lty = 1
-                         , ylim = c(min(0, y.values[, "tendency"] - y.values[, "dispersion"]), max(y.values[, "tendency"] + y.values[, "dispersion"]))
+                         , ylim = c(min(reference, y.values[, "tendency"] - y.values[, "dispersion"]), max(reference, y.values[, "tendency"] + y.values[, "dispersion"]))
                          , args.arrows = args_arrows
                          , args.legend = args_legend
                        ))
@@ -268,6 +270,7 @@ apa_barplot <- function(
   }
 
   ellipsis$intercept <- intercept
+  ellipsis$reference <- reference
 
   # Plot
   ## One or two factors
@@ -367,29 +370,20 @@ apa_barplot <- function(
 
 apa.barplot.core<-function(y.values, id, dv, factors, ...) {
 
-  if(length(factors) >= 2) {
+  if(length(factors) > 1) {
     # convert to matrices
     y <- tapply(y.values[, "tendency"],list(y.values[, factors[2]], y.values[, factors[1]]), FUN=as.numeric)
     e <- tapply(y.values[, "dispersion"],list(y.values[, factors[2]], y.values[, factors[1]]), FUN=as.numeric)
-    # xlabels <- colnames(y)
     onedim <- FALSE
   } else {
+    factors[2] <- "f2"
+    y.values[["f2"]] <- as.factor(1)
     y <- y.values[, "tendency"]
     e <- y.values[, "dispersion"]
-    # xlabels <- y.values[[factors[1]]]
     onedim <- TRUE
   }
 
   space <- .2
-  # move to apa_lineplot???
-  if(length(factors) > 1){
-    onedim <- FALSE
-  } else {
-    l2 <- 1
-    factors[2] <- "f2"
-    y.values[["f2"]] <- as.factor(1)
-    onedim <- TRUE
-  }
 
   x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
   x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
@@ -433,9 +427,9 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
                           at = 1:nlevels(y.values[[factors[1]]]) - .5
                           , labels = levels(y.values[[factors[1]]])
                           , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
-                          , lwd = ifelse(ellipsis$ylim[1]==0, 0, 1)
+                          , lwd = ifelse(ellipsis$ylim[1]==ellipsis$reference, 0, 1)
                           , lwd.tick = 1
-                          , pos = ifelse(ellipsis$ylim[1]==0, ellipsis$ylim[1], ellipsis$ylim[1] - (ellipsis$ylim[2] - ellipsis$ylim[1]) * .02)
+                          , pos = ifelse(ellipsis$ylim[1]==ellipsis$reference, ellipsis$ylim[1], ellipsis$ylim[1] - (ellipsis$ylim[2] - ellipsis$ylim[1]) * .02)
                         )
   )
 
@@ -459,7 +453,7 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
 
   do.call("axis", args.y.axis)
 
-  abline(h=0)
+  abline(h = ellipsis$reference)
 
   # prepare defaults for title and labels
   args.title <- defaults(
@@ -483,7 +477,7 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
       xleft = x0
       , xright = x1
       , ytop = y.values[["tendency"]]
-      , ybottom = 0
+      , ybottom = ifelse(ellipsis$ylim[1]<ellipsis$ylim[2]&ellipsis$ylim[2]>ellipsis$reference, ellipsis$ylim[1], ellipsis$reference)
     )
     , set = list(
       col = ellipsis$col
@@ -531,9 +525,12 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
   }
 
 
-#   if(!is.null(intercept)){
-#     segments(x0=colMeans(barx)-barx[1], y0=intercept, x1=colMeans(barx)+barx[1], y1=intercept)
-#   }
+   if(!is.null(ellipsis$intercept)){
+     space <- 0
+     x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
+     x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
+     segments(x0=x0, y0=ellipsis$intercept, x1=x1, y1=ellipsis$intercept)
+   }
 }
 
 
