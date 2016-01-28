@@ -383,20 +383,18 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
   space <- .2
   # move to apa_lineplot???
   if(length(factors) > 1){
-    x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
-    x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
-    xf1 <- (x0 + x1)/2
-    l2 <- levels(y.values[[factors[2]]])
     onedim <- FALSE
   } else {
-    # stuff to do ##############################################################################################
-    y.values$x <- as.integer(y.values[[factors[1]]])
     l2 <- 1
     factors[2] <- "f2"
-    y.values[["f2"]] <- 1
-    y.values[["f2"]] <- 1
+    y.values[["f2"]] <- as.factor(1)
     onedim <- TRUE
   }
+
+  x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
+  x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
+  xf1 <- (x0 + x1)/2
+  l2 <- levels(y.values[[factors[2]]])
 
   ellipsis <- list(...)
 
@@ -434,7 +432,10 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
                         , set.if.null = list(
                           at = 1:nlevels(y.values[[factors[1]]]) - .5
                           , labels = levels(y.values[[factors[1]]])
-                          , tick = ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
+                          , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
+                          , lwd = ifelse(ellipsis$ylim[1]==0, 0, 1)
+                          , lwd.tick = 1
+                          , pos = ifelse(ellipsis$ylim[1]==0, ellipsis$ylim[1], ellipsis$ylim[1] - (ellipsis$ylim[2] - ellipsis$ylim[1]) * .02)
                         )
   )
 
@@ -458,6 +459,8 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
 
   do.call("axis", args.y.axis)
 
+  abline(h=0)
+
   # prepare defaults for title and labels
   args.title <- defaults(
     args.title
@@ -466,8 +469,8 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
     )
     , set.if.null = list(
       main = ellipsis$main
-      , xlab = as.character(factors[1])
-      , ylab = as.character(dv)
+      , xlab = ellipsis$xlab
+      , ylab = ellipsis$ylab
     )
   )
 
@@ -505,6 +508,7 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
                           , set.if.null = list(
                             angle = 90
                             , code = 3
+                            , length = (1-space)/nlevels(y.values[[factors[[2]]]]) * .125
                             #, length = ifelse(prod(dim(as.matrix(barx))) < 8, .1, 1/max(barx))
                           )
   )
