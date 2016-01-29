@@ -141,7 +141,7 @@ apa_beeplot <- function(
   data <- data[, c(id, factors, dv)]
 
   if(is.null(ellipsis$jit)){
-    ellipsis$jit <- .4
+    ellipsis$jit <- .3
   }
 
   if(use_dplyr) {
@@ -234,13 +234,31 @@ apa_beeplot <- function(
     }
   }
 
+  tmp1 <- yy
+  tmp2 <- ee
+  colnames(tmp1)[which(colnames(tmp1)==dv)] <- "tendency"
+  colnames(tmp2)[which(colnames(tmp2)==dv)] <- "dispersion"
+
+  y.values <- merge(tmp1, tmp2, by = factors)
+
+  output$y <- y.values
+
   output$data <- aggregated
-  output[[as.character(substitute(tendency))]] <- yy
-  output[[as.character(substitute(dispersion))]] <- ee
+
 
   ## Adjust ylim to height of error bars
   if(is.null(ellipsis$ylim)) {
-    ellipsis$ylim <- c(min(0, yy[, dv] - ee[, dv]), max(yy[, dv] + ee[, dv]))
+    ellipsis$ylim <- c(
+      min(
+        0
+        , y.values[, "tendency"] - y.values[, "dispersion"]
+        , aggregated[, dv]
+      )
+      , max(
+        y.values[, "tendency"] + y.values[, "dispersion"]
+        , aggregated[, dv]
+      )
+    )
   }
 
   ## One or two factors
@@ -252,8 +270,7 @@ apa_beeplot <- function(
     ellipsis <- defaults(
       ellipsis
       , set = list(
-        yy = yy
-        , ee = ee
+        y.values = y.values
         , aggregated = aggregated
       )
       , set.if.null = list(
@@ -295,12 +312,11 @@ apa_beeplot <- function(
 
     names(ellipsis$args.legend$plot) <- levels(data[[factors[3]]])
 
-    for (i in levels(yy[[factors[3]]])) {
+    for (i in levels(y.values[[factors[3]]])) {
 
       ellipsis.i <- defaults(ellipsis, set = list(
         main = paste0(tmp_main, c(factors[3],": ",i),collapse="")
-        , yy = yy[yy[[factors[3]]]==i, ]
-        , ee = ee[ee[[factors[3]]]==i, ]
+        , y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
       ), set.if.null = list(
 
@@ -310,7 +326,7 @@ apa_beeplot <- function(
       ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i]))
 
       # suppresses ylab
-      if(i!=levels(yy[[factors[3]]])[1]){
+      if(i!=levels(y.values[[factors[3]]])[1]){
         ellipsis.i$ylab <- ""
       }
 
@@ -340,12 +356,11 @@ apa_beeplot <- function(
 
 
 
-    for (i in levels(yy[[factors[3]]])){
-      for (j in levels(yy[[factors[4]]])) {
+    for (i in levels(y.values[[factors[3]]])){
+      for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
           main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
-          , yy = yy[yy[[factors[3]]]==i&yy[[factors[4]]]==j,]
-          , ee = ee[ee[[factors[3]]]==i&ee[[factors[4]]]==j,]
+          , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
         ), set.if.null = list(
           # nothing
@@ -355,7 +370,7 @@ apa_beeplot <- function(
         ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i, j]))
 
         # suppresses ylab
-        if(j!=levels(yy[[factors[4]]])[1]){
+        if(j!=levels(y.values[[factors[4]]])[1]){
           ellipsis.i$ylab <- ""
         }
         do.call("apa.beeplot.core", ellipsis.i)
@@ -367,7 +382,7 @@ apa_beeplot <- function(
 }
 
 
-apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, ...) {
+apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL, ...) {
 
   ellipsis <- list(...)
 
@@ -383,24 +398,24 @@ apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, 
 
   # move to apa_lineplot???
   if(length(factors) > 1){
-    yy$x <- as.integer(yy[[factors[1]]]) + (as.integer(yy[[factors[2]]])-.5)/(nlevels(yy[[factors[2]]]))*(jit)-.5*jit
-    aggregated$x <- as.integer(aggregated[[factors[1]]]) + (as.integer(aggregated[[factors[2]]])-.5)/(nlevels(aggregated[[factors[2]]]))*(jit)-.5*jit
-    l2 <- levels(yy[[factors[2]]])
+    # yy$x <- as.integer(yy[[factors[1]]]) + (as.integer(yy[[factors[2]]])-.5)/(nlevels(yy[[factors[2]]]))*(jit)-.5*jit
+    # aggregated$x <- as.integer(aggregated[[factors[1]]]) + (as.integer(aggregated[[factors[2]]])-.5)/(nlevels(aggregated[[factors[2]]]))*(jit)-.5*jit
+    l2 <- levels(y.values[[factors[2]]])
     onedim <- FALSE
   } else {
-    yy$x <- as.integer(yy[[factors[1]]])
-    aggregated$x <- as.integer(aggregated[[factors[1]]])
+    # y.values$x <- as.integer(y.values[[factors[1]]])
+    # aggregated$x <- as.integer(aggregated[[factors[1]]])
     l2 <- 1
     factors[2] <- "f2"
-    yy[["f2"]] <- 1
-    ee[["f2"]] <- 1
+    y.values[["f2"]] <- 1
+    # ee[["f2"]] <- 1
     onedim <- TRUE
   }
 
+  space <-1-jit
 
-
-
-
+  y.values$x <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/(nlevels(y.values[[factors[[2]]]])-1) * (as.integer(y.values[[factors[2]]])-1)
+  aggregated$x <- as.integer(aggregated[[factors[1]]]) - 1 + space/2 + (1-space)/(nlevels(aggregated[[factors[[2]]]])-1) * (as.integer(aggregated[[factors[2]]])-1)
 
   # save parameters for multiple plot functions
   args.legend <- ellipsis$args.legend
@@ -413,7 +428,7 @@ apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, 
   ellipsis <- defaults(
     ellipsis
     , set.if.null = list(
-      xlim = c(min(yy$x), max(yy$x))
+      xlim = c(0, max(as.integer(y.values[[factors[1]]])))
     )
     , set = list(
       xaxt = "n"
@@ -462,8 +477,8 @@ apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, 
                           side = 1
                         )
                         , set.if.null = list(
-                          at = 1:nlevels(yy[[factors[1]]])
-                          , labels = levels(yy[[factors[1]]])
+                          at = 1:nlevels(y.values[[factors[1]]])-.5
+                          , labels = levels(y.values[[factors[1]]])
                         )
   )
 
@@ -474,17 +489,27 @@ apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, 
   }
 
   # convert to matrices
-  x <- tapply(yy[, "x"],list(yy[[factors[1]]], yy[[factors[2]]]), as.numeric)
-  y <- tapply(yy[, dv],list(yy[[factors[1]]], yy[[factors[2]]]), as.numeric)
-  e <- tapply(ee[, dv],list(ee[[factors[1]]], ee[[factors[2]]]), as.numeric)
+  x <- tapply(y.values[, "x"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
+  y <- tapply(y.values[, "tendency"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
+  e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
   agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
 
   nc <- nlevels(aggregated[[factors[2]]])
+
+  bg.colors <- grey((nc:1/(nc)) ^ 0.6, alpha = .4)
+  if(!is.null(args.points$bg)){
+    tmp <- col2rgb(args.points$bg, alpha = TRUE)
+    tmp <- matrix(tmp, ncol = ncol(agg.x), nrow = 4)
+    for (j in 1:ncol(agg.x)){
+      bg.colors[j] <- rgb(r = tmp[1, j], g = tmp[2, j], b = tmp[3, j], alpha = tmp[4, j] * .4, maxColorValue = 255)
+    }
+  }
+
   for (i in 1:nrow(agg.x)) {
     for (j in 1:ncol(agg.x)) {
-      points(x=agg.x[i,j][[1]], y = agg.y[i,j][[1]], pch = c(21:25,1:20)[j], bg = grey((nc:1/(nc)) ^ 0.6, alpha = .4)[j], col = rgb(r = 0, g = 0, b = 0, alpha = .4), cex = .6)
+      points(x=agg.x[i,j][[1]], y = agg.y[i,j][[1]], pch = c(21:25,1:20)[j], bg = bg.colors[j], col = rgb(r = 0, g = 0, b = 0, alpha = .4), cex = .6)
     }
   }
 
@@ -505,17 +530,17 @@ apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, 
 
   do.call("points.matrix", args.points)
 
-  # prepare and draw lines
-  args.lines <- defaults(args.lines
-                         , set = list(
-                           x = x
-                           , y = y
-                         )
-                         , set.if.null = list(
-                           lty = 1:6
-                           , col = rep("black", length(l2))
-                         )
-  )
+#   # prepare and draw lines
+#   args.lines <- defaults(args.lines
+#                          , set = list(
+#                            x = x
+#                            , y = y
+#                          )
+#                          , set.if.null = list(
+#                            lty = 1:6
+#                            , col = rep("black", length(l2))
+#                          )
+#   )
 
   # do.call("lines", args.lines)
 
@@ -541,10 +566,11 @@ apa.beeplot.core<-function(aggregated, yy, ee, id, dv, factors, intercept=NULL, 
     args.legend <- defaults(args.legend
                             , set.if.null = list(
                               x = "topright"
-                              , legend = levels(yy[[factors[2]]])
-                              , pch = args.points$pch[1:nlevels(yy[[factors[2]]])]
+                              , legend = levels(y.values[[factors[2]]])
+                              , pch = args.points$pch[1:nlevels(y.values[[factors[2]]])]
                               , lty = args.lines$lty
                               , bty = "n"
+                              , pt.bg = args.points$bg
                             ))
 
     do.call("legend", args.legend)
