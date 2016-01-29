@@ -99,6 +99,7 @@ apa_beeplot <- function(
                          , dv = dv
                          , factors = factors
                          , intercept = intercept
+                         , reference = NULL
                        )
                        , set.if.null = list(
                          args.axis = args_axis
@@ -398,13 +399,9 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
 
   # move to apa_lineplot???
   if(length(factors) > 1){
-    # yy$x <- as.integer(yy[[factors[1]]]) + (as.integer(yy[[factors[2]]])-.5)/(nlevels(yy[[factors[2]]]))*(jit)-.5*jit
-    # aggregated$x <- as.integer(aggregated[[factors[1]]]) + (as.integer(aggregated[[factors[2]]])-.5)/(nlevels(aggregated[[factors[2]]]))*(jit)-.5*jit
     l2 <- levels(y.values[[factors[2]]])
     onedim <- FALSE
   } else {
-    # y.values$x <- as.integer(y.values[[factors[1]]])
-    # aggregated$x <- as.integer(aggregated[[factors[1]]])
     l2 <- 1
     factors[2] <- "f2"
     y.values[["f2"]] <- 1
@@ -585,7 +582,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
       for(i in 1:nrow(intercept)) {
         for (j in 1:ncol(intercept)) {
           lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2))
-          print(list(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2)))
+          # print(list(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2)))
         }
       }
     } else {

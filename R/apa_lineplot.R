@@ -99,6 +99,7 @@ apa_lineplot <- function(
                          , dv = dv
                          , factors = factors
                          , intercept = intercept
+                         , reference = NULL
                        )
                        , set.if.null = list(
                          args.axis = args_axis
