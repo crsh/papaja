@@ -65,7 +65,7 @@ Although papaja is not yet on CRAN and is still undergoing a lot of changes, the
 
 Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. doi:[10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003)
 
-Aust, F., & Edwards, J. D. (in press). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. Journal of Clinical and Experimental Neuropsychology. doi:[10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453)
+Aust, F., & Edwards, J. D. (in press). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. *Journal of Clinical and Experimental Neuropsychology*. doi:[10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453)
 
 
 ## Contribute
