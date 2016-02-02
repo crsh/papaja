@@ -28,7 +28,7 @@ keywords: "keywords"
 wordcount: X
 
 class: man
-lang: american
+lang: english
 figsintext: no
 lineno: yes
 bibliography:
