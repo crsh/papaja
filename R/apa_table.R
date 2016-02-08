@@ -18,6 +18,7 @@
 #'    to indicate order of preference (\code{htb}); ignored in MS Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
+#' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}. \code{row.names} argument is overwritten
 #'    by \code{row_names}.
 #'
