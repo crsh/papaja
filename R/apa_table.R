@@ -117,17 +117,6 @@ apa_table.latex <- function(
   ellipsis$row.names <- FALSE
 
   # Assemble table
-  place_opt <- paste0("[", placement, "]")
-  if(landscape) {
-    cat("\\begin{sidewaystable}\n", place_opt, sep = "")
-    place_opt <- NULL
-  }
-  if(!longtable & !landscape) cat("\\begin{table}", place_opt, sep = "")
-  if(small) cat("\n\\small{")
-  cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
-  if(!longtable) cat("\n\\caption{", caption, "}", sep = "")
-  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
-
   if(is.list(x) && !is.data.frame(x)) {
     n_rows <- sum(sapply(x, nrow))
     prep_table <- merge_tables(
@@ -138,9 +127,8 @@ apa_table.latex <- function(
     )
     n_cols <- ncol(prep_table[[1]])
 
-    x_merged <- do.call(rbind, prep_table)
-    colnames(x_merged)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x_merged), "}")[-1] # Center title row
-    res_table <- do.call(function(...) knitr::kable(x_merged, ...), ellipsis)
+    prep_table <- do.call(rbind, prep_table)
+    colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
   } else {
     n_rows <- nrow(x)
     n_cols <- ncol(x)
@@ -157,10 +145,14 @@ apa_table.latex <- function(
     }
 
     colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
-
-    res_table <- do.call(function(...) knitr::kable(prep_table, ...), ellipsis)
   }
 
+  ## Indent stubs
+  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
+
+  res_table <- do.call(function(...) knitr::kable(prep_table, ...), ellipsis)
+
+  ## Add midrules
   table_lines <- unlist(strsplit(res_table, "\n"))
   table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \\addlinespace
 
@@ -179,25 +171,20 @@ apa_table.latex <- function(
     )
   }
 
-  if(!is.null(stub_indents)) {
-    indent_starts <- sapply(stub_indents, function(x) x[[1]])
-    indent_lines <- unlist(stub_indents)
-
-    table_lines[table_content_boarders[1] + indent_lines] <- paste(
-      "~~~"
-      , table_lines[table_content_boarders[1] + indent_lines]
-    )
-
-    stub_names <- paste(names(stub_indents), "\\\\\n")
-    stub_names[stub_names == " \\\\\n"] <- "" # No empty section headings
-    table_lines[table_content_boarders[1] + indent_starts] <- paste0(
-      stub_names
-      , table_lines[table_content_boarders[1] + indent_starts]
-    )
-  }
-
   if(!is.null(note) & longtable) table_lines <- c(table_lines[-length(table_lines)], "\\insertTableNotes", table_lines[length(table_lines)])
   res_table <- paste(table_lines, collapse = "\n")
+
+  # Print table
+  place_opt <- paste0("[", placement, "]")
+  if(landscape) {
+    cat("\\begin{sidewaystable}\n", place_opt, sep = "")
+    place_opt <- NULL
+  }
+  if(!longtable & !landscape) cat("\\begin{table}", place_opt, sep = "")
+  if(small) cat("\n\\small{")
+  cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
+  if(!longtable) cat("\n\\caption{", caption, "}", sep = "")
+  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
 
   cat(res_table)
 
@@ -217,6 +204,7 @@ apa_table.word <- function(
   , caption = NULL
   , note = NULL
   , added_colnames = NULL
+  , stub_indents = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -256,14 +244,8 @@ apa_table.word <- function(
       , row_names = row_names
       , added_colnames = added_colnames
     )
-    x_merged <- do.call(rbind, prep_table)
 
-    cat("<center>")
-    cat("Table. ")
-    cat("*", caption, "*", sep = "")
-    cat("</center>")
-
-    print(do.call(function(...) knitr::kable(x_merged, ...), ellipsis))
+    prep_table <- do.call(rbind, prep_table)
   } else {
     prep_table <- x
     if(row_names && !is.null(rownames(x))) {
@@ -276,8 +258,20 @@ apa_table.word <- function(
       if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
       colnames(prep_table) <- new_colnames
     }
-    print(do.call(function(...) knitr::kable(prep_table, ...), ellipsis))
   }
+
+  ## Indent stubs
+  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
+
+  res_table <- do.call(function(...) knitr::kable(prep_table, ...), ellipsis)
+
+  # Print table
+  cat("<center>")
+  cat("Table. ")
+  cat("*", caption, "*", sep = "")
+  cat("</center>\n")
+
+  print(res_table)
 
   if(!is.null(note)) {
     cat("\n")
@@ -411,4 +405,43 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
   )
 
   table_lines
+}
+
+
+#' Add stub indentation
+#'
+#' Indents stubs by line and adds section headings
+#' \emph{This function is not exported.}
+#'
+#' @param x data.frame.
+#' @param lines List. A named list of vectors of length 2 giving the first and second row to
+#'    indent. Names of list elements will be used as titles for indented sections.
+#' @param filler Character. Symbols used to indent stubs.
+#' @seealso \code{\link{apa_table}}
+#'
+#' @examples
+#' NULL
+
+indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
+
+  # Add indentation
+  stubs <- x[, 1]
+  for(i in seq_along(lines)) {
+    stubs[lines[[i]]] <- paste0(filler, stubs[lines[[i]]])
+  }
+  x[, 1] <- stubs
+
+  section_titles <- lines[which(names(lines) != "")]
+  section_titles <- sapply(section_titles, min)
+
+  # Add section headings
+  if(length(section_titles) > 0) {
+    for(i in seq_along(section_titles)) {
+      top <- if(section_titles[i] != 1) x[1:(section_titles[i] - 1), ] else NULL
+      bottom <- if(section_titles[i] != nrow(x)) x[section_titles[i]:nrow(x), ] else x[nrow(x), ]
+      x <- rbind(top, c(names(section_titles[i]), rep("", ncol(x) - 1)), bottom)
+    }
+  }
+
+  x
 }
