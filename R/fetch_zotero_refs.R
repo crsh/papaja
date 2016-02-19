@@ -19,7 +19,7 @@
 #' number of retrieved records is limited to 100 per API call. Frequent API calls will result in a temporary access
 #' block. Thus, there is an (currently unknown) upper limit to the length of reference collections that can be
 #' retrieved through this function. It is generally advisable to comment out the use of this function during periods
-#' in which the RMarkdown file is frequently rebuilt to limit the number of API calls and limit the number of references
+#' in which the R Markdown file is frequently rebuilt to limit the number of API calls and limit the number of references
 #' to those needed for the current document by setting up collections in your Zotero library.
 #'
 #' Collection keys (\code{collection}), i.e. identifiers of reference library subsets, can be retrieved by accessing

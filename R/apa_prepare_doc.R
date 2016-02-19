@@ -1,6 +1,6 @@
 #' Prepare APA document
 #'
-#' Prepares objevts to be used in the rendering process and creates title page and abstract for MS Word
+#' Prepares objects to be used in the rendering process and creates title page and abstract for MS Word
 #' documents.
 #'
 #' @details The function creates and locks a non-exported object \code{apa_lang} that is used by other
@@ -10,7 +10,7 @@
 #'
 #'    If the output document is MS Word (\code{output: \link{apa6_word}}) the function additionally creates
 #'    a title page and adds the abstract. You should, therefore, allways call \code{apa_prepare_doc} at the
-#'    very beginning of the RMarkdown document.
+#'    very beginning of the R Markdown document.
 #' @seealso \code{\link{apa6_word}}
 #' @examples apa_prepare_doc()
 #' @export

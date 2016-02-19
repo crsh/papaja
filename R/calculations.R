@@ -1,5 +1,5 @@
 # Modified percentile bootstrap
-# Algina, J., Keselman, H. J., & Penfield, R. D. (2007). ciidence Intervals for an Effect Size Measure in Multiple Linear Regression.
+# Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confiddence Intervals for an Effect Size Measure in Multiple Linear Regression.
 # Educational and Psychological Measurement, 67(2), 207–218. http://doi.org/10.1177/0013164406292030
 
 # x: apa_model_comp object

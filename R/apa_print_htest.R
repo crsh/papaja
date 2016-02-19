@@ -1,7 +1,7 @@
 #' Format statistics (APA 6th edition)
 #'
 #' Takes \code{htest} objects from various statistical methods to create
-#' formated chraracter strings to report the results in accordance with APA manuscript guidelines.
+#' formatted chraracter strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{htest} object. See details.
 #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
@@ -15,7 +15,7 @@
 #' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
@@ -26,7 +26,7 @@
 #'    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
 #'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
+#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
 #' @return \code{apa_print()} returns a list containing the following components according to the input:

@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' Takes \code{lm} objects from various statistical methods to create formated chraracter
+#' Takes \code{lm} objects from various statistical methods to create formatted chraracter
 #' strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{lm} object.
@@ -13,13 +13,13 @@
 #'    \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 #'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 #'    See details.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details
 #'    The coefficients names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
+#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
 #'    \code{est_name} is placed in the output string and is thus passed to pandoc or LaTeX through \pkg{kntir}.

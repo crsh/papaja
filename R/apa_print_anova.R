@@ -1,6 +1,6 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' These methods take objects from various R functions that calculate ANOVA to create formated chraracter
+#' These methods take objects from various R functions that calculate ANOVA to create formatted chraracter
 #' strings to report the results in accordance with APA manuscript guidelines. \code{anova}-objects from e.g. model comparisons are currently
 #' only supported for \code{lm}-objects.
 #'
@@ -19,7 +19,7 @@
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
+#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
 #'    As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\Delta R^2}

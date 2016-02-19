@@ -1,11 +1,11 @@
 #' Render appendix
 #'
-#' This functions renders an RMarkdown to TeX fragment without preamble so it can be included as appendix.
+#' This functions renders an R Markdown to TeX fragment without preamble so it can be included as appendix.
 #'
 #' @param x Character. Input file name.
 #' @details
 #' Because pandoc currently does not support \code{includes} \code{after_body} this function has no effect
-#' when renderin word documents.
+#' when rendering word documents.
 #' @export
 
 render_appendix <- function(x) {

@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' A generic function that takes objects from various statistical methods to create formated chraracter
+#' A generic function that takes objects from various statistical methods to create formatted chraracter
 #' strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
 #' methods, which depend on the \code{\link{class}} of the first argument.
 #'
