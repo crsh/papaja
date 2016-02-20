@@ -163,85 +163,25 @@ apa_lineplot <- function(
 
   ## Calculate dispersions
   fun_dispersion <- deparse(substitute(dispersion))
-  if(fun_dispersion == "conf_int") {
-    ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
-  } else {
-    if(use_dplyr) {
-      ee <- papaja:::fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
-    } else {
-      ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
-    }
-
-  }
-  ## within-subjects confidence intervals
   if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
-
-    # check which factors are between/within
-    between <- ellipsis$between
-    within <- ellipsis$within
-
-    for (i in 1:length(factors)) {
-
-      if (all(rowSums(table(aggregated[[id]], aggregated[[factors[i]]])!=0)==1)) {
-        between <- c(between, factors[i])
+    ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
+  } else {
+    if(fun_dispersion == "conf_int") {
+      ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
+    } else {
+      if(use_dplyr) {
+        ee <- papaja:::fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
       } else {
-        within <- c(within, factors[i])
+        ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
       }
-    }
-
-    # split by between factors
-    if (is.null(between)) {
-      splitted <- list(aggregated)
-    } else if(length(between)>1){
-      splitted <- split(aggregated, f=as.list(aggregated[, c(between)]), sep = ":")
-    } else if (length(between)==1) {
-      splitted <- split(aggregated, f=aggregated[, c(between)])
-    }
-
-    if(!is.null(within)) {
-
-      Morey_CI <- lapply(X = splitted, FUN = function(x){
-        y <- tapply(x[[dv]], as.list(x[, c(id, within)]), FUN = as.numeric) # transform to matrix
-        z <- y - array(rowMeans(y, na.rm = TRUE), dim(y)) + mean(y, na.rm=TRUE) # normalise
-        CI <- apply(z, MARGIN = (1:(length(within)+1))[-1], FUN = conf_int, level) # calculate CIs for each condition
-
-        # Morey correction
-        M <- prod(apply(X = as.matrix(x[, within]), MARGIN = 2, FUN = function(x){nlevels(as.factor(x))}))
-        Morey_CI <- CI * M/(M-1)
-
-        # reshape to data.frame
-        Morey_CI <- as.data.frame(as.table(Morey_CI))
-        if(length(within)==1){
-          colnames(Morey_CI)[colnames(Morey_CI)=="Var1"] <- within
-        }
-        colnames(Morey_CI)[colnames(Morey_CI)=="Freq"] <- dv
-        # return
-        Morey_CI
-      })
-
-    if(is.null(between)) {
-      ee <- data.frame(unlist(Morey_CI, recursive=FALSE))
-    } else {
-      names <- strsplit(names(Morey_CI), split = ":")
-      for (i in 1:length(Morey_CI)) {
-        for ( j in 1:length(between)){
-        Morey_CI[[i]][[between[j]]] <- names[[i]][j]
-        }
-      }
-    }
-    ee <- papaja:::fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun =mean)
-    output$Morey_CI <- Morey_CI
-    } else {
-      stop("No within-subjects factors specified.")
     }
   }
 
-  tmp1 <- yy
-  tmp2 <- ee
-  colnames(tmp1)[which(colnames(tmp1)==dv)] <- "tendency"
-  colnames(tmp2)[which(colnames(tmp2)==dv)] <- "dispersion"
 
-  y.values <- merge(tmp1, tmp2, by = factors)
+  colnames(yy)[which(colnames(yy)==dv)] <- "tendency"
+  colnames(ee)[which(colnames(ee)==dv)] <- "dispersion"
+
+  y.values <- merge(yy, ee, by = factors)
 
   output$y <- y.values
 
@@ -266,8 +206,6 @@ apa_lineplot <- function(
       , set.if.null = list(
 
       ))
-
-    # par(mfrow=par("mfrow"))
     do.call("apa.lineplot.core", ellipsis)
   }
 
@@ -414,7 +352,13 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
 
   space <-1-jit
 
-  y.values$x <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/(nlevels(y.values[[factors[[2]]]])-1) * (as.integer(y.values[[factors[2]]])-1)
+  y.values$x <- as.integer(y.values[[factors[1]]]) - .5
+
+  # Apply jittering if and only if more than two factors are specified
+  if(onedim==FALSE) {
+    y.values$x <- y.values$x - .5 + space/2 + (1-space)/(nlevels(y.values[[factors[[2]]]])-1) * (as.integer(y.values[[factors[2]]])-1)
+  }
+
   l2 <- levels(y.values[[factors[2]]])
 
   # save parameters for multiple plot functions
@@ -444,7 +388,7 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   )
 
   do.call("plot.default", ellipsis)
-
+  print(y.values)
   # prepare defaults for x axis
   args.axis <- defaults(args.axis
     , set = list(
@@ -633,6 +577,3 @@ sel <- function(x, i){
 
 #' @export
 within_subjects_conf_int <- function(...) return(100)
-
-#' @export
-wsci <- within_subjects_conf_int
