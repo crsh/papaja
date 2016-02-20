@@ -388,7 +388,7 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   )
 
   do.call("plot.default", ellipsis)
-  print(y.values)
+  # print(y.values)
   # prepare defaults for x axis
   args.axis <- defaults(args.axis
     , set = list(
@@ -486,7 +486,7 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
       for(i in 1:nrow(intercept)) {
         for (j in 1:ncol(intercept)) {
           lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2))
-          print(list(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2)))
+          # print(list(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2)))
         }
       }
     } else {
