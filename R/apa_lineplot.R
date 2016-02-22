@@ -566,14 +566,5 @@ arrows.matrix <- function(x0, x1, y0, y1, ...) {
 }
 
 
-
-
-
-# helper function
-sel <- function(x, i){
-  if(length(x)>=i) x <- x[i]
-  return(x)
-}
-
 #' @export
 within_subjects_conf_int <- function(...) return(100)
