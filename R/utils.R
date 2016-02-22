@@ -245,3 +245,20 @@ prettify_terms <- function(x, standardized = FALSE) {
   x
 }
 
+
+#' Select parameters
+#'
+#' If a \code{list} holds vectors of parameter values, this function extracts the i-th parameter value from each vector and creates
+#' a new \code{list} with these values. Especially helpful if a function is call repeatedly via \code{do.call} with different
+#' parameter values from within a function.
+#'
+#' @param x. List. A list of parameter values
+#' @param i. Integer. The i-th element of each vector that is to be extracted.
+#'
+#' @examples
+#' NULL
+
+sel <- function(x, i){
+  x <- x[(i-1)%%length(x)+1]
+  return(x)
+}
