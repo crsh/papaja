@@ -107,8 +107,13 @@ apa_table <- function(...) {
 
 
   # Pass to markup generating functions
-  output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-  if(length(output_format) == 0) output_format <- "latex"
+  if(!is.null(ellipsis$format)) {
+    output_format <- ellipsis$format
+  } else {
+    output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+    if(length(output_format) == 0) output_format <- "latex"
+  }
+
   if(output_format == "latex") {
     do.call(apa_table.latex, ellipsis)
   } else {
@@ -142,7 +147,6 @@ apa_table.latex <- function(
 
   # Parse ellipsis
   ellipsis <- list(...)
-  ellipsis$format <- "latex"
   ellipsis$booktabs <- TRUE
   longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
   if(longtable) {
@@ -220,8 +224,6 @@ apa_table.word <- function(
 
   # Parse ellipsis
   ellipsis <- list(...)
-  if(!is.null(ellipsis$format)) ellipsis$format <- "pandoc"
-
   res_table <- do.call(function(...) knitr::kable(x, ...), ellipsis)
 
   # Print table
