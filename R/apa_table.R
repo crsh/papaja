@@ -6,7 +6,8 @@
 #' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
-#' @param added_colnames Character. Vector of names for first unnamed columns. See details.
+#' @param added_stub_head Character. Used as stub head (name of first column) if \code{row.names = TRUE}
+#'    is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.
 #' @param col_spanners List. A named list of vectors of length 2 giving the first and second column to
 #'    span with a grouping column name.
 #' @param stub_indents List. A named list of vectors of length 2 giving the first and second row to
@@ -19,8 +20,7 @@
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
 #' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
-#' @param ... Further arguments to pass to \code{\link[knitr]{kable}}. \code{row.names} argument is overwritten
-#'    by \code{row_names}.
+#' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
 #' @details
 #'    When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is determined automatically
@@ -29,10 +29,6 @@
 #'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
 #'    the first column giving the names of the list elements elements.
 #'
-#'    If the first column(s) of the table are unnamed, names for these columns can be supplied using the
-#'    \code{added_colnames} parameter. This can be done, e.g., when an object has rownames (unless
-#'    \code{row.names = FALSE} is passed to \code{\link[knitr]{kable}}) and when elements of a \code{list} are
-#'    merged.
 #' @seealso \code{\link[knitr]{kable}}
 #' @examples
 #'
@@ -45,17 +41,78 @@
 #'    , align = c("l", "r", "r")
 #'    , caption = "A summary table of the cars dataset."
 #'    , note = "This table was created using apa\\_table()"
-#'    , added_colnames = "Descriptives"
+#'    , added_stub_head = "Descriptives"
 #' )
 #' @export
 
 apa_table <- function(...) {
+
+  # Set defaults and rename ellipsis arguments
+  ellipsis <- list(...)
+  x <- if(!is.null(ellipsis$x)) ellipsis$x else ellipsis[[1]]
+  added_stub_head <- ellipsis$added_stub_head
+  stub_indents <- ellipsis$stub_indents
+  row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
+
+  validate(row_names, "row.names", check_class = "logical", check_length = 1)
+  if(!is.null(ellipsis$caption)) validate(ellipsis$caption, "caption", check_class = "character", check_length = 1)
+  if(!is.null(ellipsis$note)) validate(ellipsis$note, "note", check_class = "character", check_length = 1)
+  if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
+  if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
+
+  # List of tables?
+  if(is.list(x) && !is.data.frame(x)) {
+
+    ## Assemble table
+    # Old table merging by adding an additional column is depricated for the moment
+#     prep_table <- merge_tables(
+#       x
+#       , empty_cells = ""
+#       , row_names = row_names
+#       , added_stub_head = added_stub_head
+#     )
+
+    if(row_names) {
+      prep_table <- lapply(x, add_row_names, added_stub_head = added_stub_head)
+    } else prep_table <- x
+
+    prep_table <- do.call(rbind, prep_table)
+
+    ### Indent individual tables
+    list_indents <- lapply(x, function(x) 1:nrow(x))
+    for(i in seq_along(list_indents)[-1]) list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
+    prep_table <- indent_stubs(prep_table, list_indents)
+
+  } else {
+
+    ## Assemble table
+    if(row_names) {
+      prep_table <- add_row_names(x, added_stub_head = added_stub_head)
+    } else prep_table <- x
+  }
+
+  if(!is.null(ellipsis$escape) && ellipsis$escape) {
+    x <- escape_latex(x)
+    colnames(x) <- escape_latex(colnames(x))
+  }
+
+  # Indent stubs
+  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
+
+
+  # Fix ellipsis for further use
+  ellipsis$escape <- FALSE
+  ellipsis$row.names <- FALSE
+  if(!is.null(ellipsis$x)) ellipsis$x <- prep_table else ellipsis[[1]] <- prep_table
+
+
+  # Pass to markup generating functions
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(length(output_format) == 0) output_format <- "latex"
   if(output_format == "latex") {
-    apa_table.latex(...)
+    do.call(apa_table.latex, ellipsis)
   } else {
-    apa_table.word(...)
+    do.call(apa_table.word, ellipsis)
   }
 }
 
@@ -66,7 +123,7 @@ apa_table.latex <- function(
   x
   , caption = NULL
   , note = NULL
-  , added_colnames = NULL
+  , added_stub_head = NULL
   , col_spanners = NULL
   , stub_indents = NULL
   , midrules = NULL
@@ -76,11 +133,10 @@ apa_table.latex <- function(
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
-  if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
-  if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
-  if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
-  if(!is.null(col_spanners)) validate(col_spanners, check_class = "list")
-  if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
+  if(!is.null(col_spanners)) {
+    validate(col_spanners, check_class = "list")
+    validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(x)))
+  }
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
@@ -97,61 +153,13 @@ apa_table.latex <- function(
     table_note_env <- "tablenotes"
   }
 
-  if(!is.null(ellipsis$escape) && ellipsis$escape) {
-       x <- escape_latex(x)
-       colnames(x) <- escape_latex(colnames(x))
-       rownames(x) <- escape_latex(rownames(x))
-  }
-  ellipsis$escape <- FALSE
+  n_cols <- ncol(x)
+  n_rows <- nrow(x)
 
-  if(!is.null(ellipsis$row.names)) {
-    if(is.list(x) && !is.data.frame(x)) {
-      row_names <- rep(ellipsis$row.names, length(x))
-    } else row_names <- ellipsis$row.names
-  } else { # Default to FALSE if rownames are 1:x or NULL
-    if(is.list(x) && !is.data.frame(x)) {
-      row_names <- !(sapply(x, function(x) all(rownames(x) == seq_along(1:nrow(x)))))
-    } else {
-      row_names <- !(rownames(x) == 1:nrow(x))
-    }
-  }
-  ellipsis$row.names <- FALSE
+  # Center title row
+  colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
 
-  # Assemble table
-  if(is.list(x) && !is.data.frame(x)) {
-    n_rows <- sum(sapply(x, nrow))
-    prep_table <- merge_tables(
-      x
-      , ""
-      , row_names = row_names
-      , added_colnames = added_colnames
-    )
-    n_cols <- ncol(prep_table[[1]])
-
-    prep_table <- do.call(rbind, prep_table)
-    colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
-  } else {
-    n_rows <- nrow(x)
-    n_cols <- ncol(x)
-    prep_table <- x
-    if(row_names && !is.null(rownames(x))) {
-      prep_table <- cbind(rownames(x), x)
-      colnames(prep_table) <- c("", colnames(x))
-      rownames(prep_table) <- NULL
-    }
-    if(!is.null(added_colnames)) {
-      new_colnames <- c(added_colnames, colnames(x))
-      if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
-      colnames(prep_table) <- new_colnames
-    }
-
-    colnames(prep_table)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(prep_table), "}")[-1] # Center title row
-  }
-
-  ## Indent stubs
-  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
-
-  res_table <- do.call(function(...) knitr::kable(prep_table, ...), ellipsis)
+  res_table <- do.call(function(...) knitr::kable(x, ...), ellipsis)
 
   ## Add midrules
   table_lines <- unlist(strsplit(res_table, "\n"))
@@ -204,67 +212,17 @@ apa_table.word <- function(
   x
   , caption = NULL
   , note = NULL
-  , added_colnames = NULL
+  , added_stub_head = NULL
   , stub_indents = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
-  if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
-  if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
-  if(!is.null(added_colnames)) validate(added_colnames, check_class = "character")
 
   # Parse ellipsis
   ellipsis <- list(...)
   if(!is.null(ellipsis$format)) ellipsis$format <- "pandoc"
 
-  if(!is.null(ellipsis$escape) && ellipsis$escape) {
-    x <- escape_latex(x)
-    colnames(x) <- escape_latex(colnames(x))
-    rownames(x) <- escape_latex(rownames(x))
-  }
-  ellipsis$escape <- FALSE
-
-  if(!is.null(ellipsis$row.names)) {
-    if(is.list(x) && !is.data.frame(x)) {
-      row_names <- rep(ellipsis$row.names, length(x))
-    } else row_names <- ellipsis$row.names
-  } else { # Default to FALSE if rownames are 1:x or NULL
-    if(is.list(x) && !is.data.frame(x)) {
-      row_names <- !(sapply(x, function(x) all(rownames(x) == seq_along(1:nrow(x)))))
-    } else {
-      row_names <- !(rownames(x) == 1:nrow(x))
-    }
-  }
-  ellipsis$row.names <- FALSE
-
-  # Assemble table
-  if(is.list(x) && !is.data.frame(x)) {
-    prep_table <- merge_tables(
-      x
-      , ""
-      , row_names = row_names
-      , added_colnames = added_colnames
-    )
-
-    prep_table <- do.call(rbind, prep_table)
-  } else {
-    prep_table <- x
-    if(row_names && !is.null(rownames(x))) {
-      prep_table <- cbind(rownames(x), x)
-      colnames(prep_table) <- c("", colnames(x))
-      rownames(prep_table) <- NULL
-    }
-    if(!is.null(added_colnames)) {
-      new_colnames <- c(added_colnames, colnames(x))
-      if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
-      colnames(prep_table) <- new_colnames
-    }
-  }
-
-  ## Indent stubs
-  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
-
-  res_table <- do.call(function(...) knitr::kable(prep_table, ...), ellipsis)
+  res_table <- do.call(function(...) knitr::kable(x, ...), ellipsis)
 
   # Print table
   cat("<center>")
@@ -284,60 +242,71 @@ apa_table.word <- function(
 }
 
 
-#' Merge tables in list
+#' Add row names as first column
 #'
-#' Takes a list of containing one or more \code{matrix} or \code{data.frame} and merges them into a single table.
+#' Adds row names as the first column of the table and sets \code{row.name} attribute to \code{NULL}.
 #' \emph{This function is not exported.}
 #'
-#' @param x List. A named list containing one or more \code{matrix} or \code{data.frame}.
-#' @param empty_cells Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
-#'    \code{"&nbsp;"} if the target document is Word.
-#' @param row_names Logical. Vector of boolean values specifying whether to print column names for the corresponding list
-#'    element.
-#' @param added_colnames Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
+#' @param x data.frame or matrix.
+#' @param added_stub_head Character. Used as stub head (name of first column).
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
 #' NULL
 
-merge_tables <- function(x, empty_cells, row_names, added_colnames) {
-  tables_to_merge <- names(x)
-  prep_table <- lapply(seq_along(x), function(i) {
+add_row_names <- function(x, added_stub_head) {
+  if(!is.null(rownames(x)) && all(rownames(x) != 1:nrow(x))) {
+    mod_table <- cbind(rownames(x), x)
 
-  # MERGE AS IS, AS INDENTED SECTIONS OR SEPARATED BY TABLE SPANNERS?
-
-    # Add rownames
-    if(row_names[i] && !is.null(rownames(x[[i]]))) {
-      i_table <- cbind(rownames(x[[i]]), x[[i]])
-      colnames(i_table) <- c("", colnames(x[[i]]))
-    } else if(!row_names[i] & any(row_names)) {
-      i_table <- cbind("", x[[i]])
-      colnames(i_table) <- c(" ", colnames(x[[i]]))
-    } else i_table <- x[[i]]
-    prep_table <- cbind(
-      c(tables_to_merge[i], rep("", nrow(x[[i]])-1))
-      , i_table
-    )
-    rownames(prep_table) <- NULL
-
-    # Add colnames
-    if(row_names[i] && !is.null(rownames(x[[i]])) && length(added_colnames) < 2) {
-      second_col <- ""
-    } else second_col <- NULL
-    if(is.null(added_colnames)) {
-      colnames(prep_table) <- c("", second_col, colnames(x[[i]]))
+    if(!is.null(added_stub_head)) {
+      colnames(mod_table) <- c(added_stub_head, colnames(x))
     } else {
-      new_colnames <- c(added_colnames, second_col, colnames(x[[i]]))
-      if(length(new_colnames) > ncol(prep_table)) stop("Too many column names. Please check length of 'added_colnames'.")
-      colnames(prep_table) <- new_colnames
+      colnames(mod_table) <- c("", colnames(x))
     }
+  } else mod_table <- x
 
-    as.data.frame(prep_table, stringsAsFactors = FALSE)
-  })
-
-  prep_table
+  rownames(mod_table) <- NULL
+  mod_table
 }
 
+
+#' Add stub indentation
+#'
+#' Indents stubs by line and adds section headings
+#' \emph{This function is not exported.}
+#'
+#' @param x data.frame.
+#' @param lines List. A named list of vectors of length 2 giving the first and second row to
+#'    indent. Names of list elements will be used as titles for indented sections.
+#' @param filler Character. Symbols used to indent stubs.
+#' @seealso \code{\link{apa_table}}
+#'
+#' @examples
+#' NULL
+
+indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
+
+  # Add indentation
+  stubs <- x[, 1]
+  for(i in seq_along(lines)) {
+    stubs[lines[[i]]] <- paste0(filler, stubs[lines[[i]]])
+  }
+  x[, 1] <- stubs
+
+  section_titles <- lines[which(names(lines) != "")]
+  section_titles <- sapply(section_titles, min)
+
+  # Add section headings
+  if(length(section_titles) > 0) {
+    for(i in seq_along(section_titles)) {
+      top <- if(section_titles[i] != 1) x[1:(section_titles[i] - 1), ] else NULL
+      bottom <- if(section_titles[i] != nrow(x)) x[section_titles[i]:nrow(x), ] else x[nrow(x), ]
+      x <- rbind(top, c(names(section_titles[i]), rep("", ncol(x) - 1)), bottom)
+    }
+  }
+
+  x
+}
 
 
 #' Add table headings to group columns
@@ -409,40 +378,53 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
 }
 
 
-#' Add stub indentation
+#' Merge tables in list
 #'
-#' Indents stubs by line and adds section headings
-#' \emph{This function is not exported.}
+#' Takes a list of containing one or more \code{matrix} or \code{data.frame} and merges them into a single table.
+#' \emph{This function is not exported and currently unused.}
 #'
-#' @param x data.frame.
-#' @param lines List. A named list of vectors of length 2 giving the first and second row to
-#'    indent. Names of list elements will be used as titles for indented sections.
-#' @param filler Character. Symbols used to indent stubs.
+#' @param x List. A named list containing one or more \code{matrix} or \code{data.frame}.
+#' @param empty_cells Character. String to place in empty cells; should be \code{""} if the target document is LaTeX and
+#'    \code{"&nbsp;"} if the target document is Word.
+#' @param row_names Logical. Vector of boolean values specifying whether to print column names for the corresponding list
+#'    element.
+#' @param added_stub_head Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
 #' NULL
 
-indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
+merge_tables <- function(x, empty_cells, row_names, added_stub_head) {
 
-  # Add indentation
-  stubs <- x[, 1]
-  for(i in seq_along(lines)) {
-    stubs[lines[[i]]] <- paste0(filler, stubs[lines[[i]]])
-  }
-  x[, 1] <- stubs
+  table_names <- names(x)
 
-  section_titles <- lines[which(names(lines) != "")]
-  section_titles <- sapply(section_titles, min)
+  prep_table <- lapply(seq_along(x), function(i) {
 
-  # Add section headings
-  if(length(section_titles) > 0) {
-    for(i in seq_along(section_titles)) {
-      top <- if(section_titles[i] != 1) x[1:(section_titles[i] - 1), ] else NULL
-      bottom <- if(section_titles[i] != nrow(x)) x[section_titles[i]:nrow(x), ] else x[nrow(x), ]
-      x <- rbind(top, c(names(section_titles[i]), rep("", ncol(x) - 1)), bottom)
+    if(row_names[i]) {
+      i_table <- add_row_names(x[[i]], added_stub_head = added_stub_head[(length(added_stub_head) == 2) + 1])
+    } else if(any(row_names)) { # Add empty column if row names are added to any table
+      i_table <- cbind("", i_table)
+      colnames(i_table) <- c("", colnames(i_table))
+    } else i_table <- x[[i]]
+
+    # Merge with added column
+    prep_table <- cbind(
+      c(table_names[i], rep("", nrow(x[[i]])-1))
+      , i_table
+    )
+
+    # Add colnames
+    if(row_names[i] && !is.null(rownames(x[[i]])) && length(added_stub_head) < 2) {
+      second_col <- ""
+    } else second_col <- NULL
+    if(is.null(added_stub_head)) {
+      colnames(prep_table) <- c("", second_col, colnames(x[[i]]))
+    } else {
+      colnames(prep_table) <- c(added_stub_head, second_col, colnames(x[[i]]))
     }
-  }
 
-  x
+    as.data.frame(prep_table, stringsAsFactors = FALSE)
+  })
+
+  prep_table
 }
