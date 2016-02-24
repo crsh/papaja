@@ -262,3 +262,28 @@ sel <- function(x, i){
   x <- x[(i-1)%%length(x)+1]
   return(x)
 }
+
+
+#' Set defaults
+#'
+#' A helper function that is intended for internal use. A list \code{ellipsis} may be manipulated by overwriting (via \code{set}) or adding (via \code{set.if.null}) list elements.
+#'
+#' @param ellipsis A \code{list}, usually a list that comes from an ellipsis
+#' @param set A named  \code{list} of parameters that are intended to be set.
+#' @param set.if.null A named \code{list} of parameters that are intended to be set if and only if the parameter is not already in \code{ellipsis}.
+
+defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
+
+  ellipsis <- as.list(ellipsis)
+
+  for (i in names(set)) {
+    ellipsis[[i]] <- set[[i]]
+  }
+  for (i in names(set.if.null)) {
+    if(is.null(ellipsis[[i]])) ellipsis[[i]] <- set.if.null[[i]]
+  }
+  return(ellipsis)
+}
+
+
+

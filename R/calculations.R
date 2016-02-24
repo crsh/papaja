@@ -59,16 +59,30 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 #' Within-subjects confidence intervals
 #'
 #' Calculate Cousineau-Morey within-subjects confidence intervals
+#' @param data A \code{data.frame} that contains the data.
+#' @param id Character. Variable name that identifies subjects.
+#' @param factors Character. A vector of variable names that is used to stratify the data.
+#' @param dv Character. The name of the dependent variable.
+#' @param level Numeric. Defines the width of the interval. Defaults to 0.95
+#'    for 95\% confidence intervals.
+#' @param method Character. The method that is used to calculate. Actually,
+#'          "Morey" and "Cousineau" are supported. Defaults to "Morey".
+#' @references
+#'    Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
+#'    \emph{Tutorials in Quantitative Methods for Psychology}, 4(2), 61--64.
+#'
+#'    Cousineau, D. (2005). Confidence intervals in within-subjects designs:
+#'    A simpler solution to Loftus and Masson's method.
+#'    \emph{Tutorials in Quantitative Methods for Psychology}, 1(1), 42--45.
 #'
 #'
 #'
-#'
-#'
+#' @examples
 #' wsci(
 #'    data = npk
 #'    , id = "block"
 #'    , dv = "yield"
-#'    , factors = c("N")
+#'    , factors = c("N", "P")
 #' )
 #' @export
 
@@ -94,7 +108,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   test <- tapply(data[[dv]], as.list(data[, c(id, factors)]), FUN = function(x){sum(!is.na(x))})
 
   if(!all(test<=1||is.na(test))){
-    stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination")
+    stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination.")
   }
 
   # split by between factors
@@ -157,3 +171,51 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 }
 
 
+
+#' @rdname wsci
+#' @export
+within_subjects_conf_int <- wsci
+
+
+
+#' Between-subjects confidence intervals
+#'
+#' Returns the deviation that is needed to construct confidence intervals for a vector of observations.
+#'
+#' @param x Numeric. A vector of observations from your dependent variable.
+#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
+#'    for 95\% confidence intervals.
+#' @param na.rm Logical. Specifies if missing values are removed.
+#' @export
+
+conf_int<-function(x, level = 0.95, na.rm = TRUE){
+  a <- (1-level)/2
+  n <- sum(!is.na(x))
+  fac <- -suppressWarnings(qt(a, df = n-1))
+  if(n==1){
+    message("Only one observation in a cell. Thus, no confidence interval can be computed.")
+  }
+  ee <- (sd(x, na.rm = na.rm)*fac)/sqrt(n)
+  return(ee)
+}
+
+#' @rdname conf_int
+#' @export
+conf.int <- conf_int
+
+
+
+
+#' Standard errors
+#'
+#' Returns the standard error of a vector
+#'
+#' @param x Numeric. A vector of observations from your dependent variable.
+#' @param na.rm Logical. Specifies if missing values are removed.
+#' @export
+
+se <- function(x, na.rm=TRUE){
+  n <- sum(!is.na(x))
+  ee <- sd(x, na.rm = na.rm)/sqrt(n)
+  return(ee)
+}
