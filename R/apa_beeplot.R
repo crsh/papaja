@@ -459,6 +459,23 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
   }
 
 
+  # prepare and draw arrows (i.e., error bars)
+  args.arrows <- defaults(args.arrows
+                          , set = list(
+                            x0 = x
+                            , x1 = x
+                            , y0 = y-e
+                            , y1 = y+e
+                          )
+                          , set.if.null = list(
+                            angle = 90, code = 3, length = .1
+                          )
+  )
+
+
+  do.call("arrows", args.arrows)
+
+
   # prepare and draw points
   args.points <- defaults(args.points
                           , set = list(
@@ -489,21 +506,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
 
   # do.call("lines", args.lines)
 
-  # prepare and draw arrows (i.e., error bars)
-  args.arrows <- defaults(args.arrows
-                          , set = list(
-                            x0 = x
-                            , x1 = x
-                            , y0 = y-e
-                            , y1 = y+e
-                          )
-                          , set.if.null = list(
-                            angle = 90, code = 3, length = .1
-                          )
-  )
 
-
-  do.call("arrows", args.arrows)
 
   # prepare and draw legend
   if(onedim==FALSE) {
