@@ -26,7 +26,14 @@
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    arrange_anova(summary(npk_aov))
 
-arrange_anova <- function(x, ...) UseMethod("arrange_anova", x)
+arrange_anova <- function(x, ...) {
+  UseMethod("arrange_anova", x)
+}
+
+arrange_anova.default <- function(x, ...) {
+  stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
+              Visit https://github.com/crsh/papaja/issues to request support for this class."))
+}
 
 
 #' @rdname arrange_anova

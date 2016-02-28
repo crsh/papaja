@@ -4,6 +4,7 @@ test_that(
   "Within-subjects confidence intervals"
   , {
     ee <- apa_barplot(data = npk, dv = "yield", id = "block", factors = c("N", "P"), dispersion = wsci)$ee
+    file.remove("Rplots.pdf")
     mat <- tapply(ee$yield, list(ee$N, ee$P), FUN = as.numeric)
 
     grand_mean <- mean(npk$yield)

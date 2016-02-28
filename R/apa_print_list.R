@@ -13,6 +13,7 @@
 
 apa_print.list <- function(
   x
+  , anova_fun = anova
   , ci = 0.90
   , boot_samples = 10000
   , in_paren = FALSE
@@ -24,7 +25,7 @@ apa_print.list <- function(
   validate(boot_samples, check_class = "numeric", check_length = 1)
 
   # Compare models
-  model_comp <- do.call(anova, x, ...)
+  model_comp <- do.call(anova_fun, x, ...)
 
   variance_table <- arrange_anova(model_comp)
 
