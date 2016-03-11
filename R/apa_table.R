@@ -301,8 +301,8 @@ indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
   # Add section headings
   if(length(section_titles) > 0) {
     for(i in seq_along(section_titles)) {
-      top <- if(section_titles[i] != 1) x[1:(section_titles[i] - 1), ] else NULL
-      bottom <- if(section_titles[i] != nrow(x)) x[section_titles[i]:nrow(x), ] else x[nrow(x), ]
+      top <- if(section_titles[i] != 1) x[1:(section_titles[i] - 1 + (i-1)), ] else NULL
+      bottom <- if(section_titles[i] != nrow(x)) x[(section_titles[i] + (i-1)):nrow(x), ] else x[nrow(x), ]
       x <- rbind(top, c(names(section_titles[i]), rep("", ncol(x) - 1)), bottom)
     }
   }
