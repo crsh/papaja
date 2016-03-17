@@ -1,9 +1,7 @@
 #' Beeswarm plots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more lineplots from a data.frame containing data from
-#' a factorial design and sets APA-friendly defaults. It sequentially calls \code{\link{plot}},
-#' \code{\link{axis}}, \code{\link{points}}, \code{\link{lines}}, \code{\link{arrows}} and
-#' \code{\link{legend}}, that may be further customized.
+#' Wrapper function that creates one or more beeswarm plots from a data.frame containing data from
+#' a factorial design and sets APA-friendly defaults.
 #'
 #'
 #' @param data A \code{data.frame} that contains the data.
@@ -22,7 +20,6 @@
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
-#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}
 #' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
 #' @param ... Further arguments than can be passed to \code{\link{plot}} function.
@@ -57,9 +54,13 @@
 #'    , level = .34
 #'    , las = 1
 #' )
+#'
+#' @familiy apa_beeplot
+#'
+#' @rdname apa_beeplot
 #' @export
 
-apa_beeplot <- function(
+apa_beeplot.default <- function(
   data
   , id
   , factors
@@ -519,6 +520,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
                               , lty = args.lines$lty
                               , bty = "n"
                               , pt.bg = args.points$bg
+                              , pt.cex = args.points$cex
                             ))
 
     do.call("legend", args.legend)
@@ -543,3 +545,34 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
   return(list(ellipsis, args.axis, args.points, args.lines, args.legend))
 }
 
+
+
+#' @rdname apa_beeplot
+#' @export
+
+apa_beeplot <- function(x, ...){
+  UseMethod("apa_beeplot")
+}
+
+
+#' @rdname apa_beeplot
+#' @method apa_beeplot afex_aov
+#' @export
+
+apa_beeplot.afex_aov <- function(x, ...){
+
+  ellipsis <- list(...)
+
+  args <- attributes(x)
+
+  ellipsis <- defaults(
+    ellipsis
+    , set = list(
+      "data" = x$data$long
+      , "id" = args$id
+      , "dv" = args$dv
+      , "factors" = c(args$between, args$within)
+    )
+  )
+  do.call("apa_beeplot.default", ellipsis)
+}
