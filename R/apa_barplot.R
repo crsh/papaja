@@ -436,10 +436,10 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
   # prepare and draw arrows (i.e., error bars)
   args.arrows <- defaults(args.arrows
                           , set = list(
-                            x0 = x
-                            , x1 = x
-                            , y0 = y-e
-                            , y1 = y+e
+                            x0 = t(x)
+                            , x1 = t(x)
+                            , y0 = t(y-e)
+                            , y1 = t(y+e)
                           )
                           , set.if.null = list(
                             angle = 90
