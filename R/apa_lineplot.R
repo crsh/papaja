@@ -470,7 +470,10 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
           x = "topright"
           , legend = levels(y.values[[factors[2]]])
           , pch = args.points$pch[1:nlevels(y.values[[factors[2]]])]
+          , pt.bg = args.points$col
           , lty = args.lines$lty
+          , lwd = args.lines$lwd
+          , col = args.lines$col
           , bty = "n"
     ))
 
@@ -536,12 +539,12 @@ arrows.matrix <- function(x0, x1, y0, y1, ...) {
 
   args <- list(...)
 
-  for (i in 1:ncol(x)){
+  for (i in 1:nrow(x0)){
     args.i <- lapply(X = args, FUN = sel, i)
-    args.i$x0 <- x0[, i]
-    args.i$x1 <- x1[, i]
-    args.i$y0 <- y0[, i]
-    args.i$y1 <- y1[, i]
+    args.i$x0 <- x0[i, ]
+    args.i$x1 <- x1[i, ]
+    args.i$y0 <- y0[i, ]
+    args.i$y1 <- y1[i, ]
     do.call("arrows", args.i)
   }
 }
