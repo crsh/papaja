@@ -28,18 +28,20 @@ localize <- function(lang) {
     , list( # Default
       author_note = "Author note"
       , abstract = "Abstract"
+      , keywords = "Keywords:"
       , word_count = "Word count:"
       , table = "Table"
       , figure = "Figure"
-      , note = "Note."
+      , note = "Note"
     )
     , german = list(
       author_note = "Anmerkung des Autors"
       , abstract = "Zusammenfassung"
+      , keywords = "Schlüsselwörter:"
       , word_count = "Wortanzahl:"
       , table = "Tabelle"
       , figure = "Abbildung"
-      , note = "Anmerkung."
+      , note = "Anmerkung"
     )
   )
 }

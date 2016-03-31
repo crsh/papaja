@@ -2,16 +2,13 @@
 #'
 #' Template for creating an article according to APA guidelines (6th edition) in PDF format.
 #'
-#' @param class Character. Specifies if the document will be a manuscript (\code{man}), a document (\code{doc}),
-#'    or a fully typsetted journal article (\code{jou}). Currently only manuscripts are supported for
-#'    MS Word documents. At this point coversion to MS word is considered experimental. See details.
 #' @param fig_caption Logical. Indicates if figures are rendered with captions.
 #' @param pandoc_args Additional command line options to pass to pandoc
 #' @param keep_tex Logical. Keep the intermediate tex file used in the conversion to PDF.
 #' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
 #' @details
-#'    When creating PDF documents \code{class} is passed to the class options of the LaTeX apa6 document class. In this case,
-#'    additional options are available. Refer to the apa6 document class
+#'    When creating PDF documents the YAML option \code{class} is passed to the class options of the LaTeX apa6 document class.
+#'    In this case, additional options are available. Refer to the apa6 document class
 #'    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
 #'    such as paper size or draft watermarks.
 #'
@@ -22,27 +19,13 @@
 #' @export
 
 apa6_pdf <- function(
-  class = "man"
-  , fig_caption = TRUE
+  fig_caption = TRUE
   , pandoc_args = NULL
   , keep_tex = TRUE
   , ...
 ) {
-
-  validate(class, check_class = "character", check_length = 1)
-  if(!any(class %in% c("man", "doc", "jou"))) stop("Document class must be either 'man', 'doc', or 'jou'.")
   validate(fig_caption, check_class = "logical", check_length = 1)
   validate(keep_tex, check_class = "logical", check_length = 1)
-
-  # Get CSL template for APA6 citations
-  csl_template <- system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "apa6.csl"
-    , package = "papaja"
-  )
-  if(csl_template == "") stop("No CSL template file found.")
-
-  pandoc_args <- c(pandoc_args, c("--csl", rmarkdown::pandoc_path_arg(csl_template)))
 
   # Get APA6 template
     template <-  system.file(
@@ -61,17 +44,32 @@ apa6_pdf <- function(
       , ...
     )
 
-  # Set options
+  # Set chunk defaults
   format$knitr$opts_chunk$echo <- FALSE
   format$knitr$opts_chunk$message <- FALSE
   format$knitr$opts_chunk$results <- "asis"
-  format$knitr$opts_chunk$fig.cap <- " "
+  format$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   format$knitr$knit_hooks$inline <- inline_numbers
 
   format$knitr$opts_chunk$dev <- c("pdf", "postscript", "png", "tiff")
   format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
+
+  ## Overwrite preprocessor to set CSL defaults
+  saved_files_dir <- NULL
+
+  # Preprocessor functions are adaptations from the RMarkdown package
+  # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
+  # to ensure right geometry defaults in the absence of user specified values
+  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+    # save files dir (for generating intermediates)
+    saved_files_dir <<- files_dir
+
+    pdf_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+  }
+
+  format$pre_processor <- pre_processor
   format
 }
 
@@ -81,21 +79,11 @@ apa6_pdf <- function(
 #' @export
 
 apa6_word <- function(
-  class = "man"
-  , fig_caption = TRUE
+  fig_caption = TRUE
   , pandoc_args = NULL
   , ...
 ) {
-
-  # Get CSL template for APA6 citations
-  csl_template <- system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "apa6.csl"
-    , package = "papaja"
-  )
-  if(csl_template == "") stop("No CSL template file found.")
-
-  pandoc_args <- c(pandoc_args, c("--csl", rmarkdown::pandoc_path_arg(csl_template)))
+  validate(fig_caption, check_class = "logical", check_length = 1)
 
   # Get APA6 reference file
   reference_docx <- system.file(
@@ -104,7 +92,6 @@ apa6_word <- function(
     , package = "papaja"
   )
   if(reference_docx == "") stop("No .docx-reference file found.")
-  if(class != "man") warning("Currently only class == 'man' is supported for MS Word documents.")
 
   # Call word_document() with the appropriate options
   format <- rmarkdown::word_document(
@@ -114,7 +101,7 @@ apa6_word <- function(
     , ...
   )
 
-  # Set options
+  # Set chunk defaults
   format$knitr$opts_chunk$echo <- FALSE
   format$knitr$opts_chunk$message <- FALSE
   format$knitr$opts_chunk$results <- "asis"
@@ -124,6 +111,22 @@ apa6_word <- function(
 #   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
 #   format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
+
+
+  ## Overwrite preprocessor to set CSL defaults
+  saved_files_dir <- NULL
+
+  # Preprocessor functions are adaptations from the RMarkdown package
+  # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
+  # to ensure right geometry defaults in the absence of user specified values
+  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+    # save files dir (for generating intermediates)
+    saved_files_dir <<- files_dir
+
+    word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+  }
+
+  format$pre_processor <- pre_processor
   format
 }
 
@@ -138,4 +141,37 @@ inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/f
     )
     paste(res, collapse = ", ")
   } else if (is.character(x)) x
+}
+
+
+# Preprocessor functions are adaptations from the RMarkdown package
+# (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
+# to ensure right geometry defaults in the absence of user specified values
+
+set_csl <- function(x) {
+  # Use APA6 CSL citations template if no other file is supplied
+  has_csl <- function(text) {
+    length(grep("^csl:.*$", text)) > 0
+  }
+
+  if (!has_csl(readLines(x, warn = FALSE))) {
+    csl_template <- system.file(
+      "rmarkdown", "templates", "apa6", "resources"
+      , "apa6.csl"
+      , package = "papaja"
+    )
+    if(csl_template == "") stop("No CSL template file found.")
+    return(c("--csl", rmarkdown::pandoc_path_arg(csl_template)))
+  } else NULL
+}
+
+pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  args <- set_csl(input_file)
+  args
+}
+
+word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  args <- set_csl(input_file)
+  # args <- c(args, '--variable abstract="test"')
+  args
 }

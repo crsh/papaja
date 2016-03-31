@@ -29,18 +29,27 @@ apa_prepare_doc <- function() {
       if(output_format == "word") {
         # Create title page and abstract
         # Hack together tables for centered elements -.-
-        padding <- paste0(rep("&nbsp;", 148), collapse = "") # Add spacer to last row
-        affiliations <- paste0(apa_metadata$affiliation, padding)
-        note <- paste0(apa_metadata$note, padding)
+        authors <- paste0(sapply(apa_metadata$author, function(x) paste0(x["name"], paste0("^", x["affiliation"], "^"), collapse = "")), collapse = "\n")
+
+        padding <- paste0(c("\n", rep("&nbsp;", 148)), collapse = "") # Add spacer to last row
+        affiliations <- lapply(apa_metadata$affiliation, function(x) c(paste0("^", x["id"], "^"), x["institution"]))
+        affiliations <- sapply(affiliations, paste, collapse = " ")
+
+        note <- paste(apa_metadata$note, padding, sep = "\n")
+
         cat("\n\n")
-        print(knitr::kable(affiliations, format = "pandoc", align = "c"))
+        print(knitr::kable(c(authors, padding, affiliations), format = "pandoc", align = "c"))
         cat(
-          "\n\n", apa_metadata$note
+          "\n\n"
+          , "# ", apa_doc_env$apa_lang$author_note
+          , "\n\n\n"
+          , apa_metadata$note
           , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
           , "# ", apa_doc_env$apa_lang$abstract
           , "\n\n\n"
           , apa_metadata$abstract
           , "\n\n*", apa_doc_env$apa_lang$keywords, "* ", apa_metadata$keywords
+          , "\n\n", apa_doc_env$apa_lang$word_count, " Insert word count here!"
           , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
           , "# ", apa_metadata$title, "\n\n"
           , sep = ""
