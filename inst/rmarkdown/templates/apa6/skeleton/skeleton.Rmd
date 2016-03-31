@@ -60,6 +60,9 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 
 # Discussion
 
+
+\newpage
+
 # References
 ```{r create_r-references}
 r_refs(file = "r-references.bib")
