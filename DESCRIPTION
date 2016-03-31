@@ -16,11 +16,11 @@ BugReports: https://github.com/crsh/papaja/issues
 Depends:
     R (>= 2.11.1)
 Imports:
-    rmarkdown (>= 0.3.10),
-    knitr (>= 1.10.5),
-    broom (>= 0.3.6),
-    MBESS,
-    boot
+  rmarkdown (>= 0.3.10),
+  knitr (>= 1.10.5),
+  broom (>= 0.3.6),
+  MBESS,
+  boot
 Suggests:
     car,
     afex,
