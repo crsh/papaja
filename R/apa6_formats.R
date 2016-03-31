@@ -65,6 +65,7 @@ apa6_pdf <- function(
   format$knitr$opts_chunk$echo <- FALSE
   format$knitr$opts_chunk$message <- FALSE
   format$knitr$opts_chunk$results <- "asis"
+  format$knitr$opts_chunk$fig.cap <- " "
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   format$knitr$knit_hooks$inline <- inline_numbers
 
