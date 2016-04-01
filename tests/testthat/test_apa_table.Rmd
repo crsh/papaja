@@ -1,0 +1,160 @@
+---
+title: "The title"
+shorttitle: "Title"
+author: 
+  - name: First Author
+    affiliation: 1
+    corresponding: yes    # Define only one corresponding author
+    address: Postal address
+    email: my@email.com
+  - name: Ernst-August Doelle
+    affiliation: "1,2"
+affiliation:
+  - id: 1
+    institution: Wilhelm-Wundt-University
+  - id: 2
+    institution: Konstanz Business School
+
+abstract: |
+  Enter abstract here (note the indentation, if you start a new paragraph).
+  
+note: |  
+  Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
+
+  Enter author note here.
+  
+keywords: "keywords"
+
+wordcount: X
+
+class: man
+lang: american
+figsintext: no
+lineno: yes
+
+output: papaja::apa6_pdf
+---
+
+```{r message = FALSE, warning = FALSE}
+library("papaja")
+apa_prepare_doc() # Prepare document for rendering
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+my_table <- apply(cars, 2, function(x) # Create data
+  round(c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
+)
+
+apa_table(
+  my_table
+  , align = c("l", "r", "r")
+  , caption = "1 A small table."
+  , note = "This table was created using apa\\_table()"
+  , small = TRUE
+)
+```
+
+
+```{r}
+apa_table(
+  list(
+    test = my_table
+    , `moar test` = my_table
+  )
+  , align = c("l", "r", "r")
+  , caption = "2 A merged table (list of two) with added stub heading."
+  , note = "This table was created using apa\\_table()"
+  , added_stub_head = "Desciptives"
+)
+```
+
+```{r}
+apa_table(
+  list(
+    test = my_table
+  )
+  , align = c("l", "r", "r")
+  , caption = "3 A 'merged' table (list of one) with added stub heading."
+  , note = "This table was created using apa\\_table()"
+  , added_stub_head = "Desciptives"
+)
+
+my_table2 <- my_table
+rownames(my_table2) <- 1:nrow(my_table2)
+
+apa_table(
+  my_table2
+  , align = c("l", "r", "r")
+  , caption = "4 Test if simple row numbers are omitted from table."
+  , note = "This table was created using apa\\_table()"
+  , added_stub_head = "Desciptives"
+)
+
+apa_table(
+  list(A = my_table2, B = my_table2)
+  , align = c("l", "r", "r")
+  , caption = "5 Test if simple row numbers are omitted from merged table (list of two)."
+  , note = "This table was created using apa\\_table()"
+  , added_stub_head = "Desciptives"
+)
+```
+
+```{r}
+apa_table(
+  my_table
+  , align = c("l", "r", "r")
+  , caption = "6 Test of column spanner and stub indenting."
+  , note = "This table was created using apa\\_table()."
+  , added_stub_head = "Desciptives"
+  , col_spanners = list(Measure = c(2, 3))
+  , stub_indents = list(2:3)
+)
+```
+
+```{r}
+my_table <- rbind(t(my_table), t(my_table), t(my_table))
+
+apa_table(
+  my_table
+  , align = c("l", "r", "r")
+  , caption = "7 Test of midurles and landscape mode and named stub indentation."
+  , note = "This table was created using apa\\_table()."
+  , added_stub_head = "Desciptives"
+  , col_spanners = list(Measure = c(2, 3))
+  , midrules = 4
+  , stub_indents = list(c(1:2), Jo = c(4:6))
+  , landscape = TRUE
+)
+```
+
+```{r}
+my_table <- rbind(my_table, my_table, my_table, my_table, my_table, my_table, my_table)
+
+apa_table(
+  my_table
+  , align = c("l", "r", "r")
+  , caption = "8 A long table."
+  , note = "This table was created using apa\\_table()."
+  , added_stub_head = "Desciptives"
+  , col_spanners = list(Measure = c(2, 3))
+  , midrules = 4
+  , stub_indents = list(c(1:2), Jo = c(4:6))
+  , longtable = TRUE
+)
+```
+
+```{r}
+apa_table(
+  my_table
+  , align = c("l", "r", "r")
+  , caption = "9 A long table in landscape mode."
+  , note = "This table was created using apa\\_table()."
+  , added_stub_head = "Desciptives"
+  , col_spanners = list(Measure = c(2, 3))
+  , midrules = 4
+  , stub_indents = list(c(1:2), Jo = c(4:6))
+  , longtable = TRUE
+  , landscape = TRUE
+)
+```

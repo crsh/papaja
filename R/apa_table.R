@@ -45,20 +45,39 @@
 #' )
 #' @export
 
-apa_table <- function(...) {
+apa_table <- function(
+  x
+  , caption = NULL
+  , note = NULL
+  , stub_indents = NULL
+  , added_stub_head = NULL
+  , col_spanners = NULL
+  , midrules = NULL
+  , placement = "tbp"
+  , landscape = FALSE
+  , small = FALSE
+  , ...
+) {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+  if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
+  if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
+  if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
+  if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
+
+  validate(placement, check_class = "character", check_length = 1)
+  validate(landscape, check_class = "logical", check_length = 1)
+  validate(small, check_class = "logical", check_length = 1)
+
 
   # Set defaults and rename ellipsis arguments
   ellipsis <- list(...)
-  x <- if(!is.null(ellipsis$x)) ellipsis$x else ellipsis[[1]]
-  added_stub_head <- ellipsis$added_stub_head
-  stub_indents <- ellipsis$stub_indents
   row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
-
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
-  if(!is.null(ellipsis$caption)) validate(ellipsis$caption, "caption", check_class = "character", check_length = 1)
-  if(!is.null(ellipsis$note)) validate(ellipsis$note, "note", check_class = "character", check_length = 1)
-  if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
-  if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
+
+  if(!is.null(col_spanners)) {
+    validate(col_spanners, check_class = "list")
+    validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(x) + row_names))
+  }
 
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
@@ -92,8 +111,8 @@ apa_table <- function(...) {
   }
 
   if(!is.null(ellipsis$escape) && ellipsis$escape) {
-    x <- escape_latex(x)
-    colnames(x) <- escape_latex(colnames(x))
+    prep_table <- escape_latex(prep_table)
+    colnames(prep_table) <- escape_latex(colnames(prep_table))
   }
 
   # Indent stubs
@@ -103,7 +122,6 @@ apa_table <- function(...) {
   # Fix ellipsis for further use
   ellipsis$escape <- FALSE
   ellipsis$row.names <- FALSE
-  if(!is.null(ellipsis$x)) ellipsis$x <- prep_table else ellipsis[[1]] <- prep_table
 
 
   # Pass to markup generating functions
@@ -115,9 +133,30 @@ apa_table <- function(...) {
   }
 
   if(output_format == "latex") {
-    do.call(apa_table.latex, ellipsis)
+    do.call(
+      function(...) apa_table.latex(
+        x = prep_table
+        , caption = caption
+        , note = note
+        , col_spanners = col_spanners
+        , midrules = midrules
+        , placement = placement
+        , landscape = landscape
+        , small = small
+        , ...
+      )
+      , ellipsis
+    )
   } else {
-    do.call(apa_table.word, ellipsis)
+    do.call(
+      function(...) apa_table.word(
+        x = prep_table
+        , caption = caption
+        , note = note
+        , ...
+      )
+      , ellipsis
+    )
   }
 }
 
@@ -128,23 +167,13 @@ apa_table.latex <- function(
   x
   , caption = NULL
   , note = NULL
-  , added_stub_head = NULL
   , col_spanners = NULL
-  , stub_indents = NULL
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
   , small = FALSE
   , ...
 ) {
-  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
-  if(!is.null(col_spanners)) {
-    validate(col_spanners, check_class = "list")
-    validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(x)))
-  }
-  validate(placement, check_class = "character", check_length = 1)
-  validate(landscape, check_class = "logical", check_length = 1)
-
   # Parse ellipsis
   ellipsis <- list(...)
   ellipsis$booktabs <- TRUE
@@ -163,7 +192,7 @@ apa_table.latex <- function(
   # Center title row
   colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
 
-  res_table <- do.call(function(...) knitr::kable(x, ...), ellipsis)
+  res_table <- do.call(function(...) knitr::kable(x, format = "latex", ...), ellipsis)
 
   ## Add midrules
   table_lines <- unlist(strsplit(res_table, "\n"))
@@ -171,7 +200,7 @@ apa_table.latex <- function(
 
   if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
 
-  if(longtable) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+  if(longtable & !is.null(caption)) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
 
   table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
 
@@ -185,27 +214,46 @@ apa_table.latex <- function(
   }
 
   if(!is.null(note) & longtable) table_lines <- c(table_lines[-length(table_lines)], "\\insertTableNotes", table_lines[length(table_lines)])
+  if(longtable) { # Makes caption as wide as table
+    table_lines[grep("\\\\begin\\{longtable\\}", table_lines)] <- paste0(
+      table_lines[grep("\\\\begin\\{longtable\\}", table_lines)]
+      , "\\noalign{\\getlongtablewidth\\global\\LTcapwidth=\\longtablewidth}"
+    )
+  }
   res_table <- paste(table_lines, collapse = "\n")
 
   # Print table
   place_opt <- paste0("[", placement, "]")
+
   if(landscape) {
-    cat("\\begin{sidewaystable}\n", place_opt, sep = "")
+    if(longtable) {
+      cat("\\begin{lltable}")
+    } else {
+      cat("\\begin{ltable}")
+    }
     place_opt <- NULL
   }
-  if(!longtable & !landscape) cat("\\begin{table}", place_opt, sep = "")
+
+  if(!landscape && !longtable) cat("\\begin{table}", place_opt, sep = "")
+  if(!landscape) cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
+  if(!is.null(caption) & !longtable) cat("\n\\caption{", caption, "}", sep = "")
+  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
   if(small) cat("\n\\small{")
-  cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
-  if(!longtable) cat("\n\\caption{", caption, "}", sep = "")
-  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
 
   cat(res_table)
-
-  if(!is.null(note) & !longtable) cat("\n\\begin{", table_note_env, "}\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
-  cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
   if(small) cat("\n}")
-  if(!longtable & !landscape) cat("\n\\end{table}")
-  if(landscape) cat("\n\\end{sidewaystable}")
+  if(!is.null(note) & !longtable) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  if(!landscape) cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
+  if(!landscape && !longtable) cat("\n\\end{table}")
+
+  if(landscape) {
+    if(longtable) {
+      cat("\n\\end{lltable}")
+    } else {
+      cat("\n\\end{ltable}")
+    }
+  }
+  cat("\n\n")
 }
 
 
@@ -216,19 +264,15 @@ apa_table.word <- function(
   x
   , caption = NULL
   , note = NULL
-  , added_stub_head = NULL
-  , stub_indents = NULL
   , ...
 ) {
-  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
-
   # Parse ellipsis
   ellipsis <- list(...)
-  res_table <- do.call(function(...) knitr::kable(x, ...), ellipsis)
+  res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
 
   # Print table
   cat("<center>")
-  cat("Table. ")
+  cat(apa_doc_env$apa_lang$table, ". ", sep = "")
   cat("*", caption, "*", sep = "")
   cat("</center>\n")
 
@@ -237,7 +281,7 @@ apa_table.word <- function(
   if(!is.null(note)) {
     cat("\n")
     cat("<center>")
-    cat("*Note.*", note)
+    cat("*", apa_doc_env$apa_lang$note, ".* ", note, sep = "")
     cat("</center>")
     cat("\n\n\n\n")
   }
