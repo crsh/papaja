@@ -81,9 +81,13 @@ $endif$
   {\begin{landscape}\begin{center}\begin{ThreePartTable}}
   {\end{ThreePartTable}\end{center}\end{landscape}}
 
-\DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
-\DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
-\DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+\usepackage{ifthen} % Only add declarations when endfloat package is loaded
+\ifthenelse{\equal{$class$}{\string jou}}{%
+  \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+  \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+  \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+}{}%
+
 
 % The following enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
