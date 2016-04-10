@@ -421,11 +421,11 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
       )
     )
     , set = list(
-      col = ellipsis$col
+      col = ellipsis$col[nlevels(y.values[[factors[2]]]):1]
       , xpd = FALSE
     )
   )
-  # print(args.rect)
+
   do.call("rect", args.rect)
 
   # convert to matrices
