@@ -73,6 +73,7 @@ apa_beeplot.default <- function(
   , intercept = NULL
   , args_axis = list()
   , args_points = list()
+  , args_swarm = list()
   , args_lines = list()
   , args_arrows = list()
   , args_legend = list()
@@ -105,6 +106,7 @@ apa_beeplot.default <- function(
                        , set.if.null = list(
                          args.axis = args_axis
                          , args.points = args_points
+                         , args.swarm = args_swarm
                          , args.lines = args_lines
                          , args.arrows = args_arrows
                          , args.legend = args_legend
@@ -366,6 +368,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
   # save parameters for multiple plot functions
   args.legend <- ellipsis$args.legend
   args.points <- ellipsis$args.points
+  args.swarm <- ellipsis$args.swarm
   args.lines <- ellipsis$args.lines
   args.axis <- ellipsis$args.axis
   args.arrows <- ellipsis$args.arrows
@@ -386,16 +389,27 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
       , args.lines = NULL
       , args.axis = NULL
       , args.arrows = NULL
+      , args.swarm = NULL
     )
   )
 
   do.call("plot.default", ellipsis)
 
+  args.swarm <- defaults(
+    args.swarm
+    , set.if.null = list(
+      cex = .5
+      , alpha = .3
+    )
+  )
+
+
+
   if(length(factors)==1) {
     for (i in levels(aggregated[[factors[1]]])){
       coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i, "x"]
                                 , y = aggregated[aggregated[[factors[1]]]==i, dv]
-                                , cex = .6
+                                , cex = args.swarm$cex
                 )
       aggregated[aggregated[[factors[1]]]==i, "swarmx"] <- coord[["x"]]
       aggregated[aggregated[[factors[1]]]==i, "swarmy"] <- coord[["y"]]
@@ -406,7 +420,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
       for (j in levels(aggregated[[factors[2]]])) {
         coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
                                   , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
-                                  , cex = .6
+                                  , cex = args.swarm$cex
                   )
         aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <-coord[["x"]]
         aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
@@ -449,13 +463,19 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
     tmp <- col2rgb(args.points$bg, alpha = TRUE)
     tmp <- matrix(tmp, ncol = ncol(agg.x), nrow = 4)
     for (j in 1:ncol(agg.x)){
-      bg.colors[j] <- rgb(r = tmp[1, j], g = tmp[2, j], b = tmp[3, j], alpha = tmp[4, j] * .4, maxColorValue = 255)
+      bg.colors[j] <- rgb(r = tmp[1, j], g = tmp[2, j], b = tmp[3, j], alpha = tmp[4, j] * args.swarm$alpha, maxColorValue = 255)
     }
   }
 
   for (i in 1:nrow(agg.x)) {
     for (j in 1:ncol(agg.x)) {
-      points(x=agg.x[i,j][[1]], y = agg.y[i,j][[1]], pch = c(21:25,1:20)[j], bg = bg.colors[j], col = rgb(r = 0, g = 0, b = 0, alpha = .4), cex = .6)
+      points(
+        x=agg.x[i,j][[1]]
+        , y = agg.y[i,j][[1]]
+        , pch = c(21:25,1:20)[j]
+        , bg = bg.colors[j]
+        , col = rgb(r = 0, g = 0, b = 0, alpha = args.swarm$alpha)
+        , cex = args.swarm$cex)
     }
   }
 
@@ -477,7 +497,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
   do.call("arrows", args.arrows)
 
 
-  # prepare and draw points
+  # prepare and draw (tendency) points
   args.points <- defaults(args.points
                           , set = list(
                             x = x
