@@ -407,6 +407,8 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
 
   do.call("title", args.title)
 
+  y.values[["col"]] <- ellipsis$col[as.integer(y.values[[factors[2]]])]
+
   args.rect <- defaults(
     list()
     , set.if.null = list(
@@ -421,7 +423,7 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
       )
     )
     , set = list(
-      col = ellipsis$col[nlevels(y.values[[factors[2]]]):1]
+      col = y.values[["col"]]
       , xpd = FALSE
     )
   )
