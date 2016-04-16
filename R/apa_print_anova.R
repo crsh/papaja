@@ -8,7 +8,7 @@
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
-#' @param MSE Logical. Specifies if Mean Squared Errors (MSEs) are to be reported.
+#' @param mse Logical. Specifies if Mean Squared Errors (MSEs) are to be reported.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.
