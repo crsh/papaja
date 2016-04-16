@@ -6,9 +6,9 @@
 # models: list of lm-objects
 
 delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
-  # validate(x, check_class = "list")
-  # validate(length(x), "length(x)", check_range = c(2, Inf))
-  # validate(ci, check_range = c(0, 1))
+  validate(x, check_class = "data.frame")
+  validate(length(models), "length(models)", check_range = c(2, Inf))
+  validate(ci, check_range = c(0, 1))
 
   model_summaries <- lapply(models, summary)
   r2s <- sapply(model_summaries, function(x) x$r.squared)
@@ -34,7 +34,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
       , ...
     )
 
-    boot_r2_ci <- boot::boot.ci(delta_r2_samples, ci = ci, type = "perc")
+    boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = ci, type = "perc")
 
     # If difference is not significant set lower bound (closest to zero) == 0 (p. 210, Algina, Keselman & Penfield, 2007)
     if(x[y, "p.value"] >= (1 - ci) / 2) {

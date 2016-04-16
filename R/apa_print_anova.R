@@ -1,8 +1,7 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
 #' These methods take objects from various R functions that calculate ANOVA to create formatted chraracter
-#' strings to report the results in accordance with APA manuscript guidelines. \code{anova}-objects from e.g. model comparisons are currently
-#' only supported for \code{lm}-objects.
+#' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
 #' @param x Output object. See details.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
@@ -11,9 +10,6 @@
 #' @param mse Logical. Specifies if Mean Squared Errors (MSEs) are to be reported.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.
-#' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
-#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
 #' @param ... Additional arguments passed to or from other methods.
 #' @details
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
@@ -22,15 +18,6 @@
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
-#'    As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\Delta R^2}
-#'    are often unreliable. Confidence intervals for model comparisons of \code{lm}-objects are, therefore, estimated
-#'    using their modified percentile bootstrap method. Note that the accuracy of the confidence intervals depends on
-#'    the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
-#'
-#'    \emph{"When the predictor distribution is multivariate normal, one can obtain accurate CIs for \eqn{\rho^2} with
-#'    \eqn{n \geq~50} when \eqn{p = 3}. For \eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq~100} is advisable. When the
-#'    predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
-#'    Algina, Keselman & Penfield, 2010)}
 #' @return
 #'    \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
 #'
@@ -42,17 +29,11 @@
 #'      \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #' @references
-#'    Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for an Effect Size Measure in Multiple Linear Regression.
-#'    \emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{http://dx.doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
-#'
-#'    Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
-#'    \emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{http://dx.doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
-#'
 #'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
 #'    , 37 (3), 379--384. doi:\href{http://dx.doi.org/10.3758/BF03192707}{10.3758/BF03192707}
 #'
 #' @family apa_print
-#' @seealso \code{\link{aov}}, \code{\link[car]{Anova}}
+#' @seealso \code{\link{aov}}, \code{\link[car]{Anova}}, \code{\link{apa_print.list}}
 #' @examples
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)

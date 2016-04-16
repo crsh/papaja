@@ -30,14 +30,15 @@
 
 print_model_comp <- function(
   x
-  , in_paren = FALSE
   , models = NULL
   , ci = NULL
   , boot_samples = 1000
+  , in_paren = FALSE
 ) {
   validate(x, check_class = "data.frame")
   validate(x, check_class = "apa_model_comp")
   validate(in_paren, check_class = "logical", check_length = 1)
+  validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   if(!is.null(models)) validate(models, check_class = "list", check_length = nrow(x) + 1)
 
   if(!is.null(names(models))) {
@@ -45,12 +46,10 @@ print_model_comp <- function(
   } else rownames(x) <- sanitize_terms(x$term)
 
   # Concatenate character strings and return as named list
-  apa_res <- list()
+  apa_res <- list(stat = NULL, est = NULL)
 
-  if(is.null(models)) { # No CI
-    warning("No model objects were supplied to the parameter 'models'. Estimates cannot be calculated and are set to NULL.")
-    apa_res$est <- NULL
-  } else if(is.null(ci)) { # No CI
+  ## est
+  if(boot_samples <= 0) { # No CI
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     delta_r2s <- diff(r2s)
@@ -60,7 +59,7 @@ print_model_comp <- function(
       , function(y) {
         delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
         eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
-        paste0("$\\Delta R^2 ", eq, delta_r2_res, "$")
+        paste0("$\\Delta R^2", eq, delta_r2_res, "$")
       }
     )
   } else { # Bootstrap CI
@@ -78,12 +77,13 @@ print_model_comp <- function(
     )
   }
 
-  # Rounding and filling with zeros
+  ## stat
+  ### Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
   x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
 
-  # Add 'equals' where necessary
+  ### Add 'equals' where necessary
   eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
   for (i in eq) {
     x$p.value[i] <- paste0("= ", x$p.value[i])
@@ -96,22 +96,20 @@ print_model_comp <- function(
   })
   names(apa_res$stat) <- x$term
 
-  if(!is.null(apa_res$est)) {
-    apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
-    names(apa_res$est) <- names(apa_res$stat)
-    names(apa_res$full) <- names(apa_res$stat)
-  } else {
-    apa_res$full <- NULL
-  }
+  ## full
+  apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
+  names(apa_res$est) <- names(apa_res$stat)
+  names(apa_res$full) <- names(apa_res$stat)
+
 
   # Assemble table
   n_models <- length(models)
 
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
-    lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c(1:3)]
-    lm_table[, 2] <- apply(cbind(paste0("$", lm_table[, 2], "$"), lm_table[, 3]), 1, paste, collapse = " ")
-    lm_table[, -3]
-  }
+      lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c(1:3)]
+      lm_table[, 2] <- apply(cbind(paste0("$", lm_table[, 2], "$"), lm_table[, 3]), 1, paste, collapse = " ")
+      lm_table[, -3]
+    }
   )
 
   ## Merge coefficient tables
@@ -121,7 +119,7 @@ print_model_comp <- function(
   coef_table <- coef_table[names(sort(apply(coef_table, 1, function(x) sum(is.na(x))))), ] # Sort predictors to create steps in table
   coef_table <- coef_table[c("Intercept", rownames(coef_table)[rownames(coef_table) != "Intercept"]), ] # Make Intercept first Predictor
   coef_table[is.na(coef_table)] <- ""
-  colnames(coef_table) <- paste("Model", 1:n_models)
+  colnames(coef_table) <- names(models)
 
   ## Add model fits
   model_fits <- lapply(models, broom::glance)
@@ -136,12 +134,14 @@ print_model_comp <- function(
     , zero = c(FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
     , digits = c(2, 2, 0, 0, 3, 2, 2)
   )
+
   model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
-    r2 <- apa_print(x, ci = ci)$est$modelfit$r2
+    r2 <- apa_print(x, ci = ci + (1 - ci) / 2)$est$modelfit$r2 # Calculate correct CI for function focusing on b CI
     r2 <- gsub("R\\^2 = ", "", r2)
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
     r2
   })
+
   colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$AIC$", "$BIC$")
 
   ## Add differences in model fits
@@ -151,18 +151,19 @@ print_model_comp <- function(
     , gt1 = c(FALSE, TRUE, TRUE)
     , zero = c(FALSE, TRUE, TRUE)
   )
-  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$est))) # Replace by previously estimate with CI
+  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$est))) # Replace by previous estimate with CI
   model_diffs <- rbind("", model_diffs)
-  colnames(model_diffs) <- c(paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]"), "$\\Delta AIC$", "$\\Delta BIC$")
+
+  r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]")
+  colnames(model_diffs) <- c(r2_diff_colname, "$\\Delta AIC$", "$\\Delta BIC$")
 
   diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
   diff_stats$p.value <- gsub("= ", "", diff_stats$p.value) # Remove 'equals' for table
-  rownames(diff_stats) <- paste("Model", 2:n_models)
   colnames(diff_stats) <- c("$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ") # Space enable duplicate row names
   diff_stats <- rbind("", diff_stats)
 
-  model_stats_table <- t(cbind(model_fits, model_diffs, diff_stats))
-  colnames(model_stats_table) <- paste("Model", 1:n_models)
+  model_stats_table <- t(cbind(model_fits, model_diffs[, 1, drop = FALSE], diff_stats, model_diffs[, 2:3]))
+  colnames(model_stats_table) <- names(models)
   apa_res$table <- rbind(coef_table, model_stats_table)
   apa_res$table[is.na(apa_res$table)] <- ""
 
