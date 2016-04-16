@@ -37,6 +37,7 @@ methods("apa_print")
 \seealso{
 Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
-  \code{\link{apa_print.htest}}, \code{\link{apa_print.lm}}
+  \code{\link{apa_print.htest}},
+  \code{\link{apa_print.list}}, \code{\link{apa_print.lm}}
 }
 

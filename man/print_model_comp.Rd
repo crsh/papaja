@@ -4,19 +4,19 @@
 \alias{print_model_comp}
 \title{Format statistics model comparisons (APA 6th edition)}
 \usage{
-print_model_comp(x, in_paren = FALSE, models = NULL, ci = NULL,
-  boot_samples = 1000)
+print_model_comp(x, models = NULL, ci = NULL, boot_samples = 1000,
+  in_paren = FALSE)
 }
 \arguments{
 \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
-
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
 \item{models}{List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.}
 
 \item{ci}{Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.}
+
+\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 }
 \value{
 A named list containing the following components:

@@ -6,32 +6,31 @@
 \alias{apa_table.word}
 \title{Prepare table for printing}
 \usage{
-apa_table(...)
-
-apa_table.latex(x, caption = NULL, note = NULL, added_stub_head = NULL,
-  col_spanners = NULL, stub_indents = NULL, midrules = NULL,
+apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
+  added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
   placement = "tbp", landscape = FALSE, small = FALSE, ...)
 
-apa_table.word(x, caption = NULL, note = NULL, added_stub_head = NULL,
-  stub_indents = NULL, ...)
+apa_table.latex(x, caption = NULL, note = NULL, col_spanners = NULL,
+  midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
+  ...)
+
+apa_table.word(x, caption = NULL, note = NULL, ...)
 }
 \arguments{
-\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
-
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
 
 \item{caption}{Character. Caption to be printed above the table.}
 
 \item{note}{Character. Note to be printed below the table.}
 
+\item{stub_indents}{List. A named list of vectors of length 2 giving the first and second row to
+indent. Names of list elements will be used as titles for indented sections.}
+
 \item{added_stub_head}{Character. Used as stub head (name of first column) if \code{row.names = TRUE}
 is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.}
 
 \item{col_spanners}{List. A named list of vectors of length 2 giving the first and second column to
 span with a grouping column name.}
-
-\item{stub_indents}{List. A named list of vectors of length 2 giving the first and second row to
-indent. Names of list elements will be used as titles for indented sections.}
 
 \item{midrules}{Numeric. Vector of line numbers in table (not counting column headings) that should be
 followed by a horizontal rule; ignored in MS Word documents.}
@@ -44,6 +43,8 @@ to indicate order of preference (\code{htb}); ignored in MS Word documents.}
 documents.}
 
 \item{small}{Logical. If \code{TRUE} the font size of the table content is reduced.}
+
+\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
 }
 \description{
 Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines

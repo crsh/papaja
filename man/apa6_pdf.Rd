@@ -5,16 +5,11 @@
 \alias{apa6_word}
 \title{APA article (6th edition)}
 \usage{
-apa6_pdf(class = "man", fig_caption = TRUE, pandoc_args = NULL,
-  keep_tex = TRUE, ...)
+apa6_pdf(fig_caption = TRUE, pandoc_args = NULL, keep_tex = TRUE, ...)
 
-apa6_word(class = "man", fig_caption = TRUE, pandoc_args = NULL, ...)
+apa6_word(fig_caption = TRUE, pandoc_args = NULL, ...)
 }
 \arguments{
-\item{class}{Character. Specifies if the document will be a manuscript (\code{man}), a document (\code{doc}),
-or a fully typsetted journal article (\code{jou}). Currently only manuscripts are supported for
-MS Word documents. At this point coversion to MS word is considered experimental. See details.}
-
 \item{fig_caption}{Logical. Indicates if figures are rendered with captions.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
@@ -27,8 +22,8 @@ MS Word documents. At this point coversion to MS word is considered experimental
 Template for creating an article according to APA guidelines (6th edition) in PDF format.
 }
 \details{
-When creating PDF documents \code{class} is passed to the class options of the LaTeX apa6 document class. In this case,
-   additional options are available. Refer to the apa6 document class
+When creating PDF documents the YAML option \code{class} is passed to the class options of the LaTeX apa6 document class.
+   In this case, additional options are available. Refer to the apa6 document class
    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
    such as paper size or draft watermarks.
 

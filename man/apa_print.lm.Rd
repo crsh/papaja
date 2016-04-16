@@ -61,8 +61,8 @@ The coefficients names are sanitized to facilitate their use as list names (see 
    If \code{ci} is a single value, confidence intervals are calculated using \code{\link{confint}}.
 
    Confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.pvaf}} to obtain a confidence
-   region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of parameters (e.g.,
-   95\% CI or \eqn{\alpha = 0.05} for parameters yields a 90\% CI for \eqn{R^2}, see Steiger, 2004)
+   region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g.,
+   95\% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004)
 }
 \examples{
 # Data from Dobson (1990), p. 9.
@@ -89,6 +89,7 @@ doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164
 
 Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
-  \code{\link{apa_print.htest}}, \code{\link{apa_print}}
+  \code{\link{apa_print.htest}},
+  \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
 
