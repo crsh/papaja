@@ -406,33 +406,6 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
 
-  # prepare and draw points
-  args.points <- defaults(args.points
-    , set = list(
-      x = x
-      , y = y
-    )
-    , set.if.null = list(
-      pch = c(21:25,1:20)
-      , col = rep("black", length(l2))
-    )
-  )
-
-  do.call("points.matrix", args.points)
-
-  # prepare and draw lines
-  args.lines <- defaults(args.lines
-     , set = list(
-       x = x
-       , y = y
-     )
-     , set.if.null = list(
-       lty = 1:6
-       , col = rep("black", length(l2))
-     )
-  )
-
-  do.call("lines", args.lines)
 
   # prepare and draw arrows (i.e., error bars)
   args.arrows <- defaults(args.arrows
@@ -443,14 +416,47 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
                             , y1 = t(y+e)
                           )
                           , set.if.null = list(
-                              angle = 90
-                              , code = 3
-                              , length = (1-space)/nlevels(y.values[[factors[[2]]]]) * 2
-                            )
+                            angle = 90
+                            , code = 3
+                            , length = (1-space)/nlevels(y.values[[factors[[2]]]]) * 2
                           )
+  )
 
 
   do.call("arrows", args.arrows)
+
+  # prepare and draw lines
+  args.lines <- defaults(args.lines
+                         , set = list(
+                           x = x
+                           , y = y
+                         )
+                         , set.if.null = list(
+                           lty = 1:6
+                           , col = rep("black", length(l2))
+                         )
+  )
+
+  do.call("lines", args.lines)
+
+
+  # prepare and draw points
+  args.points <- defaults(args.points
+    , set = list(
+      x = x
+      , y = y
+    )
+    , set.if.null = list(
+      pch = c(21:25,1:20)
+      , col = rep("black", length(l2))
+      , bg = gray((1:nlevels(y.values[[factors[2]]])-1)/(nlevels(y.values[[factors[2]]])-1))
+    )
+  )
+
+  do.call("points.matrix", args.points)
+
+
+
 
   # prepare and draw legend
   if(onedim==FALSE) {
@@ -460,7 +466,8 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
           x = "topright"
           , legend = levels(y.values[[factors[2]]])
           , pch = args.points$pch[1:nlevels(y.values[[factors[2]]])]
-          , pt.bg = args.points$col
+          # , border = args.points$col
+          , pt.bg = args.points$bg
           , lty = args.lines$lty
           , lwd = args.lines$lwd
           , col = args.lines$col
