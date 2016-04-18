@@ -50,7 +50,8 @@ in a Markdown-document using pandoc or LaTeX.
    If a package provides citation information in a CITATION file, a reference is selected based on the
    prefered order of reference types specified in \code{type_pref}. By default, articles are cited if
    available rather than books. If no reference of the specified types is available, the first reference
-   is used. Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
+   is used. If multiple references of the prefered type are given in the CITATION file all are cited.
+   Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
    \code{\link{citation}}.
 }
 \examples{

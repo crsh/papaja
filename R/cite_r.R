@@ -58,9 +58,9 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   bib$base <- NULL
   if(!is.null(pkgs)) {
     if(withhold) {
-      pkg_citations <- bib[!(names(bib) %in% pkgs)]
+      pkg_citations <- bib[!(gsub("\\_\\D", "", names(bib)) %in% pkgs)]
     } else {
-      pkg_citations <- bib[names(bib) %in% pkgs]
+      pkg_citations <- bib[gsub("\\_\\D", "", names(bib)) %in% pkgs]
     }
   } else {
     if(withhold) {
@@ -76,11 +76,18 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
 
   pkg_citations <- pkg_citations[names(sort(unlist(pkg_citations)))] # Sort packages alphabetically
 
-  # Add package version numbers
+  # Assemble (multiple) references and add package version numbers
+  pkg_names <- names(pkg_citations)
+  pkg_names <- unique(gsub("\\_\\D", "", pkg_names))
+  pkg_versions <- sapply(pkg_names, function(x) as.character(packageVersion(x)))
+  pkg_keys <- sapply(pkg_names, function(x){
+    keys <- pkg_citations[grepl(x, names(pkg_citations))]
+    paste0("@", keys, collapse = "; ")
+  })
   pkg_texts <- paste0(
-    "*", names(pkg_citations), "* "
-    , "[", sapply(names(pkg_citations), function(x) as.character(packageVersion(x)))
-    , ", @", unlist(pkg_citations), "]"
+    "*", pkg_names, "* "
+    , "[", pkg_versions
+    , ", ", pkg_keys, "]"
   )
 
   if(length(pkg_texts) > 1) {

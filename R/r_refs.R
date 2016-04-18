@@ -31,7 +31,8 @@
 #'    If a package provides citation information in a CITATION file, a reference is selected based on the
 #'    prefered order of reference types specified in \code{type_pref}. By default, articles are cited if
 #'    available rather than books. If no reference of the specified types is available, the first reference
-#'    is used. Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
+#'    is used. If multiple references of the prefered type are given in the CITATION file all are cited.
+#'    Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
 #'    \code{\link{citation}}.
 #' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link{fetch_web_refs}}, \code{\link{citation}}, \code{\link{toBibtex}}
 #' @examples NULL
@@ -104,12 +105,19 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
       }
 
       if(tweak) {
-        cite$title = gsub(sprintf("^(%s: )(\\1)", pkg), "\\1", cite$title)
-        cite$title = gsub(" & ", " \\\\& ", cite$title)
+        cite <- lapply(cite, function(cit) {
+          cit$title = gsub(sprintf("^(%s: )(\\1)", pkg), "\\1", cit$title)
+          cit$title = gsub(" & ", " \\\\& ", cit$title)
+          cit
+        })
       }
 
-      entry <- toBibtex(cite)
-      entry[1] <- sub("\\{,$", sprintf("{%s%s,", prefix, x[pkg]), entry[1])
+      entry <- lapply(cite, toBibtex)
+      specifier <- if(length(entry) > 1) paste0("_", letters[seq_along(entry)]) else NULL
+      entry <- sapply(seq_along(entry), function(ent) {
+        entry[[ent]][1] <- sub("\\{,$", paste0("{", prefix, x[pkg], specifier[ent], ","), entry[[ent]][1])
+        entry[[ent]]
+      })
       entry
     }
     , simplify = FALSE
