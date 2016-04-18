@@ -77,6 +77,7 @@ apa_barplot <- function(
   validate(level, check_class = "numeric", check_range = c(0,1))
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
+  validate(data, check_cols = c(id, dv, factors))
   if(!is.null(intercept)) validate(intercept, check_class = "numeric")
 
   # Prepare data

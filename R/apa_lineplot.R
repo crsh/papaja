@@ -87,7 +87,9 @@ apa_lineplot <- function(
   validate(level, check_class = "numeric", check_range = c(0,1))
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
+  validate(data, check_cols = c(id, dv, factors))
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric")
+
 
   ellipsis <- list(...)
   output <- list()
@@ -323,19 +325,6 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   id <- gsub(id, pattern = " ", replacement = "_")
   dv <- gsub(dv, pattern = " ", replacement = "_")
 
-#   # move to apa_lineplot???
-#   if(length(factors) > 1){
-#     y.values$x <- as.integer(y.values[[factors[1]]]) + (as.integer(y.values[[factors[2]]])-.5)/(nlevels(y.values[[factors[2]]]))*(jit)-.5*jit
-#     l2 <- levels(y.values[[factors[2]]])
-#     onedim <- FALSE
-#   } else {
-#     y.values$x <- as.integer(y.values[[factors[1]]])
-#     l2 <- 1
-#     factors[2] <- "f2"
-#     y.values[["f2"]] <- 1
-#     onedim <- TRUE
-#   }
-
 
   if(length(factors) > 1) {
     # convert to matrices
@@ -350,7 +339,7 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
     onedim <- TRUE
   }
 
-  space <-1-jit
+  space <- 1 - jit
 
   y.values$x <- as.integer(y.values[[factors[1]]]) - .5
 
@@ -388,7 +377,8 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   )
 
   do.call("plot.default", ellipsis)
-  # print(y.values)
+
+
   # prepare defaults for x axis
   args.axis <- defaults(args.axis
     , set = list(

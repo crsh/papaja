@@ -12,6 +12,7 @@
 #' @param check_length Integer. Length of the object to expect.
 #' @param check_dim Numeric. Vector of object dimensions to expect.
 #' @param check_range Numeric. Vector of length 2 defining the expected range of the object.
+#' @param check_cols Character. Vector of columns that are intended to be in a \code{data.frame}.
 #'
 #' @examples
 #' \dontrun{
@@ -31,6 +32,7 @@ validate <- function(
   , check_length = NULL
   , check_dim = NULL
   , check_range = NULL
+  , check_cols = NULL
 ) {
   if(is.null(name)) name <- deparse(substitute(x))
 
@@ -53,6 +55,14 @@ validate <- function(
 
   for (x.mode in check_mode) {
     if(!check_mode %in% mode(x)) stop(paste("The parameter '", name, "' must be of mode '", x.mode, "'.", sep = ""))
+  }
+
+  if(!is.null(check_cols)) {
+    test <- check_cols %in% colnames(x)
+
+    if(!all(test)) {
+      stop(paste0("Variable '", check_cols[!test], "' is not present in your data.frame.\n"))
+    }
   }
 
   if(!is.null(check_range) && any(x < check_range[1] | x > check_range[2])) stop(paste("The parameter '", name, "' must be between ", check_range[1], " and ", check_range[2], ".", sep = ""))
