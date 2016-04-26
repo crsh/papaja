@@ -190,6 +190,8 @@ apa_beeplot.default <- function(
 
   output$data <- aggregated
 
+  output$args <- list()
+
 
   ## Adjust ylim to height of error bars and ensure that all points of the swarm are plotted
   if(is.null(ellipsis$ylim)) {
@@ -223,7 +225,7 @@ apa_beeplot.default <- function(
       ))
 
     # par(mfrow=par("mfrow"))
-    do.call("apa.beeplot.core", ellipsis)
+    output$args <- do.call("apa.beeplot.core", ellipsis)
   }
 
   ## Three factors
@@ -276,7 +278,7 @@ apa_beeplot.default <- function(
         ellipsis.i$ylab <- ""
       }
 
-      do.call("apa.beeplot.core", ellipsis.i)
+      output$args[[paste0("plot", i, j)]] <- do.call("apa.beeplot.core", ellipsis.i)
     }
     par(mfrow=old.mfrow)
   }
@@ -319,7 +321,7 @@ apa_beeplot.default <- function(
         if(j!=levels(y.values[[factors[4]]])[1]){
           ellipsis.i$ylab <- ""
         }
-        do.call("apa.beeplot.core", ellipsis.i)
+        output$args[[paste0("plot", i, j)]] <- do.call("apa.beeplot.core", ellipsis.i)
       }
     }
     par(mfrow=old.mfrow)
@@ -406,30 +408,17 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
     )
   )
 
-
-
-  # if(length(factors)==1) {
-  #   for (i in levels(aggregated[[factors[1]]])){
-  #     coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i, "x"]
-  #                               , y = aggregated[aggregated[[factors[1]]]==i, dv]
-  #                               , cex = args.swarm$cex
-  #               )
-  #     aggregated[aggregated[[factors[1]]]==i, "swarmx"] <- coord[["x"]]
-  #     aggregated[aggregated[[factors[1]]]==i, "swarmy"] <- coord[["y"]]
-  #   }
-  # }
-  # if(length(factors)>1) {
-    for (i in levels(aggregated[[factors[1]]])) {
-      for (j in levels(aggregated[[factors[2]]])) {
-        coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
-                                  , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
-                                  , cex = args.swarm$cex
-                  )
-        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
-        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
-      }
+  for (i in levels(aggregated[[factors[1]]])) {
+    for (j in levels(aggregated[[factors[2]]])) {
+      coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
+                                , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
+                                , cex = args.swarm$cex
+                )
+      aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
+      aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
     }
-  # }
+  }
+
 
 
 
@@ -567,7 +556,12 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
       lines(x = ellipsis$xlim, y = rep(intercept,2))
     }
   }
-  return(list(ellipsis, args.axis, args.points, args.lines, args.legend))
+  invisible(list(
+    "plot" = ellipsis
+    , "axis" = args.axis
+    , "points" = args.points
+    , "swarm" = args.swarm
+    , "legend" = args.legend))
 }
 
 
