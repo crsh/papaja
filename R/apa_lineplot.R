@@ -87,7 +87,7 @@ apa_lineplot <- function(
   validate(level, check_class = "numeric", check_range = c(0,1))
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
-  validate(data, check_cols = c(id, dv, factors))
+  validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric")
 
 
@@ -405,23 +405,21 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   y <- tapply(y.values[, "tendency"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
   e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
-
-
   # prepare and draw arrows (i.e., error bars)
-  args.arrows <- defaults(args.arrows
-                          , set = list(
-                            x0 = t(x)
-                            , x1 = t(x)
-                            , y0 = t(y-e)
-                            , y1 = t(y+e)
-                          )
-                          , set.if.null = list(
-                            angle = 90
-                            , code = 3
-                            , length = (1-space)/nlevels(y.values[[factors[[2]]]]) * 2
-                          )
+  args.arrows <- defaults(
+    args.arrows
+    , set = list(
+      x0 = t(x)
+      , x1 = t(x)
+      , y0 = t(y-e)
+      , y1 = t(y+e)
+    )
+    , set.if.null = list(
+      angle = 90
+      , code = 3
+      , length = (1-space)/nlevels(y.values[[factors[[2]]]]) * 2
+    )
   )
-
 
   do.call("arrows", args.arrows)
 
