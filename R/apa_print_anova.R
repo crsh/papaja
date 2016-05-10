@@ -136,9 +136,10 @@ apa_print.anova <- function(
   # Add method for levene test
 
   variance_table <- arrange_anova(x)
+  object_heading <- attr(x, "heading")
 
   if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
-    if(grepl("Levene", attr(x, "heading"))) {
+    if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
       ellipsis <- list(...)
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
