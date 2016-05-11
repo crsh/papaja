@@ -278,7 +278,7 @@ apa_beeplot.default <- function(
         ellipsis.i$ylab <- ""
       }
 
-      output$args[[paste0("plot", i, j)]] <- do.call("apa.beeplot.core", ellipsis.i)
+      output$args[[paste0("plot", i)]] <- do.call("apa.beeplot.core", ellipsis.i)
     }
     par(mfrow=old.mfrow)
   }
