@@ -84,8 +84,8 @@ test_that(
     skip_on_cran() # The bootstrapping is computationally too expensive
     model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 10000)
 
-    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.75$, $.87]$")
-    expect_equal(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.00$, $.04]$")
+    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.77$, $.87]$")
+    expect_equal(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01$, $.04]$")
 
     model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 10000, ci = 0.5)
 
@@ -93,3 +93,19 @@ test_that(
     expect_equal(model_comp_boot2$est$Both, "$\\Delta R^2 = .02$, 50\\% CI $[.01$, $.03]$")
   }
 )
+
+# context("apa_print.anova() - Model comparison")
+#
+# test_that(
+#   "Linear regression"
+#   , {
+#     baseline <- lm(formula = Fertility ~ ., data = swiss)
+#
+#     f_test <- drop1(baseline, test = "F")
+#     f_test_results <- apa_print(f_test)
+#
+#
+#     lrt_test <- drop1(baseline, test = "Chisq")
+#     lrt_test_results <- apa_print(lrt_test)
+#   }
+# )
