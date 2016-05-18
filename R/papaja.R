@@ -40,6 +40,7 @@
 #' @section Contributors:
 #'  \itemize{
 #'    \item{Birk Diedenhofen}
+#'    \item{Christoph Stahl}
 #'  }
 #' @references
 #' American Psychological Association. (2010). Publication Manual of the American Psychological Association (6th edition).

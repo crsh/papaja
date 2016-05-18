@@ -22,7 +22,7 @@
 #' p
 #' p + theme_gray()
 
-theme_apa <- function(base_size = 18, base_family = "") {
+theme_apa <- function(base_size = 14, base_family = "") {
   theme_bw(base_size, base_family) +
     theme(
       plot.title = element_text(margin = margin(0, 0, rel(14), 0))

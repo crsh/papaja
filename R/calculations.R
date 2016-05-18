@@ -174,6 +174,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 
 #' @rdname wsci
 #' @export
+
 within_subjects_conf_int <- wsci
 
 
@@ -188,7 +189,7 @@ within_subjects_conf_int <- wsci
 #' @param na.rm Logical. Specifies if missing values are removed.
 #' @export
 
-conf_int<-function(x, level = 0.95, na.rm = TRUE){
+conf_int <- function(x, level = 0.95, na.rm = TRUE){
   a <- (1-level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(qt(a, df = n-1))
@@ -201,21 +202,21 @@ conf_int<-function(x, level = 0.95, na.rm = TRUE){
 
 #' @rdname conf_int
 #' @export
-conf.int <- conf_int
 
+conf.int <- conf_int
 
 
 
 #' Standard errors
 #'
-#' Returns the standard error of a vector
+#' Calculates the standard error of the mean
 #'
-#' @param x Numeric. A vector of observations from your dependent variable.
-#' @param na.rm Logical. Specifies if missing values are removed.
+#' @param x Numeric. A vector of observations.
+#' @param na.rm Logical. Specifies if missing values should be removed.
 #' @export
 
-se <- function(x, na.rm=TRUE){
+se <- function(x, na.rm = TRUE) {
   n <- sum(!is.na(x))
-  ee <- sd(x, na.rm = na.rm)/sqrt(n)
+  ee <- sd(x, na.rm = na.rm) / sqrt(n)
   return(ee)
 }
