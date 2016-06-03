@@ -526,8 +526,8 @@ points.matrix <- function(x, y, type = "p", ...) {
 
   for (i in 1:ncol(x)){
     args.i <- lapply(X = args, FUN = sel, i)
-    args.i$x <- x[, i]
-    args.i$y <- y[, i]
+    args.i$x <- unlist(x[, i])
+    args.i$y <- unlist(y[, i])
     do.call("points", args.i)
   }
 }

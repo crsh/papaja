@@ -447,7 +447,8 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
   agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
 
-  nc <- nlevels(aggregated[[factors[2]]])
+  nc <- nlevels(aggregated[[factors[2]]])-1
+  bg.colors <- grey((nc:0/(nc)) ^ 0.6, alpha = 1)
 
   # prepare (tendency) points
   args.points <- defaults(
@@ -459,32 +460,30 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
     , set.if.null = list(
       pch = c(21:25,1:20)
       , col = rep("black", length(l2))
-      , bg = rep("black", length(l2))
+      , bg = bg.colors
       , cex = rep(1.0, length(l2))
     )
   )
 
-  bg.colors <- grey((nc:1/(nc)) ^ 0.6, alpha = .4)
-  if(!is.null(args.points$bg)){
-    tmp <- col2rgb(args.points$bg, alpha = TRUE)
-    tmp <- matrix(tmp, ncol = ncol(agg.x), nrow = 4)
-    for (j in 1:ncol(agg.x)){
-      bg.colors[j] <- rgb(r = tmp[1, j], g = tmp[2, j], b = tmp[3, j], alpha = tmp[4, j] * args.swarm$alpha, maxColorValue = 255)
-    }
-  }
+  args.swarm <- defaults(
+    args.swarm
+    , set = list(
 
-  for (i in 1:nrow(agg.x)) {
-    for (j in 1:ncol(agg.x)) {
-      points(
-        x=agg.x[i,j][[1]]
-        , y = agg.y[i,j][[1]]
-        , pch = c(21:25,1:20)[j]
-        , bg = bg.colors[j]
-        , col = rgb(r = 0, g = 0, b = 0, alpha = args.swarm$alpha)
-        , cex = args.swarm$cex)
-    }
-  }
+      # nothing yet
+    )
+    , set.if.null = list(
+      x = agg.x
+      , y = agg.y
+      , col = alphaise(args.points$col, factor = args.swarm$alpha)
+      , bg = alphaise(args.points$bg, factor = args.swarm$alpha)
+      , pch = args.points$pch
+    )
+  )
 
+  args.swarm$alpha <- NULL
+  print(args.swarm)
+
+  do.call("points.matrix", args.swarm)
 
   # prepare and draw arrows (i.e., error bars)
   args.arrows <- defaults(
@@ -595,3 +594,20 @@ apa_beeplot.afex_aov <- function(x, ...){
   )
   do.call("apa_beeplot.default", ellipsis)
 }
+
+
+# utility functions
+#
+#
+alphaise <- function(col, factor){
+  old.col <- col2rgb(col, alpha = TRUE)
+  new.col <- rgb(
+    r = old.col["red", ]
+    , g = old.col["green", ]
+    , b = old.col["blue", ]
+    , alpha = old.col["alpha", ] * factor, maxColorValue = 255
+  )
+  return(new.col)
+}
+
+# alphaise(col = c("red", "blue"), factor = .5)
