@@ -20,6 +20,7 @@
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
+#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}. With \code{list(type = "l")} you can add lines to your plot.
 #' @param args_swarm An optional \code{list} that contains forther arguments to customize the \code{\link{points}} of the beeswarm.
 #' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
@@ -130,6 +131,10 @@ apa_beeplot.default <- function(
     fun_aggregate <- ellipsis$fun.aggregate
   }
   ellipsis$fun.aggregate <- NULL
+
+  # further compatibility stuff: ignore arguments from other plot functions
+  ellipsis$reference <- NULL
+
 
   # is dplyr available?
   use_dplyr <- "dplyr" %in% rownames(installed.packages())
@@ -486,6 +491,25 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
 
   do.call("points.matrix", args.swarm)
 
+
+  # prepare and draw lines
+  args.lines <- defaults(
+    args.lines
+    , set = list(
+      x = x
+      , y = y
+    )
+    , set.if.null = list(
+      lty = 1:6
+      , col = rep("black", length(l2))
+      , type = "n"
+    )
+  )
+
+  do.call("lines", args.lines)
+
+
+
   # prepare and draw arrows (i.e., error bars)
   args.arrows <- defaults(
     args.arrows
@@ -506,20 +530,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
   # draw points (central tendency)
   do.call("points.matrix", args.points)
 
-  # # prepare and draw lines
-  # args.lines <- defaults(
-  #   args.lines
-  #   , set = list(
-  #    x = x
-  #    , y = y
-  #   )
-  #   , set.if.null = list(
-  #    lty = 1:6
-  #    , col = rep("black", length(l2))
-  #   )
-  # )
-  #
-  # do.call("lines", args.lines)
+
 
   # prepare and draw legend
   if(onedim==FALSE) { # only draw legend if a second factor is present
