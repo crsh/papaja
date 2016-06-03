@@ -532,6 +532,7 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
         , lty = args.lines$lty
         , bty = "n"
         , pt.bg = args.points$bg
+        , col = args.points$col
         , pt.cex = args.points$cex
       )
     )
