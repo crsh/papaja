@@ -4,15 +4,15 @@
 #'
 #' @param x Character. Input file name.
 #' @details
-#' Because pandoc currently does not support \code{includes} \code{after_body} this function has no effect
-#' when rendering word documents.
+#'    Because pandoc currently does not support \code{includes} \code{after_body} this function has no effect
+#'    when rendering Word documents.
 #' @export
 
 render_appendix <- function(x) {
   new_name <- NULL
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
 
-  if(length(target_format) > 0 && target_format == "latex") {
+  if(length(target_format) == 0 || target_format == "latex") {
     # Create TeX-file
     tmp_name <- paste0(paste(sample(c(letters, LETTERS, 0:9), 28), collapse = ""), ".md")
     knitr::knit(x, tmp_name, quiet = TRUE)
@@ -23,8 +23,11 @@ render_appendix <- function(x) {
 
     # Add appendix environment
     tex <- readLines(new_name)
+    if(!grepl("\\\\section", tex[tex != ""][1])) tex <- c("\\section{}", tex) # Add section to start appendix
     tex <- c("\\begin{appendix}", tex, "\\end{appendix}")
     write(tex, file = new_name)
+  } else {
+    stop(target_format, " documents currently do not support appendices.")
   }
 
   return(new_name)
