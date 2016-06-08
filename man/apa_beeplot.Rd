@@ -45,6 +45,8 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_points}{An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}}
 
+\item{args_swarm}{An optional \code{list} that contains forther arguments to customize the \code{\link{points}} of the beeswarm.}
+
 \item{args_arrows}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}}
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}

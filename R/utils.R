@@ -297,3 +297,26 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 
 
 
+#' Sort ANOVA table by effects
+#' 
+#' Sorts rows in ANOVA table produced by \link{\code{apa_print}} by complexity (i.e., main effects,
+#' two-way interactions, three-way interactions, etc.).
+#'
+#' @param x data.frame. An arbitrary data.frame with a column named "Effect", e.g., a table element
+#'    produced by \link{\code{apa_print}}.
+#'
+#' @return Returns the same data.frame with reordered rows.
+#' @export
+#'
+#' @examples
+#' ## From Venables and Ripley (2002) p. 165.
+#' npk_aov <- aov(yield ~ block + N * P * K, npk)
+#' npk_aov_results <- apa_print(npk_aov)
+#' sort_effects(npk_aov_results$table)
+
+sort_effects <- function(x) {
+  validate(x, check_class = "data.frame", check_cols = "Effect")
+  
+  x[order(sapply(regmatches(x$Effect, gregexpr("\\\\times", x$Effect)), length)), ]
+}
+

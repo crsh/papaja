@@ -74,11 +74,6 @@ apa_table <- function(
   row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
 
-  if(!is.null(col_spanners)) {
-    validate(col_spanners, check_class = "list")
-    validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(x) + row_names))
-  }
-
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
 
@@ -118,11 +113,9 @@ apa_table <- function(
   # Indent stubs
   if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
 
-
   # Fix ellipsis for further use
   ellipsis$escape <- FALSE
   ellipsis$row.names <- FALSE
-
 
   # Pass to markup generating functions
   if(!is.null(ellipsis$format)) {
@@ -133,6 +126,11 @@ apa_table <- function(
   }
 
   if(output_format == "latex") {
+    if(!is.null(col_spanners)) {
+      validate(col_spanners, check_class = "list")
+      validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(prep_table)))
+    }
+    
     do.call(
       function(...) apa_table.latex(
         x = prep_table
@@ -331,7 +329,8 @@ add_row_names <- function(x, added_stub_head) {
 #' NULL
 
 indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
-
+  x <- apply(x, 2, as.character)
+  
   # Add indentation
   stubs <- x[, 1]
   for(i in seq_along(lines)) {

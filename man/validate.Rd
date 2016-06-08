@@ -6,7 +6,8 @@
 \usage{
 validate(x, name = NULL, check_class = NULL, check_mode = NULL,
   check_integer = FALSE, check_NA = TRUE, check_infinite = TRUE,
-  check_length = NULL, check_dim = NULL, check_range = NULL)
+  check_length = NULL, check_dim = NULL, check_range = NULL,
+  check_cols = NULL)
 }
 \arguments{
 \item{x}{Function input.}
@@ -28,6 +29,8 @@ validate(x, name = NULL, check_class = NULL, check_mode = NULL,
 \item{check_dim}{Numeric. Vector of object dimensions to expect.}
 
 \item{check_range}{Numeric. Vector of length 2 defining the expected range of the object.}
+
+\item{check_cols}{Character. Vector of columns that are intended to be in a \code{data.frame}.}
 }
 \description{
 This function can be used to validate the input to functions. \emph{This function is not exported.}
