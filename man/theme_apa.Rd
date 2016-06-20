@@ -4,7 +4,7 @@
 \alias{theme_apa}
 \title{APA compatible ggplot2 theme}
 \usage{
-theme_apa(base_size = 18, base_family = "")
+theme_apa(base_size = 14, base_family = "")
 }
 \arguments{
 \item{base_size}{Numeric. Base font size; other font sizes and margins are adjusted relative

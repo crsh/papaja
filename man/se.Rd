@@ -7,11 +7,11 @@
 se(x, na.rm = TRUE)
 }
 \arguments{
-\item{x}{Numeric. A vector of observations from your dependent variable.}
+\item{x}{Numeric. A vector of observations.}
 
-\item{na.rm}{Logical. Specifies if missing values are removed.}
+\item{na.rm}{Logical. Specifies if missing values should be removed.}
 }
 \description{
-Returns the standard error of a vector
+Calculates the standard error of the mean
 }
 

@@ -4,16 +4,34 @@
 \alias{render_appendix}
 \title{Render appendix}
 \usage{
-render_appendix(x)
+render_appendix(x, options = NULL, encoding = getOption("encoding"),
+  quiet = TRUE)
 }
 \arguments{
 \item{x}{Character. Input file name.}
+
+\item{options}{Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.}
+
+\item{encoding}{Character. Encoding of the input file; see \code{\link{file}}.}
+
+\item{quiet}{Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.}
 }
 \description{
-This functions renders an R Markdown to TeX fragment without preamble so it can be included as appendix.
+This functions renders an R Markdown to TeX fragment inside an \code{appendix} environment.
 }
 \details{
-Because pandoc currently does not support \code{includes} \code{after_body} this function has no effect
-when rendering word documents.
+By default \code{x} is converted to a TeX file which can be included in an R Markdown document
+   as \code{include}:
+
+   \preformatted{
+   output:
+     pdf_document:
+       include:
+       after_body: appendix.tex
+   }
+
+   If \code{render_appendix} is called form an R Markdown document with a target documen type other
+   than a PDF file a Markdown document is created and a warning returned (includes are only supported
+   in PDF documents).
 }
 

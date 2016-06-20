@@ -60,6 +60,7 @@ Note, at this point coversion to MS word is considered experimental. If you expe
 
  \itemize{
    \item{Birk Diedenhofen}
+   \item{Christoph Stahl}
  }
 }
 \references{
