@@ -4,8 +4,7 @@
 \alias{render_appendix}
 \title{Render appendix}
 \usage{
-render_appendix(x, options = NULL, encoding = getOption("encoding"),
-  quiet = TRUE)
+render_appendix(x, options = NULL, encoding = NULL, quiet = TRUE)
 }
 \arguments{
 \item{x}{Character. Input file name.}
@@ -17,7 +16,8 @@ render_appendix(x, options = NULL, encoding = getOption("encoding"),
 \item{quiet}{Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.}
 }
 \description{
-This functions renders an R Markdown to TeX fragment inside an \code{appendix} environment.
+This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
+an \code{appendix} environment.
 }
 \details{
 By default \code{x} is converted to a TeX file which can be included in an R Markdown document
@@ -30,8 +30,12 @@ By default \code{x} is converted to a TeX file which can be included in an R Mar
        after_body: appendix.tex
    }
 
-   If \code{render_appendix} is called form an R Markdown document with a target documen type other
+   If \code{render_appendix} is called form an R Markdown document with a target document type other
    than a PDF file a Markdown document is created and a warning returned (includes are only supported
    in PDF documents).
+
+   Default chunk options and hooks are set to those used in the R Markdown document from
+   which \code{render_appendix} is called; otherwise defaults of \code\link[rmarkdown]{md_document} are
+   used. It is, therefore, recommended to include \code{render_appendix} in your parent document.
 }
 

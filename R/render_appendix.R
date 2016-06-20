@@ -1,6 +1,7 @@
 #' Render appendix
 #'
-#' This functions renders an R Markdown to TeX fragment inside an \code{appendix} environment.
+#' This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
+#' an \code{appendix} environment.
 #'
 #' @param x Character. Input file name.
 #' @param options Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
@@ -17,15 +18,37 @@
 #'        after_body: appendix.tex
 #'    }
 #'
-#'    If \code{render_appendix} is called form an R Markdown document with a target documen type other
+#'    If \code{render_appendix} is called form an R Markdown document with a target document type other
 #'    than a PDF file a Markdown document is created and a warning returned (includes are only supported
 #'    in PDF documents).
+#'
+#'    Default chunk options and hooks are set to those used in the R Markdown document from
+#'    which \code{render_appendix} is called; otherwise defaults of \code\link[rmarkdown]{md_document} are
+#'    used. It is, therefore, recommended to include \code{render_appendix} in your parent document.
 #' @export
 
-render_appendix <- function(x, options = NULL, encoding = getOption("encoding"), quiet = TRUE) {
+render_appendix <- function(
+  x
+  , options = NULL
+  , encoding = NULL
+  , quiet = TRUE
+) {
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
 
-  md_file <- rmarkdown::render(x, output_format = "md_document", encoding = encoding, quiet = quiet)
+  md_format <- rmarkdown::md_document()
+
+  if(is.null(encoding)) {
+    encoding <- ifelse(length(target_format) > 0, knitr::opts_knit$get("encoding"), getOption("encoding"))
+    md_format$knitr$opts_chunk <- knitr::opts_chunk$get()[names(knitr::opts_chunk$get()) != "fig.path"]
+    md_format$knitr$knit_hooks <- knitr::knit_hooks$get()
+  }
+
+  md_file <- rmarkdown::render(
+    x
+    , output_format = md_format
+    , encoding = encoding
+    , quiet = quiet
+  )
 
   if(length(target_format) == 0 || target_format == "latex") {
     new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
