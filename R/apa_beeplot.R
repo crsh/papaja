@@ -270,11 +270,10 @@ apa_beeplot.default <- function(
     for (i in levels(y.values[[factors[3]]])) {
 
       ellipsis.i <- defaults(ellipsis, set = list(
-        main = paste0(tmp_main, c(factors[3],": ",i),collapse="")
-        , y.values = y.values[y.values[[factors[3]]]==i, ]
+        y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
       ), set.if.null = list(
-
+        main = ifelse(is.null(tmp_main), paste0(c(factors[3],": ",i), collapse=""), ifelse(length(tmp_main)==1, paste0(tmp_main, c(factors[3],": ",i),collapse=""), tmp_main[i]))
       ))
 
       # by default, only draw legend in very right plot
@@ -314,11 +313,10 @@ apa_beeplot.default <- function(
     for (i in levels(y.values[[factors[3]]])){
       for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
-          main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
-          , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
+          y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
         ), set.if.null = list(
-          # nothing
+          main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
         ))
 
         # by default, only draw legend in topright plot
