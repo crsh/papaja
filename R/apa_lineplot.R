@@ -357,6 +357,17 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
   args.axis <- ellipsis$args.axis
   args.arrows <- ellipsis$args.arrows
 
+  # save some global parameters for multiple
+  if(!is.null(ellipsis$col)){
+    # col
+    args.points$col <- ellipsis$col
+    args.lines$col <- ellipsis$col
+  }
+  if(!is.null(ellipsis$bg)){
+    args.points$bg <- ellipsis$bg
+  }
+
+
   # basic plot
   ellipsis <- defaults(
     ellipsis
@@ -373,6 +384,8 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
       , args.lines = NULL
       , args.axis = NULL
       , args.arrows = NULL
+      , col = NULL
+      , bg = NULL
     )
   )
 
