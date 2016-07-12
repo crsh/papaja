@@ -135,6 +135,11 @@ apa_lineplot <- function(
   }
   data[[id]]<-droplevels(as.factor(data[[id]]))
 
+  # save names for beautiful plotting
+  p.factors <- factors
+  p.id <- id
+  p.dv <- dv
+
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
@@ -245,7 +250,7 @@ apa_lineplot <- function(
     for (i in levels(y.values[[factors[3]]])) {
 
       ellipsis.i <- defaults(ellipsis, set = list(
-        main = paste0(tmp_main, c(factors[3],": ",i),collapse="")
+        main = paste0(tmp_main, c(p.factors[3],": ",i),collapse="")
         , y.values = y.values[y.values[[factors[3]]]==i, ]
       ), set.if.null = list(
 
@@ -288,7 +293,7 @@ apa_lineplot <- function(
     for (i in levels(y.values[[factors[3]]])){
       for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
-          main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
+          main = paste0(c(tmp_main,p.factors[3],": ",i," & ",p.factors[4],": ",j),collapse="")
           , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
         ), set.if.null = list(
           # nothing

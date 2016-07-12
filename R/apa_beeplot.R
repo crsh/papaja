@@ -144,6 +144,9 @@ apa_beeplot.default <- function(
     data[[i]] <- droplevels(as.factor(data[[i]]))
   }
 
+  # save variable names for pretty plotting
+  p.factors <- factors
+
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
@@ -273,7 +276,7 @@ apa_beeplot.default <- function(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
       ), set.if.null = list(
-        main = ifelse(is.null(tmp_main), paste0(c(factors[3],": ",i), collapse=""), ifelse(length(tmp_main)==1, paste0(tmp_main, c(factors[3],": ",i),collapse=""), tmp_main[i]))
+        main = ifelse(is.null(tmp_main), paste0(c(p.factors[3],": ",i), collapse=""), ifelse(length(tmp_main)==1, paste0(tmp_main, c(p.factors[3],": ",i),collapse=""), tmp_main[i]))
       ))
 
       # by default, only draw legend in very right plot
@@ -316,7 +319,7 @@ apa_beeplot.default <- function(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
         ), set.if.null = list(
-          main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
+          main = paste0(c(tmp_main,p.factors[3],": ",i," & ",p.factors[4],": ",j),collapse="")
         ))
 
         # by default, only draw legend in topright plot

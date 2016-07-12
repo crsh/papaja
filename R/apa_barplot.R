@@ -253,7 +253,7 @@ apa_barplot <- function(
       ellipsis.i <-defaults(
         ellipsis
         , set = list(
-          main = gsub(paste0(tmp_main, c(factors[3],": ",i),collapse=""), pattern = "_", replacement = " ")
+          main = gsub(paste0(tmp_main, c(p.factors[3],": ",i),collapse=""), pattern = "_", replacement = " ")
           , y.values = y.values[y.values[[factors[3]]]==i,]
         )
       )
@@ -289,7 +289,7 @@ apa_barplot <- function(
         ellipsis.ij <- defaults(
           ellipsis
           , set = list(
-            main = paste0(c(tmp_main,factors[3],": ",i," & ",factors[4],": ",j),collapse="")
+            main = paste0(c(tmp_main,p.factors[3],": ",i," & ",p.factors[4],": ",j),collapse="")
             , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           )
         )
