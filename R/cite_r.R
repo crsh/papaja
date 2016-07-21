@@ -34,7 +34,17 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
 
   if(is.null(file) || !file_test("-f", file)) { # Print R-reference if there is no .bib-file
     if(!is.null(file)) warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
-    return(cite_just_r)
+
+    if(footnote) {
+      res <- list()
+      res$r <- cite_just_r
+
+      res$pkgs <- NULL
+      return(res)
+    } else {
+      return(cite_just_r)
+    }
+
   }
 
   r_bib <- readLines(file)
