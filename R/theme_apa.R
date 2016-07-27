@@ -22,16 +22,20 @@
 #' p
 #' p + theme_gray()
 
-theme_apa <- function(base_size = 14, base_family = "") {
-  theme_bw(base_size, base_family) +
+theme_apa <- function(base_size = 14, base_family = "", box = FALSE) {
+  adapted_theme <- theme_bw(base_size, base_family) +
     theme(
-      plot.title = element_text(margin = margin(0, 0, rel(14), 0))
-      , axis.title = element_text(size = rel(1.2))
+      plot.title = element_text(size = rel(1.1), margin = margin(0, 0, rel(14), 0))
+
+      , axis.title = element_text(size = rel(1.1))
       , axis.title.x = element_text(margin = margin(rel(18), 0, 0, 0))
       , axis.title.y = element_text(margin = margin(0, rel(18), 0, 0))
       , axis.ticks.length = unit(rel(6), "points")
+      , axis.text = element_text(size = rel(0.9))
       , axis.text.x = element_text(margin = margin(rel(6), 0, 0, 0))
       , axis.text.y = element_text(margin = margin(0, rel(8), 0, 0))
+      , axis.line.x = element_line()
+      , axis.line.y = element_line()
 
       , legend.title = element_text()
       , legend.key = element_rect(fill = NA, color = NA)
@@ -39,7 +43,6 @@ theme_apa <- function(base_size = 14, base_family = "") {
       , legend.key.height = unit(rel(25), "points")
       , legend.margin = unit(rel(18), "points")
 
-      , panel.border = element_rect(color = "black")
       , panel.margin = unit(rel(16), "points")
       , panel.grid.major.x = element_line(size = NA)
       , panel.grid.minor.x = element_line(size = NA)
@@ -50,4 +53,12 @@ theme_apa <- function(base_size = 14, base_family = "") {
       , strip.text.x = element_text(size = rel(1.1), margin = margin(0, 0, rel(16), 0))
       , strip.text.y = element_text(size = rel(1.1), margin = margin(0, 0, 0, rel(16)))
     )
+
+  if(box) {
+    adapted_theme <- adapted_theme + theme(panel.border = element_rect(color = "black"))
+  } else {
+    adapted_theme <- adapted_theme + theme(panel.border = element_blank())
+  }
+
+  adapted_theme
 }
