@@ -23,7 +23,7 @@
 #'    in PDF documents).
 #'
 #'    Default chunk options and hooks are set to those used in the R Markdown document from
-#'    which \code{render_appendix} is called; otherwise defaults of \code\link[rmarkdown]{md_document} are
+#'    which \code{render_appendix} is called; otherwise defaults of \code{\link[rmarkdown]{md_document}} are
 #'    used. It is, therefore, recommended to include \code{render_appendix} in your parent document.
 #' @export
 

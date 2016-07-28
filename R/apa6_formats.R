@@ -171,7 +171,29 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 }
 
 word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  # Parse and modify YAML header
+  input_text <- readLines(input_file, encoding = "UTF-8")
+
+  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
+
+  if(length(yaml_delimiters) >= 2 &&
+     (yaml_delimiters[2] - yaml_delimiters[1] > 1) &&
+     grepl("^---\\s*$", input_text[yaml_delimiters[1]])) {
+    yaml_params <- yaml::yaml.load(paste(input_text[(yaml_delimiters[1] + 1):(yaml_delimiters[2] - 1)], collapse = "\n"))
+  }
+
+  ## Create title page
+  augmented_input_text <- c(word_title_page(yaml_params), input_text[(yaml_delimiters[2] + 1):length(input_text)])
+
+  ## Remove abstract to avoid redundancy introduced by pandoc
+  yaml_params$abstract <- NULL
+
+  ## Add modified YAML header
+  augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
+
+  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+
+  # Set CSL
   args <- set_csl(input_file)
-  # args <- c(args, '--variable abstract="test"')
   args
 }

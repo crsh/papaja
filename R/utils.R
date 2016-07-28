@@ -298,7 +298,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 
 
 #' Sort ANOVA table by effects
-#' 
+#'
 #' Sorts rows in ANOVA table produced by \link{\code{apa_print}} by complexity (i.e., main effects,
 #' two-way interactions, three-way interactions, etc.).
 #'
@@ -316,7 +316,33 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 
 sort_effects <- function(x) {
   validate(x, check_class = "data.frame", check_cols = "Effect")
-  
+
   x[order(sapply(regmatches(x$Effect, gregexpr("\\\\times", x$Effect)), length)), ]
 }
 
+
+
+# Defines phrases used throughout the manuscript
+localize <- function(x) {
+  switch(
+    x
+    , list( # Default
+      author_note = "Author note"
+      , abstract = "Abstract"
+      , keywords = "Keywords:"
+      , word_count = "Word count:"
+      , table = "Table"
+      , figure = "Figure"
+      , note = "Note"
+    )
+    , german = list(
+      author_note = "Anmerkung des Autors"
+      , abstract = "Zusammenfassung"
+      , keywords = "Schlüsselwörter:"
+      , word_count = "Wortanzahl:"
+      , table = "Tabelle"
+      , figure = "Abbildung"
+      , note = "Anmerkung"
+    )
+  )
+}

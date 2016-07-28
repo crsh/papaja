@@ -130,7 +130,7 @@ apa_table <- function(
       validate(col_spanners, check_class = "list")
       validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(prep_table)))
     }
-    
+
     do.call(
       function(...) apa_table.latex(
         x = prep_table
@@ -267,10 +267,11 @@ apa_table.word <- function(
   # Parse ellipsis
   ellipsis <- list(...)
   res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
+  apa_terms <- options()$papaja.terms
 
   # Print table
   cat("<center>")
-  cat(apa_doc_env$apa_lang$table, ". ", sep = "")
+  cat(apa_terms$table, ". ", sep = "")
   cat("*", caption, "*", sep = "")
   cat("</center>\n")
 
@@ -279,7 +280,7 @@ apa_table.word <- function(
   if(!is.null(note)) {
     cat("\n")
     cat("<center>")
-    cat("*", apa_doc_env$apa_lang$note, ".* ", note, sep = "")
+    cat("*", apa_terms$note, ".* ", note, sep = "")
     cat("</center>")
     cat("\n\n\n\n")
   }
@@ -330,7 +331,7 @@ add_row_names <- function(x, added_stub_head) {
 
 indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
   x <- apply(x, 2, as.character)
-  
+
   # Add indentation
   stubs <- x[, 1]
   for(i in seq_along(lines)) {
