@@ -124,13 +124,13 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 
     Morey_CI <- lapply(X = splitted, FUN = function(x){
       y <- tapply(x[[dv]], as.list(x[, c(id, within)]), FUN = as.numeric) # transform to matrix
-      z <- y - array(rowMeans(y, na.rm = TRUE), dim(y)) + mean(y, na.rm=TRUE) # normalise
+      z <- y - rowMeans(y, na.rm = TRUE) + mean(y, na.rm = TRUE) # normalise
       CI <- apply(z, MARGIN = (1:(length(within)+1))[-1], FUN = conf_int, level) # calculate CIs for each condition
 
       # Morey correction
       if(method=="Morey"){
-        M <- prod(apply(X = as.matrix(x[, within]), MARGIN = 2, FUN = function(x){nlevels(as.factor(x))}))
-        Morey_CI <- CI * M/(M-1)
+        M <- prod(apply(X = as.matrix(x[, within, drop = FALSE]), MARGIN = 2, FUN = function(x){nlevels(as.factor(x))}))
+        Morey_CI <- CI * sqrt(M/(M-1))
       } else {
         method <<- "Cousineau"
         Morey_CI <- CI
