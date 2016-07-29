@@ -7,7 +7,7 @@
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
-#' @param mse Logical. Indicates if mean squared errors should be included in output.
+#' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 
@@ -35,9 +35,10 @@ print_anova <- function(
   , intercept = FALSE
   , observed = NULL
   , es = "ges"
-  , mse = TRUE
+  , mse = getOption("papaja.mse")
   , in_paren = FALSE
 ) {
+
   # When processing aovlist objects a dummy term "aovlist_residuals" is kept to preserve the SS_error of the intercept
   # term to calculate generalized eta squared correctly. This term contains NAs.
   if("aovlist_residuals" %in% x$term) {

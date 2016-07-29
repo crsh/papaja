@@ -19,12 +19,17 @@
 
 \method{apa_print}{summary.aovlist}(x, ...)
 
-\method{apa_print}{Anova.mlm}(x, correction = "GG", intercept = FALSE, ...)
+\method{apa_print}{Anova.mlm}(x,
+  correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
+  ...)
 
-\method{apa_print}{summary.Anova.mlm}(x, correction = "GG",
-  intercept = FALSE, ...)
+\method{apa_print}{summary.Anova.mlm}(x,
+  correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
+  ...)
 
-\method{apa_print}{afex_aov}(x, correction = "GG", intercept = FALSE, ...)
+\method{apa_print}{afex_aov}(x,
+  correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
+  ...)
 
 \method{apa_print}{anova}(x, ...)
 }
@@ -33,7 +38,7 @@
 
 \item{...}{Additional arguments passed to or from other methods.}
 
-\item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.}
+\item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.}
 
 \item{intercept}{Logical. Indicates if intercept test should be included in output.}
 

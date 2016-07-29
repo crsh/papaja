@@ -6,7 +6,7 @@
 #' @param x Output object. See details.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none} is also possible.
+#' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.
 #' @param mse Logical. Specifies if Mean Squared Errors (MSEs) are to be reported.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
@@ -84,7 +84,7 @@ apa_print.summary.aovlist <- function(x, ...) {
 #' @method apa_print Anova.mlm
 #' @export
 
-apa_print.Anova.mlm <- function(x, correction = "GG", intercept = FALSE, ...) {
+apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
   summary_x <- summary(x, multivariate = FALSE) # car:::summary.Anova.mlm
 
   apa_print(summary_x, correction = correction, intercept = intercept, ...)
@@ -95,7 +95,7 @@ apa_print.Anova.mlm <- function(x, correction = "GG", intercept = FALSE, ...) {
 #' @method apa_print summary.Anova.mlm
 #' @export
 
-apa_print.summary.Anova.mlm <- function(x, correction = "GG", intercept = FALSE, ...) {
+apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
   variance_table <- arrange_anova(x, correction)
 
   print_anova(variance_table, intercept = intercept, ...)
@@ -106,7 +106,7 @@ apa_print.summary.Anova.mlm <- function(x, correction = "GG", intercept = FALSE,
 #' @method apa_print afex_aov
 #' @export
 
-apa_print.afex_aov <- function(x, correction = "GG", intercept = FALSE, ...) {
+apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
   validate(intercept, check_class = "logical", check_length = 1)
 
   afex_aov_intercept <- "(Intercept)" %in% rownames(x$anova_table)

@@ -4,20 +4,22 @@
 \alias{theme_apa}
 \title{APA compatible ggplot2 theme}
 \usage{
-theme_apa(base_size = 14, base_family = "")
+theme_apa(base_size = 14, base_family = "", box = FALSE)
 }
 \arguments{
 \item{base_size}{Numeric. Base font size; other font sizes and margins are adjusted relative
 to this.}
 
 \item{base_family}{Character. Base font family.}
+
+\item{box.}{Logical. Indicates whether to draw a box around the plot.}
 }
 \description{
 A ggplot2 theme with a white panel background, no grid lines, large axis and legend titles,
 and increased text padding for better readability.
 }
 \details{
-This theme is an adaptation of \link[ggplot2]{\code{theme_bw()}}. In ggplot2, themes set the
+This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
    general aspect of the plot such as the colour of the background, gridlines, the size and colour
    of fonts.
 }

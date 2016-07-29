@@ -6,8 +6,9 @@
 #' @param base_size Numeric. Base font size; other font sizes and margins are adjusted relative
 #'    to this.
 #' @param base_family Character. Base font family.
+#' @param box Logical. Indicates whether to draw a box around the plot.
 #'
-#' @details This theme is an adaptation of \link[ggplot2]{\code{theme_bw()}}. In ggplot2, themes set the
+#' @details This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
 #'    general aspect of the plot such as the colour of the background, gridlines, the size and colour
 #'    of fonts.
 #'

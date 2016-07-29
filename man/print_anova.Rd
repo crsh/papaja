@@ -5,7 +5,7 @@
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
 print_anova(x, intercept = FALSE, observed = NULL, es = "ges",
-  mse = TRUE, in_paren = FALSE)
+  mse = getOption("papaja.mse"), in_paren = FALSE)
 }
 \arguments{
 \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
@@ -16,7 +16,7 @@ print_anova(x, intercept = FALSE, observed = NULL, es = "ges",
 
 \item{es}{Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.}
 
-\item{mse}{Logical. Indicates if mean squared errors should be included in output.}
+\item{mse}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 }
