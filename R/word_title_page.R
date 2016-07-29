@@ -19,22 +19,22 @@ word_title_page <- function(x) {
 
   corresponding_author <- x$author[[which(sapply(x$author, "[[", "corresponding"))]]
 
-  note <- paste(
-    x$note
+  author_note <- paste(
+    x$author_note
     , paste0("Correspondence concerning this article should be addressed to ", corresponding_author$name, ", ", corresponding_author$address, ". E-mail: ", corresponding_author$email)
-    , sep = "\n"
+    , sep = "\n\n"
   )
 
   padding <- paste0(c("\n", rep("&nbsp;", 148)), collapse = "") # Add spacer to last row
-  # note <- paste(note, padding, sep = "\n")
+  # author_note <- paste(author_note, padding, sep = "\n")
 
   c(
     "\n\n"
-    , paste(knitr::kable(c(authors, padding, affiliations), format = "pandoc", align = "c"), collapse = "\n")
+    , paste(knitr::kable(c(authors, padding, affiliations, padding, x$note), format = "pandoc", align = "c"), collapse = "\n")
     , "\n\n&nbsp;\n"
     , paste0("# ", apa_terms$author_note)
     , "\n"
-    , note
+    , author_note
     , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , paste0("# ", apa_terms$abstract)
     , "\n\n\n"

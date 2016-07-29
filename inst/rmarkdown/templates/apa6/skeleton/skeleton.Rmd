@@ -18,7 +18,7 @@ affiliation:
 abstract: |
   Enter abstract here (note the indentation, if you start a new paragraph).
   
-note: |  
+author_note: |  
   Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
 
   Enter author note here.
