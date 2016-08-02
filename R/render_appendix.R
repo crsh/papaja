@@ -35,12 +35,16 @@ render_appendix <- function(
 ) {
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
 
-  md_format <- rmarkdown::md_document()
+  # Create MD format but retain global options of parent document
+  md_format <- rmarkdown::md_document("markdown")
+
+  if(length(target_format) != 0) {
+    md_format$knitr$opts_chunk <- knitr::opts_chunk$get()[names(knitr::opts_chunk$get()) != "fig.path"]
+    md_format$knitr$knit_hooks <- knitr::knit_hooks$get()
+  }
 
   if(is.null(encoding)) {
     encoding <- ifelse(length(target_format) > 0, knitr::opts_knit$get("encoding"), getOption("encoding"))
-    md_format$knitr$opts_chunk <- knitr::opts_chunk$get()[names(knitr::opts_chunk$get()) != "fig.path"]
-    md_format$knitr$knit_hooks <- knitr::knit_hooks$get()
   }
 
   md_file <- rmarkdown::render(

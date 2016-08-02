@@ -125,7 +125,7 @@ apa_table <- function(
     if(length(output_format) == 0) output_format <- "latex"
   }
 
-  if(output_format == "latex") {
+  if(output_format == "latex" || output_format == "markdown") { # markdown_strict for render_appendix()
     if(!is.null(col_spanners)) {
       validate(col_spanners, check_class = "list")
       validate(unlist(col_spanners), "col_spanners", check_range = c(1, ncol(prep_table)))
