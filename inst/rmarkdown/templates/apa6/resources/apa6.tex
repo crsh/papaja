@@ -207,33 +207,11 @@ $if(affiliation)$
       \textsuperscript{$affiliation.id$} $if(affiliation.institution)$$affiliation.institution$$else$$if(affiliation.city)$$affiliation.city$$endif$$if(affiliation.state)$, $affiliation.state$$endif$$if(affiliation.country)$, $affiliation.country$$endif$$endif$$sep$\\
     $endfor$
   }
-
-
-%   \def\affinst{{"init", $for(affiliation)$"$affiliation.institution$"$sep$, $endfor$}}%
-%   \def\affstate{{"init", $for(affiliation)$"$affiliation.state$"$sep$, $endfor$}}%
-%   \def\affcntry{{"init", $for(affiliation)$"$affiliation.country$"$sep$, $endfor$}}%
 $endif$
 
 $if(author_note)$
   \authornote{
     \newcounter{author}
-
-%     $if(author)$
-%     $for(author)$
-%       $if(author.affiliation)$
-%       \setcounter{author}{0}
-%         $if(author.primaryaffiliation)$
-%           \addtocounter{author}{$author.primaryaffiliation$}
-%         $else$
-%           \addtocounter{author}{$author.affiliation$}
-%         $endif$
-%         \expandafter\edef\csname authorid\endcsname{\theauthor}
-%         $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
-%       $endif$
-%     $sep$;
-%     $endfor$.
-%     $endif$
-
     $author_note$
 
     $if(author)$
@@ -248,21 +226,6 @@ $else$ % If no author_note is defined give only author information if available
   $if(author)$
   \authornote{
     \newcounter{author}
-
-%     $for(author)$
-%       $if(author.affiliation)$
-%       \setcounter{author}{0}
-%         $if(author.primaryaffiliation)$
-%           \addtocounter{author}{$author.primaryaffiliation$}
-%         $else$
-%           \addtocounter{author}{$author.affiliation$}
-%         $endif$
-%         \expandafter\edef\csname authorid\endcsname{\theauthor}
-%         $author.name$, \pgfmathparse{\affdep[\authorid]} \pgfmathresult, \pgfmathparse{\affinst[\authorid]} \pgfmathresult, \pgfmathparse{\affcity[\authorid]} \pgfmathresult, \pgfmathparse{\affstate[\authorid]} \pgfmathresult, \pgfmathparse{\affcntry[\authorid]} \pgfmathresult
-%       $endif$
-%     $sep$;
-%     $endfor$.
-
     $if(author)$
     $for(author)$
       $if(author.corresponding)$
@@ -293,6 +256,29 @@ $else$
       $if(wordcount)$\indent $word_count$ $wordcount$$endif$
     }
   $endif$
+$endif$
+
+$if(figurelist)$
+\usepackage[titles]{tocloft}
+\cftpagenumbersoff{figure}
+\renewcommand{\cftfigpresnum}{\itshape\figurename\enspace}
+\renewcommand{\cftfigaftersnum}{.\space}
+\setlength{\cftfigindent}{0pt}
+\setlength{\cftafterloftitleskip}{0pt}
+\settowidth{\cftfignumwidth}{Figure 10.\qquad}
+$endif$
+
+$if(tablelist)$
+$if(figurelist)$
+$else$
+\usepackage[titles]{tocloft}
+$endif$
+\cftpagenumbersoff{table}
+\renewcommand{\cfttabpresnum}{\itshape\tablename\enspace}
+\renewcommand{\cfttabaftersnum}{.\space}
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftafterloftitleskip}{0pt}
+\settowidth{\cfttabnumwidth}{Table 10.\qquad}
 $endif$
 
 $for(header-includes)$
@@ -332,6 +318,18 @@ $if(natbib)$
 $endif$
 $if(biblatex)$
   \printbibliography
+$endif$
+
+$if(tablelist)$
+\clearpage
+\renewcommand{\listtablename}{Table captions}
+\listoftables
+$endif$
+
+$if(figurelist)$
+\clearpage
+\renewcommand{\listfigurename}{Figure captions}
+\listoffigures
 $endif$
 
 $for(include-after)$
