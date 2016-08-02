@@ -123,7 +123,7 @@ apa_print.summary.ref.grid <- function(
   , contrast_names = NULL
   , ...
 ) {
-  validate(x, check_class = "summary.ref.grid")
+  validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
   validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
@@ -139,7 +139,7 @@ apa_print.summary.ref.grid <- function(
     prep_table <- merge_tables(
       contrast_list
       , row_names = rep(FALSE, length(contrast_list))
-      , added_colnames = split_by
+      , added_stub_head = split_by
     )
     contrast_table <- do.call(rbind, prep_table)
   } else {

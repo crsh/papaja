@@ -1,4 +1,7 @@
 # papaja: Prepare APA Journal Articles
+
+[![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
+
 papaja is a R-package in the making including a [RMarkdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce complete manuscripts, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create beautiful PDF documents or Word documents if you have to. papaja also supplies R-functions that are meant to facilitate the reporting of statistics in accordance with APA guidelines.
 
 **Note, at this point papaja is in active development and should be considered alpha. If you experience any problems, please [open an issue](https://github.com/crsh/papaja/issues) on Github.**
