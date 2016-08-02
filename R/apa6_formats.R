@@ -107,6 +107,11 @@ apa6_word <- function(
   format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
   format$knitr$knit_hooks$inline <- inline_numbers
+  format$knitr$knit_hooks$plot <- function(x, options) {
+    to <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+    if(!is.null(to) && to == "word") options$fig.cap <- paste("*Figure.*", options$fig.cap)
+    knitr::hook_plot_md(x, options)
+  }
 
 #   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
 #   format$knitr$opts_chunk$dpi <- 300
