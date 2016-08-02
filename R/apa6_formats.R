@@ -166,6 +166,16 @@ set_csl <- function(x) {
 }
 
 pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  # Parse and modify YAML header
+  input_text <- readLines(input_file, encoding = "UTF-8")
+  yaml_params <- get_yaml_params(input_text)
+
+  yaml_params$author <- author_ampersand(yaml_params$author)
+
+  ## Add modified YAML header
+  augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text)
+  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+
   args <- set_csl(input_file)
   args
 }
@@ -173,16 +183,12 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
   # Parse and modify YAML header
   input_text <- readLines(input_file, encoding = "UTF-8")
+  yaml_params <- get_yaml_params(input_text)
 
-  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
-
-  if(length(yaml_delimiters) >= 2 &&
-     (yaml_delimiters[2] - yaml_delimiters[1] > 1) &&
-     grepl("^---\\s*$", input_text[yaml_delimiters[1]])) {
-    yaml_params <- yaml::yaml.load(paste(input_text[(yaml_delimiters[1] + 1):(yaml_delimiters[2] - 1)], collapse = "\n"))
-  }
+  yaml_params$author <- author_ampersand(yaml_params$author)
 
   ## Create title page
+  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c(word_title_page(yaml_params), input_text[(yaml_delimiters[2] + 1):length(input_text)])
 
   ## Remove abstract to avoid redundancy introduced by pandoc
@@ -190,10 +196,37 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-
   writeLines(augmented_input_text, input_file, useBytes = TRUE)
 
   # Set CSL
   args <- set_csl(input_file)
   args
+}
+
+
+get_yaml_params <- function(x) {
+  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", x)
+
+  if(length(yaml_delimiters) >= 2 &&
+     (yaml_delimiters[2] - yaml_delimiters[1] > 1) &&
+     grepl("^---\\s*$", x[yaml_delimiters[1]])) {
+    yaml_params <- yaml::yaml.load(paste(x[(yaml_delimiters[1] + 1):(yaml_delimiters[2] - 1)], collapse = "\n"))
+    yaml_params
+  } else NULL
+}
+
+
+author_ampersand <- function(x) {
+  n_authors <- length(x)
+  if(n_authors >= 2) {
+    if(n_authors > 2) {
+      x[[n_authors]]$name <- paste("&", x[[n_authors]]$name)
+      for(i in 2:n_authors) {
+        x[[i]]$name <- paste(",", x[[i]]$name)
+      }
+    } else {
+      x[[n_authors]]$name <- paste("\\ &", x[[n_authors]]$name) # Otherwise space before ampersand disappears
+    }
+  }
+  x
 }

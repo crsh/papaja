@@ -194,11 +194,7 @@ $if(leftheader)$
 $endif$
 
 $if(author)$
-  \author{
-    $for(author)$
-      $author.name$$if(author.affiliation)$\textsuperscript{$author.affiliation$}$endif$$sep$,
-    $endfor$
-  }
+  \author{$for(author)$$author.name$$if(author.affiliation)$\textsuperscript{$author.affiliation$}$endif$$endfor$}
 
   \def\affdep{{$for(author)$"$author.department$"$sep$, $endfor$}}%
   \def\affcity{{$for(author)$"$author.city$"$sep$, $endfor$}}%

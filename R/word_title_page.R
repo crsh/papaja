@@ -12,12 +12,17 @@ word_title_page <- function(x) {
 
   apa_terms <- options("papaja.terms")[[1]]
 
-  authors <- paste0(sapply(x$author, function(y) paste0(y["name"], paste0("^", y["affiliation"], "^"), collapse = "")), collapse = "\n")
+  authors <- sapply(x$author, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]])) paste0("^", y[["affiliation"]], "^") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+
+  authors <- paste(authors, collapse = "")
 
   affiliations <- lapply(x$affiliation, function(y) c(paste0("^", y["id"], "^"), y["institution"]))
   affiliations <- sapply(affiliations, paste, collapse = " ")
 
-  corresponding_author <- x$author[[which(sapply(x$author, "[[", "corresponding"))]]
+  corresponding_author <- x$author[[which(unlist(lapply(x$author, "[[", "corresponding")))]]
 
   author_note <- paste(
     x$author_note
