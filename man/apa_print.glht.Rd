@@ -39,8 +39,8 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
    }
 }
 \description{
-Takes \code{htest} objects from various statistical methods to create
-formatted chraracter strings to report the results in accordance with APA manuscript guidelines.
+Takes various \code{lsmeans} objects methods to create formatted chraracter strings to report the results in
+accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
 }
 \details{
 The function should work on a wide range of \code{htest} objects. Due to the large number of functions

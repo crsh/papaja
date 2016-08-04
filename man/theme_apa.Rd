@@ -12,7 +12,7 @@ to this.}
 
 \item{base_family}{Character. Base font family.}
 
-\item{box.}{Logical. Indicates whether to draw a box around the plot.}
+\item{box}{Logical. Indicates whether to draw a box around the plot.}
 }
 \description{
 A ggplot2 theme with a white panel background, no grid lines, large axis and legend titles,

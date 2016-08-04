@@ -1,7 +1,7 @@
 #' Format statistics (APA 6th edition)
 #'
-#' Takes \code{htest} objects from various statistical methods to create
-#' formatted chraracter strings to report the results in accordance with APA manuscript guidelines.
+#' Takes various \code{lsmeans} objects methods to create formatted chraracter strings to report the results in
+#' accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
 #'
 #' @param x See details.
 #' @param test Function.
