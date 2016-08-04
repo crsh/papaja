@@ -11,3 +11,5 @@
 .DS_Store
 Thumbs.db
 .RData
+example/example_files
+example/example.tex

@@ -10,7 +10,6 @@ Authors@R: c(
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
   )
-Maintainer: Frederik Aust, <frederik.aust@uni-koeln.de>
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
@@ -22,12 +21,12 @@ Imports:
   MBESS,
   boot
 Suggests:
-    car,
-    afex,
-    ggplot2,
-    dplyr,
-    downloader,
-    testthat
+  car,
+  afex,
+  ggplot2,
+  dplyr,
+  downloader,
+  testthat
 License: MIT + file LICENSE
 LazyData: yes
 RoxygenNote: 5.0.1
