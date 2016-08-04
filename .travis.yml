@@ -1,0 +1,13 @@
+language: r
+r:
+  - oldrel
+  - release
+  - devel
+
+# Be strict when checking our package
+warnings_are_errors: true
+
+# Suggested packages needed to run tests
+r_packages:
+  - testthat
+  - afex
