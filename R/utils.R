@@ -88,15 +88,15 @@ validate <- function(
 
 
 escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
-  x = gsub("\\\\", "\\\\textbackslash", x)
-  x = gsub("([#$%&_{}])", "\\\\\\1", x)
-  x = gsub("\\\\textbackslash", "\\\\textbackslash{}", x)
-  x = gsub("~", "\\\\textasciitilde{}", x)
-  x = gsub("\\^", "\\\\textasciicircum{}", x)
+  x <- gsub("\\\\", "\\\\textbackslash", x)
+  x <- gsub("([#$%&_{}])", "\\\\\\1", x)
+  x <- gsub("\\\\textbackslash", "\\\\textbackslash{}", x)
+  x <- gsub("~", "\\\\textasciitilde{}", x)
+  x <- gsub("\\^", "\\\\textasciicircum{}", x)
   if (newlines)
-    x = gsub("(?<!\n)\n(?!\n)", "\\\\\\\\", x, perl = TRUE)
+    x <- gsub("(?<!\n)\n(?!\n)", "\\\\\\\\", x, perl = TRUE)
   if (spaces)
-    x = gsub("  ", "\\\\ \\\\ ", x)
+    x <- gsub("  ", "\\\\ \\\\ ", x)
   x
 }
 
@@ -246,7 +246,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                       # Remove parentheses and backticks
-  x <- gsub("\\_", " ", x)                            # Remove underscores
+  x <- gsub("\\_|\\.", " ", x)                            # Remove underscores
   for (i in 1:length(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
     substring(x2, first = 1, last = 1) <- toupper(substring(x2, first = 1, last = 1))

@@ -115,7 +115,7 @@ test_that(
     expect_error(printnum(1, digits = NA), "The parameter 'digits' is NA.")
     expect_error(printnum(1, digits = "A"), "The parameter 'digits' must be of class 'numeric'.")
     expect_error(printnum(1, digits = 1.1), "The parameter 'digits' must be an integer.")
-    expect_error(printnum(1, digits = 1:2), " The parameter 'digits' must be of length 1.")
+    expect_error(printnum(1, digits = 1:2), "The parameter 'digits' must be of length 1.")
     expect_error(printnum(1, digits = Inf), "The parameter 'digits' must be finite.")
 
     expect_error(printnum(1, gt1 = NULL), "The parameter 'gt1' is NULL.")

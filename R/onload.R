@@ -1,5 +1,5 @@
 .onLoad <- function(libname, pkgname) { # nocov start
-  lang <- if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0) {
+  lang <- if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0 && !is.null(rmarkdown::metadata$lang)) {
     rmarkdown::metadata$lang
   } else "english"
 
@@ -7,7 +7,7 @@
   op_papaja <- list(
     papaja.language = lang
     , papaja.terms = localize(lang)
-    , papaja.plot_theme = "greyscale"
+    , papaja.plot_colors = "greyscale"
     , papaja.mse = TRUE
     , papaja.sphericity_correction = "GG"
   )

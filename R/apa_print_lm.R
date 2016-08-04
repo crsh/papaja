@@ -138,7 +138,7 @@ apa_print.lm <- function(
   regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
   regression_table$ci <- apply(tidy_x[, tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
   regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "p.value")] # Change order of columns
-  regression_table$term <- sanitize_terms(regression_table$term, standardized)
+  regression_table$term <- prettify_terms(regression_table$term, standardized)
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)

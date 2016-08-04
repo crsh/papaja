@@ -106,8 +106,10 @@ apa_table <- function(
   }
 
   if(!is.null(ellipsis$escape) && ellipsis$escape) {
-    prep_table <- escape_latex(prep_table)
+    prep_table <- apply(prep_table, 2, escape_latex)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
+    caption <- escape_latex(caption)
+    note <- escape_latex(note)
   }
 
   # Indent stubs

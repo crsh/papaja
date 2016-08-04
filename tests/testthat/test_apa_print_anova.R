@@ -329,12 +329,12 @@ test_that(
     tw_rm_aov_summary_output <- apa_print(summary(tw_rm_aov))
     expect_identical(tw_rm_aov_summary_output, tw_rm_aov_output)
 
-    tw_rm_afex_aov <- afex::aov_ez(
+    tw_rm_afex_aov <- suppressWarnings(afex::aov_ez(
       data = tw_rm_data
       , id = "Subject"
       , dv = "Recall"
       , within = c("Task", "Valence")
-    )
+    ))
 
     tw_rm_afex_aov_output <- apa_print(tw_rm_afex_aov$aov)
     expect_identical(tw_rm_afex_aov_output, tw_rm_aov_output)
@@ -368,22 +368,3 @@ test_that(
     expect_equal(levene_test_output$stat, "$F(5, 39) = 1.47$, $p = .222$", check.attributes = FALSE)
   }
 )
-
-
-
-# library("afex")
-# data(sk2011.1)
-#
-# a1 <- aov_ez("id", "response", sk2011.1, between = "instruction", within = c("inference", "plausibility"))
-# # object of class afex_aov
-#
-# a1$anova_table # object of class anova and data.frame
-# a1$Anova # Anova.mlm
-#
-# summary(a1) # Summary Anova.mlm -> Can we just use the existing methods?
-#
-# anova(a1, correction = "HF") # Get different es and corrections
-#
-# library("papaja")
-# apa_print(a1$Anova, es = "pes")
-# apa_print(summary(a1))
