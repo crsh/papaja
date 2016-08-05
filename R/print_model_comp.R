@@ -22,10 +22,14 @@
 #'
 #' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 #' @examples
-#'    ## From Venables and Ripley (2002) p. 165.
-#'    npk_aov <- aov(yield ~ block + N * P * K, npk)
-#'    anova_table <- arrange_anova(summary(npk_aov))
-#'    print_anova(anova_table)
+#'  \dontrun{
+#'    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+#'    mod2 <- update(mod1, formula = . ~ . + Petal.Length)
+#'    mod3 <- update(mod2, formula = . ~ . + Petal.Width)
+#'
+#'    # No bootstrapped Delta R^2 CI
+#'    print_model_comp(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
+#'  }
 
 
 print_model_comp <- function(
@@ -115,7 +119,7 @@ print_model_comp <- function(
   ## Merge coefficient tables
   coef_table <- Reduce(function(...) merge(..., by = "Predictor", all = TRUE), model_summaries)
   rownames(coef_table) <- coef_table$Predictor
-  coef_table <- subset(coef_table, select = -Predictor)
+  coef_table <- coef_table[, colnames(coef_table) != "Predictor"]
   coef_table <- coef_table[names(sort(apply(coef_table, 1, function(x) sum(is.na(x))))), ] # Sort predictors to create steps in table
   coef_table <- coef_table[c("Intercept", rownames(coef_table)[rownames(coef_table) != "Intercept"]), ] # Make Intercept first Predictor
   coef_table[is.na(coef_table)] <- ""
@@ -125,7 +129,16 @@ print_model_comp <- function(
   model_fits <- lapply(models, broom::glance)
   model_fits <- do.call(rbind, model_fits)
   model_fits <- model_fits[, c("r.squared", "statistic", "df", "df.residual", "p.value", "AIC", "BIC")]
-  model_diffs <- apply(model_fits[c("r.squared", "AIC", "BIC")], 2, diff)
+  diff_vars <- c("r.squared", "AIC", "BIC")
+  model_diffs <- apply(model_fits[, diff_vars], 2, diff)
+  if(length(models) == 2) {
+    model_diffs <- matrix(
+      model_diffs
+      , ncol = length(diff_vars)
+      , byrow = TRUE
+      , dimnames = list(NULL, diff_vars)
+    )
+  }
 
   model_fits <- printnum(
     model_fits
