@@ -8,7 +8,7 @@
 #' @param ci Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param ...
+#' @param ... Additional arguments passed to \code{anova_fun}
 #'
 #' @details
 #'
@@ -48,7 +48,7 @@
 #' Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
 #' doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 #' @family apa_print
-#' @seealso \code{\link{anova}}
+#' @seealso \code{\link[stats]{anova}}
 #' @examples
 #'    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #'    mod2 <- update(mod1, formula = . ~ . + Petal.Length)
@@ -60,7 +60,7 @@
 
 apa_print.list <- function(
   x
-  , anova_fun = anova
+  , anova_fun = stats::anova
   , ci = 0.90
   , boot_samples = 10000
   , in_paren = FALSE

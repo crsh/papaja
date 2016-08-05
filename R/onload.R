@@ -14,5 +14,9 @@
   toset <- !(names(op_papaja) %in% names(op))
   if(any(toset)) options(op_papaja[toset])
 
+
+  # Fix dplyr R CMD Check note
+  if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
+
   invisible()
 } # nocov end

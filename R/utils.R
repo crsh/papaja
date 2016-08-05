@@ -46,11 +46,11 @@ validate <- function(
     else return(TRUE)
   }
 
-  if(check_infinite && "numeric" %in% is(x) && is.infinite(x)) stop(paste("The parameter '", name, "' must be finite.", sep = ""))
-  if(check_integer && "numeric" %in% is(x) && x %% 1 != 0) stop(paste("The parameter '", name, "' must be an integer.", sep = ""))
+  if(check_infinite && "numeric" %in% methods::is(x) && is.infinite(x)) stop(paste("The parameter '", name, "' must be finite.", sep = ""))
+  if(check_integer && "numeric" %in% methods::is(x) && x %% 1 != 0) stop(paste("The parameter '", name, "' must be an integer.", sep = ""))
 
   for(x.class in check_class) {
-    if(!is(x, x.class)) stop(paste("The parameter '", name, "' must be of class '", x.class, "'.", sep = ""))
+    if(!methods::is(x, x.class)) stop(paste("The parameter '", name, "' must be of class '", x.class, "'.", sep = ""))
   }
 
   for (x.mode in check_mode) {
@@ -262,8 +262,8 @@ prettify_terms <- function(x, standardized = FALSE) {
 #' a new \code{list} with these values. Especially helpful if a function is call repeatedly via \code{do.call} with different
 #' parameter values from within a function.
 #'
-#' @param x. List. A list of parameter values
-#' @param i. Integer. The i-th element of each vector that is to be extracted.
+#' @param x List. A list of parameter values
+#' @param i Integer. The i-th element of each vector that is to be extracted.
 #'
 #' @examples
 #' NULL
@@ -299,11 +299,11 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 
 #' Sort ANOVA table by effects
 #'
-#' Sorts rows in ANOVA table produced by \link{\code{apa_print}} by complexity (i.e., main effects,
+#' Sorts rows in ANOVA table produced by \code{\link{apa_print}} by complexity (i.e., main effects,
 #' two-way interactions, three-way interactions, etc.).
 #'
 #' @param x data.frame. An arbitrary data.frame with a column named "Effect", e.g., a table element
-#'    produced by \link{\code{apa_print}}.
+#'    produced by \code{\link{apa_print}}.
 #'
 #' @return Returns the same data.frame with reordered rows.
 #' @export
@@ -338,7 +338,7 @@ localize <- function(x) {
     , german = list(
       author_note = "Anmerkung des Autors"
       , abstract = "Zusammenfassung"
-      , keywords = "Schlüsselwörter:"
+      , keywords = "Schl\u00fcsselw\u00f6rter:"
       , word_count = "Wortanzahl:"
       , table = "Tabelle"
       , figure = "Abbildung"
@@ -346,3 +346,5 @@ localize <- function(x) {
     )
   )
 }
+
+package_available <- function(x) x %in% rownames(utils::installed.packages())

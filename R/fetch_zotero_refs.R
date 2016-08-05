@@ -50,7 +50,7 @@ fetch_zotero_refs <- function(
   if(!is.null(API_key)) validate(API_key, check_class = "character", check_length = 1)
   if(!is.null(collection)) validate(collection, check_class = "character", check_length = 1)
 
-  downloader_installed <- "downloader" %in% rownames(installed.packages())
+  downloader_installed <- package_available("downloader")
 
   # Load list of entry keys (no limit) and determine the number of splits for the final library
   collection_url <- paste0("https://api.zotero.org/", paste0(lib_type, "s/"), x, "/")

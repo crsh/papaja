@@ -57,6 +57,9 @@
 #'    , level = .34
 #'    , las = 1
 #' )
+#'
+#' @import grDevices
+#' @import graphics
 #' @export
 
 apa_lineplot <- function(
@@ -127,7 +130,7 @@ apa_lineplot <- function(
   ellipsis$fun.aggregate <- NULL
 
   # is dplyr available?
-  use_dplyr <- "dplyr" %in% rownames(installed.packages())
+  use_dplyr <- package_available("dplyr")
 
   # Prepare data
   for (i in factors){
@@ -155,16 +158,16 @@ apa_lineplot <- function(
 
   if(use_dplyr) {
     ## Aggregate subject data
-    aggregated <- papaja:::fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
+    aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
 
     ## Calculate central tendencies
-    yy <- papaja:::fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
+    yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
   } else {
     ## Aggregate subject data
-    aggregated <- aggregate(formula = as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+    aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
 
     ## Calculate central tendencies
-    yy <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
+    yy <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
   }
 
 
@@ -174,12 +177,12 @@ apa_lineplot <- function(
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
     if(fun_dispersion == "conf_int") {
-      ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
+      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
     } else {
       if(use_dplyr) {
-        ee <- papaja:::fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
+        ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
       } else {
-        ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
+        ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
       }
     }
   }

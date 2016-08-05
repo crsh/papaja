@@ -29,10 +29,10 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   if(!is.null(pkgs)) validate(pkgs, check_class = "character")
   validate(withhold, check_class = "logical", check_length = 1)
 
-  r_version <- as.character(packageVersion("base"))
+  r_version <- as.character(utils::packageVersion("base"))
   cite_just_r <- paste0("R [", r_version, ", @", prefix, "base]")
 
-  if(is.null(file) || !file_test("-f", file)) { # Print R-reference if there is no .bib-file
+  if(is.null(file) || !utils::file_test("-f", file)) { # Print R-reference if there is no .bib-file
     if(!is.null(file)) warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
 
     if(footnote) {
@@ -89,7 +89,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   # Assemble (multiple) references and add package version numbers
   pkg_names <- names(pkg_citations)
   pkg_names <- unique(gsub("\\_\\D", "", pkg_names))
-  pkg_versions <- sapply(pkg_names, function(x) as.character(packageVersion(x)))
+  pkg_versions <- sapply(pkg_names, function(x) as.character(utils::packageVersion(x)))
   pkg_keys <- sapply(pkg_names, function(x){
     keys <- pkg_citations[grepl(x, names(pkg_citations))]
     paste0("@", keys, collapse = "; ")
@@ -102,7 +102,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
 
   if(length(pkg_texts) > 1) {
     pkg_info <- paste(pkg_texts[1:(length(pkg_texts) - 1)], collapse = ", ")
-    pkg_info <- paste0(pkg_info, ", and ", tail(pkg_texts, 1))
+    pkg_info <- paste0(pkg_info, ", and ", utils::tail(pkg_texts, 1))
   } else {
     pkg_info <- pkg_texts
   }

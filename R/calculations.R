@@ -88,7 +88,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 
 wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # comment out again!
-  # data <- papaja:::fast_aggregate(data = data, factors = c(id, factors), dv = dv, fun = mean)
+  # data <- fast_aggregate(data = data, factors = c(id, factors), dv = dv, fun = mean)
   between <- c()
   within <- c()
 
@@ -156,7 +156,13 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
         }
       }
     }
-    ee <- papaja:::fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun =mean)
+
+    if(package_available("dplyr")) {
+      ee <- fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun = mean)
+    } else {
+      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = do.call(rbind, Morey_CI), FUN = mean)
+    }
+
   } else {
     stop("No within-subjects factors specified.")
   }
@@ -192,11 +198,11 @@ within_subjects_conf_int <- wsci
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
   a <- (1-level)/2
   n <- sum(!is.na(x))
-  fac <- -suppressWarnings(qt(a, df = n-1))
+  fac <- -suppressWarnings(stats::qt(a, df = n-1))
   if(n==1){
     message("Only one observation in a cell. Thus, no confidence interval can be computed.")
   }
-  ee <- (sd(x, na.rm = na.rm)*fac)/sqrt(n)
+  ee <- (stats::sd(x, na.rm = na.rm)*fac)/sqrt(n)
   return(ee)
 }
 
@@ -205,6 +211,10 @@ conf_int <- function(x, level = 0.95, na.rm = TRUE){
 
 conf.int <- conf_int
 
+#' @rdname conf_int
+#' @export
+
+ci <- conf_int
 
 
 #' Standard errors
@@ -217,6 +227,6 @@ conf.int <- conf_int
 
 se <- function(x, na.rm = TRUE) {
   n <- sum(!is.na(x))
-  ee <- sd(x, na.rm = na.rm) / sqrt(n)
+  ee <- stats::sd(x, na.rm = na.rm) / sqrt(n)
   return(ee)
 }

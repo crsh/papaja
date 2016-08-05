@@ -28,7 +28,7 @@
 #'
 #'    If \code{standardized} is \code{TRUE} "scale()" is removed from coefficients names (see examples).
 #'
-#'    If \code{ci} is a single value, confidence intervals are calculated using \code{\link{confint}}.
+#'    If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
 #'
 #'    Confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.pvaf}} to obtain a confidence
 #'    region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g.,
@@ -52,7 +52,7 @@
 #' doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 #'
 #' @family apa_print
-#' @seealso \code{\link{confint}}, \code{\link[MBESS]{ci.pvaf}}
+#' @seealso \code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
 #' @examples
 #' # Data from Dobson (1990), p. 9.
 #' ctl <- c(4.17, 5.58, 5.18, 6.11, 4.50, 4.61, 5.17, 4.53, 5.33, 5.14)
@@ -84,7 +84,7 @@ apa_print.lm <- function(
   if(!is.null(ci)) {
     if(length(ci) == 1) {
       validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
-      ci <- confint(x, level = ci)
+      ci <- stats::confint(x, level = ci)
     } else {
       validate(ci, check_class = "matrix")
       sapply(ci, validate, check_class = "numeric")
@@ -125,7 +125,7 @@ apa_print.lm <- function(
   apa_res$est <- apply(tidy_x[, -1], 1, function(y) {
     paste0(
       "$", est_name, " = ", do.call(function(...) printnum(y["estimate"], ...), ellipsis), "$, "
-      , do.call(function(...) print_confint(y[tail(names(y), 2)], conf_level, ...), ellipsis)
+      , do.call(function(...) print_confint(y[utils::tail(names(y), 2)], conf_level, ...), ellipsis)
     )
   })
 
@@ -136,7 +136,7 @@ apa_print.lm <- function(
 
   ## Assamble regression table
   regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
-  regression_table$ci <- apply(tidy_x[, tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
+  regression_table$ci <- apply(tidy_x[, utils::tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
   regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "p.value")] # Change order of columns
   regression_table$term <- prettify_terms(regression_table$term, standardized)
 
@@ -158,7 +158,7 @@ apa_print.lm <- function(
   # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
   # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
   # See also http://daniellakens.blogspot.de/2014/06/calculating-confidence-intervals-for.html
-  gibberish <- capture.output(r2_ci <- MBESS::ci.pvaf(
+  gibberish <- utils::capture.output(r2_ci <- MBESS::ci.pvaf(
     F.value = glance_x$statistic
     , df.1 = summary_x$fstatistic[2] # glance_x$df
     , df.2 = glance_x$df.residual

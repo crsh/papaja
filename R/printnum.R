@@ -3,7 +3,6 @@
 #' Converts numeric values to character strings for reporting.
 #'
 #' @param x Numeric. Can be either a single value, vector, or matrix.
-#' @param digits Integer. Number of decimal places to print.
 #' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
 #' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (\code{margin = 1})

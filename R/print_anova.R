@@ -1,8 +1,8 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' This function is the workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
+#' This function is the internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
 #' of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
-#' guidelines. \emph{This function is not exported.}
+#' guidelines. It is not ment to be called by the user. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
@@ -24,10 +24,12 @@
 #'
 #' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 #' @examples
+#'  \dontrun{
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    anova_table <- arrange_anova(summary(npk_aov))
 #'    print_anova(anova_table)
+#'  }
 
 
 print_anova <- function(
@@ -168,6 +170,6 @@ print_anova <- function(
     names(apa_res$full) <- names(apa_res$est)
     apa_res <- lapply(apa_res, as.list)
   }
-  apa_res$table <- as.data.frame(anova_table)
+  apa_res$table <- sort_effects(as.data.frame(anova_table))
   apa_res
 }

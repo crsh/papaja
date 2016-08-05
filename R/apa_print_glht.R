@@ -8,6 +8,8 @@
 #' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
+#' @param contrast_names Character. A vector of names to identify calculated contrasts.
+#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
@@ -38,7 +40,7 @@
 #'    NULL
 #' @export
 
-apa_print.glht <- function(x, test = adjusted(), ...) {
+apa_print.glht <- function(x, test = multcomp::adjusted(), ...) {
   summary_x <- summary(x, test = test)
 
   apa_print(summary_x, ...)
@@ -64,8 +66,8 @@ apa_print.summary.glht <- function(
 
   # Assamble table
   ## Add (adjusted) confidence intervall
-  multcomp_adjustment <- if(x$test$type == "none") univariate_calpha() else adjusted_calpha()
-  print_ci <- confint(x, level = ci, calpha = multcomp_adjustment)$confint
+  multcomp_adjustment <- if(x$test$type == "none") multcomp::univariate_calpha() else multcomp::adjusted_calpha()
+  print_ci <- stats::confint(x, level = ci, calpha = multcomp_adjustment)$confint
   dimnames(print_ci) <- NULL
   table_ci <- unlist(print_confint(print_ci[, -1], ...)) # Remove point estimate from matrix
   contrast_table <- cbind(estimate = tidy_x$estimate, confint = table_ci, tidy_x[, c("statistic", "p.value")])
@@ -119,8 +121,8 @@ apa_print.lsmobj <- function(x, ...) {
 apa_print.summary.ref.grid <- function(
   x
   , ci = 0.95
-  , in_paren = FALSE
   , contrast_names = NULL
+  , in_paren = FALSE
   , ...
 ) {
   validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
@@ -149,9 +151,10 @@ apa_print.summary.ref.grid <- function(
   contrast_df <- unique(round(contrast_table$df, 2))
 
   ## Calculate confidence intervals (can't use confint() because it's a summary object)
+  ## NEEDS COMPLETE OVERHAUL!!!
   norm_quant <- 1 - (1 - ci) / 2
-  x$ll <- x$estimate - x$std.error * qnorm(norm_quant)
-  x$ul <- x$estimate + x$std.error * qnorm(norm_quant)
+  x$ll <- x$estimate - x$std.error * stats::qnorm(norm_quant)
+  x$ul <- x$estimate + x$std.error * stats::qnorm(norm_quant)
 
   if(ci < 1) conf_level <- ci * 100
   conf_level <- paste0(conf_level, "\\% CI")
@@ -165,7 +168,7 @@ apa_print.summary.ref.grid <- function(
   )
   rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
 
-  contrast_table <- subset(contrast_table, select = -contrast)
+  contrast_table <- contrast_table[, !which(colnames(contrast_table) == "contrast")]
 
   contrast_table$estimate <- printnum(contrast_table$estimate, ...)
   contrast_table$p.value <- printp(contrast_table$p.value)
@@ -192,7 +195,7 @@ apa_print.summary.ref.grid <- function(
 
   # Add table
   if(length(contrast_df) == 1) { # Remove df column and put df in column heading
-    contrast_table <- subset(contrast_table, select = -df)
+    contrast_table <- contrast_table[, !which(colnames(contrast_table) == "df")]
     colnames(contrast_table) <- c("$\\Delta M$", conf_level, paste0("$t(", contrast_df, ")$"), "$p$")
   } else {
     colnames(contrast_table) <- c(split_by, "$\\Delta M$", conf_level, "$t$", "$df$", "$p$")

@@ -16,5 +16,8 @@ test_that(
       )
 
     expect_error(x <- capture.output(apa_table(descriptives, added_colnames = letters[1:5])))
+
+    rmarkdown::render("test_apa_table.Rmd", quiet = TRUE)
+    file.remove("test_apa_table.pdf")
   }
 )

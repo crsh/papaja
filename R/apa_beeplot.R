@@ -3,8 +3,7 @@
 #' Wrapper function that creates one or more beeswarm plots from a data.frame containing data from
 #' a factorial design and sets APA-friendly defaults.
 #'
-#'
-#' @param data A \code{data.frame} that contains the data.
+#' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
 #' @param id Character. Variable name that identifies subjects.
 #' @param factors Character. A vector of up to 4 variable names that is used to stratify the data.
 #' @param dv Character. The name of the dependent variable.
@@ -39,12 +38,11 @@
 #' )
 #'
 #' apa_beeplot(
-#' data = npk
+#'   data = npk
 #'  , id = "block"
 #'  , dv = "yield"
 #'  , factors = c("N", "P")
 #'  , args.legend = list(x = "center")
-#'  #, jit = 0
 #' )
 #'
 #' apa_beeplot(
@@ -57,9 +55,18 @@
 #'    , las = 1
 #' )
 #'
-#' #@familiy apa_beeplot
-#'
+#' @import grDevices
+#' @import graphics
 #' @rdname apa_beeplot
+#' @export
+
+apa_beeplot <- function(data, ...) {
+  UseMethod("apa_beeplot", data)
+}
+
+
+#' @rdname apa_beeplot
+#' @method apa_beeplot default
 #' @export
 
 apa_beeplot.default <- function(
@@ -137,7 +144,7 @@ apa_beeplot.default <- function(
 
 
   # is dplyr available?
-  use_dplyr <- "dplyr" %in% rownames(installed.packages())
+  use_dplyr <- package_available("dplyr")
 
   # Prepare data
   for (i in c(id, factors)){
@@ -162,16 +169,16 @@ apa_beeplot.default <- function(
 
   ## Aggregate subject data
   if(use_dplyr) {
-    aggregated <- papaja:::fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
+    aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
   } else {
-    aggregated <- aggregate(formula = as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+    aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
   }
 
   ## Calculate central tendencies
   if(use_dplyr) {
-    yy <- papaja:::fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
+    yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
   } else {
-    yy <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
+    yy <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
   }
 
   ## Calculate dispersions
@@ -181,12 +188,12 @@ apa_beeplot.default <- function(
   } else {
 
     if(fun_dispersion == "conf_int") {
-      ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
+      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
     } else {
       if(use_dplyr) {
-        ee <- papaja:::fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
+        ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
       } else {
-        ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
+        ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
       }
     }
   }
@@ -579,29 +586,20 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
 }
 
 
-
-#' @rdname apa_beeplot
-#' @export
-
-apa_beeplot <- function(x, ...){
-  UseMethod("apa_beeplot")
-}
-
-
 #' @rdname apa_beeplot
 #' @method apa_beeplot afex_aov
 #' @export
 
-apa_beeplot.afex_aov <- function(x, ...){
+apa_beeplot.afex_aov <- function(data, ...){
 
   ellipsis <- list(...)
 
-  args <- attributes(x)
+  args <- attributes(data)
 
   ellipsis <- defaults(
     ellipsis
     , set = list(
-      "data" = x$data$long
+      "data" = data$data$long
       , "id" = args$id
       , "dv" = args$dv
       , "factors" = c(args$between, args$within)
@@ -617,9 +615,9 @@ apa_beeplot.afex_aov <- function(x, ...){
 alphaise <- function(col, factor){
   old.col <- col2rgb(col, alpha = TRUE)
   new.col <- rgb(
-    r = old.col["red", ]
-    , g = old.col["green", ]
-    , b = old.col["blue", ]
+    red = old.col["red", ]
+    , green = old.col["green", ]
+    , blue = old.col["blue", ]
     , alpha = old.col["alpha", ] * factor, maxColorValue = 255
   )
   return(new.col)

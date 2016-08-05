@@ -4,13 +4,10 @@
 #' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
 #' @param x Output object. See details.
-#' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared or \code{pes} for partial eta-squared.
-#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.
-#' @param mse Logical. Specifies if Mean Squared Errors (MSEs) are to be reported.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
-#' @param ... Additional arguments passed to or from other methods.
+#' @inheritParams print_anova
+#' @param ... Additional arguments passed to to \code{\link{print_anova}}.
 #' @details
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
@@ -85,7 +82,11 @@ apa_print.summary.aovlist <- function(x, ...) {
 #' @export
 
 apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
-  summary_x <- summary(x, multivariate = FALSE) # car:::summary.Anova.mlm
+  if(correction != "none") {
+    summary_x <- summary(x, multivariate = FALSE) # car:::summary.Anova.mlm
+  } else { # Corrections are always calculated and can throw warnings; hope I don't regret this
+    summary_x <- suppressWarnings(summary(x, multivariate = FALSE)) # car:::summary.Anova.mlm
+  }
 
   apa_print(summary_x, correction = correction, intercept = intercept, ...)
 }

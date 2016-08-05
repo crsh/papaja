@@ -37,7 +37,6 @@ output: papaja::apa6_pdf
 
 ```{r message = FALSE, warning = FALSE}
 library("papaja")
-apa_prepare_doc() # Prepare document for rendering
 knitr::opts_chunk$set(echo = TRUE)
 ```
 

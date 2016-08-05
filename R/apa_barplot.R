@@ -17,7 +17,7 @@
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
 #' @param reference Numeric. Height of the x-axis. A reference point that is used for calculating, i.e. default limits of the y axis. Defaults to \code{0}.
 #' @param intercept Numeric. Adds a horizontal line to the plot.
-#' #' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
+#' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
 #' @param ... Further arguments than can be passed to \code{\link{barplot}} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
@@ -50,6 +50,9 @@
 #'    , level = .34
 #'    , las = 1
 #' )
+#'
+#' @import grDevices
+#' @import graphics
 #' @export
 
 apa_barplot <- function(
@@ -111,7 +114,7 @@ apa_barplot <- function(
   data <- data[, c(id, factors, dv)]
 
   # is dplyr available?
-  use_dplyr <- "dplyr" %in% rownames(installed.packages())
+  use_dplyr <- package_available("dplyr")
 
   if(use_dplyr) {
     ## Aggregate subject data
@@ -121,10 +124,10 @@ apa_barplot <- function(
     yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
   } else {
     ## Aggregate subject data
-    aggregated <- aggregate(formula = as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+    aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
 
     ## Calculate central tendencies
-    yy <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
+    yy <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
   }
 
 
@@ -134,12 +137,12 @@ apa_barplot <- function(
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
     if(fun_dispersion == "conf_int") {
-      ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
+      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
     } else {
       if(use_dplyr) {
         ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
       } else {
-        ee <- aggregate(formula = as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
+        ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
       }
     }
   }

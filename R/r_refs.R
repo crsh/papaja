@@ -33,19 +33,19 @@
 #'    available rather than books. If no reference of the specified types is available, the first reference
 #'    is used. If multiple references of the prefered type are given in the CITATION file all are cited.
 #'    Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
-#'    \code{\link{citation}}.
-#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link{fetch_web_refs}}, \code{\link{citation}}, \code{\link{toBibtex}}
+#'    \code{\link[utils]{citation}}.
+#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toBibtex}}
 #' @examples NULL
 #' @export
 
 r_refs <- function(file, append = TRUE, prefix = "R-", type_pref = c("Article", "Book"), tweak = TRUE) {
   validate(append, check_class = "logical", check_NA = TRUE, check_length = 1)
 
-  r_session <- sessionInfo()
+  r_session <- utils::sessionInfo()
 
   # Ensure that cached packages are also citable
   cache_path <- knitr::opts_chunk$get("cache.path")
-  if (!is.null(cache_path) && file_test("-d", cache_path)) {
+  if (!is.null(cache_path) && utils::file_test("-d", cache_path)) {
     cached_pkgs <- readLines(paste0(cache_path, "__packages"))
     cached_pkgs <- setdiff(cached_pkgs, r_session$basePkgs)
     pkgs_to_cite <- unique(c(names(r_session$otherPkgs), cached_pkgs))
@@ -56,7 +56,7 @@ r_refs <- function(file, append = TRUE, prefix = "R-", type_pref = c("Article", 
 
   pkg_list <- c("base", pkgs_to_cite)
 
-  if(file_test("-f", file) && append) {
+  if(utils::file_test("-f", file) && append) {
     bib_file <- readLines(file)
     missing_pkgs <- sapply(pkg_list, function(x) !any(grep(paste0(prefix, x), bib_file)))
     missing_pkgs <- names(missing_pkgs[missing_pkgs])
@@ -95,7 +95,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
   bib <- sapply(
     seq_along(x)
     , function(pkg) {
-      cite <- citation(x[pkg], auto = if(no_citations[pkg]) TRUE else NULL)
+      cite <- utils::citation(x[pkg], auto = if(no_citations[pkg]) TRUE else NULL)
 
       if(length(cite) > 1) {
         bibtypes <- unlist(cite$bibtype)
@@ -112,7 +112,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         })
       }
 
-      entry <- lapply(cite, toBibtex)
+      entry <- lapply(cite, utils::toBibtex)
       specifier <- if(length(entry) > 1) paste0("_", letters[seq_along(entry)]) else NULL
       entry <- sapply(seq_along(entry), function(ent) {
         entry[[ent]][1] <- sub("\\{,$", paste0("{", prefix, x[pkg], specifier[ent], ","), entry[[ent]][1])

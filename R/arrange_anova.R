@@ -7,6 +7,7 @@
 #' @param correction Character. For \code{summary.Anova.mlm} objects, specifies the type of
 #'    sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF}
 #'    for Huyn-Feldt methods or \code{none} is also possible. Ignored for other objects.
+#' @param ... Further arguemnts to pass to methods.
 #' @details
 #'    The returned \code{data.frame} can be passed to functions such as \code{\link{print_anova}}.
 #'
@@ -22,9 +23,11 @@
 #'
 #' @seealso \code{\link{print_anova}}, \code{\link{print_model_comp}}
 #' @examples
+#'  \dontrun{
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    arrange_anova(summary(npk_aov))
+#'  }
 
 arrange_anova <- function(x, ...) {
   UseMethod("arrange_anova", x)
