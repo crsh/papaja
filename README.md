@@ -118,11 +118,11 @@ Papers that use papaja
 
 Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, let me know and I will add it to this list.
 
-Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. <doi:%5B10.1016/j.concog.2015.08.003%5D(http://dx.doi.org/10.1016/j.concog.2015.08.003)>
+Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. doi: [10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003)
 
-Aust, F., & Edwards, J. D. (2016). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. *Journal of Clinical and Experimental Neuropsychology*, 38, 497-515. <doi:%5B10.1080/13803395.2015.1125453%5D(http://dx.doi.org/10.1080/13803395.2015.1125453)>
+Aust, F., & Edwards, J. D. (2016). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. *Journal of Clinical and Experimental Neuropsychology*, 38, 497-515. doi: [10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453)
 
-Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. Journal of Experimental Psychology: General, 27. <doi:%5B10.1037/xge0000191%5D(http://dx.doi.org/10.1037/xge0000191)>
+Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. Journal of Experimental Psychology: General, 27. doi: [10.1037/xge0000191](http://dx.doi.org/10.1037/xge0000191)
 
 Other journal templates
 =======================
