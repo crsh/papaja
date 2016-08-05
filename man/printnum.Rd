@@ -22,8 +22,6 @@ or columns (\code{margin = 2}).}
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 
 \item{...}{Further arguments that may be passed to \code{\link{formatC}}}
-
-\item{digits}{Integer. Number of decimal places to print.}
 }
 \description{
 Converts numeric values to character strings for reporting.

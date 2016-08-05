@@ -8,13 +8,13 @@ sort_effects(x)
 }
 \arguments{
 \item{x}{data.frame. An arbitrary data.frame with a column named "Effect", e.g., a table element
-produced by \link{\code{apa_print}}.}
+produced by \code{\link{apa_print}}.}
 }
 \value{
 Returns the same data.frame with reordered rows.
 }
 \description{
-Sorts rows in ANOVA table produced by \link{\code{apa_print}} by complexity (i.e., main effects,
+Sorts rows in ANOVA table produced by \code{\link{apa_print}} by complexity (i.e., main effects,
 two-way interactions, three-way interactions, etc.).
 }
 \examples{

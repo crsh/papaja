@@ -84,6 +84,7 @@ apa_lineplot(
    , level = .34
    , las = 1
 )
+
 }
 \seealso{
 \code{\link{barplot}}

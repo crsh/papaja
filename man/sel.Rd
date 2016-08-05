@@ -7,9 +7,9 @@
 sel(x, i)
 }
 \arguments{
-\item{x.}{List. A list of parameter values}
+\item{x}{List. A list of parameter values}
 
-\item{i.}{Integer. The i-th element of each vector that is to be extracted.}
+\item{i}{Integer. The i-th element of each vector that is to be extracted.}
 }
 \description{
 If a \code{list} holds vectors of parameter values, this function extracts the i-th parameter value from each vector and creates

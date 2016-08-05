@@ -7,7 +7,7 @@
 word_title_page(x)
 }
 \arguments{
-\item{x}{List. Meta data of the document as a result from \code{\link[yaml]{load.yaml}}.}
+\item{x}{List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.}
 }
 \description{
 Creates text for the title and abstract page for MS Word documents.

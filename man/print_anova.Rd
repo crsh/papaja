@@ -32,15 +32,17 @@ A named list containing the following components:
    }
 }
 \description{
-This function is the workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
+This function is the internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
 of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
-guidelines. \emph{This function is not exported.}
+guidelines. It is not ment to be called by the user. \emph{This function is not exported.}
 }
 \examples{
+ \dontrun{
    ## From Venables and Ripley (2002) p. 165.
    npk_aov <- aov(yield ~ block + N * P * K, npk)
    anova_table <- arrange_anova(summary(npk_aov))
    print_anova(anova_table)
+ }
 }
 \seealso{
 \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}

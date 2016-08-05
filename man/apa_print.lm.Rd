@@ -58,7 +58,7 @@ The coefficients names are sanitized to facilitate their use as list names (see 
 
    If \code{standardized} is \code{TRUE} "scale()" is removed from coefficients names (see examples).
 
-   If \code{ci} is a single value, confidence intervals are calculated using \code{\link{confint}}.
+   If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
 
    Confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.pvaf}} to obtain a confidence
    region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g.,
@@ -85,7 +85,7 @@ Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
 doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 }
 \seealso{
-\code{\link{confint}}, \code{\link[MBESS]{ci.pvaf}}
+\code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
 
 Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},

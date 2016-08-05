@@ -7,14 +7,14 @@
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
-\method{apa_print}{glht}(x, test = adjusted(), ...)
+\method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
 
 \method{apa_print}{summary.glht}(x, ci = 0.95, in_paren = FALSE, ...)
 
 \method{apa_print}{lsmobj}(x, ...)
 
-\method{apa_print}{summary.ref.grid}(x, ci = 0.95, in_paren = FALSE,
-  contrast_names = NULL, ...)
+\method{apa_print}{summary.ref.grid}(x, ci = 0.95, contrast_names = NULL,
+  in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{See details.}
@@ -26,6 +26,10 @@
 \item{ci}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.}
+
+\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses.}
+
+\item{contrast_names}{Character. A vector of names to identify calculated contrasts.}
 }
 \value{
 \code{apa_print()} returns a list containing the following components according to the input:

@@ -35,10 +35,14 @@ of class \code{apa_model_comp} and produces strings to report the results in acc
 guidelines. \emph{This function is not exported.}
 }
 \examples{
-   ## From Venables and Ripley (2002) p. 165.
-   npk_aov <- aov(yield ~ block + N * P * K, npk)
-   anova_table <- arrange_anova(summary(npk_aov))
-   print_anova(anova_table)
+ \dontrun{
+   mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+   mod2 <- update(mod1, formula = . ~ . + Petal.Length)
+   mod3 <- update(mod2, formula = . ~ . + Petal.Width)
+
+   # No bootstrapped Delta R^2 CI
+   print_model_comp(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
+ }
 }
 \seealso{
 \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}

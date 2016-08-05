@@ -24,12 +24,12 @@ This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, them
    of fonts.
 }
 \examples{
-
-# Copied from ?ggtheme
-p <- ggplot(mtcars) + geom_point(aes(x = wt, y = mpg,
-     colour=factor(gear))) + facet_wrap(~am)
-
-p
-p + theme_gray()
+ \dontrun{
+   # Copied from ?ggtheme
+   p <- ggplot(mtcars) + geom_point(aes(x = wt, y = mpg,
+     colour = factor(gear))) + facet_wrap(~ am)
+   p
+   p + theme_apa()
+ }
 }
 

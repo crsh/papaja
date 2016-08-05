@@ -4,7 +4,7 @@
 \alias{apa_print.list}
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
-\method{apa_print}{list}(x, anova_fun = anova, ci = 0.9,
+\method{apa_print}{list}(x, anova_fun = stats::anova, ci = 0.9,
   boot_samples = 10000, in_paren = FALSE, ...)
 }
 \arguments{
@@ -18,7 +18,7 @@
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
-\item{...}{}
+\item{...}{Additional arguments passed to \code{anova_fun}}
 }
 \value{
 \code{apa_print.list} returns a named list containing the following components according to the input:
@@ -72,7 +72,7 @@ Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
 doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 }
 \seealso{
-\code{\link{anova}}
+\code{\link[stats]{anova}}
 
 Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},

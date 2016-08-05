@@ -52,12 +52,12 @@ in a Markdown-document using pandoc or LaTeX.
    available rather than books. If no reference of the specified types is available, the first reference
    is used. If multiple references of the prefered type are given in the CITATION file all are cited.
    Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
-   \code{\link{citation}}.
+   \code{\link[utils]{citation}}.
 }
 \examples{
 NULL
 }
 \seealso{
-\code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link{fetch_web_refs}}, \code{\link{citation}}, \code{\link{toBibtex}}
+\code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toBibtex}}
 }
 

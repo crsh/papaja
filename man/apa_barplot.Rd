@@ -32,8 +32,9 @@ before calculating descriptive statistics for each cell of the design. Defaults 
 
 \item{reference}{Numeric. Height of the x-axis. A reference point that is used for calculating, i.e. default limits of the y axis. Defaults to \code{0}.}
 
-\item{intercept}{Numeric. Adds a horizontal line to the plot.
-#' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}}
+\item{intercept}{Numeric. Adds a horizontal line to the plot.}
+
+\item{args_arrows}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}}
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
@@ -74,6 +75,7 @@ apa_barplot(
    , level = .34
    , las = 1
 )
+
 }
 \seealso{
 \code{\link{barplot}}
