@@ -56,7 +56,6 @@ For *R* users, R Markdown has been suggested as one possible framework for repro
 The package uses the \LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to.
 Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
-
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).
 In the following I will assume you have hopped onto the band wagon and know how to use R Markdown to conduct and comment your analyses.
 If this is not the case, I recommend you get to grips with [R Markdown](http://R Markdown.rstudio.com/) first.
@@ -64,7 +63,7 @@ I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://joh
 
 
 # How to use papaja
-Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja), you can select the APA template when creating a new Markdown file through the RStudio menues, see \autoref{fig:menu}.
+Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja), you can select the APA template when creating a new Markdown file through the RStudio menus, see \autoref{fig:menu}.
 When you click RStudio's *Knit* button (see \autoref{fig:knit}), `papaja`, `R Markdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
 
 ![papaja's APA6 template is available through the RStudio menues. \label{fig:knit}](../inst/images/template_selection.png)
@@ -88,12 +87,13 @@ For prettier tables, I suggest you try `apa_table()`, which builds on `knitr`'s 
 ```{r results = 'asis', echo = TRUE}
 descriptives <- mixed_data %>% group_by(Dosage) %>%
   summarize(
-    Mean = printnum( mean(Recall) )
-    , Median = printnum( median(Recall) )
-    , SD = printnum( sd(Recall) )
-    , Min = printnum( min(Recall) )
-    , Max = printnum( max(Recall) )
+    Mean = mean(Recall)
+    , Median = median(Recall)
+    , SD = sd(Recall)
+    , Min = min(Recall)
+    , Max = max(Recall)
   )
+descriptives[, -1] <- printnum(descriptives[, -1])
 
 apa_table(
   descriptives
@@ -111,7 +111,7 @@ In papaja, table formatting is somewhat limited for Word documents due to missin
 
 [^xtable]: When you use `xtable()`, table captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6).
 
-As required by the APA guidelines, tables are defered to the final pages of the manuscript when creating a PDF.
+As required by the APA guidelines, tables are deferred to the final pages of the manuscript when creating a PDF.
 To place tables and figures in your text instead, set the `figsintext` parameter in the YAML header to `yes` or `true`, as I have done in this document.
 Again, this is not the case in Word documents due to limited pandoc functionality.
 The bottom line is, Word documents will be less polished than PDF.
@@ -120,7 +120,7 @@ The resulting documents should suffice to enable collaboration with Wordy collea
 ### Embed plots
 As usual in R Markdown, you can embed R-generated plots into your document, see \autoref{fig:bee}.
 
-```{r fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals. \\label{fig:bee}", echo = TRUE}
+```{r fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals. \\label{fig:bee}", echo = TRUE, dev.args = list(bg = 'white')}
 apa_beeplot(
   mixed_data
   , id = "Subject"
@@ -129,10 +129,12 @@ apa_beeplot(
   , dispersion = conf_int
   , ylim = c(0, 30)
   , las = 1
+  , args_points = list(cex = 1.5)
+  , args_arrows = list(length = 0.025)
 )
 ```
 
-Again, as required by the APA guidelines, figures are defered to the final pages of the document unless you set `figsintext` to `yes`.
+Again, as required by the APA guidelines, figures are deferred to the final pages of the document unless you set `figsintext` to `yes`.
 
 ### Referencing figures and tables
 Currently, `rmarkdown` does not support proper cross-referencing with the document.
@@ -180,7 +182,7 @@ apa_table(
 ## Citations
 No manuscript is complete without citation.
 In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the YAML front matter.
-Once this is done, `[e.g., @james_1890; @bem_2011]` produces a regular citation within parenthes [e.g., @james_1890; @bem_2011].
+Once this is done, `[e.g., @james_1890; @bem_2011]` produces a regular citation within parentheses [e.g., @james_1890; @bem_2011].
 To cite a source in text simply omit the brackets; for example, write `@james_1890` to cite @james_1890.
 For other options see the [overview of the R Markdown citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
 If you use RStudio, I have created an [easy-to-use add-in](https://github.com/crsh/citr) that facilitates inserting citations.

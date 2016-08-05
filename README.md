@@ -42,7 +42,7 @@ devtools::install_github("crsh/papaja")
 How to use papaja
 -----------------
 
-Once `papaja` is installed, you can select the APA template when creating a new Markdown file through the RStudio menues.
+Once `papaja` is installed, you can select the APA template when creating a new Markdown file through the RStudio menus.
 
 ![APA template selection](inst/images/template_selection.png)
 
@@ -80,7 +80,7 @@ Table. *Iris regression table.*
 
 ------------------------------------------------------------------------
 
-Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer working with `ggplot2` try `theme_apa()`.
+Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
 ### Using papaja without RStudio
 
@@ -104,8 +104,7 @@ Known issues
 ------------
 
 -   The references in Word violate the APA guidelines in that there is no hanging indentation (i.e. indentation of all lines but the first one). As of now there is no fix for this problem.
--   Intext citation incorrectly use ampersands instead of "and". This is a current limitation of the [pandoc-citeproc](https://hackage.haskell.org/package/pandoc-citeproc) filter. I'm still looking for ways to fix this.
--   If building the example manuscript throws the error `! Incomplete \iffalse; all text was ignored after line 20.` make sure you have saved the .Rmd and are not working from a temporary directory or restart RStudio. If this doesn't work try updating your TeX-packages.
+-   In-text citation incorrectly use ampersands instead of "and". This is a current limitation of the [pandoc-citeproc](https://hackage.haskell.org/package/pandoc-citeproc) filter. I'm still looking for ways to fix this.
 -   Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 -   Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
 

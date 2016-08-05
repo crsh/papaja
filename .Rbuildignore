@@ -6,5 +6,4 @@
 ^cran-comments\.md$
 ^\.travis\.yml
 
-^example/
-^inst/images/
+^example$

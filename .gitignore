@@ -13,3 +13,4 @@ Thumbs.db
 .RData
 example/example_files
 example/example.tex
+inst/doc
