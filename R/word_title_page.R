@@ -26,7 +26,7 @@ word_title_page <- function(x) {
 
   author_note <- paste(
     x$author_note
-    , paste0("Correspondence concerning this article should be addressed to ", corresponding_author$name, ", ", corresponding_author$address, ". E-mail: ", corresponding_author$email)
+    , paste0(getOption("papaja.terms")$correspondence, corresponding_author$name, ", ", corresponding_author$address, ". ", getOption("papaja.terms")$email, ": ", corresponding_author$email)
     , sep = "\n\n"
   )
 
@@ -45,9 +45,9 @@ word_title_page <- function(x) {
     , "\n\n\n"
     , x$abstract
     , "\n\n"
-    , paste0("*", apa_terms$keywords, "* ", x$keywords)
+    , paste0("*", apa_terms$keywords, ":* ", x$keywords)
     , "\n&nbsp;\n"
-    , paste0(apa_terms$word_count, " Insert word count here!")
+    , paste0(apa_terms$word_count, ": Insert word count here!")
     , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , paste0("# ", x$title, "\n\n")
   )

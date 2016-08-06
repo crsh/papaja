@@ -109,7 +109,7 @@ apa6_word <- function(
   format$knitr$knit_hooks$inline <- inline_numbers
   format$knitr$knit_hooks$plot <- function(x, options) {
     to <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-    if(!is.null(to) && to == "word") options$fig.cap <- paste("*Figure.*", options$fig.cap)
+    if(!is.null(to) && to == "word") options$fig.cap <- paste("*", getOption("papaja.terms")$figure, ".*", options$fig.cap)
     knitr::hook_plot_md(x, options)
   }
 
@@ -137,14 +137,20 @@ apa6_word <- function(
 
 
 # Set hook to print default numbers
-inline_numbers <- function (x) { # http://www.jason-french.com/blog/2014/04/25/formatting-sweave-and-knitr-output-for-2-digits/
+inline_numbers <- function (x) {
   if (is.numeric(x)) {
-    res <- ifelse(
+    printed_number <- ifelse(
       x == round(x)
-      , sprintf("%d", x)
-      , sprintf("%.2f", x)
+      , as.character(x)
+      , printnum(x)
     )
-    paste(res, collapse = ", ")
+    n <- length(printed_number)
+    if(n == 2) {
+      paste(printed_number, collapse = " and ")
+    } else if(n > 2) {
+      paste(paste(printed_number[1:(n - 1)], collapse = ", "), printed_number[n], sep = ", and ")
+    }
+
   } else if (is.character(x)) x
 }
 

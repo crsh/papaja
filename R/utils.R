@@ -329,20 +329,24 @@ localize <- function(x) {
     , list( # Default
       author_note = "Author note"
       , abstract = "Abstract"
-      , keywords = "Keywords:"
-      , word_count = "Word count:"
+      , keywords = "Keywords"
+      , word_count = "Word count"
       , table = "Table"
       , figure = "Figure"
       , note = "Note"
+      , correspondence = "Correspondence concerning this article should be addressed to "
+      , email = "E-mail"
     )
     , german = list(
       author_note = "Anmerkung des Autors"
       , abstract = "Zusammenfassung"
-      , keywords = "Schl\u00fcsselw\u00f6rter:"
-      , word_count = "Wortanzahl:"
+      , keywords = "Schl\u00fcsselw\u00f6rter"
+      , word_count = "Wortanzahl"
       , table = "Tabelle"
       , figure = "Abbildung"
       , note = "Anmerkung"
+      , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
+      , email = "E-Mail"
     )
   )
 }
