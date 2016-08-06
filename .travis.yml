@@ -4,6 +4,8 @@ r:
   - release
   - devel
 
+cache: packages
+
 # Be strict when checking our package
 warnings_are_errors: true
 
@@ -12,7 +14,13 @@ r_packages:
   - testthat
   - afex
 
-# Install GNU Scientific library for MBESS
-before-install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libgsl0ldbl
+# Install other dependencies # longtable lscape tabularx
+before_install:
+  - tlmgr install apa6 was threeparttablex endfloat substr
+
+addons:
+ apt:
+   packages:
+   - lmodern
+   - libgsl0ldbl # GNU scientific library for MBESS
+   - libgsl0-dev # GNU scientific library for MBESS

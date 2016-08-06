@@ -154,7 +154,7 @@ Finally, in case you prefer to work with Python, have a look at the [Academic Ma
 
 # Package dependencies
 
-```{r echo = FALSE, fig.width = 10, fig.height = 7, message = FALSE}
+```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE}
 library("dplyr")
 library("igraph")
 library("ggplot2")
@@ -190,14 +190,16 @@ dependency_graph_df$n_dependencies[is.na(dependency_graph_df$n_dependencies)] <-
 
 dependency_graph_df$importance <- table(gsub(".+\\|", "", attr(E(dependency_graph), "vnames")))[as.character(dependency_graph_df$package)] %>% as.vector
 dependency_graph_df$importance[is.na(dependency_graph_df$importance)] <- 0
-dependency_graph_df$importance <- dependency_graph_df$importance / max(dependency_graph_df$importance)
+
+max_downstream_deps <- max(dependency_graph_df$importance)
+
+dependency_graph_df$importance <- dependency_graph_df$importance / max_downstream_deps
 dependency_graph_df$importance <- abs(1 - dependency_graph_df$importance)
-dependency_graph_df$importance[dependency_graph_df$importance == 0] <- 0.1
 
 
 dependency_graph_df %>%
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_nodes(aes(color = n_dependencies), size = 7, alpha = 0.4) +
+  geom_nodes(aes(color = n_dependencies), size = 6.5, alpha = 0.4) +
   geom_edges(arrow = arrow(length = unit(4, "pt"), type = "closed"), color = grey(0.4)) +
   geom_nodelabel_repel(
     aes(label = package, fontface = face, color = n_dependencies)
@@ -205,9 +207,11 @@ dependency_graph_df %>%
   ) +
   geom_nodes(aes(color = n_dependencies, size = I(7 * importance))) +
   scale_color_distiller(palette = "Spectral") +
+  scale_size(labels = function(x) abs(max_downstream_deps - ceiling(x / 7 * max_downstream_deps)), breaks = round(seq(0, max_downstream_deps, length.out = 7))) +
   theme_blank(legend.position = "top") +
   guides(
-    color = guide_colorbar(title = "Upstream dependencies", title.position = "top", title.hjust = 0.5, barwidth = unit(130, "pt"), barheight = unit(4, "pt"))
+    size = guide_legend(title = "Downstream dependencies", title.position = "top", title.hjust = 0.5, label.position = "bottom", label.hjust = 0.5)
+    , color = guide_colorbar(title = "Upstream dependencies", title.position = "top", title.hjust = 0.5, barwidth = unit(130, "pt"), barheight = unit(4, "pt"))
   )
 ```
 

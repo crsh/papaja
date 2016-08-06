@@ -35,6 +35,7 @@ tablelist: no
 lineno: yes
 linkcolor: blue
 
+csl: apa6.csl
 bibliography:
   - references.bib
   - r-references.bib
