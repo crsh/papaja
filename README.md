@@ -80,6 +80,17 @@ Table. *Iris regression table.*
 
 ------------------------------------------------------------------------
 
+<!--
+`papaja` currently provides methods for the following object classes:
+
+
+A           A-L       L-S                 S                
+----------  --------  ------------------  -----------------
+afex_aov    aovlist   lm                  summary.aovlist  
+anova       glht      lsmobj              summary.glht     
+Anova.mlm   htest     summary.Anova.mlm   summary.lm       
+aov         list      summary.aov         summary.ref.grid 
+-->
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
 ### Using papaja without RStudio
@@ -133,3 +144,8 @@ Obviously, not all journals require manuscripts and articles to be prepared acco
 -   [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
 Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
+
+Package dependencies
+====================
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)

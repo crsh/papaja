@@ -11,3 +11,8 @@ warnings_are_errors: true
 r_packages:
   - testthat
   - afex
+
+# Install GNU Scientific library for MBESS
+before-install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libgsl0ldbl
