@@ -152,7 +152,11 @@ apa_barplot <- function(
 
   y.values <- merge(yy, ee, by = factors)
 
+  y.values$lower_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = function(x){sum(x[1], -x[2], na.rm = TRUE)})
+  y.values$upper_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = sum, na.rm = TRUE)
+
   output$y <- y.values
+
 
   # Set defaults
   ellipsis <- defaults(ellipsis,
@@ -168,7 +172,7 @@ apa_barplot <- function(
                          #, bty = "n"
                          , names.arg = levels(data[[factors[1]]])
                          , axis.lty = 1
-                         , ylim = c(min(reference, y.values[, "tendency"] - y.values[, "dispersion"]), max(reference, y.values[, "tendency"] + y.values[, "dispersion"]))
+                         , ylim = c(min(reference, y.values[, "lower_limit"], na.rm = TRUE), max(reference, y.values[, "upper_limit"], na.rm = TRUE))
                          , args.arrows = args_arrows
                          , args.legend = args_legend
                        ))

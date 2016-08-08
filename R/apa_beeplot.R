@@ -203,6 +203,9 @@ apa_beeplot.default <- function(
 
   y.values <- merge(yy, ee, by = factors)
 
+  y.values$lower_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = function(x){sum(x[1], -x[2], na.rm = TRUE)})
+  y.values$upper_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = sum, na.rm = TRUE)
+
   output$y <- y.values
 
   output$data <- aggregated
@@ -218,12 +221,14 @@ apa_beeplot.default <- function(
       ylim = c(
         min(
           0
-          , y.values[, "tendency"] - y.values[, "dispersion"]
+          , y.values[, "lower_limit"]
           , aggregated[, dv]
+          , na.rm = TRUE
         )
         , max(
-          y.values[, "tendency"] + y.values[, "dispersion"]
+          y.values[, "upper_limit"]
           , aggregated[, dv]
+          , na.rm = TRUE
         )
       )
     )
