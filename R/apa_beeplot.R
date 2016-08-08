@@ -494,8 +494,8 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
     , set.if.null = list(
       x = agg.x
       , y = agg.y
-      , col = alphaise(args.points$col, factor = args.swarm$alpha)
-      , bg = alphaise(args.points$bg, factor = args.swarm$alpha)
+      , col = brighten(args.points$col, factor = .9)
+      , bg = brighten(args.points$bg, factor = .9)
       , pch = args.points$pch
     )
   )
@@ -617,13 +617,13 @@ apa_beeplot.afex_aov <- function(data, ...){
 # utility functions
 #
 #
-alphaise <- function(col, factor){
+brighten <- function(col, factor){
   old.col <- col2rgb(col, alpha = TRUE)
   new.col <- rgb(
-    red = old.col["red", ]
-    , green = old.col["green", ]
-    , blue = old.col["blue", ]
-    , alpha = old.col["alpha", ] * factor, maxColorValue = 255
+    red = (old.col["red", ]) + (255 - old.col["red", ])^factor
+    , green = (old.col["green", ]) + (255 - old.col["green", ])^factor
+    , blue = (old.col["blue", ]) + (255 - old.col["blue", ])^factor
+    , maxColorValue = 255
   )
   return(new.col)
 }
