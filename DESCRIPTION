@@ -31,9 +31,7 @@ Suggests:
   ggplot2,
   dplyr,
   downloader,
-  testthat,
-    knitr,
-    rmarkdown
+  testthat
 License: MIT + file LICENSE
 LazyData: yes
 RoxygenNote: 5.0.1

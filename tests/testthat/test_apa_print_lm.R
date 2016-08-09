@@ -12,8 +12,7 @@ test_that(
     lm_fit_output <- apa_print(lm_fit)
 
     expect_is(lm_fit_output, "list")
-    expect_equal(length(lm_fit_output), 4)
-    expect_equal(names(lm_fit_output), c("stat", "est", "full", "table"))
+    expect_equal(names(lm_fit_output), container_names)
 
     # stat
     expect_is(lm_fit_output$stat, "list")
@@ -32,7 +31,6 @@ test_that(
 
     # est
     expect_is(lm_fit_output$est, "list")
-    expect_equal(length(lm_fit_output$est), 3)
     expect_equal(names(lm_fit_output$est), c("Intercept", "groupTrt", "modelfit"))
     expect_is(lm_fit_output$est$Intercept, "character")
     expect_is(lm_fit_output$est$groupTrt, "character")
@@ -50,7 +48,6 @@ test_that(
 
     # full
     expect_is(lm_fit_output$full, "list")
-    expect_equal(length(lm_fit_output$full), 3)
     expect_equal(names(lm_fit_output$full), c("Intercept", "groupTrt", "modelfit"))
     expect_is(lm_fit_output$full$Intercept, "character")
     expect_is(lm_fit_output$full$groupTrt, "character")

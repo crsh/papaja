@@ -7,8 +7,7 @@ test_that(
     t_test_output <- apa_print(t_test)
 
     expect_is(t_test_output, "list")
-    expect_equal(length(t_test_output), 3)
-    expect_equal(names(t_test_output), c("stat", "est", "full"))
+    expect_equal(names(t_test_output), container_names)
 
     expect_is(t_test_output$stat, "character")
     expect_equal(t_test_output$stat, "$t(17.78) = -1.86$, $p = .079$")
@@ -54,21 +53,13 @@ test_that(
     wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep))
     wilcox_test_output <- apa_print(wilcox_test)
 
-    expect_is(wilcox_test_output, "list")
-    expect_equal(length(wilcox_test_output), 1)
-    expect_equal(names(wilcox_test_output), "stat")
+    expect_equal(names(wilcox_test_output), container_names)
     expect_is(wilcox_test_output$stat, "character")
 
     expect_equal(wilcox_test_output$stat, "$W = 25.50$, $p = .069$")
 
     wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep, conf.int = TRUE))
     wilcox_test_output <- apa_print(wilcox_test)
-
-    expect_equal(length(wilcox_test_output), 3)
-    expect_equal(names(wilcox_test_output), c("stat", "est", "full"))
-
-    expect_is(wilcox_test_output$stat, "character")
-    expect_equal(wilcox_test_output$stat, "$W = 25.50$, $p = .069$")
 
     expect_is(wilcox_test_output$est, "character")
     expect_equal(wilcox_test_output$est, "$Mdn_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$")
@@ -99,8 +90,7 @@ test_that(
     cor_test_output <- apa_print(cor_test)
 
     expect_is(cor_test_output, "list")
-    expect_equal(length(cor_test_output), 3)
-    expect_equal(names(cor_test_output), c("stat", "est", "full"))
+    expect_equal(names(cor_test_output), container_names)
 
     expect_is(cor_test_output$stat, "character")
     expect_equal(cor_test_output$stat, "$t(7) = 1.84$, $p = .108$")
@@ -139,8 +129,7 @@ test_that(
     prop_test_output <- suppressWarnings(apa_print(prop_test, n = sum(patients)))
 
     expect_is(prop_test_output, "list")
-    expect_equal(length(prop_test_output), 1)
-    expect_equal(names(prop_test_output), "stat")
+    expect_equal(names(prop_test_output), container_names)
     expect_is(prop_test_output$stat, "character")
 
     expect_equal(prop_test_output$stat, "$\\chi^2(3, n = 397) = 12.60$, $p = .006$")
@@ -154,8 +143,7 @@ test_that(
     bartlett_test_output <- apa_print(bartlett_test)
 
     expect_is(bartlett_test_output, "list")
-    expect_equal(length(bartlett_test_output), 1)
-    expect_equal(names(bartlett_test_output), "stat")
+    expect_equal(names(bartlett_test_output), container_names)
     expect_is(bartlett_test_output$stat, "character")
     expect_equal(bartlett_test_output$stat, "$K^2(5) = 25.96$, $p < .001$")
   }
@@ -174,17 +162,13 @@ test_that(
     mauchly_output <- apa_print(mauchly_test)
 
     expect_is(mauchly_output, "list")
-    expect_equal(length(mauchly_output), 1)
-    expect_equal(names(mauchly_output), "stat")
+    expect_equal(names(mauchly_output), container_names)
     expect_is(mauchly_output$stat, "character")
     expect_equal(mauchly_output$stat, "$W = 0.89$, $p = .638$")
 
     mauchly_test <- mauchly.test(mlmfit, M = ~ deg + noise, X = ~ noise, idata = mauchly_data)
     mauchly_output <- apa_print(mauchly_test)
 
-    expect_is(mauchly_output, "list")
-    expect_equal(length(mauchly_output), 1)
-    expect_equal(names(mauchly_output), "stat")
     expect_is(mauchly_output$stat, "character")
     expect_equal(mauchly_output$stat, "$W = 0.96$, $p = .850$")
   }

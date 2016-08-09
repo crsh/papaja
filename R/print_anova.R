@@ -142,16 +142,16 @@ print_anova <- function(
   }
 
   # Concatenate character strings and return as named list
-  apa_res <- list()
+  apa_res <- apa_print_container()
 
-  apa_res$stat <- apply(x, 1, function(y) {
+  apa_res$statistic <- apply(x, 1, function(y) {
     stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], if(mse){ paste0("$, $\\mathit{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
     if(in_paren) stat <- in_paren(stat)
     stat
   })
 
   if(!is.null(es)) {
-    apa_res$est <- apply(x, 1, function(y) {
+    apa_res$estimate <- apply(x, 1, function(y) {
       apa_est <- c()
       if("pes" %in% es) {
         apa_est <- c(apa_est, paste0("$\\eta^2_p = ", y["pes"], "$"))
@@ -165,9 +165,9 @@ print_anova <- function(
       apa_est <- paste(apa_est, collapse = ", ")
     })
 
-    apa_res$full <- paste(apa_res$stat, apa_res$est, sep = ", ")
+    apa_res$full_report <- paste(apa_res$statistic, apa_res$estimate, sep = ", ")
 
-    names(apa_res$full) <- names(apa_res$est)
+    names(apa_res$full_report) <- names(apa_res$estimate)
     apa_res <- lapply(apa_res, as.list)
   }
   apa_res$table <- sort_effects(as.data.frame(anova_table))

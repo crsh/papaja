@@ -12,12 +12,10 @@ test_that(
     model_comp <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
 
     expect_is(model_comp, "list")
-    expect_equal(length(model_comp), 4)
-    expect_equal(names(model_comp), c("stat", "est", "full", "table"))
+    expect_equal(names(model_comp), container_names)
 
     # stat
     expect_is(model_comp$stat, "list")
-    expect_equal(length(model_comp$stat), 2)
     expect_equal(names(model_comp$stat), c("Length", "Both"))
     expect_is(model_comp$stat$Length, "character")
     expect_is(model_comp$stat$Both, "character")
@@ -27,7 +25,6 @@ test_that(
 
     # est
     expect_is(model_comp$est, "list")
-    expect_equal(length(model_comp$est), 2)
     expect_equal(names(model_comp$est), c("Length", "Both"))
     expect_is(model_comp$est$Length, "character")
     expect_is(model_comp$est$Both, "character")
@@ -37,7 +34,6 @@ test_that(
 
     # full
     expect_is(model_comp$full, "list")
-    expect_equal(length(model_comp$full), 2)
     expect_equal(names(model_comp$full), c("Length", "Both"))
     expect_is(model_comp$full$Length, "character")
     expect_is(model_comp$full$Both, "character")
@@ -59,17 +55,14 @@ test_that(
 
     ## stat
     expect_is(incomplete_names$stat, "list")
-    expect_equal(length(incomplete_names$stat), 2)
     expect_equal(names(incomplete_names$stat), c("model2", "model3"))
 
     ## est
     expect_is(incomplete_names$est, "list")
-    expect_equal(length(incomplete_names$est), 2)
     expect_equal(names(incomplete_names$est), c("model2", "model3"))
 
     ## full
     expect_is(incomplete_names$full, "list")
-    expect_equal(length(incomplete_names$full), 2)
     expect_equal(names(incomplete_names$full), c("model2", "model3"))
 
     ## table

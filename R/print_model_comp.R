@@ -50,7 +50,7 @@ print_model_comp <- function(
   } else rownames(x) <- sanitize_terms(x$term)
 
   # Concatenate character strings and return as named list
-  apa_res <- list(stat = NULL, est = NULL)
+  apa_res <- apa_print_container()
 
   ## est
   if(boot_samples <= 0) { # No CI
@@ -58,7 +58,7 @@ print_model_comp <- function(
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     delta_r2s <- diff(r2s)
 
-    apa_res$est <- sapply(
+    apa_res$estimate <- sapply(
       seq_along(delta_r2s)
       , function(y) {
         delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
@@ -75,7 +75,7 @@ print_model_comp <- function(
     delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
     eq <- ifelse(grepl(delta_r2_res, pattern = "<|>|="), "", " = ")
 
-    apa_res$est <- paste0(
+    apa_res$estimate <- paste0(
       "$\\Delta R^2", eq, delta_r2_res, "$, ", ci * 100, "\\% CI "
       , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
     )
@@ -93,17 +93,17 @@ print_model_comp <- function(
     x$p.value[i] <- paste0("= ", x$p.value[i])
   }
 
-  apa_res$stat <- apply(x, 1, function(y) {
+  apa_res$statistic <- apply(x, 1, function(y) {
     stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], "$, $p ", y["p.value"], "$")
     if(in_paren) stat <- in_paren(stat)
     stat
   })
-  names(apa_res$stat) <- x$term
+  names(apa_res$statistic) <- x$term
 
   ## full
-  apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
-  names(apa_res$est) <- names(apa_res$stat)
-  names(apa_res$full) <- names(apa_res$stat)
+  apa_res$full_report <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+  names(apa_res$estimate) <- names(apa_res$statistic)
+  names(apa_res$full_report) <- names(apa_res$statistic)
 
 
   # Assemble table
@@ -149,7 +149,7 @@ print_model_comp <- function(
   )
 
   model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
-    r2 <- apa_print(x, ci = ci + (1 - ci) / 2)$est$modelfit$r2 # Calculate correct CI for function focusing on b CI
+    r2 <- apa_print(x, ci = ci + (1 - ci) / 2)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
     r2 <- gsub("R\\^2 = ", "", r2)
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
     r2
@@ -164,7 +164,7 @@ print_model_comp <- function(
     , gt1 = c(FALSE, TRUE, TRUE)
     , zero = c(FALSE, TRUE, TRUE)
   )
-  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$est))) # Replace by previous estimate with CI
+  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$estimate))) # Replace by previous estimate with CI
   model_diffs <- rbind("", model_diffs)
 
   r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]")
@@ -180,6 +180,6 @@ print_model_comp <- function(
   apa_res$table <- rbind(coef_table, model_stats_table)
   apa_res$table[is.na(apa_res$table)] <- ""
 
-  apa_res[c("est", "stat", "full")] <- lapply(apa_res[c("est", "stat", "full")], as.list)
+  apa_res[c("estimate", "statistic", "full_report")] <- lapply(apa_res[c("estimate", "statistic", "full_report")], as.list)
   apa_res
 }

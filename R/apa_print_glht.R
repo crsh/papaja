@@ -79,20 +79,20 @@ apa_print.summary.glht <- function(
   contrast_table$p.value <- printp(contrast_table$p.value)
 
   # Concatenate character strings and return as named list
-  apa_res <- list()
+  apa_res <- apa_print_container()
 
-  apa_res$est <- apply(contrast_table, 1, function(y) {
+  apa_res$estimate <- apply(contrast_table, 1, function(y) {
     paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
   })
 
-  apa_res$stat <- apply(contrast_table, 1, function(y) {
+  apa_res$statistic <- apply(contrast_table, 1, function(y) {
     if(!grepl("<|>", y["p.value"])) eq <- "= " else eq <- ""
 
     paste0("$", test_stat, " = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
   })
 
-  apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
-  names(apa_res$full) <- names(apa_res$est)
+  apa_res$full_report <- paste(apa_res$estimate, apa_res$stat, sep = ", ")
+  names(apa_res$full_report) <- names(apa_res$estimate)
 
   apa_res <- lapply(apa_res, as.list)
 
@@ -175,20 +175,20 @@ apa_print.summary.ref.grid <- function(
   contrast_table[, c("df", "statistic")] <- printnum(contrast_table[, c("df", "statistic")], margin = 2, digits = 2)
 
   # Concatenate character strings and return as named list
-  apa_res <- list()
+  apa_res <- apa_print_container()
 
-  apa_res$est <- apply(contrast_table, 1, function(y) {
+  apa_res$estimate <- apply(contrast_table, 1, function(y) {
     paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
   })
 
-  apa_res$stat <- apply(contrast_table, 1, function(y) {
+  apa_res$statistic <- apply(contrast_table, 1, function(y) {
     if(!grepl("<|>", y["p.value"])) eq <- "= " else eq <- ""
 
     paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
   })
 
-  apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
-  names(apa_res$full) <- names(apa_res$est)
+  apa_res$full_report <- paste(apa_res$est, apa_res$stat, sep = ", ")
+  names(apa_res$full_report) <- names(apa_res$est)
 
   apa_res <- lapply(apa_res, as.list)
 

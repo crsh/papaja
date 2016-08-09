@@ -105,8 +105,8 @@ apa_print.lm <- function(
   glance_x <- broom::glance(x)
 
   # Concatenate character strings and return as named list
-  apa_res <- list()
-  apa_res$stat <- apply(tidy_x[, -1], 1, function(y) {
+  apa_res <- apa_print_container()
+  apa_res$statistic <- apply(tidy_x[, -1], 1, function(y) {
     p <- printp(y["p.value"])
     if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
@@ -122,15 +122,15 @@ apa_print.lm <- function(
     conf_level <- 100 * ci
   }
 
-  apa_res$est <- apply(tidy_x[, -1], 1, function(y) {
+  apa_res$estimate <- apply(tidy_x[, -1], 1, function(y) {
     paste0(
       "$", est_name, " = ", do.call(function(...) printnum(y["estimate"], ...), ellipsis), "$, "
       , do.call(function(...) print_confint(y[utils::tail(names(y), 2)], conf_level, ...), ellipsis)
     )
   })
 
-  apa_res$full <- paste(apa_res$est, apa_res$stat, sep = ", ")
-  names(apa_res$full) <- names(apa_res$est)
+  apa_res$full_report <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+  names(apa_res$full_report) <- names(apa_res$estimate)
 
   apa_res <- lapply(apa_res, as.list)
 
@@ -151,8 +151,8 @@ apa_print.lm <- function(
   p <- printp(glance_x$p.value)
   if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
-  apa_res$stat$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
-  if(in_paren) apa_res$stat$modelfit$r2 <- in_paren(apa_res$stat$modelfit$r2)
+  apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
+  if(in_paren) apa_res$statistic$modelfit$r2 <- in_paren(apa_res$statistic$modelfit$r2)
 
   ci_conf_level <- 100 - ((100 - conf_level) * 2)
   # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
@@ -167,16 +167,16 @@ apa_print.lm <- function(
   ))
 
   if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.pvaf can sometimes result in NA if F is really small
-    apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
   } else {
-    apa_res$est$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
+    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
   }
 
-  apa_res$est$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
-  apa_res$est$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
-  apa_res$est$modelfit$bic <- paste0("$BIC = ", printnum(glance_x$BIC), "$")
+  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
+  apa_res$estimate$modelfit$aic <- paste0("$AIC = ", printnum(glance_x$AIC), "$")
+  apa_res$estimate$modelfit$bic <- paste0("$BIC = ", printnum(glance_x$BIC), "$")
 
-  apa_res$full$modelfit$r2 <- paste(apa_res$est$modelfit$r2, apa_res$stat$modelfit$r2, sep = ", ")
+  apa_res$full_report$modelfit$r2 <- paste(apa_res$estimate$modelfit$r2, apa_res$statistic$modelfit$r2, sep = ", ")
 
   apa_res
 }
