@@ -6,24 +6,25 @@
 \alias{papaja-package}
 \title{APA manuscripts from RMarkdown}
 \description{
-A R-package in the making including a \href{http://rmarkdown.rstudio.com/}{RMarkdown} template
-to produce complete manuscripts (PDF and Word documents), which conform to the American Psychological Association (APA)
-manuscript guidelines (6th Edition). To do so, \pkg{papaja} uses the LaTeX document class
-\href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file. The supplied R-functions (e.g., \code{\link{apa_print}}
-or \code{\link{apa_table}} facilitate the reporting of statistics in accordance with APA guidelines.
+\pkg{papaja} is a R-package in the making including a \href{http://rmarkdown.rstudio.com/}{RMarkdown} template
+that can be used with (or without) \href{http://www.rstudio.com/}{RStudio} to produce documents, which conform to
+the American Psychological Association (APA, 2010) manuscript guidelines (6th Edition). The package uses the LaTeX
+document class \href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file, so you can create PDF documents,
+or Word documents if you have to. Moreover, `papaja` supplies R-functions (e.g., \code{\link{apa_print}}) that
+facilitate reporting results of your analyses in accordance with APA guidelines.
 }
 \details{
-Note, at this point coversion to MS word is considered experimental. If you experience any problems, please
-\href{https://github.com/crsh/papaja/issues}{open an issue} with a reproducible example of the encountered problem.
+Note, at this point `papaja` is in active development and should be considered alpha. If you experience any problems,
+please \href{https://github.com/crsh/papaja/issues}{open an issue} with a reproducible example of the encountered problem.
 }
 \section{Functions}{
 
-   To get a list of all functions try \code{ls("package:papaja")}.
+   To get a list of all functions try \code{ls("package:papaja")} or click the Index link at the bottom of this document.
 }
 
 \section{System requirements}{
 
-   Before using \pkg{papaja} to create a manuscript, make sure the following software is installed on your computer:
+   To use \pkg{papaja} you need to make sure the following software is installed on your computer:
 
    \itemize{
        \item{\href{http://www.rstudio.com/}{RStudio} (>= 0.98.932) or if you don't use RStudio
@@ -34,15 +35,14 @@ Note, at this point coversion to MS word is considered experimental. If you expe
            for Linux)}
    }
 
-   If you are running \emph{Windows}, use MikTex if possible. Currently, pandoc and the Windows version of Tex Live
+   \emph{Windows} users should use MikTex if possible. Currently, pandoc and the Windows version of Tex Live
    \href{https://github.com/rstudio/rmarkdown/issues/6}{don't seem to like each other}. Make sure you install the
    \emph{complete}---not the basic---version.
 
-   If you are running \emph{Ubuntu 14.04} you need a couple of TeX packages in addition to the already installed ones for the document
-   class \href{http://www.ctan.org/pkg/apa6}{apa6} to work:
+   \emph{Ubuntu 14.04} users need a few additional TeX packages for the document class
+   \href{\code{http://www.ctan.org/pkg/apa6}}{apa6} to work:
 
-   \code{sudo apt-get install texlive texlive-latex-extra texlive-bibtex-extra texlive-publishers texlive-fonts-recommended
-   texlive-fonts-extra texlive-humanities}
+   \code{sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern}
 }
 
 \section{Authors}{

@@ -47,7 +47,7 @@ apa6_pdf <- function(
   # Set chunk defaults
   format$knitr$opts_chunk$echo <- FALSE
   format$knitr$opts_chunk$message <- FALSE
-  format$knitr$opts_chunk$results <- "asis"
+  # format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   format$knitr$knit_hooks$inline <- inline_numbers
@@ -104,7 +104,7 @@ apa6_word <- function(
   # Set chunk defaults
   format$knitr$opts_chunk$echo <- FALSE
   format$knitr$opts_chunk$message <- FALSE
-  format$knitr$opts_chunk$results <- "asis"
+  # format$knitr$opts_chunk$results <- "asis"
   format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
   format$knitr$knit_hooks$inline <- inline_numbers
   format$knitr$knit_hooks$plot <- function(x, options) {
