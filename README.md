@@ -27,10 +27,9 @@ To use `papaja` you need to make sure the following software is installed on you
     -   **Ubuntu 14.04** users need a few additional TeX packages for the document class `apa6` to work:
 
 ``` {sh}
-sudo apt-get install texlive texlive-publishers texlive-fonts-recommended texlive-fonts-extra
+sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern
 ```
 
-<!-- Possibly also texlive-bibtex-extra texlive-latex-extra texlive-humanities -->
 ### Install papaja
 
 Once all that is taken care of, install `papaja` from GitHub:
@@ -133,7 +132,7 @@ Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and e
 
 Aust, F., & Edwards, J. D. (2016). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. *Journal of Clinical and Experimental Neuropsychology*, 38, 497-515. doi: [10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453)
 
-Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. Journal of Experimental Psychology: General, 27. doi: [10.1037/xge0000191](http://dx.doi.org/10.1037/xge0000191)
+Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. *Journal of Experimental Psychology: General*, 27. doi: [10.1037/xge0000191](http://dx.doi.org/10.1037/xge0000191)
 
 Other journal templates
 =======================

@@ -41,7 +41,7 @@ test_that(
 
     expect_equal(lm_fit_output$est$Intercept, "$b = 5.03$, 95\\% CI $[4.57$, $5.49]$")
     expect_equal(lm_fit_output$est$groupTrt, "$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$")
-    expect_equal(lm_fit_output$est$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$")
+    expect_equal(lm_fit_output$est$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.33]$")
     expect_equal(lm_fit_output$est$modelfit$r2_adj, "$R^2_{adj} = .02$")
     expect_equal(lm_fit_output$est$modelfit$aic, "$AIC = 46.18$")
     expect_equal(lm_fit_output$est$modelfit$bic, "$BIC = 49.16$")
@@ -58,7 +58,7 @@ test_that(
 
     expect_equal(lm_fit_output$full$Intercept, "$b = 5.03$, 95\\% CI $[4.57$, $5.49]$, $t(18) = 22.85$, $p < .001$")
     expect_equal(lm_fit_output$full$groupTrt, "$b = -0.37$, 95\\% CI $[-1.03$, $0.28]$, $t(18) = -1.19$, $p = .249$")
-    expect_equal(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$")
+    expect_equal(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.33]$, $F(1, 18) = 1.42$, $p = .249$")
 
     # table
     expect_is(lm_fit_output$table, "data.frame")
@@ -69,7 +69,7 @@ test_that(
     lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
     expect_equal(lm_fit_output$full$Intercept, "$b = 5.03$, 95\\% CI $[1.00$, $2.00]$, $t(18) = 22.85$, $p < .001$")
     expect_equal(lm_fit_output$full$groupTrt, "$b = -0.37$, 95\\% CI $[1.00$, $2.00]$, $t(18) = -1.19$, $p = .249$")
-    expect_equal(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.29]$, $F(1, 18) = 1.42$, $p = .249$")
+    expect_equal(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.33]$, $F(1, 18) = 1.42$, $p = .249$")
 
     # Set name of estimate
     lm_fit_output <- apa_print(lm_fit, est_name = "\\beta")

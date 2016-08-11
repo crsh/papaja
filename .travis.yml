@@ -13,10 +13,11 @@ warnings_are_errors: true
 r_packages:
   - testthat
   - afex
+  - MBESS
 
 # Install other dependencies # longtable lscape tabularx
 before_install:
-  - tlmgr install apa6 was threeparttablex endfloat substr
+  - tlmgr install apa6 was threeparttablex endfloat substr lineno
 
 addons:
  apt:

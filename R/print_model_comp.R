@@ -8,6 +8,7 @@
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.
 #' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
+#' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
 #' @return
 #'    A named list containing the following components:
@@ -38,6 +39,7 @@ print_model_comp <- function(
   , ci = NULL
   , boot_samples = 1000
   , in_paren = FALSE
+  , observed_predictors = TRUE
 ) {
   validate(x, check_class = "data.frame")
   validate(x, check_class = "apa_model_comp")
@@ -149,7 +151,7 @@ print_model_comp <- function(
   )
 
   model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
-    r2 <- apa_print(x, ci = ci + (1 - ci) / 2)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
+    r2 <- apa_print(x, ci = ci + (1 - ci) / 2, observed_predictors = observed_predictors)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
     r2 <- gsub("R\\^2 = ", "", r2)
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
     r2

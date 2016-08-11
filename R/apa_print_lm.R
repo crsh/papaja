@@ -13,6 +13,7 @@
 #'    \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 #'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 #'    See details.
+#' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details
@@ -30,9 +31,12 @@
 #'
 #'    If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
 #'
-#'    Confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.pvaf}} to obtain a confidence
-#'    region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g.,
-#'    95\% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004)
+#'    If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
+#'    obtain a confidence region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of
+#'    regression coefficients (e.g., 95\% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for
+#'    \eqn{R^2}, see Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed
+#'    variables, i.e., "the values of the [predictors] were selected a priori as part of the research design"
+#'    (p. 15, Kelly, 2007); put differently, it is assumed that predictors are not random.
 #'
 #' @return
 #'    \code{apa_print.lm} returns a list containing the following components according to the input:
@@ -47,9 +51,13 @@
 #'    }
 #'
 #' @references
-#' Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-#' Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-#' doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+#'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
+#'    Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
+#'    doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+#'
+#'    Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
+#'    implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
+#'    doi:\href{http://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 #'
 #' @family apa_print
 #' @seealso \code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
@@ -74,6 +82,7 @@ apa_print.lm <- function(
   , est_name = NULL
   , standardized = FALSE
   , ci = 0.95
+  , observed_predictors = TRUE
   , in_paren = FALSE
   , ...
 ) {
@@ -154,20 +163,23 @@ apa_print.lm <- function(
   apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", eq, p, "$") # glance_x$df
   if(in_paren) apa_res$statistic$modelfit$r2 <- in_paren(apa_res$statistic$modelfit$r2)
 
-  ci_conf_level <- 100 - ((100 - conf_level) * 2)
-  # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
-  # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
-  # See also http://daniellakens.blogspot.de/2014/06/calculating-confidence-intervals-for.html
-  gibberish <- utils::capture.output(r2_ci <- MBESS::ci.pvaf(
-    F.value = glance_x$statistic
-    , df.1 = summary_x$fstatistic[2] # glance_x$df
-    , df.2 = glance_x$df.residual
-    , N = length(x$residuals)
-    , conf.level = ci_conf_level / 100
-  ))
+  if(package_available("MBESS")) {
+    ci_conf_level <- 100 - ((100 - conf_level) * 2)
+    # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
+    # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
+    # See also http://daniellakens.blogspot.de/2014/06/calculating-confidence-intervals-for.html
 
-  if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.pvaf can sometimes result in NA if F is really small
-    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+    r2_ci <- MBESS::ci.R2(
+      R2 = glance_x$r.squared
+      , df.1 = summary_x$fstatistic[2] # glance_x$df
+      , df.2 = summary_x$fstatistic[3]
+      , conf.level = ci_conf_level / 100
+      , Random.Predictors = observed_predictors
+    )
+
+    if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
+      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+    }
   } else {
     apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
   }

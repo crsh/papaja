@@ -6,7 +6,7 @@
 \title{Format statistics (APA 6th edition)}
 \usage{
 \method{apa_print}{lm}(x, est_name = NULL, standardized = FALSE,
-  ci = 0.95, in_paren = FALSE, ...)
+  ci = 0.95, observed_predictors = TRUE, in_paren = FALSE, ...)
 
 \method{apa_print}{summary.lm}(x, ...)
 }
@@ -24,6 +24,8 @@ zeros are omitted if appropriate. See details.}
 \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
+
+\item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
 
 \item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
 
@@ -60,9 +62,12 @@ The coefficients names are sanitized to facilitate their use as list names (see 
 
    If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
 
-   Confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.pvaf}} to obtain a confidence
-   region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g.,
-   95\% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004)
+   If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
+   obtain a confidence region that corresponds to the \eqn{\alpha}-level chosen for the confidence intervals of
+   regression coefficients (e.g., 95\% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for
+   \eqn{R^2}, see Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed
+   variables, i.e., "the values of the [predictors] were selected a priori as part of the research design"
+   (p. 15, Kelly, 2007); put differently, it is assumed that predictors are not random.
 }
 \examples{
 # Data from Dobson (1990), p. 9.
@@ -81,8 +86,12 @@ apa_print(lm_fit2, standardized = TRUE)
 }
 \references{
 Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+   Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
+   doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+
+   Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
+   implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
+   doi:\href{http://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
 \code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}

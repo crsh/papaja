@@ -5,7 +5,7 @@
 \title{Format statistics model comparisons (APA 6th edition)}
 \usage{
 print_model_comp(x, models = NULL, ci = NULL, boot_samples = 1000,
-  in_paren = FALSE)
+  in_paren = FALSE, observed_predictors = TRUE)
 }
 \arguments{
 \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
@@ -17,6 +17,8 @@ print_model_comp(x, models = NULL, ci = NULL, boot_samples = 1000,
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+
+\item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
 }
 \value{
 A named list containing the following components:

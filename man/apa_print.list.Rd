@@ -5,7 +5,7 @@
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
 \method{apa_print}{list}(x, anova_fun = stats::anova, ci = 0.9,
-  boot_samples = 10000, in_paren = FALSE, ...)
+  boot_samples = 10000, observed_predictors = TRUE, in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the ouptut object.}
@@ -15,6 +15,8 @@
 \item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.}
+
+\item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
@@ -46,8 +48,14 @@ As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence int
    predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
    Algina, Keselman & Penfield, 2010)}
 
-   Confidence intervals for \eqn{R^2} and \eqn{\Delta R^2} are computed for the requested confidence level (\code{ci}), default being a 90\% CI, see Steiger (2004).
-   The confidence intervals for the regression coefficients in the model comparison table are correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and \eqn{\Delta R^2} (e.g., 90\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\% CI for regression coefficients, Steiger, 2004)
+   If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
+   obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
+   Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
+   "the values of the [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
+   put differently, it is assumed that predictors are not random. The confidence intervals for the regression
+   coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
+   \eqn{\Delta R^2} (e.g., 90\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\% CI for
+   regression coefficients, Steiger, 2004).
 
    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
    of freedom, are replaced with brackets.
@@ -67,9 +75,13 @@ Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for 
    Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
    \emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{http://dx.doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
 
-Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+   Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
+   Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
+   doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+
+   Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
+   implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
+   doi:\href{http://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
 \code{\link[stats]{anova}}

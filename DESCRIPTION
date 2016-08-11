@@ -19,7 +19,6 @@ Imports:
   knitr (>= 1.10.5),
   yaml,
   broom (>= 0.3.6),
-  MBESS,
   boot,
   beeswarm,
   methods
@@ -28,6 +27,7 @@ Suggests:
   afex,
   lsmeans,
   multcomp,
+  MBESS,
   ggplot2,
   dplyr,
   downloader,
