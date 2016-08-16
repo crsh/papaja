@@ -145,13 +145,14 @@ inline_numbers <- function (x) {
       , printnum(x)
     )
     n <- length(printed_number)
-    if(n == 2) {
+    if(n == 1) {
+      printed_number
+    } else if(n == 2) {
       paste(printed_number, collapse = " and ")
     } else if(n > 2) {
       paste(paste(printed_number[1:(n - 1)], collapse = ", "), printed_number[n], sep = ", and ")
     }
-
-  } else if (is.character(x)) x
+  } else if(is.character(x)) x
 }
 
 
