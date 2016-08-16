@@ -40,7 +40,7 @@ please \href{https://github.com/crsh/papaja/issues}{open an issue} with a reprod
    \emph{complete}---not the basic---version.
 
    \emph{Ubuntu 14.04} users need a few additional TeX packages for the document class
-   \href{\code{http://www.ctan.org/pkg/apa6}}{apa6} to work:
+   \href{http://www.ctan.org/pkg/apa6}{apa6} to work:
 
    \code{sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern}
 }

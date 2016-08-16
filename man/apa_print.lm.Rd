@@ -35,11 +35,11 @@ See details.}
 \code{apa_print.lm} returns a list containing the following components according to the input:
 
    \describe{
-     \item{\code{stat}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
+     \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
          value for each term.}
-     \item{\code{est}}{A named list of character strings giving the descriptive estimates and confidence intervals
+     \item{\code{estimate}}{A named list of character strings giving the descriptive estimates and confidence intervals
          for each term.} % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each term.}
+     \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each term.}
      \item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
    }
 }

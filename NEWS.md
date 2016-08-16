@@ -1,8 +1,26 @@
+# papaja 0.1.0.9440
+
+### Template
+- Fixed bug in inline hook that omitted single numbers (reported by @hcp4715, #79)
+- Chunk option default changed to `results = "markup"` (see #77)
+
+### Existing functions
+- `apa_barplot()` can calculate `ylim` when measure of dispersion cannot be calculated (#76)
+- `apa_beeplot()` brightens data points instead of using transparency
+- `apa_print()`
+    - Renamed returned list elements to `statistic`, `estimate`, `full_result`, and `table` (#67)
+    - All methods now return lists of the same structure (`table` may be `NULL`)
+- `apa_print.lm()` has new option `observed_predictors` to calculate proper R^2 confidence intervals
+
+
+### Misc
+- MBESS package is now suggested and not imported
+
 # papaja 0.1.0.9423
 
-Template:
+### Template
 - Fixed a bug causing a LaTeX error in `jou` mode (reported by @saladspices, #48)
-- Default `lang` is now `english`; fixed a pandoc-citeproc bug (reported by @mvuorre and @sebastiansauer, #56 and #57; fixed by Matti Vuorre, #58)
+- Default `lang` is now `english`; fixed a pandoc-citeproc bug (reported by @mvuorre and @sebastiansauer, #56 and #57; fixed by @mvuorre, #58)
 - Removed `author` field `department`, information can be supplied as part of the `address` field
 - New option `author_note`; `note` is used to add additional information to the title page
 - Changed heading "Sample" to "Participants"
@@ -17,7 +35,7 @@ Template:
     - Fixed bug causing a deranged title page (reported by @mvuorre, #59)
     - Figure captions are now preceded by "Figure."
 
-Existing functions:
+### Existing functions
 - `apa_print()`
     - Improved type setting of predictors in tables
     - New supports `car::LeveneTest()` output
@@ -50,11 +68,11 @@ Existing functions:
     - New options `pkgs` and `withhold` to black- or whitelist packages (#50)
     - Output retains structure if footnote = TURE but no bib-file is found
 - `r_refs()`
-    - Now handles packages with mulitple references (reported by mattsigal, #65)
+    - Now handles packages with mulitple references (reported by @mattsigal, #65)
 - `conf_int()`
     - Fixed bug that led to negative values
 
-New functions:
+### New functions
 - `apa_print.afex_aov()` (#47)
 - `apa_print.list()` (#27)
 - `wsci()`
@@ -65,11 +83,11 @@ New functions:
 - `fetch_zotero_refs()`
 - `in_paren()`
 
-Dropped functions:
+### Dropped functions
 - `fetch_web_refs()` evolved into a clone of `downloder::download()`
 - `apa_prepare_doc()` is no longer needed
 
-Misc:
+### Misc
 - papaja sets global options `papaja.mse` and `papaja.sphericity_correction` among others
 - Updated example manuscript
 - Added vignette
@@ -77,7 +95,7 @@ Misc:
 
 # papaja 0.1.0.9054
 
-Template:
+### Template
 - Added `wordcount` parameter to YAML header
 - Changed YAML header structure to support proper author and affiliation information (requires updates of existing Rmd-files)
 - LaTeX: Changed SVG device to PS
@@ -85,7 +103,7 @@ Template:
 - Added LaTeX fix for tightlist-bug in pandoc 1.14
 - Fixed extra comma in automatically generated corresponding author line when no note is provided
 
-Existing functions:
+### Existing functions
 - `apa_print()`
     - Added `table` output-element to `apa_print.lm()` containing complete regression table
     - Refactored and tested `apa_print()`-family for ANOVA objects
@@ -108,13 +126,13 @@ Existing functions:
     - Removed redundant `row_name` parameter
     - Fixed escaped multicolumn-headings in `apa_table.latex()`
 
-New functions:
+### New functions
 - `apa_print.anova.mlm()`
 - `apa_barplot()`
 - `cite_r()`
 - `fetch_web_refs()`
 
-Misc:
+### Misc
 - Set up proper package structure for automatic unit testing
 - Created news file
 - Fixed some typos in the example document

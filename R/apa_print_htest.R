@@ -32,11 +32,12 @@
 #' @return \code{apa_print()} returns a list containing the following components according to the input:
 #'
 #'    \describe{
-#'      \item{\code{stat}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
+#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
 #'          and \emph{p} value.}
-#'      \item{\code{est}}{A character string giving the descriptive estimates and confidence intervals if possible}
+#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
 #'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full}}{A joint character string comprised of \code{est} and \code{stat}.}
+#'      \item{\code{full_result}}{A joint character string comprised of \code{estimate} and \code{statistic}.}
+#'      \item{\code{table}}{A data.frame, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #'
 #' @family apa_print
@@ -142,7 +143,7 @@ apa_print.htest <- function(
       apa_res$estimate <- paste0("$", est_name, eq, est, "$")
     }
 
-    apa_res$full_report <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+    apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
   }
 
   apa_res

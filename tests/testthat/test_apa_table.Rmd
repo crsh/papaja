@@ -37,7 +37,7 @@ output: papaja::apa6_pdf
 
 ```{r message = FALSE, warning = FALSE}
 library("papaja")
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, results = "asis")
 ```
 
 ```{r}

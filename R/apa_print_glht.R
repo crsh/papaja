@@ -28,11 +28,12 @@
 #' @return \code{apa_print()} returns a list containing the following components according to the input:
 #'
 #'    \describe{
-#'      \item{\code{stat}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
+#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
 #'          and \emph{p} value.}
-#'      \item{\code{est}}{A character string giving the descriptive estimates and confidence intervals if possible}
+#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
 #'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full}}{A joint character string comprised of \code{est} and \code{stat}.}
+#'      \item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
+#'      \item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #'
 #' @family apa_print
@@ -91,8 +92,8 @@ apa_print.summary.glht <- function(
     paste0("$", test_stat, " = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
   })
 
-  apa_res$full_report <- paste(apa_res$estimate, apa_res$stat, sep = ", ")
-  names(apa_res$full_report) <- names(apa_res$estimate)
+  apa_res$full_result <- paste(apa_res$estimate, apa_res$stat, sep = ", ")
+  names(apa_res$full_result) <- names(apa_res$estimate)
 
   apa_res <- lapply(apa_res, as.list)
 
@@ -187,8 +188,8 @@ apa_print.summary.ref.grid <- function(
     paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
   })
 
-  apa_res$full_report <- paste(apa_res$est, apa_res$stat, sep = ", ")
-  names(apa_res$full_report) <- names(apa_res$est)
+  apa_res$full_result <- paste(apa_res$est, apa_res$stat, sep = ", ")
+  names(apa_res$full_result) <- names(apa_res$est)
 
   apa_res <- lapply(apa_res, as.list)
 
