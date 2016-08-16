@@ -89,7 +89,7 @@ apa_print_container <- function() {
   list(
     estimate = NULL
     , statistic = NULL
-    , full_report = NULL
+    , full_result = NULL
     , table = NULL
   )
 }

@@ -1,1 +1,1 @@
-container_names <- c("estimate", "statistic", "full_report", "table")
+container_names <- c("estimate", "statistic", "full_result", "table")

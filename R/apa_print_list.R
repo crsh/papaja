@@ -38,10 +38,10 @@
 #'    \code{apa_print.list} returns a named list containing the following components according to the input:
 #'
 #'    \describe{
-#'      \item{\code{stat}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
+#'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
 #'          value for each non-baseline model.}
-#'      \item{\code{est}}{A named list of character strings giving the effect size estimates for each non-baseline model}
-#'      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each non-baseline model}
+#'      \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each non-baseline model}
+#'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model}
 #'      \item{\code{table}}{A data.frame containing the complete model comparison table including regression coefficients, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #' @references

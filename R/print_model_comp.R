@@ -14,10 +14,10 @@
 #'    A named list containing the following components:
 #'
 #'    \describe{
-#'      \item{\code{stat}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
+#'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
 #'          value for each factor.}
-#'      \item{\code{est}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full}}{A named list of character strings comprised of \code{est} and \code{stat} for each factor.}
+#'      \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
+#'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
 #'      \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #'
@@ -103,9 +103,9 @@ print_model_comp <- function(
   names(apa_res$statistic) <- x$term
 
   ## full
-  apa_res$full_report <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+  apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
   names(apa_res$estimate) <- names(apa_res$statistic)
-  names(apa_res$full_report) <- names(apa_res$statistic)
+  names(apa_res$full_result) <- names(apa_res$statistic)
 
 
   # Assemble table
@@ -182,6 +182,6 @@ print_model_comp <- function(
   apa_res$table <- rbind(coef_table, model_stats_table)
   apa_res$table[is.na(apa_res$table)] <- ""
 
-  apa_res[c("estimate", "statistic", "full_report")] <- lapply(apa_res[c("estimate", "statistic", "full_report")], as.list)
+  apa_res[c("estimate", "statistic", "full_result")] <- lapply(apa_res[c("estimate", "statistic", "full_result")], as.list)
   apa_res
 }
