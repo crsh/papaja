@@ -62,7 +62,7 @@ apa_lm <- apa_print(my_lm)
 One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document (remember to set the chunk option `results = "asis"`).
 
 ```{r eval = FALSE}
-apa_table(apa_lm$table)
+apa_table(apa_lm$table, caption = "Iris regression table.")
 ```
 
 <!-- GitHub markdown doesn't support MathJax -->
