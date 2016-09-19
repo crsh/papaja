@@ -20,7 +20,7 @@ abstract: |
   uses pandoc to turn Markdown into PDF or Word documents. The conversion
   to Word documents currently supports only a limited set of features.
   
-autor_note: |  
+author_note: |  
   `papaja` has not yet been submitted to CRAN; a development version is available at https://github.com/crsh/papaja.
   
 keywords: "APA style, knitr, R, R markdown, papaja"
@@ -74,7 +74,7 @@ I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://joh
 Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja), you can select the APA template when creating a new Markdown file through the RStudio menus, see \autoref{fig:menu}.
 When you click RStudio's *Knit* button (see \autoref{fig:knit}), `papaja`, `R Markdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
 
-![papaja's APA6 template is available through the RStudio menues. \label{fig:knit}](../inst/images/template_selection.png)
+![papaja's APA6 template is available through the RStudio menues. \label{fig:menu}](../inst/images/template_selection.png)
 
 ![The *Knit* button in the RStudio. \label{fig:knit}](../inst/images/knitting.png)
 
