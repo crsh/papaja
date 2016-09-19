@@ -147,11 +147,6 @@ $endif$
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 
-$if(numbersections)$
-\setcounter{secnumdepth}{5}
-$else$
-\setcounter{secnumdepth}{0}
-$endif$
 $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
 $endif$
@@ -288,6 +283,12 @@ $endfor$
 \begin{document}
 
 \maketitle
+
+$if(numbersections)$
+\setcounter{secnumdepth}{5}
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
 
 $for(include-before)$
   $include-before$
