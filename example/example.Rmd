@@ -58,7 +58,7 @@ Moreover, `papaja` supplies R-functions that facilitate reporting results of you
 
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).
 In the following I will assume you have hopped onto the band wagon and know how to use R Markdown to conduct and comment your analyses.
-If this is not the case, I recommend you get to grips with [R Markdown](http://R Markdown.rstudio.com/) first.
+If this is not the case, I recommend you get to grips with [R Markdown](http://rmarkdown.rstudio.com/) first.
 I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process works using any other text editor.
 
 

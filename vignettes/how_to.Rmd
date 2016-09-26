@@ -66,7 +66,7 @@ Moreover, `papaja` supplies R-functions that facilitate reporting results of you
 
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).
 In the following I will assume you have hopped onto the band wagon and know how to use R Markdown to conduct and comment your analyses.
-If this is not the case, I recommend you get to grips with [R Markdown](http://R Markdown.rstudio.com/) first.
+If this is not the case, I recommend you get to grips with [R Markdown](http://rmarkdown.rstudio.com/) first.
 I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process works using any other text editor.
 
 
@@ -213,7 +213,7 @@ my_citation <- cite_r(file = "r-references.bib")
 
 The citation style is automatically set to APA style.
 If you need to use a different citation style, you can set in the YAML front matter by adding a `csl` parameter.
-See the [R Markdown documentation](http://R Markdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
+See the [R Markdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
 
 ## Math
 If you need to report formulas, you can use the flexible \LaTeX syntax (it will work in Word documents, too).
