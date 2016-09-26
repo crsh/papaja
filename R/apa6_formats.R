@@ -3,9 +3,15 @@
 #' Template for creating an article according to APA guidelines (6th edition) in PDF format.
 #'
 #' @param fig_caption Logical. Indicates if figures are rendered with captions.
+#' @param number_sections Logical. Indicates if section headers are be numbered. If
+#' \code{TRUE}, figure/table numbers will be of the form X.i, where X is the current first
+#' -level section number, and i is an incremental number (the i-th figure/table); if
+#' \code{FALSE}, figures/tables will be numbered sequentially in the document from 1, 2,
+#'  ..., and you cannot cross-reference section headers in this case.
+#' @param toc Logical. Indicates if a table of contents is included.
 #' @param pandoc_args Additional command line options to pass to pandoc
 #' @param keep_tex Logical. Keep the intermediate tex file used in the conversion to PDF.
-#' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
+#' @param ... Further arguments to pass to \code{\link[bookdown]{pdf_document2}} or \code{\link[bookdown]{word_document2}}.
 #' @details
 #'    When creating PDF documents the YAML option \code{class} is passed to the class options of the LaTeX apa6 document class.
 #'    In this case, additional options are available. Refer to the apa6 document class
@@ -14,17 +20,21 @@
 #'
 #'    When creating PDF documents the output device for figures defaults to \code{c("pdf", "postscript", "png", "tiff")},
 #'    so that each figure is saved in all four formats at a resolution of 300 dpi.
-#' @seealso \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
+#' @seealso \code{\link[bookdown]{pdf_document2}}, \code{\link[bookdown]{word_document2}}
 #' @examples NULL
 #' @export
 
 apa6_pdf <- function(
   fig_caption = TRUE
+  , number_sections = FALSE
+  , toc = FALSE
   , pandoc_args = NULL
   , keep_tex = TRUE
   , ...
 ) {
   validate(fig_caption, check_class = "logical", check_length = 1)
+  validate(number_sections, check_class = "logical", check_length = 1)
+  validate(toc, check_class = "logical", check_length = 1)
   validate(keep_tex, check_class = "logical", check_length = 1)
 
   # Get APA6 template
@@ -36,9 +46,11 @@ apa6_pdf <- function(
     if(template == "") stop("No LaTeX template file found.")
 
     # Call pdf_document() with the appropriate options
-    format <- rmarkdown::pdf_document(
+    format <- bookdown::pdf_document2(
       template = template
       , fig_caption = fig_caption
+      , number_sections = number_sections
+      , toc = toc
       , keep_tex = keep_tex
       , pandoc_args = pandoc_args
       , ...
@@ -81,6 +93,7 @@ apa6_pdf <- function(
 apa6_word <- function(
   fig_caption = TRUE
   , pandoc_args = NULL
+  , md_extensions = NULL
   , ...
 ) {
   validate(fig_caption, check_class = "logical", check_length = 1)
@@ -94,7 +107,7 @@ apa6_word <- function(
   if(reference_docx == "") stop("No .docx-reference file found.")
 
   # Call word_document() with the appropriate options
-  format <- rmarkdown::word_document(
+  format <- bookdown::word_document2(
     reference_docx = reference_docx
     , fig_caption = fig_caption
     , pandoc_args = pandoc_args
@@ -105,13 +118,12 @@ apa6_word <- function(
   format$knitr$opts_chunk$echo <- FALSE
   format$knitr$opts_chunk$message <- FALSE
   # format$knitr$opts_chunk$results <- "asis"
-  format$knitr$opts_knit$rmarkdown.pandoc.to <- "word"
+  format$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
   format$knitr$knit_hooks$inline <- inline_numbers
-  format$knitr$knit_hooks$plot <- function(x, options) {
-    to <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-    if(!is.null(to) && to == "word") options$fig.cap <- paste("*", getOption("papaja.terms")$figure, ".*", options$fig.cap)
-    knitr::hook_plot_md(x, options)
-  }
+  # format$knitr$knit_hooks$plot <- function(x, options) {
+  #   options$fig.cap <- paste("*", getOption("papaja.terms")$figure, ".* ", options$fig.cap)
+  #   knitr::hook_plot_md(x, options)
+  # }
 
 #   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
 #   format$knitr$opts_chunk$dpi <- 300
@@ -120,15 +132,17 @@ apa6_word <- function(
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
+  from_rmarkdown <- getFromNamespace("from_rmarkdown", "rmarkdown")
+  .from <- from_rmarkdown(fig_caption, md_extensions)
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
   # to ensure right geometry defaults in the absence of user specified values
-  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
-    word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+    word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from)
   }
 
   format$pre_processor <- pre_processor
@@ -192,7 +206,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   args
 }
 
-word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from) {
   # Parse and modify YAML header
   input_text <- readLines(input_file, encoding = "UTF-8")
   yaml_params <- get_yaml_params(input_text)
@@ -212,7 +226,9 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   # Set CSL
   args <- set_csl(input_file)
-  args
+
+  process_markdown <- getFromNamespace("process_markdown", "bookdown")
+  process_markdown(input_file, from, args, FALSE)
 }
 
 
