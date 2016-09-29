@@ -125,7 +125,6 @@
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 
-\setcounter{secnumdepth}{0}
 \ifxetex
   \usepackage{polyglossia}
   \setmainlanguage{}
@@ -190,7 +189,14 @@ paragraph).}
 
 \maketitle
 
+\setcounter{secnumdepth}{0}
 
+
+  {
+  \hypersetup{linkcolor=black}
+  \setcounter{tocdepth}{2}
+  \tableofcontents
+  }
 
 \begin{Shaded}
 \begin{Highlighting}[]

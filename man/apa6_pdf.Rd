@@ -5,18 +5,28 @@
 \alias{apa6_word}
 \title{APA article (6th edition)}
 \usage{
-apa6_pdf(fig_caption = TRUE, pandoc_args = NULL, keep_tex = TRUE, ...)
+apa6_pdf(fig_caption = TRUE, number_sections = FALSE, toc = FALSE,
+  pandoc_args = NULL, keep_tex = TRUE, ...)
 
-apa6_word(fig_caption = TRUE, pandoc_args = NULL, ...)
+apa6_word(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL,
+  ...)
 }
 \arguments{
 \item{fig_caption}{Logical. Indicates if figures are rendered with captions.}
+
+\item{number_sections}{Logical. Indicates if section headers are be numbered. If
+\code{TRUE}, figure/table numbers will be of the form X.i, where X is the current first
+-level section number, and i is an incremental number (the i-th figure/table); if
+\code{FALSE}, figures/tables will be numbered sequentially in the document from 1, 2,
+ ..., and you cannot cross-reference section headers in this case.}
+
+\item{toc}{Logical. Indicates if a table of contents is included.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
 
 \item{keep_tex}{Logical. Keep the intermediate tex file used in the conversion to PDF.}
 
-\item{...}{Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.}
+\item{...}{Further arguments to pass to \code{\link[bookdown]{pdf_document2}} or \code{\link[bookdown]{word_document2}}.}
 }
 \description{
 Template for creating an article according to APA guidelines (6th edition) in PDF format.
@@ -39,6 +49,6 @@ should be considered experimental.}
 NULL
 }
 \seealso{
-\code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
+\code{\link[bookdown]{pdf_document2}}, \code{\link[bookdown]{word_document2}}
 }
 
