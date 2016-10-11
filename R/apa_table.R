@@ -110,6 +110,8 @@ apa_table <- function(
     colnames(prep_table) <- escape_latex(colnames(prep_table))
     caption <- escape_latex(caption)
     note <- escape_latex(note)
+  } else {
+    prep_table <- apply(prep_table, 2, function(x) gsub("([^\\\\]+)(%)", "\\1\\\\%", x))
   }
 
   # Indent stubs
