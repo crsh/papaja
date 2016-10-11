@@ -276,6 +276,11 @@ $endif$
 \settowidth{\cfttabnumwidth}{Table 10.\qquad}
 $endif$
 
+$if(footnotelist)$
+\usepackage{endnotes}
+\let\footnote\endnote
+$endif$
+
 $for(header-includes)$
   $header-includes$
 $endfor$
@@ -331,6 +336,10 @@ $if(figurelist)$
 \clearpage
 \renewcommand{\listfigurename}{Figure captions}
 \listoffigures
+$endif$
+
+$if(footnotelist)$
+\theendnotes
 $endif$
 
 $for(include-after)$

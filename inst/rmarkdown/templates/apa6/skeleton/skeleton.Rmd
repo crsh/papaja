@@ -33,6 +33,7 @@ bibliography      : ["r-references.bib"]
 figsintext        : no
 figurelist        : no
 tablelist         : no
+footnotelist      : no
 lineno            : yes
 
 lang              : "english"
