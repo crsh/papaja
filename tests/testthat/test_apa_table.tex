@@ -80,10 +80,10 @@
   {\end{ThreePartTable}\end{center}\end{landscape}}
 
 \usepackage{ifthen} % Only add declarations when endfloat package is loaded
-\ifthenelse{\equal{man}{\string jou}}{%
-  \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
-  \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
-  \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+\ifthenelse{\equal{\string man}{\string man}}{%
+ \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+ \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+ \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
 }{}%
 
 
@@ -185,6 +185,7 @@ paragraph).}
 
 
 
+
 \begin{document}
 
 \maketitle
@@ -192,11 +193,6 @@ paragraph).}
 \setcounter{secnumdepth}{0}
 
 
-  {
-  \hypersetup{linkcolor=black}
-  \setcounter{tocdepth}{2}
-  \tableofcontents
-  }
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -621,6 +617,7 @@ dist & 42.98 & 25.77 & 2 & 120\\
 \insertTableNotes
 \end{longtable}
 \end{lltable}
+
 
 
 

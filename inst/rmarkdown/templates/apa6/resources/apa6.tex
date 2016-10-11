@@ -82,10 +82,10 @@ $endif$
   {\end{ThreePartTable}\end{center}\end{landscape}}
 
 \usepackage{ifthen} % Only add declarations when endfloat package is loaded
-\ifthenelse{\equal{$class$}{\string jou}}{%
-  \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
-  \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
-  \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+\ifthenelse{\equal{\string $class$}{\string man}}{%
+ \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+ \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+ \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
 }{}%
 
 
