@@ -46,8 +46,8 @@ word_title_page <- function(x) {
     , x$abstract
     , "\n\n"
     , paste0("*", apa_terms$keywords, ":* ", x$keywords)
-    , "\n&nbsp;\n"
-    , paste0(apa_terms$word_count, ": Insert word count here!")
+    , "\n"
+    , paste0(apa_terms$word_count, ": ", x$wordcount)
     , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , paste0("# ", x$title, "\n\n")
   )
