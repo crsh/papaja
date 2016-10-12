@@ -11,6 +11,8 @@
 #' @param toc Logical. Indicates if a table of contents is included.
 #' @param pandoc_args Additional command line options to pass to pandoc
 #' @param keep_tex Logical. Keep the intermediate tex file used in the conversion to PDF.
+#' @param md_extensions Character. Markdown extensions to be added or removed from the
+#'  default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
 #' @param ... Further arguments to pass to \code{\link[bookdown]{pdf_document2}} or \code{\link[bookdown]{word_document2}}.
 #' @details
 #'    When creating PDF documents the YAML option \code{class} is passed to the class options of the LaTeX apa6 document class.
@@ -132,7 +134,7 @@ apa6_word <- function(
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
-  from_rmarkdown <- getFromNamespace("from_rmarkdown", "rmarkdown")
+  from_rmarkdown <- utils::getFromNamespace("from_rmarkdown", "rmarkdown")
   .from <- from_rmarkdown(fig_caption, md_extensions)
 
   # Preprocessor functions are adaptations from the RMarkdown package
@@ -227,7 +229,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   # Set CSL
   args <- set_csl(input_file)
 
-  process_markdown <- getFromNamespace("process_markdown", "bookdown")
+  process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
   process_markdown(input_file, from, args, FALSE)
 }
 

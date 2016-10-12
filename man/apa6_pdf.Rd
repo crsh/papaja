@@ -27,6 +27,9 @@ apa6_word(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL,
 \item{keep_tex}{Logical. Keep the intermediate tex file used in the conversion to PDF.}
 
 \item{...}{Further arguments to pass to \code{\link[bookdown]{pdf_document2}} or \code{\link[bookdown]{word_document2}}.}
+
+\item{md_extensions}{Character. Markdown extensions to be added or removed from the
+default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.}
 }
 \description{
 Template for creating an article according to APA guidelines (6th edition) in PDF format.
