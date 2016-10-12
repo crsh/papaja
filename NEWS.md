@@ -1,3 +1,22 @@
+# papaja 0.1.0.9456
+
+### Template
+- `apa6_pdf` and `apa6_word` now adapt `pdf_document2()` and `word_document2()` from the `bookdown` package. This enables the use of `bookdown` cross-referencing syntax including automatically generated table and figure labels as detailed [here](https://bookdown.org/yihui/bookdown/cross-references.html) (see #2).
+- LaTeX
+    - If `numbersections: true` numbering now starts at the body of the text. The abstract is no longer a numbered heading (reported by @lnalborczyk, #85)
+    - New option `footnotelist` to create list of footnotes at the end of the document (see #74)
+- Word
+    - Fixed bug that the wordcount set in the YAML header was not reported on the title page of Word documents (reported by @TobiasKoeln)
+
+### Existing functions
+- `apa_table.latex()`
+    - Fixed bug causing longtables and and landscape tables to appear in text rather than at the end of the document when `figsintext: false` (reported by @m-Py, #64).
+    - Fixed bug causing LaTeX to break when table contains `%`. All unescaped `%` are now automatically escaped even if `escape = FALSE` (reported by @m-Py, #66).
+
+### Vignette
+- Corrected various typos (reported by JooYoung Seo)
+
+
 # papaja 0.1.0.9440
 
 ### Template
