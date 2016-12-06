@@ -181,7 +181,7 @@ apa_table.latex <- function(
   ellipsis <- list(...)
   ellipsis$booktabs <- TRUE
   longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
-  if(longtable) {
+  if(longtable || landscape) {
     table_env <-  "ThreePartTable"
     table_note_env <- "TableNotes"
   } else {
