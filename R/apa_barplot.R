@@ -192,7 +192,7 @@ apa_barplot <- function(
   }
 
   # allows use to suppress legend title via specifying title = ""
-  if(!is.null(ellipsis$args.legend$title)&&ellipsis$args.legend$title == "") {
+  if(!is.null(ellipsis$args.legend$title)&&!is.expression(ellipsis$args.legend$title) && ellipsis$args.legend$title == "") {
     ellipsis$args.legend$title <- NULL # Save space
   }
 

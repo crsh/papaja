@@ -129,7 +129,7 @@ apa_beeplot.default <- function(
 
   if(length(ellipsis$args.legend$title) == 0) {
     ellipsis$args.legend$title <- factors[2]
-  } else if(ellipsis$args.legend$title == "") {
+  } else if(!is.expression(ellipsis$args.legend$title) && ellipsis$args.legend$title == "") {
     ellipsis$args.legend$title <- NULL # Save space
   }
 
