@@ -41,7 +41,7 @@ class             : "man"
 output            : papaja::apa6_pdf
 ---
 
-```{r message = FALSE, warning = FALSE}
+```{r include = FALSE}
 library("papaja")
 ```
 
