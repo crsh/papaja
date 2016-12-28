@@ -1,4 +1,4 @@
-\documentclass[american,man]{apa6}
+\documentclass[english,man]{apa6}
 
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -71,20 +71,21 @@
 \usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
 % Create new environments so endfloat can handle them
-\newenvironment{ltable}
-  {\begin{landscape}\begin{center}\begin{threeparttable}}
-  {\end{threeparttable}\end{center}\end{landscape}}
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 
 \newenvironment{lltable}
   {\begin{landscape}\begin{center}\begin{ThreePartTable}}
   {\end{ThreePartTable}\end{center}\end{landscape}}
 
-\usepackage{ifthen} % Only add declarations when endfloat package is loaded
-\ifthenelse{\equal{\string man}{\string man}}{%
- \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
- \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
- \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
-}{}%
+  \usepackage{ifthen} % Only add declarations when endfloat package is loaded
+  \ifthenelse{\equal{\string man}{\string man}}{%
+   \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+   % \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+   \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+  }{}%
+
 
 
 % The following enables adjusting longtable caption width to table width
@@ -129,7 +130,7 @@
   \usepackage{polyglossia}
   \setmainlanguage{}
 \else
-  \usepackage[american]{babel}
+  \usepackage[english]{babel}
 \fi
 
 % Manuscript styling
@@ -164,16 +165,14 @@
           \textsuperscript{1} Wilhelm-Wundt-University\\
           \textsuperscript{2} Konstanz Business School  }
 
- % If no author_note is defined give only author information if available
-    \authornote{
+  \authornote{
     \newcounter{author}
+    Complete departmental affiliations for each author (note the
+    indentation, if you start a new paragraph). Enter author note here.
+
                       Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: \href{mailto:my@email.com}{\nolinkurl{my@email.com}}
                           }
-  
-  \note{Complete departmental affiliations for each author (note the
-indentation, if you start a new paragraph).
 
-Enter author note here.}
 
   \abstract{Enter abstract here (note the indentation, if you start a new
 paragraph).}
@@ -334,10 +333,10 @@ test &  & \\
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
 \midrule
-15.40 & 42.98\\
+15.4 & 42.98\\
 5.29 & 25.77\\
-4.00 & 2.00\\
-25.00 & 120.00\\
+4 & 2\\
+25 & 120\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -441,9 +440,12 @@ Max & 25 & 120\\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{ltable}
-\caption{7 Test of midurles and landscape mode and named stub indentation.}
-\begin{tabular}{lrrlr}
+\begin{lltable}
+\begin{TableNotes}[para]
+\textit{Note.} This table was created using apa\_table().
+\end{TableNotes}
+\begin{longtable}{lrrlr}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{7 Test of midurles and landscape mode and named stub indentation.}\\
 \toprule
  & \multicolumn{2}{c}{Measure}  &  &\\
 \cmidrule(r){2-3}
@@ -457,11 +459,9 @@ Jo &  &  &  & \\ \midrule
 \ \ \ speed & 15.4 & 5.29 & 4 & 25\\
 \ \ \ dist & 42.98 & 25.77 & 2 & 120\\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}[para]
-\textit{Note.} This table was created using apa\_table().
-\end{tablenotes}
-\end{ltable}
+\insertTableNotes
+\end{longtable}
+\end{lltable}
 
 \begin{Shaded}
 \begin{Highlighting}[]

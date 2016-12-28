@@ -80,7 +80,15 @@ apa6_pdf <- function(
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
-    pdf_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+    args <- pdf_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+
+    # Set citeproc = FALSE by default to invoke ampersand filter
+    if(is.null(metadata$citeproc) || metadata$citeproc) {
+      metadata$citeproc <- FALSE
+      assign("yaml_front_matter", metadata, pos = parent.frame())
+    }
+
+    args
   }
 
   format$pre_processor <- pre_processor
@@ -144,7 +152,15 @@ apa6_word <- function(
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
-    word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from)
+    args <- word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from)
+
+    # Set citeproc = FALSE by default to invoke ampersand filter
+    if(is.null(metadata$citeproc) || metadata$citeproc) {
+      metadata$citeproc <- FALSE
+      assign("yaml_front_matter", metadata, pos = parent.frame())
+    }
+
+    args
   }
 
   format$pre_processor <- pre_processor
@@ -201,10 +217,29 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   yaml_params$author <- author_ampersand(yaml_params$author)
 
   ## Add modified YAML header
-  augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text)
+  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
+  augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
   writeLines(augmented_input_text, input_file, useBytes = TRUE)
 
-  args <- set_csl(input_file)
+  args <- NULL
+  if(is.null(metadata$citeproc) || metadata$citeproc) {
+
+    # Set CSL
+    args <- set_csl(input_file)
+
+    if(!args) { # CSL has not been specified manually
+      # Correct in-text ampersands
+      pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
+      filter_path <- system.file(
+        "rmarkdown", "templates", "apa6", "resources"
+        , "ampersand_filter.R"
+        , package = "papaja"
+      )
+
+      args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
+    }
+  }
+
   args
 }
 
@@ -226,11 +261,30 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
   writeLines(augmented_input_text, input_file, useBytes = TRUE)
 
-  # Set CSL
-  args <- set_csl(input_file)
+  args <- NULL
+  if(is.null(metadata$citeproc) || metadata$citeproc) {
 
+    # Set CSL
+    args <- set_csl(input_file)
+
+    if(!args) { # CSL has not been specified manually
+      # Correct in-text ampersands
+      pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
+      filter_path <- system.file(
+        "rmarkdown", "templates", "apa6", "resources"
+        , "ampersand_filter.R"
+        , package = "papaja"
+      )
+
+      args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
+    }
+  }
+
+  # Process markdown
   process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
   process_markdown(input_file, from, args, FALSE)
+
+  args
 }
 
 
