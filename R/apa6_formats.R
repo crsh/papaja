@@ -227,7 +227,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     # Set CSL
     args <- set_csl(input_file)
 
-    if(!args) { # CSL has not been specified manually
+    if(!is.null(args)) { # CSL has not been specified manually
       # Correct in-text ampersands
       pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
       filter_path <- system.file(

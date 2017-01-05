@@ -33,6 +33,7 @@ figurelist        : no
 tablelist         : no
 footnotelist      : no
 lineno            : yes
+citeproc          : no # To avoid CRAN check error
 
 lang              : "english"
 class             : "man"
