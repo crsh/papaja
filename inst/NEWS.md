@@ -1,10 +1,17 @@
-# papaja 0.1.0.9XXX
+# papaja 0.1.0.9470
+
+### Template
+- The template now automatically invokes an R-based pandoc filter that replaces `&` with `and` in in-text citations to fully adhere to APA citation guidelines; (see #53)
+- Initial chunk in template now is set to use chunk option `include = FALSE`.
 
 ### Existing functions
 - `apa_table.latex()`
-    - Fixed bug that landscape tables did not adhere to the `figsintext` option (reported by @m-Py, #90)
+    - If `landscape = TRUE` tables are now always in `longtable` environments to improve interplay with the LaTeX package `endfloat` and correctly honoring the `figsintext` option in the YAML header (reported by @m-Py, #90)
+    - Added clarification that the chunk option `results = "asis"` is required when `apa_table()` is called (requested by 	RMHogervorst, #93)
 - `apa_print.lm()`
-    - Fixed bug that resulted in invalid names for regression terms when the `data` argument was not used in the call to `lm()` (reported by @m-Py, #87)
+    - Calling `lm()` on a `data.frame` columns by using `$` resulted in regression term names that broke `apa_table()` (reported by @m-Py, #87)
+- `render_appendix()`
+    - Now builds on `knitr::knit_child()` to fix a bug causing figures not to render in the appendix; `render_appendix()` now has to be called within an R Markdown document. (reported by @fdabl, #70)
 
 
 # papaja 0.1.0.9456

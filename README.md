@@ -136,6 +136,12 @@ Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning?
 
 Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382)
 
+Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/>
+
+Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq>
+
+Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/>
+
 Other journal templates
 =======================
 
