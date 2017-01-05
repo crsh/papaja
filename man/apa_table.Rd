@@ -37,7 +37,8 @@ followed by a horizontal rule; ignored in MS Word documents.}
 
 \item{placement}{Character. Indicates whether table should be placed at the exact location (\code{h}),
 at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
-to indicate order of preference (\code{htb}); ignored in MS Word documents.}
+to indicate order of preference (\code{htb}); ignored when \code{longtable = TRUE}, \code{landscape = TRUE},
+and in MS Word documents.}
 
 \item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 documents.}
@@ -53,6 +54,8 @@ Formats \code{matrices} and \code{data.frames} to report them as tables accordin
 \details{
 When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is determined automatically
    by the rendered document type. If no rendering is in progress the output default is LaTeX.
+   The chunk option of the enveloping chunk has to be set to \code{results = "asis"} to ensure the table
+   is rendered, otherwise the table-generating markup is printed.
 
    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
    the first column giving the names of the list elements elements.

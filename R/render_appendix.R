@@ -5,8 +5,8 @@
 #'
 #' @param x Character. Input file name.
 #' @param options Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
-#' @param encoding Character. Encoding of the input file; see \code{\link{file}}.
 #' @param quiet Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+#'    If \code{FALSE} ouptut will be included in the document.
 #' @details
 #'    By default \code{x} is converted to a TeX file which can be included in an R Markdown document
 #'    as \code{include}:
@@ -30,31 +30,23 @@
 render_appendix <- function(
   x
   , options = NULL
-  , encoding = NULL
   , quiet = TRUE
 ) {
+  validate(x, check_class = "character", check_length = 1)
+  if(!is.null(options)) validate(options, check_class = "character")
+  validate(quiet, check_class = "logical", check_length = 1)
+
+
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+  if(length(target_format) == 0) stop("render_appendix() can only be used within an R Markdown document; please include the function call in a code chunk.")
 
-  # Create MD format but retain global options of parent document
-  md_format <- rmarkdown::md_document("markdown")
+  if(target_format == "latex") {
 
-  if(length(target_format) != 0) {
-    md_format$knitr$opts_chunk <- knitr::opts_chunk$get()[names(knitr::opts_chunk$get()) != "fig.path"]
-    md_format$knitr$knit_hooks <- knitr::knit_hooks$get()
-  }
+    # Render Markdown fragment
+    md_fragment <- knitr::knit_child(text = readLines(x), quiet = quiet)
+    md_file <- paste0(tools::file_path_sans_ext(x), ".md")
+    write(md_fragment, file = md_file, sep = "\n")
 
-  if(is.null(encoding)) {
-    encoding <- ifelse(length(target_format) > 0, knitr::opts_knit$get("encoding"), getOption("encoding"))
-  }
-
-  md_file <- rmarkdown::render(
-    x
-    , output_format = md_format
-    , encoding = encoding
-    , quiet = quiet
-  )
-
-  if(length(target_format) == 0 || target_format == "latex") {
     new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
 
     # Create TeX-file
@@ -69,9 +61,10 @@ render_appendix <- function(
     tex <- readLines(new_name)
     if(!grepl("\\\\section", tex[tex != ""][1])) tex <- c("\\section{}", tex) # Add section to start appendix
     tex <- c("\\begin{appendix}", tex, "\\end{appendix}")
+    tex <- gsub("\\\\begin\\{figure\\}\\[htbp\\]", "\\\\begin{figure}", tex) # Remove placement option
 
     write(tex, file = new_name)
-    file.remove(md_file)
+    # file.remove(md_file)
 
     if(!is.null(status)) return(status)
   } else {

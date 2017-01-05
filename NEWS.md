@@ -1,3 +1,12 @@
+# papaja 0.1.0.9XXX
+
+### Existing functions
+- `apa_table.latex()`
+    - Fixed bug that landscape tables did not adhere to the `figsintext` option (reported by @m-Py, #90)
+- `apa_print.lm()`
+    - Fixed bug that resulted in invalid names for regression terms when the `data` argument was not used in the call to `lm()` (reported by @m-Py, #87)
+
+
 # papaja 0.1.0.9456
 
 ### Template

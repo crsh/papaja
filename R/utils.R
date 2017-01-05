@@ -270,8 +270,9 @@ sanitize_terms <- function(x, standardized = FALSE) {
 
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
-  x <- gsub("\\(|\\)|`", "", x)                       # Remove parentheses and backticks
-  x <- gsub("\\_|\\.", " ", x)                            # Remove underscores
+  x <- gsub("\\(|\\)|`|.+\\$", "", x)                 # Remove parentheses and backticks
+  x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
+  x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
   for (i in 1:length(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
     substring(x2, first = 1, last = 1) <- toupper(substring(x2, first = 1, last = 1))

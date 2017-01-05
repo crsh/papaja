@@ -1,43 +1,41 @@
 ---
-title: "How to use papaja: An Example Manuscript Including Basic Instructions"
-shorttitle: "How to use papaja"
-author: 
-  - name:  Frederik Aust
-    affiliation: 1
-    corresponding: yes    # Define only one corresponding author
-    department:
-    address: "Department Psychology, University of Cologne, Herbert-Lewin-Str. 2, 50931 Köln, Germany"
-    email: "frederik.aust@uni-koeln.de"
-affiliation:
-  - id: 1
-    institution: "University of Cologne"
+title             : "How to use papaja: An Example Manuscript Including Basic Instructions"
+shorttitle        : "How to use papaja"
 
-abstract: |
+author: 
+  - name          : "Frederik Aust"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Department Psychology, University of Cologne, Herbert-Lewin-Str. 2, 50931 Köln, Germany"
+    email         : "frederik.aust@uni-koeln.de"
+affiliation       :
+  - id            : "1"
+    institution   : "University of Cologne"
+
+author_note: > 
+  `papaja` has not yet been submitted to CRAN; a development version is available at https://github.com/crsh/papaja.
+
+abstract: >
   This manuscript demonstrates how to use R Markdown and papaja to
   create an APA conform manuscript. papaja builds on R Markdown, which
   uses pandoc to turn Markdown into PDF or Word documents. The conversion
   to Word documents currently supports only a limited set of features.
   
-author_note: |  
-  `papaja` has not yet been submitted to CRAN; a development version is available at https://github.com/crsh/papaja.
-  
 keywords: "APA style, knitr, R, R markdown, papaja"
-
 wordcount: "Too lazy to count"
 
-class: man
-lang: english
-figsintext: no
-figurelist: no
-tablelist: no
-lineno: yes
-linkcolor: blue
+bibliography      : ["references.bib", "r-references.bib"]
 
-bibliography:
-  - references.bib
-  - r-references.bib
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+linkcolor         : "blue"
 
-output: papaja::apa6_pdf
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
 ---
 
 ```{r message = FALSE, warning = FALSE}

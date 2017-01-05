@@ -4,16 +4,15 @@
 \alias{render_appendix}
 \title{Render appendix}
 \usage{
-render_appendix(x, options = NULL, encoding = NULL, quiet = TRUE)
+render_appendix(x, options = NULL, quiet = TRUE)
 }
 \arguments{
 \item{x}{Character. Input file name.}
 
 \item{options}{Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.}
 
-\item{encoding}{Character. Encoding of the input file; see \code{\link{file}}.}
-
-\item{quiet}{Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.}
+\item{quiet}{Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+If \code{FALSE} ouptut will be included in the document.}
 }
 \description{
 This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside

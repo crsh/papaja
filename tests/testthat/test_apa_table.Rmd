@@ -1,38 +1,43 @@
 ---
-title: "The title"
-shorttitle: "Title"
-author: 
-  - name: First Author
-    affiliation: 1
-    corresponding: yes    # Define only one corresponding author
-    address: Postal address
-    email: my@email.com
-  - name: Ernst-August Doelle
-    affiliation: "1,2"
-affiliation:
-  - id: 1
-    institution: Wilhelm-Wundt-University
-  - id: 2
-    institution: Konstanz Business School
+title             : "The title"
+shorttitle        : "Title"
 
-abstract: |
-  Enter abstract here (note the indentation, if you start a new paragraph).
-  
-note: |  
+author: 
+  - name          : "First Author"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Postal address"
+    email         : "my@email.com"
+  - name          : "Ernst-August Doelle"
+    affiliation   : "1,2"
+
+affiliation:
+  - id            : "1"
+    institution   : "Wilhelm-Wundt-University"
+  - id            : "2"
+    institution   : "Konstanz Business School"
+
+author_note: >
   Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
 
   Enter author note here.
+
+abstract: >
+  Enter abstract here (note the indentation, if you start a new paragraph).
   
-keywords: "keywords"
+keywords          : "keywords"
+wordcount         : "X"
 
-wordcount: X
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+citeproc          : no # To avoid CRAN check error
 
-class: man
-lang: american
-figsintext: no
-lineno: yes
-
-output: papaja::apa6_pdf
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
 ---
 
 ```{r message = FALSE, warning = FALSE}

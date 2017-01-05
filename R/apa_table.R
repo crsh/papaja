@@ -16,7 +16,8 @@
 #'    followed by a horizontal rule; ignored in MS Word documents.
 #' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
 #'    at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
-#'    to indicate order of preference (\code{htb}); ignored in MS Word documents.
+#'    to indicate order of preference (\code{htb}); ignored when \code{longtable = TRUE}, \code{landscape = TRUE},
+#'    and in MS Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
 #' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
@@ -25,9 +26,12 @@
 #' @details
 #'    When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is determined automatically
 #'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
+#'    The chunk option of the enveloping chunk has to be set to \code{results = "asis"} to ensure the table
+#'    is rendered, otherwise the table-generating markup is printed.
 #'
 #'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
 #'    the first column giving the names of the list elements elements.
+#'
 #'
 #' @seealso \code{\link[knitr]{kable}}
 #' @examples
@@ -180,7 +184,7 @@ apa_table.latex <- function(
   ellipsis <- list(...)
   ellipsis$booktabs <- TRUE
   longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
-  if(longtable) {
+  if(longtable || landscape) {
     table_env <-  "ThreePartTable"
     table_note_env <- "TableNotes"
   } else {
@@ -202,7 +206,7 @@ apa_table.latex <- function(
 
   if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
 
-  if(longtable & !is.null(caption)) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+  if((longtable || landscape) & !is.null(caption)) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
 
   table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
 
@@ -215,8 +219,9 @@ apa_table.latex <- function(
     )
   }
 
-  if(!is.null(note) & longtable) table_lines <- c(table_lines[-length(table_lines)], "\\insertTableNotes", table_lines[length(table_lines)])
-  if(longtable) { # Makes caption as wide as table
+  if(!is.null(note) & (longtable || landscape)) table_lines <- c(table_lines[-length(table_lines)], "\\insertTableNotes", table_lines[length(table_lines)])
+  if(longtable || landscape) { # Makes caption as wide as table
+    table_lines <- gsub("\\{tabular\\}", "{longtable}", table_lines)
     table_lines[grep("\\\\begin\\{longtable\\}", table_lines)] <- paste0(
       table_lines[grep("\\\\begin\\{longtable\\}", table_lines)]
       , "\\noalign{\\getlongtablewidth\\global\\LTcapwidth=\\longtablewidth}"
@@ -228,33 +233,35 @@ apa_table.latex <- function(
   place_opt <- paste0("[", placement, "]")
 
   if(landscape) {
-    if(longtable) {
+    # if(longtable) {
       cat("\\begin{lltable}")
-    } else {
-      cat("\\begin{ltable}")
-    }
+    # } else {
+      # cat("\\begin{ltable}")
+    # }
     place_opt <- NULL
   }
 
+  # if(longtable && placement != "h") cat("\\afterpage{\\clearpage") # Defer table to next clear page
   if(!landscape && !longtable) cat("\\begin{table}", place_opt, sep = "")
   if(!landscape) cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
-  if(!is.null(caption) & !longtable) cat("\n\\caption{", caption, "}", sep = "")
-  if(!is.null(note) & longtable) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  if(!is.null(caption) && !(longtable || landscape)) cat("\n\\caption{", caption, "}", sep = "")
+  if(!is.null(note) && (longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
   if(small) cat("\n\\small{")
 
   cat(res_table)
   if(small) cat("\n}")
-  if(!is.null(note) & !longtable) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  if(!is.null(note) & !(longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
   if(!landscape) cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
   if(!landscape && !longtable) cat("\n\\end{table}")
 
   if(landscape) {
-    if(longtable) {
+    # if(longtable) {
       cat("\n\\end{lltable}")
-    } else {
-      cat("\n\\end{ltable}")
-    }
+    # } else {
+      # cat("\n\\end{ltable}")
+    # }
   }
+  # if(longtable && placement != "h") cat("\n}")
   cat("\n\n")
 }
 

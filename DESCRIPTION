@@ -1,6 +1,6 @@
 Package: papaja
 Title: Create APA manuscripts with R Markdown
-Version: 0.1.0.9456
+Version: 0.1.0.9464
 Description: papaja (Preparing APA Journal Articles) provides document formats
     and helper functions to produce complete APA manscripts from R Markdown-files
     (PDF and Word documents).
@@ -15,14 +15,17 @@ BugReports: https://github.com/crsh/papaja/issues
 Depends:
     R (>= 2.11.1)
 Imports:
-  rmarkdown (>= 0.3.10),
+  rmarkdown (>= 1.3),
   knitr (>= 1.10.5),
   bookdown (>= 0.1),
   yaml,
   broom (>= 0.3.6),
   boot,
   beeswarm,
+  stringr,
   methods
+Remotes:
+  rstudio/rmarkdown@d1ba313ed468f90925e2602a8c32baad267e2534
 Suggests:
   car,
   afex,

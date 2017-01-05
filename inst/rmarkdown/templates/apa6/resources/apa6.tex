@@ -73,20 +73,24 @@ $endif$
 \usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
 % Create new environments so endfloat can handle them
-\newenvironment{ltable}
-  {\begin{landscape}\begin{center}\begin{threeparttable}}
-  {\end{threeparttable}\end{center}\end{landscape}}
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 
 \newenvironment{lltable}
   {\begin{landscape}\begin{center}\begin{ThreePartTable}}
   {\end{ThreePartTable}\end{center}\end{landscape}}
 
-\usepackage{ifthen} % Only add declarations when endfloat package is loaded
-\ifthenelse{\equal{\string $class$}{\string man}}{%
- \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
- \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
- \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
-}{}%
+$if(figsintext)$
+$else$
+  \usepackage{ifthen} % Only add declarations when endfloat package is loaded
+  \ifthenelse{\equal{\string $class$}{\string man}}{%
+   \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+   % \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+   \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+  }{}%
+$endif$
+
 
 
 % The following enables adjusting longtable caption width to table width
