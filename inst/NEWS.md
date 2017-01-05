@@ -12,6 +12,8 @@
     - Calling `lm()` on a `data.frame` columns by using `$` resulted in regression term names that broke `apa_table()` (reported by @m-Py, #87)
 - `render_appendix()`
     - Now builds on `knitr::knit_child()` to fix a bug causing figures not to render in the appendix; `render_appendix()` now has to be called within an R Markdown document. (reported by @fdabl, #70)
+- `apa_*plot()`
+    - Expressions can now be used as legend titles (see #94)
 
 
 # papaja 0.1.0.9456
