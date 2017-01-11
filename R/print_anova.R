@@ -86,7 +86,7 @@ print_anova <- function(
 
   # Calculate eta squared
   if("es" %in% es) {
-    x$es <- x$sumsq / (sum(x$sumsq) + unique(x$sumsq_err))
+    x$es <- x$sumsq / sum(x$sumsq, unique(x$sumsq_err))
   }
 
   # Calculate partial eta squared
