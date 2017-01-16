@@ -4,6 +4,6 @@ utils::citEntry(
   , author = c("Frederik Aust and Marius Barth")
   , title = "papaja: {Create} {APA} manuscripts with {R Markdown}"
   , year = "2016"
-  , note = "R package version 0.1.0.9470"
+  , note = "R package version 0.1.0.9477"
   , url = "https://github.com/crsh/papaja"
 )
