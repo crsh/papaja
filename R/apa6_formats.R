@@ -224,19 +224,29 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
+    pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
+
     # Set CSL
     args <- set_csl(input_file)
 
     if(!is.null(args)) { # CSL has not been specified manually
       # Correct in-text ampersands
-      pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
       filter_path <- system.file(
         "rmarkdown", "templates", "apa6", "resources"
         , "ampersand_filter.R"
         , package = "papaja"
       )
 
+      if(Sys.info()["sysname"] == "Windows") {
+        filter_path <- gsub("\\.R", ".bat", filter_path)
+        ampersand_filter <- readLines(filter_path)
+        ampersand_filter[2] <- paste0("set rscriptpath=", paste0(R.home("bin"), "/Rscript.exe"))
+        writeLines(ampersand_filter, filter_path)
+      }
+
       args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
+    } else {
+      args <- c(args, "--csl", metadata$csl, "--filter", pandoc_citeproc())
     }
   }
 
@@ -264,19 +274,29 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
+    pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
+
     # Set CSL
     args <- set_csl(input_file)
 
-    if(!args) { # CSL has not been specified manually
+    if(!is.null(args)) { # CSL has not been specified manually
       # Correct in-text ampersands
-      pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
       filter_path <- system.file(
         "rmarkdown", "templates", "apa6", "resources"
         , "ampersand_filter.R"
         , package = "papaja"
       )
 
+      if(Sys.info()["sysname"] == "Windows") {
+        filter_path <- gsub("\\.R", ".bat", filter_path)
+        ampersand_filter <- readLines(filter_path)
+        ampersand_filter[2] <- paste0("set rscriptpath=", paste0(R.home("bin"), "/Rscript.exe"))
+        writeLines(ampersand_filter, filter_path)
+      }
+
       args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
+    } else {
+      args <- c(args, "--csl", metadata$csl, "--filter", pandoc_citeproc())
     }
   }
 

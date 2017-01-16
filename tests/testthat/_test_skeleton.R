@@ -5,14 +5,15 @@ test_that(
 
     # Render skeleton
     rmarkdown::draft(
-      "bare_skeleton.Rmd"
+      "~/bare_skeleton.Rmd"
       , system.file(
         "rmarkdown", "templates", "apa6"
         , package = "papaja")
       , create_dir = FALSE
       , edit = FALSE
     )
-    rmarkdown::render("bare_skeleton.Rmd")
+
+    rmarkdown::render("~/bare_skeleton.Rmd")
     expect_true(file.exists("bare_skeleton.pdf"))
 
     # Clean up

@@ -1,6 +1,10 @@
 #!/usr/bin/env Rscript
-ast <- readLines(file("stdin"), warn = FALSE)
-# write(ast, "ast_test.txt")
+
+std_input <- file("stdin")
+ast <- readLines(std_input, warn = FALSE)
+close.connection(std_input)
+
+# write(ast, "~/ast_test.txt")
 
 intext_regex <- "\"citationMode\":\\{\"t\":\"AuthorInText\".*?\\}\\]\\]\\}\\]"
 
@@ -13,5 +17,6 @@ for(i in seq_along(corrected_citations)) {
   stringr::str_sub(ast, intext_locations[i, "start"], intext_locations[i, "end"]) <- corrected_citations[i]
 }
 
-# write(ast, "ast_test2.txt")
+# write(ast, "~/ast_test2.txt")
+
 write(ast, stdout())
