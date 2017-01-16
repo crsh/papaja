@@ -240,7 +240,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       if(Sys.info()["sysname"] == "Windows") {
         filter_path <- gsub("\\.R", ".bat", filter_path)
         ampersand_filter <- readLines(filter_path)
-        ampersand_filter[2] <- paste0("set rscriptpath=", paste0(R.home("bin"), "/Rscript.exe"))
+        ampersand_filter[2] <- paste(paste0(R.home("bin"), "/Rscript.exe"), gsub("\\.bat", ".R", filter_path))
         writeLines(ampersand_filter, filter_path)
       }
 
@@ -290,7 +290,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
       if(Sys.info()["sysname"] == "Windows") {
         filter_path <- gsub("\\.R", ".bat", filter_path)
         ampersand_filter <- readLines(filter_path)
-        ampersand_filter[2] <- paste0("set rscriptpath=", paste0(R.home("bin"), "/Rscript.exe"))
+        ampersand_filter[2] <- paste(paste0(R.home("bin"), "/Rscript.exe"), gsub("\\.bat", ".R", filter_path))
         writeLines(ampersand_filter, filter_path)
       }
 
