@@ -1,3 +1,13 @@
+
+### Template
+- The ampersand filter is now called with `--vanilla` to avoid problems with customized `.Rprofile`s (reported by @awellis, #96)
+- On windows the Batch file to apply the ampersand filter is now created at the current location and deleted on exit to avoid permission problems (reported by @stahl-c)
+
+### Existing functions
+- `apa_print.aov()`
+    - Fixed bug that caused incorrect calculation of eta squared
+
+
 # papaja 0.1.0.9470
 
 ### Template

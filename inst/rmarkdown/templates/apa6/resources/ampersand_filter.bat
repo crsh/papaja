@@ -1,2 +1,2 @@
 @echo off
-PATHTORSCRIPT PATHTOFILTER
+PATHTORSCRIPT --vanilla -e "papaja:::ampersand_filter()"

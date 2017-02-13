@@ -92,6 +92,11 @@ apa6_pdf <- function(
   }
 
   format$pre_processor <- pre_processor
+
+  if(Sys.info()["sysname"] == "Windows") {
+    format$on_exit <- function() file.remove("_papaja_ampersand_filter.bat")
+  }
+
   format
 }
 
@@ -164,6 +169,11 @@ apa6_word <- function(
   }
 
   format$pre_processor <- pre_processor
+
+  if(Sys.info()["sysname"] == "Windows") {
+    format$on_exit <- function() file.remove("_papaja_ampersand_filter.bat")
+  }
+
   format
 }
 
@@ -224,30 +234,11 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
-    pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
-
     # Set CSL
     args <- set_csl(input_file)
 
-    if(!is.null(args)) { # CSL has not been specified manually
-      # Correct in-text ampersands
-      filter_path <- system.file(
-        "rmarkdown", "templates", "apa6", "resources"
-        , "ampersand_filter.R"
-        , package = "papaja"
-      )
-
-      if(Sys.info()["sysname"] == "Windows") {
-        filter_path <- gsub("\\.R", ".bat", filter_path)
-        ampersand_filter <- readLines(filter_path)
-        ampersand_filter[2] <- paste(paste0(R.home("bin"), "/Rscript.exe"), gsub("\\.bat", ".R", filter_path))
-        writeLines(ampersand_filter, filter_path)
-      }
-
-      args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
-    } else {
-      args <- c(args, "--csl", metadata$csl, "--filter", pandoc_citeproc())
-    }
+    # Set ampersand filter
+    args <- set_ampersand_filter(args)
   }
 
   args
@@ -274,30 +265,11 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
-    pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
-
     # Set CSL
     args <- set_csl(input_file)
 
-    if(!is.null(args)) { # CSL has not been specified manually
-      # Correct in-text ampersands
-      filter_path <- system.file(
-        "rmarkdown", "templates", "apa6", "resources"
-        , "ampersand_filter.R"
-        , package = "papaja"
-      )
-
-      if(Sys.info()["sysname"] == "Windows") {
-        filter_path <- gsub("\\.R", ".bat", filter_path)
-        ampersand_filter <- readLines(filter_path)
-        ampersand_filter[2] <- paste(paste0(R.home("bin"), "/Rscript.exe"), gsub("\\.bat", ".R", filter_path))
-        writeLines(ampersand_filter, filter_path)
-      }
-
-      args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
-    } else {
-      args <- c(args, "--csl", metadata$csl, "--filter", pandoc_citeproc())
-    }
+    # Set ampersand filter
+    args <- set_ampersand_filter(args)
   }
 
   # Process markdown
@@ -333,4 +305,31 @@ author_ampersand <- function(x) {
     }
   }
   x
+}
+
+set_ampersand_filter <- function(args) {
+  pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
+
+  if(!is.null(args)) { # CSL has not been specified manually
+    # Correct in-text ampersands
+    filter_path <- system.file(
+      "rmarkdown", "templates", "apa6", "resources"
+      , "ampersand_filter.sh"
+      , package = "papaja"
+    )
+
+    if(Sys.info()["sysname"] == "Windows") {
+      filter_path <- gsub("\\.sh", ".bat", filter_path)
+      ampersand_filter <- readLines(filter_path)
+      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
+      filter_path <- "_papaja_ampersand_filter.bat"
+      writeLines(ampersand_filter, filter_path)
+    }
+
+    args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
+  } else {
+    args <- c(args, "--csl", metadata$csl, "--filter", pandoc_citeproc())
+  }
+
+  args
 }
