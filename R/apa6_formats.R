@@ -274,7 +274,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   # Process markdown
   process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
-  process_markdown(input_file, from, args, FALSE)
+  process_markdown(input_file, from, args, TRUE)
 
   args
 }

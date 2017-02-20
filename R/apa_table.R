@@ -195,21 +195,28 @@ apa_table.latex <- function(
   n_cols <- ncol(x)
   n_rows <- nrow(x)
 
+  current_chunk <- knitr::opts_current$get("label")
+  if(!is.null(current_chunk)) caption <- paste0("\\label{tab:", current_chunk, "} ", caption)
+
   # Center title row
   colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
 
   res_table <- do.call(function(...) knitr::kable(x, format = "latex", ...), ellipsis)
 
-  ## Add midrules
   table_lines <- unlist(strsplit(res_table, "\n"))
   table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \\addlinespace
 
+  # Add column spanners
   if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
 
   if((longtable || landscape) & !is.null(caption)) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
 
   table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
 
+  # Add extra space before note
+  if(!is.null(note)) table_lines[table_content_boarders[2]] <- paste(table_lines[table_content_boarders[2]], "\\addlinespace", sep = "\n")
+
+  # Add midrules
   if(!is.null(midrules)) {
     validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
 
@@ -280,11 +287,15 @@ apa_table.word <- function(
   res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
+  caption <- paste0("*", caption, "*")
+  current_chunk <- knitr::opts_current$get("label")
+  if(!is.null(current_chunk)) caption <- paste0("(\\#tab:", current_chunk, ")", caption)
+
   # Print table
-  cat("<center>")
-  cat(apa_terms$table, ". ", sep = "")
-  cat("*", caption, "*", sep = "")
-  cat("</center>\n")
+  cat("<caption>")
+  # cat(apa_terms$table, ". ", sep = "")
+  cat(caption)
+  cat("</caption>\n")
 
   print(res_table)
 

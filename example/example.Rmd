@@ -61,12 +61,16 @@ I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://joh
 
 
 # How to use papaja
-Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja), you can select the APA template when creating a new Markdown file through the RStudio menus, see \autoref{fig:menu}.
-When you click RStudio's *Knit* button (see \autoref{fig:knit}), `papaja`, `R Markdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
+Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja), you can select the APA template when creating a new Markdown file through the RStudio menus, see Figure \@ref(fig:menu).
+When you click RStudio's *Knit* button (see Figure \@ref(fig:knit)), `papaja`, `R Markdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
 
-![papaja's APA6 template is available through the RStudio menues. \label{fig:menu}](../inst/images/template_selection.png)
+```{r menu, fig.cap = "papaja's APA6 template is available through the RStudio menues."}
+knitr::include_graphics("../inst/images/template_selection.png")
+```
 
-![The *Knit* button in the RStudio. \label{fig:menu}](../inst/images/knitting.png)
+```{r knit, fig.cap = "The *Knit* button in the RStudio."}
+knitr::include_graphics("../inst/images/knitting.png")
+```
 
 ## Printing R output
 Any output from R is included as you usually would using R Markdown.
@@ -116,9 +120,9 @@ The bottom line is, Word documents will be less polished than PDF.
 The resulting documents should suffice to enable collaboration with Wordy colleagues and prepare a journal submission with limited manual labor.
 
 ### Embed plots
-As usual in R Markdown, you can embed R-generated plots into your document, see \autoref{fig:bee}.
+As usual in R Markdown, you can embed R-generated plots into your document, see Figure \@ref(fig:beeplot).
 
-```{r fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals. \\label{fig:bee}", echo = TRUE, dev.args = list(bg = 'white')}
+```{r beeplot, fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals.", echo = TRUE, dev.args = list(bg = 'white')}
 apa_beeplot(
   mixed_data
   , id = "Subject"
@@ -165,13 +169,13 @@ on recall, `r anova_results$full$Dosage`. There was no significant interaction.
 > the dosage, however, had no effect on recall, `r recall_anova_results$full$Dosage`.
 > There was no significant interaction.
 
-What's even more fun, you can easily create a complete ANOVA table using by passing `recall_anova_results$table` to `apa_table()`, see \autoref{ref:anova}.
+What's even more fun, you can easily create a complete ANOVA table using by passing `recall_anova_results$table` to `apa_table()`, see Table \@ref(tab:anova).
 
-```{r results = "asis", echo = TRUE}
+```{r anova, results = "asis", echo = TRUE}
 apa_table(
   recall_anova_results$table
   , align = c("l", "r", "c", "r", "r", "r")
-  , caption = "ANOVA table for the analyis of the example data set. \\label{ref:anova}"
+  , caption = "ANOVA table for the analyis of the example data set."
   , note = "This is a table created using apa\\_print() and apa\\_table()."
 )
 ```

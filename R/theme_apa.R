@@ -42,9 +42,15 @@ theme_apa <- function(base_size = 14, base_family = "", box = FALSE) {
       , legend.key = ggplot2::element_rect(fill = NA, color = NA)
       , legend.key.width = ggplot2::unit(ggplot2::rel(20), "points")
       , legend.key.height = ggplot2::unit(ggplot2::rel(25), "points")
-      , legend.margin = ggplot2::unit(ggplot2::rel(18), "points")
+      , legend.margin = ggplot2::margin(
+        t = ggplot2::rel(18)
+        , r = ggplot2::rel(18)
+        , b = ggplot2::rel(18)
+        , l = ggplot2::rel(18)
+        , unit = "points"
+      )
 
-      , panel.margin = ggplot2::unit(ggplot2::rel(16), "points")
+      , panel.spacing = ggplot2::unit(ggplot2::rel(16), "points")
       , panel.grid.major.x = ggplot2::element_line(size = NA)
       , panel.grid.minor.x = ggplot2::element_line(size = NA)
       , panel.grid.major.y = ggplot2::element_line(size = NA)

@@ -71,17 +71,19 @@ fetch_zotero_refs <- function(
   # Download BibTeX for all entries in batches of 100 using downloder-package or readLines()
   if(downloader_installed) {
     tmp_bib_file <- paste(sample(c(letters, LETTERS, 0:9), size = 32, replace = TRUE), collapse = "")
+    tmp_bib_file <- paste0(tmp_bib_file, ".txt")
+    on.exit(
+      file.remove(tmp_bib_file)
+    )
 
     for(i in 1:no_batches) {
       bib_url <- paste0(collection_url, "/items?&limit=100&start=", (i-1)*10, "&format=bibtex")
       if(!is.null(API_key)) bib_url <- paste0(bib_url, "&key=", API_key)
 
-      downloader::download(bib_url, destfile = paste0(tmp_bib_file, ".txt"), quiet = TRUE, mode = "a")
-      bib_file <- readLines(paste0(tmp_bib_file, ".txt"), warn = FALSE)
+      downloader::download(bib_url, destfile = tmp_bib_file, quiet = TRUE, mode = "a")
+      bib_file <- readLines(tmp_bib_file, warn = FALSE)
       writeLines(bib_file, bib_name)
     }
-
-    file.remove(paste0(tmp_bib_file, ".txt"))
   } else {
     for(i in 1:no_batches) {
       bib_url <- paste0(collection_url, "/items?&limit=100&start=", (i-1)*10, "&format=bibtex")
