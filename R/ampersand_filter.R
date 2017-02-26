@@ -5,14 +5,14 @@ ampersand_filter <- function() {
 
   # write(ast, "~/ast_test.txt")
 
-  intext_regex <- "\"citationMode\":\\{\"t\":\"AuthorInText\".*?\\}\\]\\]\\}\\]"
+  intext_regex <- "\"citationMode\":\\{\"t\":\"AuthorInText\".*?\\}\\]\\]\\}"
 
   intext_citations <- unlist(stringr::str_extract_all(ast, intext_regex))
   corrected_citations <- stringr::str_replace(intext_citations, "&", "and")
 
   intext_locations <- stringr::str_locate_all(ast, intext_regex)[[1]]
 
-  for(i in seq_along(corrected_citations)) {
+  for(i in rev(seq_along(corrected_citations))) {
     stringr::str_sub(ast, intext_locations[i, "start"], intext_locations[i, "end"]) <- corrected_citations[i]
   }
 
