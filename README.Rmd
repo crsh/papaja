@@ -120,7 +120,6 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ## Known issues
 - The references in Word violate the APA guidelines in that there is no hanging indentation (i.e. indentation of all lines but the first one). As of now there is no fix for this problem.
-- In-text citation incorrectly use ampersands instead of "and". This is a current limitation of the [pandoc-citeproc](https://hackage.haskell.org/package/pandoc-citeproc) filter. I'm still looking for ways to fix this.
 - Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 - Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
 

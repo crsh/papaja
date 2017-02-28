@@ -26,7 +26,7 @@ wordcount: "Too lazy to count"
 
 bibliography      : ["references.bib", "r-references.bib"]
 
-figsintext        : no
+figsintext        : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
@@ -47,44 +47,45 @@ load("../tests/testthat/data/mixed_data.rdata")
 ```
 
 # What is papaja?
-As you may have heard, recently, interest in reproducible research has been growing.
-Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility.
+Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility in science.
 For *R* users, R Markdown has been suggested as one possible framework for reproducible analyses.
 `papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 The package uses the \LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to.
 Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).
-In the following I will assume you have hopped onto the band wagon and know how to use R Markdown to conduct and comment your analyses.
-If this is not the case, I recommend you get to grips with [R Markdown](http://rmarkdown.rstudio.com/) first.
-I use [RStudio](http://www.rstudio.com/) (which makes use of [pandoc](http://johnmacfarlane.net/pandoc/)) to create my documents, but the general process works using any other text editor.
+In the following I will assume you know how to use R Markdown to conduct and comment your analyses.
+If this is not the case, I recommend you familiarize yourself with [R Markdown](http://rmarkdown.rstudio.com/) first.
+I use [RStudio](http://www.rstudio.com/) to create my documents, but the general process works with any text editor.
 
 
 # How to use papaja
-Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja), you can select the APA template when creating a new Markdown file through the RStudio menus, see Figure \@ref(fig:menu).
-When you click RStudio's *Knit* button (see Figure \@ref(fig:knit)), `papaja`, `R Markdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
+Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja#requirements), you can select the APA template when creating a new R Markdown file through the RStudio menus, see Figure\ \@ref(fig:menu).
+When you click RStudio's *Knit* button (see Figure\ \@ref(fig:knit)), `papaja`, `bookdown`, `rmarkdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
 
-```{r menu, fig.cap = "papaja's APA6 template is available through the RStudio menues."}
-knitr::include_graphics("../inst/images/template_selection.png")
+```{r menu, fig.cap = "papaja's APA6 template is available through the RStudio menues.", fig.align = "center"}
+knitr::include_graphics("../inst/images/template_selection.png", dpi = 108)
 ```
 
-```{r knit, fig.cap = "The *Knit* button in the RStudio."}
-knitr::include_graphics("../inst/images/knitting.png")
+```{r knit, fig.cap = "The Knit button in the RStudio.", fig.align = "center"}
+knitr::include_graphics("../inst/images/knitting.png", dpi = 108)
 ```
 
 ## Printing R output
 Any output from R is included as you usually would using R Markdown.
 By default the R code will not be displayed in the final documents.
 If you wish to show off your code you need to set `echo = TRUE` in the chunk options.
+For example, to include summary statistics of your data you could use the following code:
 
 ```{r echo = TRUE, results = 'markup'}
-summary(mixed_data)
+summary(mixed_data[, -1])
 ```
 
 But, surely, this is not what you want your submission to look like.
 
 ### Print tables
-For prettier tables, I suggest you try `apa_table()`, which builds on `knitr`'s `kable()`.
+For prettier tables, I suggest you try `apa_table()`, which builds on `knitr`'s `kable()`, and `printnum()`, which can be used to properly round and report numbers.
+For the table to display correctly set the chunk option `results = "asis"` in the chunk that produces the table.
 
 ```{r results = 'asis', echo = TRUE}
 descriptives <- mixed_data %>% group_by(Dosage) %>%
@@ -108,19 +109,19 @@ apa_table(
 Of course popular packages like `xtable`[^xtable] or `tables` can also be used to create tables when knitting PDF documents.
 These packages, however, cannot be used when you want to create Microsoft Word documents because they rely on \LaTeX for typesetting.
 `apa_table()` creates tables that conform to APA guidelines and are correctly rendered in PDF and Word documents.
-But don't get too excited.
-In papaja, table formatting is somewhat limited for Word documents due to missing functionality in pandoc (e.g., it is not possible to have cells or headers span across multiple columns).
+But don't get too excited; table formatting is somewhat limited for Word documents due to missing functionality in pandoc (e.g., it is not possible to have cells or headers span across multiple columns).
 
 [^xtable]: When you use `xtable()`, table captions are [set to the left page margin](http://tex.stackexchange.com/questions/42209/centering-tables-in-document-class-apa6).
 
 As required by the APA guidelines, tables are deferred to the final pages of the manuscript when creating a PDF.
-To place tables and figures in your text instead, set the `figsintext` parameter in the YAML header to `yes` or `true`, as I have done in this document.
 Again, this is not the case in Word documents due to limited pandoc functionality.
+To place tables and figures in your text instead, set the `figsintext` parameter in the YAML header to `yes` or `true`, as I have done in this document.
+
 The bottom line is, Word documents will be less polished than PDF.
 The resulting documents should suffice to enable collaboration with Wordy colleagues and prepare a journal submission with limited manual labor.
 
 ### Embed plots
-As usual in R Markdown, you can embed R-generated plots into your document, see Figure \@ref(fig:beeplot).
+As usual in R Markdown, you can embed R-generated plots into your document, see Figure\ \@ref(fig:beeplot).
 
 ```{r beeplot, fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals.", echo = TRUE, dev.args = list(bg = 'white')}
 apa_beeplot(
@@ -139,9 +140,14 @@ apa_beeplot(
 Again, as required by the APA guidelines, figures are deferred to the final pages of the document unless you set `figsintext` to `yes`.
 
 ### Referencing figures and tables
-Currently, `rmarkdown` does not support proper cross-referencing with the document.
-For this document, I have simply interspersed my R markdown document with \LaTeX to accomplish cross-references.
-A new version of pandoc (1.16), that is not *yet* shipped with RStudio, supports proper cross-referencing that will work with Word documents as well.
+`papaja` builds on the `bookdown` package, which provides limited cross-referencing capabilities within documents.
+By default you can insert figure and table numbers into the text using `\@ref(fig:chunk-name)` for figures or `\@ref(tab:chunk-name)` for tables.
+Note that for this syntax to work chunk names cannot include `_`.
+If you need to embed an external image that is not generated by R use the `knitr::include_graphics()` function.
+See the [great book on `bookdown`](https://bookdown.org/yihui/bookdown/cross-references.html) for details.
+Cross-referencing is currently not available for equations in `bookdown`.
+However, as anywhere in R Markdown documents you can use \LaTeX commands if the functionality is not provided by `rmarkdown`/`bookdown` and you don't need to create Word documents.
+
 
 ### Report statistical analyses
 `apa_print()` will help you report the results of your statistical analyses.
@@ -169,7 +175,7 @@ on recall, `r anova_results$full$Dosage`. There was no significant interaction.
 > the dosage, however, had no effect on recall, `r recall_anova_results$full$Dosage`.
 > There was no significant interaction.
 
-What's even more fun, you can easily create a complete ANOVA table using by passing `recall_anova_results$table` to `apa_table()`, see Table \@ref(tab:anova).
+What's even more fun, you can easily create a complete ANOVA table using by passing `recall_anova_results$table` to `apa_table()`, see Table\ \@ref(tab:anova).
 
 ```{r anova, results = "asis", echo = TRUE}
 apa_table(
@@ -184,11 +190,17 @@ apa_table(
 ## Citations
 No manuscript is complete without citation.
 In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the YAML front matter.
-Once this is done, `[e.g., @james_1890; @bem_2011]` produces a regular citation within parentheses [e.g., @james_1890; @bem_2011].
+Once this is done, `[e.g., @james_1890; @bem_2011]` produces a regular citation within parentheses [e.g., @bem_2011; @james_1890].
 To cite a source in text simply omit the brackets; for example, write `@james_1890` to cite @james_1890.
 For other options see the [overview of the R Markdown citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
-If you use RStudio, I have created an [easy-to-use add-in](https://github.com/crsh/citr) that facilitates inserting citations.
+
+The citation style is automatically set to APA style.
+If you need to use a different citation style, you can set in the YAML front matter by providing the `csl` parameter.
+See the [R Markdown documentation](http://R Markdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
+
+If you use RStudio, I have created an [easy-to-use add-in](https://github.com/crsh/citr) that facilitates inserting citations into a document.
 The relevant references will, of course, be added to the documents reference section automatically.
+Moreover, the addin can directly access you Zotero database.
 
 I think it is important to credit the software we use.
 A lot of R packages are developed by academics free of charge.
@@ -205,9 +217,6 @@ my_citation <- cite_r(file = "r-references.bib")
 `cite_r()` takes these citations and turns them into readily reportable text.
 `my_citation` now contains the following text that you can use in your document: `r my_citation`
 
-The citation style is automatically set to APA style.
-If you need to use a different citation style, you can set in the YAML front matter by adding a `csl` parameter.
-See the [R Markdown documentation](http://R Markdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
 
 ## Math
 If you need to report formulas, you can use the flexible \LaTeX syntax (it will work in Word documents, too).
@@ -230,10 +239,11 @@ Moreover, you can create lists of figure or table captions at the end of the doc
 These option have no effect on Word documents.
 
 ## Last words
-That's all I have. Enjoy writing your manuscript. If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or open a pull request.
+That's all I have; enjoy writing your manuscript.
+If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or open a pull request.
 If you want to contribute, take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
 Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support.
-Any new S3-method for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
+Any new S3/S4-method for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
 
 # References
 
