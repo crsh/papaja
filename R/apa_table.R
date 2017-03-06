@@ -196,7 +196,7 @@ apa_table.latex <- function(
   n_rows <- nrow(x)
 
   current_chunk <- knitr::opts_current$get("label")
-  if(!is.null(current_chunk)) caption <- paste0("\\label{tab:", current_chunk, "} ", caption)
+  if(!is.null(current_chunk)) caption <- paste0("\\label{tab:", current_chunk, "}", caption)
 
   # Center title row
   colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
