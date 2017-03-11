@@ -238,7 +238,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args)
+    args <- set_ampersand_filter(args, metadata$csl)
   }
 
   args
@@ -269,7 +269,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args)
+    args <- set_ampersand_filter(args, metadata$csl)
   }
 
   # Process markdown
@@ -307,7 +307,7 @@ author_ampersand <- function(x) {
   x
 }
 
-set_ampersand_filter <- function(args) {
+set_ampersand_filter <- function(args, csl_file) {
   pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
 
   if(!is.null(args)) { # CSL has not been specified manually
@@ -328,7 +328,7 @@ set_ampersand_filter <- function(args) {
 
     args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
   } else {
-    args <- c(args, "--csl", metadata$csl, "--filter", pandoc_citeproc())
+    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc())
   }
 
   args

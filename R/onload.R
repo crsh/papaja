@@ -7,6 +7,7 @@
   op_papaja <- list(
     papaja.language = lang
     , papaja.terms = localize(lang)
+    , papaja.na_string = "NA"
     , papaja.plot_colors = "greyscale"
     , papaja.mse = TRUE
     , papaja.sphericity_correction = "GG"

@@ -21,7 +21,7 @@ test_that(
 
     expect_equal(printnum(-0.0001), "0.00")
 
-    expect_equal(printnum(NA), "")
+    expect_equal(printnum(NA), "NA")
     expect_equal(printnum(NA, na_string = "-"), "-")
   }
 )
@@ -47,7 +47,7 @@ test_that(
     to_print[1] <- 0
     expect_identical(printnum(to_print, zero = c(T, F, F)), c("0.00", "9.00", "0.10", "1.00", "< .01"))
 
-    expect_equal(printnum(c(1, 2, NA)), c("1.00", "2.00", ""))
+    expect_equal(printnum(c(1, 2, NA)), c("1.00", "2.00", "NA"))
   }
 )
 
@@ -79,7 +79,7 @@ test_that(
     colnames(m_correct) <- colnames(m_num)
     expect_identical(apa_num, m_correct)
 
-    expect_identical(printnum(matrix(c(1, 2, NA, 4), ncol = 2)), matrix(c("1.00", "2.00", "", "4.00"), ncol = 2))
+    expect_identical(printnum(matrix(c(1, 2, NA, 4), ncol = 2)), matrix(c("1.00", "2.00", "NA", "4.00"), ncol = 2))
 
 
     # Data.frame
@@ -103,7 +103,7 @@ test_that(
     colnames(df_correct) <- colnames(m_num)
     expect_equivalent(apa_num, df_correct)
 
-    expect_equivalent(printnum(as.data.frame(matrix(c(1, 2, NA, 4), ncol = 2))), as.data.frame(matrix(c("1.00", "2.00", "", "4.00"), ncol = 2)))
+    expect_equivalent(printnum(as.data.frame(matrix(c(1, 2, NA, 4), ncol = 2))), as.data.frame(matrix(c("1.00", "2.00", "NA", "4.00"), ncol = 2)))
   }
 )
 

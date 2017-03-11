@@ -24,7 +24,14 @@
 #' printp(0.0001)
 #' @export
 
-printnum <- function(x, gt1 = TRUE, zero = TRUE, margin = 1, na_string = "", ...) {
+printnum <- function(
+  x
+  , gt1 = TRUE
+  , zero = TRUE
+  , margin = 1
+  , na_string = getOption("papaja.na_string")
+  , ...
+) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
 
   ellipsis <- list(...)

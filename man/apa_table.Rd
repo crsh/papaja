@@ -8,7 +8,8 @@
 \usage{
 apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
   added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
-  placement = "tbp", landscape = FALSE, small = FALSE, ...)
+  placement = "tbp", landscape = FALSE, small = FALSE,
+  na_string = getOption("papaja.na_string"), ...)
 
 apa_table.latex(x, caption = NULL, note = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
@@ -44,6 +45,8 @@ and in MS Word documents.}
 documents.}
 
 \item{small}{Logical. If \code{TRUE} the font size of the table content is reduced.}
+
+\item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 
 \item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
 }

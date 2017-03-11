@@ -76,12 +76,12 @@ test_that(
     # Bootstrapped Delta R^2 CI
     skip_on_cran() # The bootstrapping is computationally too expensive
     set.seed(1337)
-    model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 15000)
+    model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 2500)
 
-    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.77$, $.87]$")
+    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.76$, $.87]$")
     expect_equal(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01$, $.04]$")
 
-    model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 15000, ci = 0.5)
+    model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 2500, ci = 0.5)
 
     expect_equal(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80$, $.84]$")
   }

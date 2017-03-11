@@ -5,7 +5,8 @@
 \alias{printp}
 \title{Prepare numeric values for printing}
 \usage{
-printnum(x, gt1 = TRUE, zero = TRUE, margin = 1, na_string = "", ...)
+printnum(x, gt1 = TRUE, zero = TRUE, margin = 1,
+  na_string = getOption("papaja.na_string"), ...)
 
 printp(x, na_string = "")
 }

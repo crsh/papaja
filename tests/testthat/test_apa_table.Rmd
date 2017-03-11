@@ -59,7 +59,6 @@ apa_table(
 )
 ```
 
-
 ```{r}
 apa_table(
   list(
