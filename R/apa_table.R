@@ -85,6 +85,14 @@ apa_table <- function(
 
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
+    # x <- lapply(x, as.data.frame, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+
+    ## Assemble table
+    if(row_names) {
+      prep_table <- lapply(x, add_row_names, added_stub_head = added_stub_head)
+    } else {
+      prep_table <- x # lapply(x, data.frame, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    }
 
     ## Round numeric cells
     x <- lapply(x, round_cells, digits, na_string)
@@ -98,10 +106,6 @@ apa_table <- function(
 #       , added_stub_head = added_stub_head
 #     )
 
-    if(row_names) {
-      prep_table <- lapply(x, add_row_names, added_stub_head = added_stub_head)
-    } else prep_table <- x
-
     prep_table <- do.call(rbind, prep_table)
 
     ### Indent individual tables
@@ -110,22 +114,24 @@ apa_table <- function(
     prep_table <- indent_stubs(prep_table, list_indents)
 
   } else {
-    ## Round numeric cells
-    x <- round_cells(x, digits, na_string)
+    # x <- as.data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
     ## Assemble table
     if(row_names) {
       prep_table <- add_row_names(x, added_stub_head = added_stub_head)
-    } else prep_table <- x
+    } else prep_table <- x # data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+
+    ## Round numeric cells
+    prep_table <- round_cells(prep_table, digits, na_string)
   }
 
   if(!is.null(ellipsis$escape) && ellipsis$escape) {
-    prep_table <- apply(prep_table, 2, escape_latex)
+    prep_table <- as.data.frame(lapply(prep_table, escape_latex), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
     caption <- escape_latex(caption)
     note <- escape_latex(note)
   } else {
-    prep_table <- apply(prep_table, 2, function(x) gsub("([^\\\\]+)(%)", "\\1\\\\%", x))
+    prep_table <- as.data.frame(lapply(prep_table, function(x) gsub("([^\\\\]+)(%)", "\\1\\\\%", x)), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
   }
 
   # Indent stubs
@@ -338,7 +344,10 @@ round_cells <- function(x, digits = getOption("digits"), na_string = getOption("
   n_col <- ncol(x)
   digits <- rep(digits, length.out = n_col)
 
-  apply(x, 2, function(x) if(is.numeric(x)) printnum(x, digits = digits, na_string = na_string))
+  for(i in seq_len(n_col)) {
+    if(is.numeric(x[, i])) x[, i] <- printnum(x[, i], digits = digits[i], na_string = na_string)
+  }
+  x
 }
 
 
@@ -356,14 +365,16 @@ round_cells <- function(x, digits = getOption("digits"), na_string = getOption("
 
 add_row_names <- function(x, added_stub_head) {
   if(!is.null(rownames(x)) && all(rownames(x) != 1:nrow(x))) {
-    mod_table <- cbind(rownames(x), x)
+    row_names <- rownames(x)
+    rownames(x) <- NULL
+    mod_table <- data.frame(row_names, x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
     if(!is.null(added_stub_head)) {
       colnames(mod_table) <- c(added_stub_head, colnames(x))
     } else {
       colnames(mod_table) <- c("", colnames(x))
     }
-  } else mod_table <- x
+  } else mod_table <- data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
   rownames(mod_table) <- NULL
   mod_table
@@ -385,7 +396,7 @@ add_row_names <- function(x, added_stub_head) {
 #' NULL
 
 indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
-  x <- apply(x, 2, as.character)
+  # x <- as.data.frame(lapply(x, as.character), check.names = FALSE, fix.empty.names = FALSE)
 
   # Add indentation
   stubs <- x[, 1]

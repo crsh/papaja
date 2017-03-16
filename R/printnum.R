@@ -35,9 +35,6 @@ printnum <- function(
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
 
   ellipsis <- list(...)
-  if(!is.null(ellipsis$digits)) {
-    validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf))
-  }
 
   validate(gt1, check_class = "logical")
   validate(zero, check_class = "logical")
@@ -56,6 +53,10 @@ printnum <- function(
       , big.mark = ","
     )
   )
+
+  if(!is.null(ellipsis$digits)) {
+    validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf))
+  }
 
   if(length(x) > 1) {
     # print_args <- list(digits = digits, gt1 = gt1, zero = zero)
