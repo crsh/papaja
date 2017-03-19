@@ -95,7 +95,7 @@ apa_table <- function(
     }
 
     ## Round numeric cells
-    x <- lapply(x, round_cells, digits, na_string)
+    prep_table <- lapply(prep_table, round_cells, digits, na_string)
 
     ## Assemble table
     # Old table merging by adding an additional column is depricated for the moment
@@ -396,14 +396,12 @@ add_row_names <- function(x, added_stub_head) {
 #' NULL
 
 indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
-  # x <- as.data.frame(lapply(x, as.character), check.names = FALSE, fix.empty.names = FALSE)
+  x <- as.data.frame(lapply(x, as.character), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
   # Add indentation
-  stubs <- x[, 1]
   for(i in seq_along(lines)) {
-    stubs[lines[[i]]] <- paste0(filler, stubs[lines[[i]]])
+    x[lines[[i]], 1] <- paste0(filler, x[lines[[i]], 1])
   }
-  x[, 1] <- stubs
 
   section_titles <- lines[which(names(lines) != "")]
   section_titles <- sapply(section_titles, min)
@@ -413,7 +411,7 @@ indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
     for(i in seq_along(section_titles)) {
       top <- if(section_titles[i] != 1) x[1:(section_titles[i] - 1 + (i-1)), ] else NULL
       bottom <- if(section_titles[i] != nrow(x)) x[(section_titles[i] + (i-1)):nrow(x), ] else x[nrow(x), ]
-      x <- rbind(top, c(names(section_titles[i]), rep("", ncol(x) - 1)), bottom)
+      x <- rbind.data.frame(top, c(names(section_titles[i]), rep("", ncol(x) - 1)), bottom)
     }
   }
 
