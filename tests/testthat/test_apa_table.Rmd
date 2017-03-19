@@ -51,6 +51,14 @@ my_table <- apply(cars, 2, function(x) # Create data
 )
 
 apa_table(
+  my_table[1, , drop = FALSE]
+  , align = c("l", "r", "r")
+  , caption = "0 Single row table."
+  , note = "This table was created using apa\\_table()"
+  , small = TRUE
+)
+
+apa_table(
   my_table
   , align = c("l", "r", "r")
   , caption = "1 A small table."
