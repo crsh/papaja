@@ -115,7 +115,12 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
       entry <- lapply(cite, utils::toBibtex)
       specifier <- if(length(entry) > 1) paste0("_", letters[seq_along(entry)]) else NULL
       entry <- sapply(seq_along(entry), function(ent) {
-        entry[[ent]][1] <- sub("\\{,$", paste0("{", prefix, x[pkg], specifier[ent], ","), entry[[ent]][1])
+        handle <- strsplit(entry[[ent]][1], "\\{")[[1]]
+        if(handle[2] == ",") {
+          entry[[ent]][1] <- paste0(handle[1], "{", prefix, x[pkg], specifier[ent], handle[2])
+        } else {
+          entry[[ent]][1] <- paste0(handle[1], "{", prefix, handle[2])
+        }
         entry[[ent]]
       })
       entry
