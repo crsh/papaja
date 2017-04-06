@@ -25,7 +25,7 @@
 #' @export
 
 apa_print <- function(x, ...) {
-  UseMethod("apa_print", x)
+  UseMethod("apa_print")
 }
 
 apa_print.default <- function(x, ...) {

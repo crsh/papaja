@@ -3,6 +3,7 @@
 S3method(apa_beeplot,afex_aov)
 S3method(apa_beeplot,default)
 S3method(apa_print,Anova.mlm)
+S3method(apa_print,BFBayesFactor)
 S3method(apa_print,afex_aov)
 S3method(apa_print,anova)
 S3method(apa_print,aov)
