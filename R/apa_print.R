@@ -25,8 +25,10 @@
 #' @export
 
 apa_print <- function(x, ...) {
-  UseMethod("apa_print")
+  UseMethod("apa_print", x)
 }
+
+setGeneric("apa_print")
 
 apa_print.default <- function(x, ...) {
   stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).

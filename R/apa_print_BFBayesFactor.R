@@ -1,15 +1,30 @@
-#' Title
+#' Format Bayes factors (APA 6th edition)
 #'
-#' @param x
-#' @param ratio_subscript
-#' @param auto_inverse
-#' @param scientific
+#' These methods take result objects from the \code{\pkg{BayesFactor}} package to create
+#'  formatted chraracter strings to report the results in accordance with APA manuscript
+#'  guidelines.
+#'
+#' @param x Output object. See details.
+#' @param ratio_subscript Character. A brief description of the model comparison in the form of \code{"M1/M2"}.
+#' @param auto_inverse Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.
+#' @param scientific Logical. Indicates whether to use scientific notation.
 #' @param ...
 #'
 #' @return
+#'   ...
+#' @family apa_print
 #' @export
 #'
 #' @examples
+#' data(sleep)
+#' bayesian_anova <- anovaBF(
+#'   extra ~ group + ID
+#'   , data = sleep
+#'   , whichRandom = "ID"
+#'   , progress=FALSE
+#' )
+#'
+#' apa_print(bayesian_anova)
 
 apa_print.BFBayesFactor <- function(
     x
@@ -59,19 +74,25 @@ apa_print.BFBayesFactor <- function(
   bf
 }
 
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
 setMethod("apa_print", "BFBayesFactor", apa_print.BFBayesFactor)
 
 
-
 #' @rdname apa_print.BFBayesFactor
-#' @method apa_print BFBayesFactorList
 #' @export
 
 apa_print.BFBayesFactorList <- function(x, ...) {
-  bf <- sapply(x, apa_print, ...)
+  bf <- sapply(x, apa_print.BFBayesFactor, ...)
   names(bf) <- names(x)
   bf
 }
+
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
 
 
 invert_subscript <- function(x) {

@@ -195,7 +195,6 @@ apa_print.lm <- function(
 
 
 #' @rdname apa_print.lm
-#' @method apa_print summary.lm
 #' @export
 
 apa_print.summary.lm <- function(x, ...) {

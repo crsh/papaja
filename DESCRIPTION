@@ -24,8 +24,6 @@ Imports:
   beeswarm,
   stringr,
   methods
-Remotes:
-  rstudio/rmarkdown@d1ba313ed468f90925e2602a8c32baad267e2534
 Suggests:
   car,
   afex,

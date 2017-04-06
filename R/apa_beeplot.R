@@ -66,7 +66,6 @@ apa_beeplot <- function(data, ...) {
 
 
 #' @rdname apa_beeplot
-#' @method apa_beeplot default
 #' @export
 
 apa_beeplot.default <- function(
@@ -592,7 +591,6 @@ apa.beeplot.core<-function(aggregated, y.values, id, dv, factors, intercept=NULL
 
 
 #' @rdname apa_beeplot
-#' @method apa_beeplot afex_aov
 #' @export
 
 apa_beeplot.afex_aov <- function(data, ...){

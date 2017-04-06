@@ -523,10 +523,6 @@ apa.lineplot.core<-function(y.values, id, dv, factors, intercept=NULL, ...) {
 }
 
 
-
-
-#' @method lines matrix
-
 lines.matrix <- function(x, y, type = "l", ...) {
 
   args <- list(...)
@@ -541,8 +537,6 @@ lines.matrix <- function(x, y, type = "l", ...) {
 }
 
 
-#' @method points matrix
-
 points.matrix <- function(x, y, type = "p", ...) {
 
   args <- list(...)
@@ -555,8 +549,6 @@ points.matrix <- function(x, y, type = "p", ...) {
     do.call("points", args.i)
   }
 }
-
-#' @method arrows matrix
 
 arrows.matrix <- function(x0, x1, y0, y1, ...) {
 

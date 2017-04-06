@@ -7,13 +7,13 @@
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
-\method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
+apa_print.glht(x, test = multcomp::adjusted(), ...)
 
-\method{apa_print}{summary.glht}(x, ci = 0.95, in_paren = FALSE, ...)
+apa_print.summary.glht(x, ci = 0.95, in_paren = FALSE, ...)
 
-\method{apa_print}{lsmobj}(x, ...)
+apa_print.lsmobj(x, ci = 0.95, ...)
 
-\method{apa_print}{summary.ref.grid}(x, ci = 0.95, contrast_names = NULL,
+apa_print.summary.ref.grid(x, ci = NULL, contrast_names = NULL,
   in_paren = FALSE, ...)
 }
 \arguments{
@@ -66,7 +66,8 @@ The function should work on a wide range of \code{htest} objects. Due to the lar
    NULL
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.aov}},
+Other apa_print: \code{\link{apa_print.BFBayesFactor}},
+  \code{\link{apa_print.aov}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
   \code{\link{apa_print}}
