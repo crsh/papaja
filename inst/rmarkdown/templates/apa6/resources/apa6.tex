@@ -223,16 +223,18 @@ $if(author_note)$
   }
 $else$ % If no author_note is defined give only author information if available
   $if(author)$
-  \authornote{
     \newcounter{author}
-    $if(author)$
-    $for(author)$
-      $if(author.corresponding)$
-        Correspondence concerning this article should be addressed to $author.name$$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
-      $endif$
-    $endfor$
+      $if(author)$
+      $for(author)$
+        $if(author.corresponding)$
+          \authornote{
+          Correspondence concerning this article should be addressed to $author.name$
+          $if(author.address)$, $author.address$ $endif$.
+          $if(author.email)$ E-mail: $author.email$ $endif$
+          }
+        $endif$
+      $endfor$
     $endif$
-  }
   $endif$
 $endif$
 
