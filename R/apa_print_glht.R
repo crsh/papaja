@@ -48,7 +48,6 @@ apa_print.glht <- function(x, test = multcomp::adjusted(), ...) {
 }
 
 #' @rdname apa_print.glht
-#' @method apa_print summary.glht
 #' @export
 
 apa_print.summary.glht <- function(
@@ -106,36 +105,67 @@ apa_print.summary.glht <- function(
 }
 
 #' @rdname apa_print.glht
-#' @method apa_print lsmobj
 #' @export
 
 apa_print.lsmobj <- function(x, ...) {
-  summary_x <- summary(x, ...)
+  ellipsis <- list(...)
+  if(is.null(ellipsis$infer)) ellipsis$infer <- TRUE
+  ellipsis$object <- x
 
+  summary_x <- do.call("summary", ellipsis)
   apa_print(summary_x, ...)
 }
 
+
 #' @rdname apa_print.glht
-#' @method apa_print summary.ref.grid
 #' @export
 
 apa_print.summary.ref.grid <- function(
   x
-  , ci = 0.95
   , contrast_names = NULL
   , in_paren = FALSE
   , ...
 ) {
   validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
-  validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
+  ci <- get_lsm_conf_level(x)
+  ci_supplied <- !length(ci) == 0
+  p_supplied <- "p.value" %in% colnames(x)
+  if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?lsmeans::summary' for details.")
+
+  if(!ci_supplied) {
+    warning("Object 'x' does not include confidence intervals. APA guidelines recommend to routinely report confidence intervals for all estimates. See '?lsmeans::summary' on how to add confidence intervals to your results.")
+
+    ci_colnames <- NULL
+    conf_level <- NULL
+  } else {
+    ci_colnames <- c("ll", "ul")
+    if(ci < 1) ci <- ci * 100
+    conf_level <- paste0(ci, "\\% CI")
+  }
+
+  if(!p_supplied) {
+    warning("Object 'x' does not include test statistics (i.e., p-values). See '?lsmeans::summary' on how to add test statistics to your results.")
+
+    df_colname <- NULL
+    stat_colnames <- NULL
+  } else {
+    dfdigits <- as.numeric(x$df %%1 > 0) * 2
+    contrast_df <- unique(x$df)
+    df_colname <- "df"
+    stat_colnames <- c("statistic", "p.value")
+  }
+
   split_by <- attr(x, "by.vars")
   x <- data.frame(x)
-  colnames(x) <- c("contrast", split_by, "estimate", "std.error", "df", "statistic", "p.value")
+  if("null" %in% colnames(x)) x <- x[, -grep("null", colnames(x))]
+  colnames(x) <- c("contrast", split_by, "estimate", "std.error", df_colname, ci_colnames, stat_colnames)
 
   # Assamble table
+  apa_res <- apa_print_container()
+
   if(!is.null(split_by)) {
     contrast_list <- split(x, x[, split_by])
     contrast_list <- lapply(contrast_list, function(x) x[, -which(colnames(x) == split_by)])
@@ -149,60 +179,77 @@ apa_print.summary.ref.grid <- function(
     contrast_table <- x
   }
 
-  contrast_df <- unique(round(contrast_table$df, 2))
-
-  ## Calculate confidence intervals (can't use confint() because it's a summary object)
-  ## NEEDS COMPLETE OVERHAUL!!!
-  norm_quant <- 1 - (1 - ci) / 2
-  x$ll <- x$estimate - x$std.error * stats::qnorm(norm_quant)
-  x$ul <- x$estimate + x$std.error * stats::qnorm(norm_quant)
-
-  if(ci < 1) conf_level <- ci * 100
-  conf_level <- paste0(conf_level, "\\% CI")
-
   ## Add confindence interval
-  table_ci <- unlist(print_confint(matrix(c(x$ll, x$ul), ncol = 2), margin = 2, conf_level = NULL, ...))
-  contrast_table <- cbind(
-    contrast_table[, 1:which(colnames(contrast_table) == "estimate")]
-    , data.frame(confint = table_ci)
-    , contrast_table[, which(colnames(contrast_table) == "df"):ncol(contrast_table)]
-  )
-  rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
+  if(ci_supplied) {
+    ci_table <- data.frame(confint = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
+    contrast_table <- contrast_table[, -grep("std\\.error|ll|ul", colnames(contrast_table))]
 
-  contrast_table <- contrast_table[, !which(colnames(contrast_table) == "contrast")]
+    contrast_table <- cbind(
+      contrast_table[, 1:which(colnames(contrast_table) == "estimate")]
+      , ci_table
+      , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
+    )
+  } else {
+    contrast_table <- contrast_table[, -grep("std\\.error", colnames(contrast_table))]
+  }
+
+
+  ## Add contrast names
+  rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
+  contrast_table <- contrast_table[, which(colnames(contrast_table) != "contrast")]
 
   contrast_table$estimate <- printnum(contrast_table$estimate, ...)
-  contrast_table$p.value <- printp(contrast_table$p.value)
-  contrast_table[, c("df", "statistic")] <- printnum(contrast_table[, c("df", "statistic")], margin = 2, digits = 2)
+  if(p_supplied) {
+    contrast_table$statistic <- printnum(contrast_table$statistic)
+    contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
+    contrast_table$p.value <- printp(contrast_table$p.value)
+  }
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  if(ci_supplied) {
+    apa_res$estimate <- apply(contrast_table, 1, function(y) {
+      paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
+    })
+  } else {
+    apa_res$estimate <- apply(contrast_table, 1, function(y) {
+      paste0("$\\Delta M = ", y["estimate"], "$")
+    })
+  }
 
-  apa_res$estimate <- apply(contrast_table, 1, function(y) {
-    paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
-  })
+  if(p_supplied) {
+    apa_res$statistic <- apply(contrast_table, 1, function(y) {
+      if(!grepl("<|>", y["p.value"])) eq <- "= " else eq <- ""
 
-  apa_res$statistic <- apply(contrast_table, 1, function(y) {
-    if(!grepl("<|>", y["p.value"])) eq <- "= " else eq <- ""
+      paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
+    })
 
-    paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
-  })
-
-  apa_res$full_result <- paste(apa_res$est, apa_res$stat, sep = ", ")
-  names(apa_res$full_result) <- names(apa_res$est)
+    apa_res$full_result <- paste(apa_res$est, apa_res$stat, sep = ", ")
+    names(apa_res$full_result) <- names(apa_res$est)
+  }
 
   apa_res <- lapply(apa_res, as.list)
 
-
   # Add table
-  if(length(contrast_df) == 1) { # Remove df column and put df in column heading
-    contrast_table <- contrast_table[, !which(colnames(contrast_table) == "df")]
-    colnames(contrast_table) <- c("$\\Delta M$", conf_level, paste0("$t(", contrast_df, ")$"), "$p$")
+  if(p_supplied) {
+    if(length(contrast_df) == 1) { # Remove df column and put df in column heading
+      df <- contrast_table$df[1]
+      contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
+      colnames(contrast_table) <- c("$\\Delta M$", conf_level, paste0("$t(", df, ")$"), "$p$")
+    } else {
+      colnames(contrast_table) <- c(split_by, "$\\Delta M$", conf_level, "$t$", "$df$", "$p$")
+    }
   } else {
-    colnames(contrast_table) <- c(split_by, "$\\Delta M$", conf_level, "$t$", "$df$", "$p$")
+    colnames(contrast_table) <- c(split_by, "$\\Delta M$", conf_level)
   }
 
   apa_res$table <- contrast_table
 
   apa_res
+}
+
+
+get_lsm_conf_level <- function(x) {
+  lsm_messages <- attr(x, "mesg")
+  conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
+  as.numeric(stringr::str_extract(conf_level_message, "0\\.\\d+"))
 }

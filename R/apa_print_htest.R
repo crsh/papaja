@@ -94,12 +94,12 @@ apa_print.htest <- function(
   if(!is.null(x$parameter)) {
     # Statistic and degrees of freedom
     if(tolower(names(x$parameter)) == "df") {
-      if(x$parameter %%1 == 0) printdigits <- 0 else printdigits = 2
+      dfdigits <- if(x$parameter %%1 == 0) 0 else 2
       if(stat_name == "\\chi^2") {
         if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ", n = ", n, ")")
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = dfdigits), ", n = ", n, ")")
       } else {
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = printdigits), ")")
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = dfdigits), ")")
       }
     }
   }

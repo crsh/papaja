@@ -45,7 +45,7 @@ Once `papaja` is installed, you can select the APA template when creating a new 
 
 ![APA template selection](inst/images/template_selection.png)
 
-If you want to add citations specify your BibTeX-file in the YAML front matter of the document (`bibliography: my.bib`) and you can start citing. If necessary, have a look at R Markdown's [overview of the citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+If you want to add citations specify your BibTeX-file in the YAML front matter of the document (`bibliography: my.bib`) and you can start citing. If necessary, have a look at R Markdown's [overview of the citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html). You may also be interested in [citr](github.com/crsh/citr), an R Studio addin to swiftly insert Markdown citations.
 
 ### Helper functions to report analyses
 
@@ -79,17 +79,15 @@ Table. *Iris regression table.*
 
 ------------------------------------------------------------------------
 
-<!--
 `papaja` currently provides methods for the following object classes:
 
+| A         | A-L     | L-S               | S                |
+|:----------|:--------|:------------------|:-----------------|
+| afex\_aov | aovlist | lm                | summary.aovlist  |
+| anova     | glht    | lsmobj            | summary.glht     |
+| Anova.mlm | htest   | summary.Anova.mlm | summary.lm       |
+| aov       | list    | summary.aov       | summary.ref.grid |
 
-A           A-L       L-S                 S                
-----------  --------  ------------------  -----------------
-afex_aov    aovlist   lm                  summary.aovlist  
-anova       glht      lsmobj              summary.glht     
-Anova.mlm   htest     summary.Anova.mlm   summary.lm       
-aov         list      summary.aov         summary.ref.grid 
--->
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
 ### Using papaja without RStudio
@@ -114,7 +112,6 @@ Known issues
 ------------
 
 -   The references in Word violate the APA guidelines in that there is no hanging indentation (i.e. indentation of all lines but the first one). As of now there is no fix for this problem.
--   In-text citation incorrectly use ampersands instead of "and". This is a current limitation of the [pandoc-citeproc](https://hackage.haskell.org/package/pandoc-citeproc) filter. I'm still looking for ways to fix this.
 -   Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
 -   Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
 
@@ -152,7 +149,8 @@ Obviously, not all journals require manuscripts and articles to be prepared acco
 
 Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
 
-Package dependencies
-====================
-
-![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+<!-- # Package dependencies -->
+<!-- ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE, eval = FALSE} -->
+<!-- source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R") -->
+<!-- plot_dependencies() -->
+<!-- ``` -->

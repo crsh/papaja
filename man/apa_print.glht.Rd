@@ -13,7 +13,7 @@
 
 \method{apa_print}{lsmobj}(x, ...)
 
-\method{apa_print}{summary.ref.grid}(x, ci = 0.95, contrast_names = NULL,
+\method{apa_print}{summary.ref.grid}(x, contrast_names = NULL,
   in_paren = FALSE, ...)
 }
 \arguments{
