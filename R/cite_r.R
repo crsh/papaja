@@ -89,6 +89,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   # Assemble (multiple) references and add package version numbers
   pkg_names <- names(pkg_citations)
   pkg_names <- unique(gsub("\\_\\D", "", pkg_names))
+  pkg_names <- gsub("survival-book", "survival", pkg_names)
   pkg_versions <- sapply(pkg_names, function(x) as.character(utils::packageVersion(x)))
   pkg_keys <- sapply(pkg_names, function(x){
     keys <- pkg_citations[grepl(x, names(pkg_citations))]
