@@ -26,39 +26,115 @@
 #'
 #' apa_print(bayesian_anova)
 
-apa_print.BFBayesFactor <- function(
-    x
-    , ratio_subscript = "10"
-    , auto_invert = TRUE
-    , scientific = TRUE
-    # , max = 1000 # Yields 99.9% posterior probability (assuming equal prior odds)
-    # , min = 1 / max
-    # , logbf = FALSE
-    , ...
+apa_print.BFBayesFactor <- function(x, ...) {
+  if(length(x) > 1) {
+    bf <- c()
+    for(i in seq_along(x)) {
+      bf[i] <- print_bf(x[i], ...)
+    }
+    bf <- as.list(bf)
+    names(bf) <- names(x)$numerator
+  } else bf <- print_bf(x, ...)
+
+  apa_res <- apa_print_container()
+  apa_res$statistic <- bf
+
+  apa_res
+}
+
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+setMethod("apa_print", "BFBayesFactor", apa_print.BFBayesFactor)
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+apa_print.BFBayesFactorTop <- function(x, ...) {
+  x_BFBayesFactor <- BayesFactor::as.BFBayesFactor(x)
+
+  ellipsis <- list(...)
+
+  if(is.null(ellipsis$ratio_subscript)) ellipsis$ratio_subscript <- "01"
+
+  bf <- c()
+  for(i in seq_along(x_BFBayesFactor)) {
+    ellipsis$x <- x_BFBayesFactor[i]
+    bf <- c(bf, do.call("print_bf", ellipsis))
+  }
+
+  full_terms <- bf_term_labels(x@denominator)
+  full_terms <- bf_sort_terms(full_terms)
+  restricted_terms <- lapply(x@numerator, bf_term_labels)
+  restricted_terms <- lapply(restricted_terms, bf_sort_terms)
+  omitted_terms <- lapply(restricted_terms, function(x) full_terms[!full_terms %in% x])
+  names(bf) <- sanitize_terms(omitted_terms)
+
+  apa_res <- apa_print_container()
+  apa_res$statistic <- as.list(rev(bf))
+
+  apa_res
+}
+
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+setMethod("apa_print", "BFBayesFactorTop", apa_print.BFBayesFactorTop)
+
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+apa_print.BFBayesFactorList <- function(x, ...) {
+  bf <- vapply(x, print_bf, as.character(as.vector(x[[1]])))
+  names(bf) <- names(x)
+
+  apa_res <- apa_print_container()
+  apa_res$statistic <- as.list(bf)
+
+  apa_res
+}
+
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
+
+
+
+print_bf <- function(
+  x
+  , ratio_subscript = "10"
+  , auto_invert = TRUE
+  , scientific = TRUE
+  , max = 1000
+  , min = 1 / max
+  # , logbf = FALSE
+  , ...
 ) {
   validate(x@bayesFactor["bf"], check_NA = TRUE)
   validate(ratio_subscript, check_class = "character", check_length = 1)
   validate(auto_invert, check_class = "logical", check_length = 1)
   validate(scientific, check_class = "logical", check_length = 1)
-  # validate(max, check_class = "numeric", check_length = 1)
+  validate(max, check_class = "numeric", check_length = 1)
+  validate(min, check_class = "numeric", check_length = 1)
   # validate(logbf, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
-
-  bf <- as.vector(x)
-  ellipsis$x <- bf
+  ellipsis$x <- as.vector(x)
 
   if(auto_invert) {
-    to_invert <- bf < 1
-    bf[to_invert] <- 1 / bf[to_invert]
+    to_invert <- ellipsis$x < 1
+    ellipsis$x[to_invert] <- 1 / ellipsis$x[to_invert]
 
     ratio_subscript <- rep(ratio_subscript, length(x))
     ratio_subscript[to_invert] <- invert_subscript(ratio_subscript)
   }
 
-  eq <- " = "
-
-  if(scientific) {
+  if(scientific & (ellipsis$x > max - 1 | ellipsis$x < min)) {
     ellipsis$format <- "e"
     if(is.null(ellipsis$digits)) ellipsis$digits <- 2
 
@@ -69,30 +145,12 @@ apa_print.BFBayesFactor <- function(
     bf <- do.call("printnum", ellipsis)
   }
 
-  bf <- paste0("$BF_{", ratio_subscript, "}", eq, bf, "$")
+  if(!grepl("<|>", bf)) eq <- " = " else eq <- " "
+
+  bf <- paste0("$\\mathrm{BF}_{\\textrm{", ratio_subscript, "}}", eq, bf, "$")
   bf <- setNames(bf, names(x@numerator))
   bf
 }
-
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-setMethod("apa_print", "BFBayesFactor", apa_print.BFBayesFactor)
-
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-
-apa_print.BFBayesFactorList <- function(x, ...) {
-  bf <- sapply(x, apa_print.BFBayesFactor, ...)
-  names(bf) <- names(x)
-  bf
-}
-
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
 
 
 invert_subscript <- function(x) {
@@ -106,3 +164,24 @@ typeset_scientific <- function(x) {
   x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)
   x
 }
+
+bf_term_labels <- function(x) {
+  model_formula <- formula(x@identifier$formula)
+  attr(terms(model_formula), "term.labels")
+}
+
+bf_sort_terms <- function(x) {
+  sapply(strsplit(x, ":"), function(y) paste(sort(y), collapse = ":"))
+}
+
+
+# typeset_ratio_subscript <- function(x) {
+#   gsub(
+#     "(?<!\\\\)\\b([a-z:;,.]+[a-z:;,.\\- ]*[a-z:;,.]+|[a-z:;,.])"
+#     , "\\textrm{\\1}"
+#     , x
+#     , perl = TRUE
+#     , ignore.case = TRUE
+#   )
+# }
+# typeset_ratio_subscript("M_{a und b}/M_{\alpha}")
