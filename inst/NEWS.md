@@ -1,11 +1,36 @@
+# papaja 0.1.0.9492
 
 ### Template
-- The ampersand filter is now called with `--vanilla` to avoid problems with customized `.Rprofile`s (reported by @awellis, #96)
+- The ampersand filter is applied with `--vanilla` to avoid problems with customized `.Rprofile`s (reported by @awellis, #96)
+- Fixed bug in `ampersand_filter()` regex, which caused some citations to be missed depending on preceeding citations (reported by @awellis, #96, and @m-Py, #100)
 - On windows the Batch file to apply the ampersand filter is now created at the current location and deleted on exit to avoid permission problems (reported by @stahl-c)
+- Changed default graphics devices to `pdf` and `png` to improve compatibility and rendering speed; `postscript` and `tiff` are no longer used be default
+- Author note is omitted if no corresponding author is defined and no author note text is provided (reported by @jacob-long, #108; fixed by @jacob-long, #109)
 
 ### Existing functions
 - `apa_print.aov()`
     - Fixed bug that caused incorrect calculation of eta squared
+    - MSE is now typeset in regular font rather than italic as per APA guidelines
+- `apa_table()`
+    - Added proper support for automated bookdown cross-referecing of tables: Chunk label is now automatically added als `\label{}` tag.
+    - Now supports `na_string` and `digits` options
+- `theme_apa()`
+    - Now uses `ggplot::margin()` to set margins because `ggplot::unit()` is now depricated.
+    - Changed base size default from 14 to 12 and adjusted some margin and spacing defaults
+- `r_refs()`
+    - Fixed bug that caused some existing references to be added to the bib-file (#102)
+- `cite_r()`
+    - Fixed incorrect handling of `survival-book` reference
+
+### New functions
+- `apa_print.lsmobj()`
+- `apa_print.summary.ref.grid()`
+- `apa_print.glht()`
+- `apa_print.summary.glht()`
+
+### Misc
+- New global option `papaja.na_string` with default value `"NA"` used by `apa_table()` and `printnum()`
+- Updated example file and README
 
 
 # papaja 0.1.0.9470
