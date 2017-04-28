@@ -45,7 +45,6 @@ apa_print.aov <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print summary.aov
 #' @export
 
 apa_print.summary.aov <- function(x, ...) {
@@ -56,7 +55,6 @@ apa_print.summary.aov <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print aovlist
 #' @export
 
 apa_print.aovlist <- function(x, ...) {
@@ -67,7 +65,6 @@ apa_print.aovlist <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print summary.aovlist
 #' @export
 
 apa_print.summary.aovlist <- function(x, ...) {
@@ -78,7 +75,6 @@ apa_print.summary.aovlist <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print Anova.mlm
 #' @export
 
 apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -93,7 +89,6 @@ apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_cor
 
 
 #' @rdname apa_print.aov
-#' @method apa_print summary.Anova.mlm
 #' @export
 
 apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -104,7 +99,6 @@ apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.spheri
 
 
 #' @rdname apa_print.aov
-#' @method apa_print afex_aov
 #' @export
 
 apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -125,7 +119,6 @@ apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_corr
 
 
 #' @rdname apa_print.aov
-#' @method apa_print anova
 #' @export
 
 apa_print.anova <- function(

@@ -11,27 +11,25 @@
 \alias{apa_print.summary.aovlist}
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
-\method{apa_print}{aov}(x, ...)
+apa_print.aov(x, ...)
 
-\method{apa_print}{summary.aov}(x, ...)
+apa_print.summary.aov(x, ...)
 
-\method{apa_print}{aovlist}(x, ...)
+apa_print.aovlist(x, ...)
 
-\method{apa_print}{summary.aovlist}(x, ...)
+apa_print.summary.aovlist(x, ...)
 
-\method{apa_print}{Anova.mlm}(x,
+apa_print.Anova.mlm(x, correction = getOption("papaja.sphericity_correction"),
+  intercept = FALSE, ...)
+
+apa_print.summary.Anova.mlm(x,
   correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
   ...)
 
-\method{apa_print}{summary.Anova.mlm}(x,
-  correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
-  ...)
+apa_print.afex_aov(x, correction = getOption("papaja.sphericity_correction"),
+  intercept = FALSE, ...)
 
-\method{apa_print}{afex_aov}(x,
-  correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
-  ...)
-
-\method{apa_print}{anova}(x, ...)
+apa_print.anova(x, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
@@ -76,7 +74,8 @@ Bakeman, R. (2005). Recommended effect size statistics for repeated measures des
 \seealso{
 \code{\link{aov}}, \code{\link[car]{Anova}}, \code{\link{apa_print.list}}
 
-Other apa_print: \code{\link{apa_print.glht}},
+Other apa_print: \code{\link{apa_print.BFBayesFactor}},
+  \code{\link{apa_print.glht}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
   \code{\link{apa_print}}

@@ -5,10 +5,10 @@
 \alias{apa_print.summary.lm}
 \title{Format statistics (APA 6th edition)}
 \usage{
-\method{apa_print}{lm}(x, est_name = NULL, standardized = FALSE,
-  ci = 0.95, observed_predictors = TRUE, in_paren = FALSE, ...)
+apa_print.lm(x, est_name = NULL, standardized = FALSE, ci = 0.95,
+  observed_predictors = TRUE, in_paren = FALSE, ...)
 
-\method{apa_print}{summary.lm}(x, ...)
+apa_print.summary.lm(x, ...)
 }
 \arguments{
 \item{x}{\code{lm} object.}
@@ -96,7 +96,8 @@ Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of
 \seealso{
 \code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
 
-Other apa_print: \code{\link{apa_print.aov}},
+Other apa_print: \code{\link{apa_print.BFBayesFactor}},
+  \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}

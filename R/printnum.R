@@ -133,9 +133,7 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", ...) {
     gt <- "> "
   }
 
-
-
-  if(x_out == 0 & !zero) x_out <- paste0(lt, xsign, ".", paste0(rep(0, ellipsis$digits-1), collapse = ""), "1") # Too small to report
+  if(x_out == 0 & !zero) x_out <- paste0(lt, "0.", paste0(rep(0, ellipsis$digits-1), collapse = ""), "1") # Too small to report
 
   if(!gt1) {
     if(x_out == 1) {

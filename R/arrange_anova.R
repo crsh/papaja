@@ -30,7 +30,7 @@
 #'  }
 
 arrange_anova <- function(x, ...) {
-  UseMethod("arrange_anova", x)
+  UseMethod("arrange_anova")
 }
 
 arrange_anova.default <- function(x, ...) {
