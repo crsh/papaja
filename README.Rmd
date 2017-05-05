@@ -43,7 +43,7 @@ Once `papaja` is installed, you can select the APA template when creating a new 
 
 ![APA template selection](inst/images/template_selection.png)
 
-If you want to add citations specify your BibTeX-file in the YAML front matter of the document (`bibliography: my.bib`) and you can start citing. If necessary, have a look at R Markdown's [overview of the citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+If you want to add citations specify your BibTeX-file in the YAML front matter of the document (`bibliography: my.bib`) and you can start citing. If necessary, have a look at R Markdown's [overview of the citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html). You may also be interested in [citr](github.com/crsh/citr), an R Studio addin to swiftly insert Markdown citations.
 
 ### Helper functions to report analyses
 The functions `apa_print()` and `apa_table()` facilitate reporting results of your analyses. Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
@@ -80,7 +80,6 @@ Table. *Iris regression table.*
 
 ---
 
-<!--
 `papaja` currently provides methods for the following object classes:
 
 ```{r echo = FALSE, results = "asis"}
@@ -94,9 +93,9 @@ colnames(print_classes) <- apply(print_classes, 2, function(x) {
   col_names <- if(first_letters[1] == first_letters[2]) first_letters[1] else paste(first_letters, collapse = "-")
   toupper(col_names)
 })
+print_classes[is.na(print_classes)] <- ""
 knitr::kable(print_classes)
 ```
--->
 
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs.
 If you prefer creating your plots with `ggplot2` try `theme_apa()`.
@@ -170,11 +169,11 @@ If you are looking for other journal article templates, the following list of `r
 If you know of other packages and templates, drop us a note, so we can add them here.
 
 
-# Package dependencies
+<!-- # Package dependencies -->
 
-```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
-source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R")
+<!-- ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE, eval = FALSE} -->
+<!-- source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R") -->
 
-plot_dependencies()
-```
+<!-- plot_dependencies() -->
+<!-- ``` -->
 

@@ -125,7 +125,7 @@ print_anova <- function(
   }
 
 
-  mse_long <- if(mse) "$\\mathit{MSE}$" else NULL
+  mse_long <- if(mse) "$\\mathrm{MSE}$" else NULL
   correction_type <- attr(x, "correction")
 
   if(!is.null(correction_type) && correction_type != "none") {
@@ -145,7 +145,7 @@ print_anova <- function(
   apa_res <- apa_print_container()
 
   apa_res$statistic <- apply(x, 1, function(y) {
-    stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], if(mse){ paste0("$, $\\mathit{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
+    stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], if(mse){ paste0("$, $\\mathrm{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
     if(in_paren) stat <- in_paren(stat)
     stat
   })

@@ -94,7 +94,7 @@ apa6_pdf <- function(
   format$pre_processor <- pre_processor
 
   if(Sys.info()["sysname"] == "Windows") {
-    format$on_exit <- function() file.remove("_papaja_ampersand_filter.bat")
+    format$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
   }
 
   format
@@ -171,7 +171,7 @@ apa6_word <- function(
   format$pre_processor <- pre_processor
 
   if(Sys.info()["sysname"] == "Windows") {
-    format$on_exit <- function() file.remove("_papaja_ampersand_filter.bat")
+    format$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
   }
 
   format
