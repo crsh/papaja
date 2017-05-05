@@ -133,21 +133,32 @@ Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning?
 
 Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382)
 
-Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/>
+Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/> ([Data & R Markdown files](https://osf.io/jxm7z/))
 
-Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq>
+Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq/> ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
 
-Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/>
+Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/> ([Data & R Markdown files](https://osf.io/cx5eh/))
 
-Other journal templates
-=======================
+Rouder, J. N., Haaf, J., & Aust, F. (submitted). From theories to models to predictions: A Bayesian model comparison approach for communications research. Preprint retrieved from <https://osf.io/preprints/psyarxiv/jt4th/>
 
-Obviously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful. If you know of other packages and templates, drop us a note, so we can add them here.
+Other related R packages
+========================
 
--   [rticles](https://github.com/rstudio/rticles): The rticles package includes a set of R Markdown templates that enable authoring of R related journal and conference submissions.
+By now, there are a couple of R packages that provide convenience functions to facilitate the reporting of statistics in accordance with APA guidelines.
+
+-   [apa](https://github.com/dgromer/apa): Format output of statistical tests in R according to APA guidelines
+-   [APAstats](https://github.com/achetverikov/APAstats): R functions for formatting results in APA style and other stuff
+-   [apaTables](https://github.com/dstanley4/apaTables): Create American Psychological Association (APA) Style Tables
+-   [pubprint](https://bitbucket.org/mutluyum/pubprint): This package takes the output of several statistical tests, collects the characteristic values and transforms it in a publish-friendly pattern
+-   [schoRsch](https://cran.r-project.org/web/packages/schoRsch/index.html): Tools for Analyzing Factorial Experiments
+-   [sigr](https://github.com/WinVector/sigr): Concise formatting of significances in R
+
+Obviously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful.
+
 -   [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
+-   [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article Templates for R Markdown
 
-Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
+If you know of other packages and templates, drop us a note, so we can add them here.
 
 <!-- # Package dependencies -->
 <!-- ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE, eval = FALSE} -->
