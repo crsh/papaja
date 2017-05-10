@@ -393,6 +393,17 @@ localize <- function(x) {
       , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
       , email = "E-Mail"
     )
+    , dutch = list(
+      author_note = "Over de auteur"
+      , abstract = "Samenvatting"
+      , keywords = "Trefwoorden"
+      , word_count = "Aantal woorden"
+      , table = "Tabel"
+      , figure = "Figuur"
+      , note = "Opmerking"
+      , correspondence = "Correspondentie betreffende dit artikel wordt geadresseerd aan "
+      , email = "E-mail"
+    )
   )
 }
 
