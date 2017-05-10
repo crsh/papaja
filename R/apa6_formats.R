@@ -224,6 +224,18 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   input_text <- readLines(input_file, encoding = "UTF-8")
   yaml_params <- get_yaml_params(input_text)
 
+  ## Adds correspondence line to author note
+  corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
+
+  if(length(corresponding_author) > 0) {
+    yaml_params$author_note <- paste(
+      yaml_params$author_note
+      , corresponding_author_line(corresponding_author[[1]])
+      , sep = "\n\n"
+    )
+  }
+
+  ## Concatenate author names
   yaml_params$author <- author_ampersand(yaml_params$author)
 
   ## Add modified YAML header
@@ -249,11 +261,12 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   input_text <- readLines(input_file, encoding = "UTF-8")
   yaml_params <- get_yaml_params(input_text)
 
-  yaml_params$author <- author_ampersand(yaml_params$author)
-
   ## Create title page
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c(word_title_page(yaml_params), input_text[(yaml_delimiters[2] + 1):length(input_text)])
+
+  ## Concatenate author names
+  yaml_params$author <- author_ampersand(yaml_params$author)
 
   ## Remove abstract to avoid redundancy introduced by pandoc
   yaml_params$abstract <- NULL

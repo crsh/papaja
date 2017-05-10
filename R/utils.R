@@ -348,6 +348,25 @@ sort_effects <- function(x) {
 
 
 
+#' @param x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
+
+corresponding_author_line <- function(x) {
+  apa_terms <- getOption("papaja.terms")
+
+  if(is.null(x$name)) stop("Please provide the corresponding author's name in the documents YAML front matter. Use the 'name' element of the 'author' list.")
+  if(is.null(x$address)) stop("Please provide the corresponding author's complete postal address in the documents YAML front matter. Use the 'address' element of the 'author' list.")
+  if(is.null(x$email)) stop("Please provide the corresponding author's e-mail address in the documents YAML front matter. Use the 'email' element of the 'author' list.")
+
+  corresponding_line <- paste0(
+    apa_terms$correspondence, x$name, ", "
+    , x$address, ". "
+    , apa_terms$email, ": ", x$email
+  )
+
+  corresponding_line
+}
+
+
 # Defines phrases used throughout the manuscript
 localize <- function(x) {
   switch(
