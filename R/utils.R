@@ -353,9 +353,9 @@ sort_effects <- function(x) {
 corresponding_author_line <- function(x) {
   apa_terms <- getOption("papaja.terms")
 
-  if(is.null(x$name)) stop("Please provide the corresponding author's name in the documents YAML front matter. Use the 'name' element of the 'author' list.")
-  if(is.null(x$address)) stop("Please provide the corresponding author's complete postal address in the documents YAML front matter. Use the 'address' element of the 'author' list.")
-  if(is.null(x$email)) stop("Please provide the corresponding author's e-mail address in the documents YAML front matter. Use the 'email' element of the 'author' list.")
+  if(is.null(x$name)) stop("\nPlease provide the corresponding author's name in the documents YAML front matter. Use the 'name' element of the 'author' list.\n")
+  if(is.null(x$address)) stop("\nPlease provide the corresponding author's complete postal address in the documents YAML front matter. Use the 'address' element of the 'author' list.\n")
+  if(is.null(x$email)) stop("\nPlease provide the corresponding author's e-mail address in the documents YAML front matter. Use the 'email' element of the 'author' list.\n")
 
   corresponding_line <- paste0(
     apa_terms$correspondence, x$name, ", "

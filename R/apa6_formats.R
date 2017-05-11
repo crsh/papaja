@@ -236,7 +236,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ## Concatenate author names
-  yaml_params$author <- author_ampersand(yaml_params$author)
+  yaml_params$author <- author_ampersand(yaml_params$author, format = "latex")
 
   ## Add modified YAML header
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
@@ -264,9 +264,6 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   ## Create title page
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c(word_title_page(yaml_params), input_text[(yaml_delimiters[2] + 1):length(input_text)])
-
-  ## Concatenate author names
-  yaml_params$author <- author_ampersand(yaml_params$author)
 
   ## Remove abstract to avoid redundancy introduced by pandoc
   yaml_params$abstract <- NULL
@@ -305,16 +302,34 @@ get_yaml_params <- function(x) {
 }
 
 
-author_ampersand <- function(x) {
-  n_authors <- length(x)
+author_ampersand <- function(x, format) {
+
+  if(format == "latex") {
+    authors <- lapply(x, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]])) paste0("\\textsuperscript{", y[["affiliation"]], "}") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+  } else if(format == "word") {
+    authors <- lapply(x, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]])) paste0("^", y[["affiliation"]], "^") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+  } else {
+    stop("Format not supported.")
+  }
+
+  authors <- unlist(authors)
+
+  n_authors <- length(authors)
+  x[[1]]$name <- authors[1]
   if(n_authors >= 2) {
     if(n_authors > 2) {
-      x[[n_authors]]$name <- paste("&", x[[n_authors]]$name)
-      for(i in 2:n_authors) {
-        x[[i]]$name <- paste(",", x[[i]]$name)
+      x[[n_authors]]$name <- paste(", &", authors[n_authors])
+      for(i in 2:(n_authors - 1)) {
+        x[[i]]$name <- paste(",", authors[i])
       }
     } else {
-      x[[n_authors]]$name <- paste("\\ &", x[[n_authors]]$name) # Otherwise space before ampersand disappears
+      x[[n_authors]]$name <- paste("\\ &", authors[n_authors]) # Otherwise space before ampersand disappears
     }
   }
   x
