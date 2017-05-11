@@ -9,7 +9,7 @@
 #'    in the documents yaml-header. Currently, English (default) and German ("german") are supported.
 #'
 #'    If the output document is MS Word (\code{output: \link{apa6_word}}) the function additionally creates
-#'    a title page and adds the abstract. You should, therefore, allways call \code{apa_prepare_doc} at the
+#'    a title page and adds the abstract. You should, therefore, always call \code{apa_prepare_doc} at the
 #'    very beginning of the R Markdown document.
 #' @seealso \code{\link{apa6_word}}
 #' @examples apa_prepare_doc()

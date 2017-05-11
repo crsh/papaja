@@ -1,7 +1,7 @@
 #' Format Bayes factors (APA 6th edition)
 #'
 #' These methods take result objects from the \pkg{BayesFactor} package to create
-#'  formatted chraracter strings to report the results in accordance with APA manuscript
+#'  formatted character strings to report the results in accordance with APA manuscript
 #'  guidelines.
 #'
 #' @param x Output object. See details.

@@ -7,7 +7,7 @@
 #' @param correction Character. For \code{summary.Anova.mlm} objects, specifies the type of
 #'    sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF}
 #'    for Huyn-Feldt methods or \code{none} is also possible. Ignored for other objects.
-#' @param ... Further arguemnts to pass to methods.
+#' @param ... Further arguments to pass to methods.
 #' @details
 #'    The returned \code{data.frame} can be passed to functions such as \code{\link{print_anova}}.
 #'

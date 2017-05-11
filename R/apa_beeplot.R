@@ -20,13 +20,13 @@
 #' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}. With \code{list(type = "l")} you can add lines to your plot.
-#' @param args_swarm An optional \code{list} that contains forther arguments to customize the \code{\link{points}} of the beeswarm.
+#' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
 #' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
 #' @param ... Further arguments than can be passed to \code{\link{plot}} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confindence interval, specify
+#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #' @seealso \code{\link{barplot}}
 #' @examples

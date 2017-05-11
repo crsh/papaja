@@ -1,7 +1,7 @@
 #' Format statistics (APA 6th edition)
 #'
 #' Takes \code{htest} objects from various statistical methods to create
-#' formatted chraracter strings to report the results in accordance with APA manuscript guidelines.
+#' formatted character strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{htest} object. See details.
 #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
@@ -18,7 +18,7 @@
 #' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
 #'    a reproducible example in your report!).
 #'

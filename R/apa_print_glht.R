@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' Takes various \code{lsmeans} objects methods to create formatted chraracter strings to report the results in
+#' Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
 #' accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
 #'
 #' @param x See details.
@@ -12,7 +12,7 @@
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
 #'    a reproducible example in your report!).
 #'

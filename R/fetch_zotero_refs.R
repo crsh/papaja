@@ -6,7 +6,7 @@
 #' @param lib_type Character. Specifies if the supplied ID is associated with a Zotero \code{user} or \code{group}.
 #' @param collection Character. Optional ID of a collection in the Zotero library, see details.
 #' @param API_key Character. Zotero API key, see details.
-#' @param bib_name Character. Name of the BibTex-file references are saved to.
+#' @param bib_name Character. Name of the BibTeX-file references are saved to.
 #'
 #' @details
 #' This function retrieves references through the Zotero web API. \code{x} takes a Zotero user or group ID that can

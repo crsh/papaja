@@ -22,7 +22,7 @@
 #' @param ... Further arguments than can be passed to \code{\link{barplot}} function.
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confindence interval, specify
+#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #' @seealso \code{\link{barplot}}
 #' @examples

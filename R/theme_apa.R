@@ -9,7 +9,7 @@
 #' @param box Logical. Indicates whether to draw a box around the plot.
 #'
 #' @details This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
-#'    general aspect of the plot such as the colour of the background, gridlines, the size and colour
+#'    general aspect of the plot such as the color of the background, gridlines, the size and colour
 #'    of fonts.
 #'
 #' @export

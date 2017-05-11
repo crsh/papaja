@@ -1,6 +1,6 @@
-#' APA manuscripts from RMarkdown
+#' APA manuscripts from R Markdown
 #'
-#' \pkg{papaja} is a R-package in the making including a \href{http://rmarkdown.rstudio.com/}{RMarkdown} template
+#' \pkg{papaja} is a R-package in the making including a \href{http://rmarkdown.rstudio.com/}{R Markdown} template
 #' that can be used with (or without) \href{http://www.rstudio.com/}{RStudio} to produce documents, which conform to
 #' the American Psychological Association (APA, 2010) manuscript guidelines (6th Edition). The package uses the LaTeX
 #' document class \href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file, so you can create PDF documents,
@@ -24,7 +24,7 @@
 #'            for Linux)}
 #'    }
 #'
-#'    \emph{Windows} users should use MikTex if possible. Currently, pandoc and the Windows version of Tex Live
+#'    \emph{Windows} users should use MikTeX if possible. Currently, pandoc and the Windows version of Tex Live
 #'    \href{https://github.com/rstudio/rmarkdown/issues/6}{don't seem to like each other}. Make sure you install the
 #'    \emph{complete}---not the basic---version.
 #'
@@ -35,7 +35,7 @@
 #'
 #' @section Authors:
 #'    Frederik Aust (frederik.aust at uni-koeln.de).
-#'    Marius Barth (marius.bart at uni-koeln.de).
+#'    Marius Barth (marius.barth at uni-koeln.de).
 #' @section Maintainer:
 #'    Frederik Aust (frederik.aust at uni-koeln.de).
 #' @section Contributors:

@@ -1,6 +1,6 @@
 #' Replace parentheses with brackets
 #'
-#' Takes a single character or a list of characters and replaces paretheses with brackets. Can be used to
+#' Takes a single character or a list of characters and replaces parentheses with brackets. Can be used to
 #' prepare a string of statistics (e.g. containing degrees of freedom) for reporting within paretheses.
 #'
 #' @param x Character. Single character or list of characters.

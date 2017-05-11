@@ -5,8 +5,8 @@
 #'
 #' @param x Character. Input file name.
 #' @param options Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
-#' @param quiet Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
-#'    If \code{FALSE} ouptut will be included in the document.
+#' @param quiet Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+#'    If \code{FALSE} output will be included in the document.
 #' @details
 #'    By default \code{x} is converted to a TeX file which can be included in an R Markdown document
 #'    as \code{include}:

@@ -1,6 +1,6 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' These methods take objects from various R functions that calculate ANOVA to create formatted chraracter
+#' These methods take objects from various R functions that calculate ANOVA to create formatted character
 #' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
 #' @param x Output object. See details.
