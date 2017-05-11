@@ -1,6 +1,6 @@
 #' Format Bayes factors (APA 6th edition)
 #'
-#' These methods take result objects from the \code{\pkg{BayesFactor}} package to create
+#' These methods take result objects from the \pkg{BayesFactor} package to create
 #'  formatted chraracter strings to report the results in accordance with APA manuscript
 #'  guidelines.
 #'
@@ -13,9 +13,11 @@
 #' @return
 #'   ...
 #' @family apa_print
+#' @importFrom stats formula terms setNames
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' data(sleep)
 #' bayesian_anova <- anovaBF(
 #'   extra ~ group + ID
@@ -25,6 +27,7 @@
 #' )
 #'
 #' apa_print(bayesian_anova)
+#' }
 
 apa_print.BFBayesFactor <- function(x, ...) {
   if(length(x) > 1) {
@@ -42,11 +45,11 @@ apa_print.BFBayesFactor <- function(x, ...) {
   apa_res
 }
 
-
 #' @rdname apa_print.BFBayesFactor
 #' @export
 
 setMethod("apa_print", "BFBayesFactor", apa_print.BFBayesFactor)
+
 
 #' @rdname apa_print.BFBayesFactor
 #' @export
@@ -96,7 +99,6 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 
   apa_res
 }
-
 
 #' @rdname apa_print.BFBayesFactor
 #' @export

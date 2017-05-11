@@ -14,6 +14,7 @@
 #' @param check_range Numeric. Vector of length 2 defining the expected range of the object.
 #' @param check_cols Character. Vector of columns that are intended to be in a \code{data.frame}.
 #'
+#' @importFrom methods is
 #' @examples
 #' \dontrun{
 #' in_paren <- TRUE # Taken from printnum()
@@ -348,7 +349,7 @@ sort_effects <- function(x) {
 
 
 
-#' @param x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
+# x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
 
 corresponding_author_line <- function(x) {
   apa_terms <- getOption("papaja.terms")

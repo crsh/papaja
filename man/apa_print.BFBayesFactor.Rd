@@ -4,15 +4,19 @@
 \name{apa_print.BFBayesFactor}
 \alias{apa_print,BFBayesFactor-method}
 \alias{apa_print,BFBayesFactorList-method}
+\alias{apa_print,BFBayesFactorTop-method}
 \alias{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactorList}
+\alias{apa_print.BFBayesFactorTop}
 \title{Format Bayes factors (APA 6th edition)}
 \usage{
-apa_print.BFBayesFactor(x, ratio_subscript = "10", auto_invert = TRUE,
-  scientific = TRUE, ...)
+apa_print.BFBayesFactor(x, ...)
 
-\S4method{apa_print}{BFBayesFactor}(x, ratio_subscript = "10",
-  auto_invert = TRUE, scientific = TRUE, ...)
+\S4method{apa_print}{BFBayesFactor}(x, ...)
+
+apa_print.BFBayesFactorTop(x, ...)
+
+\S4method{apa_print}{BFBayesFactorTop}(x, ...)
 
 apa_print.BFBayesFactorList(x, ...)
 
@@ -21,23 +25,24 @@ apa_print.BFBayesFactorList(x, ...)
 \arguments{
 \item{x}{Output object. See details.}
 
-\item{ratio_subscript}{Character. A brief description of the model comparison in the form of \code{"M1/M2"}.}
-
-\item{scientific}{Logical. Indicates whether to use scientific notation.}
-
 \item{...}{}
 
+\item{ratio_subscript}{Character. A brief description of the model comparison in the form of \code{"M1/M2"}.}
+
 \item{auto_inverse}{Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.}
+
+\item{scientific}{Logical. Indicates whether to use scientific notation.}
 }
 \value{
 ...
 }
 \description{
-These methods take result objects from the \code{\pkg{BayesFactor}} package to create
+These methods take result objects from the \pkg{BayesFactor} package to create
  formatted chraracter strings to report the results in accordance with APA manuscript
  guidelines.
 }
 \examples{
+\dontrun{
 data(sleep)
 bayesian_anova <- anovaBF(
   extra ~ group + ID
@@ -47,6 +52,7 @@ bayesian_anova <- anovaBF(
 )
 
 apa_print(bayesian_anova)
+}
 }
 \seealso{
 Other apa_print: \code{\link{apa_print.aov}},

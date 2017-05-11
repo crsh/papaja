@@ -22,14 +22,14 @@ Imports:
   broom (>= 0.3.6),
   boot,
   beeswarm,
-  stringr,
-  methods
+  stringr
 Suggests:
   car,
   afex,
   lsmeans,
   multcomp,
   MBESS,
+  BayesFactor,
   ggplot2,
   dplyr,
   downloader,
