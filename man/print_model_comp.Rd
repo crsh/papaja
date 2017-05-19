@@ -10,7 +10,7 @@ print_model_comp(x, models = NULL, ci = NULL, boot_samples = 1000,
 \arguments{
 \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
 
-\item{models}{List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the ouptut object.}
+\item{models}{List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the output object.}
 
 \item{ci}{Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.}
 
@@ -49,4 +49,3 @@ guidelines. \emph{This function is not exported.}
 \seealso{
 \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 }
-

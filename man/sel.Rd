@@ -19,4 +19,3 @@ parameter values from within a function.
 \examples{
 NULL
 }
-

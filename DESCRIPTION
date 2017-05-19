@@ -36,5 +36,5 @@ Suggests:
   testthat
 License: MIT + file LICENSE
 LazyData: yes
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr

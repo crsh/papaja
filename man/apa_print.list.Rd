@@ -8,7 +8,7 @@ apa_print.list(x, anova_fun = stats::anova, ci = 0.9,
   boot_samples = 10000, observed_predictors = TRUE, in_paren = FALSE, ...)
 }
 \arguments{
-\item{x}{List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the ouptut object.}
+\item{x}{List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the output object.}
 
 \item{anova_fun}{Function. Function to compare model-objects contained in \code{x}.}
 
@@ -34,7 +34,7 @@ apa_print.list(x, anova_fun = stats::anova, ci = 0.9,
    }
 }
 \description{
-This methods performs comparisons of \code{lm}-objects and creates formatted chraracter
+This methods performs comparisons of \code{lm}-objects and creates formatted character
 strings and a model comparison table to report the results in accordance with APA manuscript guidelines.
 }
 \details{
@@ -92,4 +92,3 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.lm}}, \code{\link{apa_print}}
 }
-

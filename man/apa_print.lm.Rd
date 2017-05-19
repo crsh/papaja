@@ -44,7 +44,7 @@ See details.}
    }
 }
 \description{
-Takes \code{lm} objects from various statistical methods to create formatted chraracter
+Takes \code{lm} objects from various statistical methods to create formatted character
 strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
@@ -102,4 +102,3 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
-

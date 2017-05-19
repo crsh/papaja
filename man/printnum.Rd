@@ -37,6 +37,7 @@ If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vecto
 \itemize{
 \item \code{printp}: Convenience wrapper for \code{printnum} to print p-values with three decimal places.
 }}
+
 \examples{
 printnum(1/3)
 printnum(1/3, gt1 = FALSE)
@@ -47,4 +48,3 @@ printnum(0, zero = FALSE)
 
 printp(0.0001)
 }
-

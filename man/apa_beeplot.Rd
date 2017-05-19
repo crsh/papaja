@@ -2,8 +2,8 @@
 % Please edit documentation in R/apa_beeplot.R
 \name{apa_beeplot}
 \alias{apa_beeplot}
-\alias{apa_beeplot.afex_aov}
 \alias{apa_beeplot.default}
+\alias{apa_beeplot.afex_aov}
 \title{Beeswarm plots for factorial designs that conform to APA guidelines}
 \usage{
 apa_beeplot(data, ...)
@@ -47,7 +47,7 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_points}{An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}}
 
-\item{args_swarm}{An optional \code{list} that contains forther arguments to customize the \code{\link{points}} of the beeswarm.}
+\item{args_swarm}{An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.}
 
 \item{args_lines}{An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}. With \code{list(type = "l")} you can add lines to your plot.}
 
@@ -62,7 +62,7 @@ a factorial design and sets APA-friendly defaults.
 \details{
 The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
-   distribution function that will be covered. For instance, if you want a 98\% confindence interval, specify
+   distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
    \code{level = 0.98}. \code{level} defaults to 0.95.
 }
 \examples{
@@ -95,4 +95,3 @@ apa_beeplot(
 \seealso{
 \code{\link{barplot}}
 }
-

@@ -2,12 +2,12 @@
 % Please edit documentation in R/apa_print_BFBayesFactor.R
 \docType{methods}
 \name{apa_print.BFBayesFactor}
-\alias{apa_print,BFBayesFactor-method}
-\alias{apa_print,BFBayesFactorList-method}
-\alias{apa_print,BFBayesFactorTop-method}
 \alias{apa_print.BFBayesFactor}
-\alias{apa_print.BFBayesFactorList}
+\alias{apa_print,BFBayesFactor-method}
 \alias{apa_print.BFBayesFactorTop}
+\alias{apa_print,BFBayesFactorTop-method}
+\alias{apa_print.BFBayesFactorList}
+\alias{apa_print,BFBayesFactorList-method}
 \title{Format Bayes factors (APA 6th edition)}
 \usage{
 apa_print.BFBayesFactor(x, ...)
@@ -32,14 +32,22 @@ apa_print.BFBayesFactorList(x, ...)
 \item{auto_inverse}{Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.}
 
 \item{scientific}{Logical. Indicates whether to use scientific notation.}
+
+\item{evidential_boost}{Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
+corresponding models (see details).}
 }
 \value{
 ...
 }
 \description{
 These methods take result objects from the \pkg{BayesFactor} package to create
- formatted chraracter strings to report the results in accordance with APA manuscript
+ formatted character strings to report the results in accordance with APA manuscript
  guidelines.
+}
+\details{
+For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
+  odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
+  \code{evidential_boost} they are multiplied with the corresponding Bayes factor before the results are formatted.
 }
 \examples{
 \dontrun{
@@ -54,6 +62,11 @@ bayesian_anova <- anovaBF(
 apa_print(bayesian_anova)
 }
 }
+\references{
+Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian order-restricted and point-null
+  hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
+  \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
+}
 \seealso{
 Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
@@ -61,4 +74,3 @@ Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
   \code{\link{apa_print}}
 }
-

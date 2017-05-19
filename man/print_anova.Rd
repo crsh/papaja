@@ -47,4 +47,3 @@ guidelines. It is not ment to be called by the user. \emph{This function is not 
 \seealso{
 \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 }
-

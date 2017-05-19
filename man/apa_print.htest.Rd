@@ -43,11 +43,11 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
 }
 \description{
 Takes \code{htest} objects from various statistical methods to create
-formatted chraracter strings to report the results in accordance with APA manuscript guidelines.
+formatted character strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
 The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-   that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+   that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
    a reproducible example in your report!).
 
@@ -88,4 +88,3 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
   \code{\link{apa_print}}
 }
-

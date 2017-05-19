@@ -8,10 +8,19 @@
 #' @param ratio_subscript Character. A brief description of the model comparison in the form of \code{"M1/M2"}.
 #' @param auto_inverse Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.
 #' @param scientific Logical. Indicates whether to use scientific notation.
+#' @param evidential_boost Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
+#'   corresponding models (see details).
 #' @param ...
 #'
+#' @details For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
+#'   odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
+#'   \code{evidential_boost} they are multiplied with the corresponding Bayes factor before the results are formatted.
 #' @return
 #'   ...
+#' @references
+#' Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian order-restricted and point-null
+#'   hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
+#'   \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
 #' @family apa_print
 #' @importFrom stats formula terms setNames
 #' @export
@@ -114,6 +123,7 @@ print_bf <- function(
   , scientific = TRUE
   , max = 1000
   , min = 1 / max
+  , evidential_boost = NULL
   # , logbf = FALSE
   , ...
 ) {
@@ -123,10 +133,15 @@ print_bf <- function(
   validate(scientific, check_class = "logical", check_length = 1)
   validate(max, check_class = "numeric", check_length = 1)
   validate(min, check_class = "numeric", check_length = 1)
+  validate(evidential_boost, check_class = "numeric", check_length = length(as.vector(x)))
   # validate(logbf, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
   ellipsis$x <- as.vector(x)
+
+  if(!is.null(evidential_boost)) {
+    ellipsis$x <- ellipsis$x * evidential_boost
+  }
 
   if(auto_invert) {
     to_invert <- ellipsis$x < 1

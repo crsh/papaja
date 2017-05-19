@@ -2,8 +2,8 @@
 % Please edit documentation in R/apa_print_glht.R
 \name{apa_print.glht}
 \alias{apa_print.glht}
-\alias{apa_print.lsmobj}
 \alias{apa_print.summary.glht}
+\alias{apa_print.lsmobj}
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
@@ -43,12 +43,12 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
    }
 }
 \description{
-Takes various \code{lsmeans} objects methods to create formatted chraracter strings to report the results in
+Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
 accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
 }
 \details{
 The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-   that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+   that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
    a reproducible example in your report!).
 
@@ -71,4 +71,3 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
   \code{\link{apa_print}}
 }
-

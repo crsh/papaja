@@ -48,10 +48,10 @@ When creating PDF documents the YAML option \code{class} is passed to the class 
 \item \code{apa6_word}: Format to create .docx-files. \code{class} parameter is ignored. \emph{This function
 should be considered experimental.}
 }}
+
 \examples{
 NULL
 }
 \seealso{
 \code{\link[bookdown]{pdf_document2}}, \code{\link[bookdown]{word_document2}}
 }
-

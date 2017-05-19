@@ -21,4 +21,3 @@ NULL
 \seealso{
 \code{\link{apa_table}}
 }
-

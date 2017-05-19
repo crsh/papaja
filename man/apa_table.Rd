@@ -55,7 +55,7 @@ Formats \code{matrices} and \code{data.frames} to report them as tables accordin
 (6th edition).
 }
 \details{
-When using \code{apa_table()}, the type of the ouput (LaTeX or MS Word) is determined automatically
+When using \code{apa_table()}, the type of the output (LaTeX or MS Word) is determined automatically
    by the rendered document type. If no rendering is in progress the output default is LaTeX.
    The chunk option of the enveloping chunk has to be set to \code{results = "asis"} to ensure the table
    is rendered, otherwise the table-generating markup is printed.
@@ -80,4 +80,3 @@ apa_table(
 \seealso{
 \code{\link[knitr]{kable}}
 }
-

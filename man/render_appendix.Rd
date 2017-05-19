@@ -11,8 +11,8 @@ render_appendix(x, options = NULL, quiet = TRUE)
 
 \item{options}{Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.}
 
-\item{quiet}{Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
-If \code{FALSE} ouptut will be included in the document.}
+\item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+If \code{FALSE} output will be included in the document.}
 }
 \description{
 This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
@@ -37,4 +37,3 @@ By default \code{x} is converted to a TeX file which can be included in an R Mar
    which \code{render_appendix} is called; otherwise defaults of \code{\link[rmarkdown]{md_document}} are
    used. It is, therefore, recommended to include \code{render_appendix} in your parent document.
 }
-
