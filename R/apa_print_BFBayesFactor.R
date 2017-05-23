@@ -39,10 +39,17 @@
 #' }
 
 apa_print.BFBayesFactor <- function(x, ...) {
+
   if(length(x) > 1) {
+    ellipsis <- list(...)
+    if(!is.null(ellipsis$evidential_boost)) evidential_boost <- ellipsis$evidential_boost
+
     bf <- c()
     for(i in seq_along(x)) {
-      bf[i] <- print_bf(x[i], ...)
+      ellipsis$x <- x[i]
+      if(!is.null(ellipsis$evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
+      # bf[i] <- print_bf(x[i], ...)
+      bf[i] <- do.call("print_bf", ellipsis)
     }
     bf <- as.list(bf)
     names(bf) <- names(x)$numerator
@@ -69,10 +76,12 @@ apa_print.BFBayesFactorTop <- function(x, ...) {
   ellipsis <- list(...)
 
   if(is.null(ellipsis$ratio_subscript)) ellipsis$ratio_subscript <- "01"
+  if(!is.null(ellipsis$evidential_boost)) evidential_boost <- ellipsis$evidential_boost
 
   bf <- c()
   for(i in seq_along(x_BFBayesFactor)) {
     ellipsis$x <- x_BFBayesFactor[i]
+    if(!is.null(ellipsis$evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
     bf <- c(bf, do.call("print_bf", ellipsis))
   }
 
@@ -100,7 +109,7 @@ setMethod("apa_print", "BFBayesFactorTop", apa_print.BFBayesFactorTop)
 #' @export
 
 apa_print.BFBayesFactorList <- function(x, ...) {
-  bf <- vapply(x, print_bf, as.character(as.vector(x[[1]])))
+  bf <- vapply(x, print_bf, as.character(as.vector(x[[1]])), ...)
   names(bf) <- names(x)
 
   apa_res <- apa_print_container()
@@ -133,7 +142,7 @@ print_bf <- function(
   validate(scientific, check_class = "logical", check_length = 1)
   validate(max, check_class = "numeric", check_length = 1)
   validate(min, check_class = "numeric", check_length = 1)
-  validate(evidential_boost, check_class = "numeric", check_length = length(as.vector(x)))
+  if(!is.null(evidential_boost)) validate(evidential_boost, check_class = "numeric", check_length = length(x))
   # validate(logbf, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
