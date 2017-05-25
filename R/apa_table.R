@@ -215,6 +215,14 @@ apa_table.latex <- function(
   current_chunk <- knitr::opts_current$get("label")
   if(!is.null(current_chunk)) caption <- paste0("\\label{tab:", current_chunk, "}", caption)
 
+  # Escape underscores and percentages in whole table
+  colnames(x) <- gsub("_", "\\_", colnames(x), fixed = TRUE)
+  rownames(x) <- gsub("_", "\\_", rownames(x), fixed = TRUE)
+  x[] <- lapply(x, function(x) gsub("_", "\\_", x, fixed = TRUE))
+  colnames(x) <- gsub("%", "\\%", colnames(x), fixed = TRUE)
+  rownames(x) <- gsub("%", "\\%", rownames(x), fixed = TRUE)
+  x[] <- lapply(x, function(x) gsub("%", "\\%", x, fixed = TRUE))
+
   # Center title row
   colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
 
