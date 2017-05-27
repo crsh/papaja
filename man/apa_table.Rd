@@ -9,7 +9,7 @@
 apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
   added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
   placement = "tbp", landscape = FALSE, small = FALSE,
-  na_string = getOption("papaja.na_string"), ...)
+  na_string = getOption("papaja.na_string"), escape = NULL, ...)
 
 apa_table.latex(x, caption = NULL, note = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,

@@ -215,7 +215,7 @@ paragraph).}
   \NormalTok{my_table[}\DecValTok{1}\NormalTok{, , }\DataTypeTok{drop =} \OtherTok{FALSE}\NormalTok{]}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"0 Single row table."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
   \NormalTok{, }\DataTypeTok{small =} \OtherTok{TRUE}
 \NormalTok{)}
 \end{Highlighting}
@@ -248,7 +248,7 @@ Mean & 15.40 & 42.98\\
   \NormalTok{my_table}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"1 A small table."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
   \NormalTok{, }\DataTypeTok{small =} \OtherTok{TRUE}
 \NormalTok{)}
 \end{Highlighting}
@@ -286,9 +286,10 @@ Max & 25.00 & 120.00\\
     \NormalTok{, }\StringTok{`}\DataTypeTok{moar test}\StringTok{`} \NormalTok{=}\StringTok{ }\NormalTok{my_table}
   \NormalTok{)}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-  \NormalTok{, }\DataTypeTok{caption =} \StringTok{"2 A merged table (list of two) with added stub heading."}
+  \NormalTok{, }\DataTypeTok{caption =} \StringTok{"2 A merged table (list of two) with added stub heading. Not escaped."}
   \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+  \NormalTok{, }\DataTypeTok{escape =} \OtherTok{FALSE}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -296,7 +297,7 @@ Max & 25.00 & 120.00\\
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-3}2 A merged table (list of two) with added stub heading.}
+\caption{\label{tab:unnamed-chunk-3}2 A merged table (list of two) with added stub heading. Not escaped.}
 \begin{tabular}{lrr}
 \toprule
 Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -329,7 +330,7 @@ moar test &  & \\
   \NormalTok{)}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"3 A 'merged' table (list of one) with added stub heading."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
@@ -367,7 +368,7 @@ test &  & \\
   \NormalTok{my_table2}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"4 Test if simple row numbers are omitted from table."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
@@ -401,7 +402,7 @@ speed & \multicolumn{1}{c}{dist}\\
   \KeywordTok{list}\NormalTok{(}\DataTypeTok{A =} \NormalTok{my_table2, }\DataTypeTok{B =} \NormalTok{my_table2)}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"5 Test if simple row numbers are omitted from merged table (list of two)."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
@@ -441,7 +442,7 @@ B & \\
   \NormalTok{my_table}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"6 Test of column spanner and stub indenting."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()."}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
   \NormalTok{, }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
   \NormalTok{, }\DataTypeTok{stub_indents =} \KeywordTok{list}\NormalTok{(}\DecValTok{2}\NormalTok{:}\DecValTok{3}\NormalTok{)}
@@ -481,7 +482,7 @@ Max & 25.00 & 120.00\\
   \NormalTok{my_table}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"7 Test of midurles and landscape mode and named stub indentation."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()."}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
   \NormalTok{, }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
   \NormalTok{, }\DataTypeTok{midrules =} \DecValTok{4}
@@ -523,7 +524,7 @@ Jo &  &  &  & \\ \midrule
   \NormalTok{my_table}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"8 A long table."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()."}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
   \NormalTok{, }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
   \NormalTok{, }\DataTypeTok{midrules =} \DecValTok{4}
@@ -601,7 +602,7 @@ dist & 42.98 & 25.77 & 2.00 & 120.00\\
   \NormalTok{my_table}
   \NormalTok{, }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
   \NormalTok{, }\DataTypeTok{caption =} \StringTok{"9 A long table in landscape mode."}
-  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()."}
+  \NormalTok{, }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
   \NormalTok{, }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
   \NormalTok{, }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
   \NormalTok{, }\DataTypeTok{midrules =} \DecValTok{4}
