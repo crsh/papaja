@@ -196,7 +196,7 @@ For other options see the [overview of the R Markdown citation syntax](http://rm
 
 The citation style is automatically set to APA style.
 If you need to use a different citation style, you can set in the YAML front matter by providing the `csl` parameter.
-See the [R Markdown documentation](http://R Markdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
+See the [R Markdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
 
 If you use RStudio, I have created an [easy-to-use add-in](https://github.com/crsh/citr) that facilitates inserting citations into a document.
 The relevant references will, of course, be added to the documents reference section automatically.
