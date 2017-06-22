@@ -17,7 +17,7 @@ fast_aggregate <- function(data, factors, dv, fun) {
   data <- data[, colnames(data) %in% c(factors) | grepl(dv, colnames(data))]
 
   grouped <- dplyr::grouped_df(data, vars = fl, drop = TRUE)
-  agg.data <- as.data.frame(dplyr::summarise_each(grouped, dplyr::funs(fun(., na.rm = TRUE))))
+  agg.data <- as.data.frame(dplyr::summarise_all(.tbl = grouped, .funs = dplyr::funs(fun(., na.rm = TRUE))))
 
   return(agg.data)
 }
