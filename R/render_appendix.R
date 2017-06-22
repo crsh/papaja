@@ -67,7 +67,7 @@ render_appendix <- function(
     # Add appendix environment
     tex <- readLines(new_name)
     if(!grepl("\\\\section", tex[tex != ""][1])) tex <- c("\\section{}", tex) # Add section to start appendix
-    tex <- c("\\begin{appendix}", tex, "\\end{appendix}")
+    tex <- c("\\clearpage\n\n\\begin{appendix}", tex, "\\end{appendix}")
     tex <- gsub("\\\\begin\\{figure\\}\\[htbp\\]", "\\\\begin{figure}", tex) # Remove placement option
 
     write(tex, file = new_name)

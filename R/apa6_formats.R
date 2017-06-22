@@ -180,7 +180,8 @@ apa6_word <- function(
 
 # Set hook to print default numbers
 inline_numbers <- function (x) {
-  if (is.numeric(x)) {
+  if(class(x) %in% c("difftime")) x <- as.numeric(x)
+  if(is.numeric(x)) {
     printed_number <- ifelse(
       x == round(x)
       , as.character(x)
