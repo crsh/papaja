@@ -201,6 +201,17 @@ bf_sort_terms <- function(x) {
 }
 
 
+# onesample -> d_z
+# if(as.character(class(BF@numerator[[names(BF@numerator)[index]]])) == "BFoneSample"){
+#   rBF <- BayesFactor::ttestBF(BF@data[,1], mu = BF@numerator[[names(BF@numerator)[index]]]@prior$mu, rscale = BF@numerator[[names(BF@numerator)[index]]]@prior$rscale)
+# }
+# if(as.character(class(BF@numerator[[names(BF@numerator)[1]]])) == "BFindepSample"){
+#   rBF <- BayesFactor::ttestBF(subset(BF@data, BF@data[,2] == "x")[,1] , subset(BF@data, BF@data[,2] == "y")[,1], rscale = BF@numerator[[names(BF@numerator)[index]]]@prior$rscale, paired = FALSE)
+# }
+
+
+
+
 # typeset_ratio_subscript <- function(x) {
 #   gsub(
 #     "(?<!\\\\)\\b([a-z:;,.]+[a-z:;,.\\- ]*[a-z:;,.]+|[a-z:;,.])"
