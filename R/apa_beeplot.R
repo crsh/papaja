@@ -100,6 +100,27 @@ apa_beeplot.default <- function(
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric")
 
+  # remove extraneous columns from dataset
+  data <- data[, c(id, factors, dv)]
+
+  # Add missing variable labels
+  data <- default_label(data)
+
+  # temporarily save variable_labels
+  pretty_labels <- variable_label(data)
+
+  # Handling of factors:
+  # a) convert to factor
+  for (i in factors){
+    data[[i]] <- as.factor(data[[i]])
+  }
+
+  # b) drop factor levels
+  data <- droplevels(data)
+
+  # write variable labels back to data.frame
+  variable_label(data) <- pretty_labels
+
   ellipsis <- list(...)
   output <- list()
 
@@ -120,8 +141,8 @@ apa_beeplot.default <- function(
        , args.lines = args_lines
        , args.arrows = args_arrows
        , args.legend = args_legend
-       , xlab = factors[1]
-       , ylab = as.character(dv)
+       , xlab = variable_label(data[[factors[1]]])
+       , ylab = variable_label(data[[dv]])
        , frame.plot = FALSE
      )
   )
@@ -145,24 +166,14 @@ apa_beeplot.default <- function(
   # is dplyr available?
   use_dplyr <- package_available("dplyr")
 
-  # Prepare data
-  for (i in c(id, factors)){
-    data[[i]] <- droplevels(as.factor(data[[i]]))
-  }
-
-  # save variable names for pretty plotting
-  p.factors <- factors
-
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
   dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
-  # remove extraneous columns from dataset
-  data <- data[, c(id, factors, dv)]
 
-  if(is.null(ellipsis$jit)){
+    if(is.null(ellipsis$jit)){
     ellipsis$jit <- .3
   }
 
@@ -287,7 +298,7 @@ apa_beeplot.default <- function(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
       ), set.if.null = list(
-        main = ifelse(is.null(tmp_main), paste0(c(p.factors[3],": ",i), collapse=""), ifelse(length(tmp_main)==1, paste0(tmp_main, c(p.factors[3],": ",i),collapse=""), tmp_main[i]))
+        main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i)
       ))
 
       # by default, only draw legend in very right plot
@@ -330,7 +341,7 @@ apa_beeplot.default <- function(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
         ), set.if.null = list(
-          main = paste0(c(tmp_main,p.factors[3],": ",i," & ",p.factors[4],": ",j),collapse="")
+          main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i, variable_label(data[[factors[4]]]), j)
         ))
 
         # by default, only draw legend in topright plot

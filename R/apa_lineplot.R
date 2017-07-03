@@ -93,17 +93,30 @@ apa_lineplot <- function(
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric")
 
+  # remove extraneous columns from dataset
+  data <- data[, c(id, factors, dv)]
+
+  # Add missing variable labels
+  data <- default_label(data)
+
+  # temporarily save variable_labels
+  pretty_labels <- variable_label(data)
+
+  # Handling of factors:
+  # a) convert to factor
+  for (i in factors){
+    data[[i]] <- as.factor(data[[i]])
+  }
+
+  # b) drop factor levels
+  data <- droplevels(data)
+
+  # write variable labels back to data.frame
+  variable_label(data) <- pretty_labels
+
 
   ellipsis <- list(...)
   output <- list()
-
-  labels <- variable_label(data[, c(dv, id, factors)])
-  # set default label if no label is provided
-  for (i in names(labels)) {
-    if(is.null(labels[[i]])) {
-      labels[[i]] <- i
-    }
-  }
 
   # Set defaults
   ellipsis <- defaults(ellipsis,
@@ -120,13 +133,13 @@ apa_lineplot <- function(
                          , args.lines = args_lines
                          , args.arrows = args_arrows
                          , args.legend = args_legend
-                         , xlab = labels[[factors[1]]]
-                         , ylab = labels[[dv]]
+                         , xlab = variable_label(data[[factors[1]]])
+                         , ylab = variable_label(data[[dv]])
                          , frame.plot = FALSE
                        ))
 
   if(length(ellipsis$args.legend$title) == 0) {
-    ellipsis$args.legend$title <- labels[[factors[2]]]
+    ellipsis$args.legend$title <- variable_label(data[[factors[2]]])
   } else if(!is.expression(ellipsis$args.legend$title) && ellipsis$args.legend$title == "") {
     ellipsis$args.legend$title <- NULL # Save space
   }
@@ -140,16 +153,6 @@ apa_lineplot <- function(
   # is dplyr available?
   use_dplyr <- package_available("dplyr")
 
-  # Prepare data
-  for (i in factors){
-    data[[i]]<-droplevels(as.factor(data[[i]]))
-  }
-  data[[id]]<-droplevels(as.factor(data[[id]]))
-
-  # save names for beautiful plotting
-  p.factors <- factors
-  p.id <- id
-  p.dv <- dv
 
   # strip whitespace from factor names
   factors <- gsub(pattern = " ", replacement = "_", factors)
@@ -265,7 +268,7 @@ apa_lineplot <- function(
 
 
       ellipsis.i <- defaults(ellipsis, set = list(
-        main = substitute(expr = label~"test", list(label = labels[[factors[3]]], level = 1))
+        main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i)
         , y.values = y.values[y.values[[factors[3]]]==i, ]
       ), set.if.null = list(
 
@@ -308,7 +311,7 @@ apa_lineplot <- function(
     for (i in levels(y.values[[factors[3]]])){
       for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
-          main = paste0(c(tmp_main,p.factors[3],": ",i," & ",p.factors[4],": ",j),collapse="")
+          main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i, variable_label(data[[factors[4]]]), j)
           , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
         ), set.if.null = list(
           # nothing

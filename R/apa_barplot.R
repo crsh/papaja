@@ -89,11 +89,19 @@ apa_barplot <- function(
   # Add missing variable labels
   data <- default_label(data)
 
-  # save them
+  # temporarily save variable_labels
   pretty_labels <- variable_label(data)
+
+  # Handling of factors:
+  # a) convert to factor
+  for (i in factors){
+    data[[i]] <- as.factor(data[[i]])
+  }
+
+  # b) drop factor levels
   data <- droplevels(data)
 
-  # write them backto data.frame
+  # write variable labels back to data.frame
   variable_label(data) <- pretty_labels
 
   ellipsis <- list(...)
@@ -264,7 +272,7 @@ apa_barplot <- function(
           , y.values = y.values[y.values[[factors[3]]]==i,]
         )
       )
-      print(ellipsis.i$main)
+
       # by default, only draw legend in very right plot
       ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i]))
 
@@ -296,7 +304,7 @@ apa_barplot <- function(
         ellipsis.ij <- defaults(
           ellipsis
           , set = list(
-            main = paste0(c(tmp_main,variable_label(data[[factors[3]]]),": ",i," & ",variable_label(data[[factors[4]]]),": ",j),collapse="")
+            main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i, variable_label(data[[factors[4]]]), j)
             , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           )
         )
