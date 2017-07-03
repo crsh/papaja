@@ -4,7 +4,7 @@
 \alias{indent_stubs}
 \title{Add stub indentation}
 \usage{
-indent_stubs(x, lines, filler = "\\\\ \\\\ \\\\ ")
+indent_stubs(x, lines, filler = "   ")
 }
 \arguments{
 \item{x}{data.frame.}

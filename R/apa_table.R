@@ -22,6 +22,9 @@
 #'    documents.
 #' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
 #' @param na_string Character. String to print if element of \code{x} is \code{NA}.
+#' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{%} or \code{_}, in
+#'    column names, row names, caption, note and table contents are escaped. Default is \code{TRUE} if
+#'    target document format is PDF.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
 #' @details
@@ -62,6 +65,7 @@ apa_table <- function(
   , landscape = FALSE
   , small = FALSE
   , na_string = getOption("papaja.na_string")
+  , escape = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -70,6 +74,7 @@ apa_table <- function(
   if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
   if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
   if(!is.null(na_string)) validate(na_string, check_class = "character", check_length = 1)
+  if(!is.null(escape)) validate(escape, check_class = "logical", check_length = 1)
 
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
@@ -82,6 +87,9 @@ apa_table <- function(
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
   digits <- if(is.null(ellipsis$digits)) 2 else ellipsis$digits
   validate(digits, "digits", check_class = "numeric")
+
+  output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+  if(is.null(escape)) escape <- output_format == "latex"
 
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
@@ -108,11 +116,6 @@ apa_table <- function(
 
     prep_table <- do.call(rbind, prep_table)
 
-    ### Indent individual tables
-    list_indents <- lapply(x, function(x) 1:nrow(x))
-    for(i in seq_along(list_indents)[-1]) list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
-    prep_table <- indent_stubs(prep_table, list_indents)
-
   } else {
     # x <- as.data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
@@ -125,8 +128,9 @@ apa_table <- function(
     prep_table <- round_cells(prep_table, digits, na_string)
   }
 
-  if(!is.null(ellipsis$escape) && ellipsis$escape) {
-    prep_table <- as.data.frame(lapply(prep_table, escape_latex), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+  # Escape special characters
+  if(escape) {
+    prep_table <- as.data.frame(lapply(prep_table, escape_latex, spaces = TRUE), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
     caption <- escape_latex(caption)
     note <- escape_latex(note)
@@ -135,7 +139,14 @@ apa_table <- function(
   }
 
   # Indent stubs
-  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents)
+  ## Indent individual tables
+  if(is.list(x) && !is.data.frame(x) && !is.null(names(x))) {
+    list_indents <- lapply(x, function(x) 1:nrow(x))
+    for(i in seq_along(list_indents)[-1]) list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
+    prep_table <- indent_stubs(prep_table, list_indents, "\\ \\ \\ ")
+  }
+
+  if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents, "\\ \\ \\ ")
 
   # Fix ellipsis for further use
   ellipsis$escape <- FALSE
@@ -146,7 +157,6 @@ apa_table <- function(
     output_format <- ellipsis$format
     ellipsis$format <- NULL
   } else {
-    output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
     if(length(output_format) == 0 || output_format == "markdown") output_format <- "latex" # markdown_strict for render_appendix()
   }
 
@@ -197,6 +207,8 @@ apa_table.latex <- function(
   , small = FALSE
   , ...
 ) {
+  apa_terms <- options()$papaja.terms
+
   # Parse ellipsis
   ellipsis <- list(...)
   ellipsis$booktabs <- TRUE
@@ -269,12 +281,12 @@ apa_table.latex <- function(
   if(!landscape && !longtable) cat("\\begin{table}", place_opt, sep = "")
   if(!landscape) cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
   if(!is.null(caption) && !(longtable || landscape)) cat("\n\\caption{", caption, "}", sep = "")
-  if(!is.null(note) && (longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  if(!is.null(note) && (longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{", apa_terms$note, ".} ", note, "\n\\end{", table_note_env, "}", sep = "")
   if(small) cat("\n\\small{")
 
   cat(res_table)
   if(small) cat("\n}")
-  if(!is.null(note) & !(longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{Note.} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  if(!is.null(note) & !(longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{", apa_terms$note, ".} ", note, "\n\\end{", table_note_env, "}", sep = "")
   if(!landscape) cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
   if(!landscape && !longtable) cat("\n\\end{table}")
 
@@ -395,7 +407,7 @@ add_row_names <- function(x, added_stub_head) {
 #' @examples
 #' NULL
 
-indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
+indent_stubs <- function(x, lines, filler = "\ \ \ ") {
   x <- as.data.frame(lapply(x, as.character), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
   # Add indentation

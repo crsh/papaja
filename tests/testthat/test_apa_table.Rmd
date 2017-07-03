@@ -54,7 +54,7 @@ apa_table(
   my_table[1, , drop = FALSE]
   , align = c("l", "r", "r")
   , caption = "0 Single row table."
-  , note = "This table was created using apa\\_table()"
+  , note = "This table was created using apa_table()"
   , small = TRUE
 )
 
@@ -62,7 +62,7 @@ apa_table(
   my_table
   , align = c("l", "r", "r")
   , caption = "1 A small table."
-  , note = "This table was created using apa\\_table()"
+  , note = "This table was created using apa_table()"
   , small = TRUE
 )
 ```
@@ -74,9 +74,10 @@ apa_table(
     , `moar test` = my_table
   )
   , align = c("l", "r", "r")
-  , caption = "2 A merged table (list of two) with added stub heading."
+  , caption = "2 A merged table (list of two) with added stub heading. Not escaped."
   , note = "This table was created using apa\\_table()"
   , added_stub_head = "Desciptives"
+  , escape = FALSE
 )
 ```
 
@@ -87,7 +88,7 @@ apa_table(
   )
   , align = c("l", "r", "r")
   , caption = "3 A 'merged' table (list of one) with added stub heading."
-  , note = "This table was created using apa\\_table()"
+  , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
 
@@ -98,7 +99,7 @@ apa_table(
   my_table2
   , align = c("l", "r", "r")
   , caption = "4 Test if simple row numbers are omitted from table."
-  , note = "This table was created using apa\\_table()"
+  , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
 
@@ -106,7 +107,7 @@ apa_table(
   list(A = my_table2, B = my_table2)
   , align = c("l", "r", "r")
   , caption = "5 Test if simple row numbers are omitted from merged table (list of two)."
-  , note = "This table was created using apa\\_table()"
+  , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
 ```
@@ -116,7 +117,7 @@ apa_table(
   my_table
   , align = c("l", "r", "r")
   , caption = "6 Test of column spanner and stub indenting."
-  , note = "This table was created using apa\\_table()."
+  , note = "This table was created using apa_table()."
   , added_stub_head = "Desciptives"
   , col_spanners = list(Measure = c(2, 3))
   , stub_indents = list(2:3)
@@ -130,7 +131,7 @@ apa_table(
   my_table
   , align = c("l", "r", "r")
   , caption = "7 Test of midurles and landscape mode and named stub indentation."
-  , note = "This table was created using apa\\_table()."
+  , note = "This table was created using apa_table()."
   , added_stub_head = "Desciptives"
   , col_spanners = list(Measure = c(2, 3))
   , midrules = 4
@@ -146,7 +147,7 @@ apa_table(
   my_table
   , align = c("l", "r", "r")
   , caption = "8 A long table."
-  , note = "This table was created using apa\\_table()."
+  , note = "This table was created using apa_table()."
   , added_stub_head = "Desciptives"
   , col_spanners = list(Measure = c(2, 3))
   , midrules = 4
@@ -160,7 +161,7 @@ apa_table(
   my_table
   , align = c("l", "r", "r")
   , caption = "9 A long table in landscape mode."
-  , note = "This table was created using apa\\_table()."
+  , note = "This table was created using apa_table()."
   , added_stub_head = "Desciptives"
   , col_spanners = list(Measure = c(2, 3))
   , midrules = 4
