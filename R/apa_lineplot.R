@@ -160,9 +160,6 @@ apa_lineplot <- function(
   dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
-  # remove extraneous columns from dataset
-  data <- data[, c(id, factors, dv)]
-
   if(is.null(ellipsis$jit)){
     ellipsis$jit <- .1
   }
