@@ -97,6 +97,14 @@ apa_lineplot <- function(
   ellipsis <- list(...)
   output <- list()
 
+  labels <- variable_label(data[, c(dv, id, factors)])
+  # set default label if no label is provided
+  for (i in names(labels)) {
+    if(is.null(labels[[i]])) {
+      labels[[i]] <- i
+    }
+  }
+
   # Set defaults
   ellipsis <- defaults(ellipsis,
                        set = list(
@@ -112,13 +120,13 @@ apa_lineplot <- function(
                          , args.lines = args_lines
                          , args.arrows = args_arrows
                          , args.legend = args_legend
-                         , xlab = factors[1]
-                         , ylab = as.character(dv)
+                         , xlab = labels[[factors[1]]]
+                         , ylab = labels[[dv]]
                          , frame.plot = FALSE
                        ))
 
   if(length(ellipsis$args.legend$title) == 0) {
-    ellipsis$args.legend$title <- factors[2]
+    ellipsis$args.legend$title <- labels[[factors[2]]]
   } else if(!is.expression(ellipsis$args.legend$title) && ellipsis$args.legend$title == "") {
     ellipsis$args.legend$title <- NULL # Save space
   }
@@ -255,8 +263,9 @@ apa_lineplot <- function(
 
     for (i in levels(y.values[[factors[3]]])) {
 
+
       ellipsis.i <- defaults(ellipsis, set = list(
-        main = paste0(tmp_main, c(p.factors[3],": ",i),collapse="")
+        main = substitute(expr = label~"test", list(label = labels[[factors[3]]], level = 1))
         , y.values = y.values[y.values[[factors[3]]]==i, ]
       ), set.if.null = list(
 
