@@ -265,7 +265,7 @@ apa_lineplot <- function(
 
 
       ellipsis.i <- defaults(ellipsis, set = list(
-        main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i)
+        main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
         , y.values = y.values[y.values[[factors[3]]]==i, ]
       ), set.if.null = list(
 
@@ -308,7 +308,7 @@ apa_lineplot <- function(
     for (i in levels(y.values[[factors[3]]])){
       for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
-          main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i, variable_label(data[[factors[4]]]), j)
+          main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
           , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
         ), set.if.null = list(
           # nothing

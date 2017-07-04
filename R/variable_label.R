@@ -27,7 +27,7 @@ assign_label.default <- function(x, value) {
   attr(x, which = "label") <- value
 
   if(!("labelled" %in% class(x))) {
-    class(x) <- c(class(x), "labelled")
+    class(x) <- c("labelled", class(x))
   }
 
   return(x)
@@ -40,8 +40,7 @@ assign_label.default <- function(x, value) {
 
 assign_label.data.frame <- function(x, value){
   d <- mapply(FUN = assign_label, x = x, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-  names(d) <- names(x)
-  as.data.frame(d)
+  as.data.frame(d, col.names = names(x))
 }
 
 
@@ -78,17 +77,71 @@ variable_label.data.frame <-function(x) {
 }
 
 
-#' @rdname variable_lable
+#' @rdname variable_label
 #' @export
 
 "variable_label<-.default" <- function(x, value) {
   assign_label.default(x, value)
 }
 
-#' @rdname variable_lable
+#' @rdname variable_label
 #' @export
 "variable_label<-.data.frame" <- function(x, value) {
   assign_label.data.frame(x, value)
+}
+
+#' @export
+
+"[.labelled"<- function(x, ...) {
+  at1 <- attr(x, which = "label")
+  at2 <- attr(x, which = "class")
+  x <- NextMethod("[")
+  attr(x, which = "label") <- at1
+  attr(x, which = "class") <- at2
+  x
+}
+
+setGeneric("factor")
+
+#' Beautifual
+#'
+#' beautifuls tuff to write down
+#'
+#'
+#' @method factor labelled
+#' @export
+
+factor.labelled <-function(x, ...){
+  original_labels <- variable_label(x)
+  original_classes <- class(x)
+  x <- base::factor(x, ...)
+  variable_label(x) <- original_labels
+  class(x) <- original_classes
+  x
+}
+
+
+setGeneric("factor")
+
+factor.default <- factor
+
+#' methods for droplevels
+#'
+#' stuff stuff stuff
+#'
+#' @export
+droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA, ...){
+  papaja::factor.labelled(x, exclude = exclude)
+}
+
+
+#' methods for droplevels
+#'
+#' stuff stuff stuff
+#'
+#' @export
+relevel.labelled <- function(x){
+  relevel(x)
 }
 
 
@@ -107,58 +160,43 @@ default_label <- function(x){
 
 default_label.data.frame <- function(x){
   columns <- sapply(X = variable_label(x), FUN = is.null, simplify = TRUE)
-  variable_label(x[, columns]) <- colnames(x[, columns])
+  # print(columns)
+  if(any(columns)){
+    variable_label(x[, columns]) <- colnames(x)[columns]
+  }
   x
 }
 
 
-combine_plotmath <- function(a, b, c = NULL, d = NULL){
-  if (is.null(c)){
-    if(any(is.expression(c(a, b)))){
-      a <- as.expression(a)
-      b <- as.expression(b)
-      as.expression(substitute(paste(a, ": ", b), list(a = a[[1]], b = b[[1]])))
-    } else {
-      paste0(a, ": ", b)
+combine_plotmath <- function(x){
+
+  x <- lapply(X  = x, FUN = tex_conv)
+  y <- as.expression(substitute(paste(a, b), list(a = x[[1]], b = x[[2]])))
+
+  if(length(x)>2){
+    for (i in 3:length(x)){
+      y <- as.expression(substitute(paste(a, b), list(a = y[[1]], b = x[[i]])))
+    }
+  }
+  return(y)
+}
+
+tex_conv <- function(x){
+  if(!is.null(x)){
+    if(!is.expression(x)){
+      if(papaja:::package_available("latex2exp")){
+        latex2exp::TeX(x, output = "expression")[[1]]
+      } else {
+        as.expression(x)[[1]]
+      }
+    } else{
+      x[[1]]
     }
   } else {
-    if(any(is.expression(c(a, b, c, d)))){
-      a <- as.expression(a)
-      b <- as.expression(b)
-      c <- as.expression(c)
-      d <- as.expression(d)
-      as.expression(substitute(paste(a, ": ", b, " & ", c, ": ", d), list(a = a[[1]], b = b[[1]], c = c[[1]], d = d[[1]])))
-    } else{
-      paste0(a, ": ", b, " & ", c, ": ", d)
-}
+    as.expression("")[[1]]
   }
 }
 
-#' #' Indexing of labelled stuff
-#' #'
-#' #'   This one helps preserve the attributes/label if column is modified
-#' #' @export
-#'
-#' "[.labelled"<- function(x, ...) {
-#'   original_labels <- papaja::variable_label(x)
-#'   x <- NextMethod("[")
-#'   papaja::variable_label(x) <- original_labels
-#'   if(!("labelled" %in% class(x))) {
-#'     class(x) <- c(class(x), "labelled")
-#'   }
-#'   x
-#' }
-#'
-#'
 
 
 
-
-# variable_label(npk$L) <- "test2"
-# class(npk$L)
-# a <- expression(italic(A))
-# b <- "b"
-#
-# plot.new()
-# plot.window(xlim = c(-1, 1), ylim = c(-1, 1))
-# text(0, 0, combine_plotmath(a, b))

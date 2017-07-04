@@ -89,6 +89,7 @@ apa_barplot <- function(
   # Add missing variable labels
   data <- default_label(data)
 
+  print(variable_label(data))
   # temporarily save variable_labels
   pretty_labels <- variable_label(data)
 
@@ -268,7 +269,7 @@ apa_barplot <- function(
       ellipsis.i <-defaults(
         ellipsis
         , set = list(
-          main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i)
+          main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
           , y.values = y.values[y.values[[factors[3]]]==i,]
         )
       )
@@ -304,7 +305,7 @@ apa_barplot <- function(
         ellipsis.ij <- defaults(
           ellipsis
           , set = list(
-            main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i, variable_label(data[[factors[4]]]), j)
+            main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
             , y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           )
         )

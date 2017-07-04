@@ -298,7 +298,7 @@ apa_beeplot.default <- function(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
       ), set.if.null = list(
-        main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i)
+        main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
       ))
 
       # by default, only draw legend in very right plot
@@ -341,7 +341,7 @@ apa_beeplot.default <- function(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
         ), set.if.null = list(
-          main = papaja:::combine_plotmath(variable_label(data[[factors[3]]]), i, variable_label(data[[factors[4]]]), j)
+          main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ))
 
         # by default, only draw legend in topright plot
