@@ -140,8 +140,8 @@ apa6_word <- function(
   #   knitr::hook_plot_md(x, options)
   # }
 
-#   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
-#   format$knitr$opts_chunk$dpi <- 300
+  format$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
+  format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
 
 
