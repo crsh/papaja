@@ -267,6 +267,11 @@ apa_barplot <- function(
 
       # by default, only draw legend in very right plot
       ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i]))
+      # suppresses ylab
+      if(i!=levels(y.values[[factors[3]]])[1]){
+        ellipsis.i$ylab <- ""
+      }
+
 
       do.call("apa.barplot.core", ellipsis.i)
     }
@@ -303,7 +308,10 @@ apa_barplot <- function(
 
         # by default, only draw legend in topright plot
         ellipsis.ij$args.legend <- defaults(ellipsis.ij$args.legend, set = list(plot = ellipsis$args.legend$plot[i, j]))
-
+        # suppresses ylab
+        if(i!=levels(y.values[[factors[3]]])[1]){
+          ellipsis.i$ylab <- ""
+        }
         do.call("apa.barplot.core", ellipsis.ij)
       }
     }
