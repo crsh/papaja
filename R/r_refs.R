@@ -142,6 +142,14 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
   # }
 
   bib <- bib[sort(x, index.return = TRUE)$ix]
-  if(!is.null(file)) cat(unlist(bib), sep = "\n", file = file, append = append)
+  if(!is.null(file)) {
+    # cat(iconv(unlist(bib), to = "UTF-8"), sep = "\n", file = file, append = append)
+    bib_con <- file(file, encoding = "UTF-8", open = if(append) "a" else "w")
+    writeLines(
+      unlist(bib)
+      , bib_con
+    )
+    close(bib_con)
+  }
   invisible(bib)
 }
