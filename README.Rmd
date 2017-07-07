@@ -141,6 +141,8 @@ doi: [10.1037/xge0000191](http://dx.doi.org/10.1037/xge0000191)
 
 Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382)
 
+Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245--266.
+
 Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from https://osf.io/preprints/psyarxiv/zr7m8/ ([Data & R Markdown files](https://osf.io/jxm7z/))
 
 Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from https://osf.io/preprints/psyarxiv/ktjnq/ ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
@@ -163,17 +165,17 @@ By now, there are a couple of R packages that provide convenience functions to f
 Obviously, not all journals require manuscripts and articles to be prepared according to APA guidelines.
 If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful.
 
-- [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 - [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article Templates for R Markdown
+- [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
 If you know of other packages and templates, drop us a note, so we can add them here.
 
 
-<!-- # Package dependencies -->
+# Package dependencies
 
-<!-- ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE, eval = FALSE} -->
-<!-- source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R") -->
+```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
+source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R")
 
-<!-- plot_dependencies() -->
-<!-- ``` -->
+plot_dependencies()
+```
 

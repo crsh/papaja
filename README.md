@@ -81,12 +81,18 @@ Table. *Iris regression table.*
 
 `papaja` currently provides methods for the following object classes:
 
-| A         | A-L     | L-S               | S                |
-|:----------|:--------|:------------------|:-----------------|
-| afex\_aov | aovlist | lm                | summary.aovlist  |
-| anova     | glht    | lsmobj            | summary.glht     |
-| Anova.mlm | htest   | summary.Anova.mlm | summary.lm       |
-| aov       | list    | summary.aov       | summary.ref.grid |
+    ## Warning in matrix(print_classes, ncol = 4): Datenlänge [26] ist kein Teiler
+    ## oder Vielfaches der Anzahl der Zeilen [7]
+
+| A                                   | A-H               | L-S               | S-A                             |
+|:------------------------------------|:------------------|:------------------|:--------------------------------|
+| apa\_print,ANY-method               | aov               | list              | summary.lm                      |
+| apa\_print,BFBayesFactor-method     | aovlist           | lm                | summary.ref.grid                |
+| apa\_print,BFBayesFactorList-method | BFBayesFactor     | lsmobj            |                                 |
+| apa\_print,BFBayesFactorTop-method  | BFBayesFactorList | summary.Anova.mlm |                                 |
+| afex\_aov                           | BFBayesFactorTop  | summary.aov       |                                 |
+| anova                               | glht              | summary.aovlist   | apa\_print,ANY-method           |
+| Anova.mlm                           | htest             | summary.glht      | apa\_print,BFBayesFactor-method |
 
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
@@ -133,24 +139,36 @@ Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning?
 
 Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382)
 
-Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/>
+Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245--266.
 
-Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq>
+Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/> ([Data & R Markdown files](https://osf.io/jxm7z/))
 
-Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/>
+Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq/> ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
 
-Other journal templates
-=======================
+Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/> ([Data & R Markdown files](https://osf.io/cx5eh/))
 
-Obviously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful. If you know of other packages and templates, drop us a note, so we can add them here.
+Rouder, J. N., Haaf, J., & Aust, F. (submitted). From theories to models to predictions: A Bayesian model comparison approach for communications research. Preprint retrieved from <https://osf.io/preprints/psyarxiv/jt4th/>
 
--   [rticles](https://github.com/rstudio/rticles): The rticles package includes a set of R Markdown templates that enable authoring of R related journal and conference submissions.
+Other related R packages
+========================
+
+By now, there are a couple of R packages that provide convenience functions to facilitate the reporting of statistics in accordance with APA guidelines.
+
+-   [apa](https://github.com/dgromer/apa): Format output of statistical tests in R according to APA guidelines
+-   [APAstats](https://github.com/achetverikov/APAstats): R functions for formatting results in APA style and other stuff
+-   [apaTables](https://github.com/dstanley4/apaTables): Create American Psychological Association (APA) Style Tables
+-   [pubprint](https://bitbucket.org/mutluyum/pubprint): This package takes the output of several statistical tests, collects the characteristic values and transforms it in a publish-friendly pattern
+-   [schoRsch](https://cran.r-project.org/web/packages/schoRsch/index.html): Tools for Analyzing Factorial Experiments
+-   [sigr](https://github.com/WinVector/sigr): Concise formatting of significances in R
+
+Obviously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful.
+
+-   [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article Templates for R Markdown
 -   [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
-Finally, in case you prefer to work with Python, have a look at the [Academic Markdown](https://github.com/smathot/academicmarkdown)-module.
+If you know of other packages and templates, drop us a note, so we can add them here.
 
-<!-- # Package dependencies -->
-<!-- ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE, eval = FALSE} -->
-<!-- source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R") -->
-<!-- plot_dependencies() -->
-<!-- ``` -->
+Package dependencies
+====================
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
