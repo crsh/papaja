@@ -1,9 +1,9 @@
 #' Variable labels
 #'
-#' Functions used to assign and extract variable labels of a vector or the columns of a \code{data.frame}.
+#' Functions used to assign and extract variable labels of a vector or the columns (i.e., vectors) of a \code{data.frame}.
 #'
 #' @param x Either a vector or a \code{data.frame} containing the variables you want to label.
-#' @param value A vector with the variable label(s) to be assigned. Can be character, expression, etc.
+#' @param value A vector with the variable label(s) to be assigned. Can be anything like, e.g. character, expression, etc.
 #'
 #' @return
 #'         \code{variable_label} returns the variable labels stored as attributes to the coulumns of a \code{data.frame}.
@@ -21,6 +21,7 @@ assign_label <- function(x, value) {
 
 assign_label.default <- function(x, value) {
 
+  validate(value, check_dim = 1, check_length = 1)
   attr(x, which = "label") <- value
 
   if(!("labelled" %in% class(x))) {
@@ -36,6 +37,19 @@ assign_label.default <- function(x, value) {
 #' @export
 
 assign_label.data.frame <- function(x, value){
+  # sanity checks
+  if(length(value)!=ncol(x)){
+    stop(
+      paste0(
+        "Your data.frame has "
+        , ncol(x)
+        , " columns, but you provided "
+        , length(value)
+        , ifelse(length(value)==1, " variable label.", " variable labels.")
+        , "\nThe number of labels needs to match the number of columns."
+      )
+    )
+  }
   d <- mapply(FUN = assign_label, x = x, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
   as.data.frame(d, col.names = names(x))
 }
