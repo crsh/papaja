@@ -100,6 +100,7 @@ variable_label.data.frame <-function(x) {
   assign_label.data.frame(x, value)
 }
 
+
 #' @export
 
 "[.labelled"<- function(x, ...) {

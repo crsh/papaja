@@ -1,7 +1,7 @@
 context("vaiable_label()")
 
 test_that(
-  "Variable labels: Labelling a data.frame"
+  "assign_label() for a data.frame"
   , {
     a <- 1:3
     b <- 4:6
@@ -16,16 +16,16 @@ test_that(
             1:3
             , label = "label1"
             , class = c(
-              "integer"
-              , "labelled"
+              "labelled"
+              , "integer"
               )
             )
           , b = structure(
             4:6
             , label = "label2"
             , class = c(
-              "integer"
-              , "labelled"
+              "labelled"
+              , "integer"
             )
           )
         )
