@@ -89,7 +89,7 @@ apa_table <- function(
   validate(digits, "digits", check_class = "numeric")
 
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-  if(is.null(escape)) escape <- output_format == "latex"
+  if(is.null(escape)) escape <- ifelse(!is.null(output_format), output_format == "latex", TRUE)
 
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {

@@ -114,6 +114,8 @@ apa_print_container <- function() {
 
 
 escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
+  if(is.null(x)) return(x)
+
   x <- gsub("\\\\", "\\\\textbackslash", x)
   x <- gsub("([#$%&_{}])", "\\\\\\1", x)
   x <- gsub("\\\\textbackslash", "\\\\textbackslash{}", x)
@@ -123,6 +125,7 @@ escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
     x <- gsub("(?<!\n)\n(?!\n)", "\\\\\\\\", x, perl = TRUE)
   if (spaces)
     x <- gsub("  ", "\\\\ \\\\ ", x)
+
   x
 }
 
