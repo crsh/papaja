@@ -38,8 +38,14 @@
 #' apa_print(bayesian_anova)
 #' }
 
-apa_print.BFBayesFactor <- function(x, ...) {
-
+apa_print.BFBayesFactor <- function(
+  x
+  , iterations
+  , central_tendency = median
+  , hdi = 0.95
+  , standardized = FALSE
+  , ...
+) {
   if(length(x) > 1) {
     ellipsis <- list(...)
     if(!is.null(ellipsis$evidential_boost)) evidential_boost <- ellipsis$evidential_boost
@@ -57,6 +63,17 @@ apa_print.BFBayesFactor <- function(x, ...) {
 
   apa_res <- apa_print_container()
   apa_res$statistic <- bf
+
+  posterior_samples <- BayesFactor::posterior(x, iterations = iterations)
+  apa_res$estimate <- bf_estimates(
+    x@numerator[[1]]
+    , posterior_samples
+    , central_tendency = central_tendency
+    , hdi = hdi
+    , standardized = standardized
+  )
+
+  apa_res$full_result <- paste0(apa_res$statistic, ", ", apa_res$estimate)
 
   apa_res
 }
@@ -201,13 +218,41 @@ bf_sort_terms <- function(x) {
 }
 
 
-# onesample -> d_z
-# if(as.character(class(BF@numerator[[names(BF@numerator)[index]]])) == "BFoneSample"){
-#   rBF <- BayesFactor::ttestBF(BF@data[,1], mu = BF@numerator[[names(BF@numerator)[index]]]@prior$mu, rscale = BF@numerator[[names(BF@numerator)[index]]]@prior$rscale)
-# }
-# if(as.character(class(BF@numerator[[names(BF@numerator)[1]]])) == "BFindepSample"){
-#   rBF <- BayesFactor::ttestBF(subset(BF@data, BF@data[,2] == "x")[,1] , subset(BF@data, BF@data[,2] == "y")[,1], rscale = BF@numerator[[names(BF@numerator)[index]]]@prior$rscale, paired = FALSE)
-# }
+bf_estimates <- function(x, ...) no_method(x)
+
+setGeneric("bf_estimates")
+
+bf_estimates_ttest <- function(
+  x
+  , samples
+  , central_tendency = median
+  , hdi = 0.95
+  , standardized = FALSE
+) {
+  validate(samples, check_class = "mcmc")
+  validate(iterations, check_class = "numeric", check_length = 1)
+  validate(hdi, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+  validate(standardized, check_class = "logical", check_length = 1)
+
+  if(standardized) {
+    estimate <- "delta"
+    est_name <- "d"
+  } else {
+    estimate <- ifelse(class(x) == "BFoneSample", "mu", "beta (x - y)")
+    est_name <- "M"
+  }
+
+  samples <- as.numeric(samples[, estimate])
+
+  est_mean <- central_tendency(samples)
+  est_hdi <- hd_int(samples, level = hdi)
+
+  estimate <- paste0("$", est_name, " = ", printnum(est_mean), "$ ", print_hdint(est_hdi))
+  estimate
+}
+
+setMethod("bf_estimates", signature = "BFoneSample", bf_estimates_ttest)
+setMethod("bf_estimates", signature = "BFindepSample", bf_estimates_ttest)
 
 
 

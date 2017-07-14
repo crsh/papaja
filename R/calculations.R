@@ -187,7 +187,7 @@ within_subjects_conf_int <- wsci
 
 #' Between-subjects confidence intervals
 #'
-#' Returns the deviation that is needed to construct confidence intervals for a vector of observations.
+#' Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 #'
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
@@ -196,13 +196,16 @@ within_subjects_conf_int <- wsci
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
-  a <- (1-level)/2
+  validate(x, check_class = "numeric")
+  validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+
+  a <- (1 - level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(stats::qt(a, df = n-1))
   if(n==1){
     message("Only one observation in a cell. Thus, no confidence interval can be computed.")
   }
-  ee <- (stats::sd(x, na.rm = na.rm)*fac)/sqrt(n)
+  ee <- (stats::sd(x, na.rm = na.rm) * fac) / sqrt(n)
   return(ee)
 }
 
@@ -229,4 +232,27 @@ se <- function(x, na.rm = TRUE) {
   n <- sum(!is.na(x))
   ee <- stats::sd(x, na.rm = na.rm) / sqrt(n)
   return(ee)
+}
+
+
+#' Highest density interval
+#'
+#' Calculates the highest density interval of a vector of values
+#'
+#' @param x Numeric. A vector of observations.
+#' @param level Numeric. Defines the width of the interval. Defaults to 95\% highest density intervals.
+
+hd_int <- function(x, level = 0.95) {
+  validate(x, check_class = "numeric")
+  validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+
+  sorted_estimate_posterior <- sort(x)
+  n_samples <- length(sorted_estimate_posterior)
+  gap <- max(1, min(n_samples - 1, round(n_samples * level)))
+  init <- 1:(n_samples - gap)
+  lower_index <- which.min(sorted_estimate_posterior[init + gap] - sorted_estimate_posterior[init])
+  hdinterval <- cbind(sorted_estimate_posterior[lower_index], sorted_estimate_posterior[lower_index + gap])
+  colnames(hdinterval) <- c(paste((1 - level) / 2 * 100, "%"), paste(((1 - level) / 2 + level) * 100, "%"))
+  attr(hdinterval, "conf.level") <- level
+  hdinterval
 }

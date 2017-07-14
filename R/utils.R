@@ -174,9 +174,9 @@ convert_stat_name <- function(x) {
 }
 
 
-#' Create confidence interval string
+#' Create interval estimate string
 #'
-#' Creates a character string from an object with attribute. \emph{This function is not exported.}
+#' Creates a character string to report an interval estimate. \emph{This function is not exported.}
 #'
 #' @param x Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
 #'    and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and coefficient names as row names.
@@ -190,12 +190,14 @@ convert_stat_name <- function(x) {
 #' print_confint(c(1, 2), conf_level = 0.95)
 #' }
 
-print_confint <- function(
+print_interval <- function(
   x
   , conf_level = NULL
+  , interval_type
   , ...
 ) {
   sapply(x, validate, check_class = "numeric", check_infinite = FALSE)
+  validate(interval_type, check_class = "character", check_length = 1)
 
   if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, ...)
@@ -205,7 +207,7 @@ print_confint <- function(
   if(!is.null(conf_level)) {
     validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
     if(conf_level < 1) conf_level <- conf_level * 100
-    conf_level <- paste0(conf_level, "\\% CI ")
+    conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
   }
 
   if(!is.matrix(x)) {
@@ -235,6 +237,22 @@ print_confint <- function(
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     return(apa_ci)
   }
+}
+
+print_confint <- function(
+  x
+  , conf_level = NULL
+  , ...
+) {
+  print_interval(x, conf_level = conf_level, interval_type = "CI")
+}
+
+print_hdint <- function(
+  x
+  , conf_level = NULL
+  , ...
+) {
+  print_interval(x, conf_level = conf_level, interval_type = "HDI")
 }
 
 
@@ -412,3 +430,8 @@ localize <- function(x) {
 }
 
 package_available <- function(x) x %in% rownames(utils::installed.packages())
+
+no_method <- function(x) {
+  stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
+              Visit https://github.com/crsh/papaja/issues to request support for this class."))
+}

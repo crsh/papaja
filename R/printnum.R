@@ -70,14 +70,14 @@ printnum <- function(
     x_out <- apply(
       X = x
       , MARGIN = (3 - margin) # Parameters are applied according to margin
-      , FUN = function(x){
+      , FUN = function(x) {
         ellipsis$x <- x
         do.call("printnum", ellipsis)
       }
       # Inception!
     )
 
-    if(margin == 2) {
+    if(margin == 2 || nrow(x) == 1) {
       x_out <- t(x_out) # Reverse transposition caused by apply
       dimnames(x_out) <- dimnames(x)
     }
