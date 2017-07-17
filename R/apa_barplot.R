@@ -89,7 +89,6 @@ apa_barplot <- function(
   # Add missing variable labels
   data <- default_label(data)
 
-  print(variable_label(data))
   # temporarily save variable_labels
   pretty_labels <- variable_label(data)
 

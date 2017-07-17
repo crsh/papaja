@@ -3,11 +3,11 @@
 #' Functions used to assign and extract variable labels of a vector or the columns (i.e., vectors) of a \code{data.frame}.
 #'
 #' @param x Either a vector or a \code{data.frame} containing the variables you want to label.
-#' @param value A vector with the variable label(s) to be assigned. Can be anything like, e.g. character, expression, etc.
+#' @param value A vector with the variable label(s) to be assigned. Can be anything, e.g. character, expression, etc.
 #'
 #' @return
-#'         \code{variable_label} returns the variable labels stored as attributes to the coulumns of a \code{data.frame}.
-#'         \code{assign_label} return \code{x} with the added variable labels.
+#'         \code{variable_label} returns the variable labels stored as attributes to the vector or the columns of a \code{data.frame}.
+#'         \code{assign_label} returns \code{x} with the added variable labels.
 #'
 #' @export
 
@@ -21,7 +21,7 @@ assign_label <- function(x, value) {
 
 assign_label.default <- function(x, value) {
 
-  validate(value, check_dim = 1, check_length = 1)
+  # validate(value, check_length = 1)
   attr(x, which = "label") <- value
 
   if(!("labelled" %in% class(x))) {
@@ -50,6 +50,7 @@ assign_label.data.frame <- function(x, value){
       )
     )
   }
+
   d <- mapply(FUN = assign_label, x = x, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
   as.data.frame(d, col.names = names(x))
 }
@@ -104,11 +105,10 @@ variable_label.data.frame <-function(x) {
 #' @export
 
 "[.labelled"<- function(x, ...) {
-  at1 <- attr(x, which = "label")
-  at2 <- attr(x, which = "class")
+  original_label <- variable_label(x)
+  original_class <- class(x)
   x <- NextMethod("[")
-  attr(x, which = "label") <- at1
-  attr(x, which = "class") <- at2
+  variable_label(x) <- original_label
   x
 }
 
@@ -117,6 +117,7 @@ variable_label.data.frame <-function(x) {
 #' Provide a method for factor
 #'
 #' It would be nice to export this as a method
+#'This one is necessary for the S3 methods of droplevels, relevel, reorder, as.data.frame
 #'
 #' @method factor labelled
 #' @export
@@ -126,37 +127,48 @@ factor.labelled <-function(x, ...){
   original_classes <- class(x)
   x <- factor(x, ...)
   variable_label(x) <- original_labels
+
   class(x) <- c("labelled", "factor")
+  if("ordered" %in% original_classes)
+    class(x) <- c("labelled", "ordered", "factor")
   x
 }
 
-#' Stuff jorfgjdroj
-#'
-#' stuff shgofhsdrjkg
-#'
 #' @method droplevels labelled
 #' @export
 
 droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA, ...){
-  papaja::factor.labelled(x, exclude = exclude)
+  factor.labelled(x, exclude = exclude)
 }
 
 
-#' methods for droplevels
-#'
-#' stuff stuff stuff
-#'
 #' @method relevel labelled
 #' @export
 
 relevel.labelled <- function(x, ...){
-  tmp <- variable_label(x)
-  x <- relevel(x, ...)
-  variable_label(x) <- tmp
-  class(x) <- c("labelled", "factor")
+  original_label <- variable_label(x)
+  x <- NextMethod(x, ...)
+  variable_label(x) <- original_label
   x
 }
 
+
+#' @method reorder labelled
+#' @export
+
+reorder.labelled <- function(x, ...){
+  original_label <- variable_label(x)
+  x <- NextMethod(x, ...)
+  variable_label(x) <- original_label
+  x
+}
+
+
+
+#' @method as.data.frame labelled
+#' @export
+
+as.data.frame.labelled <- as.data.frame.vector
 
 #' Set default variable labels from column names
 #'
@@ -179,6 +191,8 @@ default_label.data.frame <- function(x){
   x
 }
 
+#' @export
+as.data.frame.labelled <- as.data.frame.vector
 
 #' Combine to expression
 #'
