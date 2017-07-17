@@ -199,7 +199,7 @@ as.data.frame.labelled <- as.data.frame.vector
 #' We use this interval function to generate expression that can be used for plotting. Accepts a list of elements that are coerced,
 #' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \latex elements.
 #'
-#' @param x A \code{list} that contains all elements that are intenden to be coerced into one expression.
+#' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
 #' @return An expression
 
 
