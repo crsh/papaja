@@ -46,12 +46,12 @@ assign_label.data.frame <- function(x, value){
         , " columns, but you provided "
         , length(value)
         , ifelse(length(value)==1, " variable label.", " variable labels.")
-        , "\nThe number of labels needs to match the number of columns."
+        , "\nThe number of labels needs to equal the number of columns."
       )
     )
   }
   d <- mapply(FUN = assign_label, x = x, value = value, USE.NAMES = FALSE, SIMPLIFY = FALSE)
-  as.data.frame(d, col.names = names(x))
+  as.data.frame(d, col.names = names(x), stringsAsFactors = FALSE)
 }
 
 
@@ -126,14 +126,13 @@ factor.labelled <-function(x, ...){
   original_classes <- class(x)
   x <- factor(x, ...)
   variable_label(x) <- original_labels
-  class(x) <- c("labelled", "factor")
+
+  if(!("labelled" %in% class(x))) {
+    class(x) <- c("labelled", class(x))
+  }
   x
 }
 
-#' Stuff jorfgjdroj
-#'
-#' stuff shgofhsdrjkg
-#'
 #' @method droplevels labelled
 #' @export
 
@@ -142,10 +141,6 @@ droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA,
 }
 
 
-#' methods for droplevels
-#'
-#' stuff stuff stuff
-#'
 #' @method relevel labelled
 #' @export
 
@@ -153,7 +148,9 @@ relevel.labelled <- function(x, ...){
   tmp <- variable_label(x)
   x <- relevel(x, ...)
   variable_label(x) <- tmp
-  class(x) <- c("labelled", "factor")
+  if(!("labelled" %in% class(x))) {
+    class(x) <- c("labelled", class(x))
+  }
   x
 }
 
@@ -182,7 +179,7 @@ default_label.data.frame <- function(x){
 
 #' Combine to expression
 #'
-#' We use this interval function to generate expression that can be used for plotting. Accepts a list of elements that are coerced,
+#' We use this interval function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
 #' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \latex elements.
 #'
 #' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
