@@ -109,7 +109,8 @@ variable_label.data.frame <-function(x) {
   original_class <- class(x)
   x <- NextMethod("[")
   variable_label(x) <- original_label
-  x
+  class(x) <- original_class
+  return(x)
 }
 
 
@@ -154,7 +155,7 @@ relevel.labelled <- function(x, ...){
   if(!("labelled" %in% class(x))) {
     class(x) <- c("labelled", class(x))
   }
-  x
+  return(x)
 }
 
 
@@ -165,8 +166,10 @@ reorder.labelled <- function(x, ...){
   original_label <- variable_label(x)
   x <- NextMethod(x, ...)
   variable_label(x) <- original_label
-
-  x
+  if(!("labelled" %in% class(x))) {
+    class(x) <- c("labelled", class(x))
+  }
+  return(x)
 }
 
 
@@ -202,7 +205,7 @@ as.data.frame.labelled <- as.data.frame.vector
 
 #' Combine to expression
 #'
-#' We use this interval function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
+#' We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
 #' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \latex elements.
 #'
 #' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.

@@ -64,7 +64,7 @@ test_that(
             )
           )
           , b = structure(
-            4:6
+            as.character(4:6)
             , label = "label2"
             , class = c(
               "labelled"
@@ -86,3 +86,22 @@ test_that(
   }
 )
 
+
+test_that(
+  "factor.labelled()"
+  , {
+    a <- factor(1:4, ordered = TRUE)
+    variable_label(a) <- "label1"
+    b <- factor.labelled(a, levels = 4:1)
+
+    expect_equal(
+      object = b
+      , expected = structure(
+        c(4L, 3L, 2L, 1L)
+        , .Label = c("4", "3", "2", "1")
+        , class = c("labelled", "ordered", "factor")
+        , label = "label1"
+      )
+    )
+  }
+)
