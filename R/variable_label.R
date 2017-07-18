@@ -9,6 +9,7 @@
 #'         \code{variable_label} returns the variable labels stored as attributes to the vector or the columns of a \code{data.frame}.
 #'         \code{assign_label} returns \code{x} with the added variable labels.
 #'
+#' @rdname variable_label
 #' @export
 
 assign_label <- function(x, value) {
@@ -16,7 +17,7 @@ assign_label <- function(x, value) {
   UseMethod("assign_label", x)
 }
 
-
+#' @rdname variable_label
 #' @export
 
 assign_label.default <- function(x, value) {
@@ -203,7 +204,7 @@ as.data.frame.labelled <- as.data.frame.vector
 #' Combine to expression
 #'
 #' We use this interval function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
-#' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \latex elements.
+#' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
 #'
 #' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
 #' @return An expression
