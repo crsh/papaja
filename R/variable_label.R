@@ -9,6 +9,7 @@
 #'         \code{variable_label} returns the variable labels stored as attributes to the vector or the columns of a \code{data.frame}.
 #'         \code{assign_label} returns \code{x} with the added variable labels.
 #'
+#' @rdname variable_label
 #' @export
 
 assign_label <- function(x, value) {
@@ -17,6 +18,7 @@ assign_label <- function(x, value) {
 }
 
 
+#' @rdname variable_label
 #' @export
 
 assign_label.default <- function(x, value) {
@@ -83,7 +85,7 @@ variable_label.data.frame <-function(x) {
 #' @rdname variable_label
 #' @export
 
-"variable_label<-" <- function(x, ..., value) {
+"variable_label<-" <- function(x, value) {
   UseMethod("variable_label<-")
 }
 
