@@ -1,29 +1,11 @@
-#' Barplot for factorial designs that conform to APA guidelines
+#' Barplots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more barplots from a data.frame containing data from
+#' Wrapper function that creates one or more barplots.
+#'
+#'
+#'    from a data.frame containing data from
 #' a factorial design and sets APA-friendly defaults.
 #'
-#' @param data A \code{data.frame} that contains the data.
-#' @param id Character. Variable name that identifies subjects.
-#' @param factors Character. A vector of up to 4 variable names that is used to stratify the data.
-#' @param dv Character. The name of the dependent variable.
-#' @param tendency Closure. A function that will be used as measure of central tendency.
-#' @param dispersion Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-#'    \code{conf_int} for 95\% confidence intervals. See details.
-#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals. Ignored if \code{dispersion} is not \code{conf_int}.
-#' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
-#'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
-#' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param reference Numeric. Height of the x-axis. A reference point that is used for calculating, i.e. default limits of the y axis. Defaults to \code{0}.
-#' @param intercept Numeric. Adds a horizontal line to the plot.
-#' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
-#' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
-#' @param ... Further arguments than can be passed to \code{\link{barplot}} function.
-#' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
-#'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
-#'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #' @examples
 #'
 #' apa_barplot(
@@ -52,9 +34,18 @@
 #'
 #' @import grDevices
 #' @import graphics
+#' @rdname apa_barplot
+#' @family plots for factorial designs
 #' @export
 
-apa_barplot <- function(
+apa_barplot <- function(data, ...){
+  UseMethod("apa_barplot", data)
+}
+
+#' @rdname apa_barplot
+#' @export
+
+apa_barplot.default <- function(
   data
   , id
   , factors = NULL
@@ -91,6 +82,34 @@ apa_barplot <- function(
   )
   do.call("apa_plot_skeleton", ellipsis)
 }
+
+#' @rdname apa_barplot
+#' @export
+
+apa_barplot.afex_aov <- function(
+  data
+  , tendency = mean
+  , dispersion = conf_int
+  , fun_aggregate = mean
+  , ...
+){
+
+  ellipsis <- list(...)
+
+  ellipsis <- defaults(
+    ellipsis
+    , set = list(
+      "data" = data
+      , "plot" = c("bars", "error_bars")
+      , "tendency" = substitute(tendency)
+      , "dispersion" = substitute(dispersion)
+      , "fun_aggregate" = substitute(fun_aggregate)
+    )
+  )
+  do.call("apa_plot_skeleton.afex_aov", ellipsis)
+}
+
+
 #   validate(data, check_class = "data.frame", check_NA = FALSE)
 #   validate(id, check_class="character", check_length = 1)
 #   validate(factors, check_class = "character")

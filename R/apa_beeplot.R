@@ -3,32 +3,7 @@
 #' Wrapper function that creates one or more beeswarm plots from a data.frame containing data from
 #' a factorial design and sets APA-friendly defaults.
 #'
-#' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
-#' @param id Character. Variable name that identifies subjects.
-#' @param factors Character. A vector of up to 4 variable names that is used to stratify the data.
-#' @param dv Character. The name of the dependent variable.
-#' @param tendency Closure. A function that will be used as measure of central tendency.
-#' @param dispersion Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-#'    \code{conf_int} for 95\% confidence intervals. See details.
-#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals. Ignored if \code{dispersion} is not \code{conf_int}.
-#' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
-#'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
-#' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
-#'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
-#' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
-#' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
-#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}. With \code{list(type = "l")} you can add lines to your plot.
-#' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
-#' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
-#' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
-#' @param ... Further arguments than can be passed to \code{\link{plot}} function.
-#' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
-#'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
-#'    \code{level = 0.98}. \code{level} defaults to 0.95.
-#' @seealso \code{\link{barplot}}
+#' @family plots for factorial designs
 #' @examples
 #' apa_beeplot(
 #'    data = npk
@@ -629,7 +604,13 @@ apa_beeplot.default <- function(
 #' @rdname apa_beeplot
 #' @export
 
-apa_beeplot.afex_aov <- function(data, ...){
+apa_beeplot.afex_aov <- function(
+  data
+  , tendency = mean
+  , dispersion = conf_int
+  , fun_aggregate = mean
+  , ...
+){
 
   ellipsis <- list(...)
 
@@ -642,6 +623,9 @@ apa_beeplot.afex_aov <- function(data, ...){
       , "id" = args$id
       , "dv" = args$dv
       , "factors" = c(args$between, args$within)
+      , "tendency" = substitute(tendency)
+      , "dispersion" = substitute(dispersion)
+      , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
   do.call("apa_beeplot.default", ellipsis)

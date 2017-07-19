@@ -1,36 +1,11 @@
-#' Lineplot for factorial designs that conform to APA guidelines
+#' Lineplots for factorial designs that conform to APA guidelines
 #'
 #' Wrapper function that creates one or more lineplots from a data.frame containing data from
 #' a factorial design and sets APA-friendly defaults. It sequentially calls \code{\link{plot}},
 #' \code{\link{axis}}, \code{\link{points}}, \code{\link{lines}}, \code{\link{arrows}} and
 #' \code{\link{legend}}, that may be further customized.
 #'
-#'
-#' @param data A \code{data.frame} that contains the data.
-#' @param id Character. Variable name that identifies subjects.
-#' @param factors Character. A vector of up to 4 variable names that is used to stratify the data.
-#' @param dv Character. The name of the dependent variable.
-#' @param tendency Closure. A function that will be used as measure of central tendency.
-#' @param dispersion Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-#'    \code{conf_int} for 95\% confidence intervals. See details.
-#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals. Ignored if \code{dispersion} is not \code{conf_int}.
-#' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
-#'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
-#' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
-#'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
-#' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
-#' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
-#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}
-#' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
-#' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
-#' @param ... Further arguments than can be passed to \code{\link{plot}} function.
-#' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
-#'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
-#'    \code{level = 0.98}. \code{level} defaults to 0.95.
-#' @seealso \code{\link{barplot}}
+#' @family plots for factorial designs
 #' @examples
 #' apa_lineplot(
 #'    data = npk
@@ -60,9 +35,22 @@
 #'
 #' @import grDevices
 #' @import graphics
+#' @rdname apa_lineplot
 #' @export
 
-apa_lineplot <- function(
+apa_lineplot <- function(data, ...){
+  UseMethod("apa_lineplot", data)
+}
+
+
+
+
+
+
+#' @rdname apa_lineplot
+#' @export
+
+apa_lineplot.default <- function(
   data
   , id
   , factors
@@ -103,6 +91,38 @@ apa_lineplot <- function(
   )
   do.call("apa_plot_skeleton", ellipsis)
 }
+
+#' @rdname apa_lineplot
+#' @export
+
+apa_lineplot.afex_aov <- function(
+  data
+  , tendency = mean
+  , dispersion = conf_int
+  , fun_aggregate = mean
+  , ...
+){
+
+  ellipsis <- list(...)
+
+  ellipsis <- defaults(
+    ellipsis
+    , set = list(
+      "data" = data
+      , "plot" = c("bars", "error_bars")
+      , "tendency" = substitute(tendency)
+      , "dispersion" = substitute(dispersion)
+      , "fun_aggregate" = substitute(fun_aggregate)
+    )
+  )
+  do.call("apa_lineplot.default", ellipsis)
+}
+
+
+
+
+
+
 #    # all the same like barplot:
 #   validate(data, check_class = "data.frame", check_NA = FALSE)
 #   validate(id, check_class="character", check_length = 1)

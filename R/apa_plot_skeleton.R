@@ -1,6 +1,7 @@
-#' Generic plots for factorial designs that conform to APA guidelines
+#' Plots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more generic plots.
+#' Wrapper function that creates one or more plots. \code{apa_plot_skeleton} is the workhorse function that is called
+#' by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
 #'
 #'
 #' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
@@ -9,9 +10,9 @@
 #' @param dv Character. The name of the dependent variable.
 #' @param tendency Closure. A function that will be used as measure of central tendency.
 #' @param dispersion Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-#'    \code{conf_int} for 95\% confidence intervals. See details.
+#'    \code{conf_int} for 95\% between-subjects confidence intervals. See details.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals. Ignored if \code{dispersion} is not \code{conf_int}.
+#'    for 95\% confidence intervals. Ignored if \code{dispersion} is not a confidence-interval function. See details.
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
@@ -19,19 +20,20 @@
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
 #'  \code{c("points", "error_bars", "bars", "swarms")}
-#' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
-#' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
+#' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
+#' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
 #' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
-#' @param args_error_bars An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
+#' @param args_error_bars An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
-#' @param args_plot_window An optional \code{list} that contains further arguments that may be passed to \code{\link{plot.window}}
-#' @param ... Further arguments
-#' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
-#'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
+#' @param ... Further arguments that will be passed to \code{\link{plot.window}}.
+#' @details The measure of dispersion can be either \code{conf_int} for between-subjects confidence intervals, \code{se} for standard errors,
+#'    or any other standard function.
+#'    For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}
+#'    If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
 #'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
-#' @seealso \code{\link{barplot}}
+#' @family plots for factorial designs
 #' @examples
 #' apa_plot_skeleton(
 #'   data = npk
@@ -49,6 +51,7 @@ apa_plot_skeleton <-function(data, ...){
   UseMethod("apa_plot_skeleton", data)
 }
 
+#' @rdname apa_plot_skeleton
 #' @export
 
 apa_plot_skeleton.default <- function(
@@ -69,7 +72,6 @@ apa_plot_skeleton.default <- function(
   , args_lines = list()
   , args_error_bars = NULL
   , args_legend = list()
-  , args_plot_window = list()
   , ...
 ){
   # Data validation:
@@ -135,7 +137,6 @@ apa_plot_skeleton.default <- function(
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
-       , args_plot_window = args_plot_window
        , xlab = if(!is.null(factors)){papaja:::combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
        , ylab = papaja:::combine_plotmath(list(variable_label(data[[dv]]), ""))
        , frame.plot = FALSE
@@ -166,7 +167,7 @@ apa_plot_skeleton.default <- function(
   if(!is.null(ellipsis$fun.aggregate)) {
     fun_aggregate <- ellipsis$fun.aggregate
   }
-
+  ellipsis$fun.aggregate <- NULL
 
   # Bar colors
   if(is.null(ellipsis$col)) {
@@ -207,11 +208,11 @@ apa_plot_skeleton.default <- function(
 
   ## Calculate dispersions
   fun_dispersion <- deparse(substitute(dispersion))
+  print(fun_dispersion)
   if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
     if(fun_dispersion == "conf_int") {
-
       ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
     } else {
       if(use_dplyr) {
@@ -425,8 +426,13 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   args_x_axis <- ellipsis$args_x_axis
   args_y_axis <- ellipsis$args_y_axis
   args_error_bars <- ellipsis$args_error_bars
-  args_plot_window <- ellipsis$args_plot_window
   args_title <- ellipsis$args_title
+
+  # move all arguments that are white-listed
+  args_plot_window <- list()
+  whitelist <- c("xlim", "ylim", "log", "asp", "xaxs", "yaxs", "len")
+  for(i in whitelist)
+    args_plot_window[[i]] <- ellipsis[[i]]
 
   # new plot area
   plot.new()
@@ -712,11 +718,14 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   # Invisibly return arguments that were used for plotting
   invisible(
     list(
-      "plot.window" = args_plot_window
-      , "axis" = args_x_axis
-      , "points" = args_points
-      , "swarms" = args_swarm
-      , "legend" = args_legend
+      args_x_axis = args_x_axis
+      , args_y_axis = args_y_axis
+      , args_points = args_points
+      , args_swarm = args_swarm
+      , args_lines = args_lines
+      , args_error_bars = args_error_bars
+      , args_legend = args_legend
+      , args_plot_window =args_plot_window
     )
   )
 
@@ -726,7 +735,13 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
 #' @rdname apa_plot_skeleton
 #' @export
 
-apa_plot_skeleton.afex_aov <- function(data, ...){
+apa_plot_skeleton.afex_aov <- function(
+  data
+  , tendency = mean
+  , dispersion = conf_int
+  , fun_aggregate = mean
+  , ...
+){
 
   ellipsis <- list(...)
 
@@ -739,6 +754,9 @@ apa_plot_skeleton.afex_aov <- function(data, ...){
       , "id" = args$id
       , "dv" = args$dv
       , "factors" = c(args$between, args$within)
+      , "tendency" = substitute(tendency)
+      , "dispersion" = substitute(dispersion)
+      , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
   do.call("apa_plot_skeleton.default", ellipsis)
