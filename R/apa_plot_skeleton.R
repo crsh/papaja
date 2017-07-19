@@ -18,7 +18,7 @@
 #' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
-#'  \code{c("points", "error_bars", "bars", "swarm")}
+#'  \code{c("points", "error_bars", "bars", "swarms")}
 #' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
@@ -32,6 +32,15 @@
 #'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #' @seealso \code{\link{barplot}}
+#' @examples
+#' apa_plot_skeleton(
+#'   data = npk
+#'   , id = "block"
+#'   , dv = "yield"
+#'   , factors = c("N", "P", "K")
+#'   , las = 1
+#'   , plot = c("error_bars", "points", "swarms")
+#' )
 #'
 #' @export
 
@@ -63,7 +72,7 @@ apa_plot_skeleton.default <- function(
   , args_plot_window = list()
   , ...
 ){
-  # all the same like barplot:
+  # Data validation:
   validate(data, check_class = "data.frame", check_NA = FALSE)
   validate(id, check_class="character", check_length = 1)
   if(!is.null(factors)){
@@ -134,6 +143,7 @@ apa_plot_skeleton.default <- function(
      )
   )
 
+  # Only use a legend title if more than one factor is specified, allow suppressing the legend title
   if(length(factors)>1){
     if(length(ellipsis$args_legend$title) == 0) {
       ellipsis$args_legend$title <- variable_label(data[[factors[2]]])
@@ -200,8 +210,8 @@ apa_plot_skeleton.default <- function(
   if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
-
     if(fun_dispersion == "conf_int") {
+
       ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
     } else {
       if(use_dplyr) {
@@ -520,7 +530,7 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
 
   do.call("title", args_title)
 
-  if("swarm" %in% ellipsis$plot){
+  if("swarms" %in% ellipsis$plot){
     args_swarm <- defaults(
       args_swarm
       , set.if.null = list(
@@ -563,7 +573,7 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   y <- tapply(y.values[, "tendency"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
   e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
-  if("swarm" %in% ellipsis$plot){
+  if("swarms" %in% ellipsis$plot){
     agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
     agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   }
@@ -589,7 +599,7 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   )
 
 
-  if("swarm" %in% ellipsis$plot){
+  if("swarms" %in% ellipsis$plot){
     args_swarm <- defaults(
       args_swarm
       , set = list(
@@ -705,7 +715,7 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
       "plot.window" = args_plot_window
       , "axis" = args_x_axis
       , "points" = args_points
-      , "swarm" = args_swarm
+      , "swarms" = args_swarm
       , "legend" = args_legend
     )
   )
