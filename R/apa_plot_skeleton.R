@@ -1,6 +1,6 @@
 #' Generic plots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more generic plots segfjoiswefjplaesfvafaf
+#' Wrapper function that creates one or more generic plots.
 #'
 #'
 #' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
@@ -17,13 +17,16 @@
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
 #' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
+#' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
+#'  \code{c("points", "error_bars", "bars", "swarm")}
 #' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}
-#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}. With \code{list(type = "l")} you can add lines to your plot.
+#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
 #' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
-#' @param args_arrows An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
+#' @param args_error_bars An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
-#' @param ... Further arguments than can be passed to \code{\link{plot}} function.
+#' @param args_plot_window An optional \code{list} that contains further arguments that may be passed to \code{\link{plot.window}}
+#' @param ... Further arguments
 #' @details The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
 #'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
@@ -42,34 +45,38 @@ apa_plot_skeleton <-function(data, ...){
 apa_plot_skeleton.default <- function(
   data
   , id
-  , factors
+  , factors = NULL
   , dv
   , tendency = mean
   , dispersion = conf_int
   , level = 0.95
   , fun_aggregate = mean
   , na.rm = TRUE
+  , reference = 0
   , intercept = NULL
   , args_axis = list()
   , args_points = list()
   , args_swarm = list()
   , args_lines = list()
-  , args_arrows = list()
+  , args_error_bars = NULL
   , args_legend = list()
+  , args_plot_window = list()
   , ...
 ){
   # all the same like barplot:
   validate(data, check_class = "data.frame", check_NA = FALSE)
   validate(id, check_class="character", check_length = 1)
-  validate(factors, check_class = "character")
-  validate(length(factors), check_range = c(1,4))
+  if(!is.null(factors)){
+    validate(factors, check_class = "character")
+    validate(length(factors), check_range = c(1,4))
+  }
   validate(tendency, check_class = "function", check_length = 1, check_NA =FALSE)
   validate(dispersion, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(level, check_class = "numeric", check_range = c(0,1))
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
-  if(!is.null(intercept)) validate(intercept, check_mode = "numeric")
+  if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE, check_class = FALSE)
 
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
@@ -95,6 +102,14 @@ apa_plot_skeleton.default <- function(
   ellipsis <- list(...)
   output <- list()
 
+  # If no factors were specified, use an arbitrary one
+  if(is.null(factors)){
+    factors <- "arbitrary_factor_name"
+    data[[factors]] <- 1
+    data[[factors]] <- as.factor(data[[factors]])
+    ellipsis$args_x_axis<- list(tick = FALSE, labels = "")
+  }
+
   # Set defaults
   ellipsis <- defaults(
     ellipsis
@@ -103,35 +118,58 @@ apa_plot_skeleton.default <- function(
        , dv = dv
        , factors = factors
        , intercept = intercept
-       , reference = NULL
      )
      , set.if.null = list(
-       args.axis = args_axis
-       , args.points = args_points
-       , args.swarm = args_swarm
-       , args.lines = args_lines
-       , args.arrows = args_arrows
-       , args.legend = args_legend
-       , xlab = papaja:::combine_plotmath(list(variable_label(data[[factors[1]]]), ""))
+       args_x_axis = args_axis
+       , args_points = args_points
+       , args_swarm = args_swarm
+       , args_lines = args_lines
+       , args_error_bars = args_error_bars
+       , args_legend = args_legend
+       , args_plot_window = args_plot_window
+       , xlab = if(!is.null(factors)){papaja:::combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
        , ylab = papaja:::combine_plotmath(list(variable_label(data[[dv]]), ""))
        , frame.plot = FALSE
+       , reference = reference
      )
   )
 
-  if(length(ellipsis$args.legend$title) == 0) {
-    ellipsis$args.legend$title <- factors[2]
-  } else if(!is.expression(ellipsis$args.legend$title) && ellipsis$args.legend$title == "") {
-    ellipsis$args.legend$title <- NULL # Save space
+  if(length(factors)>1){
+    if(length(ellipsis$args_legend$title) == 0) {
+      ellipsis$args_legend$title <- variable_label(data[[factors[2]]])
+    } else if(!is.expression(ellipsis$args_legend$title) && ellipsis$args_legend$title == "") {
+      ellipsis$args_legend$title <- NULL # Save space
+    }
   }
 
-  # compatibility: allows aggregation function to be specified via "fun.aggregate"
+  # warning if "beside = FALSE" is specified
+  if(is.null(ellipsis$beside) || !(ellipsis$beside)) {
+    if(!is.null(ellipsis$beside) && !(ellipsis$beside)) warning("Stacked barplots are not supported. Ignoring parameter 'beside = FALSE'.")
+    ellipsis$beside <- TRUE
+  }
+
+  # Backward compatibility: args_arrows
+  if(!is.null(ellipsis$args_arrows)){
+    ellipsis$args_error_bars <- ellipsis$args_arrows
+  }
+  # Backward compatibility: fun.aggregate
   if(!is.null(ellipsis$fun.aggregate)) {
     fun_aggregate <- ellipsis$fun.aggregate
   }
-  ellipsis$fun.aggregate <- NULL
 
-  # further compatibility stuff: ignore arguments from other plot functions
-  ellipsis$reference <- NULL
+
+  # Bar colors
+  if(is.null(ellipsis$col)) {
+    if(length(factors) == 1){
+      ellipsis$col <- "white"
+    } else {
+      nc <- nlevels(data[[factors[2]]])
+      colors <- (nc:1/(nc)) ^ 0.6
+      ellipsis$col <- grey(colors)
+    }
+  }
+
+  ellipsis$intercept <- intercept
 
   # is dplyr available?
   use_dplyr <- package_available("dplyr")
@@ -238,8 +276,8 @@ apa_plot_skeleton.default <- function(
     tmp_plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
     names(tmp_plot) <- levels(data[[factors[3]]])
 
-    ellipsis$args.legend <- defaults(
-      ellipsis$args.legend
+    ellipsis$args_legend <- defaults(
+      ellipsis$args_legend
       , set = list(
         # nothing
       )
@@ -248,16 +286,16 @@ apa_plot_skeleton.default <- function(
       )
     )
 
-    if(is.null(ellipsis$args.legend$plot)) {
-      ellipsis$args.legend$plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
+    if(is.null(ellipsis$args_legend$plot)) {
+      ellipsis$args_legend$plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
     }
 
-    if(length(ellipsis$args.legend$plot)!=nlevels(data[[factors[3]]])) {
-      rec <- length(ellipsis$args.legend$plot) / nlevels(data[[factors[3]]])
-      ellipsis$args.legend$plot <- rep(ellipsis$args.legend$plot, round(rec+1))
+    if(length(ellipsis$args_legend$plot)!=nlevels(data[[factors[3]]])) {
+      rec <- length(ellipsis$args_legend$plot) / nlevels(data[[factors[3]]])
+      ellipsis$args_legend$plot <- rep(ellipsis$args_legend$plot, round(rec+1))
     }
 
-    names(ellipsis$args.legend$plot) <- levels(data[[factors[3]]])
+    names(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
 
     for (i in levels(y.values[[factors[3]]])) {
 
@@ -269,7 +307,7 @@ apa_plot_skeleton.default <- function(
       ))
 
       # by default, only draw legend in very right plot
-      ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i]))
+      ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i]))
 
       # suppresses ylab
       if(i!=levels(y.values[[factors[3]]])[1]){
@@ -289,7 +327,7 @@ apa_plot_skeleton.default <- function(
     legend.plot <- array(FALSE, dim=c(nlevels(data[[factors[3]]]), nlevels(data[[factors[4]]])))
     legend.plot[1,nlevels(data[[factors[4]]])] <- TRUE
 
-    ellipsis$args.legend <- defaults(ellipsis$args.legend
+    ellipsis$args_legend <- defaults(ellipsis$args_legend
                                      , set = list(
 
                                      )
@@ -297,8 +335,8 @@ apa_plot_skeleton.default <- function(
                                        plot = legend.plot
                                      )
     )
-    rownames(ellipsis$args.legend$plot) <- levels(data[[factors[3]]])
-    colnames(ellipsis$args.legend$plot) <- levels(data[[factors[4]]])
+    rownames(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
+    colnames(ellipsis$args_legend$plot) <- levels(data[[factors[4]]])
 
 
 
@@ -312,7 +350,7 @@ apa_plot_skeleton.default <- function(
         ))
 
         # by default, only draw legend in topright plot
-        ellipsis.i$args.legend <- defaults(ellipsis.i$args.legend, set = list(plot = ellipsis$args.legend$plot[i, j]))
+        ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i, j]))
 
         # suppresses ylab
         if(j!=levels(y.values[[factors[4]]])[1]){
@@ -336,7 +374,11 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   # jittering of x coordinates
   if(is.null(ellipsis$jit)){
     ellipsis$jit <- .3
+    if("bars" %in% ellipsis$plot){
+      ellipsis$jit <- .4
+    }
   }
+
 
   factors <- gsub(factors, pattern = " ", replacement = "_")
   id <- gsub(id, pattern = " ", replacement = "_")
@@ -354,7 +396,8 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
     onedim <- TRUE
   }
 
-  space <-1 - ellipsis$jit
+  space <- (1 - ellipsis$jit)
+
 
   y.values$x <- as.integer(y.values[[factors[1]]]) - .5
   aggregated$x <- as.integer(aggregated[[factors[1]]]) - .5
@@ -365,65 +408,147 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   }
 
   # save parameters for multiple plot functions
-  args.legend <- ellipsis$args.legend
-  args.points <- ellipsis$args.points
-  args.swarm <- ellipsis$args.swarm
-  args.lines <- ellipsis$args.lines
-  args.axis <- ellipsis$args.axis
-  args.arrows <- ellipsis$args.arrows
-  tmp_plot <- ellipsis$plot
+  args_legend <- ellipsis$args_legend
+  args_points <- ellipsis$args_points
+  args_swarm <- ellipsis$args_swarm
+  args_lines <- ellipsis$args_lines
+  args_x_axis <- ellipsis$args_x_axis
+  args_y_axis <- ellipsis$args_y_axis
+  args_error_bars <- ellipsis$args_error_bars
+  args_plot_window <- ellipsis$args_plot_window
+  args_title <- ellipsis$args_title
 
-  # basic plot
-  ellipsis <- defaults(
-    ellipsis
+  # new plot area
+  plot.new()
+
+  # plot.window
+  args_plot_window <- defaults(
+    args_plot_window
     , set.if.null = list(
       xlim = c(0, max(as.integer(y.values[[factors[1]]])))
+      , ylim = ellipsis$ylim
     )
     , set = list(
-      xaxt = "n"
-      , x = 1
-      , type = "n"
-      , jit = NULL
-      , args.legend = NULL
-      , args.points = NULL
-      , args.lines = NULL
-      , args.axis = NULL
-      , args.arrows = NULL
-      , args.swarm = NULL
-      , plot = NULL
     )
   )
 
-  do.call("plot.default", ellipsis)
-  ellipsis$plot <- tmp_plot
+  do.call("plot.window", args_plot_window)
 
-  args.swarm <- defaults(
-    args.swarm
+  # prepare defaults for x-axis
+  args_x_axis <- defaults(
+    args_x_axis
+    , set = list(
+      side = 1
+    )
     , set.if.null = list(
-      cex = .5
-      , alpha = .3
-      , priority = c("ascending", "descending", "density", "random", "none")
+      at = 1:nlevels(y.values[[factors[1]]]) - .5
+      , labels = levels(y.values[[factors[1]]])
+      , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
+      , lwd = ifelse("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference, 0, 1)
+      , lwd.tick = 1
+      , pos = ifelse("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference, ellipsis$ylim[1], ellipsis$ylim[1] - (ellipsis$ylim[2] - ellipsis$ylim[1]) * .02)
     )
   )
 
-  for (i in levels(aggregated[[factors[1]]])) {
-    for (j in levels(aggregated[[factors[2]]])) {
-      coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
-                                , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
-                                , cex = args.swarm$cex
-                                , priority = args.swarm$priority
-                )
-      aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
-      aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
-    }
+
+  # only draw axis if axis type is not specified or not specified as "n"
+  if(is.null(args_x_axis$xaxt)||args_x_axis$xaxt!="n") {
+    do.call("axis", args_x_axis)
   }
 
-  args.swarm$priority <- NULL
+  # prepare defaults for y-axis
+  args_y_axis <- defaults(
+    args_y_axis
+    , set = list(
+      side = 2
+    )
+    , set.if.null = list(
+      labels = TRUE
+      , las = ellipsis$las
+    )
+  )
+
+  do.call("axis", args_y_axis)
+
+
+  if("bars" %in% ellipsis$plot){
+
+    abline(h = ellipsis$reference)
+    space <- .2
+
+    x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
+    x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
+
+    xf1 <- (x0 + x1)/2
+    l2 <- levels(y.values[[factors[2]]])
+
+    y.values[["col"]] <- ellipsis$col[as.integer(y.values[[factors[2]]])]
+
+    args_rect <- defaults(
+      list()
+      , set.if.null = list(
+
+        xleft = x0
+        , xright = x1
+        , ytop = y.values[["tendency"]]
+        , ybottom = ifelse(
+          ellipsis$ylim[1] < ellipsis$ylim[2] # Is ylab increasing?
+          , ifelse(ellipsis$ylim[1] >= ellipsis$reference, ellipsis$ylim[1], ellipsis$reference) # for increasing ylab
+          , ifelse(ellipsis$ylim[1] <= ellipsis$reference, ellipsis$ylim[1], ellipsis$reference) # for decreasing ylab
+        )
+      )
+      , set = list(
+        col = y.values[["col"]]
+        , xpd = FALSE
+      )
+    )
+    do.call("rect", args_rect)
+  }
+
+  # prepare defaults for title and labels
+  args_title <- defaults(
+    args_title
+    , set = list(
+
+    )
+    , set.if.null = list(
+      main = ellipsis$main
+      ,  xlab = ellipsis$xlab
+      , ylab = ellipsis$ylab
+    )
+  )
+
+  do.call("title", args_title)
+
+  if("swarm" %in% ellipsis$plot){
+    args_swarm <- defaults(
+      args_swarm
+      , set.if.null = list(
+        cex = .5
+        , alpha = .3
+        , priority = c("ascending", "descending", "density", "random", "none")
+      )
+    )
+
+    for (i in levels(aggregated[[factors[1]]])) {
+      for (j in levels(aggregated[[factors[2]]])) {
+        coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
+                                  , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
+                                  , cex = args_swarm$cex
+                                  , priority = args_swarm$priority
+                  )
+        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
+        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
+      }
+    }
+
+    args_swarm$priority <- NULL
+  }
 
 
   # prepare x axis
-  args.axis <- defaults(
-    args.axis
+  args_x_axis <- defaults(
+    args_x_axis
     , set = list(
       side = 1
     )
@@ -433,19 +558,15 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
     )
   )
 
-
-  # only draw axis if axis type is not specified or not specified as "n"
-  if(is.null(args.axis$xaxt)||args.axis$xaxt!="n") {
-    do.call("axis", args.axis)
-  }
-
   # convert to matrices
   x <- tapply(y.values[, "x"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
   y <- tapply(y.values[, "tendency"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
   e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
-  agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
-  agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+  if("swarm" %in% ellipsis$plot){
+    agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+  }
 
   ## default colors for tendency points (which are inherited by swarm points)
   nc <- nlevels(aggregated[[factors[2]]])-1
@@ -453,14 +574,14 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
   bg.colors <- grey((0:nc/(nc)) ^ 0.6)
 
   # prepare (tendency) points
-  args.points <- defaults(
-    args.points
+  args_points <- defaults(
+    args_points
     , set = list(
       x = x
       , y = y
     )
     , set.if.null = list(
-      pch = c(21:25,1:20)
+      pch = c(21:25, 1:20)
       , col = rep("black", length(l2))
       , bg = bg.colors
       , cex = rep(1.0, length(l2))
@@ -469,30 +590,30 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
 
 
   if("swarm" %in% ellipsis$plot){
-    args.swarm <- defaults(
-      args.swarm
+    args_swarm <- defaults(
+      args_swarm
       , set = list(
         # nothing yet
       )
       , set.if.null = list(
         x = agg.x
         , y = agg.y
-        , col = brighten(args.points$col, factor = .9)
-        , bg = brighten(args.points$bg, factor = .9)
-        , pch = args.points$pch
+        , col = brighten(args_points$col, factor = .9)
+        , bg = brighten(args_points$bg, factor = .9)
+        , pch = args_points$pch
       )
     )
 
-    args.swarm$alpha <- NULL
+    args_swarm$alpha <- NULL
 
-    do.call("points.matrix", args.swarm)
+    do.call("points.matrix", args_swarm)
   }
 
 
-  # prepare and draw lines
+  # prepare and draw (central tendency) lines
   if("lines" %in% ellipsis$plot){
-    args.lines <- defaults(
-      args.lines
+    args_lines <- defaults(
+      args_lines
       , set = list(
         x = x
         , y = y
@@ -503,13 +624,13 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
       )
     )
 
-    do.call("lines", args.lines)
+    do.call("lines", args_lines)
   }
 
   # prepare and draw error bars
-  if("errorbar" %in% ellipsis$plot){
-    args.arrows <- defaults(
-      args.arrows
+  if("error_bars" %in% ellipsis$plot){
+    args_error_bars <- defaults(
+      args_error_bars
       , set = list(
         x0 = t(x)
         , x1 = t(x)
@@ -517,62 +638,78 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
         , y1 = t(y+e)
       )
       , set.if.null = list(
-        angle = 90, code = 3, length = .1
+        angle = 90
+        , code = 3
+        , length = .06
       )
     )
 
-    # draw arrows (measure of dispersion)
-    do.call("arrows", args.arrows)
+    do.call("arrows", args_error_bars)
   }
 
   if("points" %in% ellipsis$plot){
     # draw points (central tendency)
-    do.call("points.matrix", args.points)
+    do.call("points.matrix", args_points)
   }
 
   # prepare and draw legend
   if(onedim==FALSE) { # only draw legend if a second factor is present
 
-    args.legend <- defaults(
-      args.legend
+    args_legend <- defaults(
+      args_legend
       , set.if.null = list(
         x = "topright"
         , legend = levels(y.values[[factors[2]]])
-        , pch = args.points$pch[1:nlevels(y.values[[factors[2]]])]
-        , lty = args.lines$lty
+        , pch = args_points$pch[1:nlevels(y.values[[factors[2]]])]
+        , lty = args_lines$lty
         , bty = "n"
-        , pt.bg = args.points$bg
-        , col = args.points$col
-        , pt.cex = args.points$cex
+        , pt.bg = args_points$bg
+        , col = args_points$col
+        , pt.cex = args_points$cex
       )
     )
-
-    do.call("legend", args.legend)
+    if("bars" %in% ellipsis$plot){
+      args_legend <- defaults(
+        args_legend
+        , set = list(
+          pch = NULL
+          , lty = NULL
+        )
+        , set.if.null = list(
+          fill = ellipsis$col
+        )
+      )
+    }
+    do.call("legend", args_legend)
   }
 
 
-  # draw intercept
-
+  # Draw intercept
   if(!is.null(intercept)){
     if(is.matrix(intercept)) {
-      diff <- (ellipsis$xlim[2] - ellipsis$xlim[1])/(ncol(intercept)-1)
-      x.vector <- seq(ellipsis$xlim[1], ellipsis$xlim[2], diff)
+      diff <- (args_plot_window$xlim[2] - args_plot_window$xlim[1])/(ncol(intercept)-1)
+      x.vector <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff)
       for(i in 1:nrow(intercept)) {
         for (j in 1:ncol(intercept)) {
-          lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2))
-          # print(list(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i,j], 2)))
+          lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i, j], 2))
         }
       }
     } else {
-      lines(x = ellipsis$xlim, y = rep(intercept,2))
+      lines(x = args_plot_window$xlim, y = rep(intercept, 2))
     }
   }
-  invisible(list(
-    "plot" = ellipsis
-    , "axis" = args.axis
-    , "points" = args.points
-    , "swarm" = args.swarm
-    , "legend" = args.legend))
+
+  # Invisibly return arguments that were used for plotting
+  invisible(
+    list(
+      "plot.window" = args_plot_window
+      , "axis" = args_x_axis
+      , "points" = args_points
+      , "swarm" = args_swarm
+      , "legend" = args_legend
+    )
+  )
+
 }
 
 

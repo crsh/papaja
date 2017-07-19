@@ -392,7 +392,7 @@ apa.barplot.core<-function(y.values, id, dv, factors, ...) {
     do.call("axis", args.axis)
   }
 
-  # prepare defaults for x axis
+  # prepare defaults for y axis
   args.y.axis <- defaults(
     args.y.axis
     , set = list(
