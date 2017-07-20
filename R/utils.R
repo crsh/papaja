@@ -244,7 +244,7 @@ print_confint <- function(
   , conf_level = NULL
   , ...
 ) {
-  print_interval(x, conf_level = conf_level, interval_type = "CI")
+  print_interval(x, conf_level = conf_level, interval_type = "CI", ...)
 }
 
 print_hdint <- function(
@@ -252,7 +252,7 @@ print_hdint <- function(
   , conf_level = NULL
   , ...
 ) {
-  print_interval(x, conf_level = conf_level, interval_type = "HDI")
+  print_interval(x, conf_level = conf_level, interval_type = "HDI", ...)
 }
 
 
