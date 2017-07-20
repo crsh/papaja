@@ -40,7 +40,7 @@
 
 apa_print.BFBayesFactor <- function(
   x
-  , iterations
+  , iterations = 10000
   , central_tendency = median
   , hdi = 0.95
   , standardized = FALSE
@@ -64,16 +64,19 @@ apa_print.BFBayesFactor <- function(
   apa_res <- apa_print_container()
   apa_res$statistic <- bf
 
-  posterior_samples <- BayesFactor::posterior(x, iterations = iterations)
-  apa_res$estimate <- bf_estimates(
-    x@numerator[[1]]
-    , posterior_samples
-    , central_tendency = central_tendency
-    , hdi = hdi
-    , standardized = standardized
-  )
+  if(class(x@numerator[[1]]) %in% c("BFoneSample", "BFindepSample")) {
+    posterior_samples <- BayesFactor::posterior(x, iterations = iterations)
+    apa_res$estimate <- bf_estimates(
+      x@numerator[[1]]
+      , posterior_samples
+      , central_tendency = central_tendency
+      , hdi = hdi
+      , standardized = standardized
+    )
+  }
 
-  apa_res$full_result <- paste0(apa_res$statistic, ", ", apa_res$estimate)
+
+  apa_res$full_result <- paste0(apa_res$estimate, ", ", apa_res$statistic)
 
   apa_res
 }
@@ -230,7 +233,7 @@ bf_estimates_ttest <- function(
   , standardized = FALSE
 ) {
   validate(samples, check_class = "mcmc")
-  validate(iterations, check_class = "numeric", check_length = 1)
+  validate(central_tendency, check_class = "function")
   validate(hdi, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(standardized, check_class = "logical", check_length = 1)
 
