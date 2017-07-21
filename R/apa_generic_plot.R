@@ -3,6 +3,11 @@
 #' Wrapper function that creates one or more plots. \code{apa_generic_plot} is the workhorse function that is called
 #' by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
 #'
+#' If required by parameter \code{plot}, it sequentially calls
+#' \code{\link{plot.new()}},
+#' \code{\link{plot.window}},
+#' \code{\link{axis}},
+#'
 #'
 #' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
 #' @param id Character. Variable name that identifies subjects.
@@ -16,11 +21,13 @@
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
+#' @param reference Numeric. A reference point that determines the y-coordinate of the x-axis.
 #' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
 #'  \code{c("points", "error_bars", "bars", "swarms")}
-#' @param args_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
+#' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
+#' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
 #' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
@@ -66,12 +73,13 @@ apa_generic_plot.default <- function(
   , na.rm = TRUE
   , reference = 0
   , intercept = NULL
-  , args_axis = list()
-  , args_points = list()
-  , args_swarm = list()
-  , args_lines = list()
+  , args_x_axis = NULL
+  , args_y_axis = NULL
+  , args_points = NULL
+  , args_swarm = NULL
+  , args_lines = NULL
   , args_error_bars = NULL
-  , args_legend = list()
+  , args_legend = NULL
   , ...
 ){
   # Data validation:
@@ -131,7 +139,8 @@ apa_generic_plot.default <- function(
        , intercept = intercept
      )
      , set.if.null = list(
-       args_x_axis = args_axis
+       args_x_axis = args_x_axis
+       , args_y_axis = args_y_axis
        , args_points = args_points
        , args_swarm = args_swarm
        , args_lines = args_lines
@@ -163,11 +172,20 @@ apa_generic_plot.default <- function(
   if(!is.null(ellipsis$args_arrows)){
     ellipsis$args_error_bars <- ellipsis$args_arrows
   }
-  # Backward compatibility: fun.aggregate
+  ellipsis$args_arrows <- NULL
+
+  # Backward compatibility: fun.aggregate (Note that this one is NOT written to ellipsis)
   if(!is.null(ellipsis$fun.aggregate)) {
     fun_aggregate <- ellipsis$fun.aggregate
   }
   ellipsis$fun.aggregate <- NULL
+
+  # Backward compatibility: args_axis
+  if(!is.null(ellipsis$args_axis)) {
+    ellipsis$args_x_axis <- ellipsis$args_axis
+  }
+  ellipsis$args_axis <- NULL
+
 
   # Bar colors
   if(is.null(ellipsis$col)) {
@@ -460,11 +478,27 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
       at = 1:nlevels(y.values[[factors[1]]]) - .5
       , labels = levels(y.values[[factors[1]]])
       , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
-      , lwd = ifelse("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference, 0, 1)
-      , lwd.tick = 1
-      , pos = ifelse("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference, ellipsis$ylim[1], ellipsis$ylim[1] - (ellipsis$ylim[2] - ellipsis$ylim[1]) * .02)
     )
   )
+
+
+  # Some modifications are in order if a barplot starts at reference point
+  # However, save `lwd`
+  tmp_lwd <- ifelse(is.null(args_x_axis$lwd), 1, args_x_axis$lwd)
+
+  if("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference){
+
+    args_x_axis <- defaults(
+      args_x_axis
+      , set = list(
+        lwd = 0
+      )
+      , set.if.null = list(
+        lwd.tick = 1
+        , pos = ellipsis$ylim[1]
+      )
+    )
+  }
 
 
   # only draw axis if axis type is not specified or not specified as "n"
@@ -489,7 +523,7 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
 
   if("bars" %in% ellipsis$plot){
 
-    abline(h = ellipsis$reference)
+    abline(h = ellipsis$reference, lwd = tmp_lwd)
     space <- .2
 
     x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)

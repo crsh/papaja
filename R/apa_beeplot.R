@@ -46,7 +46,7 @@ apa_beeplot <- function(data, ...) {
 apa_beeplot.default <- function(
   data
   , id
-  , factors
+  , factors = NULL
   , dv
   , tendency = mean
   , dispersion = conf_int

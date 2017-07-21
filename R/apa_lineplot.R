@@ -51,7 +51,7 @@ apa_lineplot <- function(data, ...){
 apa_lineplot.default <- function(
   data
   , id
-  , factors
+  , factors = NULL
   , dv
   , tendency = mean
   , dispersion = conf_int
