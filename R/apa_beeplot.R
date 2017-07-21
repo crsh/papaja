@@ -84,7 +84,7 @@ apa_beeplot.default <- function(
       , plot = c("points", "error_bars", "swarms")
     )
   )
-  do.call("apa_plot_skeleton", ellipsis)
+  do.call("apa_generic_plot", ellipsis)
 }
 
 #   # all the same like barplot:

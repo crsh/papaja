@@ -1,9 +1,7 @@
 #' Lineplots for factorial designs that conform to APA guidelines
 #'
 #' Wrapper function that creates one or more lineplots from a data.frame containing data from
-#' a factorial design and sets APA-friendly defaults. It sequentially calls \code{\link{plot}},
-#' \code{\link{axis}}, \code{\link{points}}, \code{\link{lines}}, \code{\link{arrows}} and
-#' \code{\link{legend}}, that may be further customized.
+#' a factorial design and sets APA-friendly defaults.
 #'
 #' @family plots for factorial designs
 #' @examples
@@ -89,7 +87,7 @@ apa_lineplot.default <- function(
       , plot = c("points", "error_bars", "lines")
     )
   )
-  do.call("apa_plot_skeleton", ellipsis)
+  do.call("apa_generic_plot", ellipsis)
 }
 
 #' @rdname apa_lineplot

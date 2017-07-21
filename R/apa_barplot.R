@@ -1,10 +1,8 @@
 #' Barplots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more barplots.
-#'
-#'
-#'    from a data.frame containing data from
+#' Wrapper function that creates one or more barplots from a data.frame containing data from
 #' a factorial design and sets APA-friendly defaults.
+#'
 #'
 #' @examples
 #'
@@ -80,7 +78,7 @@ apa_barplot.default <- function(
       , plot = c("bars", "error_bars")
     )
   )
-  do.call("apa_plot_skeleton", ellipsis)
+  do.call("apa_generic_plot", ellipsis)
 }
 
 #' @rdname apa_barplot
@@ -106,7 +104,7 @@ apa_barplot.afex_aov <- function(
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_plot_skeleton.afex_aov", ellipsis)
+  do.call("apa_generic_plot.afex_aov", ellipsis)
 }
 
 

@@ -1,6 +1,6 @@
 #' Plots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more plots. \code{apa_plot_skeleton} is the workhorse function that is called
+#' Wrapper function that creates one or more plots. \code{apa_generic_plot} is the workhorse function that is called
 #' by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
 #'
 #'
@@ -35,7 +35,7 @@
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #' @family plots for factorial designs
 #' @examples
-#' apa_plot_skeleton(
+#' apa_generic_plot(
 #'   data = npk
 #'   , id = "block"
 #'   , dv = "yield"
@@ -47,14 +47,14 @@
 #' @export
 
 
-apa_plot_skeleton <-function(data, ...){
-  UseMethod("apa_plot_skeleton", data)
+apa_generic_plot <-function(data, ...){
+  UseMethod("apa_generic_plot", data)
 }
 
-#' @rdname apa_plot_skeleton
+#' @rdname apa_generic_plot
 #' @export
 
-apa_plot_skeleton.default <- function(
+apa_generic_plot.default <- function(
   data
   , id
   , factors = NULL
@@ -272,7 +272,7 @@ apa_plot_skeleton.default <- function(
 
       ))
 
-    output$args <- do.call("apa_plot_skeleton_single", ellipsis)
+    output$args <- do.call("apa_generic_plot_single", ellipsis)
   }
 
   old.mfrow <- par("mfrow") # Save original plot architecture
@@ -325,7 +325,7 @@ apa_plot_skeleton.default <- function(
         ellipsis.i$ylab <- ""
       }
 
-      output$args[[paste0("plot", i)]] <- do.call("apa_plot_skeleton_single", ellipsis.i)
+      output$args[[paste0("plot", i)]] <- do.call("apa_generic_plot_single", ellipsis.i)
     }
     par(mfrow=old.mfrow)
   }
@@ -367,7 +367,7 @@ apa_plot_skeleton.default <- function(
         if(j!=levels(y.values[[factors[4]]])[1]){
           ellipsis.i$ylab <- ""
         }
-        output$args[[paste0("plot", i, j)]] <- do.call("apa_plot_skeleton_single", ellipsis.i)
+        output$args[[paste0("plot", i, j)]] <- do.call("apa_generic_plot_single", ellipsis.i)
       }
     }
     par(mfrow=old.mfrow)
@@ -378,7 +378,7 @@ apa_plot_skeleton.default <- function(
 
 #' @export
 
-apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
+apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
 
   ellipsis <- list(...)
 
@@ -732,10 +732,10 @@ apa_plot_skeleton_single <- function(aggregated, y.values, id, dv, factors, inte
 }
 
 
-#' @rdname apa_plot_skeleton
+#' @rdname apa_generic_plot
 #' @export
 
-apa_plot_skeleton.afex_aov <- function(
+apa_generic_plot.afex_aov <- function(
   data
   , tendency = mean
   , dispersion = conf_int
@@ -759,5 +759,5 @@ apa_plot_skeleton.afex_aov <- function(
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_plot_skeleton.default", ellipsis)
+  do.call("apa_generic_plot.default", ellipsis)
 }
