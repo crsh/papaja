@@ -18,12 +18,12 @@ affiliation:
     institution   : "Konstanz Business School"
 
 author_note: >
-  Complete departmental affiliations for each author (Each paragraph herein must be indented, like this line. For a new paragraph, two empty lines are needed).
+  Complete departmental affiliations for each author (Each paragraph herein must be indented, like this line. For a new paragraph, two empty lines are needed, unless you change the ">" symbol after the colon to a "|"; in that case only one empty line is needed).
 
   Enter author note here.
 
 abstract: >
-  Enter abstract here (Each paragraph herein must be indented, like this line. For a new paragraph, two empty lines are needed).
+  Enter abstract here (Each paragraph herein must be indented, like this line. For a new paragraph, two empty lines are needed, unless you change the ">" symbol after the colon to a "|"; in that case only one empty line is needed).
   
 keywords          : "keywords"
 wordcount         : "X"
