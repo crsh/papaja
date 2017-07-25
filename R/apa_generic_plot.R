@@ -95,7 +95,7 @@ apa_generic_plot.default <- function(
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
-  if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE, check_class = FALSE)
+  if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE)
 
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
@@ -105,6 +105,12 @@ apa_generic_plot.default <- function(
 
   # temporarily save variable_labels
   pretty_labels <- variable_label(data)
+
+  # strip whitespace from factor names
+  factors <- gsub(pattern = " ", replacement = "_", factors)
+  id <- gsub(pattern = " ", replacement = "_", id)
+  dv <- gsub(pattern = " ", replacement = "_", dv)
+  colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
   # Handling of factors:
   # a) convert to factor
@@ -202,13 +208,6 @@ apa_generic_plot.default <- function(
 
   # is dplyr available?
   use_dplyr <- package_available("dplyr")
-
-  # strip whitespace from factor names
-  factors <- gsub(pattern = " ", replacement = "_", factors)
-  id <- gsub(pattern = " ", replacement = "_", id)
-  dv <- gsub(pattern = " ", replacement = "_", dv)
-  colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
-
 
   ## Aggregate subject data
   if(use_dplyr) {
@@ -407,11 +406,6 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
       ellipsis$jit <- .4
     }
   }
-
-
-  factors <- gsub(factors, pattern = " ", replacement = "_")
-  id <- gsub(id, pattern = " ", replacement = "_")
-  dv <- gsub(dv, pattern = " ", replacement = "_")
 
 
   if(length(factors) > 1){
@@ -745,7 +739,12 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
         }
       }
     } else {
-      lines(x = args_plot_window$xlim, y = rep(intercept, 2))
+      n_lines <- length(intercept)
+      x_coordinates <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff(args_plot_window$xlim)/n_lines)
+      for (i in 1:n_lines){
+        y_coordinates <- rep(intercept[i], 2)
+        lines(x = x_coordinates[(0:1) + i], y = y_coordinates)
+      }
     }
   }
 
