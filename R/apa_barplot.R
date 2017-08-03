@@ -55,8 +55,8 @@ apa_barplot.default <- function(
   , na.rm = TRUE
   , reference = 0
   , intercept = NULL
-  , args_arrows = list()
-  , args_legend = list()
+  , args_arrows = NULL
+  , args_legend = NULL
   , ...
 ){
   ellipsis <- defaults(

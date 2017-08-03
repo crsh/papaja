@@ -59,11 +59,11 @@ apa_lineplot.default <- function(
   , fun_aggregate = mean
   , na.rm = TRUE
   , intercept = NULL
-  , args_axis = list()
-  , args_points = list()
-  , args_lines = list()
-  , args_arrows = list()
-  , args_legend = list()
+  , args_axis = NULL
+  , args_points = NULL
+  , args_lines = NULL
+  , args_arrows = NULL
+  , args_legend = NULL
   , ...
 ){
   ellipsis <- defaults(
