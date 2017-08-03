@@ -131,6 +131,8 @@ Papers that use papaja
 
 Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, let me know and I will add it to this list.
 
+### Published
+
 Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. doi: [10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003)
 
 Aust, F., & Edwards, J. D. (2016). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. *Journal of Clinical and Experimental Neuropsychology*, 38, 497-515. doi: [10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453)
@@ -141,6 +143,8 @@ Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Seq
 
 Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245--266.
 
+### Preprints
+
 Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/> ([Data & R Markdown files](https://osf.io/jxm7z/))
 
 Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq/> ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
@@ -148,6 +152,10 @@ Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Mo
 Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/> ([Data & R Markdown files](https://osf.io/cx5eh/))
 
 Rouder, J. N., Haaf, J., & Aust, F. (submitted). From theories to models to predictions: A Bayesian model comparison approach for communications research. Preprint retrieved from <https://osf.io/preprints/psyarxiv/jt4th/>
+
+Buchanan, E. M., & Scofield, J. E. (2017, August 2). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from <https://osf.io/preprints/psyarxiv/fzyj5> ([Data & R Markdown files](https://osf.io/urd8q/))
+
+Gutierrez, I. A., Bou-Malham, P., & Miller-Cotto, D. (2017, August 2). Graduate Student Employee Unionization: Considerations for the Future of Graduate Education in Psychology. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wb8tm>
 
 Other related R packages
 ========================
