@@ -779,6 +779,7 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
     list(
       args_x_axis = args_x_axis
       , args_y_axis = args_y_axis
+      , args_title = args_title
       , args_points = args_points
       , args_swarm = args_swarm
       , args_lines = args_lines
