@@ -23,6 +23,7 @@
 #'    }
 #'
 #' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
+#' @keywords internal
 #' @examples
 #'  \dontrun{
 #'    ## From Venables and Ripley (2002) p. 165.

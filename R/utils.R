@@ -308,6 +308,7 @@ sel <- function(x, i){
 #' @param ellipsis A \code{list}, usually a list that comes from an ellipsis
 #' @param set A named  \code{list} of parameters that are intended to be set.
 #' @param set.if.null A named \code{list} of parameters that are intended to be set if and only if the parameter is not already in \code{ellipsis}.
+#' @keywords internal
 
 defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 

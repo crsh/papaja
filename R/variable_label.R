@@ -120,8 +120,9 @@ variable_label.data.frame <-function(x) {
 #' Provide a method for factor
 #'
 #' It would be nice to export this as a method
-#'This one is necessary for the S3 methods of droplevels, relevel, reorder, as.data.frame
+#' This one is necessary for the S3 methods of droplevels, relevel, reorder, as.data.frame
 #'
+#' @keywords internal
 #' @method factor labelled
 #' @export
 
@@ -212,7 +213,7 @@ as.data.frame.labelled <- as.data.frame.vector
 #'
 #' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
 #' @return An expression
-
+#' @keywords internal
 
 combine_plotmath <- function(x){
 
