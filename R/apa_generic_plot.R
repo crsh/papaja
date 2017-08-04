@@ -26,6 +26,7 @@
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
 #'  \code{c("points", "error_bars", "bars", "swarms")}
+#' @param jit Numeric.
 #' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
 #' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
@@ -114,7 +115,7 @@ apa_generic_plot.default <- function(
 
   # Handling of factors:
   # a) convert to factor
-  for (i in factors){
+  for (i in c(id, factors)){
     data[[i]] <- as.factor(data[[i]])
   }
 
@@ -128,7 +129,7 @@ apa_generic_plot.default <- function(
   output <- list()
 
   # If no factors were specified, use an arbitrary one
-  if(is.null(factors)){
+  if(is.null(factors)||length(factors)==0){
     factors <- "arbitrary_factor_name"
     data[[factors]] <- 1
     data[[factors]] <- as.factor(data[[factors]])
@@ -152,8 +153,8 @@ apa_generic_plot.default <- function(
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
-       , xlab = if(!is.null(factors)){papaja:::combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
-       , ylab = papaja:::combine_plotmath(list(variable_label(data[[dv]]), ""))
+       , xlab = if(!is.null(factors)){combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
+       , ylab = combine_plotmath(list(variable_label(data[[dv]]), ""))
        , frame.plot = FALSE
        , reference = reference
      )
@@ -195,7 +196,7 @@ apa_generic_plot.default <- function(
 
   # Bar colors
   if(is.null(ellipsis$col)) {
-    if(length(factors) == 1){
+    if(length(factors) < 2){
       ellipsis$col <- "white"
     } else {
       nc <- nlevels(data[[factors[2]]])
@@ -225,7 +226,7 @@ apa_generic_plot.default <- function(
 
   ## Calculate dispersions
   fun_dispersion <- deparse(substitute(dispersion))
-  print(fun_dispersion)
+
   if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
@@ -244,7 +245,6 @@ apa_generic_plot.default <- function(
   colnames(ee)[which(colnames(ee)==dv)] <- "dispersion"
 
   y.values <- merge(yy, ee, by = factors)
-
   y.values$lower_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = function(x){sum(x[1], -x[2], na.rm = TRUE)})
   y.values$upper_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = sum, na.rm = TRUE)
 
@@ -325,6 +325,10 @@ apa_generic_plot.default <- function(
 
     names(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
 
+    if(!is.null(ellipsis$main)){
+      names(ellipsis$main) <- levels(y.values[[factors[3]]])
+    }
+
     for (i in levels(y.values[[factors[3]]])) {
 
       ellipsis.i <- defaults(ellipsis, set = list(
@@ -333,6 +337,9 @@ apa_generic_plot.default <- function(
       ), set.if.null = list(
         main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
       ))
+      if(!is.null(ellipsis$main)){
+        ellipsis.i$main <- ellipsis$main[i]
+      }
 
       # by default, only draw legend in very right plot
       ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i]))
@@ -366,6 +373,10 @@ apa_generic_plot.default <- function(
     rownames(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
     colnames(ellipsis$args_legend$plot) <- levels(data[[factors[4]]])
 
+    if(!is.null(ellipsis$main)){
+      rownames(ellipsis$main) <- levels(y.values[[factors[3]]])
+      colnames(ellipsis$main) <- levels(y.values[[factors[4]]])
+    }
 
 
     for (i in levels(y.values[[factors[3]]])){
@@ -376,7 +387,9 @@ apa_generic_plot.default <- function(
         ), set.if.null = list(
           main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ))
-
+        if(!is.null(ellipsis$main)){
+          ellipsis.i$main <- ellipsis$main[i, j]
+        }
         # by default, only draw legend in topright plot
         ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i, j]))
 
@@ -523,7 +536,7 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
     x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
     x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
 
-    xf1 <- (x0 + x1)/2
+    y.values$x <- (x0 + x1)/2
     l2 <- levels(y.values[[factors[2]]])
 
     y.values[["col"]] <- ellipsis$col[as.integer(y.values[[factors[2]]])]
