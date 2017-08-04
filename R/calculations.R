@@ -202,8 +202,8 @@ conf_int <- function(x, level = 0.95, na.rm = TRUE){
   a <- (1 - level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(stats::qt(a, df = n-1))
-  if(n==1){
-    message("Only one observation in a cell. Thus, no confidence interval can be computed.")
+  if(n<2){
+    message("Less than two observations in at least one cell. Thus, no confidence interval can be computed.")
   }
   ee <- (stats::sd(x, na.rm = na.rm) * fac) / sqrt(n)
   return(ee)
