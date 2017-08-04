@@ -196,7 +196,7 @@ within_subjects_conf_int <- wsci
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
-  validate(x, check_class = "numeric")
+  validate(x, check_class = "numeric", check_NA = FALSE)
   validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
 
   a <- (1 - level)/2
