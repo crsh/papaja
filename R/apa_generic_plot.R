@@ -1,46 +1,62 @@
 #' Plots for factorial designs that conform to APA guidelines
 #'
-#' Wrapper function that creates one or more plots. \code{apa_generic_plot} is the workhorse function that is called
-#' by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
-#'
-#' If required by parameter \code{plot}, it sequentially calls
-#' \code{\link{plot.new()}},
-#' \code{\link{plot.window}},
-#' \code{\link{axis}},
-#'
+#' Wrapper function that creates one or more plots by sequentially calling functions from the \pkg{graphics} package.
+#' \code{apa_generic_plot} is the workhorse function that is called by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
 #'
 #' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
 #' @param id Character. Variable name that identifies subjects.
-#' @param factors Character. A vector of up to 4 variable names that is used to stratify the data.
+#' @param factors Character. A vector of up to four variable names that is used to stratify the data.
 #' @param dv Character. The name of the dependent variable.
 #' @param tendency Closure. A function that will be used as measure of central tendency.
 #' @param dispersion Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-#'    \code{conf_int} for 95\% between-subjects confidence intervals. See details.
-#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
+#'    \code{conf_int} for 95\% between-subjects confidence intervals. See details for more options, especially for within-subjects confidence intervals.
+#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to \code{0.95}.
 #'    for 95\% confidence intervals. Ignored if \code{dispersion} is not a confidence-interval function. See details.
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param reference Numeric. A reference point that determines the y-coordinate of the x-axis.
-#' @param intercept Numeric. Adds a horizontal line to the plot. Can be either a single value or a matrix. For the matrix
+#' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to\code{0}.
+#' @param intercept Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
-#'  \code{c("points", "error_bars", "bars", "swarms")}
-#' @param jit Numeric.
-#' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
-#' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}}.
+#'  \code{c("points", "error_bars", "bars", "swarms", "lines")}
+#' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.3}, defaults to \code{0.4} if \code{plot = "bars"}.
+#' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{x} axis.
+#' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{y} axis.
+#' @param args_title  An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
 #' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
 #' @param args_error_bars An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
+#' @param xlab Character or expression. Label for \emph{x} axis.
+#' @param ylab Character or expression. Label for \emph{y} axis.
+#' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
+#' either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.
 #' @param ... Further arguments that will be passed to \code{\link{plot.window}}.
-#' @details The measure of dispersion can be either \code{conf_int} for between-subjects confidence intervals, \code{se} for standard errors,
-#'    or any other standard function.
-#'    For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}
+#' @details
+#'    The measure of dispersion can be either \code{conf_int} for between-subjects confidence intervals, \code{se} for standard errors,
+#'    or any other standard function. For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}.
+#'
 #'    If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
 #'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
+#'
+#' \strong{Customisation of plot elements}
+#'
+#'    \code{apa_generic_plot} is a wrapper function that sequentially calls
+#' \code{\link{plot.new}},
+#' \code{\link{plot.window}},
+#' \code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
+#' \code{\link{title}} for axis labels and titles,
+#' \code{\link{rect}} for bars in barplots,
+#' \code{\link{points}} for bee swarms,
+#' \code{\link{lines}} for lines connecting central tendency points,
+#' \code{\link{arrows}} for error bars,
+#' \code{\link{points}} for tendency points,
+#' \code{\link{legend}} for a legend, and
+#' \code{\link{lines}} for intercepts.
+#' These calls can be customised by setting the respective parameters \code{args_***}.
 #' @family plots for factorial designs
 #' @examples
 #' apa_generic_plot(
@@ -50,6 +66,7 @@
 #'   , factors = c("N", "P", "K")
 #'   , las = 1
 #'   , plot = c("error_bars", "points", "swarms")
+#'   , ylim = c(0, 100)
 #' )
 #'
 #' @export
@@ -76,9 +93,10 @@ apa_generic_plot.default <- function(
   , intercept = NULL
   , args_x_axis = NULL
   , args_y_axis = NULL
+  , args_title = NULL
   , args_points = NULL
-  , args_swarm = NULL
   , args_lines = NULL
+  , args_swarm = NULL
   , args_error_bars = NULL
   , args_legend = NULL
   , ...
@@ -325,19 +343,17 @@ apa_generic_plot.default <- function(
 
     names(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
 
-    if(!is.null(ellipsis$main)){
-      names(ellipsis$main) <- levels(y.values[[factors[3]]])
-    }
-
     for (i in levels(y.values[[factors[3]]])) {
 
       ellipsis.i <- defaults(ellipsis, set = list(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
+        , main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
       ), set.if.null = list(
-        main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
+
       ))
-      if(!is.null(ellipsis$main)){
+      if(length(ellipsis$main)==nlevels(aggregated[[factors[3]]])){
+        names(ellipsis$main) <- levels(y.values[[factors[3]]])
         ellipsis.i$main <- ellipsis$main[i]
       }
 
@@ -373,21 +389,18 @@ apa_generic_plot.default <- function(
     rownames(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
     colnames(ellipsis$args_legend$plot) <- levels(data[[factors[4]]])
 
-    if(!is.null(ellipsis$main)){
-      rownames(ellipsis$main) <- levels(y.values[[factors[3]]])
-      colnames(ellipsis$main) <- levels(y.values[[factors[4]]])
-    }
-
 
     for (i in levels(y.values[[factors[3]]])){
       for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
+          , main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ), set.if.null = list(
-          main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ))
-        if(!is.null(ellipsis$main)){
+        if(is.matrix(main)){
+          rownames(ellipsis$main) <- levels(y.values[[factors[3]]])
+          colnames(ellipsis$main) <- levels(y.values[[factors[4]]])
           ellipsis.i$main <- ellipsis$main[i, j]
         }
         # by default, only draw legend in topright plot
