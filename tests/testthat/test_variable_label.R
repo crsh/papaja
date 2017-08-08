@@ -113,8 +113,8 @@ test_that(
 test_that(
   "droplevels.labelled()"
   , {
-    object_a <- as.character(1:3)
-    object_b <- as.character(4:6)
+    object_a <- factor(1:3)
+    object_b <- factor(4:6)
     object_c <- data.frame(object_a, object_b, stringsAsFactors = TRUE)
     variable_label(object_c) <- c("label1", "label2")
     object_d <- droplevels(object_c[2:3, ])
@@ -153,35 +153,26 @@ test_that(
     variable_label(object_c) <- c("label1", "label2")
     object_d <- object_c[1:2, ]
 
-    expect_equal(
+    expect_identical(
       object = object_d
       , expected = structure(
         list(
           object_a = structure(
-            1:2
+            structure(c(1, 2))
             , label = "label1"
-            , class = c(
-              "labelled"
-              , "numeric"
-            )
+            , class = c("labelled", "numeric")
           )
           , object_b = structure(
-            as.character(4:5)
+            structure(c("4", "5"))
             , label = "label2"
-            , class = c(
-              "labelled"
-              , "character"
-            )
+            , class = c("labelled", "character")
           )
         )
         , .Names = c(
           "object_a"
           , "object_b"
         )
-        , row.names = c(
-          NA
-          , -2L
-        )
+        , row.names = 1:2
         , class = "data.frame"
       )
     )
