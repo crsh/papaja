@@ -140,7 +140,10 @@ factor.labelled <-function(x, ...){
 #' @export
 
 droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA, ...){
-  factor.labelled(x, exclude = exclude)
+  original_labels <- variable_label(x)
+  y <- factor.labelled(x, exclude = exclude)
+  variable_label(y) <- original_labels
+  y
 }
 
 
