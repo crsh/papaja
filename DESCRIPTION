@@ -13,7 +13,7 @@ Authors@R: c(
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
-    R (>= 3.4.0)
+    R (>= 2.11.1)
 Imports:
   rmarkdown (>= 1.3),
   knitr (>= 1.10.5),
