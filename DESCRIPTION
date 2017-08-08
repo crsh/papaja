@@ -22,7 +22,10 @@ Imports:
   broom (>= 0.3.6),
   boot,
   beeswarm,
-  stringr
+  stringr,
+  methods,
+  latex2exp,
+  methods
 Suggests:
   car,
   afex,
