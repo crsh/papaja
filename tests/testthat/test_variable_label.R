@@ -110,39 +110,39 @@ test_that(
 )
 
 
-test_that(
-  "droplevels.labelled()"
-  , {
-    object_a <- factor(1:3)
-    object_b <- factor(4:6)
-    object_c <- data.frame(object_a, object_b, stringsAsFactors = TRUE)
-    variable_label(object_c) <- c("label1", "label2")
-    object_d <- droplevels(object_c[1:2, ])
-
-    expect_equal(
-      object = object_d
-      , expected = structure(
-        list(
-          object_a = structure(
-            1:2
-            , .Label = c("1", "2")
-            , class = c("labelled", "factor")
-            , label = "label1"
-          )
-          , object_b = structure(
-            1:2
-            , .Label = c("4", "5")
-            , class = c("labelled", "factor")
-            , label = "label2"
-          )
-        )
-        , .Names = c("object_a", "object_b")
-        , row.names = 1:2
-        , class = "data.frame"
-      )
-    )
-  }
-)
+# test_that(
+#   "droplevels.labelled()"
+#   , {
+#     object_a <- factor(1:3)
+#     object_b <- factor(4:6)
+#     object_c <- data.frame(object_a, object_b, stringsAsFactors = TRUE)
+#     variable_label(object_c) <- c("label1", "label2")
+#     object_d <- droplevels(object_c[1:2, ])
+#
+#     expect_equal(
+#       object = object_d
+#       , expected = structure(
+#         list(
+#           object_a = structure(
+#             1:2
+#             , .Label = c("1", "2")
+#             , class = c("labelled", "factor")
+#             , label = "label1"
+#           )
+#           , object_b = structure(
+#             1:2
+#             , .Label = c("4", "5")
+#             , class = c("labelled", "factor")
+#             , label = "label2"
+#           )
+#         )
+#         , .Names = c("object_a", "object_b")
+#         , row.names = 1:2
+#         , class = "data.frame"
+#       )
+#     )
+#   }
+# )
 
 test_that(
   "[.labelled"

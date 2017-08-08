@@ -121,7 +121,7 @@ variable_label.data.frame <-function(x) {
 #' This one is necessary for the S3 methods of droplevels, relevel, reorder, as.data.frame
 #'
 #' @keywords internal
-#' @export
+
 
 factor.labelled <-function(x, ...){
 
@@ -137,18 +137,23 @@ factor.labelled <-function(x, ...){
 }
 
 
-#' @export
+#' Drop unused levels of factor
+#'
+#' This one is intended to become the S3 method for labelled factors. Unfortunately, this only works reliably for R >= 3.4.0.
+#' Therefore, we postponed exporting this function.
+#'
+#' @keywords internal
 
 droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA, ...){
   original_labels <- variable_label(x)
-  y <- factor.labelled(x, exclude = exclude)
+  y <- factor.labelled(x, exclude = exclude, ...)
   variable_label(y) <- original_labels
   y
 }
 
 
 #' @importFrom stats relevel
-#' @export
+#' @keywords internal
 
 relevel.labelled <- function(x, ...){
 
@@ -163,7 +168,7 @@ relevel.labelled <- function(x, ...){
 
 
 #' @importFrom stats reorder
-#' @export
+#' @keywords internal
 
 reorder.labelled <- function(x, ...){
   original_label <- variable_label(x)
@@ -180,6 +185,7 @@ reorder.labelled <- function(x, ...){
 #' @export
 
 as.data.frame.labelled <- as.data.frame.vector
+
 
 #' Set default variable labels from column names
 #'
@@ -202,8 +208,6 @@ default_label.data.frame <- function(x){
   x
 }
 
-#' @export
-as.data.frame.labelled <- as.data.frame.vector
 
 #' Combine to expression
 #'
