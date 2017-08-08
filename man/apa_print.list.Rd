@@ -86,8 +86,7 @@ Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for 
 \seealso{
 \code{\link[stats]{anova}}
 
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.aov}},
+Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.lm}}, \code{\link{apa_print}}
