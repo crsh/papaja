@@ -121,12 +121,11 @@ variable_label.data.frame <-function(x) {
 #' This one is necessary for the S3 methods of droplevels, relevel, reorder, as.data.frame
 #'
 #' @keywords internal
-#' @method factor labelled
 #' @export
 
 factor.labelled <-function(x, ...){
+
   original_labels <- variable_label(x)
-  original_classes <- class(x)
   x <- factor(x, ...)
   variable_label(x) <- original_labels
 
@@ -145,7 +144,6 @@ droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA,
 }
 
 
-#' @method relevel labelled
 #' @importFrom stats relevel
 #' @export
 
@@ -161,7 +159,6 @@ relevel.labelled <- function(x, ...){
 }
 
 
-#' @method reorder labelled
 #' @importFrom stats reorder
 #' @export
 
@@ -177,7 +174,6 @@ reorder.labelled <- function(x, ...){
 
 
 
-#' @method as.data.frame labelled
 #' @export
 
 as.data.frame.labelled <- as.data.frame.vector

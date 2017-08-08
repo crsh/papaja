@@ -4,7 +4,7 @@
 \alias{factor.labelled}
 \title{Provide a method for factor}
 \usage{
-\method{factor}{labelled}(x, ...)
+factor.labelled(x, ...)
 }
 \description{
 It would be nice to export this as a method
