@@ -91,12 +91,19 @@ apa_beeplot.default <- function(
   , level = 0.95
   , fun_aggregate = mean
   , na.rm = TRUE
+  , reference = 0
   , intercept = NULL
-  , args_axis = NULL
+  , args_x_axis = NULL
+  , args_y_axis = NULL
+  , args_title = NULL
   , args_points = NULL
   , args_swarm = NULL
   , args_error_bars = NULL
   , args_legend = NULL
+  , jit = .3
+  , xlab = NULL
+  , ylab = NULL
+  , main = NULL
   , ...
 ){
   ellipsis <- defaults(
@@ -112,11 +119,16 @@ apa_beeplot.default <- function(
       , fun_aggregate = substitute(fun_aggregate)
       , na.rm = na.rm
       , intercept = intercept
-      , args_axis = args_axis
+      , args_x_axis = args_x_axis
+      , args_y_axis = args_y_axis
       , args_points = args_points
       , args_swarm = args_swarm
       , args_error_bars = args_error_bars
       , args_legend = args_legend
+      , jit = jit
+      , xlab = xlab
+      , ylab = ylab
+      , main = main
       , plot = c("points", "error_bars", "swarms")
     )
   )

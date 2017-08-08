@@ -148,6 +148,7 @@ droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA,
 
 
 #' @method relevel labelled
+#' @importFrom stats relevel
 #' @export
 
 relevel.labelled <- function(x, ...){
@@ -163,6 +164,7 @@ relevel.labelled <- function(x, ...){
 
 
 #' @method reorder labelled
+#' @importFrom stats reorder
 #' @export
 
 reorder.labelled <- function(x, ...){
@@ -228,10 +230,13 @@ combine_plotmath <- function(x){
   return(y)
 }
 
+
+#' @importFrom latex2exp TeX
+
 tex_conv <- function(x){
   if(!is.null(x)){
     if(!is.expression(x)){
-      if(papaja:::package_available("latex2exp")){
+      if(package_available("latex2exp")){
         latex2exp::TeX(x, output = "expression")[[1]]
       } else {
         as.expression(x)[[1]]

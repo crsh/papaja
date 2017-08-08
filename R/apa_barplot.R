@@ -18,7 +18,6 @@
 #' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to \code{0}.
 #' @param intercept Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
-#' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.4}.
 #' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{x} axis.
 #' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{y} axis.
 #' @param args_title  An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.
@@ -34,8 +33,8 @@
 #'    or any other standard function. For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}.
 #'
 #'    If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
-#'    \code{level = 0.98}. \code{level} defaults to 0.95.
+#'    distribution function that will be covered. For instance, if you want a 98\% within-subjects confidence interval, specify
+#'    \code{dispersion = wsci} and \code{level = 0.98}. \code{level} defaults to 0.95.
 #'
 #'    For more details on customising plot elements, see \code{\link{apa_generic_plot}}.
 #'
@@ -91,8 +90,14 @@ apa_barplot.default <- function(
   , na.rm = TRUE
   , reference = 0
   , intercept = NULL
+  , args_x_axis = NULL
+  , args_y_axis = NULL
+  , args_title = NULL
   , args_error_bars = NULL
   , args_legend = NULL
+  , xlab = NULL
+  , ylab = NULL
+  , main = NULL
   , ...
 ){
   ellipsis <- defaults(
@@ -109,9 +114,15 @@ apa_barplot.default <- function(
       , na.rm = na.rm
       , reference = reference
       , intercept = intercept
+      , args_x_axis = args_x_axis
+      , args_y_axis = args_y_axis
       , args_error_bars = args_error_bars
       , args_legend = args_legend
+      , jit = .4  # add parameter 'space'
       , plot = c("bars", "error_bars")
+      , xlab = xlab
+      , ylab = ylab
+      , main = main
     )
   )
   do.call("apa_generic_plot", ellipsis)

@@ -99,6 +99,11 @@ apa_generic_plot.default <- function(
   , args_swarm = NULL
   , args_error_bars = NULL
   , args_legend = NULL
+  , plot = NULL
+  , jit = .3
+  , xlab = NULL
+  , ylab = NULL
+  , main = NULL
   , ...
 ){
   # Data validation:
@@ -175,6 +180,8 @@ apa_generic_plot.default <- function(
        , ylab = combine_plotmath(list(variable_label(data[[dv]]), ""))
        , frame.plot = FALSE
        , reference = reference
+       , main = main
+       , plot = plot
      )
   )
 
@@ -348,7 +355,7 @@ apa_generic_plot.default <- function(
       ellipsis.i <- defaults(ellipsis, set = list(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
-        , main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
+        , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
       ), set.if.null = list(
 
       ))
@@ -395,7 +402,7 @@ apa_generic_plot.default <- function(
         ellipsis.i <- defaults(ellipsis, set = list(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
-          , main = papaja:::combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
+          , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ), set.if.null = list(
         ))
         if(is.matrix(main)){
@@ -419,7 +426,19 @@ apa_generic_plot.default <- function(
 }
 
 
-#' @export
+
+#' Plots for factorial designs that conform to APA guidelines, two-factors internal function
+#'
+#' Internal function that is called (possibly multiple times) by \code{\link{apa_generic_plot}}.
+#'
+#' @param aggregated A \code{data.frame}, the \emph{aggregated} data.
+#' @param y.values   A \code{data.frame} containing the measures of central tendency and of dispersion per cell of the design.
+#' @param id Character. Variable name that identifies subjects.
+#' @param dv Character. The name of the dependent variable.
+#' @param factors Character. A vector of up to four variable names that is used to stratify the data.
+#' @param intercept Numeric. See details in \code{\link{apa_generic_plot}}
+#'
+#' @keywords internal
 
 apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
 
