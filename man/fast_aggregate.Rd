@@ -23,3 +23,4 @@ usual \code{aggregate} command. It is also easy to call from within a function. 
 \examples{
 NULL
 }
+\keyword{internal}

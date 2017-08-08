@@ -3,16 +3,16 @@ context("variable_label()")
 test_that(
   "assign_label.data.frame()"
   , {
-    a <- 1:3
-    b <- 4:6
-    c <- data.frame(a, b)
-    d <- assign_label(c, value = c("label1", "label2"))
+    object_a <- 1:3
+    object_b <- 4:6
+    object_c <- data.frame(object_a, object_b)
+    object_d <- assign_label(object_c, value = c("label1", "label2"))
 
     expect_equal(
-      object = d
+      object = object_d
       , expected = structure(
         list(
-          a = structure(
+          object_a = structure(
             1:3
             , label = "label1"
             , class = c(
@@ -20,7 +20,7 @@ test_that(
               , "integer"
               )
             )
-          , b = structure(
+          , object_b = structure(
             4:6
             , label = "label2"
             , class = c(
@@ -30,8 +30,8 @@ test_that(
           )
         )
         , .Names = c(
-          "a"
-          , "b"
+          "object_a"
+          , "object_b"
         )
         , row.names = c(
           NA
@@ -46,16 +46,16 @@ test_that(
 test_that(
   "variable_label.data.frame() assignment statement"
   , {
-    a <- as.numeric(1:3)
-    b <- as.character(4:6)
-    c <- data.frame(a, b, stringsAsFactors = FALSE)
-    variable_label(c) <- c("label1", "label2")
+    object_a <- as.numeric(1:3)
+    object_b <- as.character(4:6)
+    object_c <- data.frame(object_a, object_b, stringsAsFactors = FALSE)
+    variable_label(object_c) <- c("label1", "label2")
 
     expect_equal(
-      object = c
+      object = object_c
       , expected = structure(
         list(
-          a = structure(
+          object_a = structure(
             1:3
             , label = "label1"
             , class = c(
@@ -63,7 +63,7 @@ test_that(
               , "numeric"
             )
           )
-          , b = structure(
+          , object_b = structure(
             as.character(4:6)
             , label = "label2"
             , class = c(
@@ -73,8 +73,8 @@ test_that(
           )
         )
         , .Names = c(
-          "a"
-          , "b"
+          "object_a"
+          , "object_b"
         )
         , row.names = c(
           NA
@@ -93,12 +93,12 @@ context("methods for class 'labelled'")
 test_that(
   "factor.labelled()"
   , {
-    a <- factor(1:4, ordered = TRUE)
-    variable_label(a) <- "label1"
-    b <- factor.labelled(a, levels = 4:1)
+    object_a <- factor(1:4, ordered = TRUE)
+    variable_label(object_a) <- "label1"
+    object_b <- factor.labelled(object_a, levels = 4:1)
 
     expect_equal(
-      object = b
+      object = object_b
       , expected = structure(
         c(4L, 3L, 2L, 1L)
         , .Label = c("4", "3", "2", "1")
@@ -113,30 +113,30 @@ test_that(
 test_that(
   "droplevels.labelled()"
   , {
-    a <- as.character(1:3)
-    b <- as.character(4:6)
-    c <- data.frame(a, b, stringsAsFactors = TRUE)
-    variable_label(c) <- c("label1", "label2")
-    d <- droplevels(c[2:3, ])
+    object_a <- as.character(1:3)
+    object_b <- as.character(4:6)
+    object_c <- data.frame(object_a, object_b, stringsAsFactors = TRUE)
+    variable_label(object_c) <- c("label1", "label2")
+    object_d <- droplevels(object_c[2:3, ])
 
     expect_equal(
-      object = d
+      object = object_d
       , expected = structure(
         list(
-          a = structure(
+          object_a = structure(
             1:2
             , .Label = c("2", "3")
             , class = c("labelled", "factor")
             , label = "label1"
           )
-          , b = structure(
+          , object_b = structure(
             1:2
             , .Label = c("5", "6")
             , class = c("labelled", "factor")
             , label = "label2"
           )
         )
-        , .Names = c("a", "b")
+        , .Names = c("object_a", "object_b")
         , row.names = 2:3
         , class = "data.frame"
       )
@@ -147,17 +147,17 @@ test_that(
 test_that(
   "[.labelled"
   , {
-    a <- as.numeric(1:3)
-    b <- as.character(4:6)
-    c <- data.frame(a, b, stringsAsFactors = FALSE)
-    variable_label(c) <- c("label1", "label2")
-    d <- c[1:2, ]
+    object_a <- as.numeric(1:3)
+    object_b <- as.character(4:6)
+    object_c <- data.frame(object_a, object_b, stringsAsFactors = FALSE)
+    variable_label(object_c) <- c("label1", "label2")
+    object_d <- object_c[1:2, ]
 
     expect_equal(
-      object = d
+      object = object_d
       , expected = structure(
         list(
-          a = structure(
+          object_a = structure(
             1:2
             , label = "label1"
             , class = c(
@@ -165,7 +165,7 @@ test_that(
               , "numeric"
             )
           )
-          , b = structure(
+          , object_b = structure(
             as.character(4:5)
             , label = "label2"
             , class = c(
@@ -175,8 +175,8 @@ test_that(
           )
         )
         , .Names = c(
-          "a"
-          , "b"
+          "object_a"
+          , "object_b"
         )
         , row.names = c(
           NA

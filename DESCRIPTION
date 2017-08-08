@@ -25,7 +25,6 @@ Imports:
   stringr,
   methods,
   latex2exp,
-  methods,
   BayesFactor
 Suggests:
   car,
