@@ -13,7 +13,7 @@ combine_plotmath(x)
 An expression
 }
 \description{
-We use this interval function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
+We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
 currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
 }
 \keyword{internal}

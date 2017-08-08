@@ -107,11 +107,9 @@ variable_label.data.frame <-function(x) {
 #' @export
 
 "[.labelled"<- function(x, ...) {
-  original_label <- variable_label(x)
-  original_class <- class(x)
+  original_attributes <- attributes(x)
   x <- NextMethod("[")
-  variable_label(x) <- original_label
-  class(x) <- original_class
+  attributes(x) <- original_attributes
   return(x)
 }
 
@@ -139,7 +137,7 @@ factor.labelled <-function(x, ...){
   return(x)
 }
 
-#' @method droplevels labelled
+
 #' @export
 
 droplevels.labelled <- function(x, exclude = if (anyNA(levels(x))) NULL else NA, ...){
@@ -210,7 +208,7 @@ as.data.frame.labelled <- as.data.frame.vector
 
 #' Combine to expression
 #'
-#' We use this interval function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
+#' We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
 #' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
 #'
 #' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
@@ -232,6 +230,7 @@ combine_plotmath <- function(x){
 
 
 #' @importFrom latex2exp TeX
+#' @keywords internal
 
 tex_conv <- function(x){
   if(!is.null(x)){
