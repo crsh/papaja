@@ -209,12 +209,14 @@ as.data.frame.labelled <- as.data.frame.vector
 #' We use this function internally to provide default variable for all columns in a data.frame from column names.
 #' @param x A \code{data.frame}
 #' @return Returns a \code{data.frame} with labelled columns. Labels are preserved (if already specified), otherwise generated from column names.
+#' @keywords internal
 
 default_label <- function(x){
   UseMethod("default_label", x)
 }
 
 #' @rdname default_label
+#' @keywords internal
 
 default_label.data.frame <- function(x){
   columns <- sapply(X = variable_label(x), FUN = is.null, simplify = TRUE)

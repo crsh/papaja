@@ -21,6 +21,7 @@
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
 #' }
+#' @keywords internal
 
 validate <- function(
   x
@@ -85,6 +86,7 @@ validate <- function(
 #'      \item{\code{full_report}}{A (named list of) character strings comprised of \code{estimate} and \code{statistic} for each factor.}
 #'      \item{\code{table}}{A \code{data.frame} containing all results; can, for example, be passed to \code{\link{apa_table}}.}
 #'    }
+#' @keywords internal
 
 apa_print_container <- function() {
   list(
@@ -111,7 +113,7 @@ apa_print_container <- function() {
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
 #' }
-
+#' @keywords internal
 
 escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
   x <- gsub("\\\\", "\\\\textbackslash", x)
@@ -140,6 +142,7 @@ escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
 #' convert_stat_name("mean of the differences")
 #' convert_stat_name("t")
 #' }
+#' @keywords internal
 
 convert_stat_name <- function(x) {
   validate(x, check_class = "character")
@@ -186,6 +189,7 @@ convert_stat_name <- function(x) {
 #' \dontrun{
 #' print_confint(c(1, 2), conf_level = 0.95)
 #' }
+#' @keywords internal
 
 print_confint <- function(
   x
@@ -248,6 +252,7 @@ print_confint <- function(
 #' \dontrun{
 #' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 #' }
+#' @keywords internal
 
 sanitize_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
@@ -268,6 +273,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
 #'
 #' @examples
 #' NULL
+#' @keywords internal
 
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
@@ -349,9 +355,12 @@ sort_effects <- function(x) {
   x[order(sapply(regmatches(x$Effect, gregexpr("\\\\times", x$Effect)), length)), ]
 }
 
-
-
-# x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
+#' Corresponding author line
+#'
+#' Internal function. Construct corresponding-author line.
+#'
+#' @param x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
+#' @keywords internal
 
 corresponding_author_line <- function(x) {
   apa_terms <- getOption("papaja.terms")
@@ -369,8 +378,13 @@ corresponding_author_line <- function(x) {
   corresponding_line
 }
 
+#' Define phrases according to locale
+#'
+#' Internal function. Defines phrases used throughout the manuscript.
+#'
+#' @param x Integer. Locale.
+#' @keywords internal
 
-# Defines phrases used throughout the manuscript
 localize <- function(x) {
   switch(
     x
@@ -409,5 +423,13 @@ localize <- function(x) {
     )
   )
 }
+
+#' Package available
+#'
+#' Internal function to check if a specified package is installed.
+
+#' @param x Character. Name of the package to be checked.
+#' @return Logical. Is the specified package installed?
+#' @keywords internal
 
 package_available <- function(x) x %in% rownames(utils::installed.packages())

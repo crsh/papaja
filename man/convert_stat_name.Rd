@@ -20,3 +20,4 @@ convert_stat_name("mean of the differences")
 convert_stat_name("t")
 }
 }
+\keyword{internal}

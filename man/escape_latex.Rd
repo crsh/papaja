@@ -24,3 +24,4 @@ validate(in_paren, check_class = "logical", check_length = 1)
 validate(in_paren, check_class = "numeric", check_length = 1)
 }
 }
+\keyword{internal}

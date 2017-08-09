@@ -19,3 +19,4 @@ Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify ter
 \examples{
 NULL
 }
+\keyword{internal}

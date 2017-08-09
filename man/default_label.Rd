@@ -18,3 +18,4 @@ Returns a \code{data.frame} with labelled columns. Labels are preserved (if alre
 \description{
 We use this function internally to provide default variable for all columns in a data.frame from column names.
 }
+\keyword{internal}
