@@ -44,12 +44,13 @@ test_that(
 )
 
 test_that(
-  "variable_label.data.frame() assignment statement"
+  "variable_label.data.frame() assignment and extraction statements"
   , {
     object_a <- as.numeric(1:3)
     object_b <- as.character(4:6)
     object_c <- data.frame(object_a, object_b, stringsAsFactors = FALSE)
     variable_label(object_c) <- c("label1", "label2")
+    extracted_labels <- variable_label(object_c)
 
     expect_equal(
       object = object_c
@@ -83,8 +84,23 @@ test_that(
         , class = "data.frame"
       )
     )
+
+    expect_identical(
+      object = extracted_labels
+      , expected = structure(
+        c(
+          "label1"
+          , "label2"
+        )
+        , .Names = c(
+          "object_a"
+          , "object_b"
+        )
+      )
+    )
   }
 )
+
 
 
 

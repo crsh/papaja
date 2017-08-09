@@ -78,7 +78,7 @@ variable_label.default <-function(x) {
 #' @export
 
 variable_label.data.frame <-function(x) {
-  mapply(x = x, FUN = variable_label, SIMPLIFY = FALSE)
+  mapply(x = x, FUN = variable_label, SIMPLIFY = TRUE)
 }
 
 
