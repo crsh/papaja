@@ -24,10 +24,12 @@ variable_unit(x) <- value
 \arguments{
 \item{x}{Either a vector or a \code{data.frame} containing the variables you want to assign a unit of measurement.}
 
-\item{value}{A vector with the variable unit(s) to be assigned. Can be anything, e.g. character, expression, etc.}
+\item{value}{A vector with the variable unit(s) to be assigned. Can be anything, e.g. character, expression, etc. If applied to a single vector,
+this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector or
+a \emph{named} list. Check the examples for details.}
 }
 \value{
-If applied to a \code{data.frame}, \code{variable_label} returns a named vector containing all variable units.
+If applied to a \code{data.frame}, \code{variable_label} returns a named list containing all variable units.
         If applied to a \code{vector}, a length-one \code{character}.
 }
 \description{
@@ -37,4 +39,7 @@ the columns (i.e., vectors) of a \code{data.frame}.
 \examples{
 variable_unit(npk$yield) <- "pounds/plot"
 variable_unit(npk)
+variable_unit(npk) <- c(yield = "ppp")
+variable_unit(npk)
+variable_unit(npk) <- NULL
 }

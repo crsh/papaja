@@ -4,14 +4,18 @@
 #' the columns (i.e., vectors) of a \code{data.frame}.
 #'
 #' @param x Either a vector or a \code{data.frame} containing the variables you want to label.
-#' @param value A vector with the variable label(s) to be assigned. Can be anything, e.g. character, expression, etc.
+#' @param value The variable label(s) to be assigned. Can be anything, e.g. character, expression, etc. If applied to a single vector,
+#' this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector or
+#' a \emph{named} list. Check the examples for details.
 #'
 #' @return
 #'         If applied to a \code{data.frame}, \code{variable_label} returns a named list containing all variable labels.
 #'         If applied to a \code{vector}, a length-one \code{character}.
 #'
 #' @examples
-#' variable_label(npk) <- c("Block number", "Nitrogen", "Phosphate", "Potassium", "Yield")
+#' variable_label(npk) <- c(N = "Nitrogen", P = "Phosphate", K = "Potassium")
+#' variable_label(npk)
+#' variable_label(npk) <- NULL
 #' variable_label(npk)
 #' @rdname variable_label
 #' @export
@@ -63,15 +67,20 @@ variable_label.data.frame <-function(x) {
 #' the columns (i.e., vectors) of a \code{data.frame}.
 #'
 #' @param x Either a vector or a \code{data.frame} containing the variables you want to assign a unit of measurement.
-#' @param value A vector with the variable unit(s) to be assigned. Can be anything, e.g. character, expression, etc.
+#' @param value A vector with the variable unit(s) to be assigned. Can be anything, e.g. character, expression, etc. If applied to a single vector,
+#' this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector or
+#' a \emph{named} list. Check the examples for details.
 #'
 #' @return
-#'         If applied to a \code{data.frame}, \code{variable_label} returns a named vector containing all variable units.
+#'         If applied to a \code{data.frame}, \code{variable_label} returns a named list containing all variable units.
 #'         If applied to a \code{vector}, a length-one \code{character}.
 #'
 #' @examples
 #' variable_unit(npk$yield) <- "pounds/plot"
 #' variable_unit(npk)
+#' variable_unit(npk) <- c(yield = "ppp")
+#' variable_unit(npk)
+#' variable_unit(npk) <- NULL
 #' @rdname variable_unit
 #' @export
 

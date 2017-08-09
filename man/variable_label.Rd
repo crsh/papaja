@@ -24,7 +24,9 @@ variable_label(x) <- value
 \arguments{
 \item{x}{Either a vector or a \code{data.frame} containing the variables you want to label.}
 
-\item{value}{A vector with the variable label(s) to be assigned. Can be anything, e.g. character, expression, etc.}
+\item{value}{The variable label(s) to be assigned. Can be anything, e.g. character, expression, etc. If applied to a single vector,
+this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector or
+a \emph{named} list. Check the examples for details.}
 }
 \value{
 If applied to a \code{data.frame}, \code{variable_label} returns a named list containing all variable labels.
@@ -35,6 +37,8 @@ Functions used to assign and extract variable labels of a \code{vector} \emph{or
 the columns (i.e., vectors) of a \code{data.frame}.
 }
 \examples{
-variable_label(npk) <- c("Block number", "Nitrogen", "Phosphate", "Potassium", "Yield")
+variable_label(npk) <- c(N = "Nitrogen", P = "Phosphate", K = "Potassium")
+variable_label(npk)
+variable_label(npk) <- NULL
 variable_label(npk)
 }
