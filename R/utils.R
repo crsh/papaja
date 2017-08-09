@@ -292,6 +292,7 @@ prettify_terms <- function(x, standardized = FALSE) {
 #' @param x List. A list of parameter values
 #' @param i Integer. The i-th element of each vector that is to be extracted.
 #'
+#' @keywords internal
 #' @examples
 #' NULL
 
