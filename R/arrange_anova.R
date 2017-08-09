@@ -21,6 +21,7 @@
 #' @return
 #'    \code{data.frame} of class \code{apa_variance_table} or \code{apa_model_comp}.
 #'
+#' @keywords internal
 #' @seealso \code{\link{print_anova}}, \code{\link{print_model_comp}}
 #' @examples
 #'  \dontrun{
@@ -28,7 +29,7 @@
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    arrange_anova(summary(npk_aov))
 #'  }
-#'  @keywords internal
+#'
 
 arrange_anova <- function(x, ...) {
   UseMethod("arrange_anova")
@@ -42,7 +43,6 @@ arrange_anova.default <- function(x, ...) {
 
 #' @rdname arrange_anova
 #' @method arrange_anova anova
-#' @keywords internal
 
 arrange_anova.anova <- function(x) {
   object <- as.data.frame(x)
@@ -86,7 +86,6 @@ arrange_anova.anova <- function(x) {
 
 #' @rdname arrange_anova
 #' @method arrange_anova summary.aov
-#' @keywords internal
 
 arrange_anova.summary.aov <- function(x) {
   variance_table <- broom::tidy(x[[1]])
@@ -125,7 +124,6 @@ arrange_anova.summary.aovlist <- function(x) {
 
 #' @rdname arrange_anova
 #' @method arrange_anova summary.Anova.mlm
-#' @keywords internal
 
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
   validate(correction, check_class = "character", check_length = 1)

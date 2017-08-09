@@ -7,7 +7,7 @@
 \alias{variable_label<-}
 \alias{variable_label<-.default}
 \alias{variable_label<-.data.frame}
-\title{Variable labels}
+\title{Assign and extract variable labels}
 \usage{
 variable_label(x)
 
@@ -27,7 +27,7 @@ variable_label(x) <- value
 \item{value}{A vector with the variable label(s) to be assigned. Can be anything, e.g. character, expression, etc.}
 }
 \value{
-If applied to a \code{data.frame}, \code{variable_label} returns a named vector containing all variable labels.
+If applied to a \code{data.frame}, \code{variable_label} returns a named list containing all variable labels.
         If applied to a \code{vector}, a length-one \code{character}.
 }
 \description{

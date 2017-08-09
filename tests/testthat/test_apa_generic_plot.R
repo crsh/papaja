@@ -49,10 +49,11 @@ context("apa_generic_plot()")
 test_that(
   "apa_generic_plot.default(): calculations, parameter `level`"
   , {
-    out <- apa_generic_plot(data = npk, id = "block", dv = "yield", level = .75)
-    npk$block <- as.factor(npk$block)
-    variable_label(npk[c("block", "yield")]) <- c("block", "yield")
-    aggregated <- aggregate(formula = yield ~ block, data = npk, FUN = mean)
+    data <- npk
+    out <- apa_generic_plot(data = data, id = "block", dv = "yield", level = .75)
+    data$block <- as.factor(data$block)
+    variable_label(data[, c("block", "yield")]) <- c("block" = "block", "yield" = "yield")
+    aggregated <- aggregate(formula = yield ~ block, data = data, FUN = mean)
 
     tendency <- mean(aggregated$yield)
     dispersion <- conf_int(aggregated$yield, level = .75)

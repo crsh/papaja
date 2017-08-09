@@ -6,17 +6,19 @@
 \alias{assign_label.data.frame}
 \title{Assign a variable label}
 \usage{
-assign_label(x, value)
+assign_label(x, value, which)
 
-\method{assign_label}{default}(x, value)
+\method{assign_label}{default}(x, value, which = "label")
 
-\method{assign_label}{data.frame}(x, value)
+\method{assign_label}{data.frame}(x, value, which = "label")
 }
 \arguments{
 \item{x}{The object that is intended to get some variable labels. Typically a \code{data.frame} or a \code{vector}.}
 
 \item{value}{Character, expression. The label that is intended to be assigned to the variables. If \code{x} is a \code{data.frame},
 the number of labels must match the number of columns.}
+
+\item{which}{Character. The supposed name of the attribute to be set, defaults to \code{label}.}
 }
 \value{
 A \code{data.frame} or a \code{vector}, now with variable labels. The (S3-)class of this new object is \code{labelled}.

@@ -6,7 +6,7 @@ test_that(
     object_a <- 1:3
     object_b <- 4:6
     object_c <- data.frame(object_a, object_b)
-    object_d <- assign_label(object_c, value = c("label1", "label2"))
+    object_d <- assign_label(object_c, value = c(object_a = "label1", object_b = "label2"))
 
     expect_equal(
       object = object_d
@@ -50,7 +50,7 @@ test_that(
     object_a <- as.numeric(1:3)
     object_b <- as.character(4:6)
     object_c <- data.frame(object_a, object_b, stringsAsFactors = FALSE)
-    variable_label(object_c) <- c("label1", "label2")
+    variable_label(object_c) <- c(object_a = "label1", object_b = "label2")
     extracted_labels <- variable_label(object_c)
 
     expect_equal(
@@ -89,9 +89,9 @@ test_that(
     expect_identical(
       object = extracted_labels
       , expected = structure(
-        c(
-          "label1"
-          , "label2"
+        list(
+          object_a ="label1"
+          , object_b = "label2"
         )
         , .Names = c(
           "object_a"
@@ -167,7 +167,7 @@ test_that(
     object_a <- as.numeric(1:3)
     object_b <- as.character(4:6)
     object_c <- data.frame(object_a, object_b, stringsAsFactors = FALSE)
-    variable_label(object_c) <- c("label1", "label2")
+    variable_label(object_c) <- c(object_a = "label1", object_b = "label2")
     object_d <- object_c[1:2, ]
 
     expect_identical(
