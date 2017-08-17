@@ -560,7 +560,7 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
 
   do.call("axis", args_y_axis)
 
-
+  args_rect <- list()
   if("bars" %in% ellipsis$plot){
 
     abline(h = ellipsis$reference, lwd = tmp_lwd)
@@ -573,9 +573,11 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
     l2 <- levels(y.values[[factors[2]]])
 
     y.values[["col"]] <- ellipsis$col[as.integer(y.values[[factors[2]]])]
+    assigned_colors <- y.values[["col"]]
+    names(assigned_colors) <- as.character(y.values[[factors[2]]])
 
     args_rect <- defaults(
-      list()
+      args_rect
       , set.if.null = list(
 
         xleft = x0
@@ -588,7 +590,7 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
         )
       )
       , set = list(
-        col = y.values[["col"]]
+        col = assigned_colors
         , xpd = FALSE
       )
     )
@@ -800,6 +802,7 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
       args_x_axis = args_x_axis
       , args_y_axis = args_y_axis
       , args_title = args_title
+      , args_rect = args_rect
       , args_points = args_points
       , args_swarm = args_swarm
       , args_lines = args_lines
