@@ -146,6 +146,7 @@ apa_generic_plot.default <- function(
   data <- droplevels(data)
 
   # write variable labels back to data.frame
+  names(pretty_labels) <- gsub(names(pretty_labels), pattern = " ", replacement = "_")
   variable_label(data) <- pretty_labels
 
   ellipsis <- list(...)
@@ -176,8 +177,8 @@ apa_generic_plot.default <- function(
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
-       , xlab = if(!is.null(factors)){combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
-       , ylab = combine_plotmath(list(variable_label(data[[dv]]), ""))
+       , xlab = if(!is.null(xlab)){xlab}else{if(!is.null(factors)){combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}else{""}}
+       , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(variable_label(data[[dv]]), ""))}
        , frame.plot = FALSE
        , reference = reference
        , main = main

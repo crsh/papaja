@@ -309,7 +309,7 @@ default_label.data.frame <- function(x){
 
   if(any(columns)){
     value <- colnames(x)[columns]
-    names(value) <- colnames(x)[columns]
+    names(value) <- value
     variable_label(x[, columns]) <- value
   }
   x
