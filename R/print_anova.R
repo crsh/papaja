@@ -22,8 +22,8 @@
 #'      \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
 #'    }
 #'
-#' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 #' @keywords internal
+#' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 #' @examples
 #'  \dontrun{
 #'    ## From Venables and Ripley (2002) p. 165.

@@ -4,6 +4,7 @@
 #' \emph{This function is not exported.}
 #'
 #' @param x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
+#' @keywords internal
 #' @seealso \code{\link{apa6_word}}
 
 word_title_page <- function(x) {

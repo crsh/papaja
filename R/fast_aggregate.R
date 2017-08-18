@@ -8,8 +8,8 @@
 #' @param dv Character. The dependent variable to aggregate. All variables in \code{data} that contain this substring
 #'    will be aggregated separately.
 #' @param fun Closure. The function used for aggregation.
-#' @examples NULL
 #' @keywords internal
+#' @examples NULL
 
 fast_aggregate <- function(data, factors, dv, fun) {
 

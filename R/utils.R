@@ -15,13 +15,13 @@
 #' @param check_cols Character. Vector of columns that are intended to be in a \code{data.frame}.
 #'
 #' @importFrom methods is
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' in_paren <- TRUE # Taken from printnum()
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
 #' }
-#' @keywords internal
 
 validate <- function(
   x
@@ -107,13 +107,13 @@ apa_print_container <- function() {
 #' @param newlines Logical. Determines if \code{\\n} are escaped.
 #' @param spaces Logical. Determines if multiple spaces are escaped.
 #'
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' in_paren <- TRUE # Taken from printnum()
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
 #' }
-#' @keywords internal
 
 escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
   x <- gsub("\\\\", "\\\\textbackslash", x)
@@ -136,13 +136,13 @@ escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
 #'
 #' @param x Character.
 #'
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' convert_stat_name("rho")
 #' convert_stat_name("mean of the differences")
 #' convert_stat_name("t")
 #' }
-#' @keywords internal
 
 convert_stat_name <- function(x) {
   validate(x, check_class = "character")
@@ -184,12 +184,12 @@ convert_stat_name <- function(x) {
 #'    they cannot be determined from column names or attributes of \code{x}.
 #' @param ... Arguments to pass to \code{\link{printnum}}.
 #'
+#' @keywords internal
 #' @seealso \code{\link{printnum}}
 #' @examples
 #' \dontrun{
 #' print_confint(c(1, 2), conf_level = 0.95)
 #' }
-#' @keywords internal
 
 print_confint <- function(
   x
@@ -248,11 +248,11 @@ print_confint <- function(
 #' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
 #'    removed from term names.
 #'
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 #' }
-#' @keywords internal
 
 sanitize_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()

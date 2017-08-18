@@ -335,6 +335,7 @@ apa_table.word <- function(
 #' @param digits Numeric. Vector of the number of digits to round numeric columns to.
 #' @param na_string Character. String to print if element of \code{x} is \code{NA}.
 #'
+#' @keywords internal
 #' @seealso \code{\link{printnum}}
 #'
 #' @examples
@@ -358,6 +359,7 @@ round_cells <- function(x, digits = getOption("digits"), na_string = getOption("
 #'
 #' @param x data.frame or matrix.
 #' @param added_stub_head Character. Used as stub head (name of first column).
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
@@ -390,6 +392,7 @@ add_row_names <- function(x, added_stub_head) {
 #' @param lines List. A named list of vectors of length 2 giving the first and second row to
 #'    indent. Names of list elements will be used as titles for indented sections.
 #' @param filler Character. Symbols used to indent stubs.
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
@@ -427,6 +430,7 @@ indent_stubs <- function(x, lines, filler = "\\ \\ \\ ") {
 #' @param table_lines Character. Vector of characters containing one line of a LaTeX table each.
 #' @param col_spanners List. A named list containing the indices of the first and last columns to group, where the names are the headings.
 #' @param n_cols Numeric. Number of columns of the table.
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
@@ -499,6 +503,7 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
 #' @param row_names Logical. Vector of boolean values specifying whether to print column names for the corresponding list
 #'    element.
 #' @param added_stub_head Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
