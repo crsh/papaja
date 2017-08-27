@@ -16,3 +16,4 @@ Creates text for the title and abstract page for MS Word documents.
 \seealso{
 \code{\link{apa6_word}}
 }
+\keyword{internal}

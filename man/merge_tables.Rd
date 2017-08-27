@@ -27,3 +27,4 @@ NULL
 \seealso{
 \code{\link{apa_table}}
 }
+\keyword{internal}

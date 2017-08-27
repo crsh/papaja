@@ -24,3 +24,4 @@ NULL
 \seealso{
 \code{\link{printnum}}
 }
+\keyword{internal}

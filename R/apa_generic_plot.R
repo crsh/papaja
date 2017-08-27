@@ -68,7 +68,7 @@
 #'   , plot = c("error_bars", "points", "swarms")
 #'   , ylim = c(0, 100)
 #' )
-#'
+#' @importFrom methods as
 #' @export
 
 
@@ -121,33 +121,27 @@ apa_generic_plot.default <- function(
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE)
 
+  factors <- gsub(pattern = " ", replacement = "_", factors)
+  id <- gsub(pattern = " ", replacement = "_", id)
+  dv <- gsub(pattern = " ", replacement = "_", dv)
+  colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
+
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
 
   # Add missing variable labels
   data <- default_label(data)
 
-  # temporarily save variable_labels
-  pretty_labels <- variable_label(data)
 
-  # strip whitespace from factor names
-  factors <- gsub(pattern = " ", replacement = "_", factors)
-  id <- gsub(pattern = " ", replacement = "_", id)
-  dv <- gsub(pattern = " ", replacement = "_", dv)
-  colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
 
   # Handling of factors:
   # a) convert to factor
   for (i in c(id, factors)){
-    data[[i]] <- as.factor(data[[i]])
+    data[[i]] <- methods::as(data[[i]], "annotated_factor")
   }
 
   # b) drop factor levels
   data <- droplevels(data)
-
-  # write variable labels back to data.frame
-  names(pretty_labels) <- gsub(names(pretty_labels), pattern = " ", replacement = "_")
-  variable_label(data) <- pretty_labels
 
   ellipsis <- list(...)
   output <- list()
@@ -177,8 +171,8 @@ apa_generic_plot.default <- function(
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
-       , xlab = if(!is.null(xlab)){xlab}else{if(!is.null(factors)){combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}else{""}}
-       , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(variable_label(data[[dv]]), ""))}
+       , xlab = if(!is.null(xlab)){xlab}else{if(!is.null(factors)){combine_plotmath(list(label(data[[factors[1]]]), ""))}else{""}}
+       , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(label(data[[dv]]), ""))}
        , frame.plot = FALSE
        , reference = reference
        , main = main
@@ -189,7 +183,7 @@ apa_generic_plot.default <- function(
   # Only use a legend title if more than one factor is specified, allow suppressing the legend title
   if(length(factors)>1){
     if(length(ellipsis$args_legend$title) == 0) {
-      ellipsis$args_legend$title <- variable_label(data[[factors[2]]])
+      ellipsis$args_legend$title <- label(data[[factors[2]]])
     } else if(!is.expression(ellipsis$args_legend$title) && ellipsis$args_legend$title == "") {
       ellipsis$args_legend$title <- NULL # Save space
     }
@@ -356,7 +350,7 @@ apa_generic_plot.default <- function(
       ellipsis.i <- defaults(ellipsis, set = list(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
-        , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
+        , main = combine_plotmath(list(tmp_main, label(data[[factors[3]]]), ": ", i))
       ), set.if.null = list(
 
       ))
@@ -403,7 +397,7 @@ apa_generic_plot.default <- function(
         ellipsis.i <- defaults(ellipsis, set = list(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
-          , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
+          , main = combine_plotmath(list(tmp_main, label(data[[factors[3]]]), ": ", i, " & ", label(data[[factors[4]]]), ": ", j))
         ), set.if.null = list(
         ))
         if(is.matrix(main)){

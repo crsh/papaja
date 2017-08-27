@@ -114,7 +114,6 @@ apa_generic_plot(
   , plot = c("error_bars", "points", "swarms")
   , ylim = c(0, 100)
 )
-
 }
 \seealso{
 Other plots for factorial designs: \code{\link{apa_barplot}},
