@@ -14,3 +14,4 @@
 Methods to coerce an annotated factor to an atomic character vector.
 Necessary for compatibility reasons.
 }
+\keyword{internal}

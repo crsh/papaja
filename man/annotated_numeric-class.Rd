@@ -13,7 +13,7 @@ These are the details about this class..
 \item{\code{label}}{Length-one character. Should be a copy of slot "label" in slot "annotation".
 This slot is only included for nice printing in RStudio.}
 
-\item{\code{annotation}}{An object of class \code{\link{vector_annotation-class}}, keeping all meta-data of the vector.}
+\item{\code{annotation}}{An object of class \code{\link{vector_annotation-class}}, containing all meta-data of the vector.}
 }}
 
 \keyword{internal}

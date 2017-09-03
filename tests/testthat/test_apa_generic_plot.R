@@ -52,7 +52,7 @@ test_that(
     data <- npk
     out <- apa_generic_plot(data = data, id = "block", dv = "yield", level = .75)
     data$block <- as.factor(data$block)
-    label(data[, c("block", "yield")]) <- c("block" = "block", "yield" = "yield")
+    variable_label(data[, c("block", "yield")]) <- c("block" = "block", "yield" = "yield")
     aggregated <- aggregate(formula = yield ~ block, data = data, FUN = mean)
 
     tendency <- mean(aggregated$yield)

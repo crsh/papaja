@@ -43,7 +43,7 @@ setValidity(
 #'
 #' @slot label  Length-one character. Should be a copy of slot "label" in slot "annotation".
 #' This slot is only included for nice printing in RStudio.
-#' @slot annotation An object of class \code{\link{vector_annotation-class}}, keeping all meta-data of the vector.
+#' @slot annotation An object of class \code{\link{vector_annotation-class}}, containing all meta-data of the vector.
 #' @keywords internal
 
 setClass(
@@ -120,6 +120,16 @@ setMethod(
   }
 )
 
+setMethod(
+  "initialize"
+  , "annotated_factor"
+  , function(.Object, ...){
+    .Object <- callNextMethod()
+    .Object@label <- .Object@annotation@label
+    .Object
+  }
+)
+
 setValidity(
   "annotated_vector"
   , method = function(object){
@@ -187,7 +197,7 @@ setMethod("[", "annotated_factor", function(x, i){
 #'
 #' @seealso \code{\link{droplevels}}
 #'
-#' @export
+#' @keywords internal
 
 setMethod(
   f = "droplevels"
@@ -200,11 +210,14 @@ setMethod(
     } else {
       exclude <- if(anyNA(levels(x))) NULL else NA
     }
+
+    fac <- as(factor(x, exclude = exclude), "annotated_factor")
+
     new("annotated_factor"
-      , .Data = x@.Data
+      , .Data = fac@.Data
       , label = x@label
       , annotation = x@annotation
-      , levels = levels(factor(x, exclude = exclude))
+      , levels = fac@levels
     )
   }
 )
@@ -252,7 +265,7 @@ setMethod(
 #' (as would be returned by \code{levels}).
 #'
 #' @rdname relevel_annotated
-#' @export
+#' @keywords internal
 
 setMethod(
   f = "relevel"
@@ -269,7 +282,7 @@ setMethod(
 )
 
 #' @rdname relevel_annotated
-#' @export
+#' @keywords internal
 
 setMethod(
   f = "relevel"
@@ -293,7 +306,7 @@ setMethod(
 #' @param x An object of class annotated_factor.
 #'
 #' @rdname as_character
-#' @export
+#' @keywords internal
 
 setMethod(
   f = "as.character"

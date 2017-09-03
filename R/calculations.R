@@ -168,7 +168,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   }
   values <- ee
   attr(values, "Between-subjects factors") <- if(is.null(between)){"none"} else {between}
-  attr(values, "Within-subjects factors") <- if(is.null(within)){"none"} else {within}
+  attr(values, "Within-subjects factors") <- within
   attr(values, "Dependent variable") <- dv
   attr(values, "Subject identifier") <- id
   attr(values, "Confidence level") <- level
@@ -199,8 +199,8 @@ conf_int <- function(x, level = 0.95, na.rm = TRUE){
   a <- (1-level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(stats::qt(a, df = n-1))
-  if(n==1){
-    message("Only one observation in a cell. Thus, no confidence interval can be computed.")
+  if(n < 2){
+    message("Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
   }
   ee <- (stats::sd(x, na.rm = na.rm)*fac)/sqrt(n)
   return(ee)

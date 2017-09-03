@@ -1,74 +1,107 @@
-#' @title Generic functions for 'label'
-#' @description
-#'  What it does, more specifically...
-#' @param object blablabla
-#' @param value bla
-#' @rdname label
-#' @export
+#' @include annotated_data.R
+NULL
 
-setGeneric(
-  name = "label"
-  , def = function(object){
-    standardGeneric("label")
-  }
-)
 
-#' label dummy methods
+
+#' Assign or Extract Variable Labels
 #'
-#' only a dummy method
+#' Assign or extract variable labels of a \code{vector} \emph{or}
+#' the columns (i.e., vectors) of a \code{data.frame}.
 #'
+#' @param object Either a vector or a \code{data.frame}.
+#' @param value Character. The variable label(s) to be assigned. If \code{variable_label} is applied to a single vector,
+#' this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector.
+#' Check the examples for details.
+#' @rdname variable_label
 #' @keywords internal
 
 setGeneric(
-  name = "label<-"
-  , def = function(object, value){
-    standardGeneric("label<-")
+  name = "variable_label"
+  , def = function(object){
+    standardGeneric("variable_label")
   }
 )
 
 
-#' @rdname label
+
+#' @rdname variable_label
+#' @keywords internal
+
+setGeneric(
+  name = "variable_label<-"
+  , def = function(object, value){
+    standardGeneric("variable_label<-")
+  }
+)
+
+
+
+#' @rdname variable_label
 #' @export
 
 setMethod(
-  "label"
+  "variable_label"
   , signature = "annotated_vector"
   , definition = function(object){
     object@label
   }
 )
 
-#' Extract label of an atomic (i.e., non-annotated) vector
+
+
+#' Extract label of an Atomic (i.e., non-annotated) vector
 #'
 #' This is only intended as a dummy method. However, it could be used to obtain compatibility with S3-type labels (like in Hmisc package).
 #'
 #' @keywords internal
 
 setMethod(
-  "label"
+  "variable_label"
   , signature = "vector"
   , definition = function(object){
-    return(NULL)
+    NULL
   }
 )
 
-#' @rdname label
+
+
+setOldClass("labelled")
+
+#' Extract label from a 'labelled' vector
+#'
+#' This method is for minimum compatibility with the \pkg{Hmisc} package. Allows to extract a variable label that was set by \code{Hmisc::label}.
+#' @param object A vector of (S3-) class \code{labelled} (e.g., from \pkg{Hmisc} package) and attribute \code{label} set.
+#'
 #' @export
 
 setMethod(
-  "label"
+  "variable_label"
+  , signature = "labelled"
+  , definition = function(object){
+    return(attr(object, "label"))
+  }
+)
+
+
+
+#' @rdname variable_label
+#' @export
+
+setMethod(
+  "variable_label"
   , signature = "data.frame"
   , definition = function(object){
-    mapply(FUN = label, object, SIMPLIFY = FALSE, USE.NAMES = TRUE)
+    mapply(FUN = variable_label, object, SIMPLIFY = FALSE, USE.NAMES = TRUE)
   }
 )
 
 
-#' @rdname label
+
+#' @rdname variable_label
 #' @export
 
 setMethod(
-  "label<-"
+  "variable_label<-"
   , signature = c(object = "annotated_vector", value = "character")
   , definition = function(object, value){
     object@annotation@label <- value
@@ -79,11 +112,13 @@ setMethod(
   }
 )
 
-#' @rdname label
+
+
+#' @rdname variable_label
 #' @export
 
 setMethod(
-  "label<-"
+  "variable_label<-"
   , signature = c(object = "vector", value = "character")
   , definition = function(object, value){
 
@@ -96,16 +131,18 @@ setMethod(
   }
 )
 
-#' @rdname label
+
+
+#' @rdname variable_label
 #' @export
 
 setMethod(
-  "label<-"
+  "variable_label<-"
   , signature = c(object = "factor", value = "character")
   , definition = function(object, value){
 
     new(
-      paste0("annotated_", class(object))
+      "annotated_factor"
       , .Data = object
       , label = value
       , annotation = new("vector_annotation", label = value)
@@ -115,16 +152,43 @@ setMethod(
   }
 )
 
-#' @rdname label
+
+
+#' @rdname variable_label
 #' @export
 
 setMethod(
-  "label<-"
+  "variable_label<-"
+  , signature = c(object = "annotated_factor", value = "character")
+  , definition = function(object, value){
+
+    new(
+      "annotated_factor"
+      , .Data = object@.Data
+      , label = value
+      , annotation = new(
+        "vector_annotation"
+        , label = value
+        , unit = object@annotation@unit
+      )
+      , levels = object@levels
+      , .S3Class = "factor"
+    )
+  }
+)
+
+
+
+#' @rdname variable_label
+#' @export
+
+setMethod(
+  "variable_label<-"
   , signature = c("data.frame", value = "character")
   , definition = function(object, value){
 
     if(is.null(names(value))){
-      stop("Parameter 'value' is required to be a named vector or list.")
+      stop("Assigned label is required to be a named character vector.")
     }
 
     if(!all(names(value) %in% colnames(object))){
@@ -142,6 +206,8 @@ setMethod(
   }
 )
 
+
+
 #' @keywords internal
 
 setGeneric(
@@ -150,6 +216,8 @@ setGeneric(
     standardGeneric("assign_annotation")
   }
 )
+
+
 
 #' @keywords internal
 
@@ -163,24 +231,22 @@ setMethod(
   }
 )
 
-# setMethod(
-#   "assign_annotation"
-#   , signature = c(object = "vector", value = "character", name = "character")
-#   , definition = function(object, value, name){
-#     object <- new(paste0())
-#     slot(object@annotation, name = name) <- value
-#     object@label <- object@annotation@label
-#     object
-#   }
-# )
+#' #' @keywords internal
+#'
+#' setMethod(
+#'   "assign_annotation"
+#'   , signature = c(object = "vector", value = "character", name = "character")
+#'   , definition = function(object, value, name){
+#'     object <- new(
+#'       paste0("annotated_", class(object))
+#'       , annotation <- new("vector_annotation")
+#'     )
+#'     object@label <- object@annotation@label
+#'     object# return
+#'   }
+#' )
 
 
-setGeneric(
-  "default_label"
-  , def = function(object){
-    standardGeneric("default_label")
-  }
-)
 
 #' @title Set default variable labels from column names
 #' @description We use this function internally to provide default variable for all columns in a data.frame from column names.
@@ -189,19 +255,33 @@ setGeneric(
 #' @rdname default_label
 #' @keywords internal
 
+setGeneric(
+  "default_label"
+  , def = function(object){
+    standardGeneric("default_label")
+  }
+)
+
+
+
+#' @rdname default_label
+#' @keywords internal
+
 setMethod(
   "default_label"
   , signature = "data.frame"
   , definition = function(object){
-    columns <- sapply(X = label(object), FUN = is.null, simplify = TRUE)
+    columns <- sapply(X = variable_label(object), FUN = is.null, simplify = TRUE)
 
     if(any(columns)){
       value <- colnames(object)[columns]
       names(value) <- value
-      label(object[, columns]) <- value
+      variable_label(object[, columns]) <- value
     }
     object
-  })
+  }
+)
+
 
 
 #' Combine to expression
@@ -227,13 +307,14 @@ combine_plotmath <- function(x){
 }
 
 
+
 #' @importFrom latex2exp TeX
 #' @keywords internal
 
-tex_conv <- function(x){
+tex_conv <- function(x, latex2exp = package_available("latex2exp")){
   if(!is.null(x)){
     if(!is.expression(x)){
-      if(package_available("latex2exp")){
+      if(latex2exp){
         latex2exp::TeX(x, output = "expression")[[1]]
       } else {
         as.expression(x)[[1]]

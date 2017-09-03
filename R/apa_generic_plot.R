@@ -171,8 +171,8 @@ apa_generic_plot.default <- function(
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
-       , xlab = if(!is.null(xlab)){xlab}else{if(!is.null(factors)){combine_plotmath(list(label(data[[factors[1]]]), ""))}else{""}}
-       , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(label(data[[dv]]), ""))}
+       , xlab = if(!is.null(xlab)){xlab}else{if(!is.null(factors)){combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}else{""}}
+       , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(variable_label(data[[dv]]), ""))}
        , frame.plot = FALSE
        , reference = reference
        , main = main
@@ -183,7 +183,7 @@ apa_generic_plot.default <- function(
   # Only use a legend title if more than one factor is specified, allow suppressing the legend title
   if(length(factors)>1){
     if(length(ellipsis$args_legend$title) == 0) {
-      ellipsis$args_legend$title <- label(data[[factors[2]]])
+      ellipsis$args_legend$title <- variable_label(data[[factors[2]]])
     } else if(!is.expression(ellipsis$args_legend$title) && ellipsis$args_legend$title == "") {
       ellipsis$args_legend$title <- NULL # Save space
     }
@@ -350,7 +350,7 @@ apa_generic_plot.default <- function(
       ellipsis.i <- defaults(ellipsis, set = list(
         y.values = y.values[y.values[[factors[3]]]==i, ]
         , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
-        , main = combine_plotmath(list(tmp_main, label(data[[factors[3]]]), ": ", i))
+        , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
       ), set.if.null = list(
 
       ))
@@ -397,7 +397,7 @@ apa_generic_plot.default <- function(
         ellipsis.i <- defaults(ellipsis, set = list(
           y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
           , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
-          , main = combine_plotmath(list(tmp_main, label(data[[factors[3]]]), ": ", i, " & ", label(data[[factors[4]]]), ": ", j))
+          , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ), set.if.null = list(
         ))
         if(is.matrix(main)){

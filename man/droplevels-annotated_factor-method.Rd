@@ -19,3 +19,4 @@ from factors in a \code{data.frame}. This method preserves meta-data (e.g., labe
 \seealso{
 \code{\link{droplevels}}
 }
+\keyword{internal}
