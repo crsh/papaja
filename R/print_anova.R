@@ -129,12 +129,30 @@ print_anova <- function(
   mse_long <- if(mse) "$\\mathrm{MSE}$" else NULL
   correction_type <- attr(x, "correction")
 
-  if(!is.null(correction_type) && correction_type != "none") {
-    colnames(anova_table) <- c("Effect", "$F$", paste0("$\\mathit{df}_1^{", correction_type, "}$"), paste0("$\\mathit{df}_2^{", correction_type, "}$"), mse_long, "$p$", es_long)
-  } else {
-    colnames(anova_table) <- c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", mse_long, "$p$", es_long)
-  }
+  colnames(anova_table) <- c("Effect", "F", "df1", "df2", if(mse){"MSE"}else{NULL}, "p", es)
+  class(anova_table) <- "data.frame"
 
+  if(!is.null(correction_type) && correction_type != "none") {
+    variable_label(anova_table) <- c(
+      "Effect" = "Effect"
+      , "F" = "$F$"
+      , "df1" = paste0("$\\mathit{df}_1^{", correction_type, "}$")
+      , "df2" = paste0("$\\mathit{df}_2^{", correction_type, "}$")
+      , "p" = "$p$"
+    )
+  } else {
+    variable_label(anova_table) <- c(
+      "Effect" = "Effect"
+      , "F" = "$F$"
+      , "df1" = "$\\mathit{df}_1$"
+      , "df2" = "$\\mathit{df}_2$"
+      , "p" = "$p$"
+    )
+  }
+  names(es_long) <- es
+  if(length(es)>0)
+    variable_label(anova_table[, es]) <- es_long
+  if(mse) variable_label(anova_table$MSE) <- mse_long
 
   ## Add 'equals' where necessary
   eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
