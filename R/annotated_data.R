@@ -370,6 +370,54 @@ setMethod(
 )
 
 
+
+#' @keywords internal
+
+setAs(
+  from = "vector"
+  , to = "annotated_numeric"
+  , def = function(from){
+    new("annotated_numeric", .Data = as(from, "numeric"))
+  }
+)
+
+
+
+#' @keywords internal
+
+setAs(
+  from = "vector"
+  , to = "annotated_integer"
+  , def = function(from){
+    new("annotated_integer", .Data = as(from, "integer"))
+  }
+)
+
+
+#' @keywords internal
+
+setAs(
+  from = "vector"
+  , to = "annotated_character"
+  , def = function(from){
+    new("annotated_character", .Data = as(from, "character"))
+  }
+)
+
+
+
+#' @keywords internal
+
+setAs(
+  from = "vector"
+  , to = "annotated_logical"
+  , def = function(from){
+    new("annotated_logical", .Data = as(from, "logical"))
+  }
+)
+
+
+
 #' @keywords internal
 
 setAs(
@@ -377,10 +425,57 @@ setAs(
   , to = "annotated_factor"
   , def = function(from){
     tmp <- factor(from)
-
-    new("annotated_factor", .Data = as.integer(tmp), levels = levels(tmp))
+    new("annotated_factor", tmp, levels = as(levels(tmp), "character"))
   }
 )
+
+
+
+#' @keywords internal
+
+setAs(
+  from = "integer"
+  , to = "annotated_factor"
+  , def = function(from){
+    tmp <- factor(from)
+    new("annotated_factor", tmp, levels = levels(tmp))
+  }
+)
+
+
+
+#' @keywords internal
+
+setAs(
+  from = "annotated_factor"
+  , to = "factor"
+  , def = function(from){
+    factor(from@levels[from@.Data], levels = from@levels)
+  }
+)
+
+
+#' Set Levels of an Annotated Factor
+#'
+#' This method is as wrapper around \code{\link{levels}} and should do the same.
+#' Annotations are preserved.
+#'
+#' @param x An object of \code{annotated_factor-class}.
+#' @param value Character. The valid value for \code{levels(x)}.
+#'
+#' @keywords internal
+
+setMethod(
+  "levels<-"
+  , "annotated_factor"
+  , definition = function(x, value){
+    fac <- factor(x@levels[x@.Data], levels = x@levels)
+    levels(fac) <- value
+    new("annotated_factor", fac, levels = levels(fac), annotation = x@annotation, label = x@label)
+  }
+)
+
+
 
 
 # setMethod(
