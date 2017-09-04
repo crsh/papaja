@@ -370,6 +370,17 @@ setMethod(
 )
 
 
+#' @keywords internal
+
+setAs(
+  from = "vector"
+  , to = "annotated_factor"
+  , def = function(from){
+    tmp <- factor(from)
+
+    new("annotated_factor", .Data = as.integer(tmp), levels = levels(tmp))
+  }
+)
 
 
 # setMethod(

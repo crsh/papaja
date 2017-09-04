@@ -152,5 +152,39 @@ test_that(
   }
 )
 
+test_that(
+  "apa_generic_plot.default(): Four-factors case"
+  , {
+    set.seed(123)
+    # Between-subjects design
+    data <- data.frame(
+      A = rep(letters[1:3], each = 3^3)
+      , B = rep(letters[1:3], each = 3^2)
+      , C = rep(letters[1:3], each = 3^1)
+      , D = letters[1:3] # D is within-subjects-factor
+      , id = rep(1:3^4, each = 3)
+      , dv = rnorm(3^5)
+    )
+    object_1 <- apa_generic_plot(
+      data = data
+      , id = "id"
+      , dv = "dv"
+      , factors = c("A", "B", "C", "D")
+      , plot = c("lines", "points", "error_bars")
+      , dispersion = wsci
+      , level = .2
+      , intercept = 0
+      , fun.aggregate = mean
+    )
+    # Test if mandatory legend is plotted:
+    expect_identical(
+      object = object_1$args$plotac$args_legend$plot
+      , expected = TRUE
+    )
 
-
+    # Test more interesting stuff:
+    # ...
+    # ...
+    # ...
+  }
+)
