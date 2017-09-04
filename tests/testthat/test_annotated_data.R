@@ -15,7 +15,7 @@ test_that(
       object = object_2
       , expected = new(
         "annotated_factor"
-        , c(1L, NA_integer_, 2:3)
+        , object_4
         , levels = levels(object_4) # base behavior changed recently, so just check consistency with currently installed version
         , annotation = anno
         , label = "lab"
