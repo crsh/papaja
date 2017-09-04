@@ -1,3 +1,5 @@
+context("print_anova()")
+
 test_that(
   "Calculation of eta-squared"
   , {
@@ -10,3 +12,12 @@ test_that(
   }
 )
 
+test_that(
+  "print_anova(): Throw an error if a missing variable is specified as `observed`."
+  , {
+    expect_error(
+      apa_print(aov(formula = yield ~ N, data = npk), observed = "P")
+      , "Observed variable not in data: P"
+    )
+  }
+)

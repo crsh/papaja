@@ -411,6 +411,7 @@ setMethod(
       class(x)
       , .Data = rep(x@.Data, ...)
       , annotation = x@annotation
+      , label = x@label
     )
   }
 )
@@ -427,6 +428,7 @@ setMethod(
       , .Data = rep(x@.Data, ...)
       , annotation = x@annotation
       , levels = x@levels
+      , label = x@label
     )
   }
 )

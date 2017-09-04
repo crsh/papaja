@@ -13,6 +13,32 @@ test_that(
   }
 )
 
+test_that(
+  "apa_barplot.afex_aov()"
+  , {
+    afex_aov <- afex::aov_ez(data = npk, id = "block", within = c("N", "P"), dv = "yield")
+    generic_bar <- apa_generic_plot(afex_aov, plot = c("bars", "error_bars"))
+    generic_line <- apa_generic_plot(afex_aov, plot = c("lines", "error_bars", "points"))
+    generic_bee <- apa_generic_plot(afex_aov, plot = c("swarms", "points", "error_bars"))
+    bar <- apa_barplot(afex_aov)
+    line <- apa_lineplot(afex_aov)
+    bee <- apa_beeplot(afex_aov)
+
+    expect_identical(
+      object = bar
+      , expected = generic_bar
+    )
+    expect_identical(
+      object = line
+      , expected = generic_line
+    )
+    expect_identical(
+      object = bee
+      , expected = generic_bee
+    )
+  }
+)
+
 context("apa_beeplot()")
 
 test_that(

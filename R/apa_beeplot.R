@@ -149,19 +149,15 @@ apa_beeplot.afex_aov <- function(
 
   ellipsis <- list(...)
 
-  args <- attributes(data)
-
   ellipsis <- defaults(
     ellipsis
     , set = list(
-      "data" = data$data$long
-      , "id" = args$id
-      , "dv" = args$dv
-      , "factors" = c(args$between, args$within)
+      "data" = data
+      , "plot" = c("swarms", "error_bars", "points")
       , "tendency" = substitute(tendency)
       , "dispersion" = substitute(dispersion)
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_beeplot.default", ellipsis)
+  do.call("apa_generic_plot.afex_aov", ellipsis)
 }

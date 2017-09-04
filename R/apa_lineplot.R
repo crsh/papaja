@@ -155,13 +155,13 @@ apa_lineplot.afex_aov <- function(
     ellipsis
     , set = list(
       "data" = data
-      , "plot" = c("bars", "error_bars")
+      , "plot" = c("lines", "error_bars", "points")
       , "tendency" = substitute(tendency)
       , "dispersion" = substitute(dispersion)
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_lineplot.default", ellipsis)
+  do.call("apa_generic_plot.afex_aov", ellipsis)
 }
 
 
