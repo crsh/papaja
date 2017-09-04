@@ -55,6 +55,27 @@ test_that(
 )
 
 
+test_that(
+  "relevel,annotated_factor,character/integer-method"
+  , {
+    object_1 <- new("annotated_factor", .Data = 1:3, levels = letters[1:3], label = "label1", annotation = new("vector_annotation", label = "label1", unit = "unit1"))
+    object_2 <- relevel(object_1, ref = c("c", "b"))
+    object_3 <- new("annotated_factor", .Data = 3:1, levels = letters[3:1], label = "label1", annotation = new("vector_annotation", label = "label1", unit = "unit1"))
+    object_4 <- relevel(object_1, ref = 2L)
+    object_5 <- new("annotated_factor", .Data = c(2, 1, 3), levels = letters[c(2, 1, 3)], label = "label1", annotation = new("vector_annotation", label = "label1", unit = "unit1"))
+
+    expect_identical(
+      object = object_2
+      , expected = object_3
+    )
+    expect_identical(
+      object = object_4
+      , expected = object_5
+    )
+  }
+)
+
+
 
 test_that(
   "rep-methods for annotated_vector and annotated-factor"
@@ -75,5 +96,3 @@ test_that(
 )
 
 # relevel
-# rep
-# annotate

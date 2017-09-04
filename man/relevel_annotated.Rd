@@ -34,4 +34,3 @@ The \code{annotated_factor,integer}-method reorders the levels according to thei
 \seealso{
 \code{\link{relevel}}
 }
-\keyword{internal}

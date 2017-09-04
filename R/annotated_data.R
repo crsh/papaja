@@ -265,38 +265,53 @@ setMethod(
 #' (as would be returned by \code{levels}).
 #'
 #' @rdname relevel_annotated
-#' @keywords internal
+#' @export
 
 setMethod(
   f = "relevel"
   , signature = c(x = "annotated_factor", ref = "character")
   , definition = function(x, ref){
+    # reorder integer vector:
+    index <- 1:length(x@levels)
+    new_levels <- c(ref, levels(x)[!(levels(x)%in%ref)])
+    names(index) <- new_levels
+    .Data <- index[x@levels[x@.Data]]
+    names(.Data) <- NULL
+
     new(
       "annotated_factor"
-      , .Data = x@.Data
+      , .Data = .Data
       , label = x@label
       , annotation = x@annotation
-      , levels = c(ref, levels(x)[!(levels(x)%in%ref)])
+      , levels = new_levels
     )
   }
 )
 
 #' @rdname relevel_annotated
-#' @keywords internal
+#' @export
 
 setMethod(
   f = "relevel"
   , signature = c(x = "annotated_factor", ref = "integer")
   , definition = function(x, ref){
+    # reorder integer vector:
+    index <- 1:length(x@levels)
+    new_levels <- x@levels[c(ref, (1:length(x@levels))[-ref])]
+    names(index) <- new_levels
+    new_.Data <- index[x@levels[x@.Data]]
+    names(new_.Data) <- NULL
+
     new(
       "annotated_factor"
-      , .Data = x@.Data
+      , .Data = new_.Data
       , label = x@label
       , annotation = x@annotation
-      , levels = x@levels[c(ref, (1:length(x@levels))[-ref])]
+      , levels = new_levels
     )
   }
 )
+
 
 
 #' Coerce annotated factors to character vectors
