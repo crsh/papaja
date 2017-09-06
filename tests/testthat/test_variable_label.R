@@ -26,7 +26,7 @@ test_that(
 test_that(
   "variable_label<-,annotated_vector-method"
   , {
-    object_1 <-new("annotated_integer", 1:4)
+    object_1 <-new("annotated_integer", .Data = 1:4)
     variable_label(object_1) <- "label_1"
 
     expect_equal(
