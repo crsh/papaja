@@ -1,10 +1,14 @@
 #' @import methods
-NULL
+NULL # to import complete methods package, document NULL.
 
-
-#' Vector annotations
+#' Annotations for Vectors
 #'
-#' A class intended to keep all meta-data of a vector.
+#' This S4 class is used to represent annotations (i.e., meta-data) of a vector;
+#' it is used as the meta-data container of the
+#' \code{\link{annotated_vector-class}}.
+#' It currently contains slots for a variable label and the unit of measurement,
+#' but is intended to be incrementally extended.
+#'
 #' @slot label Length-one character. A label for the vector.
 #' @slot unit  Length-one character. The unit of measurement.
 #'
@@ -18,32 +22,77 @@ setClass(
   )
 )
 
+
+# ------------------------------------------------------------------------------
+# Validity method for `vector_annotation`-class.
+#
+# Hadley did not anticipate someone wanting to document a validity method.
+
 setValidity(
   Class = "vector_annotation"
   , method = function(object){
 
-    # build a vector for containing all possible problems
+    # `return_value` is intended to keep the results of all checks:
     return_value <- rep(NA, length(slotNames(object)))
     names(return_value) <- slotNames(object)
 
-    # for each slot, check if value has length 1 (or shorter)
+    # For each slot, check if `value` has length <=1
     for (i in slotNames(object)){
       length_slot <- length(slot(object, i))
-      return_value[i] <- if(length_slot<2){NA} else {paste0("Slot '", i, "' has length ", length_slot, ", needs to be of length 0 or 1.")}
+      return_value[i] <- if(length_slot < 2){
+        NA
+      } else {
+        paste0(
+          "Slot \""
+          , i
+          , "\" has length "
+          , length_slot
+          , ", but needs to be of length 0 or 1."
+        )
+      }
     }
-
-    # return only problems
+    # Return problems:
     return_value[!is.na(return_value)]
   }
 )
 
-#' S4 class union 'annotated_vector'
+# ------------------------------------------------------------------------------
+# Classes for unnamed vectors.
+#
+# It would be great to have a graphic representation of the class structure.
+# However, an R package implementing this possibility seems to be broken,
+# currently.
+
+
+#' S4 Class Union for Annotated Vectors
 #'
-#' These are the details about this class..
+#' This is a collection of classes that extend basic data types (currently
+#' numeric, integer, character, logical vectors, and factors) with an additional
+#' annotation object.
 #'
-#' @slot label  Length-one character. Should be a copy of slot "label" in slot "annotation".
-#' This slot is only included for nice printing in RStudio.
-#' @slot annotation An object of class \code{\link{vector_annotation-class}}, containing all meta-data of the vector.
+#' @slot .Data  Depending on the data type that the class extends, the original
+#' values.
+#' @slot names  A character vector of value names, if supplied.
+#' @slot label  Length-one character. This one must always be a copy of slot
+#' "label" in slot "annotation".
+#' \emph{Don't you ever manipulate this one by hand.}
+#' It is only included for nice printing in RStudio.
+#' @slot annotation A \code{\link{vector_annotation-class}} object,
+#' containing all meta-data of the vector.
+#' @details
+#'   We currently support six different classes of annotated vectors:
+#'   \code{annotated_numeric}, \code{annotated_integer},
+#'   \code{annotated_character}, \code{annotated_logical},
+#'   \code{annotated_factor}.
+#'
+#'   These can be extended to named vectors (via \code{\link{names}(x)}).
+#'   The corresponding classes are
+#'   \code{annotated_named_numeric}, \code{annotated_named_integer},
+#'   \code{annotated_named_character}, \code{annotated_named_logical},
+#'   \code{annotated_named_factor}.
+#'
+#'   \emph{Ordered factors, raw and complex vectors are not supported, yet.}
+#' @rdname annotated_vector-class
 #' @keywords internal
 
 setClass(
@@ -55,6 +104,8 @@ setClass(
   , contains = "numeric"
 )
 
+#' @rdname annotated_vector-class
+#' @keywords internal
 
 setClass(
   "annotated_integer"
@@ -65,6 +116,8 @@ setClass(
   , contains = "integer"
 )
 
+#' @rdname annotated_vector-class
+#' @keywords internal
 
 setClass(
   "annotated_character"
@@ -75,6 +128,8 @@ setClass(
   , contains = "character"
 )
 
+#' @rdname annotated_vector-class
+#' @keywords internal
 
 setClass(
   "annotated_logical"
@@ -85,9 +140,11 @@ setClass(
   , contains = "logical"
 )
 
+# ------------------------------------------------------------------------------
+# Factor class needs some more brain:
 
-## Factor class needs some more brain:
-setOldClass(Classes = "factor")
+#' @rdname annotated_vector-class
+#' @keywords internal
 
 setClass(
   "annotated_factor"
@@ -98,6 +155,109 @@ setClass(
   , contains = "factor"
 )
 
+# #' @rdname annotated_vector-class
+# #' @keywords internal
+
+# setClass(
+#   "annotated_ordered_factor"
+#   , contains = c("annotated_factor", "ordered")
+# )
+
+# ------------------------------------------------------------------------------
+# Classes for named vectors.
+#
+# Each one extends its corresponding unnamed class by slot `names`.
+
+
+#' @rdname annotated_vector-class
+#' @keywords internal
+
+setClass(
+  "annotated_named_numeric"
+  , slots = c(
+    names = "character"
+  )
+  , contains = "annotated_numeric"
+)
+
+#' @rdname annotated_vector-class
+#' @keywords internal
+
+setClass(
+  "annotated_named_integer"
+  , slots = c(
+    names = "character"
+  )
+  , contains = "annotated_numeric"
+)
+
+#' @rdname annotated_vector-class
+#' @keywords internal
+
+setClass(
+  "annotated_named_character"
+  , slots = c(
+    names = "character"
+  )
+  , contains = "annotated_character"
+)
+
+#' @rdname annotated_vector-class
+#' @keywords internal
+
+setClass(
+  "annotated_named_logical"
+  , slots = c(
+    names = "character"
+  )
+  , contains = "annotated_logical"
+)
+
+#' @rdname annotated_vector-class
+#' @keywords internal
+
+setClass(
+  "annotated_named_factor"
+  , slots = c(
+    names = "character"
+  )
+  , contains = "annotated_factor"
+)
+
+# #' @rdname annotated_vector-class
+# #' @keywords internal
+
+# setClass(
+#   "annotated_named_ordered_factor"
+#   , slots = c(
+#     names = "character"
+#   )
+#   , contains = "annotated_ordered_factor"
+# )
+
+# ------------------------------------------------------------------------------
+# Class Unions (superclasses) for named and unnamed vectors.
+# These are hierarchically ordered, i.e., superclass annotated_named_vector
+# is itself a member of superclass annotated_vector.
+
+#' @rdname annotated_vector-class
+#' @keywords internal
+
+setClassUnion(
+  name = "annotated_named_vector"
+  , members = c(
+    "annotated_named_numeric"
+    , "annotated_named_integer"
+    , "annotated_named_character"
+    , "annotated_named_logical"
+    , "annotated_named_factor"
+    # , "annotated_named_ordered_factor"
+  )
+)
+
+
+#' @rdname annotated_vector-class
+#' @keywords internal
 
 setClassUnion(
   name = "annotated_vector"
@@ -107,58 +267,206 @@ setClassUnion(
     , "annotated_character"
     , "annotated_logical"
     , "annotated_factor"
+    # , "annotated_ordered_factor"
+    # Make annotated_vector a superclass of annotated_named_vector:
+    , "annotated_named_vector"
   )
 )
+
+
+#' Generate an Annotated Vector
+#'
+#' \code{\link{initialize}}-method for class union \code{annotated_vector}.
+#' It takes care that \code{.Object@annotation@label} is copied to
+#' \code{.Object@label}.
+#'
+#' @keywords internal
 
 setMethod(
   "initialize"
   , "annotated_vector"
   , function(.Object, ...){
-    .Object <- callNextMethod()
-    .Object@label <- .Object@annotation@label
+    # Copy `@annotation@label` to `@label`:
+    args <- list(...)
+    args$.Object <- .Object
+    if(is.null(args$annotation)){
+      args$label <- character(0)
+    } else {
+      args$label <- args$annotation@label
+    }
+    # When calling the standard initialize-method, label and annotation@label
+    # already need to be identical, because at the end of callNextMethod,
+    # the validity method (see below) is called for the first time.
+    .Object <- do.call("callNextMethod", args)
     .Object
   }
 )
 
-setMethod(
-  "initialize"
-  , "annotated_factor"
-  , function(.Object, ...){
-    .Object <- callNextMethod()
-    .Object@label <- .Object@annotation@label
-    .Object
-  }
-)
+# ------------------------------------------------------------------------------
+# The corresponding validity method.
+#
+# It is checked whether slot label is identical to the label slot in the
+# annotation object in slotannotation. It is possibly a good idea to hide
+# the label slot from the user, as I only provide it for compatibility with
+# RStudio (that reads from the S3-ish label-attribute).
+#
+#
+# The error message about names is a safeguard against gross misuse. However,
+# if someone does this:
+#
+# names(object@.Data) <- "The worst way to assign names."
+
+# the to-be assigned names are not stored in the object -- a behavior I like.
 
 setValidity(
   "annotated_vector"
   , method = function(object){
-    if(length(object@label)>0|length(object@annotation@label))
-    if(object@label!=object@annotation@label)
-       return('Slot "label" is not equal to slot "annotation@label"')
+    value <- list()
+
+    if(!identical(object@label, object@annotation@label)){
+       value$label <- 'Slot "label" is not identical to slot "annotation@label"'
+    }
+
+    if(!is.null(names(object@.Data))){
+      value$names <- "There are hidden names in slot \".Data\".
+      Please report this problem to www.github.com/crsh/papaja."
+    }
+    unlist(value)
   }
 )
 
-## show methods
-setMethod("show", "annotated_vector", function(object){
-  cat('An object of formal class "', class(object), '":\n', sep = "")
-  print(object@.Data)
-})
 
-# Build a more detailed show method for annotated factors:
-setMethod("show", "annotated_factor", function(object){
-  cat('An object of formal class "', class(object), '":\n', sep = "")
-  print(object@levels[object@.Data], quote = FALSE)
-  cat("Levels: ", object@levels)
-})
+# ------------------------------------------------------------------------------
+# Show methods for annotated_vector-superclass
+#
+# All methods print meta-data to the first two lines, what follows mimicks
+# the console output for standard vector types.
+# Special care is necessary for named vectors and factors.
+#
+# Showing a vector annotation object (the meta-data container) has its own
+# method, making it easy to standardize outputs.
 
 
-#' Indexing of annotated vectors
+
+#' Show a vector annotation
 #'
-#' When subsetting a vector by "[", meta-data (e.g., label and unit of measurement)
-#' are preserved.
-#' @param x The annotated vector object to be subsetted.
-#' @param i An
+#' Display a vector annotation by printing to the console.
+#'
+#' @keywords internal
+
+setMethod(
+  f = "show"
+  , signature = "vector_annotation"
+  , def = function(object){
+    cat(
+          "Variable label     : ", object@label
+      , "\nUnit of measurement: ", object@unit
+      , "\n"
+      , sep = ""
+    )
+  }
+)
+
+# This might be an alternative solution that only needs one line ----
+#     cat(
+#       format(
+#         paste0(
+#           "Variable label: "
+#           , object@annotation@label
+#           , "   " # some minimum whitespace separating label and unit
+#         )
+#         , width = 40
+#       )
+#       , "Unit of measurement: "
+#       , object@annotation@unit
+#       , "\n"
+#       , sep = ""
+#     )
+# ----
+
+
+
+#' Show an Annotated Vector
+#'
+#' Display an annotated vector by printing to the console.
+#'
+#' @rdname show-annotated_vector-method
+#' @keywords internal
+
+setMethod(
+  "show"
+  , "annotated_vector"
+  , function(object){
+    show(object@annotation)
+    print(object@.Data)
+  }
+)
+
+#' @rdname show-annotated_vector-method
+#' @keywords internal
+
+setMethod(
+  "show"
+  , "annotated_named_vector"
+  , function(object){
+    show(object@annotation)
+    tmp <- object@.Data
+    names(tmp) <- object@names
+    print(tmp)
+  }
+)
+
+# Factors needs some special treatment, as .Data contains integer values ----
+
+#' @rdname show-annotated_vector-method
+#' @keywords internal
+
+setMethod(
+  f = "show"
+  , signature = "annotated_factor"
+  , definition = function(object){
+    show(object@annotation)
+    print(object@levels[object@.Data], quote = FALSE)
+    cat("Levels: ", object@levels)
+  }
+)
+
+# Named factors are even a bit more tricky ----
+
+#' @rdname show-annotated_vector-method
+#' @keywords internal
+
+setMethod(
+  f = "show"
+  , signature = "annotated_named_factor"
+  , definition = function(object){
+    show(object@annotation)
+    tmp <- object@levels[object@.Data]
+    names(tmp) <- object@names
+    print(tmp, quote = FALSE)
+    cat("Levels: ", object@levels)
+  }
+)
+
+# A code-bit for implementing ordered factors
+#
+# #' @rdname show-annotated_vector-method
+# #' @keywords internal
+#
+# setMethod("show", "annotated_ordered_factor", function(object){
+#   show(object@annotation)
+#   print(object@levels[object@.Data], quote = FALSE)
+#   cat("Levels: ", paste(object@levels, collapse = " < "))
+# })
+
+
+
+#' Subsetting of Annotated Vectors
+#'
+#' When subsetting a vector by "[", all annotations (e.g., label and unit of
+#' measurement) are preserved.
+#' @param x The annotated_vector object to be subsetted.
+#' @param i An index specifying elements to extract or replace.
 #'
 #' @examples
 #' a <- new("annotated_numeric", .Data = 1:4)
@@ -166,37 +474,82 @@ setMethod("show", "annotated_factor", function(object){
 #' @rdname sub_annotated
 #' @keywords internal
 
-setMethod("[", "annotated_vector", function(x, i){
- new(
-   class(x)
-   , .Data = x@.Data[i]
-   , label = x@label
-   , annotation = x@annotation
- )
-})
+setMethod(
+  f = "["
+  , signature = "annotated_vector"
+  , definition = function(x, i){
+  new(
+    class(x)
+    , .Data = x@.Data[i]
+    , label = x@label
+    , annotation = x@annotation
+    )
+  }
+)
 
 #' @rdname sub_annotated
 #' @keywords internal
 
-setMethod("[", "annotated_factor", function(x, i){
-  new(
-    "annotated_factor"
-    , .Data = x@.Data[i]
-    , label = x@label
-    , annotation = x@annotation
-    , levels = levels(x)
-  )
-})
+setMethod(
+  f = "["
+  , signature = "annotated_named_vector"
+  , definition = function(x, i){
+    new(
+      class(x)
+      , .Data = x@.Data[i]
+      , names = x@names[i]
+      , label = x@label
+      , annotation = x@annotation
+    )
+  }
+)
+
+#' @rdname sub_annotated
+#' @keywords internal
+
+setMethod(
+  f = "["
+  , signature = "annotated_factor"
+  , definition = function(x, i){
+    new(
+      "annotated_factor"
+      , .Data = x@.Data[i]
+      , label = x@label
+      , annotation = x@annotation
+      , levels = levels(x)
+    )
+  }
+)
+
+#' @rdname sub_annotated
+#' @keywords internal
+
+setMethod(
+  f = "["
+  , signature = "annotated_named_factor"
+  , definition = function(x, i){
+    new(
+      "annotated_factor"
+      , .Data = x@.Data[i]
+      , names = x@names[i]
+      , label = x@label
+      , annotation = x@annotation
+      , levels = levels(x)
+    )
+  }
+)
 
 #' Drop Unused Levels from Factors
 #'
-#' The function \code{droplevels} is used to drop unused levels from a factor or, more commonly,
-#' from factors in a \code{data.frame}. This method preserves meta-data (e.g., label and unit of measurement).
+#' The function \code{droplevels} is used to drop unused levels from a factor
+#' or, more commonly, from factors in a \code{data.frame}. This method preserves
+#' meta-data (e.g., label and unit of measurement).
 #' @param x An annotated factor from which to drop unused levels.
-#' @param ... Further arguments that can be passed, see \code{\link{droplevels}} for further options.
+#' @param ... Further arguments that can be passed, see \code{\link{droplevels}}
+#' for further options.
 #'
 #' @seealso \code{\link{droplevels}}
-#'
+#' @rdname droplevels-annotated_factor-method
 #' @keywords internal
 
 setMethod(
@@ -222,10 +575,37 @@ setMethod(
   }
 )
 
-#' @title Drop Unused Levels
-#' @description
+#' @rdname droplevels-annotated_factor-method
+#' @keywords internal
+
+setMethod(
+  f = "droplevels"
+  , signature = c(x = "annotated_named_factor")
+  , definition = function(x, ...){
+
+    args <- list(...)
+    if("exclude" %in% names(args)){
+      exclude <- args$exclude
+    } else {
+      exclude <- if(anyNA(levels(x))) NULL else NA
+    }
+
+    fac <- as(factor(x, exclude = exclude), "annotated_factor")
+
+    new("annotated_named_factor"
+        , .Data = fac@.Data
+        , named = x@names
+        , label = x@label
+        , annotation = x@annotation
+        , levels = fac@levels
+    )
+  }
+)
+
+#' Drop Unused Levels from Vectors
+#'
 #' This is an additional method that allows for more convenient programming:
-#' If a vector is not a factor (annotated or not), do not change anything.
+#' If a vector (annotated or not) is not a factor, do not change anything.
 #' @param x An atomic vector or annotated vector.
 #' @return x, unchanged.
 #' @keywords internal
@@ -238,15 +618,6 @@ setMethod(
   }
 )
 
-# setMethod(
-#   f = "droplevels"
-#   , signature = "data.frame"
-#   , definition = function(x, ...){
-#     # apply droplevels to all columns, method dispatch solves your problems:
-#     as.data.frame(lapply(X = x, FUN = droplevels), stringsAsFactors = FALSE)
-#   }
-# )
-
 #' Reorder Levels of Annotated Factor
 #'
 #' The levels of an annotated factor are re-ordered so that the level specified
@@ -255,8 +626,10 @@ setMethod(
 #' reference.
 #'
 #' @param x An object of class \code{annotated_factor}.
-#' @param ref The reference level, typically a character.
-#' You can also specify a character vector of any length: As many levels as you specified will be re-ordered.
+#' @param ref The reference level, typically a character. Contrary to the
+#' original behavior, you can also specify a character vector of any length:
+#' As many levels as you specified will be re-ordered (standard behavior issued
+#' an error).
 #' @return An annotated factor of the same length as x.
 #' @seealso \code{\link{relevel}}
 #' @details Currently, two methods for reordering the levels of an \code{annotated_factor} are implemented:
@@ -317,7 +690,7 @@ setMethod(
 #' Coerce annotated factors to character vectors
 #'
 #' Methods to coerce an annotated factor to an atomic character vector.
-#' Necessary for compatibility reasons.
+#' Necessary for compatibility reasons (View() in RStudio).
 #' @param x An object of class annotated_factor.
 #'
 #' @rdname as_character
@@ -340,9 +713,10 @@ setAs(
 )
 
 
+
 #' Coerce vectors to annotated vectors
 #'
-#' Internal workhorse function wthat will soon be dropped.
+#' Internal workhorse function that
 #' @param An annotated vector or a data.frame.
 #'
 #' @rdname annotate
@@ -554,3 +928,185 @@ setMethod(
   }
 )
 
+
+
+
+#' The Names of an Annotated Vector
+#'
+#' Methods to set the names of an annotated vector.
+#' If names are specified for an unnamed annotated_vector, its class is changed
+#' to the corresponding class from annotated_named_vector-superclass.
+#' @param x An annotated vector.
+#' @param value A character vector of the same length as x, or NULL.
+#' @details
+#'   See \code{\link{names}} for details. If the names of an object of an
+#'   annotated_named_vector are removed by setting \code{names(x) <- NULL}, it
+#'   is coerced to the corresponding class from annotated_vector-superclasses
+#'   (i.e., an annotated vector without a names slot).
+#'
+#' @keywords internal
+
+setMethod(
+  f = "names<-"
+  , signature = "annotated_vector"
+  , definition = function(x, value){
+    value_ <- rep(NA, length.out = length(x@.Data))
+    value_[1:length(value)] <- value
+    new(
+      gsub(class(x), pattern = "annotated", replacement = "annotated_named")
+      , .Data = x@.Data
+      , names = as.character(value_)
+      , label = x@label
+      , annotation = x@annotation
+    )
+  }
+)
+
+#' Replace the Names Slot with NULL
+#'
+#' If \code{value(x) <- NULL} is assigned, an unnamed vector keeps its class,
+#' a named vector is coerced to its unnamed complement.
+#'
+#' @rdname replacement_with_NULL_names
+#' @keywords internal
+
+setMethod(
+  f = "names<-"
+  , signature = c(x = "annotated_vector", value = "NULL")
+  , definition = function(x, value){
+    x
+  }
+)
+
+#' @rdname replacement_with_NULL_names
+#' @keywords internal
+
+setMethod(
+  f = "names<-"
+  , signature = c(x = "annotated_named_vector", value = "NULL")
+  , definition = function(x, value){
+    as(x, gsub(class(x), pattern = "annotated_named", replacement = "annotated"))
+  }
+)
+
+# ------------------------------------------------------------------------------
+# This section defines methods to coerce named vectors to unnamed vectors.
+# Method selection uses class inheritance only on the first argument; thus, it
+# it is necessary to define a method for each target-class.
+
+setAs(
+  from = "annotated_named_vector"
+  , to = "annotated_numeric"
+  , def = function(from){
+    new(
+      "annotated_numeric"
+      , .Data = as(from@.Data, "numeric")
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_named_vector"
+  , to = "annotated_integer"
+  , def = function(from){
+    new(
+      "annotated_integer"
+      , .Data = as(from@.Data, "integer")
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_named_vector"
+  , to = "annotated_character"
+  , def = function(from){
+    new(
+      "annotated_character"
+      , .Data = as(from@.Data, "character")
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_named_vector"
+  , to = "annotated_logical"
+  , def = function(from){
+    new(
+      "annotated_character"
+      , .Data = as(from@.Data, "logical")
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+# ------------------------------------------------------------------------------
+# This next section defines methods to coerce unnamed vectors to named vectors.
+# Method selection uses class inheritance only on the first argument; thus, it
+# it is necessary to define a method for each target-class.
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_named_numeric"
+  , def = function(from){
+    new(
+      "annotated_named_numeric"
+      , .Data = as(from@.Data, "numeric")
+      # Next line is not necessary, but an explicit description what happens.
+      # , names = rep(NA_character_, length(from@.Data))
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_named_integer"
+  , def = function(from){
+    new(
+      "annotated_named_integer"
+      , .Data = as(from@.Data, "integer")
+      # Next line is not necessary, but an explicit description what happens.
+      # , names = rep(NA_character_, length(from@.Data))
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_named_character"
+  , def = function(from){
+    new(
+      "annotated_named_character"
+      , .Data = as(from@.Data, "character")
+      # Next line is not necessary, but an explicit description what happens.
+      # , names = rep(NA_character_, length(from@.Data))
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_named_logical"
+  , def = function(from){
+    new(
+      "annotated_named_logical"
+      , .Data = as(from@.Data, "logical")
+      # Next line is not necessary, but an explicit description what happens.
+      # , names = rep(NA_character_, length(from@.Data))
+      , label = from@label
+      , annotation = from@annotation
+    )
+  }
+)

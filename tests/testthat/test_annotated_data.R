@@ -44,11 +44,11 @@ test_that(
 
     expect_identical(
       object = capture.output(show(object_1))
-      , expected = c("An object of formal class \"annotated_integer\":", "[1] 1 2 3 4")
+      , expected = c("Variable label     : ", "Unit of measurement: ", "[1] 1 2 3 4")
     )
     expect_identical(
       object = capture.output(show(object_2))
-      , expected = c("An object of formal class \"annotated_factor\":", "[1] a b c d", "Levels:  a b c d e")
+      , expected = c("Variable label     : ", "Unit of measurement: ", "[1] a b c d", "Levels:  a b c d e")
     )
   }
 )
@@ -125,7 +125,101 @@ test_that(
       object = object_1
       , expected = object_2
     )
-
   }
+)
 
+test_that(
+  "names<-, annotated_vector-method"
+  , {
+    # Construct a standard annotated_integer
+    annotation <- new("vector_annotation", label = "label1", unit = "kg")
+    object_1 <- new("annotated_integer", .Data = 6:4, label = annotation@label, annotation = annotation)
+    object_2 <- object_1
+    object_3 <- object_1
+    object_4 <- object_1
+    # If full names are supplied, are they properly assigned
+    names(object_2) <- letters[3:1]
+    # If partial names are supplied, are NAs generated properly
+    names(object_3) <- c(NA_character_, "b")
+    # If NULL-names are assigned, vector should keep class annotated_integer
+    names(object_4) <- NULL
+
+    expect_identical(
+      object = object_2
+      , expected = new(
+        "annotated_named_integer"
+        , .Data = 6:4
+        , names = letters[3:1]
+        , label = "label1"
+        , annotation = annotation
+      )
+    )
+    expect_identical(
+      object = object_3
+      , expected = new(
+        "annotated_named_integer"
+        , .Data = 6:4
+        , names = c(NA_character_, "b", NA_character_)
+        , label = "label1"
+        , annotation = annotation
+      )
+    )
+    expect_identical(
+      object = object_4
+      , expected = object_1
+    )
+  }
+)
+
+test_that(
+  "as,annotated_vector,annotated_named_vector-methods"
+  , {
+    # Prepare
+    annotation <- new(
+      "vector_annotation"
+      , label = "label1"
+      , unit = "kg"
+    )
+
+    # Coercion from unnamed to named
+    object_1 <- new(
+      "annotated_integer"
+      , .Data = 6:8
+      , label = "label1"
+      , annotation = annotation
+    )
+
+    object_2 <- as(object_1, "annotated_named_integer")
+
+    # Coercion from named to unnamed
+    object_3 <- new(
+      "annotated_named_integer"
+      , .Data = 2:5
+      , names = letters[1:4]
+      , label = "label1"
+      , annotation = annotation
+    )
+    object_4 <- as(object_3, "annotated_integer")
+
+    # Expectations
+    expect_identical(
+      object = object_2
+      , expected = new(
+        "annotated_named_integer"
+        , .Data = 6:8
+        , label = "label1"
+        , annotation = annotation
+      )
+    )
+
+    expect_identical(
+      object = object_4
+      , expected = new(
+        "annotated_integer"
+        , .Data = 2:5
+        , label = "label1"
+        , annotation = annotation
+      )
+    )
+  }
 )

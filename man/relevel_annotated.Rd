@@ -13,8 +13,10 @@
 \arguments{
 \item{x}{An object of class \code{annotated_factor}.}
 
-\item{ref}{The reference level, typically a character.
-You can also specify a character vector of any length: As many levels as you specified will be re-ordered.}
+\item{ref}{The reference level, typically a character. Contrary to the
+original behavior, you can also specify a character vector of any length:
+As many levels as you specified will be re-ordered (standard behavior issued
+an error).}
 }
 \value{
 An annotated factor of the same length as x.

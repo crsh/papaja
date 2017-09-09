@@ -3,7 +3,7 @@
 \docType{methods}
 \name{droplevels,vector-method}
 \alias{droplevels,vector-method}
-\title{Drop Unused Levels}
+\title{Drop Unused Levels from Vectors}
 \usage{
 \S4method{droplevels}{vector}(x)
 }
@@ -15,6 +15,6 @@ x, unchanged.
 }
 \description{
 This is an additional method that allows for more convenient programming:
-If a vector is not a factor (annotated or not), do not change anything.
+If a vector (annotated or not) is not a factor, do not change anything.
 }
 \keyword{internal}

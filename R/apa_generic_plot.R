@@ -230,11 +230,17 @@ apa_generic_plot.default <- function(
   # is dplyr available?
   use_dplyr <- package_available("dplyr")
 
-  ## Aggregate subject data
-  if(use_dplyr) {
-    aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
+  # Aggregate subject data -------------------------------------------------------------------------
+  ch_fun_aggregate <- deparse(substitute(fun_aggregate))[1]
+  if(!ch_fun_aggregate=="suppress"){
+
+    if(use_dplyr) {
+      aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
+    } else {
+      aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+    }
   } else {
-    aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+    aggregated <- data
   }
 
   ## Calculate central tendencies
@@ -515,11 +521,9 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
     )
   )
 
-
   # Some modifications are in order if a barplot starts at reference point
   # However, save `lwd`
   tmp_lwd <- ifelse(is.null(args_x_axis$lwd), 1, args_x_axis$lwd)
-
   if("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference){
 
     args_x_axis <- defaults(
@@ -532,12 +536,6 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
         , pos = ellipsis$ylim[1]
       )
     )
-  }
-
-
-  # only draw axis if axis type is not specified or not specified as "n"
-  if(is.null(args_x_axis$xaxt)||args_x_axis$xaxt!="n") {
-    do.call("axis", args_x_axis)
   }
 
   # prepare defaults for y-axis
@@ -554,10 +552,9 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
 
   do.call("axis", args_y_axis)
 
-  args_rect <- list()
+  args_rect <- ellipsis$args_rect
   if("bars" %in% ellipsis$plot){
 
-    abline(h = ellipsis$reference, lwd = tmp_lwd)
     space <- .2
 
     x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
@@ -582,13 +579,20 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
           , ifelse(ellipsis$ylim[1] >= ellipsis$reference, ellipsis$ylim[1], ellipsis$reference) # for increasing ylab
           , ifelse(ellipsis$ylim[1] <= ellipsis$reference, ellipsis$ylim[1], ellipsis$reference) # for decreasing ylab
         )
+        , col = assigned_colors
       )
       , set = list(
-        col = assigned_colors
-        , xpd = FALSE
+
+        xpd = FALSE
       )
     )
     do.call("rect", args_rect)
+    abline(h = ellipsis$reference, lwd = tmp_lwd)
+  }
+
+  # only draw axis if axis type is not specified or not specified as "n"
+  if(is.null(args_x_axis$xaxt)||args_x_axis$xaxt!="n") {
+    do.call("axis", args_x_axis)
   }
 
   # prepare defaults for title and labels

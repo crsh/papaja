@@ -24,7 +24,8 @@ Imports:
   beeswarm,
   stringr,
   methods,
-  latex2exp
+  latex2exp,
+  BayesFactor
 Suggests:
   car,
   afex,

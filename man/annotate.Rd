@@ -14,6 +14,6 @@ annotate(object)
 \item{An}{annotated vector or a data.frame.}
 }
 \description{
-Internal workhorse function wthat will soon be dropped.
+Internal workhorse function that
 }
 \keyword{internal}

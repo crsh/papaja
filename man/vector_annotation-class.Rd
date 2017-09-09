@@ -3,9 +3,13 @@
 \docType{class}
 \name{vector_annotation-class}
 \alias{vector_annotation-class}
-\title{Vector annotations}
+\title{Annotations for Vectors}
 \description{
-A class intended to keep all meta-data of a vector.
+This S4 class is used to represent annotations (i.e., meta-data) of a vector;
+it is used as the meta-data container of the
+\code{\link{annotated_vector-class}}.
+It currently contains slots for a variable label and the unit of measurement,
+but is intended to be incrementally extended.
 }
 \section{Slots}{
 
