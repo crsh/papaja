@@ -120,9 +120,9 @@ print_model_comp <- function(
   )
 
   ## Merge coefficient tables
-  coef_table <- Reduce(function(...) merge(..., by = "Predictor", all = TRUE), model_summaries)
-  rownames(coef_table) <- coef_table$Predictor
-  coef_table <- coef_table[, colnames(coef_table) != "Predictor"]
+  coef_table <- Reduce(function(...) merge(..., by = "predictor", all = TRUE), model_summaries)
+  rownames(coef_table) <- coef_table$predictor
+  coef_table <- coef_table[, colnames(coef_table) != "predictor"]
   coef_table <- coef_table[names(sort(apply(coef_table, 1, function(x) sum(is.na(x))))), ] # Sort predictors to create steps in table
   coef_table <- coef_table[c("Intercept", rownames(coef_table)[rownames(coef_table) != "Intercept"]), ] # Make Intercept first Predictor
   coef_table[is.na(coef_table)] <- ""

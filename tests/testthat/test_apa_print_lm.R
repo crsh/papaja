@@ -63,7 +63,8 @@ test_that(
     # table
     expect_is(lm_fit_output$table, "data.frame")
     expect_equal(nrow(lm_fit_output$table), 2)
-    expect_equal(colnames(lm_fit_output$table), c("Predictor", "$b$", "95\\% CI", "$t(18)$", "$p$"))
+    expect_equal(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$b$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
+    expect_equal(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
 
     # Manual CI
     lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
@@ -75,7 +76,8 @@ test_that(
     lm_fit_output <- apa_print(lm_fit, est_name = "\\beta")
     expect_equal(lm_fit_output$est$Intercept, "$\\beta = 5.03$, 95\\% CI $[4.57$, $5.49]$")
     expect_equal(lm_fit_output$est$groupTrt, "$\\beta = -0.37$, 95\\% CI $[-1.03$, $0.28]$")
-    expect_equal(colnames(lm_fit_output$table), c("Predictor", "$\\beta$", "95\\% CI", "$t(18)$", "$p$"))
+    expect_equal(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$\\beta$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
+    expect_equal(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
 
     # Standardized regression coefficients
     trt <- rep(trt, 2)
@@ -85,7 +87,8 @@ test_that(
 
     expect_equal(lm_fit_output$full$Intercept, "$b^* = .00$, 95\\% CI $[-.43$, $.43]$, $t(18) = 0.00$, $p > .999$")
     expect_equal(lm_fit_output$full$z_ctl, "$b^* = -.46$, 95\\% CI $[-.90$, $-.02]$, $t(18) = -2.18$, $p = .042$")
-    expect_equal(colnames(lm_fit_output$table), c("Predictor", "$b^*$", "95\\% CI", "$t(18)$", "$p$"))
+    expect_equal(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$b^*$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
+    expect_equal(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
 
     # No CI information
     expect_error(apa_print(lm_fit, ci = NULL), "The parameter 'ci' is NULL.")

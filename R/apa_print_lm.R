@@ -143,7 +143,7 @@ apa_print.lm <- function(
 
   apa_res <- lapply(apa_res, as.list)
 
-  ## Assamble regression table
+  ## Assemble regression table
   regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
   regression_table$ci <- apply(tidy_x[, utils::tail(names(tidy_x), 2)], 1, print_confint, conf_level = NULL) # Don't add "x% CI" to each line
   regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "p.value")] # Change order of columns
@@ -153,7 +153,15 @@ apa_print.lm <- function(
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
   regression_table$p.value <- printp(regression_table$p.value)
 
-  colnames(regression_table) <- c("Predictor", paste0("$", est_name, "$"), paste0(conf_level, "\\% CI"), paste0("$t(", glance_x$df.residual, ")$"), "$p$")
+  colnames(regression_table) <- c("predictor", "estimate", "ci", "statistic", "p.value")
+
+  variable_label(regression_table) <- c(
+    predictor = "Predictor"
+    , estimate = paste0("$", est_name, "$")
+    , ci = paste0(conf_level, "\\% CI")
+    , statistic = paste0("$t(", glance_x$df.residual, ")$")
+    , p.value = "$p$"
+  )
   apa_res$table <- regression_table
 
   # Model fit
