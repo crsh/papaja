@@ -24,4 +24,3 @@ meta-data (e.g., label and unit of measurement).
 \seealso{
 \code{\link{droplevels}}
 }
-\keyword{internal}

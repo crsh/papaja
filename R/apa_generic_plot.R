@@ -129,15 +129,15 @@ apa_generic_plot.default <- function(
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
 
+
+
   # Add missing variable labels
   data <- default_label(data)
-
-
 
   # Handling of factors:
   # a) convert to factor
   for (i in c(id, factors)){
-    data[[i]] <- methods::as(data[[i]], "annotated_factor")
+    data[[i]] <- as(data[[i]], "annotated_factor")
   }
 
   # b) drop factor levels

@@ -43,7 +43,7 @@ setMethod(
   "variable_label"
   , signature = "annotated_vector"
   , definition = function(object){
-    object@label
+    object@annotation@label
   }
 )
 
@@ -125,7 +125,6 @@ setMethod(
     new(
       paste0("annotated_", class(object))
       , .Data = object
-      , label = value
       , annotation = new("vector_annotation", label = value)
     )
   }

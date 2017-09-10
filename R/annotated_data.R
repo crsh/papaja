@@ -296,7 +296,7 @@ setMethod(
     }
     # When calling the standard initialize-method, label and annotation@label
     # already need to be identical, because at the end of callNextMethod,
-    # the validity method (see below) is called for the first time.
+    # the validity method (see below) is already called for the first time.
     .Object <- do.call("callNextMethod", args)
     .Object
   }
@@ -366,6 +366,25 @@ setMethod(
     )
   }
 )
+
+
+# This might be an alternative solution, printing only used slots ----
+# setMethod(
+#   f = "show"
+#   , signature = "vector_annotation"
+#   , def = function(object){
+#     cat(
+#       if(length(object@label)>0){   "Variable label     : "}else{NULL}
+#       , object@label
+#       , if(length(object@unit)>0){"\nUnit of measurement: "}else{NULL}
+#       , object@unit
+#       , "\n"
+#       , sep = ""
+#     )
+#   }
+# )
+# ----
+
 
 # This might be an alternative solution that only needs one line ----
 #     cat(
@@ -550,7 +569,7 @@ setMethod(
 #'
 #' @seealso \code{\link{droplevels}}
 #' @rdname droplevels-annotated_factor-method
-#' @keywords internal
+#' @export
 
 setMethod(
   f = "droplevels"
@@ -576,7 +595,7 @@ setMethod(
 )
 
 #' @rdname droplevels-annotated_factor-method
-#' @keywords internal
+#' @export
 
 setMethod(
   f = "droplevels"
@@ -736,9 +755,23 @@ setMethod(
   f = "annotate"
   , signature = "data.frame"
   , definition = function(object){
-    for (i in 1:ncol(object)){
-      object[, i] <- as(object[, i], paste0("annotated_", class(object[, i])))
-    }
+
+    lapply(X = object, FUN = annotate)
+  }
+)
+
+setMethod(
+  f = "annotate"
+  , signature = "vector"
+  , definition = function(object){
+    as(object, paste0("annotated_", class(object)))
+  }
+)
+
+setMethod(
+  f = "annotate"
+  , signature = "annotated_vector"
+  , definition = function(object){
     object
   }
 )
@@ -1107,6 +1140,82 @@ setAs(
       # , names = rep(NA_character_, length(from@.Data))
       , label = from@label
       , annotation = from@annotation
+    )
+  }
+)
+
+# ------------------------------------------------------------------------------
+# This next section defines methods to coerce annotated vectors to other types
+# of annotated vectors.
+# Method selection uses class inheritance only on the first argument; thus, it
+# it is necessary to define a method for each target-class.
+
+setAs(
+  from = "annotated_numeric"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_integer"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_character"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_logical"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "vector"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , .Data = tmp
+      , levels = levels(tmp)
     )
   }
 )
