@@ -127,6 +127,7 @@ apa_table <- function(
 
   if(!is.null(ellipsis$escape) && ellipsis$escape) {
     prep_table <- as.data.frame(lapply(prep_table, escape_latex), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    # prep_table <- default_label(prep_table)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
     caption <- escape_latex(caption)
     note <- escape_latex(note)
@@ -216,7 +217,10 @@ apa_table.latex <- function(
   if(!is.null(current_chunk)) caption <- paste0("\\label{tab:", current_chunk, "}", caption)
 
   # Center title row
-  colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
+  # If x doesn't have variable labels, yet, create them...
+  x <- default_label(x)
+  # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
+  colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", unlist(variable_label(x)), "}")[-1]
 
   res_table <- do.call(function(...) knitr::kable(x, format = "latex", ...), ellipsis)
 
@@ -301,6 +305,10 @@ apa_table.word <- function(
 ) {
   # Parse ellipsis
   ellipsis <- list(...)
+  # If x doesn't have variable labels, yet, create them...
+  x <- default_label(x)
+  # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
+  colnames(x) <- unlist(variable_label(x))
   res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
