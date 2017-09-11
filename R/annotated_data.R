@@ -142,6 +142,7 @@ setClass(
 
 # ------------------------------------------------------------------------------
 # Factor class needs some more brain:
+setOldClass("factor")
 
 #' @rdname annotated_vector-class
 #' @keywords internal
@@ -241,7 +242,7 @@ setClass(
 # is itself a member of superclass annotated_vector.
 
 #' @rdname annotated_vector-class
-#' @keywords internal
+#' @export
 
 setClassUnion(
   name = "annotated_named_vector"
@@ -257,7 +258,7 @@ setClassUnion(
 
 
 #' @rdname annotated_vector-class
-#' @keywords internal
+#' @export
 
 setClassUnion(
   name = "annotated_vector"
@@ -731,7 +732,27 @@ setAs(
   }
 )
 
+setAs(
+  from = "annotated_factor"
+  , to = "factor"
+  , def = function(from){
+    factor(x = from@levels[from@.Data], levels = from@levels)
+  }
+)
 
+setGeneric(
+  "as.factor"
+)
+
+#' @export
+
+setMethod(
+  f = "as.factor"
+  , signature = "annotated_vector"
+  , definition = function(x){
+    as(x, "factor")
+  }
+)
 
 #' Coerce vectors to annotated vectors
 #'
@@ -756,7 +777,7 @@ setMethod(
   , signature = "data.frame"
   , definition = function(object){
 
-    lapply(X = object, FUN = annotate)
+    as.data.frame(lapply(X = object, FUN = annotate), stringsAsFactors = FALSE)
   }
 )
 
@@ -778,8 +799,6 @@ setMethod(
 
 
 
-#' @keywords internal
-
 setAs(
   from = "vector"
   , to = "annotated_numeric"
@@ -787,10 +806,6 @@ setAs(
     new("annotated_numeric", .Data = as(from, "numeric"))
   }
 )
-
-
-
-#' @keywords internal
 
 setAs(
   from = "vector"
@@ -800,9 +815,6 @@ setAs(
   }
 )
 
-
-#' @keywords internal
-
 setAs(
   from = "vector"
   , to = "annotated_character"
@@ -810,10 +822,6 @@ setAs(
     new("annotated_character", .Data = as(from, "character"))
   }
 )
-
-
-
-#' @keywords internal
 
 setAs(
   from = "vector"
@@ -823,41 +831,12 @@ setAs(
   }
 )
 
-
-
-#' @keywords internal
-
 setAs(
   from = "vector"
   , to = "annotated_factor"
   , def = function(from){
     tmp <- factor(from)
     new("annotated_factor", tmp, levels = as(levels(tmp), "character"))
-  }
-)
-
-
-
-#' @keywords internal
-
-setAs(
-  from = "integer"
-  , to = "annotated_factor"
-  , def = function(from){
-    tmp <- factor(from)
-    new("annotated_factor", tmp, levels = levels(tmp))
-  }
-)
-
-
-
-#' @keywords internal
-
-setAs(
-  from = "annotated_factor"
-  , to = "factor"
-  , def = function(from){
-    factor(from@levels[from@.Data], levels = from@levels)
   }
 )
 
@@ -1147,8 +1126,9 @@ setAs(
 # ------------------------------------------------------------------------------
 # This next section defines methods to coerce annotated vectors to other types
 # of annotated vectors.
-# Method selection uses class inheritance only on the first argument; thus, it
-# it is necessary to define a method for each target-class.
+# Definition by adding a method for superclass annotated_vector does not seem to
+# work if the target class is also from this superclass; thus, we need a method
+# for each subclass.
 
 setAs(
   from = "annotated_numeric"
@@ -1219,3 +1199,16 @@ setAs(
     )
   }
 )
+
+setAs(
+  from = "annotated_factor"
+  , to = "factor"
+  , def = function(from){
+    factor(
+      x = from@levels[from@.Data]
+      , levels = from@levels
+    )
+  }
+)
+
+

@@ -194,12 +194,30 @@ setMethod(
       stop("Some requested columns could not be found in data.frame.")
     }
 
-    col_order <- match(names(value), colnames(object))
-    modified_object <- as.data.frame(object[, col_order], stringsAsFactors = FALSE)
+    # R allows data frames to have duplicate column names.
+    # The following code is optimized to work even in this horrible case.
+    # This is especially important for default_label and apa_table (e.g., in
+    # a frequency table, you frequently have repeating column names):
+    columns_to_annotate <- colnames(object) %in% names(value)
+    # do not coece to vector if only one column is changed:
+    modified_object <- object[, columns_to_annotate, drop = FALSE]
     modified_object <- annotate(modified_object)
-    d <- mapply(FUN = assign_annotation, modified_object, name = rep("label", length(col_order)), value = value, USE.NAMES = TRUE, SIMPLIFY = FALSE)
-    d <- as.data.frame(d, col.names = names(modified_object), stringsAsFactors = FALSE)
-    object[, col_order] <- d
+    ordered_value <- value[colnames(modified_object)]
+
+    d <- mapply(
+      FUN = assign_annotation
+      , modified_object
+      , name = rep("label", length(ordered_value))
+      , value = ordered_value
+      , USE.NAMES = TRUE
+      , SIMPLIFY = FALSE
+    )
+    d <- as.data.frame(
+      d
+      , col.names = names(modified_object)
+      , stringsAsFactors = FALSE
+    )
+    object[, columns_to_annotate] <- d
 
     object
   }

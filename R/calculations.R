@@ -92,6 +92,12 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   between <- c()
   within <- c()
 
+  # `split()` (below) needs standard factors, because it does not apply `as.factor`
+  # by default
+  for(i in c(id, factors)){
+    data[[i]] <- as(data[[i]], "factor")
+  }
+
   for (i in 1:length(factors)) {
 
     if (all(rowSums(table(data[[id]], data[[factors[i]]])>0)==1)) {
