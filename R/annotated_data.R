@@ -732,18 +732,29 @@ setAs(
   }
 )
 
-setAs(
-  from = "annotated_factor"
-  , to = "factor"
-  , def = function(from){
-    factor(x = from@levels[from@.Data], levels = from@levels)
-  }
-)
+# setAs(
+#   from = "annotated_factor"
+#   , to = "factor"
+#   , def = function(from){
+#     factor(x = from@levels[from@.Data], levels = from@levels)
+#   }
+# )
 
 setGeneric(
   "as.factor"
 )
 
+
+
+
+#' Coerce Annotated Vectors to Factors
+#'
+#' Methods to coerce an annotated vector to an (atomic) factor.
+#' Necessary for compatibility reasons.
+#' @param x An object of virtual class annotated_vector.
+#'
+#' @rdname as_factor
+#' @keywords internal
 #' @export
 
 setMethod(
@@ -799,46 +810,7 @@ setMethod(
 
 
 
-setAs(
-  from = "vector"
-  , to = "annotated_numeric"
-  , def = function(from){
-    new("annotated_numeric", .Data = as(from, "numeric"))
-  }
-)
 
-setAs(
-  from = "vector"
-  , to = "annotated_integer"
-  , def = function(from){
-    new("annotated_integer", .Data = as(from, "integer"))
-  }
-)
-
-setAs(
-  from = "vector"
-  , to = "annotated_character"
-  , def = function(from){
-    new("annotated_character", .Data = as(from, "character"))
-  }
-)
-
-setAs(
-  from = "vector"
-  , to = "annotated_logical"
-  , def = function(from){
-    new("annotated_logical", .Data = as(from, "logical"))
-  }
-)
-
-setAs(
-  from = "vector"
-  , to = "annotated_factor"
-  , def = function(from){
-    tmp <- factor(from)
-    new("annotated_factor", tmp, levels = as(levels(tmp), "character"))
-  }
-)
 
 
 #' Set Levels of an Annotated Factor
@@ -1126,12 +1098,58 @@ setAs(
 # ------------------------------------------------------------------------------
 # This next section defines methods to coerce annotated vectors to other types
 # of annotated vectors.
-# Definition by adding a method for superclass annotated_vector does not seem to
-# work if the target class is also from this superclass; thus, we need a method
-# for each subclass.
+# Class Inheritance hopefully works, but should be tested!
 
 setAs(
-  from = "annotated_numeric"
+  from = "annotated_vector"
+  , to = "annotated_numeric"
+  , def = function(from){
+    new(
+      "annotated_numeric"
+      , .Data = as.numeric(from@.Data)
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_integer"
+  , def = function(from){
+    new(
+      "annotated_integer"
+      , .Data = as.integer(from@.Data)
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_character"
+  , def = function(from){
+    new(
+      "annotated_character"
+      , .Data = as.character(from@.Data)
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
+  , to = "annotated_logical"
+  , def = function(from){
+    new(
+      "annotated_logical"
+      , .Data = as.logical(from@.Data)
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_vector"
   , to = "annotated_factor"
   , def = function(from){
 
@@ -1144,59 +1162,98 @@ setAs(
   }
 )
 
-setAs(
-  from = "annotated_integer"
-  , to = "annotated_factor"
-  , def = function(from){
 
-    tmp <- factor(from@.Data)
-    new(
-      "annotated_factor"
-      , tmp
-      , annotation = from@annotation
-    )
-  }
-)
+# ------------------------------------------------------------------------------
+# Coercion from basic data types to their annotated counterparts.
 
 setAs(
-  from = "annotated_character"
-  , to = "annotated_factor"
+  from = "vector"
+  , to = "annotated_numeric"
   , def = function(from){
-
-    tmp <- factor(from@.Data)
-    new(
-      "annotated_factor"
-      , tmp
-      , annotation = from@annotation
-    )
-  }
-)
-
-setAs(
-  from = "annotated_logical"
-  , to = "annotated_factor"
-  , def = function(from){
-
-    tmp <- factor(from@.Data)
-    new(
-      "annotated_factor"
-      , tmp
-      , annotation = from@annotation
-    )
+    new("annotated_numeric", .Data = as(from, "numeric"))
   }
 )
 
 setAs(
   from = "vector"
+  , to = "annotated_integer"
+  , def = function(from){
+    new("annotated_integer", .Data = as(from, "integer"))
+  }
+)
+
+setAs(
+  from = "vector"
+  , to = "annotated_character"
+  , def = function(from){
+    new("annotated_character", .Data = as(from, "character"))
+  }
+)
+
+setAs(
+  from = "vector"
+  , to = "annotated_logical"
+  , def = function(from){
+    new("annotated_logical", .Data = as(from, "logical"))
+  }
+)
+
+# ------------------------------------------------------------------------------
+# Coercion to factor is horrible, method dispatch does not work if only
+# superclass vector is specified
+
+setAs(
+  from = "numeric"
   , to = "annotated_factor"
   , def = function(from){
+    tmp <- factor(from)
+    new("annotated_factor", tmp)
+  }
+)
 
-    tmp <- factor(from@.Data)
-    new(
-      "annotated_factor"
-      , .Data = tmp
-      , levels = levels(tmp)
-    )
+setAs(
+  from = "integer"
+  , to = "annotated_factor"
+  , def = function(from){
+    tmp <- factor(from)
+    new("annotated_factor", tmp)
+  }
+)
+
+setAs(
+  from = "character"
+  , to = "annotated_factor"
+  , def = function(from){
+    tmp <- factor(from)
+    new("annotated_factor", tmp)
+  }
+)
+
+setAs(
+  from = "logical"
+  , to = "annotated_factor"
+  , def = function(from){
+    tmp <- factor(from)
+    new("annotated_factor", tmp)
+  }
+)
+
+setAs(
+  from = "factor"
+  , to = "annotated_factor"
+  , def = function(from){
+    new("annotated_factor", from)
+  }
+)
+
+# ------------------------------------------------------------------------------
+# Coercion from annotated vectors to basic data types.
+
+setAs(
+  from = "annotated_vector"
+  , to = "factor"
+  , def = function(from){
+    factor(from@.Data)
   }
 )
 
@@ -1210,5 +1267,3 @@ setAs(
     )
   }
 )
-
-

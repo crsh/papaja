@@ -95,7 +95,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # `split()` (below) needs standard factors, because it does not apply `as.factor`
   # by default
   for(i in c(id, factors)){
-    data[[i]] <- as(data[[i]], "factor")
+    data[[i]] <- as.factor(data[[i]])
   }
 
   for (i in 1:length(factors)) {
