@@ -1,5 +1,5 @@
 #' @import methods
-NULL # to import complete methods package, document NULL.
+NULL # to import the complete `methods` package, document NULL.
 
 #' Annotations for Vectors
 #'
@@ -927,7 +927,7 @@ setMethod(
 #'   annotated_named_vector are removed by setting \code{names(x) <- NULL}, it
 #'   is coerced to the corresponding class from annotated_vector-superclasses
 #'   (i.e., an annotated vector without a names slot).
-#'
+#' @rdname names-set-annotated_vector-ANY-method
 #' @keywords internal
 
 setMethod(
@@ -938,6 +938,25 @@ setMethod(
     value_[1:length(value)] <- value
     new(
       gsub(class(x), pattern = "annotated", replacement = "annotated_named")
+      , .Data = x@.Data
+      , names = as.character(value_)
+      , label = x@label
+      , annotation = x@annotation
+    )
+  }
+)
+
+#' @rdname names-set-annotated_vector-ANY-method
+#' @keywords internal
+
+setMethod(
+  f = "names<-"
+  , signature = "annotated_named_vector"
+  , definition = function(x, value){
+    value_ <- rep(NA, length.out = length(x@.Data))
+    value_[1:length(value)] <- value
+    new(
+      class(x)
       , .Data = x@.Data
       , names = as.character(value_)
       , label = x@label

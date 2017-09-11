@@ -3,9 +3,12 @@
 \docType{methods}
 \name{names<-,annotated_vector,ANY-method}
 \alias{names<-,annotated_vector,ANY-method}
+\alias{names<-,annotated_named_vector,ANY-method}
 \title{The Names of an Annotated Vector}
 \usage{
 \S4method{names}{annotated_vector,ANY}(x) <- value
+
+\S4method{names}{annotated_named_vector,ANY}(x) <- value
 }
 \arguments{
 \item{x}{An annotated vector.}
