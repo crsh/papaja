@@ -787,8 +787,9 @@ setMethod(
   f = "annotate"
   , signature = "data.frame"
   , definition = function(object){
-
-    as.data.frame(lapply(X = object, FUN = annotate), stringsAsFactors = FALSE)
+    # ----
+    # optional=TRUE suppresses changing colnames
+    as.data.frame(lapply(X = object, FUN = annotate), stringsAsFactors = FALSE, optional = TRUE)
   }
 )
 
@@ -1169,6 +1170,66 @@ setAs(
 
 setAs(
   from = "annotated_vector"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+
+# ------------------------------------------------------------------------------
+# For coercion to annotated_factor, it seems to be necessary to include
+# methods, directly -- probably because factor inherits from integer???
+setAs(
+  from = "annotated_numeric"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_integer"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_character"
+  , to = "annotated_factor"
+  , def = function(from){
+
+    tmp <- factor(from@.Data)
+    new(
+      "annotated_factor"
+      , tmp
+      , annotation = from@annotation
+    )
+  }
+)
+
+setAs(
+  from = "annotated_logical"
   , to = "annotated_factor"
   , def = function(from){
 

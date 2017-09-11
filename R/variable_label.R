@@ -199,7 +199,7 @@ setMethod(
     # This is especially important for default_label and apa_table (e.g., in
     # a frequency table, you frequently have repeating column names):
     columns_to_annotate <- colnames(object) %in% names(value)
-    # do not coece to vector if only one column is changed:
+    # do not coerce to vector if only one column is changed:
     modified_object <- object[, columns_to_annotate, drop = FALSE]
     modified_object <- annotate(modified_object)
     ordered_value <- value[colnames(modified_object)]

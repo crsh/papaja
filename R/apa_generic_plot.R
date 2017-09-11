@@ -121,25 +121,22 @@ apa_generic_plot.default <- function(
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE)
 
+  # remove extraneous columns from dataset
+  data <- data[, c(id, factors, dv)]
+
+  # Add missing variable labels
+  data <- default_label(data)
+
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
   dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
-
-  # remove extraneous columns from dataset
-  data <- data[, c(id, factors, dv)]
-
-
-
-  # Add missing variable labels
-  data <- default_label(data)
 
   # Handling of factors:
   # a) convert to factor
   for (i in c(id, factors)){
     data[[i]] <- as(data[[i]], "annotated_factor")
   }
-
   # b) drop factor levels
   data <- droplevels(data)
 
@@ -152,6 +149,7 @@ apa_generic_plot.default <- function(
     data[[factors]] <- 1
     data[[factors]] <- as.factor(data[[factors]])
     ellipsis$args_x_axis<- list(tick = FALSE, labels = "")
+    variable_label(data[[factors]]) <- "arbitrary_factor_name"
   }
 
   # Set defaults
