@@ -143,7 +143,7 @@ apa_generic_plot.default <- function(
   ellipsis <- list(...)
   output <- list()
 
-  # If no factors were specified, use an arbitrary one
+  # If no factors were specified, use an arbitrary one -------------------------
   if(is.null(factors)||length(factors)==0){
     factors <- "arbitrary_factor_name"
     data[[factors]] <- 1
@@ -189,7 +189,9 @@ apa_generic_plot.default <- function(
 
   # warning if "beside = FALSE" is specified
   if(is.null(ellipsis$beside) || !(ellipsis$beside)) {
-    if(!is.null(ellipsis$beside) && !(ellipsis$beside)) warning("Stacked barplots are not supported. Ignoring parameter 'beside = FALSE'.")
+    if(!is.null(ellipsis$beside) && !(ellipsis$beside)) {
+      warning("Stacked barplots are not supported. Ignoring parameter 'beside = FALSE'.")
+    }
     ellipsis$beside <- TRUE
   }
 
@@ -228,10 +230,13 @@ apa_generic_plot.default <- function(
   # is dplyr available?
   use_dplyr <- package_available("dplyr")
 
-  # Aggregate subject data -------------------------------------------------------------------------
-  ch_fun_aggregate <- deparse(substitute(fun_aggregate))[1]
-  if(!ch_fun_aggregate=="suppress"){
-
+  # Aggregate subject data -----------------------------------------------------
+  # Check if aggregation is necessary
+  # this is a sub-optimal solution: if we had information about which factors are
+  # within, this would be faster; for this purpose, we could use the code-bit
+  # from `papaja::wsci`
+  # `base::table` is a bit faster than `stats::xtabs`
+  if(any(table(data[, c(id, factors)]) > 1)){
     if(use_dplyr) {
       aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
     } else {
@@ -241,14 +246,14 @@ apa_generic_plot.default <- function(
     aggregated <- data
   }
 
-  ## Calculate central tendencies
+  ## Calculate central tendencies ----------------------------------------------
   if(use_dplyr) {
     yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
   } else {
     yy <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
   }
 
-  ## Calculate dispersions
+  ## Calculate dispersions -----------------------------------------------------
   fun_dispersion <- deparse(substitute(dispersion))
 
   if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
