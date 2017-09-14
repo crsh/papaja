@@ -549,7 +549,7 @@ setMethod(
   , signature = "annotated_named_factor"
   , definition = function(x, i){
     new(
-      "annotated_factor"
+      "annotated_named_factor"
       , .Data = x@.Data[i]
       , names = x@names[i]
       , label = x@label
@@ -1168,19 +1168,21 @@ setAs(
   }
 )
 
-setAs(
-  from = "annotated_vector"
-  , to = "annotated_factor"
-  , def = function(from){
 
-    tmp <- factor(from@.Data)
-    new(
-      "annotated_factor"
-      , tmp
-      , annotation = from@annotation
-    )
-  }
-)
+# see below why this is commented out ----
+# setAs(
+#   from = "annotated_vector"
+#   , to = "annotated_factor"
+#   , def = function(from){
+#
+#     tmp <- factor(from@.Data)
+#     new(
+#       "annotated_factor"
+#       , tmp
+#       , annotation = from@annotation
+#     )
+#   }
+# )
 
 
 # ------------------------------------------------------------------------------
