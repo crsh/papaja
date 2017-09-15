@@ -614,7 +614,7 @@ setMethod(
 
     new("annotated_named_factor"
         , .Data = fac@.Data
-        , named = x@names
+        , names = x@names
         , label = x@label
         , annotation = x@annotation
         , levels = fac@levels

@@ -35,6 +35,57 @@ test_that(
   }
 )
 
+test_that(
+  "droplevels,annotated_named_factor-method"
+  , {
+    anno <- new("vector_annotation", label = "lab", unit = "un")
+    object_1 <- new(
+      "annotated_named_factor"
+      , .Data = 1:4
+      , names = LETTERS[1:4]
+      , levels = letters[1:10]
+      , annotation = anno
+    )
+    object_2 <- droplevels(object_1, exclude = "b")
+    object_3 <- droplevels(object_1)
+
+    # base behavior changed recently, we can only check consistency with
+    # installed base version
+    object_4 <- droplevels.factor(
+      x = factor(
+        letters[1:4]
+        , levels = letters[1:10]
+      )
+      , exclude = "b"
+    )
+
+    # test case with excluded levels
+    expect_identical(
+      object = object_2
+      , expected = new(
+        "annotated_named_factor"
+        , object_4
+        , names = LETTERS[1:4]
+        , annotation = anno
+        , label = "lab"
+      )
+    )
+
+    # test standard case
+    expect_identical(
+      object = object_3
+      , expected = new(
+        "annotated_named_factor"
+        , .Data = 1:4
+        , names = LETTERS[1:4]
+        , levels = letters[1:4]
+        , annotation = anno
+        , label = "lab"
+      )
+    )
+  }
+)
+
 
 test_that(
   "show-methods for annotated_vector and annotated_factor"
@@ -517,3 +568,77 @@ test_that(
     )
   }
 )
+
+test_that(
+  "annotate,annotated_vector-method"
+  , {
+    anno <- new("vector_annotation", label = "label", unit = "unit")
+    object_1 <- new("annotated_numeric", .Data = 1:2, annotation = anno)
+    object_2 <- annotate(object_1)
+    expect_identical(
+      object = object_2
+      , expected = object_1
+    )
+  }
+)
+
+# Coercion to annotated_factor -------------------------------------------------
+
+test_that(
+  "coerce to annotated_factor"
+  , {
+    num <- as.numeric(1:4)
+    int <- 1:4
+    chr <- letters[1:3]
+    log <- c(TRUE, FALSE)
+    fac <- factor(letters[3:5])
+
+    object_1 <- as(num, "annotated_factor")
+    object_2 <- as(int, "annotated_factor")
+    object_3 <- as(chr, "annotated_factor")
+    object_4 <- as(log, "annotated_factor")
+    object_5 <- as(fac[1:2], "annotated_factor")
+
+    expect_identical(
+      object = object_1
+      , expected = new(
+        "annotated_factor"
+        , .Data = 1:4
+        , levels = as.character(1:4)
+      )
+    )
+    expect_identical(
+      object = object_2
+      , expected = new(
+        "annotated_factor"
+        , .Data = 1:4
+        , levels = as.character(1:4)
+      )
+    )
+    expect_identical(
+      object = object_3
+      , expected = new(
+        "annotated_factor"
+        , .Data = 1:3
+        , levels = letters[1:3]
+      )
+    )
+    expect_identical(
+      object = object_4
+      , expected = new(
+        "annotated_factor"
+        , .Data = 2:1
+        , levels = c("FALSE", "TRUE")
+      )
+    )
+    expect_identical(
+      object = object_5
+      , expected = new(
+        "annotated_factor"
+        , .Data = 1:2
+        , levels = letters[3:5]
+      )
+    )
+  }
+)
+
