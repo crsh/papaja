@@ -18,7 +18,7 @@
 \description{
 This is a collection of classes that extend basic data types (currently
 numeric, integer, character, logical vectors, and factors) with an additional
-annotation object.
+vector_annotation-object.
 }
 \details{
 We currently support six different classes of annotated vectors:

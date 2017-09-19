@@ -4,16 +4,22 @@
 \name{annotate}
 \alias{annotate}
 \alias{annotate,data.frame-method}
+\alias{annotate,vector-method}
+\alias{annotate,annotated_vector-method}
 \title{Coerce vectors to annotated vectors}
 \usage{
 annotate(object)
 
 \S4method{annotate}{data.frame}(object)
+
+\S4method{annotate}{vector}(object)
+
+\S4method{annotate}{annotated_vector}(object)
 }
 \arguments{
 \item{An}{annotated vector or a data.frame.}
 }
 \description{
-Internal workhorse function that
+Internal workhorse function. \emph{This function is not exported.}
 }
 \keyword{internal}

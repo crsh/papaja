@@ -68,7 +68,7 @@ setValidity(
 #'
 #' This is a collection of classes that extend basic data types (currently
 #' numeric, integer, character, logical vectors, and factors) with an additional
-#' annotation object.
+#' vector_annotation-object.
 #'
 #' @slot .Data  Depending on the data type that the class extends, the original
 #' values.
@@ -225,8 +225,8 @@ setClass(
   , contains = "annotated_factor"
 )
 
-# #' @rdname annotated_vector-class
-# #' @keywords internal
+
+# Ordered factors are not supported, yet.
 
 # setClass(
 #   "annotated_named_ordered_factor"
@@ -307,7 +307,7 @@ setMethod(
 # The corresponding validity method.
 #
 # It is checked whether slot label is identical to the label slot in the
-# annotation object in slotannotation. It is possibly a good idea to hide
+# annotation object in slot annotation. It is possibly a good idea to hide
 # the label slot from the user, as I only provide it for compatibility with
 # RStudio (that reads from the S3-ish label-attribute).
 #
@@ -316,8 +316,12 @@ setMethod(
 # if someone does this:
 #
 # names(object@.Data) <- "The worst way to assign names."
-
+#
 # the to-be assigned names are not stored in the object -- a behavior I like.
+#
+# Instead, this is the desired way to assign names:
+#
+# names(object) <- c("some", "names", "for", "your", "entries")
 
 setValidity(
   "annotated_vector"
@@ -344,7 +348,7 @@ setValidity(
 # the console output for standard vector types.
 # Special care is necessary for named vectors and factors.
 #
-# Showing a vector annotation object (the meta-data container) has its own
+# Showing a vector_annotation object (the meta-data container) has its own
 # method, making it easy to standardize outputs.
 
 
@@ -767,7 +771,7 @@ setMethod(
 
 #' Coerce vectors to annotated vectors
 #'
-#' Internal workhorse function that
+#' Internal workhorse function. \emph{This function is not exported.}
 #' @param An annotated vector or a data.frame.
 #'
 #' @rdname annotate
@@ -793,13 +797,23 @@ setMethod(
   }
 )
 
+#' @rdname annotate
+#' @keywords internal
+
 setMethod(
   f = "annotate"
   , signature = "vector"
   , definition = function(object){
-    as(object, paste0("annotated_", class(object)))
+    if(is.null(names(object))){
+      as(object, paste0("annotated_", class(object)))
+    } else {
+      as(object, paste0("annotated_named_", class(object)))
+    }
   }
 )
+
+#' @rdname annotate
+#' @keywords internal
 
 setMethod(
   f = "annotate"
@@ -835,41 +849,6 @@ setMethod(
 )
 
 
-
-
-# setMethod(
-#   f = "reorder"
-#   , signature = c(x = "annotated_factor")
-#   , definition = function(x, ...){
-#     cat("test")
-#   }
-# )
-
-# setClass(
-#   "annotated_data_frame"
-#   , slots = c(
-#     label = "character"
-#   )
-#   , contains = "list"
-# )
-
-# setAs(
-#   from = "annotated_data_frame"
-#   , to = "data.frame"
-#   , def = function(from){
-#     vlist <- lapply(X = from@.Data, FUN = function(x){x@.Data})
-#     value <- structure(vlist, row.names = if(length(vlist)>0){1:length(vlist[[1]])}, .Names = names(vlist), class = "data.frame")
-#     value
-#   }
-# )
-
-# setMethod(
-#   "show"
-#   , "annotated_data_frame"
-#   , function(object){
-#     print(as(object = object, Class = "data.frame"))
-#   }
-# )
 
 #' Replicate Elements of Annotated Vectors
 #'

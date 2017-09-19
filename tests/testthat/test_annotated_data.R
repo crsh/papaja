@@ -642,3 +642,82 @@ test_that(
   }
 )
 
+# Coercion to annotated_named_vector--------------------------------------------
+
+
+test_that(
+  "coerce to annotated_factor"
+  , {
+    anno <- new("vector_annotation", label = "label", unit = "unit")
+
+    num <- new("annotated_numeric", .Data = 1:2, annotation = anno)
+    int <- new("annotated_integer", .Data = 1:2, annotation = anno)
+    chr <- new("annotated_character", .Data = LETTERS[1:2], annotation = anno)
+    log <- new("annotated_logical", .Data = c(T, F), annotation = anno)
+
+    named_num <- as(num, "annotated_named_numeric")
+    named_int <- as(int, "annotated_named_integer")
+    named_chr <- as(chr, "annotated_named_character")
+    named_log <- as(log, "annotated_named_logical")
+
+    expect_identical(
+      object = named_num
+      , expected = new(
+        "annotated_named_numeric"
+        , .Data = 1:2
+        , names = rep(NA_character_, 2)
+        , annotation = anno
+      )
+    )
+    expect_identical(
+      object = named_int
+      , expected = new(
+        "annotated_named_integer"
+        , .Data = 1:2
+        , names = rep(NA_character_, 2)
+        , annotation = anno
+      )
+    )
+    expect_identical(
+      object = named_chr
+      , expected = new(
+        "annotated_named_character"
+        , .Data = LETTERS[1:2]
+        , names = rep(NA_character_, 2)
+        , annotation = anno
+      )
+    )
+    expect_identical(
+      object = named_log
+      , expected = new(
+        "annotated_named_logical"
+        , .Data = c(T, F)
+        , names = rep(NA_character_, 2)
+        , annotation = anno
+      )
+    )
+
+    back_num <- as(named_num, "annotated_numeric")
+    back_int <- as(named_int, "annotated_integer")
+    back_chr <- as(named_chr, "annotated_character")
+    back_log <- as(named_log, "annotated_logical")
+
+
+    expect_identical(
+      object = back_num
+      , expected = num
+    )
+    expect_identical(
+      object = back_int
+      , expected = int
+    )
+    expect_identical(
+      object = back_chr
+      , expected = chr
+    )
+    expect_identical(
+      object = back_log
+      , expected = log
+    )
+  }
+)
