@@ -1,4 +1,4 @@
-papaja: Create APA manuscripts with R Markdown
+papaja: Create reproducible APA manuscripts with R Markdown
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -84,15 +84,15 @@ Table. *Iris regression table.*
     ## Warning in matrix(print_classes, ncol = 4): Datenlänge [26] ist kein Teiler
     ## oder Vielfaches der Anzahl der Zeilen [7]
 
-| A                                   | A-H               | L-S               | S-A                             |
-|:------------------------------------|:------------------|:------------------|:--------------------------------|
-| apa\_print,ANY-method               | aov               | list              | summary.lm                      |
-| apa\_print,BFBayesFactor-method     | aovlist           | lm                | summary.ref.grid                |
-| apa\_print,BFBayesFactorList-method | BFBayesFactor     | lsmobj            |                                 |
-| apa\_print,BFBayesFactorTop-method  | BFBayesFactorList | summary.Anova.mlm |                                 |
-| afex\_aov                           | BFBayesFactorTop  | summary.aov       |                                 |
-| anova                               | glht              | summary.aovlist   | apa\_print,ANY-method           |
-| Anova.mlm                           | htest             | summary.glht      | apa\_print,BFBayesFactor-method |
+| A-B                   | B-H                                 | L-S               | S-A              |
+|:----------------------|:------------------------------------|:------------------|:-----------------|
+| afex\_aov             | BFBayesFactorList                   | list              | summary.lm       |
+| anova                 | apa\_print,BFBayesFactorList-method | lm                | summary.ref.grid |
+| Anova.mlm             | apa\_print,BFBayesFactor-method     | lsmobj            |                  |
+| apa\_print,ANY-method | BFBayesFactorTop                    | summary.Anova.mlm |                  |
+| aov                   | apa\_print,BFBayesFactorTop-method  | summary.aov       |                  |
+| aovlist               | glht                                | summary.aovlist   | afex\_aov        |
+| BFBayesFactor         | htest                               | summary.glht      | anova            |
 
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
@@ -126,12 +126,10 @@ Contribute
 
 Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
 
-Papers that use papaja
-----------------------
+Papers written with papaja
+--------------------------
 
 Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, let me know and I will add it to this list.
-
-### Published
 
 Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. doi: [10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003)
 
@@ -143,19 +141,19 @@ Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Seq
 
 Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245--266.
 
-### Preprints
+Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A test of evaluative conditioning for brief visual conditioned stimuli using auditory unconditioned stimuli. *Royal Society Open Science*, 4, 160935. doi: [10.1098/rsos.160935](http://dx.doi.org/10.1098/rsos.160935) ([Data & R Markdown files](https://osf.io/cx5eh/))
 
-Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/> ([Data & R Markdown files](https://osf.io/jxm7z/))
+Sauer, S. (in press). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. doi: [10.3758/s13428-017-0949-8](https://doi.org/10.3758/s13428-017-0949-8)
 
-Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq/> ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
+Stahl, C., Henze, L., & Aust, F. (2016). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. doi: [10.17605/OSF.IO/ZR7M8](http://dx.doi.org/10.17605/OSF.IO/ZR7M8) ([Data & R Markdown files](https://osf.io/jxm7z/))
 
-Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/> ([Data & R Markdown files](https://osf.io/cx5eh/))
+Haaf, J. & Rouder, J. N. (2017). Developing Constraint in Bayesian Mixed Models. *PsyArXiv*. doi: [10.17605/OSF.IO/KTJNQ](http://dx.doi.org/10.17605/OSF.IO/KTJNQ) ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
 
-Rouder, J. N., Haaf, J., & Aust, F. (submitted). From theories to models to predictions: A Bayesian model comparison approach for communications research. Preprint retrieved from <https://osf.io/preprints/psyarxiv/jt4th/>
+Rouder, J. N., Haaf, J., & Aust, F. (2017). From theories to models to predictions: A Bayesian model comparison approach for communications research. *PsyArXiv*. doi: [10.17605/OSF.IO/JT4TH](http://dx.doi.org/10.17605/OSF.IO/JT4TH)
 
-Buchanan, E. M., & Scofield, J. E. (2017, August 2). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from <https://osf.io/preprints/psyarxiv/fzyj5> ([Data & R Markdown files](https://osf.io/urd8q/))
+Buchanan, E. M, & Scofield, J. E. (2017, August 25). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from <https://osf.io/cs4vy/> ([Data & R Markdown files](https://osf.io/urd8q/))
 
-Gutierrez, I. A., Bou-Malham, P., & Miller-Cotto, D. (2017, August 2). Graduate Student Employee Unionization: Considerations for the Future of Graduate Education in Psychology. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wb8tm>
+Urry, H. L., Sifre, E., Song, J., Steinberg, H., Bornstein, M., Kim, J., … Andrews, M. (2017, March 13). Replication of Eskine, K. J., Kacinik, N. A., & Prinz, J. J. (2011) at Tufts University - Spring, 2017. Preprint retrieved from <https://osf.io/fu384/> ([Data & R Markdown files](https://osf.io/ddmkm))
 
 Other related R packages
 ========================

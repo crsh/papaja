@@ -196,14 +196,14 @@ within_subjects_conf_int <- wsci
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
-  validate(x, check_class = "numeric")
+  validate(x, check_class = "numeric", check_NA = FALSE)
   validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
 
   a <- (1 - level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(stats::qt(a, df = n-1))
-  if(n==1){
-    message("Only one observation in a cell. Thus, no confidence interval can be computed.")
+  if(n<2){
+    message("Less than two observations in at least one cell. Thus, no confidence interval can be computed.")
   }
   ee <- (stats::sd(x, na.rm = na.rm) * fac) / sqrt(n)
   return(ee)
