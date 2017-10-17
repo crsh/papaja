@@ -1,7 +1,7 @@
 ampersand_filter <- function() {
   std_input <- file("stdin")
+
   ast <- readLines(std_input, warn = FALSE)
-  close.connection(std_input)
 
   # write(ast, "~/ast_test.txt")
 
@@ -20,4 +20,34 @@ ampersand_filter <- function() {
 
   write(ast, stdout())
   closeAllConnections()
+
+  # replace_ampersand <- function(x) {
+  #   if(
+  #     is.list(x) &&
+  #     !is.null(x$t) &&
+  #     x$t == "Cite" &&
+  #     x$c[[1]][[1]]$citationMode$t == "AuthorInText"
+  #   ) {
+  #     list_structure <- as.relistable(x$c[[2]])
+  #     corrected_citation <- gsub("&", "and", unlist(x$c[[2]]))
+  #     x$c[[2]] <- relist(corrected_citation, skeleton = list_structure)
+  #   }
+  #
+  #   x
+  # }
+  #
+  # ast <- jsonlite::fromJSON(std_input, simplifyVector = FALSE)
+  #
+  # # write(jsonlite::toJSON(ast, auto_unbox = TRUE), "~/json_ast_test.txt")
+  # ast$blocks <- lapply(
+  #   ast$blocks
+  #   , function(x) {
+  #     x$c <- lapply(x$c, replace_ampersand)
+  #     x
+  #   }
+  # )
+  # # write(jsonlite::toJSON(ast, auto_unbox = TRUE), "~/json_ast_test2.txt")
+  #
+  # write(jsonlite::toJSON(ast, auto_unbox = TRUE), stdout())
+  # closeAllConnections()
 }
