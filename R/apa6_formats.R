@@ -40,23 +40,23 @@ apa6_pdf <- function(
   validate(keep_tex, check_class = "logical", check_length = 1)
 
   # Get APA6 template
-    template <-  system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "apa6.tex"
-      , package = "papaja"
-    )
-    if(template == "") stop("No LaTeX template file found.")
+  template <-  system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "apa6.tex"
+    , package = "papaja"
+  )
+  if(template == "") stop("No LaTeX template file found.")
 
-    # Call pdf_document() with the appropriate options
-    format <- bookdown::pdf_document2(
-      template = template
-      , fig_caption = fig_caption
-      , number_sections = number_sections
-      , toc = toc
-      , keep_tex = keep_tex
-      , pandoc_args = pandoc_args
-      , ...
-    )
+  # Call pdf_document() with the appropriate options
+  format <- bookdown::pdf_document2(
+    template = template
+    , fig_caption = fig_caption
+    , number_sections = number_sections
+    , toc = toc
+    , keep_tex = keep_tex
+    , pandoc_args = pandoc_args
+    , ...
+  )
 
   # Set chunk defaults
   format$knitr$opts_chunk$echo <- FALSE
@@ -242,7 +242,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Add modified YAML header
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
-  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  writeLines(augmented_input_text, input_file)
+  close(input_file_connection)
 
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
@@ -271,7 +273,9 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  writeLines(input_file_connection, input_file)
+  close(input_file_connection)
 
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
@@ -352,7 +356,9 @@ set_ampersand_filter <- function(args, csl_file) {
       ampersand_filter <- readLines(filter_path)
       ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
       filter_path <- "_papaja_ampersand_filter.bat"
-      writeLines(ampersand_filter, filter_path)
+      filter_path_connection <- file(filter_path, encoding = "UTF-8")
+      writeLines(ampersand_filter, filter_path_connection)
+      close(filter_path_connection)
     }
 
     args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
