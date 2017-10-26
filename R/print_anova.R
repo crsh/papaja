@@ -7,6 +7,7 @@
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
+#'   Be careful when calculating eta-squared: It is only calculated correctly if the design is balanced.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
@@ -87,6 +88,7 @@ print_anova <- function(
   # Calculate eta squared
   if("es" %in% es) {
     x$es <- x$sumsq / sum(x$sumsq, unique(x$sumsq_err))
+    message("For your information: Eta-squared is calculated correctly if and only if the design is balanced.")
   }
 
   # Calculate partial eta squared
