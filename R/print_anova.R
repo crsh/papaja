@@ -63,8 +63,15 @@ print_anova <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
 
   rownames(x) <- sanitize_terms(x$term)
+  # ----------------------------------------------------------------------------
+  # If `intercept` is not requested by the user explicitly, it should be removed
+  # from the ANOVA table and calculations of effect sizes
+  sumsq_err_complete <- x$sumsq_err
+  if(!intercept){
+    x <- x[which(rownames(x)!="Intercept"), ]
+  }
 
-  # Calculate generalized eta squared
+  # Calculate generalized eta-squared
   if("ges" %in% es) {
     ## This code is a copy from afex by Henrik Singmann who said that it is basically a copy
     ## from ezANOVA by Mike Lawrence
@@ -82,16 +89,16 @@ print_anova <- function(
       obs_SSn1 <- 0
       obs_SSn2 <- 0
     }
-    x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+    x$ges <- x$sumsq / (x$sumsq + sum(unique(sumsq_err_complete)) + obs_SSn1 - obs_SSn2)
   }
 
-  # Calculate eta squared
+  # Calculate eta-squared
   if("es" %in% es) {
-    x$es <- x$sumsq / sum(x$sumsq, unique(x$sumsq_err))
+    x$es <- x$sumsq / sum(x$sumsq, unique(sumsq_err_complete))
     message("For your information: Eta-squared is calculated correctly if and only if the design is balanced.")
   }
 
-  # Calculate partial eta squared
+  # Calculate partial eta-squared
   if("pes" %in% es) {
     x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
   }
