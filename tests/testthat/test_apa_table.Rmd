@@ -64,6 +64,8 @@ apa_table(
   , caption = "1 A small table."
   , note = "This table was created using apa_table()"
   , small = TRUE
+  , digits = 3
+  , format.args = list(decimal.mark = ",", big.mark = "")
 )
 ```
 

@@ -21,10 +21,10 @@
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
 #' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
-#' @param na_string Character. String to print if element of \code{x} is \code{NA}.
 #' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{%} or \code{_}, in
 #'    column names, row names, caption, note and table contents are escaped. Default is \code{TRUE} if
 #'    target document format is PDF.
+#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
 #' @details
@@ -37,7 +37,7 @@
 #'    the first column giving the names of the list elements elements.
 #'
 #'
-#' @seealso \code{\link[knitr]{kable}}
+#' @seealso \code{\link[knitr]{kable}}, \code{\link{printnum}}
 #' @examples
 #'
 #' my_table <- apply(cars, 2, function(x) # Create data
@@ -64,8 +64,8 @@ apa_table <- function(
   , placement = "tbp"
   , landscape = FALSE
   , small = FALSE
-  , na_string = getOption("papaja.na_string")
   , escape = NULL
+  , format.args = NULL
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -73,7 +73,6 @@ apa_table <- function(
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
   if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
-  if(!is.null(na_string)) validate(na_string, check_class = "character", check_length = 1)
   if(!is.null(escape)) validate(escape, check_class = "logical", check_length = 1)
 
   validate(placement, check_class = "character", check_length = 1)
@@ -85,8 +84,11 @@ apa_table <- function(
   ellipsis <- list(...)
   row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
-  digits <- if(is.null(ellipsis$digits)) 2 else ellipsis$digits
-  validate(digits, "digits", check_class = "numeric")
+  if(is.null(ellipsis$digits) & is.null(format.args$digits)) {
+    format.args$digits <- 2
+  } else if(!is.null(ellipsis$digits)) {
+    format.args$digits <- ellipsis$digits
+  }
 
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(is.null(escape)) escape <- ifelse(!is.null(output_format), output_format == "latex", TRUE)
@@ -103,7 +105,7 @@ apa_table <- function(
     }
 
     ## Round numeric cells
-    prep_table <- lapply(prep_table, round_cells, digits, na_string)
+    prep_table <- lapply(prep_table, format_cells, format.args)
 
     ## Assemble table
     # Old table merging by adding an additional column is depricated for the moment
@@ -125,7 +127,7 @@ apa_table <- function(
     } else prep_table <- x # data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
     ## Round numeric cells
-    prep_table <- round_cells(prep_table, digits, na_string)
+    prep_table <- format_cells(prep_table, format.args)
   }
 
   # Escape special characters
@@ -153,9 +155,9 @@ apa_table <- function(
   ellipsis$row.names <- FALSE
 
   # Pass to markup generating functions
-  if(!is.null(ellipsis$format)) {
-    output_format <- ellipsis$format
-    ellipsis$format <- NULL
+  if(!is.null(ellipsis[["format"]])) {
+    output_format <- ellipsis[["format"]]
+    ellipsis[["format"]] <- NULL
   } else {
     if(length(output_format) == 0 || output_format == "markdown") output_format <- "latex" # markdown_strict for render_appendix()
   }
@@ -338,27 +340,23 @@ apa_table.word <- function(
 }
 
 
-#' Round table cells
+#' Format numeric table cells
 #'
-#' Round all numeric cells of a table using \code{\link{printnum}}.
+#' Format all numeric cells of a table using \code{\link{printnum}}.
 #' \emph{This function is not exported.}
 #'
 #' @param x data.frame or matrix.
-#' @param digits Numeric. Vector of the number of digits to round numeric columns to.
-#' @param na_string Character. String to print if element of \code{x} is \code{NA}.
+#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.
 #'
 #' @seealso \code{\link{printnum}}
 #'
 #' @examples
 #' NULL
 
-round_cells <- function(x, digits = getOption("digits"), na_string = getOption("papaja.na_string")) {
-  n_col <- ncol(x)
-  digits <- rep(digits, length.out = n_col)
-
-  for(i in seq_len(n_col)) {
-    if(is.numeric(x[, i])) x[, i] <- printnum(x[, i], digits = digits[i], na_string = na_string)
-  }
+format_cells <- function(x, format.args = NULL) {
+  numeric_columns <- sapply(x, is.numeric)
+  format.args$x <- x[, numeric_columns]
+  x[, numeric_columns] <- do.call(printnum, format.args)
   x
 }
 
