@@ -100,7 +100,7 @@ test_that(
 
 
 test_that(
-  "add_effect_sizes"
+  "add_effect_sizes: Two-way between-subjects design"
   , {
     apa_variance_table <- structure(
       list(
@@ -156,3 +156,61 @@ test_that(
   }
 )
 
+test_that(
+  "add_effect_sizes: Two-way within-subjects design"
+  , {
+    apa_variance_table <- structure(
+      list(
+        sumsq = c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
+        , df = c(1, 1, 1.43869284635452, 1.62877229248125)
+        , sumsq_err = c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
+        , df_res = c(4, 4, 5.7547713854181, 6.51508916992501)
+        , statistic = c(47.8579339316403, 7.34693877551021, 1.4590570719603, 0.290657439446368)
+        , p.value = c(0.00229109843354983, 0.053508296850918, 0.29341624721021, 0.714981769489886)
+        , term = c("(Intercept)", "Task", "Valence", "Task:Valence")
+      )
+      , .Names = c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value", "term")
+      , row.names = c(NA, -4L)
+      , class = c("apa_variance_table", "data.frame")
+      , correction = "GG"
+    )
+    with_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
+    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
+
+    # SS from car output:
+    SS_car <- c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
+    SS_err <- c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
+
+    # Output with intercept ----
+    expect_equal(
+      object = with_intercept$es
+      # Expectation calculated via sums of squares from car
+      , expected = SS_car/sum(c(SS_car, SS_err))
+    )
+    expect_equal(
+      object = with_intercept$ges
+      # Expectation calculated with afex
+      , expected = c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
+    )
+    expect_equal(
+      object = with_intercept$pes
+      # Expectation calculated with afex
+      , expected = c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
+    )
+
+    # Output without intercept ----
+    expect_equal(
+      object = without_intercept$es
+      # Expectation calculated via sums of squares from car
+      , expected = SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+    )
+    expect_equal(
+      object = without_intercept$ges
+      , expected = with_intercept$ges[2:4]
+    )
+    expect_equal(
+      object = without_intercept$pes
+      , expected = with_intercept$pes[2:4]
+    )
+  }
+)
