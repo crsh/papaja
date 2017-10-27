@@ -251,13 +251,13 @@ test_that(
 
 
     # DF corrections
-    rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "GG", intercept = TRUE)
+    rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "GG")
     expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.15, 4.6) = 189.11$, $\\mathrm{MSE} = 9.34$, $p < .001$, $\\eta^2_G = .932$")
 
-    rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "HF", intercept = TRUE)
+    rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "HF")
     expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.32, 5.26) = 189.11$, $\\mathrm{MSE} = 8.16$, $p < .001$, $\\eta^2_G = .932$")
 
-    rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "none", intercept = TRUE)
+    rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "none")
     expect_identical(rm_afex_anova.mlm_output$full$Valence, rm_aov_output$full$Valence)
   }
 )

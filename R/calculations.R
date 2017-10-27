@@ -272,7 +272,7 @@ hd_int <- function(x, level = 0.95) {
 #' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
 #'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
 
-add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept) {
+add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
   # ----------------------------------------------------------------------------
   # We don't validate here because this function is intended to be used
   # internally, validation, should have happened earlier in the processing chain.
@@ -325,7 +325,7 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
         index <- x$term!="(Intercept)"
       }
       x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
-      message("For your information: Eta-squared is calculated correctly if and only if the design is balanced.")
+      message("Note that eta-squared is calculated correctly if and only if the design is balanced.")
     }
 
     # --------------------------------------------------------------------------
