@@ -42,73 +42,33 @@ print_anova <- function(
   , in_paren = FALSE
 ) {
 
-  # When processing aovlist objects a dummy term "aovlist_residuals" is kept to preserve the SS_error of the intercept
-  # term to calculate generalized eta squared correctly. This term contains NAs.
-  if("aovlist_residuals" %in% x$term) {
-    tmp <- x[x$term != "aovlist_residuals", ]
-    validate(tmp, check_class = "data.frame")
-    validate(tmp, check_class = "apa_variance_table")
-  } else {
-    validate(x, check_class = "data.frame")
-    validate(x, check_class = "apa_variance_table")
-  }
-
+  # When processing aovlist objects, the `(Intercept)` is kept to preserve the
+  # SS_error of the intercept   # term to calculate generalized eta squared
+  # correctly. This term contains NAs.
+  validate(x, check_class = "data.frame", check_NA = FALSE)
+  validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   validate(intercept, check_class = "logical", check_length = 1)
+
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
     validate(es, check_class = "character")
-    if(!all(es %in% c("pes", "ges", "es"))) stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
     es <- sort(es, decreasing = TRUE)
   }
   validate(in_paren, check_class = "logical", check_length = 1)
 
   rownames(x) <- sanitize_terms(x$term)
   # ----------------------------------------------------------------------------
-  # If `intercept` is not requested by the user explicitly, it should be removed
-  # from the ANOVA table and calculations of effect sizes
-  sumsq_err_complete <- x$sumsq_err
-  if(!intercept){
-    x <- x[which(rownames(x)!="Intercept"), ]
-  }
+  # Add effect-size measures and mean-squared errors
+  x <- add_effect_sizes(
+    x = x
+    , es = es
+    , observed = observed
+    , mse = mse
+    , intercept = intercept
+  )
 
-  # Calculate generalized eta-squared
-  if("ges" %in% es) {
-    ## This code is a copy from afex by Henrik Singmann who said that it is basically a copy
-    ## from ezANOVA by Mike Lawrence
-    if(!is.null(observed)) {
-      obs <- rep(FALSE, nrow(x))
-      for(i in observed) {
-        if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
-          stop(paste0("Observed variable not in data: ", i, collapse = " "))
-        }
-        obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
-      }
-      obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
-      obs_SSn2 <- x$sumsq*obs
-    } else {
-      obs_SSn1 <- 0
-      obs_SSn2 <- 0
-    }
-    x$ges <- x$sumsq / (x$sumsq + sum(unique(sumsq_err_complete)) + obs_SSn1 - obs_SSn2)
-  }
-
-  # Calculate eta-squared
-  if("es" %in% es) {
-    x$es <- x$sumsq / sum(x$sumsq, unique(sumsq_err_complete))
-    message("For your information: Eta-squared is calculated correctly if and only if the design is balanced.")
-  }
-
-  # Calculate partial eta-squared
-  if("pes" %in% es) {
-    x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
-  }
-
-  # Remove dummy term for aovlists and intercept if necessary
-  if("aovlist_residuals" %in% x$term) x <- x[x$term != "aovlist_residuals", ]
+  # Remove intercept if the user doesn't want it:
   if(!intercept) x <- x[x$term != "(Intercept)", ]
-
-  # Calculate MSE
-  if(mse) x$mse <- x$sumsq_err / x$df_res
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)

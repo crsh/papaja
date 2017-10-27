@@ -256,3 +256,93 @@ hd_int <- function(x, level = 0.95) {
   attr(hdinterval, "conf.level") <- level
   hdinterval
 }
+
+
+#' Effect sizes for Analysis of Variance
+#'
+#' Calculates effect-size measures for Analysis of Variance output objects.
+#'
+#' @param x An object of class \code{apa_variance_table}.
+#' @param es Character. A vector naming all to-be-computed effect-size measures.
+#'   Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+#'   (\code{"ges"}), and eta-squared (\code{"es"}) are supported.
+#' @param observed Character. A vector naming all factors that are observed
+#'   (i.e., \emph{not} manipulated).
+#' @param mse Logical. Should means-squared errors be computed?
+#' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
+#'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
+
+add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept) {
+  # ----------------------------------------------------------------------------
+  # We don't validate here because this function is intended to be used
+  # internally, validation, should have happened earlier in the processing chain.
+
+  # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
+  # validate(es, check_class = "character", check_NA = FALSE)
+
+  if(!is.null(es)) {
+    # Stop if the user requires a non-supported effect-size measure ----
+    if(!all(es %in% c("pes", "ges", "es"))) {
+      stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
+    }
+
+    # --------------------------------------------------------------------------
+    # Calculate generalized eta-squared
+    #
+    # This code is a copy from the afex package by Henrik Singmann et al.
+    # In the package's source code, it is stated that the code is basically a copy
+    # from ezANOVA by Mike Lawrence
+    if("ges" %in% es) {
+      if(!is.null(observed)) {
+        obs <- rep(FALSE, nrow(x))
+        for(i in observed) {
+          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
+            stop(paste0("Observed variable not in data: ", i, collapse = " "))
+          }
+          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+        }
+        obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
+        obs_SSn2 <- x$sumsq*obs
+      } else {
+        obs_SSn1 <- 0
+        obs_SSn2 <- 0
+      }
+      x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+    }
+
+    # --------------------------------------------------------------------------
+    # Calculate eta-squared
+    #
+    # In it's current implementation, correct calculation of eta-squared relies
+    # on the fact that the design is balanced (otherwise, the summation below)
+    # is simply false. Replacing this term by the sum of squared deviations of
+    # individual observations from the grand mean (the general specification)
+    # would be highly desirable. However, most ANOVA outputs do not provide
+    # the necessary information, so we have to go with this hack.
+    if("es" %in% es) {
+      index <- rep(TRUE, nrow(x))
+      if(!intercept){
+        index <- x$term!="(Intercept)"
+      }
+      x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      message("For your information: Eta-squared is calculated correctly if and only if the design is balanced.")
+    }
+
+    # --------------------------------------------------------------------------
+    # Calculate partial eta-squared
+    #
+    # This one should be unproblematic and work in all cases.
+    if("pes" %in% es) {
+      x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+    }
+  }
+
+  # ----------------------------------------------------------------------------
+  # Only calculate MSE if required (otherwise, Levene tests give an error).
+  if(mse) {
+    x$mse <- x$sumsq_err / x$df_res
+  }
+
+  x
+}
+

@@ -97,3 +97,62 @@ test_that(
     expect_equal(compare_data$dv, compare_data$ci)
   }
 )
+
+
+test_that(
+  "add_effect_sizes"
+  , {
+    apa_variance_table <- structure(
+      list(
+        term = c("(Intercept)", "Gender", "Dosage", "Gender:Dosage")
+        , sumsq = c(3164.0625, 76.5625, 5.0625, 0.0625)
+        , df = c(1, 1, 1, 1)
+        , sumsq_err = c(311.25, 311.25, 311.25, 311.25)
+        , df_res = c(12, 12, 12, 12)
+        , statistic = c(121.987951807229, 2.95180722891566, 0.195180722891566, 0.00240963855421686)
+        , p.value = c(1.21163629179605e-07, 0.111450651130857, 0.66649556577607, 0.961656681938102)
+      )
+      , .Names = c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+      , row.names = c(NA, -4L)
+      , class = c("apa_variance_table", "data.frame")
+      , correction = "none"
+    )
+
+    with_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
+    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
+
+    # SS from car output:
+    SS_car <- c(3164.0625, 76.5625, 5.0625, 0.0625, 311.25)
+
+    expect_equal(
+      object = with_intercept$es
+      # Expectation calculated via sums of squares from car
+      , expected = SS_car[1:4] / sum(SS_car)
+    )
+    expect_equal(
+      # Expectation calculated with afex
+      object = with_intercept$pes
+      , expected = c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
+    )
+    expect_equal(
+      object = with_intercept$ges
+      # Expectation calculated with afex
+      , expected = c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
+    )
+
+    expect_equal(
+      object = without_intercept$es
+      # Expectation calculated via sums of squares from car
+      , expected = SS_car[2:4]/sum(SS_car[2:5])
+    )
+    expect_equal(
+      object = without_intercept$ges
+      , expected = with_intercept$ges[2:4]
+    )
+    expect_equal(
+      object = without_intercept$pes
+      , expected = with_intercept$pes[2:4]
+    )
+  }
+)
+
