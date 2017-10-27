@@ -24,8 +24,7 @@ Imports:
   beeswarm,
   stringr,
   methods,
-  latex2exp,
-  BayesFactor
+  latex2exp
 Suggests:
   car,
   afex,
@@ -35,7 +34,8 @@ Suggests:
   ggplot2,
   dplyr,
   downloader,
-  testthat
+  testthat,
+  BayesFactor
 License: MIT + file LICENSE
 LazyData: yes
 RoxygenNote: 6.0.1
@@ -49,6 +49,7 @@ Collate:
     'apa_generic_plot.R'
     'apa_lineplot.R'
     'apa_print.R'
+    'apa_print_BFBayesFactor.R'
     'apa_print_anova.R'
     'apa_print_glht.R'
     'apa_print_htest.R'

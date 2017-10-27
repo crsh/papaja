@@ -82,7 +82,8 @@ prop_stat <- prop.test(smokers, patients)
 apa_print(prop_stat, n = sum(patients))
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.aov}},
+Other apa_print: \code{\link{apa_print.BFBayesFactor}},
+  \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
   \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
   \code{\link{apa_print}}
