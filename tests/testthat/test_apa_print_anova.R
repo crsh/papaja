@@ -243,10 +243,10 @@ test_that(
     rm_afex_aov_output <- apa_print(rm_afex_aov$aov)
     expect_identical(rm_afex_aov_output, rm_aov_output)
 
-    rm_afex_aov_output <- apa_print(rm_afex_aov$Anova, correction = "none")
+    rm_afex_aov_output <- apa_print(rm_afex_aov$Anova, correction = "none", intercept = FALSE)
     expect_identical(rm_afex_aov_output, rm_aov_output)
 
-    rm_afex_aov_output <- apa_print(rm_afex_aov, correction = "none")
+    rm_afex_aov_output <- apa_print(rm_afex_aov, correction = "none", intercept = FALSE)
     expect_identical(rm_afex_aov_output, rm_aov_output)
 
 

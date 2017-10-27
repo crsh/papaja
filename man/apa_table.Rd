@@ -8,8 +8,8 @@
 \usage{
 apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
   added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
-  placement = "tbp", landscape = FALSE, small = FALSE,
-  na_string = getOption("papaja.na_string"), escape = NULL, ...)
+  placement = "tbp", landscape = FALSE, small = FALSE, escape = NULL,
+  format.args = NULL, ...)
 
 apa_table.latex(x, caption = NULL, note = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
@@ -46,7 +46,7 @@ documents.}
 
 \item{small}{Logical. If \code{TRUE} the font size of the table content is reduced.}
 
-\item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
+\item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.}
 
 \item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
 }
@@ -78,5 +78,5 @@ apa_table(
 )
 }
 \seealso{
-\code{\link[knitr]{kable}}
+\code{\link[knitr]{kable}}, \code{\link{printnum}}
 }
