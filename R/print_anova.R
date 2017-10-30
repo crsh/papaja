@@ -84,13 +84,13 @@ print_anova <- function(
   ## Define appropriate column names
   es_long <- c()
   if("pes" %in% es) {
-    es_long <- c(es_long, "$\\eta^2_p$")
+    es_long <- c(es_long, "$\\hat{\\eta}^2_p$")
   }
   if("ges" %in% es) {
-    es_long <- c(es_long, "$\\eta^2_G$")
+    es_long <- c(es_long, "$\\hat{\\eta}^2_G$")
   }
   if("es" %in% es) {
-    es_long <- c(es_long, "$\\eta^2$")
+    es_long <- c(es_long, "$\\hat{\\eta}^2$")
   }
 
 
@@ -123,13 +123,13 @@ print_anova <- function(
     apa_res$estimate <- apply(x, 1, function(y) {
       apa_est <- c()
       if("pes" %in% es) {
-        apa_est <- c(apa_est, paste0("$\\eta^2_p = ", y["pes"], "$"))
+        apa_est <- c(apa_est, paste0("$\\hat{\\eta}^2_p = ", y["pes"], "$"))
       }
       if("ges" %in% es) {
-        apa_est <- c(apa_est, paste0("$\\eta^2_G = ", y["ges"], "$"))
+        apa_est <- c(apa_est, paste0("$\\hat{\\eta}^2_G = ", y["ges"], "$"))
       }
       if("es" %in% es) {
-        apa_est <- c(apa_est, paste0("$\\eta^2 = ", y["es"], "$"))
+        apa_est <- c(apa_est, paste0("$\\hat{\\eta}^2 = ", y["es"], "$"))
       }
       apa_est <- paste(apa_est, collapse = ", ")
     })
