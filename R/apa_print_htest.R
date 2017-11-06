@@ -93,14 +93,18 @@ apa_print.htest <- function(
 
   if(!is.null(x$parameter)) {
     # Statistic and degrees of freedom
-    if(tolower(names(x$parameter)) == "df") {
-      dfdigits <- if(x$parameter %%1 == 0) 0 else 2
+    parameter_names <- tolower(names(x$parameter))
+    if(length(parameter_names) == 1 && parameter_names == "df") {
+      dfdigits <- (x$parameter %%1 != 0) * 2
       if(stat_name == "\\chi^2") {
         if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = dfdigits), ", n = ", n, ")")
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ", n = ", n, ")")
       } else {
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = dfdigits), ")")
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ")")
       }
+    } else if(length(parameter_names) == 2 && identical(parameter_names, c("num df", "denom df"))) {
+      dfdigits <- (x$parameter %%1 != 0) * 2
+      stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("num df", parameter_names)], digits = dfdigits[1]), ", ", printnum(x$parameter[grep("denom df", parameter_names)], digits = dfdigits[2]), ")")
     }
   }
 
