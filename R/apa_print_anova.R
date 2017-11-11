@@ -129,12 +129,12 @@ apa_print.anova <- function(
   # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
 
+  ellipsis <- list(...)
   variance_table <- arrange_anova(x)
   object_heading <- attr(x, "heading")
 
   if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
     if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
-      ellipsis <- list(...)
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
