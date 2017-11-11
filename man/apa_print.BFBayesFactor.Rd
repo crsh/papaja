@@ -10,9 +10,11 @@
 \alias{apa_print,BFBayesFactorList-method}
 \title{Format Bayes factors (APA 6th edition)}
 \usage{
-apa_print.BFBayesFactor(x, ...)
+apa_print.BFBayesFactor(x, iterations = 10000, central_tendency = median,
+  hdi = 0.95, standardized = FALSE, ...)
 
-\S4method{apa_print}{BFBayesFactor}(x, ...)
+\S4method{apa_print}{BFBayesFactor}(x, iterations = 10000,
+  central_tendency = median, hdi = 0.95, standardized = FALSE, ...)
 
 apa_print.BFBayesFactorTop(x, ...)
 

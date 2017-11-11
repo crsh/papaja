@@ -7,6 +7,7 @@
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
+#'   Note that eta-squared is calculated correctly if and only if the design is balanced.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
@@ -41,65 +42,33 @@ print_anova <- function(
   , in_paren = FALSE
 ) {
 
-  # When processing aovlist objects a dummy term "aovlist_residuals" is kept to preserve the SS_error of the intercept
-  # term to calculate generalized eta squared correctly. This term contains NAs.
-  if("aovlist_residuals" %in% x$term) {
-    tmp <- x[x$term != "aovlist_residuals", ]
-    validate(tmp, check_class = "data.frame")
-    validate(tmp, check_class = "apa_variance_table")
-  } else {
-    validate(x, check_class = "data.frame")
-    validate(x, check_class = "apa_variance_table")
-  }
-
+  # When processing aovlist objects, the `(Intercept)` is kept to preserve the
+  # SS_error of the intercept   # term to calculate generalized eta squared
+  # correctly. This term contains NAs.
+  validate(x, check_class = "data.frame", check_NA = FALSE)
+  validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   validate(intercept, check_class = "logical", check_length = 1)
+
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
     validate(es, check_class = "character")
-    if(!all(es %in% c("pes", "ges", "es"))) stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
     es <- sort(es, decreasing = TRUE)
   }
   validate(in_paren, check_class = "logical", check_length = 1)
 
   rownames(x) <- sanitize_terms(x$term)
+  # ----------------------------------------------------------------------------
+  # Add effect-size measures and mean-squared errors
+  x <- add_effect_sizes(
+    x = x
+    , es = es
+    , observed = observed
+    , mse = mse
+    , intercept = intercept
+  )
 
-  # Calculate generalized eta squared
-  if("ges" %in% es) {
-    ## This code is a copy from afex by Henrik Singmann who said that it is basically a copy
-    ## from ezANOVA by Mike Lawrence
-    if(!is.null(observed)) {
-      obs <- rep(FALSE, nrow(x))
-      for(i in observed) {
-        if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
-          stop(paste0("Observed variable not in data: ", i, collapse = " "))
-        }
-        obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
-      }
-      obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
-      obs_SSn2 <- x$sumsq*obs
-    } else {
-      obs_SSn1 <- 0
-      obs_SSn2 <- 0
-    }
-    x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
-  }
-
-  # Calculate eta squared
-  if("es" %in% es) {
-    x$es <- x$sumsq / sum(x$sumsq, unique(x$sumsq_err))
-  }
-
-  # Calculate partial eta squared
-  if("pes" %in% es) {
-    x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
-  }
-
-  # Remove dummy term for aovlists and intercept if necessary
-  if("aovlist_residuals" %in% x$term) x <- x[x$term != "aovlist_residuals", ]
+  # Remove intercept if the user doesn't want it:
   if(!intercept) x <- x[x$term != "(Intercept)", ]
-
-  # Calculate MSE
-  if(mse) x$mse <- x$sumsq_err / x$df_res
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
@@ -115,13 +84,13 @@ print_anova <- function(
   ## Define appropriate column names
   es_long <- c()
   if("pes" %in% es) {
-    es_long <- c(es_long, "$\\eta^2_p$")
+    es_long <- c(es_long, "$\\hat{\\eta}^2_p$")
   }
   if("ges" %in% es) {
-    es_long <- c(es_long, "$\\eta^2_G$")
+    es_long <- c(es_long, "$\\hat{\\eta}^2_G$")
   }
   if("es" %in% es) {
-    es_long <- c(es_long, "$\\eta^2$")
+    es_long <- c(es_long, "$\\hat{\\eta}^2$")
   }
 
 
@@ -154,13 +123,13 @@ print_anova <- function(
     apa_res$estimate <- apply(x, 1, function(y) {
       apa_est <- c()
       if("pes" %in% es) {
-        apa_est <- c(apa_est, paste0("$\\eta^2_p = ", y["pes"], "$"))
+        apa_est <- c(apa_est, paste0("$\\hat{\\eta}^2_p = ", y["pes"], "$"))
       }
       if("ges" %in% es) {
-        apa_est <- c(apa_est, paste0("$\\eta^2_G = ", y["ges"], "$"))
+        apa_est <- c(apa_est, paste0("$\\hat{\\eta}^2_G = ", y["ges"], "$"))
       }
       if("es" %in% es) {
-        apa_est <- c(apa_est, paste0("$\\eta^2 = ", y["es"], "$"))
+        apa_est <- c(apa_est, paste0("$\\hat{\\eta}^2 = ", y["es"], "$"))
       }
       apa_est <- paste(apa_est, collapse = ", ")
     })
