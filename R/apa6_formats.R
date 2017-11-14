@@ -83,7 +83,10 @@ apa6_pdf <- function(
     args <- pdf_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
 
     # Set citeproc = FALSE by default to invoke ampersand filter
-    if(is.null(metadata$citeproc) || metadata$citeproc) {
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
       metadata$citeproc <- FALSE
       assign("yaml_front_matter", metadata, pos = parent.frame())
     }
@@ -253,7 +256,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args, metadata$csl)
+    if(is.null(metadata$replace_ampersands) || metadata$replace_ampersands) {
+      args <- set_ampersand_filter(args, metadata$csl)
+    }
   }
 
   args
@@ -343,27 +348,27 @@ author_ampersand <- function(x, format) {
 set_ampersand_filter <- function(args, csl_file) {
   pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
 
+  # Correct in-text ampersands
+  filter_path <- system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "ampersand_filter.sh"
+    , package = "papaja"
+  )
+
+  if(Sys.info()["sysname"] == "Windows") {
+    filter_path <- gsub("\\.sh", ".bat", filter_path)
+    ampersand_filter <- readLines(filter_path)
+    ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
+    filter_path <- "_papaja_ampersand_filter.bat"
+    filter_path_connection <- file(filter_path, encoding = "UTF-8")
+    writeLines(ampersand_filter, filter_path_connection)
+    close(filter_path_connection)
+  }
+
   if(!is.null(args)) { # CSL has not been specified manually
-    # Correct in-text ampersands
-    filter_path <- system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "ampersand_filter.sh"
-      , package = "papaja"
-    )
-
-    if(Sys.info()["sysname"] == "Windows") {
-      filter_path <- gsub("\\.sh", ".bat", filter_path)
-      ampersand_filter <- readLines(filter_path)
-      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
-      filter_path <- "_papaja_ampersand_filter.bat"
-      filter_path_connection <- file(filter_path, encoding = "UTF-8")
-      writeLines(ampersand_filter, filter_path_connection)
-      close(filter_path_connection)
-    }
-
     args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
   } else {
-    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc())
+    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc(), "--filter", filter_path)
   }
 
   args
