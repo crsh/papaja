@@ -52,6 +52,7 @@ Collate:
     'apa_print_BFBayesFactor.R'
     'apa_print_anova.R'
     'apa_print_glht.R'
+    'apa_print_glm.R'
     'apa_print_htest.R'
     'apa_print_list.R'
     'apa_print_lm.R'
