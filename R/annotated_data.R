@@ -67,7 +67,6 @@ setValidity(
 #' S4 Class Union for Annotated Vectors
 #'
 #' This is a collection of classes that extend basic data types (currently
-#' numeric, integer, character, logical vectors, and factors) with an additional
 #' vector_annotation-object.
 #'
 #' @slot .Data  Depending on the data type that the class extends, the original
@@ -626,18 +625,39 @@ setMethod(
   }
 )
 
-#' Drop Unused Levels from Vectors
+#' #' Drop Unused Levels from Vectors
+#' #'
+#' #' This is an additional method that allows for more convenient programming:
+#' #' If a vector (annotated or not) is not a factor, do not change anything.
+#' #' @param x An atomic vector or annotated vector.
+#' #' @return x, unchanged.
+#' #' @keywords internal
 #'
-#' This is an additional method that allows for more convenient programming:
-#' If a vector (annotated or not) is not a factor, do not change anything.
+#' setMethod(
+#'   f = "droplevels"
+#'   , signature = "vector"
+#'   , definition = function(x) {
+#'     x
+#'   }
+#' )
+#'
+#' Drop Unused Levels from Data Frames
+#'
+#' This is a copy from the S3-method from the base package.
 #' @param x An atomic vector or annotated vector.
 #' @return x, unchanged.
-#' @keywords internal
+#' @export
 
 setMethod(
   f = "droplevels"
-  , signature = "vector"
-  , definition = function(x) {
+  , signature = "data.frame"
+  , definition = function(x, except = NULL, exclude) {
+    ix <- vapply(x, is.factor, NA)
+    if (!is.null(except))
+      ix[except] <- FALSE
+    x[ix] <- if (missing(exclude))
+      lapply(x[ix], droplevels)
+    else lapply(x[ix], droplevels, exclude = exclude)
     x
   }
 )

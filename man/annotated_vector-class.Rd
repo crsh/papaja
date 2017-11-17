@@ -17,7 +17,6 @@
 \title{S4 Class Union for Annotated Vectors}
 \description{
 This is a collection of classes that extend basic data types (currently
-numeric, integer, character, logical vectors, and factors) with an additional
 vector_annotation-object.
 }
 \details{
