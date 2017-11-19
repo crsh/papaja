@@ -221,6 +221,7 @@ apa_table.latex <- function(
   x <- default_label(x)
   # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
   colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", unlist(variable_label(x)), "}")[-1]
+  colnames(x)[1] <- variable_label(x)[[1]]
 
   res_table <- do.call(function(...) knitr::kable(x, format = "latex", ...), ellipsis)
 
