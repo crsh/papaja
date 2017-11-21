@@ -246,7 +246,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
   input_file_connection <- file(input_file, encoding = "UTF-8")
-  writeLines(augmented_input_text, input_file)
+  writeLines(augmented_input_text, input_file_connection)
   close(input_file_connection)
 
   args <- NULL
@@ -279,7 +279,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
   input_file_connection <- file(input_file, encoding = "UTF-8")
-  writeLines(input_file_connection, input_file)
+  writeLines(augmented_input_text, input_file_connection)
   close(input_file_connection)
 
   args <- NULL
