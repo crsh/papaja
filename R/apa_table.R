@@ -8,10 +8,10 @@
 #' @param note Character. Note to be printed below the table.
 #' @param added_stub_head Character. Used as stub head (name of first column) if \code{row.names = TRUE}
 #'    is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.
-#' @param col_spanners List. A named list of vectors of length 2 giving the first and second column to
-#'    span with a grouping column name.
-#' @param stub_indents List. A named list of vectors of length 2 giving the first and second row to
-#'    indent. Names of list elements will be used as titles for indented sections.
+#' @param col_spanners List. A named list of vectors of length 2 that contain the first and last column to
+#'    span. The name of each list element containing the vector is used as grouping column name.
+#' @param stub_indents List. A named list of vectors that contain indeces of the rows to indent. The name
+#'    of each list element containing the vector is used as title for indented sections.
 #' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
 #'    followed by a horizontal rule; ignored in MS Word documents.
 #' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
@@ -40,16 +40,29 @@
 #' @seealso \code{\link[knitr]{kable}}, \code{\link{printnum}}
 #' @examples
 #'
-#' my_table <- apply(cars, 2, function(x) # Create data
-#'    round(c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
+#' my_table <- t(apply(cars, 2, function(x) # Create data
+#'   round(c(Mean = mean(x), SD = sd(x), Min = min(x), Max = max(x)), 2)
+#' ))
+#'
+#' apa_table(
+#'   my_table
+#'   , align = c("l", rep("r", 3))
+#'   , caption = "A summary table of the cars dataset."
 #' )
 #'
 #' apa_table(
-#'    my_table
-#'    , align = c("l", "r", "r")
-#'    , caption = "A summary table of the cars dataset."
-#'    , note = "This table was created using apa\\_table()"
-#'    , added_stub_head = "Descriptives"
+#'   cbind(my_table, my_table)
+#'   , align = c("l", rep("r", 8))
+#'   , caption = "A summary table of the cars dataset."
+#'   , note = "This table was created using apa\\_table()"
+#'   , added_stub_head = "Variables"
+#'   , col_spanners = list(`Cars 1` = c(2, 5), `Cars 2` = c(6, 9))
+#' )
+#'
+#' apa_table(
+#'   list(`Cars 1` = my_table, `Cars 2` = my_table)
+#'   , caption = "A summary table of the cars dataset."
+#'   , added_stub_head = "Variables"
 #' )
 #' @export
 

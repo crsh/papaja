@@ -97,8 +97,8 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   })
   pkg_texts <- paste0(
     "*", pkg_names, "* "
-    , "[", pkg_versions
-    , ", ", pkg_keys, "]"
+    , "[Version ", pkg_versions
+    , "; ", pkg_keys, "]"
   )
 
   if(length(pkg_texts) > 1) {
