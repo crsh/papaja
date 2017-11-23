@@ -37,7 +37,6 @@ footnotelist      : no
 lineno            : yes
 mask              : no
 
-lang              : "english"
 class             : "man"
 output            : papaja::apa6_pdf
 ---
