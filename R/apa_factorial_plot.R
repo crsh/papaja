@@ -1,7 +1,7 @@
 #' Plots for factorial designs that conform to APA guidelines
 #'
 #' Wrapper function that creates one or more plots by sequentially calling functions from the \pkg{graphics} package.
-#' \code{apa_generic_plot} is the workhorse function that is called by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
+#' \code{apa_factorial_plot} is the workhorse function that is called by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
 #'
 #' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
 #' @param id Character. Variable name that identifies subjects.
@@ -44,7 +44,7 @@
 #'
 #' \strong{Customisation of plot elements}
 #'
-#'    \code{apa_generic_plot} is a wrapper function that sequentially calls
+#'    \code{apa_factorial_plot} is a wrapper function that sequentially calls
 #' \code{\link{plot.new}},
 #' \code{\link{plot.window}},
 #' \code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
@@ -59,7 +59,7 @@
 #' These calls can be customised by setting the respective parameters \code{args_***}.
 #' @family plots for factorial designs
 #' @examples
-#' apa_generic_plot(
+#' apa_factorial_plot(
 #'   data = npk
 #'   , id = "block"
 #'   , dv = "yield"
@@ -72,14 +72,14 @@
 #' @export
 
 
-apa_generic_plot <-function(data, ...){
-  UseMethod("apa_generic_plot", data)
+apa_factorial_plot <-function(data, ...){
+  UseMethod("apa_factorial_plot", data)
 }
 
-#' @rdname apa_generic_plot
+#' @rdname apa_factorial_plot
 #' @export
 
-apa_generic_plot.default <- function(
+apa_factorial_plot.default <- function(
   data
   , id
   , factors = NULL
@@ -120,6 +120,19 @@ apa_generic_plot.default <- function(
   validate(na.rm, check_class = "logical", check_length = 1)
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE)
+  if(!is.null(args_x_axis)) validate(args_x_axis, check_class = "list")
+  if(!is.null(args_y_axis)) validate(args_y_axis, check_class = "list")
+  if(!is.null(args_title)) validate(args_title, check_class = "list")
+  if(!is.null(args_points)) validate(args_points, check_class = "list")
+  if(!is.null(args_lines)) validate(args_lines, check_class = "list")
+  if(!is.null(args_swarm)) validate(args_swarm, check_class = "list")
+  if(!is.null(args_error_bars)) validate(args_error_bars, check_class = "list")
+  if(!is.null(args_legend)) validate(args_legend, check_class = "list")
+  if(!is.null(plot)) validate(plot, check_class = "character")
+  if(!is.null(jit)) validate(jit, check_class = "numeric")
+  if(!is.null(xlab)) if(!is.expression(xlab)) validate(xlab, check_class = "character")
+  if(!is.null(ylab)) if(!is.expression(ylab)) validate(ylab, check_class = "character")
+  if(!is.null(main)) if(!is.expression(main)) validate(main, check_class = "character")
 
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
@@ -149,7 +162,7 @@ apa_generic_plot.default <- function(
     data[[factors]] <- 1
     data[[factors]] <- as.factor(data[[factors]])
     ellipsis$args_x_axis<- list(tick = FALSE, labels = "")
-    variable_label(data[[factors]]) <- "arbitrary_factor_name"
+    variable_label(data[[factors]]) <- "arbitraryFactorName"
   }
 
   # Set defaults
@@ -318,7 +331,7 @@ apa_generic_plot.default <- function(
 
       ))
 
-    output$args <- do.call("apa_generic_plot_single", ellipsis)
+    output$args <- do.call("apa_factorial_plot_single", ellipsis)
   }
 
   old.mfrow <- par("mfrow") # Save original plot architecture
@@ -376,7 +389,7 @@ apa_generic_plot.default <- function(
         ellipsis.i$ylab <- ""
       }
 
-      output$args[[paste0("plot", i)]] <- do.call("apa_generic_plot_single", ellipsis.i)
+      output$args[[paste0("plot", i)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
     }
     par(mfrow=old.mfrow)
   }
@@ -421,7 +434,7 @@ apa_generic_plot.default <- function(
         if(j!=levels(y.values[[factors[4]]])[1]){
           ellipsis.i$ylab <- ""
         }
-        output$args[[paste0("plot", i, j)]] <- do.call("apa_generic_plot_single", ellipsis.i)
+        output$args[[paste0("plot", i, j)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
       }
     }
     par(mfrow=old.mfrow)
@@ -433,18 +446,18 @@ apa_generic_plot.default <- function(
 
 #' Plots for factorial designs that conform to APA guidelines, two-factors internal function
 #'
-#' Internal function that is called (possibly multiple times) by \code{\link{apa_generic_plot}}.
+#' Internal function that is called (possibly multiple times) by \code{\link{apa_factorial_plot}}.
 #'
 #' @param aggregated A \code{data.frame}, the \emph{aggregated} data.
 #' @param y.values   A \code{data.frame} containing the measures of central tendency and of dispersion per cell of the design.
 #' @param id Character. Variable name that identifies subjects.
 #' @param dv Character. The name of the dependent variable.
 #' @param factors Character. A vector of up to four variable names that is used to stratify the data.
-#' @param intercept Numeric. See details in \code{\link{apa_generic_plot}}
+#' @param intercept Numeric. See details in \code{\link{apa_factorial_plot}}
 #'
 #' @keywords internal
 
-apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
+apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
 
   ellipsis <- list(...)
 
@@ -816,10 +829,10 @@ apa_generic_plot_single <- function(aggregated, y.values, id, dv, factors, inter
 }
 
 
-#' @rdname apa_generic_plot
+#' @rdname apa_factorial_plot
 #' @export
 
-apa_generic_plot.afex_aov <- function(
+apa_factorial_plot.afex_aov <- function(
   data
   , tendency = mean
   , dispersion = conf_int
@@ -843,5 +856,5 @@ apa_generic_plot.afex_aov <- function(
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_generic_plot.default", ellipsis)
+  do.call("apa_factorial_plot.default", ellipsis)
 }

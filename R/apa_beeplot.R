@@ -39,7 +39,7 @@
 #'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 #'    \code{level = 0.98}. \code{level} defaults to 0.95.
 #'
-#'    For more details on customising plot elements, see \code{\link{apa_generic_plot}}.
+#'    For more details on customising plot elements, see \code{\link{apa_factorial_plot}}.
 #'
 #' @family plots for factorial designs
 #' @examples
@@ -132,7 +132,7 @@ apa_beeplot.default <- function(
       , plot = c("points", "error_bars", "swarms")
     )
   )
-  do.call("apa_generic_plot", ellipsis)
+  do.call("apa_factorial_plot", ellipsis)
 }
 
 
@@ -159,5 +159,5 @@ apa_beeplot.afex_aov <- function(
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_generic_plot.afex_aov", ellipsis)
+  do.call("apa_factorial_plot.afex_aov", ellipsis)
 }

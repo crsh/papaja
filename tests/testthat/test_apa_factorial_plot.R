@@ -3,7 +3,7 @@ context("apa_barplot()")
 test_that(
   "apa_barplot.default()"
   , {
-    generic <- apa_generic_plot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), plot = c("bars", "error_bars"), fun_aggregate = median, tendency = sum, dispersion = se)
+    generic <- apa_factorial_plot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), plot = c("bars", "error_bars"), fun_aggregate = median, tendency = sum, dispersion = se)
     x <- apa_barplot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), fun_aggregate = median, tendency = sum, dispersion = se)
 
     expect_equal(
@@ -17,9 +17,9 @@ test_that(
   "apa_barplot.afex_aov()"
   , {
     afex_aov <- afex::aov_ez(data = npk, id = "block", within = c("N", "P"), dv = "yield")
-    generic_bar <- apa_generic_plot(afex_aov, plot = c("bars", "error_bars"))
-    generic_line <- apa_generic_plot(afex_aov, plot = c("lines", "error_bars", "points"))
-    generic_bee <- apa_generic_plot(afex_aov, plot = c("swarms", "points", "error_bars"))
+    generic_bar <- apa_factorial_plot(afex_aov, plot = c("bars", "error_bars"))
+    generic_line <- apa_factorial_plot(afex_aov, plot = c("lines", "error_bars", "points"))
+    generic_bee <- apa_factorial_plot(afex_aov, plot = c("swarms", "points", "error_bars"))
     bar <- apa_barplot(afex_aov)
     line <- apa_lineplot(afex_aov)
     bee <- apa_beeplot(afex_aov)
@@ -44,7 +44,7 @@ context("apa_beeplot()")
 test_that(
   "apa_beeplot.default()"
   , {
-    generic <- apa_generic_plot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), plot = c("swarms", "points", "error_bars"), fun_aggregate = median, tendency = sum, dispersion = se)
+    generic <- apa_factorial_plot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), plot = c("swarms", "points", "error_bars"), fun_aggregate = median, tendency = sum, dispersion = se)
     x <- apa_beeplot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), fun_aggregate = median, tendency = sum, dispersion = se)
 
     expect_equal(
@@ -59,7 +59,7 @@ context("apa_lineplot()")
 test_that(
   "apa_lineplot.default()"
   , {
-    generic <- apa_generic_plot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), plot = c("lines", "points", "error_bars"), fun_aggregate = median, tendency = sum, dispersion = se)
+    generic <- apa_factorial_plot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), plot = c("lines", "points", "error_bars"), fun_aggregate = median, tendency = sum, dispersion = se)
     x <- apa_lineplot(data = npk, id = "block", dv = "yield", factors = c("N", "P", "K"), fun_aggregate = median, tendency = sum, dispersion = se)
 
     expect_equal(
@@ -70,13 +70,13 @@ test_that(
 )
 
 
-context("apa_generic_plot()")
+context("apa_factorial_plot()")
 
 test_that(
-  "apa_generic_plot.default(): calculations, and parameter `level`"
+  "apa_factorial_plot.default(): calculations, and parameter `level`"
   , {
     data <- npk
-    out <- apa_generic_plot(data = data, id = "block", dv = "yield", level = .75)
+    out <- apa_factorial_plot(data = data, id = "block", dv = "yield", level = .75)
     data$block <- as.factor(data$block)
     variable_label(data[, c("block", "yield")]) <- c("block" = "block", "yield" = "yield")
     aggregated <- aggregate(formula = yield ~ block, data = data, FUN = mean)
@@ -96,9 +96,9 @@ test_that(
 )
 
 test_that(
-  "apa_generic_plot.default(): Inherit customisations"
+  "apa_factorial_plot.default(): Inherit customisations"
   , {
-    out <- apa_generic_plot(
+    out <- apa_factorial_plot(
       data = npk
       , id = "block"
       , dv = "yield"
@@ -153,32 +153,24 @@ test_that(
 )
 
 test_that(
-  "apa_generic_plot.default(): Four-factors case"
+  "apa_factorial_plot.default(): Four-factors case"
   , {
-    set.seed(123)
-    # Between-subjects design
-    data <- data.frame(
-      A = rep(letters[1:3], each = 3^3)
-      , B = rep(letters[1:3], each = 3^2)
-      , C = rep(letters[1:3], each = 3^1)
-      , D = letters[1:3] # D is within-subjects-factor
-      , id = rep(1:3^4, each = 3)
-      , dv = rnorm(3^5)
-    )
-    object_1 <- apa_generic_plot(
-      data = data
-      , id = "id"
-      , dv = "dv"
-      , factors = c("A", "B", "C", "D")
+    load("data/mixed_data.rdata")
+
+    object_1 <- apa_factorial_plot(
+      data = mixed_data
+      , id = "Subject"
+      , dv = "Recall"
+      , factors = c("Gender", "Dosage", "Task", "Valence")
       , plot = c("lines", "points", "error_bars")
       , dispersion = wsci
-      , level = .2
+      , level = .4
       , intercept = 0
-      , fun.aggregate = mean
+      , fun_aggregate = mean
     )
     # Test if mandatory legend is plotted:
     expect_identical(
-      object = object_1$args$plotac$args_legend$plot
+      object = object_1$args$plotCPos$args_legend$plot
       , expected = TRUE
     )
 

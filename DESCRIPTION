@@ -46,7 +46,7 @@ Collate:
     'apa6_formats.R'
     'apa_barplot.R'
     'apa_beeplot.R'
-    'apa_generic_plot.R'
+    'apa_factorial_plot.R'
     'apa_lineplot.R'
     'apa_print.R'
     'apa_print_BFBayesFactor.R'

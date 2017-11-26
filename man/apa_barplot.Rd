@@ -75,7 +75,7 @@ The measure of dispersion can be either \code{conf_int} for between-subjects con
    distribution function that will be covered. For instance, if you want a 98\% within-subjects confidence interval, specify
    \code{dispersion = wsci} and \code{level = 0.98}. \code{level} defaults to 0.95.
 
-   For more details on customising plot elements, see \code{\link{apa_generic_plot}}.
+   For more details on customising plot elements, see \code{\link{apa_factorial_plot}}.
 }
 \examples{
 
@@ -106,6 +106,6 @@ apa_barplot(
 }
 \seealso{
 Other plots for factorial designs: \code{\link{apa_beeplot}},
-  \code{\link{apa_generic_plot}},
+  \code{\link{apa_factorial_plot}},
   \code{\link{apa_lineplot}}
 }

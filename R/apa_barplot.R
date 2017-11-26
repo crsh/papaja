@@ -36,7 +36,7 @@
 #'    distribution function that will be covered. For instance, if you want a 98\% within-subjects confidence interval, specify
 #'    \code{dispersion = wsci} and \code{level = 0.98}. \code{level} defaults to 0.95.
 #'
-#'    For more details on customising plot elements, see \code{\link{apa_generic_plot}}.
+#'    For more details on customising plot elements, see \code{\link{apa_factorial_plot}}.
 #'
 #' @family plots for factorial designs
 #'
@@ -125,7 +125,7 @@ apa_barplot.default <- function(
       , main = main
     )
   )
-  do.call("apa_generic_plot", ellipsis)
+  do.call("apa_factorial_plot", ellipsis)
 }
 
 
@@ -152,5 +152,5 @@ apa_barplot.afex_aov <- function(
       , "fun_aggregate" = substitute(fun_aggregate)
     )
   )
-  do.call("apa_generic_plot.afex_aov", ellipsis)
+  do.call("apa_factorial_plot.afex_aov", ellipsis)
 }
