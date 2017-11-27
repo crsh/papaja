@@ -483,6 +483,54 @@ setMethod(
 # })
 
 
+print.data.frame <- function(x, ...) {
+  column_labels <- variable_label(x)
+  n_labels <- length(unlist(column_labels))
+
+  if(n_labels == 0) {
+    base::print.data.frame(x, ...)
+  } else {
+    cat("An annotated data.frame with", n_labels, "labels:\n\n")
+
+    base::print.data.frame(x, ...)
+
+    x_labels <- unlist(
+      lapply(
+        variable_label(x)
+        , function(x) if(is.null(x)) NA else x
+      )
+    )
+    x_units <- unlist(
+      lapply(
+        x
+        , function(x) if(is(x, "annotated_vector") && length(x@annotation@unit) > 0) x@annotation@unit else NA
+      )
+    )
+
+    x_legend <- data.frame(
+      column = colnames(x)
+      , label = x_labels
+      , unit = x_units
+      , stringsAsFactors = FALSE
+    )
+    x_legend <- subset(x_legend, !is.na(label) | !is.na(unit))
+    max_char <- max(nchar(x_legend$column))
+
+    apply(
+      x_legend[1:5, ]
+      , 1
+      , function(x) {
+        cat("\n", format(x["column"], width = max_char), ": ", sep = "")
+        if(!is.na(x["label"])) cat(x["label"], " ", sep = "")
+        if(!is.na(x["unit"])) cat("[", x["unit"], "]", sep = "")
+      }
+    )
+
+    if(n_labels > 5) cat("\n... (", n_labels - 5, " more label", if(n_labels > 6) "s" else NULL, ")", sep = "")
+  }
+}
+
+
 
 #' Subsetting of Annotated Vectors
 #'
