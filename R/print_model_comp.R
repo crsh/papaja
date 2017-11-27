@@ -110,8 +110,6 @@ print_model_comp <- function(
 
 
   # Assemble table
-  n_models <- length(models)
-
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
       lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c(1:3)]
       lm_table[, 2] <- apply(cbind(paste0("$", lm_table[, 2], "$"), lm_table[, 3]), 1, paste, collapse = " ")
@@ -158,7 +156,7 @@ print_model_comp <- function(
     r2
   })
 
-  colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$AIC$", "$BIC$")
+  colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
 
   ## Add differences in model fits
   model_diffs <- printnum(
@@ -171,7 +169,7 @@ print_model_comp <- function(
   model_diffs <- rbind("", model_diffs)
 
   r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]")
-  colnames(model_diffs) <- c(r2_diff_colname, "$\\Delta AIC$", "$\\Delta BIC$")
+  colnames(model_diffs) <- c(r2_diff_colname, "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")
 
   diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
   diff_stats$p.value <- gsub("= ", "", diff_stats$p.value) # Remove 'equals' for table

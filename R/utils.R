@@ -332,13 +332,13 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 
 
 
-#' Sort ANOVA table by effects
+#' Sort ANOVA or regression table by predictors/effects
 #'
-#' Sorts rows in ANOVA table produced by \code{\link{apa_print}} by complexity (i.e., main effects,
-#' two-way interactions, three-way interactions, etc.).
+#' Sorts rows in ANOVA or regression tables produced by \code{\link{apa_print}}
+#' by complexity (i.e., main effects, two-way interactions, three-way interactions, etc.).
 #'
-#' @param x data.frame. An arbitrary data.frame with a column named "Effect", e.g., a table element
-#'    produced by \code{\link{apa_print}}.
+#' @param x data.frame. For example, a table element produced by \code{\link{apa_print}}.
+#' @param terms Character. Column name of the \code{data.frame} containing the terms to sort.
 #'
 #' @return Returns the same data.frame with reordered rows.
 #' @export
@@ -347,12 +347,12 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 #' ## From Venables and Ripley (2002) p. 165.
 #' npk_aov <- aov(yield ~ block + N * P * K, npk)
 #' npk_aov_results <- apa_print(npk_aov)
-#' sort_effects(npk_aov_results$table)
+#' sort_terms(npk_aov_results$table, "Effect")
 
-sort_effects <- function(x) {
-  validate(x, check_class = "data.frame", check_cols = "Effect")
+sort_terms <- function(x, colname) {
+  validate(x, check_class = "data.frame", check_cols = colname)
 
-  x[order(sapply(regmatches(x$Effect, gregexpr("\\\\times", x$Effect)), length)), ]
+  x[order(sapply(regmatches(x[[colname]], gregexpr("\\\\times", x[[colname]])), length)), ]
 }
 
 #' Corresponding author line

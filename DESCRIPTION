@@ -38,7 +38,7 @@ Suggests:
   BayesFactor
 License: MIT + file LICENSE
 LazyData: yes
-RoxygenNote: 6.0.1
+RoxygenNote: 6.0.1.9000
 VignetteBuilder: knitr
 Collate: 
     'ampersand_filter.R'
@@ -55,9 +55,9 @@ Collate:
     'apa_print_glm.R'
     'apa_print_htest.R'
     'apa_print_list.R'
-    'apa_print_lm.R'
     'apa_table.R'
     'arrange_anova.R'
+    'arrange_regression.R'
     'calculations.R'
     'cite_r.R'
     'deprecated_defunct.R'
