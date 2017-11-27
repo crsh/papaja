@@ -29,4 +29,7 @@ measurement) are preserved.
 a <- new("annotated_numeric", .Data = 1:4)
 test <- a[1:2]
 }
+\seealso{
+base::`[`
+}
 \keyword{internal}

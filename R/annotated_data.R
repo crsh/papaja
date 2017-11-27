@@ -538,7 +538,7 @@ print.data.frame <- function(x, ...) {
 #' measurement) are preserved.
 #' @param x The annotated_vector object to be subsetted.
 #' @param i An index specifying elements to extract or replace.
-#'
+#' @seealso base::`[`
 #' @examples
 #' a <- new("annotated_numeric", .Data = 1:4)
 #' test <- a[1:2]
