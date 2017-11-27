@@ -333,7 +333,7 @@ setValidity(
 
     if(!is.null(names(object@.Data))){
       value$names <- "There are hidden names in slot \".Data\".
-      Please report this problem to www.github.com/crsh/papaja."
+      Please report this problem to https://github.com/crsh/papaja/issues."
     }
     unlist(value)
   }
@@ -691,7 +691,7 @@ setMethod(
 #'
 #' Drop Unused Levels from Data Frames
 #'
-#' This is a copy from the S3-method from the base package.
+#' This is a copy from the S3-method from the \pkg{base} package.
 #' @param x An atomic vector or annotated vector.
 #' @return x, unchanged.
 #' @export
@@ -1391,8 +1391,9 @@ setAs(
   , to = "factor"
   , def = function(from){
     factor(
-      x = from@levels[from@.Data]
-      , levels = from@levels
+      x = from@.Data
+      , levels = 1:length(from@levels)
+      , labels = from@levels
     )
   }
 )

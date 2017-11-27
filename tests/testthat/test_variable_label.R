@@ -116,6 +116,24 @@ test_that(
       variable_label(object) <- "a"
       , "Assigned label is required to be a named character vector."
     )
+    variable_label(object) <- c("a" = "A beautiful test label.")
+
+    expect_identical(
+      object = object
+      , expected = data.frame(
+        a = new(
+          "annotated_integer"
+          , .Data = 1:4
+          , label = "A beautiful test label."
+          , annotation = new(
+            "vector_annotation"
+            , label = "A beautiful test label."
+          )
+        )
+        , b = 5:8
+      )
+    )
+
   }
 )
 

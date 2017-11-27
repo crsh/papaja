@@ -24,6 +24,7 @@
 #' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{x} axis.
 #' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{y} axis.
 #' @param args_title  An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.
+#' @param args_rect An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
 #' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
@@ -44,7 +45,7 @@
 #'
 #' \strong{Customisation of plot elements}
 #'
-#'    \code{apa_factorial_plot} is a wrapper function that sequentially calls
+#'    \code{apa_factorial_plot} and its descendants \code{apa_barplot}, \code{apa_lineplot}, and \code{apa_beeplot} are wrapper functions that sequentially call
 #' \code{\link{plot.new}},
 #' \code{\link{plot.window}},
 #' \code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),

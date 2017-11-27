@@ -283,7 +283,7 @@ test_that(
     # Coercion from named to unnamed
     object_3 <- new(
       "annotated_named_integer"
-      , .Data = 2:5
+      , .Data = 6:8
       , names = letters[1:4]
       , label = "label1"
       , annotation = annotation
@@ -303,12 +303,7 @@ test_that(
 
     expect_identical(
       object = object_4
-      , expected = new(
-        "annotated_integer"
-        , .Data = 2:5
-        , label = "label1"
-        , annotation = annotation
-      )
+      , expected = object_1
     )
   }
 )
@@ -585,7 +580,7 @@ test_that(
 # Coercion to annotated_factor -------------------------------------------------
 
 test_that(
-  "coerce to annotated_factor"
+  "coerce to annotated_factor (et vice versa)"
   , {
     num <- as.numeric(1:4)
     int <- 1:4
@@ -639,6 +634,43 @@ test_that(
         , levels = letters[3:5]
       )
     )
+
+    object_6 <- as(object_1, "numeric")
+    object_7 <- as(object_2, "integer")
+    object_8 <- as(object_3, "character")
+    object_9 <- as(object_4, "logical")
+    object_10 <- as(object_5, "factor")
+
+    # This behavior is consistent with as(1:4, "numeric"), but inconsistent with
+    # as.numeric(1:4) -- I think this is weird and undesirable. However, I think
+    # we should stick withthe S4-ish definition of a numeric.
+    # We should also test using as.numeric():
+
+    expect_identical(
+      object = as.numeric(object_1)
+      , expected = num
+    )
+
+    expect_identical(
+      object = object_6
+      , expected = int
+    )
+    expect_identical(
+      object = object_7
+      , expected = int
+    )
+    expect_identical(
+      object = object_8
+      , expected = chr
+    )
+    expect_identical(
+      object = object_9
+      , expected = log
+    )
+    expect_identical(
+      object = object_10
+      , expected = fac[1:2]
+    )
   }
 )
 
@@ -646,7 +678,7 @@ test_that(
 
 
 test_that(
-  "coerce to annotated_factor"
+  "coerce to annotated_named_vector"
   , {
     anno <- new("vector_annotation", label = "label", unit = "unit")
 
@@ -701,7 +733,6 @@ test_that(
     back_int <- as(named_int, "annotated_integer")
     back_chr <- as(named_chr, "annotated_character")
     back_log <- as(named_log, "annotated_logical")
-
 
     expect_identical(
       object = back_num

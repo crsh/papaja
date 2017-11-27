@@ -11,14 +11,15 @@ apa_barplot(data, ...)
 \method{apa_barplot}{default}(data, id, factors = NULL, dv, tendency = mean,
   dispersion = conf_int, level = 0.95, fun_aggregate = mean,
   na.rm = TRUE, reference = 0, intercept = NULL, args_x_axis = NULL,
-  args_y_axis = NULL, args_title = NULL, args_error_bars = NULL,
-  args_legend = NULL, xlab = NULL, ylab = NULL, main = NULL, ...)
+  args_y_axis = NULL, args_title = NULL, args_rect = NULL,
+  args_error_bars = NULL, args_legend = NULL, xlab = NULL, ylab = NULL,
+  main = NULL, ...)
 
 \method{apa_barplot}{afex_aov}(data, tendency = mean, dispersion = conf_int,
   fun_aggregate = mean, ...)
 }
 \arguments{
-\item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}.}
+\item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
 
 \item{...}{Further arguments that will be passed to \code{\link{plot.window}}.}
 
@@ -41,7 +42,7 @@ before calculating descriptive statistics for each cell of the design. Defaults 
 
 \item{na.rm}{Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.}
 
-\item{reference}{Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to \code{0}.}
+\item{reference}{Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to\code{0}.}
 
 \item{intercept}{Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.}
@@ -52,9 +53,11 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_title}{An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.}
 
+\item{args_rect}{An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.}
+
 \item{args_error_bars}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.}
 
-\item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}.}
+\item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
 \item{xlab}{Character or expression. Label for \emph{x} axis.}
 
@@ -72,10 +75,24 @@ The measure of dispersion can be either \code{conf_int} for between-subjects con
    or any other standard function. For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}.
 
    If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
-   distribution function that will be covered. For instance, if you want a 98\% within-subjects confidence interval, specify
-   \code{dispersion = wsci} and \code{level = 0.98}. \code{level} defaults to 0.95.
+   distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
+   \code{level = 0.98}. \code{level} defaults to 0.95.
 
-   For more details on customising plot elements, see \code{\link{apa_factorial_plot}}.
+\strong{Customisation of plot elements}
+
+   \code{apa_factorial_plot} and its descendants \code{apa_barplot}, \code{apa_lineplot}, and \code{apa_beeplot} are wrapper functions that sequentially call
+\code{\link{plot.new}},
+\code{\link{plot.window}},
+\code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
+\code{\link{title}} for axis labels and titles,
+\code{\link{rect}} for bars in barplots,
+\code{\link{points}} for bee swarms,
+\code{\link{lines}} for lines connecting central tendency points,
+\code{\link{arrows}} for error bars,
+\code{\link{points}} for tendency points,
+\code{\link{legend}} for a legend, and
+\code{\link{lines}} for intercepts.
+These calls can be customised by setting the respective parameters \code{args_***}.
 }
 \examples{
 
@@ -109,4 +126,3 @@ Other plots for factorial designs: \code{\link{apa_beeplot}},
   \code{\link{apa_factorial_plot}},
   \code{\link{apa_lineplot}}
 }
-\concept{plots for factorial designs}

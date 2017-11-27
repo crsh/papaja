@@ -23,8 +23,7 @@ Imports:
   boot,
   beeswarm,
   stringr,
-  methods,
-  latex2exp
+  methods
 Suggests:
   car,
   afex,
@@ -35,7 +34,8 @@ Suggests:
   dplyr,
   downloader,
   testthat,
-  BayesFactor
+  BayesFactor,
+  latex2exp
 License: MIT + file LICENSE
 LazyData: yes
 RoxygenNote: 6.0.1.9000

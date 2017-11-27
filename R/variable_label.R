@@ -324,8 +324,6 @@ combine_plotmath <- function(x){
 }
 
 
-
-#' @importFrom latex2exp TeX
 #' @keywords internal
 
 tex_conv <- function(x, latex2exp = package_available("latex2exp")){

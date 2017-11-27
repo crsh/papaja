@@ -20,7 +20,7 @@ apa_lineplot(data, ...)
   dispersion = conf_int, fun_aggregate = mean, ...)
 }
 \arguments{
-\item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}.}
+\item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
 
 \item{...}{Further arguments that will be passed to \code{\link{plot.window}}.}
 
@@ -62,7 +62,7 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
-\item{jit}{Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.3}.}
+\item{jit}{Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.3}, defaults to \code{0.4} if \code{plot = "bars"}.}
 
 \item{xlab}{Character or expression. Label for \emph{x} axis.}
 
@@ -83,7 +83,21 @@ The measure of dispersion can be either \code{conf_int} for between-subjects con
    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
    \code{level = 0.98}. \code{level} defaults to 0.95.
 
-   For more details on customising plot elements, see \code{\link{apa_factorial_plot}}.
+\strong{Customisation of plot elements}
+
+   \code{apa_factorial_plot} and its descendants \code{apa_barplot}, \code{apa_lineplot}, and \code{apa_beeplot} are wrapper functions that sequentially call
+\code{\link{plot.new}},
+\code{\link{plot.window}},
+\code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
+\code{\link{title}} for axis labels and titles,
+\code{\link{rect}} for bars in barplots,
+\code{\link{points}} for bee swarms,
+\code{\link{lines}} for lines connecting central tendency points,
+\code{\link{arrows}} for error bars,
+\code{\link{points}} for tendency points,
+\code{\link{legend}} for a legend, and
+\code{\link{lines}} for intercepts.
+These calls can be customised by setting the respective parameters \code{args_***}.
 }
 \examples{
 apa_lineplot(
@@ -118,4 +132,3 @@ Other plots for factorial designs: \code{\link{apa_barplot}},
   \code{\link{apa_beeplot}},
   \code{\link{apa_factorial_plot}}
 }
-\concept{plots for factorial designs}

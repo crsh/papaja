@@ -75,6 +75,8 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{main}{Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
+
+\item{args_rect}{An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.}
 }
 \description{
 Wrapper function that creates one or more plots by sequentially calling functions from the \pkg{graphics} package.
@@ -90,7 +92,7 @@ The measure of dispersion can be either \code{conf_int} for between-subjects con
 
 \strong{Customisation of plot elements}
 
-   \code{apa_factorial_plot} is a wrapper function that sequentially calls
+   \code{apa_factorial_plot} and its descendants \code{apa_barplot}, \code{apa_lineplot}, and \code{apa_beeplot} are wrapper functions that sequentially call
 \code{\link{plot.new}},
 \code{\link{plot.window}},
 \code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
@@ -119,4 +121,3 @@ apa_factorial_plot(
 Other plots for factorial designs: \code{\link{apa_barplot}},
   \code{\link{apa_beeplot}}, \code{\link{apa_lineplot}}
 }
-\concept{plots for factorial designs}

@@ -31,5 +31,5 @@ setMethod(
 \details{
 Drop Unused Levels from Data Frames
 
-This is a copy from the S3-method from the base package.
+This is a copy from the S3-method from the \pkg{base} package.
 }
