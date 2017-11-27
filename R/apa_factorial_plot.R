@@ -159,11 +159,12 @@ apa_factorial_plot.default <- function(
 
   # If no factors were specified, use an arbitrary one -------------------------
   if(is.null(factors)||length(factors)==0){
-    factors <- "arbitrary_factor_name"
+    factors <- "arbitraryFactorName"
     data[[factors]] <- 1
     data[[factors]] <- as.factor(data[[factors]])
     ellipsis$args_x_axis<- list(tick = FALSE, labels = "")
-    variable_label(data[[factors]]) <- "arbitraryFactorName"
+    # Create an empty label so that xlab won't be plotted automatically
+    variable_label(data[[factors]]) <- ""
   }
 
   # Set defaults
@@ -183,7 +184,7 @@ apa_factorial_plot.default <- function(
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
-       , xlab = if(!is.null(xlab)){xlab}else{if(!is.null(factors)){combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}else{""}}
+       , xlab = if(!is.null(xlab)){xlab}else{combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
        , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(variable_label(data[[dv]]), ""))}
        , frame.plot = FALSE
        , reference = reference
