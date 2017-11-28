@@ -12,9 +12,9 @@ apa_factorial_plot(data, ...)
   tendency = mean, dispersion = conf_int, level = 0.95,
   fun_aggregate = mean, na.rm = TRUE, reference = 0, intercept = NULL,
   args_x_axis = NULL, args_y_axis = NULL, args_title = NULL,
-  args_points = NULL, args_lines = NULL, args_swarm = NULL,
-  args_error_bars = NULL, args_legend = NULL, plot = NULL, jit = 0.3,
-  xlab = NULL, ylab = NULL, main = NULL, ...)
+  args_rect = NULL, args_points = NULL, args_lines = NULL,
+  args_swarm = NULL, args_error_bars = NULL, args_legend = NULL,
+  plot = NULL, jit = 0.3, xlab = NULL, ylab = NULL, main = NULL, ...)
 
 \method{apa_factorial_plot}{afex_aov}(data, tendency = mean,
   dispersion = conf_int, fun_aggregate = mean, ...)
@@ -54,6 +54,8 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_title}{An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.}
 
+\item{args_rect}{An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.}
+
 \item{args_points}{An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.}
 
 \item{args_lines}{An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.}
@@ -75,8 +77,6 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{main}{Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
-
-\item{args_rect}{An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.}
 }
 \description{
 Wrapper function that creates one or more plots by sequentially calling functions from the \pkg{graphics} package.

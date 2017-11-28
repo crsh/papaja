@@ -83,13 +83,15 @@ apa_barplot.default <- function(
       , intercept = intercept
       , args_x_axis = args_x_axis
       , args_y_axis = args_y_axis
+      , args_title = args_title
+      , args_rect = args_rect
       , args_error_bars = args_error_bars
       , args_legend = args_legend
-      , jit = .4  # add parameter 'space'
-      , plot = c("bars", "error_bars")
       , xlab = xlab
       , ylab = ylab
       , main = main
+      , jit = .4  # add parameter 'space'
+      , plot = c("bars", "error_bars")
     )
   )
   do.call("apa_factorial_plot", ellipsis)

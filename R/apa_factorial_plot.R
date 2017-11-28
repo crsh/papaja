@@ -95,6 +95,7 @@ apa_factorial_plot.default <- function(
   , args_x_axis = NULL
   , args_y_axis = NULL
   , args_title = NULL
+  , args_rect = NULL
   , args_points = NULL
   , args_lines = NULL
   , args_swarm = NULL
@@ -124,6 +125,7 @@ apa_factorial_plot.default <- function(
   if(!is.null(args_x_axis)) validate(args_x_axis, check_class = "list")
   if(!is.null(args_y_axis)) validate(args_y_axis, check_class = "list")
   if(!is.null(args_title)) validate(args_title, check_class = "list")
+  if(!is.null(args_rect)) validate(args_rect, check_class = "list")
   if(!is.null(args_points)) validate(args_points, check_class = "list")
   if(!is.null(args_lines)) validate(args_lines, check_class = "list")
   if(!is.null(args_swarm)) validate(args_swarm, check_class = "list")
@@ -179,6 +181,7 @@ apa_factorial_plot.default <- function(
      , set.if.null = list(
        args_x_axis = args_x_axis
        , args_y_axis = args_y_axis
+       , args_rect = args_rect
        , args_points = args_points
        , args_swarm = args_swarm
        , args_lines = args_lines
