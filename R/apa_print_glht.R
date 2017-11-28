@@ -106,7 +106,7 @@ apa_print.summary.glht <- function(
     , p.value = "$p$"
   )
   apa_res$table <- contrast_table
-
+  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }
 
@@ -271,6 +271,7 @@ apa_print.summary.ref.grid <- function(
   }
 
   apa_res$table <- contrast_table
+  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
 
   apa_res
 }

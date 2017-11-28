@@ -190,5 +190,6 @@ print_anova <- function(
     apa_res <- lapply(apa_res, as.list)
   }
   apa_res$table <- sort_terms(as.data.frame(anova_table), "Effect")
+  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }

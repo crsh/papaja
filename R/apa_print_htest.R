@@ -145,6 +145,7 @@ apa_print.htest <- function(
 
     apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
   }
-
+  # Do not assign if table is not a data.frame
+  # attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }

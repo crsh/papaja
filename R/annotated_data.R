@@ -274,6 +274,18 @@ setClassUnion(
 )
 
 
+# ------------------------------------------------------------------------------
+# Define a rather trivial class for our tables, so that both print() and
+# variable_label() work on them
+
+#' @export
+
+setClass(
+  "apa_results_table"
+  , contains = "data.frame"
+)
+
+
 #' Generate an Annotated Vector
 #'
 #' \code{\link{initialize}}-method for class union \code{annotated_vector}.
@@ -482,15 +494,16 @@ setMethod(
 #   cat("Levels: ", paste(object@levels, collapse = " < "))
 # })
 
+#' @export
 
-print.data.frame <- function(x, ...) {
+print.apa_results_table <- function(x, ...) {
   column_labels <- variable_label(x)
   n_labels <- length(unlist(column_labels))
 
   if(n_labels == 0) {
     base::print.data.frame(x, ...)
   } else {
-    cat("An annotated data.frame with", n_labels, "labels:\n\n")
+    cat("A data.frame with ", n_labels, " labelled column",if(n_labels!=1){"s"}else{""}, ":\n\n", sep = "")
 
     base::print.data.frame(x, ...)
 
@@ -517,7 +530,7 @@ print.data.frame <- function(x, ...) {
     max_char <- max(nchar(x_legend$column))
 
     apply(
-      x_legend[1:5, ]
+      x_legend[1:min(5, nrow(x_legend)), ]
       , 1
       , function(x) {
         cat("\n", format(x["column"], width = max_char), ": ", sep = "")

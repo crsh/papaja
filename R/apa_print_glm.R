@@ -282,5 +282,6 @@ apa_glm_res <- function(x, in_paren, conf_level) {
   apa_res <- lapply(apa_res, as.list)
 
   apa_res$table <- sort_terms(as.data.frame(x), "predictor")
+  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }
