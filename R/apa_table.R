@@ -103,8 +103,7 @@ apa_table <- function(
     format.args$digits <- ellipsis$digits
   }
 
-  output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-  if(is.null(escape)) escape <- ifelse(!is.null(output_format), output_format == "latex", TRUE)
+  if(is.null(escape)) ellipsis$escape <- TRUE
 
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
@@ -169,6 +168,8 @@ apa_table <- function(
   ellipsis$row.names <- FALSE
 
   # Pass to markup generating functions
+  output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+
   if(!is.null(ellipsis[["format"]])) {
     output_format <- ellipsis[["format"]]
     ellipsis[["format"]] <- NULL

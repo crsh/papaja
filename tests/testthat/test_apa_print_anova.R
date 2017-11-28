@@ -34,7 +34,7 @@ test_that(
     expect_is(ow_aov_output$table, "data.frame")
     expect_equal(nrow(ow_aov_output$table), 1)
     expect_equal(colnames(ow_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
-    expect_equal(unlist(variable_label(ow_aov_output$table)), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
+    expect_equal(unname(unlist(variable_label(ow_aov_output$table))), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
 
     # Other classes
     ow_aov_summary_output <- apa_print(summary(ow_aov))
@@ -85,7 +85,7 @@ test_that(
     expect_is(ow_afex_aov_output$table, "data.frame")
     expect_equal(nrow(ow_afex_aov_output$table), 2)
     expect_equal(colnames(ow_afex_aov_output$table), c("Effect", "F", "df1", "df2", "MSE", "p", "ges"))
-    expect_equal(unlist(variable_label(ow_afex_aov_output$table)), c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
+    expect_equal(unname(unlist(variable_label(ow_afex_aov_output$table))), c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
     expect_equal(ow_afex_aov_output$table$Effect@.Data, c("Intercept", "Dosage"))
 
     ow_afex_aov_output2 <- apa_print(ow_afex_aov, intercept = TRUE)
@@ -143,7 +143,7 @@ test_that(
     expect_is(tw_aov_output$table, "data.frame")
     expect_equal(nrow(tw_aov_output$table), 3)
     expect_equal(colnames(tw_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
-    expect_equal(unlist(variable_label(tw_aov_output$table)), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
+    expect_equal(unname(unlist(variable_label(tw_aov_output$table))), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
     expect_equal(tw_aov_output$table$Effect@.Data, c("Gender", "Dosage", "Gender $\\times$ Dosage"))
 
     # Other classes

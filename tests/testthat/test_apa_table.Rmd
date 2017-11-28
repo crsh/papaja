@@ -184,6 +184,7 @@ glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
 apa_table(
   apa_print(glm.D93)$table
   , align = "lrrrr"
+  , escape = FALSE
 )
 ```
 
