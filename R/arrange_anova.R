@@ -21,6 +21,7 @@
 #' @return
 #'    \code{data.frame} of class \code{apa_variance_table} or \code{apa_model_comp}.
 #'
+#' @keywords internal
 #' @seealso \code{\link{print_anova}}, \code{\link{print_model_comp}}
 #' @examples
 #'  \dontrun{
@@ -28,6 +29,7 @@
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    arrange_anova(summary(npk_aov))
 #'  }
+#'
 
 arrange_anova <- function(x, ...) {
   UseMethod("arrange_anova")

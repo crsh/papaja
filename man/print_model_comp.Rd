@@ -49,3 +49,4 @@ guidelines. \emph{This function is not exported.}
 \seealso{
 \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
 }
+\keyword{internal}

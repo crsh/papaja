@@ -33,7 +33,8 @@ test_that(
     # table
     expect_is(ow_aov_output$table, "data.frame")
     expect_equal(nrow(ow_aov_output$table), 1)
-    expect_equal(colnames(ow_aov_output$table), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
+    expect_equal(colnames(ow_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
+    expect_equal(unlist(variable_label(ow_aov_output$table)), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
 
     # Other classes
     ow_aov_summary_output <- apa_print(summary(ow_aov))
@@ -83,8 +84,9 @@ test_that(
     # table
     expect_is(ow_afex_aov_output$table, "data.frame")
     expect_equal(nrow(ow_afex_aov_output$table), 2)
-    expect_equal(colnames(ow_afex_aov_output$table), c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
-    expect_equal(ow_afex_aov_output$table$Effect, c("Intercept", "Dosage"))
+    expect_equal(colnames(ow_afex_aov_output$table), c("Effect", "F", "df1", "df2", "MSE", "p", "ges"))
+    expect_equal(unlist(variable_label(ow_afex_aov_output$table)), c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
+    expect_equal(ow_afex_aov_output$table$Effect@.Data, c("Intercept", "Dosage"))
 
     ow_afex_aov_output2 <- apa_print(ow_afex_aov, intercept = TRUE)
     expect_identical(ow_afex_aov_output2, ow_afex_aov_output)
@@ -140,8 +142,9 @@ test_that(
     # table
     expect_is(tw_aov_output$table, "data.frame")
     expect_equal(nrow(tw_aov_output$table), 3)
-    expect_equal(colnames(tw_aov_output$table), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
-    expect_equal(tw_aov_output$table$Effect, c("Gender", "Dosage", "Gender $\\times$ Dosage"))
+    expect_equal(colnames(tw_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
+    expect_equal(unlist(variable_label(tw_aov_output$table)), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
+    expect_equal(tw_aov_output$table$Effect@.Data, c("Gender", "Dosage", "Gender $\\times$ Dosage"))
 
     # Other classes
     tw_aov_Anova_output <- apa_print(car::Anova(tw_aov))
@@ -186,7 +189,7 @@ test_that(
     ## table
     expect_is(tw_afex_aov_output$table, "data.frame")
     expect_equal(nrow(tw_afex_aov_output$table), 4)
-    expect_equal(tw_afex_aov_output$table$Effect, c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage"))
+    expect_equal(tw_afex_aov_output$table$Effect@.Data, c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage"))
 
     tw_afex_aov_output2 <- apa_print(tw_afex_aov, intercept = TRUE)
     expect_identical(tw_afex_aov_output2, tw_afex_aov_output)
@@ -339,7 +342,6 @@ test_that(
   "Levene test"
   , {
     levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = car::Moore)
-
     levene_test_output <- apa_print(levene_test)
     expect_is(levene_test_output, "list")
     expect_equal(names(levene_test_output), container_names)

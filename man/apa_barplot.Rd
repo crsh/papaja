@@ -2,53 +2,97 @@
 % Please edit documentation in R/apa_barplot.R
 \name{apa_barplot}
 \alias{apa_barplot}
-\title{Barplot for factorial designs that conform to APA guidelines}
+\alias{apa_barplot.default}
+\alias{apa_barplot.afex_aov}
+\title{Barplots for factorial designs that conform to APA guidelines}
 \usage{
-apa_barplot(data, id, factors, dv, tendency = mean, dispersion = conf_int,
-  level = 0.95, fun_aggregate = mean, na.rm = TRUE, reference = 0,
-  intercept = NULL, args_arrows = list(), args_legend = list(), ...)
+apa_barplot(data, ...)
+
+\method{apa_barplot}{default}(data, id, factors = NULL, dv, tendency = mean,
+  dispersion = conf_int, level = 0.95, fun_aggregate = mean,
+  na.rm = TRUE, reference = 0, intercept = NULL, args_x_axis = NULL,
+  args_y_axis = NULL, args_title = NULL, args_rect = NULL,
+  args_error_bars = NULL, args_legend = NULL, xlab = NULL, ylab = NULL,
+  main = NULL, ...)
+
+\method{apa_barplot}{afex_aov}(data, tendency = mean, dispersion = conf_int,
+  fun_aggregate = mean, ...)
 }
 \arguments{
-\item{data}{A \code{data.frame} that contains the data.}
+\item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
+
+\item{...}{Further arguments that will be passed to \code{\link{plot.window}}.}
 
 \item{id}{Character. Variable name that identifies subjects.}
 
-\item{factors}{Character. A vector of up to 4 variable names that is used to stratify the data.}
+\item{factors}{Character. A vector of up to four variable names that is used to stratify the data.}
 
 \item{dv}{Character. The name of the dependent variable.}
 
 \item{tendency}{Closure. A function that will be used as measure of central tendency.}
 
 \item{dispersion}{Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-\code{conf_int} for 95\% confidence intervals. See details.}
+\code{conf_int} for 95\% between-subjects confidence intervals. See details for more options, especially for within-subjects confidence intervals.}
 
-\item{level}{Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-for 95\% confidence intervals. Ignored if \code{dispersion} is not \code{conf_int}.}
+\item{level}{Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to \code{0.95}.
+for 95\% confidence intervals. Ignored if \code{dispersion} is not a confidence-interval function. See details.}
 
 \item{fun_aggregate}{Closure. The function that will be used to aggregate observations within subjects and factors
 before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.}
 
 \item{na.rm}{Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.}
 
-\item{reference}{Numeric. Height of the x-axis. A reference point that is used for calculating, i.e. default limits of the y axis. Defaults to \code{0}.}
+\item{reference}{Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to\code{0}.}
 
-\item{intercept}{Numeric. Adds a horizontal line to the plot.}
+\item{intercept}{Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
+case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.}
 
-\item{args_arrows}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}}
+\item{args_x_axis}{An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{x} axis.}
+
+\item{args_y_axis}{An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{y} axis.}
+
+\item{args_title}{An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.}
+
+\item{args_rect}{An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.}
+
+\item{args_error_bars}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.}
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
-\item{...}{Further arguments than can be passed to \code{\link{barplot}} function.}
+\item{xlab}{Character or expression. Label for \emph{x} axis.}
+
+\item{ylab}{Character or expression. Label for \emph{y} axis.}
+
+\item{main}{Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
+either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
 }
 \description{
-Wrapper function for \code{\link{barplot}} that creates one or more barplots from a data.frame containing data from
+Wrapper function that creates one or more barplots from a \code{data.frame} containing data from
 a factorial design and sets APA-friendly defaults.
 }
 \details{
-The measure of dispersion can be either \code{conf_int} for confidence intervals, \code{se} for standard errors,
-   or any other standard function. If \code{conf_int} is specified, you can also specify the area of the cumulative
+The measure of dispersion can be either \code{conf_int} for between-subjects confidence intervals, \code{se} for standard errors,
+   or any other standard function. For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}.
+
+   If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
    \code{level = 0.98}. \code{level} defaults to 0.95.
+
+\strong{Customisation of plot elements}
+
+   \code{apa_factorial_plot} and its descendants \code{apa_barplot}, \code{apa_lineplot}, and \code{apa_beeplot} are wrapper functions that sequentially call
+\code{\link{plot.new}},
+\code{\link{plot.window}},
+\code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
+\code{\link{title}} for axis labels and titles,
+\code{\link{rect}} for bars in barplots,
+\code{\link{points}} for bee swarms,
+\code{\link{lines}} for lines connecting central tendency points,
+\code{\link{arrows}} for error bars,
+\code{\link{points}} for tendency points,
+\code{\link{legend}} for a legend, and
+\code{\link{lines}} for intercepts.
+These calls can be customised by setting the respective parameters \code{args_***}.
 }
 \examples{
 
@@ -78,5 +122,7 @@ apa_barplot(
 
 }
 \seealso{
-\code{\link{barplot}}
+Other plots for factorial designs: \code{\link{apa_beeplot}},
+  \code{\link{apa_factorial_plot}},
+  \code{\link{apa_lineplot}}
 }

@@ -17,9 +17,10 @@ will be aggregated separately.}
 \item{fun}{Closure. The function used for aggregation.}
 }
 \description{
-This is a convenience wrapper for aggregating your data using dplyr functions that tend to be much faster than the
+This is a convenience wrapper for aggregating your data using \pkg{dplyr} functions that tend to be much faster than the
 usual \code{aggregate} command. It is also easy to call from within a function. \emph{This function is not exported.}
 }
 \examples{
 NULL
 }
+\keyword{internal}

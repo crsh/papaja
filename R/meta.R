@@ -1,3 +1,5 @@
+#' @encoding UTF-8
+
 # # Create environment to store metadata
 # apa_doc_env <- new.env()
 #
@@ -37,7 +39,7 @@
 #     , german = list(
 #       author_note = "Anmerkung des Autors"
 #       , abstract = "Zusammenfassung"
-#       , keywords = "Schlüsselwörter:"
+#       , keywords = "Schl\00FCsselw\00F6rter:"
 #       , word_count = "Wortanzahl:"
 #       , table = "Tabelle"
 #       , figure = "Abbildung"

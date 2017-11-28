@@ -47,7 +47,9 @@ The returned \code{data.frame} can be passed to functions such as \code{\link{pr
    npk_aov <- aov(yield ~ block + N * P * K, npk)
    arrange_anova(summary(npk_aov))
  }
+
 }
 \seealso{
 \code{\link{print_anova}}, \code{\link{print_model_comp}}
 }
+\keyword{internal}

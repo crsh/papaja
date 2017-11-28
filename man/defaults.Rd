@@ -16,3 +16,4 @@ defaults(ellipsis, set = NULL, set.if.null = NULL)
 \description{
 A helper function that is intended for internal use. A list \code{ellipsis} may be manipulated by overwriting (via \code{set}) or adding (via \code{set.if.null}) list elements.
 }
+\keyword{internal}

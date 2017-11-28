@@ -98,7 +98,6 @@ test_that(
   }
 )
 
-
 test_that(
   "add_effect_sizes: Two-way between-subjects design"
   , {
@@ -156,6 +155,7 @@ test_that(
   }
 )
 
+
 test_that(
   "add_effect_sizes: Two-way within-subjects design"
   , {
@@ -212,5 +212,53 @@ test_that(
       object = without_intercept$pes
       , expected = with_intercept$pes[2:4]
     )
+  }
+)
+
+
+test_that(
+  "Within-subjects confidence intervals: Cousineau vs. Morey method"
+  , {
+    aggregated_data <- aggregate(formula = yield ~ N + block, data = npk, FUN = mean)
+    object_1 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Cousineau", level = .98)
+    object_2 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Morey", level = .98)
+
+    expect_identical(
+      object = attributes(object_1)
+      , expected = list(
+          class = "data.frame"
+          , names = c("N", "yield")
+          , row.names = c(1L, 2L)
+          , `Between-subjects factors` = "none"
+          , `Within-subjects factors` = "N"
+          , `Dependent variable` = "yield"
+          , `Subject identifier` = "block"
+          , `Confidence level` = 0.98
+          , Method = "Cousineau"
+      )
+    )
+    expect_identical(
+      object = object_1$yield
+      , expected = object_2$yield /sqrt(2)
+    )
+  }
+)
+
+
+test_that(
+  "Within-subjects confidence intervals: Throw error if data are not properly aggregated."
+  , {
+    expect_error(
+      wsci(data = npk, id = "block", factors = "N", dv = "yield")
+      , "More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination."
+    )
+  }
+)
+
+test_that(
+  "conf_int(): Throw message if not enough observations"
+  , {
+    expect_message(conf_int(1), "Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
+    expect_message(conf_int(NA), "Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
   }
 )

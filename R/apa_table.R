@@ -137,15 +137,16 @@ apa_table <- function(
     ## Assemble table
     if(row_names) {
       prep_table <- add_row_names(x, added_stub_head = added_stub_head)
-    } else prep_table <- x # data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    } else prep_table <- data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
     ## Round numeric cells
     prep_table <- format_cells(prep_table, format.args)
   }
 
   # Escape special characters
-  if(escape) {
+  if(!is.null(ellipsis$escape) && ellipsis$escape) {
     prep_table <- as.data.frame(lapply(prep_table, escape_latex, spaces = TRUE), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    # prep_table <- default_label(prep_table)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
     caption <- escape_latex(caption)
     note <- escape_latex(note)
@@ -243,7 +244,11 @@ apa_table.latex <- function(
   if(!is.null(current_chunk)) caption <- paste0("\\label{tab:", current_chunk, "}", caption)
 
   # Center title row
-  colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", colnames(x), "}")[-1]
+  # If x doesn't have variable labels, yet, create them...
+  x <- default_label(x)
+  # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
+  colnames(x) <- paste0("\\multicolumn{1}{c}{", unlist(variable_label(x)), "}")
+  colnames(x)[1] <- if(!is.na(variable_label(x)[[1]])) variable_label(x)[[1]] else ""
 
   res_table <- do.call(function(...) knitr::kable(x, format = "latex", ...), ellipsis)
 
@@ -328,6 +333,12 @@ apa_table.word <- function(
 ) {
   # Parse ellipsis
   ellipsis <- list(...)
+  # If x doesn't have variable labels, yet, create them...
+  x <- default_label(x)
+  # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
+  colnames(x) <- unlist(variable_label(x))
+  colnames(x)[1] <- if(!is.na(variable_label(x)[[1]])) variable_label(x)[[1]] else ""
+
   res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
@@ -361,6 +372,7 @@ apa_table.word <- function(
 #' @param x data.frame or matrix.
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.
 #'
+#' @keywords internal
 #' @seealso \code{\link{printnum}}
 #'
 #' @examples
@@ -383,6 +395,7 @@ format_cells <- function(x, format.args = NULL) {
 #'
 #' @param x data.frame or matrix.
 #' @param added_stub_head Character. Used as stub head (name of first column).
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
@@ -396,8 +409,10 @@ add_row_names <- function(x, added_stub_head) {
 
     if(!is.null(added_stub_head)) {
       colnames(mod_table) <- c(added_stub_head, colnames(x))
+      if(is(mod_table, "apa_results_table")) variable_label(mod_table[, 1]) <- added_stub_head
     } else {
       colnames(mod_table) <- c("", colnames(x))
+      if(is(mod_table, "apa_results_table")) variable_label(mod_table[, 1]) <- ""
     }
   } else mod_table <- data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
@@ -415,6 +430,7 @@ add_row_names <- function(x, added_stub_head) {
 #' @param lines List. A named list of vectors of length 2 giving the first and second row to
 #'    indent. Names of list elements will be used as titles for indented sections.
 #' @param filler Character. Symbols used to indent stubs.
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
@@ -452,6 +468,7 @@ indent_stubs <- function(x, lines, filler = "\ \ \ ") {
 #' @param table_lines Character. Vector of characters containing one line of a LaTeX table each.
 #' @param col_spanners List. A named list containing the indices of the first and last columns to group, where the names are the headings.
 #' @param n_cols Numeric. Number of columns of the table.
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
@@ -524,6 +541,7 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
 #' @param row_names Logical. Vector of boolean values specifying whether to print column names for the corresponding list
 #'    element.
 #' @param added_stub_head Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
+#' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples

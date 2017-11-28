@@ -21,3 +21,4 @@ not exported.}
 sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 }
 }
+\keyword{internal}

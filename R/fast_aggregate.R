@@ -1,6 +1,6 @@
 #' Aggregate data much faster using dplyr
 #'
-#' This is a convenience wrapper for aggregating your data using dplyr functions that tend to be much faster than the
+#' This is a convenience wrapper for aggregating your data using \pkg{dplyr} functions that tend to be much faster than the
 #' usual \code{aggregate} command. It is also easy to call from within a function. \emph{This function is not exported.}
 #'
 #' @param data A \code{data.frame} that contains the data.
@@ -8,17 +8,15 @@
 #' @param dv Character. The dependent variable to aggregate. All variables in \code{data} that contain this substring
 #'    will be aggregated separately.
 #' @param fun Closure. The function used for aggregation.
+#' @keywords internal
 #' @examples NULL
 
 fast_aggregate <- function(data, factors, dv, fun) {
+  # subset: this is a bit faster than subset.data.frame
+  data <- data[, colnames(data) %in% c(factors, dv)]
+  # the dplyr magic: this construct seems to be as fast as using pipes
+  grouped <- dplyr::grouped_df(data, vars = factors, drop = TRUE)
+  agg_data <- as.data.frame(dplyr::summarise_all(.tbl = grouped, .funs = dplyr::funs(fun(., na.rm = TRUE))))
 
-  fl <- lapply(as.list(factors), FUN = as.name)
-
-  data <- data[, colnames(data) %in% c(factors) | grepl(dv, colnames(data))]
-
-  grouped <- dplyr::grouped_df(data, vars = fl, drop = TRUE)
-  agg.data <- as.data.frame(dplyr::summarise_each(grouped, dplyr::funs(fun(., na.rm = TRUE))))
-
-  return(agg.data)
+  return(agg_data)
 }
-

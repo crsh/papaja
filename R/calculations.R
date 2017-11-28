@@ -1,6 +1,6 @@
 # Modified percentile bootstrap
 # Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confiddence Intervals for an Effect Size Measure in Multiple Linear Regression.
-# Educational and Psychological Measurement, 67(2), 207–218. http://doi.org/10.1177/0013164406292030
+# Educational and Psychological Measurement, 67(2), 207-218. http://doi.org/10.1177/0013164406292030
 
 # x: apa_model_comp object
 # models: list of lm-objects
@@ -92,6 +92,12 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   between <- c()
   within <- c()
 
+  # `split()` (below) needs standard factors, because it does not apply `as.factor`
+  # by default
+  for(i in c(id, factors)){
+    data[[i]] <- as.factor(data[[i]])
+  }
+
   for (i in 1:length(factors)) {
 
     if (all(rowSums(table(data[[id]], data[[factors[i]]])>0)==1)) {
@@ -168,7 +174,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   }
   values <- ee
   attr(values, "Between-subjects factors") <- if(is.null(between)){"none"} else {between}
-  attr(values, "Within-subjects factors") <- if(is.null(within)){"none"} else {within}
+  attr(values, "Within-subjects factors") <- within
   attr(values, "Dependent variable") <- dv
   attr(values, "Subject identifier") <- id
   attr(values, "Confidence level") <- level
@@ -202,9 +208,11 @@ conf_int <- function(x, level = 0.95, na.rm = TRUE){
   a <- (1 - level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(stats::qt(a, df = n-1))
-  if(n<2){
-    message("Less than two observations in at least one cell. Thus, no confidence interval can be computed.")
+
+  if(n < 2){
+    message("Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
   }
+
   ee <- (stats::sd(x, na.rm = na.rm) * fac) / sqrt(n)
   return(ee)
 }

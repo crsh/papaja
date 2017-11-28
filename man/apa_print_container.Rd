@@ -19,3 +19,4 @@ A named list containing the following components according to the input:
 \description{
 Creates the default empty container for the results of \code{\link{apa_print}}. \emph{This function is not exported.}
 }
+\keyword{internal}

@@ -26,3 +26,4 @@ print_confint(c(1, 2), conf_level = 0.95)
 \seealso{
 \code{\link{printnum}}
 }
+\keyword{internal}

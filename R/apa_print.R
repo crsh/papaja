@@ -28,6 +28,8 @@ apa_print <- function(x, ...) {
   UseMethod("apa_print", x)
 }
 
+
+#' @importClassesFrom BayesFactor BFBayesFactor
 setGeneric("apa_print")
 
 apa_print.default <- function(x, ...) no_method(x)
