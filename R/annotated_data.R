@@ -503,13 +503,13 @@ print.apa_results_table <- function(x, ...) {
   if(n_labels == 0) {
     base::print.data.frame(x, ...)
   } else {
-    cat("A data.frame with ", n_labels, " labelled column",if(n_labels!=1){"s"}else{""}, ":\n\n", sep = "")
+    cat("A data.frame with ", n_labels, " labelled column", if(n_labels > 1) "s" else NULL, ":\n\n", sep = "")
 
     base::print.data.frame(x, ...)
 
     x_labels <- unlist(
       lapply(
-        variable_label(x)
+        column_labels
         , function(x) if(is.null(x)) NA else x
       )
     )
@@ -541,6 +541,8 @@ print.apa_results_table <- function(x, ...) {
 
     if(n_labels > 5) cat("\n... (", n_labels - 5, " more label", if(n_labels > 6) "s" else NULL, ")", sep = "")
   }
+
+  invisible(x)
 }
 
 

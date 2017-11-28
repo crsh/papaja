@@ -119,7 +119,7 @@ apa_table <- function(
     ## Assemble table
     if(row_names) {
       prep_table <- add_row_names(x, added_stub_head = added_stub_head)
-    } else prep_table <- x # data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    } else prep_table <- data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
     ## Round numeric cells
     prep_table <- round_cells(prep_table, digits, na_string)
@@ -220,8 +220,8 @@ apa_table.latex <- function(
   # If x doesn't have variable labels, yet, create them...
   x <- default_label(x)
   # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
-  colnames(x)[-1] <- paste0("\\multicolumn{1}{c}{", unlist(variable_label(x)), "}")[-1]
-  colnames(x)[1] <- variable_label(x)[[1]]
+  colnames(x) <- paste0("\\multicolumn{1}{c}{", unlist(variable_label(x)), "}")
+  colnames(x)[1] <- if(!is.na(variable_label(x)[[1]])) variable_label(x)[[1]] else ""
 
   res_table <- do.call(function(...) knitr::kable(x, format = "latex", ...), ellipsis)
 
@@ -310,6 +310,8 @@ apa_table.word <- function(
   x <- default_label(x)
   # ...so that you can overwrite colnames(x) with (potentially) a mixture of labels and names
   colnames(x) <- unlist(variable_label(x))
+  colnames(x)[1] <- if(!is.na(variable_label(x)[[1]])) variable_label(x)[[1]] else ""
+
   res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
@@ -382,8 +384,10 @@ add_row_names <- function(x, added_stub_head) {
 
     if(!is.null(added_stub_head)) {
       colnames(mod_table) <- c(added_stub_head, colnames(x))
+      if(is(mod_table, "apa_results_table")) variable_label(mod_table[, 1]) <- added_stub_head
     } else {
       colnames(mod_table) <- c("", colnames(x))
+      if(is(mod_table, "apa_results_table")) variable_label(mod_table[, 1]) <- ""
     }
   } else mod_table <- data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
