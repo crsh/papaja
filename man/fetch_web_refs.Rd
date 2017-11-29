@@ -26,4 +26,3 @@ NULL
 \seealso{
 \code{\link{cite_r}}, \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
 }
-

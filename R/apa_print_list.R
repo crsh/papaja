@@ -1,9 +1,9 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#'  This methods performs comparisons of \code{lm}-objects and creates formatted chraracter
+#'  This methods performs comparisons of \code{lm}-objects and creates formatted character
 #' strings and a model comparison table to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the ouptut object.
+#' @param x List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the output object.
 #' @param anova_fun Function. Function to compare model-objects contained in \code{x}.
 #' @param ci Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.

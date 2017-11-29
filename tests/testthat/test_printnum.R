@@ -17,7 +17,7 @@ test_that(
     expect_equal(printnum(-1/3, gt1 = FALSE), "-.33")
 
     expect_equal(printnum(0, zero = TRUE), "0.00")
-    expect_equal(printnum(0, zero = FALSE), "< .01")
+    expect_equal(printnum(0, zero = FALSE), "< 0.01")
 
     expect_equal(printnum(-0.0001), "0.00")
 
@@ -45,7 +45,7 @@ test_that(
     expect_identical(printnum(to_print, gt1 = c(T, T, F, T, F)), c("12.10", "9.00", ".10", "1.00", ".00"))
 
     to_print[1] <- 0
-    expect_identical(printnum(to_print, zero = c(T, F, F)), c("0.00", "9.00", "0.10", "1.00", "< .01"))
+    expect_identical(printnum(to_print, zero = c(T, F, F)), c("0.00", "9.00", "0.10", "1.00", "< 0.01"))
 
     expect_equal(printnum(c(1, 2, NA)), c("1.00", "2.00", "NA"))
   }

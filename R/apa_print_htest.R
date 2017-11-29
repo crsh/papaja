@@ -1,7 +1,7 @@
 #' Format statistics (APA 6th edition)
 #'
 #' Takes \code{htest} objects from various statistical methods to create
-#' formatted chraracter strings to report the results in accordance with APA manuscript guidelines.
+#' formatted character strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x \code{htest} object. See details.
 #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
@@ -18,7 +18,7 @@
 #' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
 #'    a reproducible example in your report!).
 #'
@@ -93,14 +93,18 @@ apa_print.htest <- function(
 
   if(!is.null(x$parameter)) {
     # Statistic and degrees of freedom
-    if(tolower(names(x$parameter)) == "df") {
-      dfdigits <- if(x$parameter %%1 == 0) 0 else 2
+    parameter_names <- tolower(names(x$parameter))
+    if(length(parameter_names) == 1 && parameter_names == "df") {
+      dfdigits <- (x$parameter %%1 != 0) * 2
       if(stat_name == "\\chi^2") {
         if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = dfdigits), ", n = ", n, ")")
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ", n = ", n, ")")
       } else {
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", names(x$parameter), ignore.case = TRUE)], digits = dfdigits), ")")
+        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ")")
       }
+    } else if(length(parameter_names) == 2 && identical(parameter_names, c("num df", "denom df"))) {
+      dfdigits <- (x$parameter %%1 != 0) * 2
+      stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("num df", parameter_names)], digits = dfdigits[1]), ", ", printnum(x$parameter[grep("denom df", parameter_names)], digits = dfdigits[2]), ")")
     }
   }
 
@@ -145,6 +149,7 @@ apa_print.htest <- function(
 
     apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
   }
-
+  # Do not assign if table is not a data.frame
+  # attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }

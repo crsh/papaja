@@ -40,23 +40,23 @@ apa6_pdf <- function(
   validate(keep_tex, check_class = "logical", check_length = 1)
 
   # Get APA6 template
-    template <-  system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "apa6.tex"
-      , package = "papaja"
-    )
-    if(template == "") stop("No LaTeX template file found.")
+  template <-  system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "apa6.tex"
+    , package = "papaja"
+  )
+  if(template == "") stop("No LaTeX template file found.")
 
-    # Call pdf_document() with the appropriate options
-    format <- bookdown::pdf_document2(
-      template = template
-      , fig_caption = fig_caption
-      , number_sections = number_sections
-      , toc = toc
-      , keep_tex = keep_tex
-      , pandoc_args = pandoc_args
-      , ...
-    )
+  # Call pdf_document() with the appropriate options
+  format <- bookdown::pdf_document2(
+    template = template
+    , fig_caption = fig_caption
+    , number_sections = number_sections
+    , toc = toc
+    , keep_tex = keep_tex
+    , pandoc_args = pandoc_args
+    , ...
+  )
 
   # Set chunk defaults
   format$knitr$opts_chunk$echo <- FALSE
@@ -83,7 +83,10 @@ apa6_pdf <- function(
     args <- pdf_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
 
     # Set citeproc = FALSE by default to invoke ampersand filter
-    if(is.null(metadata$citeproc) || metadata$citeproc) {
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
       metadata$citeproc <- FALSE
       assign("yaml_front_matter", metadata, pos = parent.frame())
     }
@@ -140,8 +143,8 @@ apa6_word <- function(
   #   knitr::hook_plot_md(x, options)
   # }
 
-#   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
-#   format$knitr$opts_chunk$dpi <- 300
+  format$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
+  format$knitr$opts_chunk$dpi <- 300
   format$clean_supporting <- FALSE # Always keep images files
 
 
@@ -180,7 +183,8 @@ apa6_word <- function(
 
 # Set hook to print default numbers
 inline_numbers <- function (x) {
-  if (is.numeric(x)) {
+  if(class(x) %in% c("difftime")) x <- as.numeric(x)
+  if(is.numeric(x)) {
     printed_number <- ifelse(
       x == round(x)
       , as.character(x)
@@ -224,12 +228,26 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   input_text <- readLines(input_file, encoding = "UTF-8")
   yaml_params <- get_yaml_params(input_text)
 
-  yaml_params$author <- author_ampersand(yaml_params$author)
+  ## Adds correspondence line to author note
+  corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
+
+  if(length(corresponding_author) > 0) {
+    yaml_params$author_note <- paste(
+      yaml_params$author_note
+      , corresponding_author_line(corresponding_author[[1]])
+      , sep = "\n\n"
+    )
+  }
+
+  ## Concatenate author names
+  yaml_params$author <- author_ampersand(yaml_params$author, format = "latex")
 
   ## Add modified YAML header
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
-  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  writeLines(augmented_input_text, input_file_connection)
+  close(input_file_connection)
 
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
@@ -238,7 +256,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args, metadata$csl)
+    if(is.null(metadata$replace_ampersands) || metadata$replace_ampersands) {
+      args <- set_ampersand_filter(args, metadata$csl)
+    }
   }
 
   args
@@ -249,8 +269,6 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   input_text <- readLines(input_file, encoding = "UTF-8")
   yaml_params <- get_yaml_params(input_text)
 
-  yaml_params$author <- author_ampersand(yaml_params$author)
-
   ## Create title page
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c(word_title_page(yaml_params), input_text[(yaml_delimiters[2] + 1):length(input_text)])
@@ -260,7 +278,9 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  writeLines(augmented_input_text, input_file_connection)
+  close(input_file_connection)
 
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
@@ -292,16 +312,34 @@ get_yaml_params <- function(x) {
 }
 
 
-author_ampersand <- function(x) {
-  n_authors <- length(x)
+author_ampersand <- function(x, format) {
+
+  if(format == "latex") {
+    authors <- lapply(x, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]])) paste0("\\textsuperscript{", y[["affiliation"]], "}") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+  } else if(format == "word") {
+    authors <- lapply(x, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]])) paste0("^", y[["affiliation"]], "^") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+  } else {
+    stop("Format not supported.")
+  }
+
+  authors <- unlist(authors)
+
+  n_authors <- length(authors)
+  x[[1]]$name <- authors[1]
   if(n_authors >= 2) {
     if(n_authors > 2) {
-      x[[n_authors]]$name <- paste("&", x[[n_authors]]$name)
-      for(i in 2:n_authors) {
-        x[[i]]$name <- paste(",", x[[i]]$name)
+      x[[n_authors]]$name <- paste(", &", authors[n_authors])
+      for(i in 2:(n_authors - 1)) {
+        x[[i]]$name <- paste(",", authors[i])
       }
     } else {
-      x[[n_authors]]$name <- paste("\\ &", x[[n_authors]]$name) # Otherwise space before ampersand disappears
+      x[[n_authors]]$name <- paste("\\ &", authors[n_authors]) # Otherwise space before ampersand disappears
     }
   }
   x
@@ -310,25 +348,27 @@ author_ampersand <- function(x) {
 set_ampersand_filter <- function(args, csl_file) {
   pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
 
+  # Correct in-text ampersands
+  filter_path <- system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "ampersand_filter.sh"
+    , package = "papaja"
+  )
+
+  if(Sys.info()["sysname"] == "Windows") {
+    filter_path <- gsub("\\.sh", ".bat", filter_path)
+    ampersand_filter <- readLines(filter_path)
+    ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
+    filter_path <- "_papaja_ampersand_filter.bat"
+    filter_path_connection <- file(filter_path, encoding = "UTF-8")
+    writeLines(ampersand_filter, filter_path_connection)
+    close(filter_path_connection)
+  }
+
   if(!is.null(args)) { # CSL has not been specified manually
-    # Correct in-text ampersands
-    filter_path <- system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "ampersand_filter.sh"
-      , package = "papaja"
-    )
-
-    if(Sys.info()["sysname"] == "Windows") {
-      filter_path <- gsub("\\.sh", ".bat", filter_path)
-      ampersand_filter <- readLines(filter_path)
-      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
-      filter_path <- "_papaja_ampersand_filter.bat"
-      writeLines(ampersand_filter, filter_path)
-    }
-
     args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
   } else {
-    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc())
+    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc(), "--filter", filter_path)
   }
 
   args

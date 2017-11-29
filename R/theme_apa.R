@@ -9,7 +9,7 @@
 #' @param box Logical. Indicates whether to draw a box around the plot.
 #'
 #' @details This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
-#'    general aspect of the plot such as the colour of the background, gridlines, the size and colour
+#'    general aspect of the plot such as the color of the background, gridlines, the size and colour
 #'    of fonts.
 #'
 #' @export
@@ -31,10 +31,12 @@ theme_apa <- function(base_size = 12, base_family = "", box = FALSE) {
       # , axis.title = ggplot2::element_text(size = ggplot2::rel(1.1))
       , axis.title.x = ggplot2::element_text(size = ggplot2::rel(1), lineheight = ggplot2::rel(1.1), margin = ggplot2::margin(ggplot2::rel(12), 0, 0, 0))
       , axis.title.y = ggplot2::element_text(size = ggplot2::rel(1), lineheight = ggplot2::rel(1.1), margin = ggplot2::margin(0, ggplot2::rel(12), 0, 0))
+      , axis.title.y.right = ggplot2::element_text(size = ggplot2::rel(1), lineheight = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, 0, ggplot2::rel(12)))
       , axis.ticks.length = ggplot2::unit(ggplot2::rel(6), "points")
       , axis.text = ggplot2::element_text(size = ggplot2::rel(0.9))
       , axis.text.x = ggplot2::element_text(size = ggplot2::rel(1), margin = ggplot2::margin(ggplot2::rel(6), 0, 0, 0))
       , axis.text.y = ggplot2::element_text(size = ggplot2::rel(1), margin = ggplot2::margin(0, ggplot2::rel(6), 0, 0))
+      , axis.text.y.right = ggplot2::element_text(size = ggplot2::rel(1), margin = ggplot2::margin(0, 0, 0, ggplot2::rel(6)))
       , axis.line.x = ggplot2::element_line()
       , axis.line.y = ggplot2::element_line()
 
@@ -57,8 +59,8 @@ theme_apa <- function(base_size = 12, base_family = "", box = FALSE) {
       , panel.grid.minor.y = ggplot2::element_line(size = NA)
 
       , strip.background = ggplot2::element_rect(fill = NA, color = NA)
-      , strip.text.x = ggplot2::element_text(margin = ggplot2::margin(0, 0, ggplot2::rel(16), 0)) # size = ggplot2::rel(1.1),
-      , strip.text.y = ggplot2::element_text(margin = ggplot2::margin(0, 0, 0, ggplot2::rel(16))) # size = ggplot2::rel(1.1),
+      , strip.text.x = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, ggplot2::rel(16), 0))
+      , strip.text.y = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, 0, ggplot2::rel(16)))
     )
 
   if(box) {

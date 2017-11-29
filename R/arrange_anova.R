@@ -7,7 +7,7 @@
 #' @param correction Character. For \code{summary.Anova.mlm} objects, specifies the type of
 #'    sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF}
 #'    for Huyn-Feldt methods or \code{none} is also possible. Ignored for other objects.
-#' @param ... Further arguemnts to pass to methods.
+#' @param ... Further arguments to pass to methods.
 #' @details
 #'    The returned \code{data.frame} can be passed to functions such as \code{\link{print_anova}}.
 #'
@@ -21,6 +21,7 @@
 #' @return
 #'    \code{data.frame} of class \code{apa_variance_table} or \code{apa_model_comp}.
 #'
+#' @keywords internal
 #' @seealso \code{\link{print_anova}}, \code{\link{print_model_comp}}
 #' @examples
 #'  \dontrun{
@@ -28,9 +29,10 @@
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    arrange_anova(summary(npk_aov))
 #'  }
+#'
 
 arrange_anova <- function(x, ...) {
-  UseMethod("arrange_anova", x)
+  UseMethod("arrange_anova")
 }
 
 arrange_anova.default <- function(x, ...) {
@@ -90,13 +92,19 @@ arrange_anova.summary.aov <- function(x) {
 
   # When processing aovlist via lapply a dummy term "aovlist_residuals" preserves the SS_error of the intercept
   # term to calculate generalized eta squared correctly later on.
+  # ----
+  # We now changed this to the term (Intercept) -- for the sake of consistency
+  # and standardized processing later on
+
+  # When processing an aovlist, this one-row aov-object contains the residual
+  # sum of squares:
   if(nrow(variance_table) == 1 && variance_table$term == "Residuals") {
     variance_table$sumsq_err <- variance_table$sumsq
     variance_table$sumsq <- NA
     variance_table$df_res <- variance_table$df
     variance_table$df <- NA
     variance_table$meansq <- NA
-    variance_table$term <- "aovlist_residuals"
+    variance_table$term <- "(Intercept)"
   } else {
     variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
     variance_table$df_res <- variance_table[nrow(variance_table), "df"]

@@ -1,4 +1,4 @@
-papaja: Create APA manuscripts with R Markdown
+papaja: Prepare reproducible APA journal articles with R Markdown
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -81,12 +81,14 @@ Table. *Iris regression table.*
 
 `papaja` currently provides methods for the following object classes:
 
-| A         | A-L     | L-S               | S                |
-|:----------|:--------|:------------------|:-----------------|
-| afex\_aov | aovlist | lm                | summary.aovlist  |
-| anova     | glht    | lsmobj            | summary.glht     |
-| Anova.mlm | htest   | summary.Anova.mlm | summary.lm       |
-| aov       | list    | summary.aov       | summary.ref.grid |
+| A-B           | B-L               | L-S               | S-Z              |
+|:--------------|:------------------|:------------------|:-----------------|
+| afex\_aov     | BFBayesFactorList | lm                | summary.glm      |
+| anova         | BFBayesFactorTop  | lsmobj            | summary.lm       |
+| Anova.mlm     | glht              | summary.Anova.mlm | summary.ref.grid |
+| aov           | glm               | summary.aov       |                  |
+| aovlist       | htest             | summary.aovlist   |                  |
+| BFBayesFactor | list              | summary.glht      |                  |
 
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
@@ -120,10 +122,12 @@ Contribute
 
 Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
 
-Papers that use papaja
-----------------------
+Papers written with papaja
+--------------------------
 
 Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, let me know and I will add it to this list.
+
+### Journal publications
 
 Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. doi: [10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003)
 
@@ -133,13 +137,27 @@ Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning?
 
 Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382)
 
-Stahl, C., Henze, L., & Aust, F. (submitted). False memory for perceptually similar but conceptually distinct line drawings. Preprint retrieved from <https://osf.io/preprints/psyarxiv/zr7m8/> ([Data & R Markdown files](https://osf.io/jxm7z/))
+Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245--266.
 
-Haaf, J. & Rouder, J. N. (submitted). Developing Constraint in Bayesian Mixed Models. Preprint retrieved from <https://osf.io/preprints/psyarxiv/ktjnq/> ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
+Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A test of evaluative conditioning for brief visual conditioned stimuli using auditory unconditioned stimuli. *Royal Society Open Science*, 4, 160935. doi: [10.1098/rsos.160935](http://dx.doi.org/10.1098/rsos.160935) ([Data & R Markdown files](https://osf.io/cx5eh/))
 
-Heycke, T., Aust, F., & Stahl, C. (submitted). Crossmodal evaluative conditioning with briefly presented visual conditioned stimuli. Preprint retrieved from <https://osf.io/preprints/psyarxiv/wntf5/> ([Data & R Markdown files](https://osf.io/cx5eh/))
+McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Moral Dumbfounding: Identifying Measurable Indicators of Moral Dumbfounding. *Collabra: Psychology*, 3(1), 23. doi: [10.1525/collabra.79](http://doi.org/10.1525/collabra.79) ([Data & R Markdown files](https://osf.io/wm6vc/))
 
-Rouder, J. N., Haaf, J., & Aust, F. (submitted). From theories to models to predictions: A Bayesian model comparison approach for communications research. Preprint retrieved from <https://osf.io/preprints/psyarxiv/jt4th/>
+Sauer, S. (in press). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. doi: [10.3758/s13428-017-0949-8](https://doi.org/10.3758/s13428-017-0949-8) ([Data & R Markdown files](https://osf.io/6vhja/))
+
+Rouder, J. N., Haaf, J. M., & Aust, F. (in press). From theories to models to predictions: A Bayesian model comparison approach for communications research. *Communication Monographs*. doi: [10.1080/03637751.2017.1394581](https://doi.org/10.1080/03637751.2017.1394581)
+
+### Preprints
+
+Stahl, C., Henze, L., & Aust, F. (2016). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. doi: [10.17605/OSF.IO/ZR7M8](http://dx.doi.org/10.17605/OSF.IO/ZR7M8) ([Data & R Markdown files](https://osf.io/jxm7z/))
+
+Haaf, J. & Rouder, J. N. (2017). Developing Constraint in Bayesian Mixed Models. *PsyArXiv*. doi: [10.17605/OSF.IO/KTJNQ](http://dx.doi.org/10.17605/OSF.IO/KTJNQ) ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
+
+Buchanan, E. M, & Scofield, J. E. (2017, August 25). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from <https://osf.io/cs4vy/> ([Data & R Markdown files](https://osf.io/urd8q/))
+
+Urry, H. L., Sifre, E., Song, J., Steinberg, H., Bornstein, M., Kim, J., … Andrews, M. (2017, March 13). Replication of Eskine, K. J., Kacinik, N. A., & Prinz, J. J. (2011) at Tufts University - Spring, 2017. Preprint retrieved from <https://osf.io/fu384/> ([Data & R Markdown files](https://osf.io/ddmkm))
+
+Aust, F., Haaf, J. M., & Stahl, C. (2017). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. PsyArXiv. doi: [10.17605/OSF.IO/TKX7B](https://dx.doi.org/10.17605/OSF.IO/TKX7B) ([Data & R Markdown files](https://osf.io/x6ur5/))
 
 Other related R packages
 ========================
@@ -155,13 +173,13 @@ By now, there are a couple of R packages that provide convenience functions to f
 
 Obviously, not all journals require manuscripts and articles to be prepared according to APA guidelines. If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful.
 
--   [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 -   [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article Templates for R Markdown
+-   [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
 If you know of other packages and templates, drop us a note, so we can add them here.
 
-<!-- # Package dependencies -->
-<!-- ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE, eval = FALSE} -->
-<!-- source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R") -->
-<!-- plot_dependencies() -->
-<!-- ``` -->
+
+Package dependencies
+====================
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)

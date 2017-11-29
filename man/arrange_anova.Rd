@@ -3,8 +3,8 @@
 \name{arrange_anova}
 \alias{arrange_anova}
 \alias{arrange_anova.anova}
-\alias{arrange_anova.summary.Anova.mlm}
 \alias{arrange_anova.summary.aov}
+\alias{arrange_anova.summary.Anova.mlm}
 \title{Create variance table from various ANOVA objects}
 \usage{
 arrange_anova(x, ...)
@@ -18,7 +18,7 @@ arrange_anova(x, ...)
 \arguments{
 \item{x}{Output object. See details.}
 
-\item{...}{Further arguemnts to pass to methods.}
+\item{...}{Further arguments to pass to methods.}
 
 \item{correction}{Character. For \code{summary.Anova.mlm} objects, specifies the type of
 sphericity correction to be used. Either \code{GG} for Greenhouse-Geisser or \code{HF}
@@ -47,8 +47,9 @@ The returned \code{data.frame} can be passed to functions such as \code{\link{pr
    npk_aov <- aov(yield ~ block + N * P * K, npk)
    arrange_anova(summary(npk_aov))
  }
+
 }
 \seealso{
 \code{\link{print_anova}}, \code{\link{print_model_comp}}
 }
-
+\keyword{internal}

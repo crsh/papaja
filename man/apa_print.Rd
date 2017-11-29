@@ -16,7 +16,7 @@ The form of the value returned by \code{apa_print} depends on the class of \code
    documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
 }
 \description{
-A generic function that takes objects from various statistical methods to create formatted chraracter
+A generic function that takes objects from various statistical methods to create formatted character
 strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
 methods, which depend on the \code{\link{class}} of the first argument.
 }
@@ -35,9 +35,10 @@ Currently the following output objects are supported:
 methods("apa_print")
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.aov}},
+Other apa_print: \code{\link{apa_print.BFBayesFactor}},
+  \code{\link{apa_print.aov}},
   \code{\link{apa_print.glht}},
+  \code{\link{apa_print.glm}},
   \code{\link{apa_print.htest}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print.lm}}
+  \code{\link{apa_print.list}}
 }
-

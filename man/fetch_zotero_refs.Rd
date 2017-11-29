@@ -10,7 +10,7 @@ fetch_zotero_refs(x, bib_name, API_key = NULL, collection = NULL,
 \arguments{
 \item{x}{Character. Zotero user or group ID, see details.}
 
-\item{bib_name}{Character. Name of the BibTex-file references are saved to.}
+\item{bib_name}{Character. Name of the BibTeX-file references are saved to.}
 
 \item{API_key}{Character. Zotero API key, see details.}
 
@@ -49,10 +49,9 @@ utilize the \pkg{downloader}-package, which speeds up reference downloads consid
 \examples{
 NULL
 }
-\author{
-Christoph Stahl, Frederik Aust
-}
 \seealso{
 \code{\link{r_refs}}, \code{\link{cite_r}}
 }
-
+\author{
+Christoph Stahl, Frederik Aust
+}

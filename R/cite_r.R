@@ -30,7 +30,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   validate(withhold, check_class = "logical", check_length = 1)
 
   r_version <- as.character(utils::packageVersion("base"))
-  cite_just_r <- paste0("R [", r_version, ", @", prefix, "base]")
+  cite_just_r <- paste0("R [Version ", r_version, "; @", prefix, "base]")
 
   if(is.null(file) || !utils::file_test("-f", file)) { # Print R-reference if there is no .bib-file
     if(!is.null(file)) warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
@@ -97,8 +97,8 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   })
   pkg_texts <- paste0(
     "*", pkg_names, "* "
-    , "[", pkg_versions
-    , ", ", pkg_keys, "]"
+    , "[Version ", pkg_versions
+    , "; ", pkg_keys, "]"
   )
 
   if(length(pkg_texts) > 1) {
@@ -108,14 +108,16 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
     pkg_info <- pkg_texts
   }
 
+  complete_r_citaiton <- paste0("R [Version ", r_version, "; @", r_citation, "]")
+
   if(footnote) {
     res <- list()
-    res$r <- paste0("R [", r_version, ", @", r_citation, "][^papaja_pkg_citations]")
+    res$r <- paste0(complete_r_citaiton, "[^papaja_pkg_citations]")
 
     res$pkgs <- paste0("\n\n[^papaja_pkg_citations]: We, furthermore, used the R-packages ", pkg_info, ".\n\n")
   } else {
     res <- paste0(
-      "R [", r_version, ", @", r_citation, "] and the R-package"
+      complete_r_citaiton, " and the R-package"
       , if(length(pkg_texts) > 1) "s", " " , pkg_info
     )
   }

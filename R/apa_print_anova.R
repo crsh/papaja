@@ -1,6 +1,6 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' These methods take objects from various R functions that calculate ANOVA to create formatted chraracter
+#' These methods take objects from various R functions that calculate ANOVA to create formatted character
 #' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
 #' @param x Output object. See details.
@@ -45,7 +45,6 @@ apa_print.aov <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print summary.aov
 #' @export
 
 apa_print.summary.aov <- function(x, ...) {
@@ -56,7 +55,6 @@ apa_print.summary.aov <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print aovlist
 #' @export
 
 apa_print.aovlist <- function(x, ...) {
@@ -67,7 +65,6 @@ apa_print.aovlist <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print summary.aovlist
 #' @export
 
 apa_print.summary.aovlist <- function(x, ...) {
@@ -78,7 +75,6 @@ apa_print.summary.aovlist <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
-#' @method apa_print Anova.mlm
 #' @export
 
 apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -93,7 +89,6 @@ apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_cor
 
 
 #' @rdname apa_print.aov
-#' @method apa_print summary.Anova.mlm
 #' @export
 
 apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -104,7 +99,6 @@ apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.spheri
 
 
 #' @rdname apa_print.aov
-#' @method apa_print afex_aov
 #' @export
 
 apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -125,7 +119,6 @@ apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_corr
 
 
 #' @rdname apa_print.aov
-#' @method apa_print anova
 #' @export
 
 apa_print.anova <- function(
@@ -136,12 +129,12 @@ apa_print.anova <- function(
   # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
 
+  ellipsis <- list(...)
   variance_table <- arrange_anova(x)
   object_heading <- attr(x, "heading")
 
   if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
     if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
-      ellipsis <- list(...)
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }

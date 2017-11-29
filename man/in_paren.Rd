@@ -13,7 +13,7 @@ in_paren(x)
 An object of the same type as \code{x}.
 }
 \description{
-Takes a single character or a list of characters and replaces paretheses with brackets. Can be used to
+Takes a single character or a list of characters and replaces parentheses with brackets. Can be used to
 prepare a string of statistics (e.g. containing degrees of freedom) for reporting within paretheses.
 }
 \examples{
@@ -24,4 +24,3 @@ in_paren(t_test_res$stat)
 \seealso{
 apa_print
 }
-

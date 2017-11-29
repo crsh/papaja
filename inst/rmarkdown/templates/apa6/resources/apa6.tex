@@ -1,4 +1,4 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$if(figsintext)$floatsintext,$endif$$for(class)$$class$$sep$,$endfor$]{apa6}
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$if(figsintext)$floatsintext,$endif$$if(mask)$mask,$endif$$for(class)$$class$$sep$,$endfor$]{apa6}
 
 $if(linestretch)$
   \usepackage{setspace}
@@ -193,10 +193,10 @@ $if(leftheader)$
 $endif$
 
 $if(author)$
-  \author{$for(author)$$author.name$$if(author.affiliation)$\textsuperscript{$author.affiliation$}$endif$$endfor$}
+  \author{$for(author)$$author.name$$endfor$}
 
-  \def\affdep{{$for(author)$"$author.department$"$sep$, $endfor$}}%
-  \def\affcity{{$for(author)$"$author.city$"$sep$, $endfor$}}%
+  % \def\affdep{{$for(author)$"$author.department$"$sep$, $endfor$}}%
+  % \def\affcity{{$for(author)$"$author.city$"$sep$, $endfor$}}%
 $endif$
 
 $if(affiliation)$
@@ -210,30 +210,8 @@ $endif$
 
 $if(author_note)$
   \authornote{
-    \newcounter{author}
     $author_note$
-
-    $if(author)$
-    $for(author)$
-      $if(author.corresponding)$
-        Correspondence concerning this article should be addressed to $author.name$$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
-      $endif$
-    $endfor$
-    $endif$
   }
-$else$ % If no author_note is defined give only author information if available
-  $if(author)$
-    \newcounter{author}
-      $if(author)$
-      $for(author)$
-        $if(author.corresponding)$
-          \authornote{
-            Correspondence concerning this article should be addressed to $author.name$$if(author.address)$, $author.address$$endif$.$if(author.email)$ E-mail: $author.email$$endif$
-          }
-        $endif$
-      $endfor$
-    $endif$
-  $endif$
 $endif$
 
 $if(note)$

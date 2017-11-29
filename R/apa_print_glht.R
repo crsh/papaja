@@ -1,7 +1,8 @@
 #' Format statistics (APA 6th edition)
 #'
-#' Takes various \code{lsmeans} objects methods to create formatted chraracter strings to report the results in
-#' accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
+#' Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
+#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+#' considered experimental.}
 #'
 #' @param x See details.
 #' @param test Function.
@@ -12,7 +13,7 @@
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
 #'    a reproducible example in your report!).
 #'
@@ -98,9 +99,15 @@ apa_print.summary.glht <- function(
 
   # Add table
   rownames(contrast_table) <- tidy_x$lhs
-  colnames(contrast_table) <- c("$\\Delta M$", conf_level, paste0("$", test_stat, "$"), "$p$")
+  colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
+  variable_label(contrast_table) <- c(
+    estimate = "$\\Delta M$"
+    , ci = conf_level
+    , statistic = paste0("$", test_stat, "$")
+    , p.value = "$p$"
+  )
   apa_res$table <- contrast_table
-
+  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }
 
@@ -234,15 +241,38 @@ apa_print.summary.ref.grid <- function(
     if(length(contrast_df) == 1) { # Remove df column and put df in column heading
       df <- contrast_table$df[1]
       contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      colnames(contrast_table) <- c("$\\Delta M$", conf_level, paste0("$t(", df, ")$"), "$p$")
+      colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
+      contrast_table$ci <- as.character(contrast_table$ci)
+      variable_label(contrast_table) <- c(
+        estimate = "$\\Delta M$"
+        , ci = conf_level
+        , statistic = paste0("$t(", df, ")$")
+        , p.value = "$p$"
+      )
     } else {
-      colnames(contrast_table) <- c(split_by, "$\\Delta M$", conf_level, "$t$", "$df$", "$p$")
+      colnames(contrast_table) <- c("split_by", "estimate", "ci", "statistic", "df", "p.value")
+      contrast_table$ci <- as.character(contrast_table$ci)
+      variable_label(contrast_table) <- c(
+        split_by = split_by
+        , estimate = "$\\Delta M$"
+        , ci = conf_level
+        , estimate = "$t$"
+        , df = "$df$"
+        , p.value = "$p$"
+      )
     }
   } else {
-    colnames(contrast_table) <- c(split_by, "$\\Delta M$", conf_level)
+    colnames(contrast_table) <- c("split_by", "estimate", "ci")
+    contrast_table$ci <- as.character(contrast_table$ci)
+    variable_label(contrast_table) <- c(
+      split_by = split_by
+      , estimate = "$\\Delta M$"
+      , ci = conf_level
+    )
   }
 
   apa_res$table <- contrast_table
+  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
 
   apa_res
 }

@@ -1,11 +1,11 @@
 Package: papaja
-Title: Create APA manuscripts with R Markdown
-Version: 0.1.0.9492
+Title: Prepare reproducible APA journal articles with R Markdown
+Version: 0.1.0.9655
 Description: papaja (Preparing APA Journal Articles) provides document formats
-    and helper functions to produce complete APA manscripts from R Markdown-files
+    and helper functions to produce complete APA manuscripts from R Markdown-files
     (PDF and Word documents).
 Authors@R: c(
-    person("Frederik", "Aust", email = "frederik.aust@uni-koeln.de", role = c("aut", "cre"))
+    person("Frederik", "Aust", email = "frederik.aust@uni-koeln.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4900-788X"))
     , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("aut"))
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
@@ -33,8 +33,47 @@ Suggests:
   ggplot2,
   dplyr,
   downloader,
-  testthat
+  testthat,
+  BayesFactor,
+  latex2exp
 License: MIT + file LICENSE
 LazyData: yes
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1.9000
 VignetteBuilder: knitr
+Collate: 
+    'ampersand_filter.R'
+    'annotated_data.R'
+    'apa6_formats.R'
+    'apa_barplot.R'
+    'apa_beeplot.R'
+    'apa_factorial_plot.R'
+    'apa_lineplot.R'
+    'apa_print.R'
+    'apa_print_BFBayesFactor.R'
+    'apa_print_anova.R'
+    'apa_print_glht.R'
+    'apa_print_glm.R'
+    'apa_print_htest.R'
+    'apa_print_list.R'
+    'apa_table.R'
+    'arrange_anova.R'
+    'arrange_regression.R'
+    'calculations.R'
+    'cite_r.R'
+    'deprecated_defunct.R'
+    'fast_aggregate.R'
+    'fetch_zotero_refs.R'
+    'in_paren.R'
+    'meta.R'
+    'onload.R'
+    'papaja.R'
+    'print_anova.R'
+    'print_model_comp.R'
+    'printnum.R'
+    'r_refs.R'
+    'render_appendix.R'
+    'theme_apa.R'
+    'utils.R'
+    'utils_for_plots.R'
+    'variable_label.R'
+    'word_title_page.R'

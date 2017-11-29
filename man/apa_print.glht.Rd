@@ -2,19 +2,18 @@
 % Please edit documentation in R/apa_print_glht.R
 \name{apa_print.glht}
 \alias{apa_print.glht}
-\alias{apa_print.lsmobj}
 \alias{apa_print.summary.glht}
+\alias{apa_print.lsmobj}
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
-\method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
+apa_print.glht(x, test = multcomp::adjusted(), ...)
 
-\method{apa_print}{summary.glht}(x, ci = 0.95, in_paren = FALSE, ...)
+apa_print.summary.glht(x, ci = 0.95, in_paren = FALSE, ...)
 
-\method{apa_print}{lsmobj}(x, ...)
+apa_print.lsmobj(x, ...)
 
-\method{apa_print}{summary.ref.grid}(x, contrast_names = NULL,
-  in_paren = FALSE, ...)
+apa_print.summary.ref.grid(x, contrast_names = NULL, in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{See details.}
@@ -44,12 +43,13 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
    }
 }
 \description{
-Takes various \code{lsmeans} objects methods to create formatted chraracter strings to report the results in
-accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
+Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
+accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+considered experimental.}
 }
 \details{
 The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-   that produce these objects and their idiosyncracies, the produced strings may sometimes be inaccurate. If you
+   that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
    a reproducible example in your report!).
 
@@ -66,9 +66,8 @@ The function should work on a wide range of \code{htest} objects. Due to the lar
    NULL
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.aov}},
+Other apa_print: \code{\link{apa_print.BFBayesFactor}},
+  \code{\link{apa_print.aov}}, \code{\link{apa_print.glm}},
   \code{\link{apa_print.htest}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print.lm}},
-  \code{\link{apa_print}}
+  \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
-

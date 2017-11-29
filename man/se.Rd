@@ -14,4 +14,3 @@ se(x, na.rm = TRUE)
 \description{
 Calculates the standard error of the mean
 }
-

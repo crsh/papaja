@@ -41,4 +41,3 @@ cite_r()
 \seealso{
 \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
 }
-

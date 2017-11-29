@@ -5,8 +5,8 @@
 #'
 #' @param x Character. Input file name.
 #' @param options Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
-#' @param quiet Logical. Supresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
-#'    If \code{FALSE} ouptut will be included in the document.
+#' @param quiet Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+#'    If \code{FALSE} output will be included in the document.
 #' @details
 #'    By default \code{x} is converted to a TeX file which can be included in an R Markdown document
 #'    as \code{include}:
@@ -44,6 +44,13 @@ render_appendix <- function(
 
     # Render Markdown fragment
     md_fragment <- knitr::knit_child(text = readLines(x), quiet = quiet)
+
+    ## Remove placement options
+    if(!rmarkdown::metadata$figsintext) {
+      md_fragment <- gsub("(\\\\begin\\{table\\})(\\[.+?\\])", "\\1", md_fragment)
+      md_fragment <- gsub("(\\\\begin\\{figure\\})(\\[.+?\\])", "\\1", md_fragment)
+    }
+
     md_file <- paste0(tools::file_path_sans_ext(x), ".md")
     write(md_fragment, file = md_file, sep = "\n")
 
@@ -60,11 +67,11 @@ render_appendix <- function(
     # Add appendix environment
     tex <- readLines(new_name)
     if(!grepl("\\\\section", tex[tex != ""][1])) tex <- c("\\section{}", tex) # Add section to start appendix
-    tex <- c("\\begin{appendix}", tex, "\\end{appendix}")
+    tex <- c("\\clearpage\n\n\\begin{appendix}", tex, "\\end{appendix}")
     tex <- gsub("\\\\begin\\{figure\\}\\[htbp\\]", "\\\\begin{figure}", tex) # Remove placement option
 
     write(tex, file = new_name)
-    # file.remove(md_file)
+    file.remove(md_file)
 
     if(!is.null(status)) return(status)
   } else {

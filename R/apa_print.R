@@ -1,6 +1,6 @@
 #' Format statistics (APA 6th edition)
 #'
-#' A generic function that takes objects from various statistical methods to create formatted chraracter
+#' A generic function that takes objects from various statistical methods to create formatted character
 #' strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
 #' methods, which depend on the \code{\link{class}} of the first argument.
 #'
@@ -28,7 +28,8 @@ apa_print <- function(x, ...) {
   UseMethod("apa_print", x)
 }
 
-apa_print.default <- function(x, ...) {
-  stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
-              Visit https://github.com/crsh/papaja/issues to request support for this class."))
-}
+
+# #' @importClassesFrom BayesFactor BFBayesFactor
+setGeneric("apa_print")
+
+apa_print.default <- function(x, ...) no_method(x)
