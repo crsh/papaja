@@ -2,15 +2,22 @@
 #'
 #' These methods take result objects from the \pkg{BayesFactor} package to create
 #'  formatted character strings to report the results in accordance with APA manuscript
-#'  guidelines.
+#'  guidelines. \emph{These methods are not properly tested and should be considered experimental.}
 #'
 #' @param x Output object. See details.
+#' @param iterations Numeric. Number of iterations of the MCMC sampler to estimate HDIs from the posterior.
+#' @param central_tendency Function to calculate central tendency of MCMC samples to obtain a point estimate from
+#'   the posterior.
+#' @param hdi Numeric. A single value (range [0, 1]) giving the credibility level of the HDI.
+#' @param standardized Logical. Indicates whether to return standardized or unstandardized effect size estimates.
 #' @param ratio_subscript Character. A brief description of the model comparison in the form of \code{"M1/M2"}.
-#' @param auto_inverse Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.
+#' @param auto_invert Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.
 #' @param scientific Logical. Indicates whether to use scientific notation.
+#' @param max Numeric. Upper limit of the Bayes factor before switching to scientific notation.
+#' @param min Numeric. Lower limit of the Bayes factor before switching to scientific notation.
 #' @param evidential_boost Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
 #'   corresponding models (see details).
-#' @param ...
+#' @param ... Arguments passed to \code{\link{printnum}}
 #'
 #' @details For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
 #'   odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
@@ -22,7 +29,7 @@
 #'   hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
 #'   \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
 #' @family apa_print
-#' @importFrom stats formula terms setNames
+#' @importFrom stats formula terms setNames median
 #' @export
 #'
 #' @examples
@@ -44,16 +51,26 @@ apa_print.BFBayesFactor <- function(
   , central_tendency = median
   , hdi = 0.95
   , standardized = FALSE
+  , ratio_subscript = "10"
+  , auto_invert = TRUE
+  , scientific = TRUE
+  , max = 1000
+  , min = 1 / max
+  , evidential_boost = NULL
   , ...
 ) {
   if(length(x) > 1) {
     ellipsis <- list(...)
-    if(!is.null(ellipsis$evidential_boost)) evidential_boost <- ellipsis$evidential_boost
+    ellipsis$ratio_subscript <- ratio_subscript
+    ellipsis$auto_invert <- auto_invert
+    ellipsis$scientific <- scientific
+    ellipsis$max <- max
+    ellipsis$min <- min
 
     bf <- c()
     for(i in seq_along(x)) {
       ellipsis$x <- x[i]
-      if(!is.null(ellipsis$evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
+      if(!is.null(evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
       # bf[i] <- print_bf(x[i], ...)
       bf[i] <- do.call("print_bf", ellipsis)
     }
@@ -142,7 +159,6 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 #' @export
 
 setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
-
 
 
 print_bf <- function(

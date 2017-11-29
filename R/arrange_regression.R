@@ -44,7 +44,7 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
   regression_table$ci <- apply(
     tidy_x[, utils::tail(names(tidy_x), 2)]
     , 1
-    , function(y) do.call(function(...) papaja:::print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
+    , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
   regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "p.value")] # Change order of columns
   regression_table$term <- prettify_terms(regression_table$term, standardized = standardized)

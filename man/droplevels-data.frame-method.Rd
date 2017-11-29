@@ -15,6 +15,10 @@
 }
 \arguments{
 \item{x}{An atomic vector or annotated vector.}
+
+\item{except}{Todo}
+
+\item{exclude}{Todo}
 }
 \value{
 x, unchanged.

@@ -1,7 +1,8 @@
 #' Format statistics (APA 6th edition)
 #'
 #' Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
-#' accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
+#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+#' considered experimental.}
 #'
 #' @param x See details.
 #' @param test Function.

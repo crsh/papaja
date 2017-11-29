@@ -21,14 +21,14 @@
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
 #' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
-#' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{%} or \code{_}, in
+#' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 #'    column names, row names, caption, note and table contents are escaped. Default is \code{TRUE} if
 #'    target document format is PDF.
-#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.
+#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
 #' @details
-#'    When using \code{apa_table()}, the type of the output (LaTeX or MS Word) is determined automatically
+#'    When using \code{apa_table}, the type of the output (LaTeX or MS Word) is determined automatically
 #'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
 #'    The chunk option of the enveloping chunk has to be set to \code{results = "asis"} to ensure the table
 #'    is rendered, otherwise the table-generating markup is printed.
@@ -103,7 +103,11 @@ apa_table <- function(
     format.args$digits <- ellipsis$digits
   }
 
-  if(is.null(escape)) ellipsis$escape <- TRUE
+  if(is.null(escape)) {
+    ellipsis$escape <- TRUE
+  } else {
+    ellipsis$escape <- escape
+  }
 
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
@@ -371,7 +375,7 @@ apa_table.word <- function(
 #' \emph{This function is not exported.}
 #'
 #' @param x data.frame or matrix.
-#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.
+#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
 #'
 #' @keywords internal
 #' @seealso \code{\link{printnum}}

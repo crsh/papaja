@@ -14,6 +14,7 @@
 \alias{annotated_named_factor-class}
 \alias{annotated_named_vector-class}
 \alias{annotated_vector-class}
+\alias{apa_results_table-class}
 \title{S4 Class Union for Annotated Vectors}
 \description{
 This is a collection of classes that extend basic data types (currently

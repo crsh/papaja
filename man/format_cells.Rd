@@ -9,7 +9,7 @@ format_cells(x, format.args = NULL)
 \arguments{
 \item{x}{data.frame or matrix.}
 
-\item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum()}} to format numeric values.}
+\item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
 }
 \description{
 Format all numeric cells of a table using \code{\link{printnum}}.
@@ -21,3 +21,4 @@ NULL
 \seealso{
 \code{\link{printnum}}
 }
+\keyword{internal}

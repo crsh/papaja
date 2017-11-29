@@ -84,7 +84,8 @@ Table. *Iris regression table.*
 
 ```{r echo = FALSE, results = "asis"}
 print_classes <- gsub("apa_print\\.", "", as.character(utils::methods("apa_print")))
-print_classes <- c(print_classes, rep(NA,  length(print_classes) %% 4))
+print_classes <- print_classes[!grepl(",", print_classes)]
+print_classes <- c(print_classes, rep(NA,  (4 - length(print_classes) %% 4) * (length(print_classes) %% 4 > 0)))
 print_classes <- matrix(print_classes, ncol = 4)
 colnames(print_classes) <- apply(print_classes, 2, function(x) {
   first_letters <- tolower(substr(x, 1, 1))
@@ -190,7 +191,7 @@ If you know of other packages and templates, drop us a note, so we can add them 
 # Package dependencies
 
 ```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
-source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c9e9543e6d0e13a8cca2113c51ea3c3fd7fedcfa/plot_dependencies.R")
+source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/f6f0fce38bc274446d205854ea35cfa03b9b1f7a/plot_dependencies.R")
 
 plot_dependencies()
 ```

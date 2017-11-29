@@ -1,4 +1,4 @@
-papaja: Create reproducible APA manuscripts with R Markdown
+papaja: Prepare reproducible APA journal articles with R Markdown
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -81,18 +81,14 @@ Table. *Iris regression table.*
 
 `papaja` currently provides methods for the following object classes:
 
-    ## Warning in matrix(print_classes, ncol = 4): Datenlänge [26] ist kein Teiler
-    ## oder Vielfaches der Anzahl der Zeilen [7]
-
-| A-B                   | B-H                                 | L-S               | S-A              |
-|:----------------------|:------------------------------------|:------------------|:-----------------|
-| afex\_aov             | BFBayesFactorList                   | list              | summary.lm       |
-| anova                 | apa\_print,BFBayesFactorList-method | lm                | summary.ref.grid |
-| Anova.mlm             | apa\_print,BFBayesFactor-method     | lsmobj            |                  |
-| apa\_print,ANY-method | BFBayesFactorTop                    | summary.Anova.mlm |                  |
-| aov                   | apa\_print,BFBayesFactorTop-method  | summary.aov       |                  |
-| aovlist               | glht                                | summary.aovlist   | afex\_aov        |
-| BFBayesFactor         | htest                               | summary.glht      | anova            |
+| A-B           | B-L               | L-S               | S-Z              |
+|:--------------|:------------------|:------------------|:-----------------|
+| afex\_aov     | BFBayesFactorList | lm                | summary.glm      |
+| anova         | BFBayesFactorTop  | lsmobj            | summary.lm       |
+| Anova.mlm     | glht              | summary.Anova.mlm | summary.ref.grid |
+| aov           | glm               | summary.aov       |                  |
+| aovlist       | htest             | summary.aovlist   |                  |
+| BFBayesFactor | list              | summary.glht      |                  |
 
 Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
@@ -149,13 +145,13 @@ McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Mor
 
 Sauer, S. (in press). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. doi: [10.3758/s13428-017-0949-8](https://doi.org/10.3758/s13428-017-0949-8) ([Data & R Markdown files](https://osf.io/6vhja/))
 
+Rouder, J. N., Haaf, J. M., & Aust, F. (in press). From theories to models to predictions: A Bayesian model comparison approach for communications research. *Communication Monographs*. doi: [10.1080/03637751.2017.1394581](https://doi.org/10.1080/03637751.2017.1394581)
+
 ### Preprints
 
 Stahl, C., Henze, L., & Aust, F. (2016). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. doi: [10.17605/OSF.IO/ZR7M8](http://dx.doi.org/10.17605/OSF.IO/ZR7M8) ([Data & R Markdown files](https://osf.io/jxm7z/))
 
 Haaf, J. & Rouder, J. N. (2017). Developing Constraint in Bayesian Mixed Models. *PsyArXiv*. doi: [10.17605/OSF.IO/KTJNQ](http://dx.doi.org/10.17605/OSF.IO/KTJNQ) ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
-
-Rouder, J. N., Haaf, J., & Aust, F. (2017). From theories to models to predictions: A Bayesian model comparison approach for communications research. *PsyArXiv*. doi: [10.17605/OSF.IO/JT4TH](http://dx.doi.org/10.17605/OSF.IO/JT4TH)
 
 Buchanan, E. M, & Scofield, J. E. (2017, August 25). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from <https://osf.io/cs4vy/> ([Data & R Markdown files](https://osf.io/urd8q/))
 
@@ -185,4 +181,4 @@ If you know of other packages and templates, drop us a note, so we can add them 
 Package dependencies
 ====================
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)

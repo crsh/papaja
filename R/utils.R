@@ -359,7 +359,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 #' by complexity (i.e., main effects, two-way interactions, three-way interactions, etc.).
 #'
 #' @param x data.frame. For example, a table element produced by \code{\link{apa_print}}.
-#' @param terms Character. Column name of the \code{data.frame} containing the terms to sort.
+#' @param colname Character. Column name of the \code{data.frame} containing the terms to sort.
 #'
 #' @return Returns the same data.frame with reordered rows.
 #' @export
