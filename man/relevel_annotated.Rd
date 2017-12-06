@@ -3,12 +3,12 @@
 \docType{methods}
 \name{relevel,annotated_factor,character-method}
 \alias{relevel,annotated_factor,character-method}
-\alias{relevel,annotated_factor,integer-method}
+\alias{relevel,annotated_factor,numeric-method}
 \title{Reorder Levels of Annotated Factor}
 \usage{
 \S4method{relevel}{annotated_factor,character}(x, ref)
 
-\S4method{relevel}{annotated_factor,integer}(x, ref)
+\S4method{relevel}{annotated_factor,numeric}(x, ref)
 }
 \arguments{
 \item{x}{An object of class \code{annotated_factor}.}
