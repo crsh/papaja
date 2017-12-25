@@ -122,5 +122,6 @@ apa_factorial_plot(
 }
 \seealso{
 Other plots for factorial designs: \code{\link{apa_barplot}},
-  \code{\link{apa_beeplot}}, \code{\link{apa_lineplot}}
+  \code{\link{apa_beeplot}}, \code{\link{apa_lineplot}},
+  \code{\link{apa_sinaplot}}
 }

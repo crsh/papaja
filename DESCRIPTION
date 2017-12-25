@@ -55,6 +55,7 @@ Collate:
     'apa_print_glm.R'
     'apa_print_htest.R'
     'apa_print_list.R'
+    'apa_sinaplot.R'
     'apa_table.R'
     'arrange_anova.R'
     'arrange_regression.R'
