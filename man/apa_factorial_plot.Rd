@@ -13,8 +13,9 @@ apa_factorial_plot(data, ...)
   fun_aggregate = mean, na.rm = TRUE, reference = 0, intercept = NULL,
   args_x_axis = NULL, args_y_axis = NULL, args_title = NULL,
   args_rect = NULL, args_points = NULL, args_lines = NULL,
-  args_swarm = NULL, args_error_bars = NULL, args_legend = NULL,
-  plot = NULL, jit = 0.3, xlab = NULL, ylab = NULL, main = NULL, ...)
+  args_swarm = NULL, args_sina = NULL, args_error_bars = NULL,
+  args_legend = NULL, plot = NULL, jit = 0.3, xlab = NULL,
+  ylab = NULL, main = NULL, ...)
 
 \method{apa_factorial_plot}{afex_aov}(data, tendency = mean,
   dispersion = conf_int, fun_aggregate = mean, ...)
@@ -62,12 +63,14 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_swarm}{An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.}
 
+\item{args_sina}{An optional \code{list} that contains further arguments to customize the \code{\link{points}} of a \pkg{sinaplot}-like output.}
+
 \item{args_error_bars}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.}
 
 \item{args_legend}{An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}}
 
 \item{plot}{Character. A vector specifying which elements of the plot should be plotted. Available options are
-\code{c("points", "error_bars", "bars", "swarms", "lines")}}
+\code{c("points", "error_bars", "bars", "swarms", "lines", "sina")}}
 
 \item{jit}{Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.3}, defaults to \code{0.4} if \code{plot = "bars"}.}
 

@@ -19,7 +19,7 @@
 #' @param intercept Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
-#'  \code{c("points", "error_bars", "bars", "swarms", "lines")}
+#'  \code{c("points", "error_bars", "bars", "swarms", "lines", "sina")}
 #' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.3}, defaults to \code{0.4} if \code{plot = "bars"}.
 #' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{x} axis.
 #' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{y} axis.
@@ -28,6 +28,7 @@
 #' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
 #' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
 #' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
+#' @param args_sina An optional \code{list} that contains further arguments to customize the \code{\link{points}} of a \pkg{sinaplot}-like output.
 #' @param args_error_bars An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.
 #' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
 #' @param xlab Character or expression. Label for \emph{x} axis.
@@ -99,6 +100,7 @@ apa_factorial_plot.default <- function(
   , args_points = NULL
   , args_lines = NULL
   , args_swarm = NULL
+  , args_sina = NULL
   , args_error_bars = NULL
   , args_legend = NULL
   , plot = NULL
@@ -129,6 +131,7 @@ apa_factorial_plot.default <- function(
   if(!is.null(args_points)) validate(args_points, check_class = "list")
   if(!is.null(args_lines)) validate(args_lines, check_class = "list")
   if(!is.null(args_swarm)) validate(args_swarm, check_class = "list")
+  if(!is.null(args_sina)) validate(args_sina, check_class = "list")
   if(!is.null(args_error_bars)) validate(args_error_bars, check_class = "list")
   if(!is.null(args_legend)) validate(args_legend, check_class = "list")
   if(!is.null(plot)) validate(plot, check_class = "character")
@@ -184,6 +187,7 @@ apa_factorial_plot.default <- function(
        , args_rect = args_rect
        , args_points = args_points
        , args_swarm = args_swarm
+       , args_sina = args_sina
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
@@ -506,6 +510,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
   args_y_axis <- ellipsis$args_y_axis
   args_error_bars <- ellipsis$args_error_bars
   args_title <- ellipsis$args_title
+  args_sina <- ellipsis$args_sina
 
   # move all arguments that are white-listed
   args_plot_window <- list()
@@ -679,6 +684,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
     agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   }
 
+
   ## default colors for tendency points (which are inherited by swarm points)
   nc <- nlevels(aggregated[[factors[2]]])-1
   if(nc==0) nc <- 1
@@ -719,6 +725,45 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
     do.call("points.matrix", args_swarm)
   }
+
+  if("sina" %in% ellipsis$plot){
+    n_bins <- 120
+    breaks <- seq(from = args_plot_window$ylim[1], to = args_plot_window$ylim[2], by = diff(args_plot_window$ylim)/n_bins)
+    aggregated$y_bin <- findInterval(aggregated[[dv]], vec = breaks)
+
+    for (i in levels(aggregated[[factors[1]]])) {
+      for (j in levels(aggregated[[factors[2]]])) {
+        y_bin <- aggregated$y_bin[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
+        y_tmp <- rep(NA, length(y_bin))
+        for (k in unique(y_bin)){
+          truth_v <- y_bin==k
+          nobs <- sum(truth_v)
+          y_tmp[truth_v] <- seq(-(nobs-1)/2, (nobs-1)/2, 1)
+        }
+      aggregated$sina_offset[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- y_tmp
+      }
+    }
+    aggregated$sina_x <- aggregated$x + aggregated$sina_offset/max(abs(aggregated$sina_offset)) * .06
+
+    agg.x <- tapply(aggregated[, "sina_x"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.y <- tapply(aggregated[, dv], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+
+    args_sina <- defaults(
+      ellipsis = args_sina
+      , set = list(
+        cex = ifelse(is.null(args_sina$cex), .6, args_sina$cex) * args_points$cex
+      )
+      , set.if.null = list(
+        x = agg.x
+        , y = agg.y
+        , col = brighten(args_points$col, factor = .9)
+        , bg = brighten(args_points$bg, factor = .9)
+        , pch = args_points$pch
+      )
+    )
+    do.call("points.matrix", args_sina)
+  }
+
 
 
   # prepare and draw (central tendency) lines
