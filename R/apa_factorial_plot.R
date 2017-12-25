@@ -281,11 +281,15 @@ apa_factorial_plot.default <- function(
   if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
-    if(fun_dispersion == "conf_int") {
-      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
-    } else {
-      if(use_dplyr) {
+    if(use_dplyr) {
+      if(fun_dispersion=="conf_int"){
+        ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion, level = level)
+      } else {
         ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
+      }
+    } else {
+      if(fun_dispersion=="conf_int"){
+        ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
       } else {
         ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
       }

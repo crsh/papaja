@@ -8,15 +8,17 @@
 #' @param dv Character. The dependent variable to aggregate. All variables in \code{data} that contain this substring
 #'    will be aggregated separately.
 #' @param fun Closure. The function used for aggregation.
+#' @param ... Additional arguments that will be passed to the aggregation function.
 #' @keywords internal
 #' @examples NULL
 
-fast_aggregate <- function(data, factors, dv, fun) {
+fast_aggregate <- function(data, factors, dv, fun, ...) {
+  args <- list(...)
   # subset: this is a bit faster than subset.data.frame
   data <- data[, colnames(data) %in% c(factors, dv)]
   # the dplyr magic: this construct seems to be as fast as using pipes
   grouped <- dplyr::grouped_df(data, vars = factors, drop = TRUE)
-  agg_data <- as.data.frame(dplyr::summarise_all(.tbl = grouped, .funs = dplyr::funs(fun(., na.rm = TRUE))))
+  agg_data <- as.data.frame(dplyr::summarise_all(.tbl = grouped, .funs = dplyr::funs(fun(., na.rm = TRUE), .args = args)))
 
   return(agg_data)
 }

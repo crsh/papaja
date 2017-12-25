@@ -4,7 +4,7 @@
 \alias{fast_aggregate}
 \title{Aggregate data much faster using dplyr}
 \usage{
-fast_aggregate(data, factors, dv, fun)
+fast_aggregate(data, factors, dv, fun, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}
@@ -15,6 +15,8 @@ fast_aggregate(data, factors, dv, fun)
 will be aggregated separately.}
 
 \item{fun}{Closure. The function used for aggregation.}
+
+\item{...}{Additional arguments that will be passed to the aggregation function.}
 }
 \description{
 This is a convenience wrapper for aggregating your data using \pkg{dplyr} functions that tend to be much faster than the
