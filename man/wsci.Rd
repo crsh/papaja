@@ -22,11 +22,11 @@ within_subjects_conf_int(data, id, factors, dv, level = 0.95,
 \item{level}{Numeric. Defines the width of the interval. Defaults to 0.95
 for 95\% confidence intervals.}
 
-\item{method}{Character. The method that is used to calculate. Actually,
+\item{method}{Character. The method that is used to calculate. Currently,
 "Morey" and "Cousineau" are supported. Defaults to "Morey".}
 }
 \description{
-Calculate Cousineau-Morey within-subjects confidence intervals
+Calculate Cousineau-Morey within-subjects confidence intervals.
 }
 \examples{
 wsci(

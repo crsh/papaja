@@ -58,14 +58,15 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 
 #' Within-subjects confidence intervals
 #'
-#' Calculate Cousineau-Morey within-subjects confidence intervals
+#' Calculate Cousineau-Morey within-subjects confidence intervals.
+#'
 #' @param data A \code{data.frame} that contains the data.
 #' @param id Character. Variable name that identifies subjects.
 #' @param factors Character. A vector of variable names that is used to stratify the data.
 #' @param dv Character. The name of the dependent variable.
 #' @param level Numeric. Defines the width of the interval. Defaults to 0.95
 #'    for 95\% confidence intervals.
-#' @param method Character. The method that is used to calculate. Actually,
+#' @param method Character. The method that is used to calculate. Currently,
 #'          "Morey" and "Cousineau" are supported. Defaults to "Morey".
 #' @references
 #'    Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
