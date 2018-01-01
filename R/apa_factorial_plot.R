@@ -498,11 +498,13 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
 
   y.values$x <- as.integer(y.values[[factors[1]]]) - .5
-  aggregated$x <- as.integer(aggregated[[factors[1]]]) - .5
+  aggregated_ <- data.frame(
+    x = as.integer(aggregated[[factors[1]]]) - .5
+  )
 
   if(onedim==FALSE){
     y.values$x <- y.values$x - .5  + space/2 + (1-space)/(nlevels(y.values[[factors[[2]]]])-1) * (as.integer(y.values[[factors[2]]])-1)
-    aggregated$x <- aggregated$x - .5 + space/2 + (1-space)/(nlevels(aggregated[[factors[[2]]]])-1) * (as.integer(aggregated[[factors[2]]])-1)
+    aggregated_$x <- aggregated_$x - .5 + space/2 + (1-space)/(nlevels(aggregated[[factors[[2]]]])-1) * (as.integer(aggregated[[factors[2]]])-1)
   }
 
   # save parameters for multiple plot functions
@@ -652,13 +654,13 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
     for (i in levels(aggregated[[factors[1]]])) {
       for (j in levels(aggregated[[factors[2]]])) {
-        coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
+        coord <- beeswarm::swarmx(x = aggregated_[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
                                   , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
                                   , cex = args_swarm$cex
                                   , priority = args_swarm$priority
                   )
-        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
-        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
+        aggregated_[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
+        aggregated_[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
       }
     }
 
@@ -684,8 +686,8 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
   e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
   if("swarms" %in% ellipsis$plot){
-    agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
-    agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.x <- tapply(aggregated_[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.y <- tapply(aggregated_[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   }
 
 
@@ -733,29 +735,36 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
   if("sina" %in% ellipsis$plot){
     n_bins <- 120
     breaks <- seq(from = args_plot_window$ylim[1], to = args_plot_window$ylim[2], by = diff(args_plot_window$ylim)/n_bins)
-    aggregated$y_bin <- findInterval(aggregated[[dv]], vec = breaks)
+    aggregated_$y_bin <- findInterval(aggregated[[dv]], vec = breaks)
 
     for (i in levels(aggregated[[factors[1]]])) {
       for (j in levels(aggregated[[factors[2]]])) {
-        y_bin <- aggregated$y_bin[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
+        y_bin <- aggregated_$y_bin[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
         y_tmp <- rep(NA, length(y_bin))
         for (k in unique(y_bin)){
           truth_v <- y_bin==k
           nobs <- sum(truth_v)
           y_tmp[truth_v] <- seq(-(nobs-1)/2, (nobs-1)/2, 1)
         }
-      aggregated$sina_offset[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- y_tmp
+      aggregated_$sina_offset[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- y_tmp
       }
     }
-    aggregated$sina_x <- aggregated$x + aggregated$sina_offset/max(abs(aggregated$sina_offset)) * .06
+    max_offset <- max(abs(aggregated_$sina_offset))
+    if(max_offset==0){
+      aggregated_$sina_x <- aggregated_$x
+    } else {
+      aggregated_$sina_x <- aggregated_$x + aggregated_$sina_offset/max_offset * ifelse(is.null(args_sina$width), .18, args_sina$width)
+    }
 
-    agg.x <- tapply(aggregated[, "sina_x"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
-    agg.y <- tapply(aggregated[, dv], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    # print(aggregated)
+    agg.x <- tapply(aggregated_[, "sina_x"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.y <- tapply(aggregated[[dv]], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
 
     args_sina <- defaults(
       ellipsis = args_sina
       , set = list(
         cex = ifelse(is.null(args_sina$cex), .6, args_sina$cex) * args_points$cex
+        , width = NULL
       )
       , set.if.null = list(
         x = agg.x
