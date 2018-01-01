@@ -810,9 +810,29 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
         angle = 90
         , code = 3
         , length = .06
+        , lwd = 1
       )
     )
+    args_cortile <- defaults(
+      args_error_bars
+      , set = list(
+        col = "white"
+        , lwd = args_error_bars$lwd + .8
+      )
+    )
+    do.call("arrows", args_cortile)
 
+    if("points" %in% ellipsis$plot){
+      args_points_cortile <- defaults(
+        args_points
+        , set = list(
+          col = "white"
+          , bg = "white"
+          , cex = args_points$cex + .16
+        )
+      )
+      do.call("points.matrix", args_points_cortile)
+    }
     do.call("arrows", args_error_bars)
   }
 
