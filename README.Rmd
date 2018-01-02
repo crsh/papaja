@@ -125,7 +125,7 @@ rmarkdown::render("mymanuscript.Rmd")
 
 
 ## Contribute
-Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
+Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
 
 
 ## Papers written with papaja
