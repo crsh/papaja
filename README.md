@@ -110,17 +110,10 @@ rmarkdown::draft(
 rmarkdown::render("mymanuscript.Rmd")
 ```
 
-Known issues
-------------
-
--   The references in Word violate the APA guidelines in that there is no hanging indentation (i.e. indentation of all lines but the first one). As of now there is no fix for this problem.
--   Citations may mess with RStudios syntax highlighting in the current line. Incorrect highlighting following a citation does not necessarily indicate incorrect syntax.
--   Printing PDF from RStudio's PDF viewer can produce weird results. If you want to print your manuscript I suggest you use any other PDF viewer of your choice.
-
 Contribute
 ----------
 
-Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
+Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
 
 Papers written with papaja
 --------------------------
@@ -177,7 +170,6 @@ Obviously, not all journals require manuscripts and articles to be prepared acco
 -   [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
 If you know of other packages and templates, drop us a note, so we can add them here.
-
 
 Package dependencies
 ====================
