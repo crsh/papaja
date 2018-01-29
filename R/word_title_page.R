@@ -43,7 +43,15 @@ word_title_page <- function(x) {
     padding <- paste0(c("\n", rep("&nbsp;", 148)), collapse = "") # Add spacer to last row
     author_information <- c(
       "\n\n"
-      , paste(knitr::kable(c(authors, padding, affiliations, padding, x$note), format = "pandoc", align = "c"), collapse = "\n")
+      , paste(
+        knitr::kable(
+          c(authors, padding, affiliations, padding, x$note)
+          , format = "pandoc"
+          , align = "c"
+          , col.names = NULL
+        )
+        , collapse = "\n"
+      )
       , "\n\n&nbsp;\n"
     )
   }
