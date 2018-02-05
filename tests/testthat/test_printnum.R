@@ -228,6 +228,30 @@ test_that(
 )
 
 test_that(
+  "Integers"
+  , {
+    expect_equal(printnum(1L, numerals = FALSE), "one")
+    expect_equal(printnum(10L, numerals = FALSE), "ten")
+    expect_equal(printnum(13L, numerals = FALSE), "thirteen")
+    expect_equal(printnum(50L, numerals = FALSE), "fifty")
+    expect_equal(printnum(23L, numerals = FALSE), "twenty-three")
+    expect_equal(printnum(100L, numerals = FALSE), "one hundred")
+    expect_equal(printnum(139L, numerals = FALSE), "one hundred and thirty-nine")
+    expect_equal(printnum(3871L, numerals = FALSE), "three thousand, eight hundred and seventy-one")
+    expect_equal(printnum(c(10000000L, 3L), numerals = FALSE), c("ten million", "three"))
+
+    expect_equal(printnum(100L, numerals = FALSE, capitalize = TRUE), "One hundred")
+  }
+)
+
+test_that(
+  "Lists"
+  , {
+    expect_equal(printnum(list(1.323, 1)), list("1.32", "1.00"))
+  }
+)
+
+test_that(
   "Input validation"
   , {
     expect_error(printp(NULL), "The parameter 'x' is NULL.")

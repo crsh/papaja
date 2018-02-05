@@ -250,7 +250,7 @@ apa_print.summary.ref.grid <- function(
         , p.value = "$p$"
       )
     } else {
-      colnames(contrast_table) <- c("split_by", "estimate", "ci", "statistic", "df", "p.value")
+      colnames(contrast_table) <- c("estimate", "ci", "statistic", "df", "p.value")
       contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
         split_by = split_by
@@ -262,7 +262,7 @@ apa_print.summary.ref.grid <- function(
       )
     }
   } else {
-    colnames(contrast_table) <- c("split_by", "estimate", "ci")
+    colnames(contrast_table) <- c("estimate", "ci")
     contrast_table$ci <- as.character(contrast_table$ci)
     variable_label(contrast_table) <- c(
       split_by = split_by

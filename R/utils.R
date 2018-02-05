@@ -43,7 +43,7 @@ validate <- function(
   if(!is.null(check_dim) && !all(dim(x) == check_dim)) stop(paste("The parameter '", name, "' must have dimensions " , paste(check_dim, collapse=""), ".", sep = ""))
   if(!is.null(check_length) && length(x) != check_length) stop(paste("The parameter '", name, "' must be of length ", check_length, ".", sep = ""))
 
-  if(!check_class=="function"&&any(is.na(x))) {
+  if(!check_class == "function" && any(is.na(x))) {
     if(check_NA) stop(paste("The parameter '", name, "' is NA.", sep = ""))
     else return(TRUE)
   }
@@ -303,9 +303,14 @@ prettify_terms <- function(x, standardized = FALSE) {
   x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
   for (i in 1:length(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
-    substring(x2, first = 1, last = 1) <- toupper(substring(x2, first = 1, last = 1))
+    x2 <- capitalize(x2)
     x[i] <- paste(x2, collapse = " $\\times$ ")
   }
+  x
+}
+
+capitalize <- function(x) {
+  substring(x, first = 1, last = 1) <- toupper(substring(x, first = 1, last = 1))
   x
 }
 
