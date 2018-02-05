@@ -48,7 +48,7 @@ apa6_pdf <- function(
   if(template == "") stop("No LaTeX template file found.")
 
   # Call pdf_document() with the appropriate options
-  format <- bookdown::pdf_document2(
+  config <- bookdown::pdf_document2(
     template = template
     , fig_caption = fig_caption
     , number_sections = number_sections
@@ -59,16 +59,16 @@ apa6_pdf <- function(
   )
 
   # Set chunk defaults
-  format$knitr$opts_chunk$echo <- FALSE
-  format$knitr$opts_chunk$message <- FALSE
-  # format$knitr$opts_chunk$results <- "asis"
-  format$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
-  format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
-  format$knitr$knit_hooks$inline <- inline_numbers
+  config$knitr$opts_chunk$echo <- FALSE
+  config$knitr$opts_chunk$message <- FALSE
+  # config$knitr$opts_chunk$results <- "asis"
+  config$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
+  config$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
+  config$knitr$knit_hooks$inline <- inline_numbers
 
-  format$knitr$opts_chunk$dev <- c("pdf", "png") # , "postscript", "tiff"
-  format$knitr$opts_chunk$dpi <- 300
-  format$clean_supporting <- FALSE # Always keep images files
+  config$knitr$opts_chunk$dev <- c("pdf", "png") # , "postscript", "tiff"
+  config$knitr$opts_chunk$dpi <- 300
+  config$clean_supporting <- FALSE # Always keep images files
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -94,13 +94,35 @@ apa6_pdf <- function(
     args
   }
 
-  format$pre_processor <- pre_processor
+  config$pre_processor <- pre_processor
 
-  if(Sys.info()["sysname"] == "Windows") {
-    format$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+  config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
+
+    # Remove indentation so that endfloat can process the lltable environments
+    output_text <- readLines(output_file, encoding = "UTF-8")
+    appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
+    output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
+      "^\\s+"
+      , ""
+      , output_text[appendix_lines[1]:appendix_lines[2]]
+    )
+    output_file_connection <- file(output_file, encoding = "UTF-8")
+    writeLines(output_text, output_file_connection)
+    close(output_file_connection)
+
+    # Apply bookdown postprocesser and pass format options
+    bookdown_post_processor <- bookdown::pdf_document2()$post_processor
+    pp_env <- environment(bookdown_post_processor)
+    assign("post", NULL, envir = pp_env) # Postprocessor is not sefl-contained
+    assign("config", config, envir = pp_env) # Postprocessor is not sefl-contained
+    bookdown_post_processor(metadata = metadata, input = input_file, output = output_file, clean = clean, verbose = verbose)
   }
 
-  format
+  if(Sys.info()["sysname"] == "Windows") {
+    config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+  }
+
+  config
 }
 
 
@@ -125,7 +147,7 @@ apa6_word <- function(
   if(reference_docx == "") stop("No .docx-reference file found.")
 
   # Call word_document() with the appropriate options
-  format <- bookdown::word_document2(
+  config <- bookdown::word_document2(
     reference_docx = reference_docx
     , fig_caption = fig_caption
     , pandoc_args = pandoc_args
@@ -133,19 +155,19 @@ apa6_word <- function(
   )
 
   # Set chunk defaults
-  format$knitr$opts_chunk$echo <- FALSE
-  format$knitr$opts_chunk$message <- FALSE
-  # format$knitr$opts_chunk$results <- "asis"
-  format$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
-  format$knitr$knit_hooks$inline <- inline_numbers
-  # format$knitr$knit_hooks$plot <- function(x, options) {
+  config$knitr$opts_chunk$echo <- FALSE
+  config$knitr$opts_chunk$message <- FALSE
+  # config$knitr$opts_chunk$results <- "asis"
+  config$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
+  config$knitr$knit_hooks$inline <- inline_numbers
+  # config$knitr$knit_hooks$plot <- function(x, options) {
   #   options$fig.cap <- paste("*", getOption("papaja.terms")$figure, ".* ", options$fig.cap)
   #   knitr::hook_plot_md(x, options)
   # }
 
-  format$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
-  format$knitr$opts_chunk$dpi <- 300
-  format$clean_supporting <- FALSE # Always keep images files
+  config$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
+  config$knitr$opts_chunk$dpi <- 300
+  config$clean_supporting <- FALSE # Always keep images files
 
 
   ## Overwrite preprocessor to set CSL defaults
@@ -171,13 +193,13 @@ apa6_word <- function(
     args
   }
 
-  format$pre_processor <- pre_processor
+  config$pre_processor <- pre_processor
 
   if(Sys.info()["sysname"] == "Windows") {
-    format$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+    config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
   }
 
-  format
+  config
 }
 
 
@@ -268,6 +290,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   args
 }
+
 
 word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from) {
   # Parse and modify YAML header
