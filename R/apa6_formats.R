@@ -101,14 +101,16 @@ apa6_pdf <- function(
     # Remove indentation so that endfloat can process the lltable environments
     output_text <- readLines(output_file, encoding = "UTF-8")
     appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
-    output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
-      "^\\s+"
-      , ""
-      , output_text[appendix_lines[1]:appendix_lines[2]]
-    )
-    output_file_connection <- file(output_file, encoding = "UTF-8")
-    writeLines(output_text, output_file_connection)
-    close(output_file_connection)
+    if(length(appendix_lines) == 2) {
+      output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
+        "^\\s+"
+        , ""
+        , output_text[appendix_lines[1]:appendix_lines[2]]
+      )
+      output_file_connection <- file(output_file, encoding = "UTF-8")
+      writeLines(output_text, output_file_connection)
+      close(output_file_connection)
+    }
 
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
