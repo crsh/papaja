@@ -35,3 +35,4 @@ addons:
    - lmodern
    - libgsl0ldbl # GNU scientific library for MBESS
    - libgsl0-dev # GNU scientific library for MBESS
+   - libnlopt-dev # nloptr
