@@ -62,7 +62,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
   # Based on a function that John Fox posted on the R mailing list
   # http://tolstoy.newcastle.edu.au/R/help/05/04/2715.html
 
-  number_to_words <- function(x, capitalize) {
+  number_to_words <- function(x) {
     single_digits <- c("", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
     names(single_digits) <- 0:9
     teens <- c("ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", " seventeen", "eighteen", "nineteen")
@@ -81,7 +81,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
       } else {
         number <- paste(
           tens[digits[2]]
-          , Recall(as.numeric(digits[1]), capitalize = capitalize)
+          , Recall(as.numeric(digits[1]))
           , sep = "-"
         )
       }
@@ -89,7 +89,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
       number <- paste(
         single_digits[digits[3]]
         , "hundred and"
-        , Recall(collapse(digits[2:1]), capitalize = capitalize)
+        , Recall(collapse(digits[2:1]))
       )
     } else {
       required_number_word <- ((n_digits + 2) %/% 3) - 1
@@ -97,13 +97,12 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
         stop("Number is to large.")
       }
       number <- paste(
-        Recall(collapse(digits[n_digits:(3*required_number_word + 1)]), capitalize = capitalize)
+        Recall(collapse(digits[n_digits:(3*required_number_word + 1)]))
         , number_names[required_number_word]
         , ","
-        , Recall(collapse(digits[(3*required_number_word):1]), capitalize = capitalize))
+        , Recall(collapse(digits[(3*required_number_word):1])))
     }
 
-    if(capitalize) number <- capitalize(number)
     number
   }
 
@@ -117,13 +116,21 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
 
   if(length(x) > 1) {
     return(
-      clean_number(
-        vapply(x, number_to_words, FUN.VALUE = "a", capitalize)
+      vapply(
+        x
+        , function(y) {
+          y_number <- clean_number(number_to_words(y))
+          if(capitalize) x_number <- capitalize(y_number)
+          y_number
+        }
+        , FUN.VALUE = "a"
       )
     )
   }
 
-  clean_number(number_to_words(x, capitalize))
+  x_number <- clean_number(number_to_words(x))
+  if(capitalize) x_number <- capitalize(x_number)
+  x_number
 }
 
 
