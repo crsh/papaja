@@ -1,7 +1,8 @@
 #' Format statistics (APA 6th edition)
 #'
 #' Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
-#' accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
+#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+#' considered experimental.}
 #'
 #' @param x See details.
 #' @param test Function.
@@ -249,7 +250,7 @@ apa_print.summary.ref.grid <- function(
         , p.value = "$p$"
       )
     } else {
-      colnames(contrast_table) <- c("split_by", "estimate", "ci", "statistic", "df", "p.value")
+      colnames(contrast_table) <- c("estimate", "ci", "statistic", "df", "p.value")
       contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
         split_by = split_by
@@ -261,7 +262,7 @@ apa_print.summary.ref.grid <- function(
       )
     }
   } else {
-    colnames(contrast_table) <- c("split_by", "estimate", "ci")
+    colnames(contrast_table) <- c("estimate", "ci")
     contrast_table$ci <- as.character(contrast_table$ci)
     variable_label(contrast_table) <- c(
       split_by = split_by

@@ -1,3 +1,57 @@
+# papaja 0.1.0.9655
+
+### Template
+- Improved generation of the author note (#126)
+- Author note skeleton text clarified to stress the need for indentation (reported and fixed by @alexholcombe, #132)
+- Name of author does not include an ampersand in the correspondence line of the author note (reported by @jacob-long, #110)
+- Author note is now omitted if empty in Word
+- Formats throw error if name, postal address or e-mail address of corresponding author is missing.
+- New rendering option `mask` removes author name, affiliations, and author note from the title page (suggested by @mcbeem, #114)
+- New rendering option `replace_ampersands` controls whether `ampersand_filter()` is applied during rendering (suggested by Julia Haaf, Jeff Rouder, and Anne Scheel)
+- Rendering option `lang` removed because it is not compatible with current `pandoc` versions (reimplementation needed)
+
+### Existing functions
+- `apa_barplot()`
+    - Now prints `ylab` on every plot as do `apa_lineplot()` and `apa_beeplot()` (#124)
+- `theme_apa()`
+    - Added support for right y-axis.
+- `render_appendix()`
+    - The function now removes the placement options of figures and tables in appendix (reported by @TobiasKoeln, #113)
+- `inline_hook()`
+    - Added support for `difftime` objects
+- `r_refs()`
+    - Now enforces UTF-8 encoding (reported by @JimGrange, #123)
+- `apa_print.anova()` and related
+    - Now correctly italicize MSE
+    - Corrected bug in the calculation of eta^2 and denote as estimate using `^`.
+- `within_subjects_conf_int()`
+    - Calculates confidence intervals in presence of `NA`s (reported by @TobiasKoeln, #137)
+- `apa_print()`
+    - Returned tables are of class `apa_results_table`, column names are easy to address, and each column is labeld for pretty printing.
+- `apa_table()`
+    - Takes into account additional options passed to `format.args` parameter (reported by @lnalborczyk, #131)
+- `apa_print.htest()`
+    - Supports `oneway.test()` objects.
+- `apa6_word()`
+    - Enforces UTF-8 encoding while augmenting the YAML front matter (reported by @lindsayhinzman, #156)
+
+### New functions
+
+- `apa_factorial_plot()`
+- `apa_factorial_plot.afex()`
+- `apa_print.glm()`
+- `apa_print.summary.glm()`
+- `print.apa_results_table()`
+- `variable_label()`
+
+Experimental:
+
+- `apa_print.BFBayesFactor()`
+- `apa_print.BFBayesFactorTop()`
+- `apa_print.BFBayesFactorList()`
+
+
+
 # papaja 0.1.0.9492
 
 ### Template

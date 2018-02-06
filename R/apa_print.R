@@ -29,10 +29,7 @@ apa_print <- function(x, ...) {
 }
 
 
-#' @importClassesFrom BayesFactor BFBayesFactor
+# #' @importClassesFrom BayesFactor BFBayesFactor
 setGeneric("apa_print")
 
-apa_print.default <- function(x, ...) {
-  stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
-              Visit https://github.com/crsh/papaja/issues to request support for this class."))
-}
+apa_print.default <- function(x, ...) no_method(x)

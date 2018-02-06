@@ -16,24 +16,25 @@ test_that(
     expect_is(ow_aov_output$stat, "list")
     expect_equal(names(ow_aov_output$stat), "Dosage")
     expect_is(ow_aov_output$stat$Dosage, "character")
-    expect_equal(ow_aov_output$stat$Dosage, "$F(2, 15) = 8.79$, $\\mathrm{MSE} = 24.25$, $p = .003$")
+    expect_equal(ow_aov_output$stat$Dosage, "$F(2, 15) = 8.79$, $\\mathit{MSE} = 24.25$, $p = .003$")
 
     # est
     expect_is(ow_aov_output$est, "list")
     expect_equal(names(ow_aov_output$est), "Dosage")
     expect_is(ow_aov_output$est$Dosage, "character")
-    expect_equal(ow_aov_output$est$Dosage, "$\\eta^2_G = .540$")
+    expect_equal(ow_aov_output$est$Dosage, "$\\hat{\\eta}^2_G = .540$")
 
     # full
     expect_is(ow_aov_output$full, "list")
     expect_equal(names(ow_aov_output$full), "Dosage")
     expect_is(ow_aov_output$full$Dosage, "character")
-    expect_equal(ow_aov_output$full$Dosage, "$F(2, 15) = 8.79$, $\\mathrm{MSE} = 24.25$, $p = .003$, $\\eta^2_G = .540$")
+    expect_equal(ow_aov_output$full$Dosage, "$F(2, 15) = 8.79$, $\\mathit{MSE} = 24.25$, $p = .003$, $\\hat{\\eta}^2_G = .540$")
 
     # table
     expect_is(ow_aov_output$table, "data.frame")
     expect_equal(nrow(ow_aov_output$table), 1)
     expect_equal(colnames(ow_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
+    expect_equal(unname(unlist(variable_label(ow_aov_output$table))), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
 
     # Other classes
     ow_aov_summary_output <- apa_print(summary(ow_aov))
@@ -66,24 +67,25 @@ test_that(
     expect_is(ow_afex_aov_output$stat, "list")
     expect_equal(names(ow_afex_aov_output$stat), c("Intercept", "Dosage"))
     expect_is(ow_afex_aov_output$stat$Intercept, "character")
-    expect_equal(ow_afex_aov_output$stat$Intercept, "$F(1, 15) = 487.23$, $\\mathrm{MSE} = 24.25$, $p < .001$")
+    expect_equal(ow_afex_aov_output$stat$Intercept, "$F(1, 15) = 487.23$, $\\mathit{MSE} = 24.25$, $p < .001$")
 
     # est
     expect_is(ow_afex_aov_output$est, "list")
     expect_equal(names(ow_afex_aov_output$est), c("Intercept", "Dosage"))
     expect_is(ow_afex_aov_output$est$Intercept, "character")
-    expect_equal(ow_afex_aov_output$est$Intercept, "$\\eta^2_G = .970$")
+    expect_equal(ow_afex_aov_output$est$Intercept, "$\\hat{\\eta}^2_G = .970$")
 
     # full
     expect_is(ow_afex_aov_output$full, "list")
     expect_equal(names(ow_afex_aov_output$full), c("Intercept", "Dosage"))
     expect_is(ow_afex_aov_output$full$Intercept, "character")
-    expect_equal(ow_afex_aov_output$full$Intercept, "$F(1, 15) = 487.23$, $\\mathrm{MSE} = 24.25$, $p < .001$, $\\eta^2_G = .970$")
+    expect_equal(ow_afex_aov_output$full$Intercept, "$F(1, 15) = 487.23$, $\\mathit{MSE} = 24.25$, $p < .001$, $\\hat{\\eta}^2_G = .970$")
 
     # table
     expect_is(ow_afex_aov_output$table, "data.frame")
     expect_equal(nrow(ow_afex_aov_output$table), 2)
     expect_equal(colnames(ow_afex_aov_output$table), c("Effect", "F", "df1", "df2", "MSE", "p", "ges"))
+    expect_equal(unname(unlist(variable_label(ow_afex_aov_output$table))), c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
     expect_equal(ow_afex_aov_output$table$Effect@.Data, c("Intercept", "Dosage"))
 
     ow_afex_aov_output2 <- apa_print(ow_afex_aov, intercept = TRUE)
@@ -92,10 +94,10 @@ test_that(
 
     # Other effect sizes
     ow_aov_output <- apa_print(ow_aov, es = "pes")
-    expect_equal(ow_aov_output$est$Dosage, "$\\eta^2_p = .540$")
+    expect_equal(ow_aov_output$est$Dosage, "$\\hat{\\eta}^2_p = .540$")
 
     ow_aov_output <- apa_print(ow_aov, es = c("pes", "ges"))
-    expect_equal(ow_aov_output$est$Dosage, "$\\eta^2_p = .540$, $\\eta^2_G = .540$")
+    expect_equal(ow_aov_output$est$Dosage, "$\\hat{\\eta}^2_p = .540$, $\\hat{\\eta}^2_G = .540$")
   }
 )
 
@@ -111,36 +113,37 @@ test_that(
     expect_is(tw_aov_output$stat, "list")
     expect_equal(names(tw_aov_output$stat), c("Gender", "Dosage", "Gender_Dosage"))
     expect_is(tw_aov_output$stat$Gender, "character")
-    expect_equal(tw_aov_output$stat$Gender, "$F(1, 12) = 2.95$, $\\mathrm{MSE} = 25.94$, $p = .111$")
+    expect_equal(tw_aov_output$stat$Gender, "$F(1, 12) = 2.95$, $\\mathit{MSE} = 25.94$, $p = .111$")
     expect_is(tw_aov_output$stat$Dosage, "character")
-    expect_equal(tw_aov_output$stat$Dosage, "$F(1, 12) = 0.20$, $\\mathrm{MSE} = 25.94$, $p = .666$")
+    expect_equal(tw_aov_output$stat$Dosage, "$F(1, 12) = 0.20$, $\\mathit{MSE} = 25.94$, $p = .666$")
     expect_is(tw_aov_output$stat$Gender_Dosage, "character")
-    expect_equal(tw_aov_output$stat$Gender_Dosage, "$F(1, 12) = 0.00$, $\\mathrm{MSE} = 25.94$, $p = .962$")
+    expect_equal(tw_aov_output$stat$Gender_Dosage, "$F(1, 12) = 0.00$, $\\mathit{MSE} = 25.94$, $p = .962$")
 
     # est
     expect_is(tw_aov_output$est, "list")
     expect_equal(names(tw_aov_output$est), c("Gender", "Dosage", "Gender_Dosage"))
     expect_is(tw_aov_output$est$Gender, "character")
-    expect_equal(tw_aov_output$est$Gender, "$\\eta^2_G = .197$")
+    expect_equal(tw_aov_output$est$Gender, "$\\hat{\\eta}^2_G = .197$")
     expect_is(tw_aov_output$est$Dosage, "character")
-    expect_equal(tw_aov_output$est$Dosage, "$\\eta^2_G = .016$")
+    expect_equal(tw_aov_output$est$Dosage, "$\\hat{\\eta}^2_G = .016$")
     expect_is(tw_aov_output$est$Gender_Dosage, "character")
-    expect_equal(tw_aov_output$est$Gender_Dosage, "$\\eta^2_G = .000$")
+    expect_equal(tw_aov_output$est$Gender_Dosage, "$\\hat{\\eta}^2_G = .000$")
 
     # full
     expect_is(tw_aov_output$full, "list")
     expect_equal(names(tw_aov_output$full), c("Gender", "Dosage", "Gender_Dosage"))
     expect_is(tw_aov_output$full$Gender, "character")
-    expect_equal(tw_aov_output$full$Gender, "$F(1, 12) = 2.95$, $\\mathrm{MSE} = 25.94$, $p = .111$, $\\eta^2_G = .197$")
+    expect_equal(tw_aov_output$full$Gender, "$F(1, 12) = 2.95$, $\\mathit{MSE} = 25.94$, $p = .111$, $\\hat{\\eta}^2_G = .197$")
     expect_is(tw_aov_output$full$Dosage, "character")
-    expect_equal(tw_aov_output$full$Dosage, "$F(1, 12) = 0.20$, $\\mathrm{MSE} = 25.94$, $p = .666$, $\\eta^2_G = .016$")
+    expect_equal(tw_aov_output$full$Dosage, "$F(1, 12) = 0.20$, $\\mathit{MSE} = 25.94$, $p = .666$, $\\hat{\\eta}^2_G = .016$")
     expect_is(tw_aov_output$full$Gender_Dosage, "character")
-    expect_equal(tw_aov_output$full$Gender_Dosage, "$F(1, 12) = 0.00$, $\\mathrm{MSE} = 25.94$, $p = .962$, $\\eta^2_G = .000$")
+    expect_equal(tw_aov_output$full$Gender_Dosage, "$F(1, 12) = 0.00$, $\\mathit{MSE} = 25.94$, $p = .962$, $\\hat{\\eta}^2_G = .000$")
 
     # table
     expect_is(tw_aov_output$table, "data.frame")
     expect_equal(nrow(tw_aov_output$table), 3)
     expect_equal(colnames(tw_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
+    expect_equal(unname(unlist(variable_label(tw_aov_output$table))), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
     expect_equal(tw_aov_output$table$Effect@.Data, c("Gender", "Dosage", "Gender $\\times$ Dosage"))
 
     # Other classes
@@ -170,18 +173,18 @@ test_that(
     ## stat
     expect_equal(names(tw_afex_aov_output$stat), c("Intercept", "Gender", "Dosage", "Gender_Dosage"))
     expect_is(tw_afex_aov_output$stat$Intercept, "character")
-    expect_equal(tw_afex_aov_output$stat$Intercept, "$F(1, 12) = 121.99$, $\\mathrm{MSE} = 25.94$, $p < .001$")
+    expect_equal(tw_afex_aov_output$stat$Intercept, "$F(1, 12) = 121.99$, $\\mathit{MSE} = 25.94$, $p < .001$")
 
     ## est
     expect_equal(names(tw_afex_aov_output$est), c("Intercept", "Gender", "Dosage", "Gender_Dosage"))
     expect_is(tw_afex_aov_output$est$Intercept, "character")
-    expect_equal(tw_afex_aov_output$est$Intercept, "$\\eta^2_G = .910$")
+    expect_equal(tw_afex_aov_output$est$Intercept, "$\\hat{\\eta}^2_G = .910$")
 
     ## full
     expect_is(tw_afex_aov_output$full, "list")
     expect_equal(names(tw_afex_aov_output$full), c("Intercept", "Gender", "Dosage", "Gender_Dosage"))
     expect_is(tw_afex_aov_output$full$Intercept, "character")
-    expect_equal(tw_afex_aov_output$full$Intercept, "$F(1, 12) = 121.99$, $\\mathrm{MSE} = 25.94$, $p < .001$, $\\eta^2_G = .910$")
+    expect_equal(tw_afex_aov_output$full$Intercept, "$F(1, 12) = 121.99$, $\\mathit{MSE} = 25.94$, $p < .001$, $\\hat{\\eta}^2_G = .910$")
 
     ## table
     expect_is(tw_afex_aov_output$table, "data.frame")
@@ -194,9 +197,9 @@ test_that(
     # Observed effects
     tw_rm_aov_output <- apa_print(tw_aov, observed = "Gender")
 
-    expect_equal(tw_rm_aov_output$est$Gender, "$\\eta^2_G = .197$")
-    expect_equal(tw_rm_aov_output$est$Dosage, "$\\eta^2_G = .013$")
-    expect_equal(tw_rm_aov_output$est$Gender_Dosage, "$\\eta^2_G = .000$")
+    expect_equal(tw_rm_aov_output$est$Gender, "$\\hat{\\eta}^2_G = .197$")
+    expect_equal(tw_rm_aov_output$est$Dosage, "$\\hat{\\eta}^2_G = .013$")
+    expect_equal(tw_rm_aov_output$est$Gender_Dosage, "$\\hat{\\eta}^2_G = .000$")
   }
 )
 
@@ -215,19 +218,19 @@ test_that(
     expect_is(rm_aov_output$stat, "list")
     expect_equal(names(rm_aov_output$stat), "Valence")
     expect_is(rm_aov_output$stat$Valence, "character")
-    expect_equal(rm_aov_output$stat$Valence, "$F(2, 8) = 189.11$, $\\mathrm{MSE} = 5.37$, $p < .001$")
+    expect_equal(rm_aov_output$stat$Valence, "$F(2, 8) = 189.11$, $\\mathit{MSE} = 5.37$, $p < .001$")
 
     # est
     expect_is(rm_aov_output$est, "list")
     expect_equal(names(rm_aov_output$est), "Valence")
     expect_is(rm_aov_output$est$Valence, "character")
-    expect_equal(rm_aov_output$est$Valence, "$\\eta^2_G = .932$")
+    expect_equal(rm_aov_output$est$Valence, "$\\hat{\\eta}^2_G = .932$")
 
     # full
     expect_is(rm_aov_output$full, "list")
     expect_equal(names(rm_aov_output$full), "Valence")
     expect_is(rm_aov_output$full$Valence, "character")
-    expect_equal(rm_aov_output$full$Valence, "$F(2, 8) = 189.11$, $\\mathrm{MSE} = 5.37$, $p < .001$, $\\eta^2_G = .932$")
+    expect_equal(rm_aov_output$full$Valence, "$F(2, 8) = 189.11$, $\\mathit{MSE} = 5.37$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
 
     # Other classes
     rm_aov_summary_output <- apa_print(summary(rm_aov))
@@ -243,19 +246,19 @@ test_that(
     rm_afex_aov_output <- apa_print(rm_afex_aov$aov)
     expect_identical(rm_afex_aov_output, rm_aov_output)
 
-    rm_afex_aov_output <- apa_print(rm_afex_aov$Anova, correction = "none")
+    rm_afex_aov_output <- apa_print(rm_afex_aov$Anova, correction = "none", intercept = FALSE)
     expect_identical(rm_afex_aov_output, rm_aov_output)
 
-    rm_afex_aov_output <- apa_print(rm_afex_aov, correction = "none")
+    rm_afex_aov_output <- apa_print(rm_afex_aov, correction = "none", intercept = FALSE)
     expect_identical(rm_afex_aov_output, rm_aov_output)
 
 
     # DF corrections
     rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "GG")
-    expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.15, 4.6) = 189.11$, $\\mathrm{MSE} = 9.34$, $p < .001$, $\\eta^2_G = .932$")
+    expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.15, 4.6) = 189.11$, $\\mathit{MSE} = 9.34$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
 
     rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "HF")
-    expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.32, 5.26) = 189.11$, $\\mathrm{MSE} = 8.16$, $p < .001$, $\\eta^2_G = .932$")
+    expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.32, 5.26) = 189.11$, $\\mathit{MSE} = 8.16$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
 
     rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "none")
     expect_identical(rm_afex_anova.mlm_output$full$Valence, rm_aov_output$full$Valence)
@@ -277,31 +280,31 @@ test_that(
     expect_is(tw_rm_aov_output$stat, "list")
     expect_equal(names(tw_rm_aov_output$stat), c("Task", "Valence", "Task_Valence"))
     expect_is(tw_rm_aov_output$stat$Task, "character")
-    expect_equal(tw_rm_aov_output$stat$Task, "$F(1, 4) = 7.35$, $\\mathrm{MSE} = 4.08$, $p = .054$")
+    expect_equal(tw_rm_aov_output$stat$Task, "$F(1, 4) = 7.35$, $\\mathit{MSE} = 4.08$, $p = .054$")
     expect_is(tw_rm_aov_output$stat$Valence, "character")
-    expect_equal(tw_rm_aov_output$stat$Valence, "$F(2, 8) = 1.46$, $\\mathrm{MSE} = 3.36$, $p = .288$")
+    expect_equal(tw_rm_aov_output$stat$Valence, "$F(2, 8) = 1.46$, $\\mathit{MSE} = 3.36$, $p = .288$")
     expect_is(tw_rm_aov_output$stat$Task_Valence, "character")
-    expect_equal(tw_rm_aov_output$stat$Task_Valence, "$F(2, 8) = 0.29$, $\\mathrm{MSE} = 2.41$, $p = .755$")
+    expect_equal(tw_rm_aov_output$stat$Task_Valence, "$F(2, 8) = 0.29$, $\\mathit{MSE} = 2.41$, $p = .755$")
 
     # est
     expect_is(tw_rm_aov_output$est, "list")
     expect_equal(names(tw_rm_aov_output$est), c("Task", "Valence", "Task_Valence"))
     expect_is(tw_rm_aov_output$est$Task, "character")
-    expect_equal(tw_rm_aov_output$est$Task, "$\\eta^2_G = .068$")
+    expect_equal(tw_rm_aov_output$est$Task, "$\\hat{\\eta}^2_G = .068$")
     expect_is(tw_rm_aov_output$est$Valence, "character")
-    expect_equal(tw_rm_aov_output$est$Valence, "$\\eta^2_G = .023$")
+    expect_equal(tw_rm_aov_output$est$Valence, "$\\hat{\\eta}^2_G = .023$")
     expect_is(tw_rm_aov_output$est$Task_Valence, "character")
-    expect_equal(tw_rm_aov_output$est$Task_Valence, "$\\eta^2_G = .003$")
+    expect_equal(tw_rm_aov_output$est$Task_Valence, "$\\hat{\\eta}^2_G = .003$")
 
     # full
     expect_is(tw_rm_aov_output$full, "list")
     expect_equal(names(tw_rm_aov_output$full), c("Task", "Valence", "Task_Valence"))
     expect_is(tw_rm_aov_output$full$Task, "character")
-    expect_equal(tw_rm_aov_output$full$Task, "$F(1, 4) = 7.35$, $\\mathrm{MSE} = 4.08$, $p = .054$, $\\eta^2_G = .068$")
+    expect_equal(tw_rm_aov_output$full$Task, "$F(1, 4) = 7.35$, $\\mathit{MSE} = 4.08$, $p = .054$, $\\hat{\\eta}^2_G = .068$")
     expect_is(tw_rm_aov_output$full$Valence, "character")
-    expect_equal(tw_rm_aov_output$full$Valence, "$F(2, 8) = 1.46$, $\\mathrm{MSE} = 3.36$, $p = .288$, $\\eta^2_G = .023$")
+    expect_equal(tw_rm_aov_output$full$Valence, "$F(2, 8) = 1.46$, $\\mathit{MSE} = 3.36$, $p = .288$, $\\hat{\\eta}^2_G = .023$")
     expect_is(tw_rm_aov_output$full$Task_Valence, "character")
-    expect_equal(tw_rm_aov_output$full$Task_Valence, "$F(2, 8) = 0.29$, $\\mathrm{MSE} = 2.41$, $p = .755$, $\\eta^2_G = .003$")
+    expect_equal(tw_rm_aov_output$full$Task_Valence, "$F(2, 8) = 0.29$, $\\mathit{MSE} = 2.41$, $p = .755$, $\\hat{\\eta}^2_G = .003$")
 
     # Other classes
     tw_rm_aov_summary_output <- apa_print(summary(tw_rm_aov))
@@ -327,11 +330,11 @@ test_that(
     tw_rm_aov_output <- apa_print(tw_rm_aov, observed = "Task")
 
     expect_is(tw_rm_aov_output$est$Task, "character")
-    expect_equal(tw_rm_aov_output$est$Task, "$\\eta^2_G = .068$")
+    expect_equal(tw_rm_aov_output$est$Task, "$\\hat{\\eta}^2_G = .068$")
     expect_is(tw_rm_aov_output$est$Valence, "character")
-    expect_equal(tw_rm_aov_output$est$Valence, "$\\eta^2_G = .022$")
+    expect_equal(tw_rm_aov_output$est$Valence, "$\\hat{\\eta}^2_G = .022$")
     expect_is(tw_rm_aov_output$est$Task_Valence, "character")
-    expect_equal(tw_rm_aov_output$est$Task_Valence, "$\\eta^2_G = .003$")
+    expect_equal(tw_rm_aov_output$est$Task_Valence, "$\\hat{\\eta}^2_G = .003$")
   }
 )
 

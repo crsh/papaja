@@ -193,7 +193,7 @@ within_subjects_conf_int <- wsci
 
 #' Between-subjects confidence intervals
 #'
-#' Returns the deviation that is needed to construct confidence intervals for a vector of observations.
+#' Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 #'
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
@@ -202,13 +202,18 @@ within_subjects_conf_int <- wsci
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
-  a <- (1-level)/2
+  validate(x, check_class = "numeric", check_NA = FALSE)
+  validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+
+  a <- (1 - level)/2
   n <- sum(!is.na(x))
   fac <- -suppressWarnings(stats::qt(a, df = n-1))
+
   if(n < 2){
     message("Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
   }
-  ee <- (stats::sd(x, na.rm = na.rm)*fac)/sqrt(n)
+
+  ee <- (stats::sd(x, na.rm = na.rm) * fac) / sqrt(n)
   return(ee)
 }
 
@@ -236,3 +241,116 @@ se <- function(x, na.rm = TRUE) {
   ee <- stats::sd(x, na.rm = na.rm) / sqrt(n)
   return(ee)
 }
+
+
+#' Highest density interval
+#'
+#' Calculates the highest density interval of a vector of values
+#'
+#' @param x Numeric. A vector of observations.
+#' @param level Numeric. Defines the width of the interval. Defaults to 95\% highest density intervals.
+
+hd_int <- function(x, level = 0.95) {
+  validate(x, check_class = "numeric")
+  validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+
+  sorted_estimate_posterior <- sort(x)
+  n_samples <- length(sorted_estimate_posterior)
+  gap <- max(1, min(n_samples - 1, round(n_samples * level)))
+  init <- 1:(n_samples - gap)
+  lower_index <- which.min(sorted_estimate_posterior[init + gap] - sorted_estimate_posterior[init])
+  hdinterval <- cbind(sorted_estimate_posterior[lower_index], sorted_estimate_posterior[lower_index + gap])
+  colnames(hdinterval) <- c(paste((1 - level) / 2 * 100, "%"), paste(((1 - level) / 2 + level) * 100, "%"))
+  attr(hdinterval, "conf.level") <- level
+  hdinterval
+}
+
+
+#' Effect sizes for Analysis of Variance
+#'
+#' Calculates effect-size measures for Analysis of Variance output objects.
+#'
+#' @param x An object of class \code{apa_variance_table}.
+#' @param es Character. A vector naming all to-be-computed effect-size measures.
+#'   Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+#'   (\code{"ges"}), and eta-squared (\code{"es"}) are supported.
+#' @param observed Character. A vector naming all factors that are observed
+#'   (i.e., \emph{not} manipulated).
+#' @param mse Logical. Should means-squared errors be computed?
+#' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
+#'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
+
+add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
+  # ----------------------------------------------------------------------------
+  # We don't validate here because this function is intended to be used
+  # internally, validation, should have happened earlier in the processing chain.
+
+  # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
+  # validate(es, check_class = "character", check_NA = FALSE)
+
+  if(!is.null(es)) {
+    # Stop if the user requires a non-supported effect-size measure ----
+    if(!all(es %in% c("pes", "ges", "es"))) {
+      stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
+    }
+
+    # --------------------------------------------------------------------------
+    # Calculate generalized eta-squared
+    #
+    # This code is a copy from the afex package by Henrik Singmann et al.
+    # In the package's source code, it is stated that the code is basically a copy
+    # from ezANOVA by Mike Lawrence
+    if("ges" %in% es) {
+      if(!is.null(observed)) {
+        obs <- rep(FALSE, nrow(x))
+        for(i in observed) {
+          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
+            stop(paste0("Observed variable not in data: ", i, collapse = " "))
+          }
+          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+        }
+        obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
+        obs_SSn2 <- x$sumsq*obs
+      } else {
+        obs_SSn1 <- 0
+        obs_SSn2 <- 0
+      }
+      x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+    }
+
+    # --------------------------------------------------------------------------
+    # Calculate eta-squared
+    #
+    # In it's current implementation, correct calculation of eta-squared relies
+    # on the fact that the design is balanced (otherwise, the summation below)
+    # is simply false. Replacing this term by the sum of squared deviations of
+    # individual observations from the grand mean (the general specification)
+    # would be highly desirable. However, most ANOVA outputs do not provide
+    # the necessary information, so we have to go with this hack.
+    if("es" %in% es) {
+      index <- rep(TRUE, nrow(x))
+      if(!intercept){
+        index <- x$term!="(Intercept)"
+      }
+      x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      message("Note that eta-squared is calculated correctly if and only if the design is balanced.")
+    }
+
+    # --------------------------------------------------------------------------
+    # Calculate partial eta-squared
+    #
+    # This one should be unproblematic and work in all cases.
+    if("pes" %in% es) {
+      x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+    }
+  }
+
+  # ----------------------------------------------------------------------------
+  # Only calculate MSE if required (otherwise, Levene tests give an error).
+  if(mse) {
+    x$mse <- x$sumsq_err / x$df_res
+  }
+
+  x
+}
+

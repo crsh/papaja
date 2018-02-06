@@ -9,7 +9,7 @@ sort_terms(x, colname)
 \arguments{
 \item{x}{data.frame. For example, a table element produced by \code{\link{apa_print}}.}
 
-\item{terms}{Character. Column name of the \code{data.frame} containing the terms to sort.}
+\item{colname}{Character. Column name of the \code{data.frame} containing the terms to sort.}
 }
 \value{
 Returns the same data.frame with reordered rows.

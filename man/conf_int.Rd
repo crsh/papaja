@@ -21,5 +21,5 @@ for 95\% confidence intervals.}
 \item{na.rm}{Logical. Specifies if missing values are removed.}
 }
 \description{
-Returns the deviation that is needed to construct confidence intervals for a vector of observations.
+Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 }

@@ -43,7 +43,7 @@ validate <- function(
   if(!is.null(check_dim) && !all(dim(x) == check_dim)) stop(paste("The parameter '", name, "' must have dimensions " , paste(check_dim, collapse=""), ".", sep = ""))
   if(!is.null(check_length) && length(x) != check_length) stop(paste("The parameter '", name, "' must be of length ", check_length, ".", sep = ""))
 
-  if(!check_class=="function"&&any(is.na(x))) {
+  if(!check_class == "function" && any(is.na(x))) {
     if(check_NA) stop(paste("The parameter '", name, "' is NA.", sep = ""))
     else return(TRUE)
   }
@@ -116,6 +116,8 @@ apa_print_container <- function() {
 #' }
 
 escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
+  if(is.null(x)) return(x)
+
   x <- gsub("\\\\", "\\\\textbackslash", x)
   x <- gsub("([#$%&_{}])", "\\\\\\1", x)
   x <- gsub("\\\\textbackslash", "\\\\textbackslash{}", x)
@@ -125,6 +127,7 @@ escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
     x <- gsub("(?<!\n)\n(?!\n)", "\\\\\\\\", x, perl = TRUE)
   if (spaces)
     x <- gsub("  ", "\\\\ \\\\ ", x)
+
   x
 }
 
@@ -174,9 +177,9 @@ convert_stat_name <- function(x) {
 }
 
 
-#' Create confidence interval string
+#' Create interval estimate string
 #'
-#' Creates a character string from an object with attribute. \emph{This function is not exported.}
+#' Creates a character string to report an interval estimate. \emph{This function is not exported.}
 #'
 #' @param x Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
 #'    and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and coefficient names as row names.
@@ -191,12 +194,14 @@ convert_stat_name <- function(x) {
 #' print_confint(c(1, 2), conf_level = 0.95)
 #' }
 
-print_confint <- function(
+print_interval <- function(
   x
   , conf_level = NULL
+  , interval_type
   , ...
 ) {
   sapply(x, validate, check_class = "numeric", check_infinite = FALSE)
+  validate(interval_type, check_class = "character", check_length = 1)
 
   if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, ...)
@@ -206,7 +211,7 @@ print_confint <- function(
   if(!is.null(conf_level)) {
     validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
     if(conf_level < 1) conf_level <- conf_level * 100
-    conf_level <- paste0(conf_level, "\\% CI ")
+    conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
   }
 
   if(!is.matrix(x)) {
@@ -236,6 +241,22 @@ print_confint <- function(
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     return(apa_ci)
   }
+}
+
+print_confint <- function(
+  x
+  , conf_level = NULL
+  , ...
+) {
+  print_interval(x, conf_level = conf_level, interval_type = "CI", ...)
+}
+
+print_hdint <- function(
+  x
+  , conf_level = NULL
+  , ...
+) {
+  print_interval(x, conf_level = conf_level, interval_type = "HDI", ...)
 }
 
 
@@ -282,9 +303,14 @@ prettify_terms <- function(x, standardized = FALSE) {
   x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
   for (i in 1:length(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
-    substring(x2, first = 1, last = 1) <- toupper(substring(x2, first = 1, last = 1))
+    x2 <- capitalize(x2)
     x[i] <- paste(x2, collapse = " $\\times$ ")
   }
+  x
+}
+
+capitalize <- function(x) {
+  substring(x, first = 1, last = 1) <- toupper(substring(x, first = 1, last = 1))
   x
 }
 
@@ -338,7 +364,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 #' by complexity (i.e., main effects, two-way interactions, three-way interactions, etc.).
 #'
 #' @param x data.frame. For example, a table element produced by \code{\link{apa_print}}.
-#' @param terms Character. Column name of the \code{data.frame} containing the terms to sort.
+#' @param colname Character. Column name of the \code{data.frame} containing the terms to sort.
 #'
 #' @return Returns the same data.frame with reordered rows.
 #' @export
@@ -433,3 +459,8 @@ localize <- function(x) {
 #' @keywords internal
 
 package_available <- function(x) x %in% rownames(utils::installed.packages())
+
+no_method <- function(x) {
+  stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
+              Visit https://github.com/crsh/papaja/issues to request support for this class."))
+}

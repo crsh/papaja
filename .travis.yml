@@ -4,6 +4,8 @@ r:
   - release
   - devel
 
+pandoc_version: 2.0.3
+
 cache: packages
 
 # Be strict when checking our package
@@ -11,9 +13,17 @@ warnings_are_errors: true
 
 # Suggested packages needed to run tests
 r_packages:
-  - testthat
+  - car
   - afex
+  - lsmeans
+  - multcomp
   - MBESS
+  - ggplot2
+  - dplyr
+  - downloader
+  - testthat
+  - BayesFactor
+  - latex2exp
 
 # Install other dependencies # longtable lscape tabularx
 before_install:
@@ -25,3 +35,4 @@ addons:
    - lmodern
    - libgsl0ldbl # GNU scientific library for MBESS
    - libgsl0-dev # GNU scientific library for MBESS
+   - libnlopt-dev # nloptr

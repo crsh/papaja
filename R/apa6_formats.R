@@ -40,35 +40,35 @@ apa6_pdf <- function(
   validate(keep_tex, check_class = "logical", check_length = 1)
 
   # Get APA6 template
-    template <-  system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "apa6.tex"
-      , package = "papaja"
-    )
-    if(template == "") stop("No LaTeX template file found.")
+  template <-  system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "apa6.tex"
+    , package = "papaja"
+  )
+  if(template == "") stop("No LaTeX template file found.")
 
-    # Call pdf_document() with the appropriate options
-    format <- bookdown::pdf_document2(
-      template = template
-      , fig_caption = fig_caption
-      , number_sections = number_sections
-      , toc = toc
-      , keep_tex = keep_tex
-      , pandoc_args = pandoc_args
-      , ...
-    )
+  # Call pdf_document() with the appropriate options
+  config <- bookdown::pdf_document2(
+    template = template
+    , fig_caption = fig_caption
+    , number_sections = number_sections
+    , toc = toc
+    , keep_tex = keep_tex
+    , pandoc_args = pandoc_args
+    , ...
+  )
 
   # Set chunk defaults
-  format$knitr$opts_chunk$echo <- FALSE
-  format$knitr$opts_chunk$message <- FALSE
-  # format$knitr$opts_chunk$results <- "asis"
-  format$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
-  format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
-  format$knitr$knit_hooks$inline <- inline_numbers
+  config$knitr$opts_chunk$echo <- FALSE
+  config$knitr$opts_chunk$message <- FALSE
+  # config$knitr$opts_chunk$results <- "asis"
+  config$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
+  config$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
+  config$knitr$knit_hooks$inline <- inline_numbers
 
-  format$knitr$opts_chunk$dev <- c("pdf", "png") # , "postscript", "tiff"
-  format$knitr$opts_chunk$dpi <- 300
-  format$clean_supporting <- FALSE # Always keep images files
+  config$knitr$opts_chunk$dev <- c("pdf", "png") # , "postscript", "tiff"
+  config$knitr$opts_chunk$dpi <- 300
+  config$clean_supporting <- FALSE # Always keep images files
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -83,7 +83,10 @@ apa6_pdf <- function(
     args <- pdf_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
 
     # Set citeproc = FALSE by default to invoke ampersand filter
-    if(is.null(metadata$citeproc) || metadata$citeproc) {
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
       metadata$citeproc <- FALSE
       assign("yaml_front_matter", metadata, pos = parent.frame())
     }
@@ -91,13 +94,37 @@ apa6_pdf <- function(
     args
   }
 
-  format$pre_processor <- pre_processor
+  config$pre_processor <- pre_processor
 
-  if(Sys.info()["sysname"] == "Windows") {
-    format$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+  config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
+
+    # Remove indentation so that endfloat can process the lltable environments
+    output_text <- readLines(output_file, encoding = "UTF-8")
+    appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
+    if(length(appendix_lines) == 2) {
+      output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
+        "^\\s+"
+        , ""
+        , output_text[appendix_lines[1]:appendix_lines[2]]
+      )
+      output_file_connection <- file(output_file, encoding = "UTF-8")
+      writeLines(output_text, output_file_connection)
+      close(output_file_connection)
+    }
+
+    # Apply bookdown postprocesser and pass format options
+    bookdown_post_processor <- bookdown::pdf_document2()$post_processor
+    pp_env <- environment(bookdown_post_processor)
+    assign("post", NULL, envir = pp_env) # Postprocessor is not sefl-contained
+    assign("config", config, envir = pp_env) # Postprocessor is not sefl-contained
+    bookdown_post_processor(metadata = metadata, input = input_file, output = output_file, clean = clean, verbose = verbose)
   }
 
-  format
+  if(Sys.info()["sysname"] == "Windows") {
+    config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+  }
+
+  config
 }
 
 
@@ -122,7 +149,7 @@ apa6_word <- function(
   if(reference_docx == "") stop("No .docx-reference file found.")
 
   # Call word_document() with the appropriate options
-  format <- bookdown::word_document2(
+  config <- bookdown::word_document2(
     reference_docx = reference_docx
     , fig_caption = fig_caption
     , pandoc_args = pandoc_args
@@ -130,19 +157,19 @@ apa6_word <- function(
   )
 
   # Set chunk defaults
-  format$knitr$opts_chunk$echo <- FALSE
-  format$knitr$opts_chunk$message <- FALSE
-  # format$knitr$opts_chunk$results <- "asis"
-  format$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
-  format$knitr$knit_hooks$inline <- inline_numbers
-  # format$knitr$knit_hooks$plot <- function(x, options) {
+  config$knitr$opts_chunk$echo <- FALSE
+  config$knitr$opts_chunk$message <- FALSE
+  # config$knitr$opts_chunk$results <- "asis"
+  config$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
+  config$knitr$knit_hooks$inline <- inline_numbers
+  # config$knitr$knit_hooks$plot <- function(x, options) {
   #   options$fig.cap <- paste("*", getOption("papaja.terms")$figure, ".* ", options$fig.cap)
   #   knitr::hook_plot_md(x, options)
   # }
 
-#   format$knitr$opts_chunk$dev <- c("png", "pdf", "svg", "tiff")
-#   format$knitr$opts_chunk$dpi <- 300
-  format$clean_supporting <- FALSE # Always keep images files
+  config$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
+  config$knitr$opts_chunk$dpi <- 300
+  config$clean_supporting <- FALSE # Always keep images files
 
 
   ## Overwrite preprocessor to set CSL defaults
@@ -168,19 +195,21 @@ apa6_word <- function(
     args
   }
 
-  format$pre_processor <- pre_processor
+  config$pre_processor <- pre_processor
 
   if(Sys.info()["sysname"] == "Windows") {
-    format$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+    config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
   }
 
-  format
+  config
 }
 
 
 # Set hook to print default numbers
 inline_numbers <- function (x) {
-  if (is.numeric(x)) {
+
+  if(class(x) %in% c("difftime")) x <- as.numeric(x)
+  if(is.numeric(x)) {
     printed_number <- ifelse(
       x == round(x)
       , as.character(x)
@@ -194,7 +223,11 @@ inline_numbers <- function (x) {
     } else if(n > 2) {
       paste(paste(printed_number[1:(n - 1)], collapse = ", "), printed_number[n], sep = ", and ")
     }
-  } else if(is.character(x)) x
+  } else if(is.integer(x)) {
+    x <- printnum(x)
+  } else if(is.character(x)) {
+    x
+  }
 }
 
 
@@ -241,7 +274,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Add modified YAML header
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
-  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  writeLines(augmented_input_text, input_file_connection)
+  close(input_file_connection)
 
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
@@ -250,11 +285,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args, metadata$csl)
+    if(is.null(metadata$replace_ampersands) || metadata$replace_ampersands) {
+      args <- set_ampersand_filter(args, metadata$csl)
+    }
   }
 
   args
 }
+
 
 word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from) {
   # Parse and modify YAML header
@@ -270,7 +308,9 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-  writeLines(augmented_input_text, input_file, useBytes = TRUE)
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  writeLines(augmented_input_text, input_file_connection)
+  close(input_file_connection)
 
   args <- NULL
   if(is.null(metadata$citeproc) || metadata$citeproc) {
@@ -338,25 +378,27 @@ author_ampersand <- function(x, format) {
 set_ampersand_filter <- function(args, csl_file) {
   pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
 
+  # Correct in-text ampersands
+  filter_path <- system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "ampersand_filter.sh"
+    , package = "papaja"
+  )
+
+  if(Sys.info()["sysname"] == "Windows") {
+    filter_path <- gsub("\\.sh", ".bat", filter_path)
+    ampersand_filter <- readLines(filter_path)
+    ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
+    filter_path <- "_papaja_ampersand_filter.bat"
+    filter_path_connection <- file(filter_path, encoding = "UTF-8")
+    writeLines(ampersand_filter, filter_path_connection)
+    close(filter_path_connection)
+  }
+
   if(!is.null(args)) { # CSL has not been specified manually
-    # Correct in-text ampersands
-    filter_path <- system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "ampersand_filter.sh"
-      , package = "papaja"
-    )
-
-    if(Sys.info()["sysname"] == "Windows") {
-      filter_path <- gsub("\\.sh", ".bat", filter_path)
-      ampersand_filter <- readLines(filter_path)
-      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
-      filter_path <- "_papaja_ampersand_filter.bat"
-      writeLines(ampersand_filter, filter_path)
-    }
-
     args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
   } else {
-    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc())
+    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc(), "--filter", filter_path)
   }
 
   args

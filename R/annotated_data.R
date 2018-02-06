@@ -278,6 +278,7 @@ setClassUnion(
 # Define a rather trivial class for our tables, so that both print() and
 # variable_label() work on them
 
+#' @rdname annotated_vector-class
 #' @export
 
 setClass(
@@ -526,7 +527,7 @@ print.apa_results_table <- function(x, ...) {
       , unit = x_units
       , stringsAsFactors = FALSE
     )
-    x_legend <- subset(x_legend, !is.na(label) | !is.na(unit))
+    x_legend <- x_legend[!is.na(x_legend$label) | !is.na(x_legend$unit), ]
     max_char <- max(nchar(x_legend$column))
 
     apply(
@@ -708,6 +709,8 @@ setMethod(
 #'
 #' This is a copy from the S3-method from the \pkg{base} package.
 #' @param x An atomic vector or annotated vector.
+#' @param except Todo
+#' @param exclude Todo
 #' @return x, unchanged.
 #' @export
 

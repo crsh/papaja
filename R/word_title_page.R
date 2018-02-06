@@ -43,24 +43,31 @@ word_title_page <- function(x) {
     padding <- paste0(c("\n", rep("&nbsp;", 148)), collapse = "") # Add spacer to last row
     author_information <- c(
       "\n\n"
-      , paste(knitr::kable(c(authors, padding, affiliations, padding, x$note), format = "pandoc", align = "c"), collapse = "\n")
+      , paste(
+        knitr::kable(
+          c(authors, affiliations, padding, x$note)
+          , format = "pandoc"
+          , align = "c"
+          , col.names = NULL
+        )
+        , collapse = "\n"
+      )
       , "\n\n&nbsp;\n"
     )
   }
 
   c(
     author_information
-    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
+    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , author_note
-    , "\n\n&nbsp;\n\n"
-    , paste0("# ", apa_terms$abstract)
-    , "\n\n\n"
+    , "\n"
+    , paste0("<div custom-style='h1-pagebreak'>", apa_terms$abstract, "</div>")
+    , "\n"
     , x$abstract
-    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , paste0("*", apa_terms$keywords, ":* ", x$keywords)
     , "\n"
     , paste0(apa_terms$word_count, ": ", x$wordcount)
-    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
-    , paste0("# ", x$title, "\n\n")
+    , "\n"
+    , paste0("<div custom-style='Title'>", x$title, "</div>\n\n")
   )
 }

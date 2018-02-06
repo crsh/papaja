@@ -174,3 +174,15 @@ test_that(
   }
 )
 
+test_that(
+  "One-way ANOVA"
+  , {
+    oneway_test <- oneway.test(extra ~ group, data = sleep)
+    oneway_output <- apa_print(oneway_test)
+
+    expect_is(oneway_output, "list")
+    expect_equal(names(oneway_output), container_names)
+    expect_is(oneway_output$stat, "character")
+    expect_equal(oneway_output$stat, "$F(1, 17.78) = 3.46$, $p = .079$")
+  }
+)

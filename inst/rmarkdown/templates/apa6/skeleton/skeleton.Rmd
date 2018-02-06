@@ -17,13 +17,13 @@ affiliation:
   - id            : "2"
     institution   : "Konstanz Business School"
 
-author_note: >
-  Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
+author_note: |
+  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
 
   Enter author note here.
 
-abstract: >
-  Enter abstract here (note the indentation, if you start a new paragraph).
+abstract: |
+  Enter abstract here. Each new line herein must be indented, like this line.
   
 keywords          : "keywords"
 wordcount         : "X"
@@ -37,14 +37,19 @@ footnotelist      : no
 lineno            : yes
 mask              : no
 
-lang              : "english"
 class             : "man"
 output            : papaja::apa6_pdf
 ---
 
-```{r include = FALSE}
+```{r load_packages, include = FALSE}
 library("papaja")
 ```
+
+```{r analysis_preferences}
+# Seed for random number generation
+set.seed(42)
+```
+
 
 
 # Methods
@@ -72,5 +77,9 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 r_refs(file = "r-references.bib")
 ```
 
+\begingroup
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.5in}
+
+<div id = "refs"></div>
+\endgroup

@@ -92,13 +92,19 @@ arrange_anova.summary.aov <- function(x) {
 
   # When processing aovlist via lapply a dummy term "aovlist_residuals" preserves the SS_error of the intercept
   # term to calculate generalized eta squared correctly later on.
+  # ----
+  # We now changed this to the term (Intercept) -- for the sake of consistency
+  # and standardized processing later on
+
+  # When processing an aovlist, this one-row aov-object contains the residual
+  # sum of squares:
   if(nrow(variance_table) == 1 && variance_table$term == "Residuals") {
     variance_table$sumsq_err <- variance_table$sumsq
     variance_table$sumsq <- NA
     variance_table$df_res <- variance_table$df
     variance_table$df <- NA
     variance_table$meansq <- NA
-    variance_table$term <- "aovlist_residuals"
+    variance_table$term <- "(Intercept)"
   } else {
     variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
     variance_table$df_res <- variance_table[nrow(variance_table), "df"]

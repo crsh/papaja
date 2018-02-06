@@ -44,7 +44,8 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
 }
 \description{
 Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
-accordance with APA manuscript guidelines. \emph{Not yet ready for use.}
+accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+considered experimental.}
 }
 \details{
 The function should work on a wide range of \code{htest} objects. Due to the large number of functions
@@ -70,3 +71,4 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
+\concept{apa_print}
