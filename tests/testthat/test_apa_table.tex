@@ -1,4 +1,4 @@
-\documentclass[english,man]{apa6}
+\documentclass[man]{apa6}
 
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -126,12 +126,6 @@
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 
-\ifxetex
-  \usepackage{polyglossia}
-  \setmainlanguage{}
-\else
-  \usepackage[english]{babel}
-\fi
 
 % Manuscript styling
 \captionsetup{font=singlespacing,justification=justified}
@@ -187,16 +181,16 @@ paragraph).}
 
 
 \usepackage{amsthm}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\newtheorem{corollary}{Corollary}
-\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
 \theoremstyle{definition}
-\newtheorem{example}{Example}
+\newtheorem{example}{Example}[section]
 \theoremstyle{definition}
-\newtheorem{exercise}{Exercise}
+\newtheorem{exercise}{Exercise}[section]
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 \newtheorem*{solution}{Solution}

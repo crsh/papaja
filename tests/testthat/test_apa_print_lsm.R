@@ -9,6 +9,7 @@ test_that(
       , id = "Subject"
       , dv = "Recall"
       , within = c("Task", "Valence")
+      , return = "aov"
     ))
 
     tw_rm_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
