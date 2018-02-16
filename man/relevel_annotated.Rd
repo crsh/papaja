@@ -30,7 +30,7 @@ reference.
 \details{
 Currently, two methods for reordering the levels of an \code{annotated_factor} are implemented:
 The \code{annotated_factor,character}-method reorders the levels according to the ordering in a character vector \code{ref}.
-The \code{annotated_factor,integer}-method reorders the levels according to their position within the vector of levels
+The \code{annotated_factor,numeric}-method reorders the levels according to their position within the vector of levels
 (as would be returned by \code{levels}).
 }
 \seealso{

@@ -142,6 +142,7 @@ apa_factorial_plot.default <- function(
 
   # Add missing variable labels
   data <- default_label(data)
+  original_labels <- variable_label(data)
 
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
@@ -151,10 +152,11 @@ apa_factorial_plot.default <- function(
   # Handling of factors:
   # a) convert to factor
   for (i in c(id, factors)){
-    data[[i]] <- as(data[[i]], "annotated_factor")
+    data[[i]] <- as.factor(data[[i]])
   }
   # b) drop factor levels
   data <- droplevels(data)
+  variable_label(data) <- original_labels
 
   ellipsis <- list(...)
   output <- list()
