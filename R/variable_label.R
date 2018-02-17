@@ -145,14 +145,23 @@ setMethod(
   "default_label"
   , signature = "data.frame"
   , definition = function(object){
-    columns <- sapply(X = variable_label(object), FUN = is.null, simplify = TRUE)
 
-    if(any(columns)){
-      value <- colnames(object)[columns]
-      names(value) <- value
-      variable_label(object[, columns]) <- value
-    }
-    object
+    as.data.frame.list(
+      x = mapply(
+        FUN = function(x, value){
+          if(is.null(variable_label(x))){
+            variable_label(x) <- value
+          }
+          x
+        }
+        , x = object
+        , value = colnames(object)
+        , USE.NAMES = TRUE
+        , SIMPLIFY = FALSE
+      )
+      , check.names = FALSE
+      , stringsAsFactors = FALSE
+    )
   }
 )
 
