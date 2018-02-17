@@ -142,12 +142,13 @@ apa_factorial_plot.default <- function(
 
   # Add missing variable labels
   data <- default_label(data)
-  original_labels <- variable_label(data)
+  # original_labels <- variable_label(data)
 
   factors <- gsub(pattern = " ", replacement = "_", factors)
   id <- gsub(pattern = " ", replacement = "_", id)
   dv <- gsub(pattern = " ", replacement = "_", dv)
   colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
+  original_labels <- variable_label(data)
 
   # Handling of factors:
   # a) convert to factor
