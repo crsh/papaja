@@ -157,6 +157,9 @@ apa_factorial_plot.default <- function(
   }
   # b) drop factor levels
   data <- droplevels(data)
+  # Handling of dependent variable:
+  data[[dv]] <- as.numeric(data[[dv]])
+
   variable_label(data) <- original_labels
 
   ellipsis <- list(...)

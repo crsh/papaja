@@ -1,16 +1,17 @@
-#' Assign or Extract Variable Labels
+#' Variable Labels Attributes
 #'
 #' Assign or extract variable labels of a \code{vector} \emph{or}
 #' the columns (i.e., vectors) of a \code{data.frame}.
 #'
-#' @param object Either a vector or a \code{data.frame}.
+#' @param x Either a vector or a \code{data.frame}.
 #' @param value Character. The variable label(s) to be assigned. If \code{variable_label} is applied to a single vector,
 #' this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector.
 #' Check the examples for details.
+#' @param ... Further arguments that can be passes to methods.
 #' @rdname variable_label
 #' @export
 
-"variable_label" <- function(object, ...){
+"variable_label" <- function(x, ...){
   UseMethod("variable_label")
 }
 
@@ -21,34 +22,34 @@
 
 
 
-variable_label.default <- function(object, ...){
-  attr(object, "label")
+variable_label.default <- function(x, ...){
+  attr(x, "label")
 }
 
 #' @rdname variable_label
 #' @export
 
-variable_label.data.frame <- function(object, ...){
-  mapply(FUN = variable_label, object, SIMPLIFY = FALSE, USE.NAMES = TRUE)
+variable_label.data.frame <- function(x, ...){
+  mapply(FUN = variable_label, x, SIMPLIFY = FALSE, USE.NAMES = TRUE)
 }
 
 
 
 # ------------------------------------------------------------------------------
-# Assignment methods
+# Replacement methods
 
 #' @rdname variable_label
 #' @export
 
-"variable_label<-" <- function(object, value, ...){
+`variable_label<-` <- function(x, value){
   UseMethod("variable_label<-")
 }
 
 #' @rdname variable_label
 #' @export
 
-"variable_label<-.default" <- function(object, value, ...){
-  assign_label.default(object, value)
+`variable_label<-.default` <- function(x, value){
+  assign_label.default(x, value)
 }
 
 
@@ -56,8 +57,8 @@ variable_label.data.frame <- function(object, ...){
 #' @rdname variable_label
 #' @export
 
-"variable_label<-.data.frame" <- function(object, value, ...){
-  assign_label.data.frame(object, value)
+`variable_label<-.data.frame` <- function(x, value){
+  assign_label.data.frame(x, value)
 }
 
 
@@ -66,18 +67,18 @@ variable_label.data.frame <- function(object, ...){
 
 #' @keywords internal
 
-assign_label <- function(object, value, ...){
+assign_label <- function(x, value, ...){
   UseMethod("assign_label")
 }
 
 
 #' @keywords internal
 
-assign_label.default <- function(object, value){
+assign_label.default <- function(x, value){
   structure(
-    object
+    x
     , label = value
-    , class = c("labelled", setdiff(class(object), "labelled"))
+    , class = c("labelled", setdiff(class(x), "labelled"))
   )
 }
 
@@ -85,26 +86,26 @@ assign_label.default <- function(object, value){
 
 #' @keywords internal
 
-assign_label.data.frame <- function(object, value, ...){
+assign_label.data.frame <- function(x, value, ...){
   # R allows data frames to have duplicate column names.
   # The following code is optimized to work even in this horrible case.
   # This is especially important for default_label and apa_table (e.g., in
   # a frequency table, you frequently have repeating column names):
-  columns_to_annotate <- colnames(object) %in% names(value)
+  columns_to_annotate <- colnames(x) %in% names(value)
   if(is.null(names(value))){
     stop("Assigned label is required to be a named character vector.")
   }
 
-  if(!all(names(value) %in% colnames(object))){
+  if(!all(names(value) %in% colnames(x))){
     stop("Some requested columns could not be found in data.frame.")
   }
   # do not coerce to vector if only one column is changed:
-  modified_object <- object[, columns_to_annotate, drop = FALSE]
-  colnames(modified_object) <- colnames(object)[columns_to_annotate]
+  modified_object <- x[, columns_to_annotate, drop = FALSE]
+  colnames(modified_object) <- colnames(x)[columns_to_annotate]
   ordered_value <- value[colnames(modified_object)]
 
   d <- mapply(
-    FUN = papaja:::assign_label.default
+    FUN = assign_label.default
     , modified_object
     , value = ordered_value
     , USE.NAMES = TRUE
@@ -116,9 +117,9 @@ assign_label.data.frame <- function(object, value, ...){
     , stringsAsFactors = FALSE
     , check.names = FALSE
   )
-  object[, columns_to_annotate] <- d
+  x[, columns_to_annotate] <- d
 
-  object
+  x
 }
 
 
