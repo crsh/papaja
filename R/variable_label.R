@@ -100,6 +100,7 @@ assign_label.data.frame <- function(object, value, ...){
   }
   # do not coerce to vector if only one column is changed:
   modified_object <- object[, columns_to_annotate, drop = FALSE]
+  colnames(modified_object) <- colnames(object)[columns_to_annotate]
   ordered_value <- value[colnames(modified_object)]
 
   d <- mapply(
@@ -113,6 +114,7 @@ assign_label.data.frame <- function(object, value, ...){
     d
     , col.names = names(modified_object)
     , stringsAsFactors = FALSE
+    , check.names = FALSE
   )
   object[, columns_to_annotate] <- d
 
