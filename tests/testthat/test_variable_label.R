@@ -68,17 +68,17 @@ test_that(
 test_that(
   "droplevels.labelled-method"
   , {
+    # only check consitency, as base behavior has changed recently
     x <- factor(letters[1:4], levels = letters[1:10])
     variable_label(x) <- "Test me!"
     x <- droplevels(x, exclude = "d")
 
+    y <- factor(letters[1:4], levels = letters[1:3])
+    variable_label(y) <- "Test me!"
+
     expect_identical(
       object = x
-      , expected = structure(
-        factor(c(letters[1:3], NA), levels = letters[1:3])
-        , label = "Test me!"
-        , class = c("labelled", "factor")
-      )
+      , expected = y
     )
   }
 )
