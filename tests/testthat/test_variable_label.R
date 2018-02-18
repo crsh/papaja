@@ -73,7 +73,8 @@ test_that(
     variable_label(x) <- "Test me!"
     x <- droplevels(x, exclude = "d")
 
-    y <- factor(letters[1:4], levels = letters[1:3])
+    y <- factor(letters[1:4], levels = letters[1:10])
+    y <- droplevels(y, exclude = "d")
     variable_label(y) <- "Test me!"
 
     expect_identical(
