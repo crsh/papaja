@@ -7,7 +7,9 @@
 \alias{variable_label<-}
 \alias{variable_label<-.default}
 \alias{variable_label<-.data.frame}
-\title{Variable Labels Attributes}
+\alias{variable_labels}
+\alias{variable_labels<-}
+\title{Assign or Extract Variable Labels}
 \usage{
 variable_label(x, ...)
 
@@ -20,6 +22,10 @@ variable_label(x) <- value
 \method{variable_label}{default}(x) <- value
 
 \method{variable_label}{data.frame}(x) <- value
+
+variable_labels(x, ...)
+
+variable_labels(x) <- value
 }
 \arguments{
 \item{x}{Either a vector or a \code{data.frame}.}

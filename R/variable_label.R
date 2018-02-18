@@ -1,4 +1,4 @@
-#' Variable Labels Attributes
+#' Assign or Extract Variable Labels
 #'
 #' Assign or extract variable labels of a \code{vector} \emph{or}
 #' the columns (i.e., vectors) of a \code{data.frame}.
@@ -15,12 +15,8 @@
   UseMethod("variable_label")
 }
 
-
-
 #' @rdname variable_label
 #' @export
-
-
 
 variable_label.default <- function(x, ...){
   attr(x, "label")
@@ -123,6 +119,25 @@ assign_label.data.frame <- function(x, value, ...){
 }
 
 
+# ------------------------------------------------------------------------------
+# alias generics
+
+#' @rdname variable_label
+#' @export
+
+"variable_labels" <- function(x, ...){
+  UseMethod("variable_label")
+}
+
+#' @rdname variable_label
+#' @export
+
+`variable_labels<-` <- function(x, value){
+  UseMethod("variable_label<-")
+}
+
+
+
 #' @title Set default variable labels from column names
 #' @description We use this function internally to provide default variable for all columns in a data.frame from column names.
 #' @param x A \code{data.frame}
@@ -165,6 +180,20 @@ setMethod(
     )
   }
 )
+
+
+# ------------------------------------------------------------------------------
+# Some S3 methods for class labelled, aimed at making variable labels a bit
+# more stable
+
+#' @export
+
+droplevels.labelled <- function(x, exclude = if(anyNA(levels(x))) NULL else NA, ...){
+  original_label <- variable_label(x)
+  x <- NextMethod("droplevels", x, exclude = exclude, ...)
+  variable_label(x) <- original_label
+  x
+}
 
 
 

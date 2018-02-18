@@ -52,7 +52,7 @@ test_that(
 context("variable_label() extraction methods")
 
 test_that(
-  "variable_label,labelled-method"
+  "variable_label.labelled-method"
   , {
     object <- 1:10
     class(object) <- c("labelled", "integer")
@@ -65,6 +65,42 @@ test_that(
   }
 )
 
+test_that(
+  "droplevels.labelled-method"
+  , {
+    x <- factor(letters[1:4], levels = letters[1:10])
+    variable_label(x) <- "Test me!"
+    x <- droplevels(x, exclude = "d")
+
+    expect_identical(
+      object = x
+      , expected = structure(
+        factor(c(letters[1:3], NA), levels = letters[1:3])
+        , label = "Test me!"
+        , class = c("labelled", "factor")
+      )
+    )
+  }
+)
+
+test_that(
+  "[.labelled-method"
+  , {
+    x <- factor(letters[1:4], levels = letters[1:10])
+    variable_label(x) <- "Test me!"
+    y <- x[1:3]
+
+    expect_identical(
+      object = y
+      , expected = structure(
+        1:3
+        , .Label = letters[1:10]
+        , class = c("labelled", "factor")
+        , label = "Test me!"
+      )
+    )
+  }
+)
 
 context("tex_conv borderline cases")
 
