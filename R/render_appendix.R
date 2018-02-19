@@ -70,7 +70,7 @@ render_appendix <- function(
   if(target_format == "latex") {
 
     # Render Markdown fragment
-    md_fragment <- knitr::knit_child(text = readLines(x), quiet = quiet, )
+    md_fragment <- knitr::knit_child(text = readLines(x), quiet = quiet)
 
     ## Remove placement options
     if(!rmarkdown::metadata$figsintext) {
