@@ -72,6 +72,7 @@ Collate:
     'printnum.R'
     'r_refs.R'
     'render_appendix.R'
+    'revision_letter_format.R'
     'theme_apa.R'
     'utils.R'
     'utils_for_plots.R'

@@ -47,8 +47,7 @@ render_appendix <- function(
     validate(csl, check_class = "character", check_length = 1)
   } else {
     csl <- system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "apa6.csl"
+      "rmd", "apa6.csl"
       , package = "papaja"
     )
   }

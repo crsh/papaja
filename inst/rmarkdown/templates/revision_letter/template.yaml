@@ -1,0 +1,4 @@
+name: Revision letter
+description: >
+  Create journal revision letters in PDF format.
+create_dir: false

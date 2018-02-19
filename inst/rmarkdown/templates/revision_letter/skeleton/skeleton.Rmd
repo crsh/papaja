@@ -1,0 +1,59 @@
+---
+title       : "Manuscript title"
+authors     : "First Author & Second Author"
+journal     : "Journal title"
+manuscript  : "Manuscript number"
+
+bibliography: [""]
+
+class       : "draft"
+
+output      : papaja::revision_letter_pdf
+---
+
+Dear Dr. Editor,
+
+thank you very much for taking the time to consider our manuscript for publication at the _Journal XYZ_.
+In the following we address your and each reviewer's concerns point-by-point.
+
+
+# Reviewer \#1
+
+\RC
+This is a reviewer comment
+
+This is our response
+
+\Assignment{First Author}
+\WorkInProgress
+\Easy
+
+
+\RC{This is the first paragraph of a long reviewer comment
+
+This is the second paragraph}
+
+This is our response.
+
+> This is a section quoted from the revised manuscript to illustrate the change.
+
+\Assignment{Second Author}
+\AlmostDone
+\Medium
+
+
+\RC
+This is a reviewer comment
+
+This is our response
+
+\Assignment{First Author}
+\Done
+\TimeConsuming
+\Hard
+\NotEstimated
+
+# References
+
+\setlength{\leftskip}{0.4in}
+\setlength{\parindent}{-0.4in}

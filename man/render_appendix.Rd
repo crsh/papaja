@@ -4,14 +4,19 @@
 \alias{render_appendix}
 \title{Render appendix}
 \usage{
-render_appendix(x, options = NULL, quiet = TRUE)
+render_appendix(x, bibliography = rmarkdown::metadata$bibliography,
+  csl = rmarkdown::metadata$csl, quiet = TRUE, options = NULL)
 }
 \arguments{
 \item{x}{Character. Input file name.}
 
-\item{options}{Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.}
+\item{bibliography}{Character. Location of bibliography file(s) to use.}
 
-\item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+\item{csl}{Character. Location of CSL file to use. Defaults to APA-style.}
+
+\item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.}
+
+\item{options}{Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
 If \code{FALSE} output will be included in the document.}
 }
 \description{
