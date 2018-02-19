@@ -4,8 +4,10 @@
 #' an \code{appendix} environment.
 #'
 #' @param x Character. Input file name.
-#' @param options Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
+#' @param bibliography Character. Location of bibliography file(s) to use.
+#' @param csl Character. Location of CSL file to use. Defaults to APA-style.
 #' @param quiet Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
+#' @param options Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
 #'    If \code{FALSE} output will be included in the document.
 #' @details
 #'    By default \code{x} is converted to a TeX file which can be included in an R Markdown document
@@ -29,11 +31,36 @@
 
 render_appendix <- function(
   x
-  , options = NULL
+  , bibliography = rmarkdown::metadata$bibliography
+  , csl = rmarkdown::metadata$csl
   , quiet = TRUE
+  , options = NULL
 ) {
   validate(x, check_class = "character", check_length = 1)
-  if(!is.null(options)) validate(options, check_class = "character")
+
+  if(length(bibliography) > 0) {
+    validate(bibliography, check_class = "character")
+    bib_call <- paste0("--bibliography=", bibliography)
+  }
+
+  if(length(csl) > 0) {
+    validate(csl, check_class = "character", check_length = 1)
+  } else {
+    csl <- system.file(
+      "rmarkdown", "templates", "apa6", "resources"
+      , "apa6.csl"
+      , package = "papaja"
+    )
+  }
+  csl_call <- paste0("--csl=", csl)
+
+  if(!is.null(options)) {
+    validate(options, check_class = "character")
+    options <- c(options, bib_call, csl_call)
+  } else if(length(bibliography) > 0) {
+    options <- c(bib_call, csl_call)
+  }
+
   validate(quiet, check_class = "logical", check_length = 1)
 
 
@@ -43,7 +70,7 @@ render_appendix <- function(
   if(target_format == "latex") {
 
     # Render Markdown fragment
-    md_fragment <- knitr::knit_child(text = readLines(x), quiet = quiet)
+    md_fragment <- knitr::knit_child(text = readLines(x), quiet = quiet, )
 
     ## Remove placement options
     if(!rmarkdown::metadata$figsintext) {
