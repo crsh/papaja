@@ -203,8 +203,15 @@ rep.labelled <- function(x, ...){
   y
 }
 
+
+#' Reorder Levels of Labelled Factor
+#'
+#' The levels of a factor are re-ordered so that the level specified by ref is
+#' first and the others are moved down. This is a copy from \code{\link[stats]{relevel}}
+#' in the \pkg{stats} package, but preserves the \code{label} attribute and class \code{labelled}.
 #' @importFrom stats relevel
-#' @export
+#' @inheritParams stats::relevel
+#' @exportMethod relevel
 
 relevel.labelled <- function(x, ref, ...){
   y <- NextMethod()
