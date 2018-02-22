@@ -203,6 +203,16 @@ rep.labelled <- function(x, ...){
   y
 }
 
+#' @importFrom stats relevel
+#' @export
+
+relevel.labelled <- function(x, ref, ...){
+  y <- NextMethod()
+  variable_label(y) <- variable_label(x)
+  y
+}
+
+
 
 #' Combine to expression
 #'

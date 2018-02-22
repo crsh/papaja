@@ -65,6 +65,8 @@ test_that(
   }
 )
 
+context("methods for class .labelled")
+
 test_that(
   "droplevels.labelled-method"
   , {
@@ -100,6 +102,9 @@ test_that(
         , label = "Test me!"
       )
     )
+    expect_identical(variable_label(y), "Test me!")
+    expect_identical(class(y), c("labelled", "factor"))
+    expect_identical(levels(y), letters[1:10])
   }
 )
 
@@ -116,6 +121,24 @@ test_that(
       object = o1
       , expected = o2
     )
+  }
+)
+
+test_that(
+  "relevel.labelled-method"
+  , {
+    o1 <- factor(letters[1:3], levels = letters[1:3])
+    variable_label(o1) <- "Test me!"
+    o1 <- relevel(o1, "b")
+
+    expect_identical(
+      object = o1
+      , expected = structure(c(2L, 1L, 3L), .Label = c("b", "a", "c"), class = c("labelled", "factor"), label = "Test me!")
+    )
+    # Check all attributes separately, as sometimes expect_identical seems to be sloppy
+    expect_identical(variable_label(o1), expected = "Test me!")
+    expect_identical(levels(o1), expected = c("b", "a", "c"))
+    expect_identical(class(o1), expected = c("labelled", "factor"))
   }
 )
 
