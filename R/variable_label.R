@@ -195,6 +195,13 @@ droplevels.labelled <- function(x, exclude = if(anyNA(levels(x))) NULL else NA, 
   x
 }
 
+#' @export
+
+rep.labelled <- function(x, ...){
+  y <- NextMethod()
+  variable_label(y) <- variable_label(x)
+  y
+}
 
 
 #' Combine to expression

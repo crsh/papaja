@@ -57,7 +57,7 @@ test_that(
     object <- 1:10
     class(object) <- c("labelled", "integer")
     attr(object, "label") <- "label1"
-    variable_label(object)
+
     expect_identical(
       object = variable_label(object)
       , expected = "label1"
@@ -102,6 +102,23 @@ test_that(
     )
   }
 )
+
+test_that(
+  "rep.labelled-method"
+  , {
+    o1 <- 1:3
+    variable_label(o1) <- "Test me!"
+    o1 <- rep(o1, 2)
+    o2 <- rep(1:3, 2)
+    variable_label(o2) <- "Test me!"
+
+    expect_identical(
+      object = o1
+      , expected = o2
+    )
+  }
+)
+
 
 context("tex_conv borderline cases")
 
