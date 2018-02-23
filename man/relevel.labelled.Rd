@@ -4,7 +4,7 @@
 \alias{relevel.labelled}
 \title{Reorder Levels of Labelled Factor}
 \usage{
-relevel.labelled(x, ref, ...)
+\method{relevel}{labelled}(x, ref, ...)
 }
 \arguments{
 \item{x}{an unordered factor.}

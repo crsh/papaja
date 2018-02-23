@@ -132,9 +132,8 @@ assign_label.data.frame <- function(x, value, ...){
 #' @rdname variable_label
 #' @export
 
-`variable_labels<-` <- function(x, value){
-  UseMethod("variable_label<-")
-}
+`variable_labels<-` <- `variable_label<-`
+
 
 
 
@@ -211,7 +210,7 @@ rep.labelled <- function(x, ...){
 #' in the \pkg{stats} package, but preserves the \code{label} attribute and class \code{labelled}.
 #' @importFrom stats relevel
 #' @inheritParams stats::relevel
-#' @exportMethod relevel
+#' @export
 
 relevel.labelled <- function(x, ref, ...){
   y <- NextMethod()
