@@ -135,7 +135,7 @@ apa_factorial_plot.default <- function(
   if(!is.null(jit)) validate(jit, check_class = "numeric")
   if(!is.null(xlab)) if(!is.expression(xlab)) validate(xlab, check_class = "character")
   if(!is.null(ylab)) if(!is.expression(ylab)) validate(ylab, check_class = "character")
-  if(!is.null(main)) if(!is.expression(main)) validate(main, check_class = "character")
+  if(!is.null(main)) if(!is.expression(main)) if(!is.matrix(main)) validate(main, check_class = "character")
 
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
@@ -170,7 +170,7 @@ apa_factorial_plot.default <- function(
     factors <- "arbitraryFactorName"
     data[[factors]] <- 1
     data[[factors]] <- as.factor(data[[factors]])
-    ellipsis$args_x_axis<- list(tick = FALSE, labels = "")
+    args_x_axis<- defaults(args_x_axis, set = list(tick = FALSE, labels = ""))
     # Create an empty label so that xlab won't be plotted automatically
     variable_label(data[[factors]]) <- ""
   }
@@ -232,7 +232,7 @@ apa_factorial_plot.default <- function(
   ellipsis$fun.aggregate <- NULL
 
   # Backward compatibility: args_axis
-  if(!is.null(ellipsis$args_axis)) {
+  if(!is.null(ellipsis$args_axis) && is.null(ellipsis$args_x_axis)) {
     ellipsis$args_x_axis <- ellipsis$args_axis
   }
   ellipsis$args_axis <- NULL
