@@ -125,9 +125,7 @@ assign_label.data.frame <- function(x, value, ...){
 #' @rdname variable_label
 #' @export
 
-"variable_labels" <- function(x, ...){
-  UseMethod("variable_label")
-}
+"variable_labels" <- variable_label
 
 #' @rdname variable_label
 #' @export
@@ -187,6 +185,32 @@ setMethod(
 
 #' @export
 
+`[.labelled` <- function(x, ..., drop = FALSE) {
+  y <- NextMethod("[")
+  variable_label(y) <- variable_label(x)
+  y
+}
+
+
+#' @export
+
+print.labelled <- function(x, ...) {
+  unit_defined <- !is.null(attr(x, "unit"))
+
+  cat(
+    "Variable label     : ", attr(x, "label")
+    , if(unit_defined) {"\nUnit of measurement: "}
+    , if(unit_defined) {attr(x, "unit")}
+    , "\n"
+    , sep = ""
+  )
+  variable_label(x) <- NULL
+  NextMethod("print")
+}
+
+
+#' @export
+
 droplevels.labelled <- function(x, exclude = if(anyNA(levels(x))) NULL else NA, ...){
   original_label <- variable_label(x)
   x <- NextMethod("droplevels", x, exclude = exclude, ...)
@@ -216,48 +240,5 @@ relevel.labelled <- function(x, ref, ...){
   y <- NextMethod()
   variable_label(y) <- variable_label(x)
   y
-}
-
-
-
-#' Combine to expression
-#'
-#' We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
-#' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
-#'
-#' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
-#' @return An expression
-#' @keywords internal
-
-combine_plotmath <- function(x){
-
-  x <- lapply(X  = x, FUN = tex_conv)
-  y <- as.expression(substitute(paste(a, b), list(a = x[[1]], b = x[[2]])))
-
-  if(length(x)>2){
-    for (i in 3:length(x)){
-      y <- as.expression(substitute(paste(a, b), list(a = y[[1]], b = x[[i]])))
-    }
-  }
-  return(y)
-}
-
-
-#' @keywords internal
-
-tex_conv <- function(x, latex2exp = package_available("latex2exp")){
-  if(!is.null(x)){
-    if(!is.expression(x)){
-      if(latex2exp){
-        latex2exp::TeX(x, output = "expression")[[1]]
-      } else {
-        as.expression(x)[[1]]
-      }
-    } else{
-      x[[1]]
-    }
-  } else {
-    as.expression("")[[1]]
-  }
 }
 

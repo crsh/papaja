@@ -77,3 +77,44 @@ points.matrix <- function(x, y, type = "p", ...) {
 #     do.call("arrows", args.i)
 #   }
 # }
+
+#' Combine to expression
+#'
+#' We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
+#' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
+#'
+#' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
+#' @return An expression
+#' @keywords internal
+
+combine_plotmath <- function(x){
+
+  x <- lapply(X  = x, FUN = tex_conv)
+  y <- as.expression(substitute(paste(a, b), list(a = x[[1]], b = x[[2]])))
+
+  if(length(x)>2){
+    for (i in 3:length(x)){
+      y <- as.expression(substitute(paste(a, b), list(a = y[[1]], b = x[[i]])))
+    }
+  }
+  return(y)
+}
+
+
+#' @keywords internal
+
+tex_conv <- function(x, latex2exp = package_available("latex2exp")){
+  if(!is.null(x)){
+    if(!is.expression(x)){
+      if(latex2exp){
+        latex2exp::TeX(x, output = "expression")[[1]]
+      } else {
+        as.expression(x)[[1]]
+      }
+    } else{
+      x[[1]]
+    }
+  } else {
+    as.expression("")[[1]]
+  }
+}
