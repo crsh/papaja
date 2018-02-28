@@ -1,0 +1,159 @@
+% Taken from https://github.com/mschroen/review_response_letter
+% GNU General Public License v3.0
+
+\documentclass[$if(class)$$class$$endif$]{article}
+
+\usepackage[includeheadfoot,top=20mm, bottom=20mm, footskip=2.5cm]{geometry}
+
+% Typography
+\usepackage[T1]{fontenc}
+\usepackage{times}
+%\usepackage{mathptmx} % math also in times font
+\usepackage{amssymb,amsmath}
+\usepackage{microtype}
+\usepackage[utf8]{inputenc}
+
+% Misc
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref} %textopdfstring from pandoc
+\usepackage{soul} % Highlight using \hl{}
+
+% Table
+
+\usepackage{adjustbox} % center large tables across textwidth by surrounding tabular with \begin{adjustbox}{center}
+\renewcommand{\arraystretch}{1.5} % enlarge spacing between rows
+\usepackage{caption}
+\captionsetup[table]{skip=10pt} % enlarge spacing between caption and table
+
+% Section styles
+
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large}{\makebox[0pt][r]{\bf \thesection.\hspace{4mm}}}{0em}{\bfseries}
+\titleformat{\subsection}{\normalfont}{\makebox[0pt][r]{\bf \thesubsection.\hspace{4mm}}}{0em}{\bfseries}
+\titlespacing{\subsection}{0em}{1em}{-0.3em} % left before after
+
+% Paragraph styles
+
+\setlength{\parskip}{0.6\baselineskip}%
+\setlength{\parindent}{0pt}%
+
+% Quotation styles
+
+\usepackage{framed}
+\let\oldquote=\quote
+\let\endoldquote=\endquote
+\renewenvironment{quote}{\begin{fquote}\advance\leftmargini -2.4em\begin{oldquote}}{\end{oldquote}\end{fquote}}
+
+% \usepackage{xcolor}
+\newenvironment{fquote}
+  {\def\FrameCommand{
+	\fboxsep=0.6em % box to text padding
+	\fcolorbox{black}{white}}%
+	% the "2" can be changed to make the box smaller
+    \MakeFramed {\advance\hsize-2\width \FrameRestore}
+    \begin{minipage}{\linewidth}
+  }
+  {\end{minipage}\endMakeFramed}
+
+% Table styles
+
+\let\oldtabular=\tabular
+\let\endoldtabular=\endtabular
+\renewenvironment{tabular}[1]{\begin{adjustbox}{center}\begin{oldtabular}{#1}}{\end{oldtabular}\end{adjustbox}}
+
+
+% Shortcuts
+
+%% Let textbf be both, bold and italic
+%\DeclareTextFontCommand{\textbf}{\bfseries\em}
+
+%% Add RC and AR to the left of a paragraph
+%\def\RC{\makebox[0pt][r]{\bf RC:\hspace{4mm}}}
+%\def\AR{\makebox[0pt][r]{AR:\hspace{4mm}}}
+
+%% Define that \RC and \AR should start and format the whole paragraph
+\usepackage{suffix}
+\long\def\RC#1\par{\makebox[0pt][r]{\bf RC:\hspace{4mm}}{\bf #1}\par\makebox[0pt][r]{AR:\hspace{10pt}}} %\RC
+\WithSuffix\long\def\RC*#1\par{{\bf #1}\par} %\RC*
+% \long\def\AR#1\par{\makebox[0pt][r]{AR:\hspace{10pt}}#1\par} %\AR
+\WithSuffix\long\def\AR*#1\par{#1\par} %\AR*
+
+
+%%%
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\definecolor{offred}{rgb}{0.867, 0.153, 0.153} %DIF PREAMBLE
+\definecolor{offblue}{rgb}{0.0705882352941176, 0.168627450980392, 0.717647058823529} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{offred}\sout{#1}}} %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{{\protect\color{offblue}\uwave{#1}}} %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+% Fix pandoc related tight-list error
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Add task difficulty and assignment commands from https://github.com/cdc08x/letter-2-reviewers-LaTeX-template
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{ifdraft}
+
+\newcommand{\TaskEstimationBox}[2]{%
+\ifoptiondraft{\parbox{1.0\linewidth}{\hfill \hfill {\colorbox{#2}{\color{White} \textbf{#1}}}}}%
+{}%
+}
+%
+\def\WorkInProgress {\TaskEstimationBox{Work in progress}{Cyan}}
+\def\AlmostDone {\TaskEstimationBox{Almost there}{NavyBlue}}
+\def\Done {\TaskEstimationBox{Done}{Blue}}
+%
+\def\NotEstimated {\TaskEstimationBox{Effort not estimated}{Gray}}
+\def\Easy {\TaskEstimationBox{Feasible}{ForestGreen}}
+\def\Medium {\TaskEstimationBox{Medium effort}{Orange}}
+\def\TimeConsuming {\TaskEstimationBox{Time-consuming}{Bittersweet}}
+\def\Hard {\TaskEstimationBox{Infeasible}{Black}}
+%
+\newcommand{\Assignment}[1]{
+%
+\ifoptiondraft{%
+\vspace{.25\baselineskip} \parbox{1.0\linewidth}{\hfill \hfill \vspace{.25\baselineskip} \normalfont{Assignment:} \normalfont{\textbf{#1}}}%
+}{}%
+}
+
+
+$for(header-includes)$
+  $header-includes$
+$endfor$
+
+\begin{document}
+
+{\Large\bf Author response to reviews of}\\[1em]
+$if(manuscript)$Manuscript $manuscript$\\ \\$endif$
+$if(title)${\Large $title$}\\[1em]$endif$
+$if(authors)${$authors$}\\$endif$
+$if(journal)${submitted to \it $journal$ }$endif$\\
+\hrule
+
+\hfill {\bfseries RC:} \textbf{\textit{Reviewer Comment}}\(\quad\) AR: Author Response \(\quad\square\) Manuscript text
+
+\vspace{2em}
+
+$body$
+
+$for(include-after)$
+  $include-after$
+$endfor$
+
+\end{document}\grid

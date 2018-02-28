@@ -485,17 +485,20 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
   multicols <- sapply(
     seq_along(col_spanners)
     , function(i, names) {
-      paste0("\\multicolumn{", diff(col_spanners[[i]]) + 1, "}{c}{", names[i], "}")
+      spanner_length <- diff(col_spanners[[i]])
+      if(length(spanner_length) == 0) spanner_length <- 0
+      paste0("\\multicolumn{", spanner_length + 1, "}{c}{", names[i], "}")
     }
     , names(col_spanners)
   )
 
   ## Calculate group distances
+  multicol_spanners <- vapply(col_spanners, length, 1) > 1
   n_ampersands <- c()
-  if(length(col_spanners) > 1) {
-    group_indices <- sort(unlist(col_spanners))
-    group_indices <- group_indices[-c(1, length(group_indices))] # Remove first and last column number
-    n_ampersands <- diff(group_indices)[-seq(from = 2, to = length(group_indices), by = 2)] # Remove differences between column numbers of the same group
+  if(sum(multicol_spanners) > 1) {
+    for(i in 2:length(col_spanners)) {
+        n_ampersands <- c(n_ampersands, min(col_spanners[[i]]) - max(col_spanners[[i - 1]]))
+    }
   }
   n_ampersands <- c(n_ampersands, 0)
 
@@ -507,7 +510,7 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
 
 
   group_headings <- c()
-  for(i in 1:(length(multicols))) {
+  for(i in 1:(length(col_spanners))) {
     group_headings <- paste(group_headings, multicols[i], paste(rep("&", n_ampersands[i]), collapse = " "))
   }
   group_headings <- paste(leading_amps, group_headings, trailing_amps, "\\\\", sep = "")

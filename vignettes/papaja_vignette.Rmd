@@ -39,7 +39,7 @@ bibliography      : ["references.bib", "r-references.bib"]
 # output            : papaja::apa6_pdf
 
 date              : "`r Sys.Date()`"
-csl               : "`r system.file('rmarkdown', 'templates', 'apa6', 'resources', 'apa6.csl', package = 'papaja')`"
+csl               : "`r system.file('rmd', 'apa6.csl', package = 'papaja')`"
 output: 
   bookdown::html_document2:
     theme         : "spacelab"

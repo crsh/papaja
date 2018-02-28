@@ -243,8 +243,7 @@ set_csl <- function(x) {
 
   if (!has_csl(readLines(x, warn = FALSE))) {
     csl_template <- system.file(
-      "rmarkdown", "templates", "apa6", "resources"
-      , "apa6.csl"
+      "rmd", "apa6.csl"
       , package = "papaja"
     )
     if(csl_template == "") stop("No CSL template file found.")
@@ -380,8 +379,7 @@ set_ampersand_filter <- function(args, csl_file) {
 
   # Correct in-text ampersands
   filter_path <- system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "ampersand_filter.sh"
+    "rmd", "ampersand_filter.sh"
     , package = "papaja"
   )
 
