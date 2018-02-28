@@ -1,5 +1,7 @@
 context("apa_print.BFBayesFactor()")
 
+library("BayesFactor")
+
 test_that(
   "ttestBF(): One sample"
   , {
@@ -70,3 +72,4 @@ test_that(
   }
 )
 
+detach("package:BayesFactor")

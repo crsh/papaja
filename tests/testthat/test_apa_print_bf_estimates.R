@@ -1,5 +1,7 @@
 context("bf_estimates()")
 
+library("BayesFactor")
+
 test_that(
   "bf_estimates.BFoneSample()"
   , {
@@ -194,3 +196,4 @@ test_that(
 
 # BFmetat, BFlinearModel, BFcontingencyTable, BFproportion, BFcorrelation, BFmodel
 
+detach("package:BayesFactor")

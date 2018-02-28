@@ -1,20 +1,5 @@
 context("variable_label() replacement methods")
 
-# Protect test from foreign registered S3 methods
-all_labelled_methods <- attr(methods(class = "labelled"), "info")
-foreign_labelled_methods <- subset(all_labelled_methods, from != "papaja")
-
-foreign_method_error <- function(...) stop("Attempting to dispatch foreign .labelled-method.")
-for(i in rownames(foreign_labelled_methods)) {
-  assign(i, foreign_method_error)
-}
-
-# assignInNamespace("[.labelled", hmisc_methods, ns = "Hmisc")
-# assignInNamespace("print.labelled", hmisc_methods, ns = "Hmisc")
-# assignInNamespace("relevel.labelled", hmisc_methods, ns = "Hmisc")
-# assignInNamespace("as.data.frame.labelled", hmisc_methods, ns = "Hmisc")
-# assignInNamespace("xtfrm.labelled", hmisc_methods, ns = "Hmisc")
-
 test_that(
   "variable_label<-.default"
   , {
