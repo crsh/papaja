@@ -237,9 +237,14 @@ bf_sort_terms <- function(x) {
 }
 
 
-bf_estimates <- function(x, ...) no_method(x)
+# bf_estimates <- function(x, ...) UseMethod("bf_estimates", x)
 
-setGeneric("bf_estimates")
+# bf_estimates.default <- function(x, ...) no_method(x)
+
+setGeneric(
+  name = "bf_estimates"
+  , def = function(x, ...) standardGeneric("bf_estimates")
+)
 
 bf_estimates_ttest <- function(
   x
@@ -270,8 +275,17 @@ bf_estimates_ttest <- function(
   estimate
 }
 
-setMethod("bf_estimates", signature = "BFoneSample", bf_estimates_ttest)
-setMethod("bf_estimates", signature = "BFindepSample", bf_estimates_ttest)
+setMethod(
+  f = "bf_estimates"
+  , signature = "BFoneSample"
+  , definition = bf_estimates_ttest
+)
+
+setMethod(
+  f = "bf_estimates"
+  , signature = "BFindepSample"
+  , definition = bf_estimates_ttest
+)
 
 
 
