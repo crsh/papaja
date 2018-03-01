@@ -5,5 +5,5 @@
 ^README_files$
 ^cran-comments\.md$
 ^\.travis\.yml
-
 ^example$
+^inst/rmarkdown/templates/revision_letter$

@@ -1,4 +1,4 @@
-papaja: Prepare reproducible APA journal articles with R Markdown
+papaja: Prepare APA journal articles with R Markdown
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -90,7 +90,27 @@ Table. *Iris regression table.*
 | aovlist       | htest             | summary.aovlist   |                  |
 | BFBayesFactor | list              | summary.glht      |                  |
 
-Be sure to also check out `apa_barplot()` and `apa_beeplot()` if you work with factorial designs. If you prefer creating your plots with `ggplot2` try `theme_apa()`.
+### Plot functions
+
+Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`) if you work with factorial designs:
+
+``` r
+apa_factorial_plot(
+  data = npk
+  , id = "block"
+  , dv = "yield"
+  , factors = c("N", "P", "K")
+  , ylim = c(0, 80)
+  , level = .34
+  , las = 1
+  , ylab = "Yield"
+  , plot = c("swarms", "lines", "error_bars", "points")
+)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
 ### Using papaja without RStudio
 
@@ -136,21 +156,27 @@ Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A
 
 McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Moral Dumbfounding: Identifying Measurable Indicators of Moral Dumbfounding. *Collabra: Psychology*, 3(1), 23. doi: [10.1525/collabra.79](http://doi.org/10.1525/collabra.79) ([Data & R Markdown files](https://osf.io/wm6vc/))
 
+Haaf, J. M., & Rouder, J. N. (2017). Developing constraint in Bayesian mixed models. Psychological Methods, 22(4), 779-798. <doi:%5B10.1037/met0000156%5D(http://doi.org/10.1037/met0000156)> ([PDF](http://dx.doi.org/10.17605/OSF.IO/KTJNQ) & [R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
+
+Rouder, J. N., Haaf, J. M., & Aust, F. (2018). From theories to models to predictions: A Bayesian model comparison approach. *Communication Monographs*, 85(1), 41-56. doi: [10.1080/03637751.2017.1394581](https://doi.org/10.1080/03637751.2017.1394581)
+
+Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds or one? A registered replication of Rydell et al. (2006). Cognition and Emotion, 0(0), 1–20. <doi:10.1080/02699931.2018.1429389> (PDF & ergänzendes Material
+
 Sauer, S. (in press). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. doi: [10.3758/s13428-017-0949-8](https://doi.org/10.3758/s13428-017-0949-8) ([Data & R Markdown files](https://osf.io/6vhja/))
 
-Rouder, J. N., Haaf, J. M., & Aust, F. (in press). From theories to models to predictions: A Bayesian model comparison approach for communications research. *Communication Monographs*. doi: [10.1080/03637751.2017.1394581](https://doi.org/10.1080/03637751.2017.1394581)
+Aust, F., Haaf, J. M., & Stahl, C. (in press). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. ([PDF](https://dx.doi.org/10.17605/OSF.IO/TKX7B), [Data & R Markdown files](https://osf.io/vnmby/))
 
 ### Preprints
 
 Stahl, C., Henze, L., & Aust, F. (2016). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. doi: [10.17605/OSF.IO/ZR7M8](http://dx.doi.org/10.17605/OSF.IO/ZR7M8) ([Data & R Markdown files](https://osf.io/jxm7z/))
 
-Haaf, J. & Rouder, J. N. (2017). Developing Constraint in Bayesian Mixed Models. *PsyArXiv*. doi: [10.17605/OSF.IO/KTJNQ](http://dx.doi.org/10.17605/OSF.IO/KTJNQ) ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
+Urry, H. L., Sifre, E., Song, J., Steinberg, H., Bornstein, M., Kim, J., … Andrews, M. (2017, March 13). Replication of Eskine, K. J., Kacinik, N. A., & Prinz, J. J. (2011) at Tufts University - Spring, 2017. Preprint retrieved from <https://osf.io/fu384/> ([Data & R Markdown files](https://osf.io/ddmkm))
 
 Buchanan, E. M, & Scofield, J. E. (2017, August 25). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from <https://osf.io/cs4vy/> ([Data & R Markdown files](https://osf.io/urd8q/))
 
-Urry, H. L., Sifre, E., Song, J., Steinberg, H., Bornstein, M., Kim, J., … Andrews, M. (2017, March 13). Replication of Eskine, K. J., Kacinik, N. A., & Prinz, J. J. (2011) at Tufts University - Spring, 2017. Preprint retrieved from <https://osf.io/fu384/> ([Data & R Markdown files](https://osf.io/ddmkm))
+Heycke, T., & Stahl, C. (2018). No Evaluative Conditioning Effects with Briefly Presented Stimuli. *PsyArXiv*. doi: [10.17605/OSF.IO/UJQ4G](http://dx.doi.org/10.17605/OSF.IO/UJQ4G) ([Data & R Markdown files](https://osf.io/3dn7e/))
 
-Aust, F., Haaf, J. M., & Stahl, C. (2017). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. PsyArXiv. doi: [10.17605/OSF.IO/TKX7B](https://dx.doi.org/10.17605/OSF.IO/TKX7B) ([Data & R Markdown files](https://osf.io/x6ur5/))
+Barth, M., Stahl, C., & Haider, H. (2018). Assumptions of the process-dissociation procedure are violated in sequence learning. *PsyArXiv*. doi: [10.17605/OSF.IO/P7UXN](http://dx.doi.org/10.17605/OSF.IO/P7UXN) ([Data & R Markdown files](https://github.com/methexp/pdl2))
 
 Other related R packages
 ========================
@@ -174,4 +200,4 @@ If you know of other packages and templates, drop us a note, so we can add them 
 Package dependencies
 ====================
 
-![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)

@@ -1,3 +1,30 @@
+# papaja 0.1.0.9709
+
+### Template
+
+- Reference section is now placed at the end explicitly and allows users to add contents after the reference section. This enables proper appendices in DOCX format.
+- Fixed bug that resulted in unwanted "x"s on first page of Word documents (reported by @sjystu, #174)
+- Adds proper pagebreaks before abstract and first page of the introduction in Word documents
+- Fixes bug in the inclusion of appendices that lead to LaTeX errors when tables were included (reported by @ericpgreen, #179)
+
+### Existing functions
+
+- Switched implementation of `variable_labels()` and related functions from S4 to S3 class. The transition was necessary because the S4 class was incompatible with at least one primitve function (#176). This change may unfortunately break backward compatibility with the previous release.
+- `apa_table()`
+    - Now supports for column spanners that spann only one column
+- `render_appendix()`
+    - Now supports for the application of `pandoc-citeproc`
+
+### New functions
+
+- `printnum.integer()` (suggested by @LorcanKenny, #178)
+
+### Misc
+
+- `papaja` now depends on `bookdown` 0.6 to resolve compatibility issues with `pandoc` 2.0 (reported by @ericpgreen, #170)
+
+
+
 # papaja 0.1.0.9655
 
 ### Template
