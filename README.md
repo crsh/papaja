@@ -150,21 +150,21 @@ Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning?
 
 Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382)
 
-Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245--266.
+Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245-266.
 
 Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A test of evaluative conditioning for brief visual conditioned stimuli using auditory unconditioned stimuli. *Royal Society Open Science*, 4, 160935. doi: [10.1098/rsos.160935](http://dx.doi.org/10.1098/rsos.160935) ([Data & R Markdown files](https://osf.io/cx5eh/))
 
 McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Moral Dumbfounding: Identifying Measurable Indicators of Moral Dumbfounding. *Collabra: Psychology*, 3(1), 23. doi: [10.1525/collabra.79](http://doi.org/10.1525/collabra.79) ([Data & R Markdown files](https://osf.io/wm6vc/))
 
-Haaf, J. M., & Rouder, J. N. (2017). Developing constraint in Bayesian mixed models. Psychological Methods, 22(4), 779-798. <doi:%5B10.1037/met0000156%5D(http://doi.org/10.1037/met0000156)> ([PDF](http://dx.doi.org/10.17605/OSF.IO/KTJNQ) & [R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
+Haaf, J. M., & Rouder, J. N. (2017). Developing constraint in Bayesian mixed models. Psychological Methods, 22(4), 779-798. doi: [10.1037/met0000156](http://doi.org/10.1037/met0000156) ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff))
 
 Rouder, J. N., Haaf, J. M., & Aust, F. (2018). From theories to models to predictions: A Bayesian model comparison approach. *Communication Monographs*, 85(1), 41-56. doi: [10.1080/03637751.2017.1394581](https://doi.org/10.1080/03637751.2017.1394581)
 
-Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds or one? A registered replication of Rydell et al. (2006). Cognition and Emotion, 0(0), 1–20. <doi:10.1080/02699931.2018.1429389> (PDF & ergänzendes Material
+Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds or one? A registered replication of Rydell et al. (2006). Cognition and Emotion, 0(0), 1–20. doi: [10.1080/02699931.2018.1429389](http://doi.org/10.1080/02699931.2018.1429389) ([Data & R Markdown files](https://osf.io/c57sr/))
 
 Sauer, S. (in press). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. doi: [10.3758/s13428-017-0949-8](https://doi.org/10.3758/s13428-017-0949-8) ([Data & R Markdown files](https://osf.io/6vhja/))
 
-Aust, F., Haaf, J. M., & Stahl, C. (in press). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. ([PDF](https://dx.doi.org/10.17605/OSF.IO/TKX7B), [Data & R Markdown files](https://osf.io/vnmby/))
+Aust, F., Haaf, J. M., & Stahl, C. (in press). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. ([Data & R Markdown files](https://osf.io/vnmby/))
 
 ### Preprints
 
