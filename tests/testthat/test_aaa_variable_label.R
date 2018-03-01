@@ -86,11 +86,12 @@ test_that(
 )
 
 test_that(
-  "[.labelled-method"
+  "[.labelled-method, [[.labelled-method"
   , {
     x <- factor(letters[1:4], levels = letters[1:10])
     variable_label(x) <- "Test me!"
     y <- x[1:3]
+    z <- x[[2]]
 
     expect_identical(
       object = y
@@ -101,11 +102,24 @@ test_that(
         , label = "Test me!"
       )
     )
+
+    expect_identical(
+      object = z
+      , expected = structure(
+        2L
+        , .Label = letters[1:10]
+        , class = c("labelled", "factor")
+        , label = "Test me!"
+      )
+    )
+
     expect_identical(variable_label(y), "Test me!")
     expect_identical(class(y), c("labelled", "factor"))
     expect_identical(levels(y), letters[1:10])
   }
 )
+
+
 
 test_that(
   "rep.labelled-method"

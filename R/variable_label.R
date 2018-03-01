@@ -191,6 +191,14 @@ setMethod(
   y
 }
 
+#' @export
+
+`[[.labelled` <- function(x, ..., exact = TRUE) {
+  y <- NextMethod("[[")
+  variable_label(y) <- variable_label(x)
+  y
+}
+
 
 #' @export
 
