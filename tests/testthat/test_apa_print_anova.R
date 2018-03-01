@@ -86,7 +86,14 @@ test_that(
     expect_equal(nrow(ow_afex_aov_output$table), 2)
     expect_equal(colnames(ow_afex_aov_output$table), c("Effect", "F", "df1", "df2", "MSE", "p", "ges"))
     expect_equal(unname(unlist(variable_label(ow_afex_aov_output$table))), c("Effect", "$F$", "$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
-    expect_equal(ow_afex_aov_output$table$Effect@.Data, c("Intercept", "Dosage"))
+    expect_identical(
+      ow_afex_aov_output$table$Effect
+      , structure(
+        c("Intercept", "Dosage")
+        , class = c("labelled", "character")
+        , label = "Effect"
+      )
+    )
 
     ow_afex_aov_output2 <- apa_print(ow_afex_aov, intercept = TRUE)
     expect_identical(ow_afex_aov_output2, ow_afex_aov_output)
@@ -144,7 +151,14 @@ test_that(
     expect_equal(nrow(tw_aov_output$table), 3)
     expect_equal(colnames(tw_aov_output$table), c("Effect", "F","df1", "df2", "MSE", "p", "ges"))
     expect_equal(unname(unlist(variable_label(tw_aov_output$table))), c("Effect", "$F$","$\\mathit{df}_1$", "$\\mathit{df}_2$", "$\\mathit{MSE}$", "$p$", "$\\hat{\\eta}^2_G$"))
-    expect_equal(tw_aov_output$table$Effect@.Data, c("Gender", "Dosage", "Gender $\\times$ Dosage"))
+    expect_identical(
+      tw_aov_output$table$Effect
+      , expected = structure(
+        c("Gender", "Dosage", "Gender $\\times$ Dosage")
+        , label = "Effect"
+        , class = c("labelled", "character")
+      )
+    )
 
     # Other classes
     tw_aov_Anova_output <- apa_print(car::Anova(tw_aov))
@@ -189,7 +203,14 @@ test_that(
     ## table
     expect_is(tw_afex_aov_output$table, "data.frame")
     expect_equal(nrow(tw_afex_aov_output$table), 4)
-    expect_equal(tw_afex_aov_output$table$Effect@.Data, c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage"))
+    expect_identical(
+      object = tw_afex_aov_output$table$Effect
+      , expected = structure(
+        c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage")
+        , label = "Effect"
+        , class = c("labelled", "character")
+      )
+    )
 
     tw_afex_aov_output2 <- apa_print(tw_afex_aov, intercept = TRUE)
     expect_identical(tw_afex_aov_output2, tw_afex_aov_output)

@@ -1,10 +1,10 @@
 context("apa_print.BFBayesFactor()")
 
+library("BayesFactor")
+
 test_that(
   "ttestBF(): One sample"
   , {
-    library("BayesFactor")
-
     set.seed(123)
     ttest <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2], paired = TRUE)
 
@@ -40,8 +40,6 @@ test_that(
 test_that(
   "ttestBF(): Independent samples"
   , {
-    library("BayesFactor")
-
     set.seed(123)
     ttest <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2])
 
@@ -74,3 +72,4 @@ test_that(
   }
 )
 
+detach("package:BayesFactor")

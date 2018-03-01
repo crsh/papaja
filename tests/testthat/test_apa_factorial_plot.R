@@ -180,3 +180,5 @@ test_that(
     # ...
   }
 )
+
+file.remove("Rplots.pdf")

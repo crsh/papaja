@@ -5,10 +5,11 @@ test_that(
   , {
     load("data/mixed_data.rdata")
 
-    library("dplyr")
-    descriptives <- mixed_data %>% group_by(Dosage) %>%
-      summarize(
-        Mean = printnum( mean(Recall) )
+    descriptives <- dplyr::group_by(mixed_data, Dosage)
+
+    descriptives <- dplyr::summarize(
+      descriptives
+        , Mean = printnum( mean(Recall) )
         , Median = printnum( median(Recall) )
         , SD = printnum( sd(Recall) )
         , Min = printnum( min(Recall) )

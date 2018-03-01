@@ -19,20 +19,4 @@ Returns a \code{data.frame} with labelled columns. Labels are preserved (if alre
 \description{
 We use this function internally to provide default variable for all columns in a data.frame from column names.
 }
-\details{
-#' @keywords internal
-
-setMethod(
-  "assign_annotation"
-  , signature = c(object = "vector", value = "character", name = "character")
-  , definition = function(object, value, name){
-    object <- new(
-      paste0("annotated_", class(object))
-      , annotation <- new("vector_annotation")
-    )
-    object@label <- object@annotation@label
-    object# return
-  }
-)
-}
 \keyword{internal}

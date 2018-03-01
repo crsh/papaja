@@ -1,10 +1,10 @@
 context("bf_estimates()")
 
+library("BayesFactor")
+
 test_that(
   "bf_estimates.BFoneSample()"
   , {
-    library("BayesFactor")
-
     set.seed(123)
     ttest <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2], paired = TRUE)
     posterior_samples <- BayesFactor::posterior(ttest, iterations = 5000)
@@ -51,8 +51,6 @@ test_that(
 test_that(
   "bf_estimates.BFindepSample()"
   , {
-    library("BayesFactor")
-
     set.seed(123)
     ttest <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2])
     posterior_samples <- BayesFactor::posterior(ttest, iterations = 5000)
@@ -198,3 +196,4 @@ test_that(
 
 # BFmetat, BFlinearModel, BFcontingencyTable, BFproportion, BFcorrelation, BFmodel
 
+detach("package:BayesFactor")

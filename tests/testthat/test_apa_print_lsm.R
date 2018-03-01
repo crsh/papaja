@@ -51,34 +51,34 @@ test_that(
     # table --------------------------------------------------------------------
     expect_identical(
       object = tw_rm_lsm_output$table$estimate
-      , expected = new(
-        "annotated_character"
-        , .Data = c("11.00", "12.10", "12.30")
-        , annotation = new("vector_annotation", label = "$\\Delta M$")
+      , expected = structure(
+        c("11.00", "12.10", "12.30")
+        , label = "$\\Delta M$"
+        , class = c("labelled", "character")
       )
     )
     expect_identical(
       object = tw_rm_lsm_output$table$ci
-      , expected = new(
-        "annotated_character"
-        , .Data = c("$[6.34$, $15.66]$",  "$[7.44$, $16.76]$", "$[7.64$, $16.96]$")
-        , annotation = new("vector_annotation", label = "95\\% CI")
+      , expected = structure(
+        c("$[6.34$, $15.66]$",  "$[7.44$, $16.76]$", "$[7.64$, $16.96]$")
+        , label = "95\\% CI"
+        , class = c("labelled", "character")
       )
     )
     expect_identical(
       object = tw_rm_lsm_output$table$statistic
-      , expected = new(
-        "annotated_character"
-        , .Data = c("6.21", "6.84", "6.95")
-        , annotation = new("vector_annotation", label = "$t(4.63)$")
+      , expected = structure(
+        c("6.21", "6.84", "6.95")
+        , label = "$t(4.63)$"
+        , class = c("labelled", "character")
       )
     )
     expect_identical(
       object = tw_rm_lsm_output$table$p.value
-      , expected = new(
-        "annotated_character"
-        , .Data = c(".002", ".001", ".001")
-        , annotation = new("vector_annotation", label = "$p$")
+      , expected = structure(
+        c(".002", ".001", ".001")
+        , label = "$p$"
+        , class = c("labelled", "character")
       )
     )
 
