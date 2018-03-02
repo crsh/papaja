@@ -75,7 +75,6 @@ apa6_pdf <- function(
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  # to ensure right geometry defaults in the absence of user specified values
   pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
@@ -179,7 +178,6 @@ apa6_word <- function(
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  # to ensure right geometry defaults in the absence of user specified values
   pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
@@ -233,7 +231,6 @@ inline_numbers <- function (x) {
 
 # Preprocessor functions are adaptations from the RMarkdown package
 # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-# to ensure right geometry defaults in the absence of user specified values
 
 set_csl <- function(x) {
   # Use APA6 CSL citations template if no other file is supplied

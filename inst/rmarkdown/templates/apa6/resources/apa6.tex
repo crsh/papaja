@@ -1,70 +1,8 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$if(figsintext)$floatsintext,$endif$$if(mask)$mask,$endif$$for(class)$$class$$sep$,$endfor$]{apa6}
-
-$if(linestretch)$
-  \usepackage{setspace}
-  \setstretch{$linestretch$}
-$endif$
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-$if(euro)$
-  \usepackage{eurosym}
-$endif$
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-    \usepackage{xltxtra,xunicode}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-  \newcommand{\euro}{€}
-$if(mainfont)$
-    \setmainfont{$mainfont$}
-$endif$
-$if(sansfont)$
-    \setsansfont{$sansfont$}
-$endif$
-$if(monofont)$
-    \setmonofont[Mapping=tex-ansi]{$monofont$}
-$endif$
-$if(mathfont)$
-    \setmathfont(Digits,Latin,Greek){$mathfont$}
-$endif$
-\fi
-% use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
-$if(natbib)$
-\usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
-$endif$
 $if(biblatex)$
-\usepackage[backend=biber,style=$if(biblio-style)$$biblio-style$$else$apa$endif$,sortcites=true,sorting=nyt,doi,url]{biblatex}
 \DeclareLanguageMapping{american}{american-apa}
-$if(biblio-files)$
-\bibliography{$biblio-files$}
-$endif$
-% $endif$
-$if(listings)$
-\usepackage{listings}
-$endif$
-$if(lhs)$
-\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
-$endif$
-$if(highlighting-macros)$
-$highlighting-macros$
-$endif$
-$if(verbatim-in-note)$
-\usepackage{fancyvrb}
 $endif$
 
 % Table formatting
-\usepackage{longtable, booktabs}
 \usepackage{lscape}
 % \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
 \usepackage{multirow}		% Table styling
@@ -108,61 +46,6 @@ $endif$
   \fi
 \endgroup}
 
-
-$if(graphics)$
-  \usepackage{graphicx}
-  \makeatletter
-  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-  \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-  \makeatother
-  % Scale images if necessary, so that they will not overflow the page
-  % margins by default, and it is still possible to overwrite the defaults
-  % using explicit options in \includegraphics[width, height, ...]{}
-  \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-$endif$
-\ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex
-              unicode=false, % unicode breaks when used with xetex
-              xetex]{hyperref}
-\else
-  \usepackage[unicode=true]{hyperref}
-\fi
-\hypersetup{breaklinks=true,
-            pdfauthor={$author-meta$},
-            pdftitle={$title-meta$},
-            colorlinks=true,
-            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
-            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$black$endif$,
-            pdfborder={0 0 0}}
-\urlstyle{same}  % don't use monospace font for urls
-$if(links-as-notes)$
-% Make links footnotes instead of hotlinks:
-\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
-$endif$
-$if(strikeout)$
-\usepackage[normalem]{ulem}
-% avoid problems with \sout in headers with hyperref:
-\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
-$endif$
-
-\setlength{\parindent}{0pt}
-%\setlength{\parskip}{0pt plus 0pt minus 0pt}
-
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-
-$if(verbatim-in-note)$
-\VerbatimFootnotes % allows verbatim text in footnotes
-$endif$
-$if(lang)$
-\ifxetex
-  \usepackage{polyglossia}
-  \setmainlanguage{$mainlang$}
-\else
-  \usepackage[$lang$]{babel}
-\fi
-$endif$
-
 % Manuscript styling
 \captionsetup{font=singlespacing,justification=justified}
 \usepackage{csquotes}
@@ -173,17 +56,7 @@ $if(lineno)$ % Line numbering
   \linenumbers
 $endif$
 
-\usepackage{tikz} % Variable definition to generate author note
-
-% fix for \tightlist problem in pandoc 1.14
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
 % Essential manuscript parts
-$if(title)$
-  \title{$title$}
-$endif$
-
 $if(shorttitle)$
   \shorttitle{$shorttitle$}
 $endif$
@@ -218,8 +91,8 @@ $if(note)$
   \note{$note$}
 $endif$
 
-$if(abstract)$
-  \abstract{$abstract$}
+$if(apa6_abstract)$
+  \abstract{$apa6_abstract$}
 $endif$
 $if(keywords)$
   \keywords{$keywords$ \\
@@ -263,50 +136,10 @@ $if(footnotelist)$
 \let\footnote\endnote
 $endif$
 
-$for(header-includes)$
-  $header-includes$
-$endfor$
-
 \begin{document}
 
-\maketitle
-
-$if(numbersections)$
-\setcounter{secnumdepth}{5}
-$else$
-\setcounter{secnumdepth}{0}
-$endif$
-
-$for(include-before)$
-  $include-before$
-$endfor$
-
-$if(toc)$
-  {
-  \hypersetup{linkcolor=black}
-  \setcounter{tocdepth}{$toc-depth$}
-  \tableofcontents
-  }
-$endif$
 
 $body$
-
-$if(natbib)$
-  $if(biblio-files)$
-    $if(biblio-title)$
-      $if(book-class)$
-        \renewcommand\bibname{$biblio-title$}
-      $else$
-        \renewcommand\refname{$biblio-title$}
-      $endif$
-    $endif$
-  \bibliography{$biblio-files$}
-
-  $endif$
-$endif$
-$if(biblatex)$
-  \printbibliography
-$endif$
 
 $if(tablelist)$
 \clearpage
@@ -323,9 +156,5 @@ $endif$
 $if(footnotelist)$
 \theendnotes
 $endif$
-
-$for(include-after)$
-  $include-after$
-$endfor$
 
 \end{document}
