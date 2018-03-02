@@ -1,27 +1,20 @@
 #' Format statistics (APA 6th edition)
 #'
-#' Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
+#' Takes various \code{lsmeans} and \code{emmeans} objects methods to create formatted character strings to report the results in
 #' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
 #' considered experimental.}
 #'
-#' @param x See details.
-#' @param test Function.
+#' @param x Object
+#' @param test Function. Computes p-values (adjusted for multiple comparisons).
 #' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
 #' @param contrast_names Character. A vector of names to identify calculated contrasts.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
-#' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-#'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
-#'    a reproducible example in your report!).
+#' @details
 #'
 #'    ADJUSTED CONFIDENCE INTERVALS
-#'
-#'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-#'    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
-#'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
@@ -114,7 +107,7 @@ apa_print.summary.glht <- function(
 #' @rdname apa_print.glht
 #' @export
 
-apa_print.lsmobj <- function(x, ...) {
+apa_print.emmGrid <- function(x, ...) {
   ellipsis <- list(...)
   if(is.null(ellipsis$infer)) ellipsis$infer <- TRUE
   ellipsis$object <- x
@@ -123,17 +116,24 @@ apa_print.lsmobj <- function(x, ...) {
   apa_print(summary_x, ...)
 }
 
+#' @rdname apa_print.glht
+#' @export
+
+apa_print.lsmobj <- function(x, ...) {
+  apa_print.emmGrid(x, ...)
+}
+
 
 #' @rdname apa_print.glht
 #' @export
 
-apa_print.summary.ref.grid <- function(
+apa_print.summary_emm <- function(
   x
   , contrast_names = NULL
   , in_paren = FALSE
   , ...
 ) {
-  validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
+  if(class(x)[1] != "summary.ref.grid") validate(x, check_class = "summary_emm", check_NA = FALSE)
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
@@ -275,6 +275,14 @@ apa_print.summary.ref.grid <- function(
   attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
 
   apa_res
+}
+
+#' @rdname apa_print.glht
+#' @export
+
+apa_print.summary.ref.grid <- function(x, ...) {
+  validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
+  apa_print.summary_emm(x, ...)
 }
 
 
