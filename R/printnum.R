@@ -34,8 +34,11 @@ printnum <- function(x, ...) {
 #' @rdname printnum
 #' @export
 
-printnum.default <- function(x, ...) {
-  printnum.numeric(x, ...)
+printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+  if(anyNA(x)){rep(na_string, length(x))}else{as.character(x)}
+  # Don't use printnum.numeric as a default if it only allows numeric input:
+  # printnum.numeric(x, ...)
 }
 
 
@@ -207,6 +210,27 @@ printnum.numeric <- function(
   }
   x_out
 }
+
+
+#' @rdname printnum
+#' @export
+
+printnum.data.frame <- function(
+  x
+  , ... # cleverly recycle (column-wise) over all possible parameters
+) {
+  as.data.frame(
+    mapply(
+      FUN = printnum
+      , x = x
+      , ...
+      , SIMPLIFY = FALSE
+    )
+    , stringsAsFactors = FALSE
+    , check.names = FALSE
+  )
+}
+
 
 
 printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", ...) {
