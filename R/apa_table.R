@@ -383,7 +383,7 @@ apa_table.word <- function(
 #' @examples
 #' NULL
 
-format_cells <- function(x, format.args) {
+format_cells <- function(x, format.args = NULL) {
   format.args$x <- x
   do.call("printnum.data.frame", format.args)
 }
