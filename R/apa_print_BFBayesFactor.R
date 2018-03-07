@@ -161,15 +161,11 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
 
 
-#' @export
-
 apa_print_bf <- function(x, ...) {
   UseMethod("apa_print_bf", x)
 }
 
 apa_print_bf.default <- function(x, ...) no_method(x)
-
-#' @export
 
 apa_print_bf.numeric <- function(
   x
@@ -223,8 +219,6 @@ apa_print_bf.numeric <- function(
   bf <- setNames(bf, names(x))
   bf
 }
-
-#' @export
 
 apa_print_bf.BFBayesFactor <- function(x, ...) {
   validate(as.vector(x), check_NA = TRUE)
