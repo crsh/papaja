@@ -97,7 +97,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
     } else {
       required_number_word <- ((n_digits + 2) %/% 3) - 1
       if (required_number_word > length(number_names)) {
-        stop("Number is to large.")
+        stop("Number is too large.")
       }
       number <- paste(
         Recall(collapse(digits[n_digits:(3*required_number_word + 1)]))
@@ -238,7 +238,7 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", ...) {
   ellipsis <- list(...)
   validate(x, check_class = "numeric", check_NA = FALSE, check_length = 1, check_infinite = FALSE)
   if(is.na(x)) return(na_string)
-  if(is.infinite(x)) return("$\\infty$")
+  if(is.infinite(x)) return(paste0("$", ifelse(x < 0, "-", ""), "\\infty$"))
   if(!is.null(ellipsis$digits)) {
     validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(0, Inf))
   }
