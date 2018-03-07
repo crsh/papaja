@@ -34,8 +34,11 @@ printnum <- function(x, ...) {
 #' @rdname printnum
 #' @export
 
-printnum.default <- function(x, ...) {
-  printnum.numeric(x, ...)
+printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+  if(anyNA(x)){rep(na_string, length(x))}else{as.character(x)}
+  # Don't use printnum.numeric as a default if it only allows numeric input:
+  # printnum.numeric(x, ...)
 }
 
 
@@ -94,7 +97,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
     } else {
       required_number_word <- ((n_digits + 2) %/% 3) - 1
       if (required_number_word > length(number_names)) {
-        stop("Number is to large.")
+        stop("Number is too large.")
       }
       number <- paste(
         Recall(collapse(digits[n_digits:(3*required_number_word + 1)]))
@@ -209,12 +212,33 @@ printnum.numeric <- function(
 }
 
 
+#' @rdname printnum
+#' @export
+
+printnum.data.frame <- function(
+  x
+  , ... # cleverly recycle (column-wise) over all possible parameters
+) {
+  as.data.frame(
+    mapply(
+      FUN = printnum
+      , x = x
+      , ...
+      , SIMPLIFY = FALSE
+    )
+    , stringsAsFactors = FALSE
+    , check.names = FALSE
+  )
+}
+
+
+
 printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", ...) {
 
   ellipsis <- list(...)
   validate(x, check_class = "numeric", check_NA = FALSE, check_length = 1, check_infinite = FALSE)
   if(is.na(x)) return(na_string)
-  if(is.infinite(x)) return("$\\infty$")
+  if(is.infinite(x)) return(paste0("$", ifelse(x < 0, "-", ""), "\\infty$"))
   if(!is.null(ellipsis$digits)) {
     validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(0, Inf))
   }

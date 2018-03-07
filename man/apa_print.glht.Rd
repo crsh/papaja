@@ -3,7 +3,9 @@
 \name{apa_print.glht}
 \alias{apa_print.glht}
 \alias{apa_print.summary.glht}
+\alias{apa_print.emmGrid}
 \alias{apa_print.lsmobj}
+\alias{apa_print.summary_emm}
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
@@ -11,14 +13,18 @@ apa_print.glht(x, test = multcomp::adjusted(), ...)
 
 apa_print.summary.glht(x, ci = 0.95, in_paren = FALSE, ...)
 
+apa_print.emmGrid(x, ...)
+
 apa_print.lsmobj(x, ...)
 
-apa_print.summary.ref.grid(x, contrast_names = NULL, in_paren = FALSE, ...)
+apa_print.summary_emm(x, contrast_names = NULL, in_paren = FALSE, ...)
+
+apa_print.summary.ref.grid(x, ...)
 }
 \arguments{
-\item{x}{See details.}
+\item{x}{Object}
 
-\item{test}{Function.}
+\item{test}{Function. Computes p-values (adjusted for multiple comparisons).}
 
 \item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
 
@@ -43,21 +49,12 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
    }
 }
 \description{
-Takes various \code{lsmeans} objects methods to create formatted character strings to report the results in
+Takes various \code{lsmeans} and \code{emmeans} objects methods to create formatted character strings to report the results in
 accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
 considered experimental.}
 }
 \details{
-The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-   that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-   experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
-   a reproducible example in your report!).
-
-   ADJUSTED CONFIDENCE INTERVALS
-
-   \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-   \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
-   final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
+ADJUSTED CONFIDENCE INTERVALS
 
    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
    of freedom, are replaced with brackets.
@@ -71,3 +68,4 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
+\concept{apa_print}

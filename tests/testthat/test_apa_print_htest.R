@@ -186,3 +186,34 @@ test_that(
     expect_equal(oneway_output$stat, "$F(1, 17.78) = 3.46$, $p = .079$")
   }
 )
+
+# Test for issue #192, confidence interval was confused with infty and extraneous $ symbols
+test_that(
+  "One-sided t test (with infty in CI)"
+  , {
+    t_out <- t.test(formula = yield ~ N, data = npk, alternative = "greater")
+    apa_out <- apa_print(t_out)
+
+    t2 <- t.test(formula = yield ~ N, data = npk, alternative = "less")
+    apa2 <- apa_print(t2)
+
+    # positive infinity ----
+    expect_identical(
+      object = apa_out$full_result
+      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-9.54$, $\\infty]$, $t(21.88) = -2.46$, $p = .989$"
+    )
+    expect_identical(
+      object = apa_out$estimate
+      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-9.54$, $\\infty]$"
+    )
+    # negative infinity ----
+    expect_identical(
+      object = apa2$full_result
+      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-\\infty$, $-1.70]$, $t(21.88) = -2.46$, $p = .011$"
+    )
+    expect_identical(
+      object = apa2$estimate
+      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-\\infty$, $-1.70]$"
+    )
+  }
+)

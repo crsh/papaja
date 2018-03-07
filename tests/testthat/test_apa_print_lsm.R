@@ -13,11 +13,16 @@ test_that(
     ))
 
     tw_rm_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
+    tw_rm_emm <- emmeans::emmeans(tw_rm, ~ Valence)
 
     tw_rm_lsm_output <- apa_print(tw_rm_lsm)
+    tw_rm_emm_output <- apa_print(tw_rm_emm)
     tw_rm_lsm_output2 <- apa_print(summary(tw_rm_lsm, infer = c(T, T)))
+    tw_rm_emm_output2 <- apa_print(summary(tw_rm_emm, infer = c(T, T)))
 
     expect_identical(tw_rm_lsm_output, tw_rm_lsm_output2)
+    expect_identical(tw_rm_emm_output, tw_rm_emm_output2)
+    expect_identical(tw_rm_lsm_output, tw_rm_emm_output2)
 
     expect_is(tw_rm_lsm_output, "list")
     expect_equal(names(tw_rm_lsm_output), container_names)

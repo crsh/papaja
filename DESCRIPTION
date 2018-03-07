@@ -28,6 +28,7 @@ Suggests:
   car,
   afex,
   lsmeans,
+  emmeans,
   multcomp,
   MBESS,
   ggplot2,

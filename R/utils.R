@@ -217,6 +217,8 @@ print_interval <- function(
   if(!is.matrix(x)) {
     validate(ci, "x", check_length = 2)
     apa_ci <- paste0(conf_level, "$[", paste(ci, collapse = "$, $"), "]$")
+    apa_ci <- sub(pattern = "$\\infty$", replacement = "\\infty", x = apa_ci, fixed = TRUE)
+    apa_ci <- sub(pattern = "$-\\infty$", replacement = "-\\infty", x = apa_ci, fixed = TRUE)
     return(apa_ci)
   } else {
     if(!is.null(rownames(ci))) {
@@ -236,7 +238,10 @@ print_interval <- function(
       apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
     }
 
-    apa_ci <- lapply(apa_ci, function(x) sub("$\\infty$", "\\infty", x, fixed = TRUE)) # Fix extra $
+    apa_ci <- lapply(apa_ci, function(x){
+      x <- sub("$\\infty$", "\\infty", x, fixed = TRUE)
+      x <- sub("$-\\infty$", "-\\infty", x, fixed = TRUE)
+    }) # Fix extra $
 
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     return(apa_ci)

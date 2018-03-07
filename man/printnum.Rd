@@ -6,11 +6,12 @@
 \alias{printnum.list}
 \alias{printnum.integer}
 \alias{printnum.numeric}
+\alias{printnum.data.frame}
 \title{Prepare numeric values for printing}
 \usage{
 printnum(x, ...)
 
-\method{printnum}{default}(x, ...)
+\method{printnum}{default}(x, na_string = getOption("papaja.na_string"), ...)
 
 \method{printnum}{list}(x, ...)
 
@@ -19,17 +20,19 @@ printnum(x, ...)
 
 \method{printnum}{numeric}(x, gt1 = TRUE, zero = TRUE, margin = 1,
   na_string = getOption("papaja.na_string"), ...)
+
+\method{printnum}{data.frame}(x, ...)
 }
 \arguments{
 \item{x}{Numeric. Can be either a single value, vector, or matrix.}
 
 \item{...}{Further arguments that may be passed to \code{\link{formatC}}}
 
+\item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
+
 \item{numerals}{Logical. Indicates if integer should be returned as words.}
 
 \item{capitalize}{Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.}
-
-\item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 
 \item{gt1}{Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.}
 
