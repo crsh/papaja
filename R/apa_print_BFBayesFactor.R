@@ -169,6 +169,8 @@ apa_print_bf <- function(x, ...) {
 
 apa_print_bf.default <- function(x, ...) no_method(x)
 
+#' @export
+
 apa_print_bf.numeric <- function(
   x
   , ratio_subscript = "10"
@@ -221,6 +223,8 @@ apa_print_bf.numeric <- function(
   bf <- setNames(bf, names(x))
   bf
 }
+
+#' @export
 
 apa_print_bf.BFBayesFactor <- function(x, ...) {
   validate(as.vector(x), check_NA = TRUE)
