@@ -72,11 +72,11 @@ apa_print.BFBayesFactor <- function(
       ellipsis$x <- x[i]
       if(!is.null(evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
       # bf[i] <- print_bf(x[i], ...)
-      bf[i] <- do.call("print_bf", ellipsis)
+      bf[i] <- do.call("apa_print_bf", ellipsis)
     }
     bf <- as.list(bf)
     names(bf) <- names(x)$numerator
-  } else bf <- print_bf(x, ...)
+  } else bf <- apa_print_bf(x, ...)
 
   apa_res <- apa_print_container()
   apa_res$statistic <- bf
@@ -119,7 +119,7 @@ apa_print.BFBayesFactorTop <- function(x, ...) {
   for(i in seq_along(x_BFBayesFactor)) {
     ellipsis$x <- x_BFBayesFactor[i]
     if(!is.null(ellipsis$evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
-    bf <- c(bf, do.call("print_bf", ellipsis))
+    bf <- c(bf, do.call("apa_print_bf", ellipsis))
   }
 
   full_terms <- bf_term_labels(x@denominator)
@@ -146,7 +146,7 @@ setMethod("apa_print", "BFBayesFactorTop", apa_print.BFBayesFactorTop)
 #' @export
 
 apa_print.BFBayesFactorList <- function(x, ...) {
-  bf <- vapply(x, print_bf, as.character(as.vector(x[[1]])), ...)
+  bf <- vapply(x, apa_print_bf, as.character(as.vector(x[[1]])), ...)
   names(bf) <- names(x)
 
   apa_res <- apa_print_container()
@@ -161,7 +161,15 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
 
 
-print_bf <- function(
+#' @export
+
+apa_print_bf <- function(x, ...) {
+  UseMethod("apa_print_bf", x)
+}
+
+apa_print_bf.default <- function(x, ...) no_method(x)
+
+apa_print_bf.numeric <- function(
   x
   , ratio_subscript = "10"
   , auto_invert = TRUE
@@ -172,7 +180,7 @@ print_bf <- function(
   # , logbf = FALSE
   , ...
 ) {
-  validate(x@bayesFactor["bf"], check_NA = TRUE)
+  validate(x, check_NA = TRUE)
   validate(ratio_subscript, check_class = "character", check_length = 1)
   validate(auto_invert, check_class = "logical", check_length = 1)
   validate(scientific, check_class = "logical", check_length = 1)
@@ -210,6 +218,13 @@ print_bf <- function(
   if(!grepl("<|>", bf)) eq <- " = " else eq <- " "
 
   bf <- paste0("$\\mathrm{BF}_{\\textrm{", ratio_subscript, "}}", eq, bf, "$")
+  bf <- setNames(bf, names(x))
+  bf
+}
+
+apa_print_bf.BFBayesFactor <- function(x, ...) {
+  validate(as.vector(x), check_NA = TRUE)
+  bf <- apa_print_bf(as.vector(x))
   bf <- setNames(bf, names(x@numerator))
   bf
 }
