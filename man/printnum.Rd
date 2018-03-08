@@ -19,7 +19,7 @@ printnum(x, ...)
   na_string = getOption("papaja.na_string"), ...)
 
 \method{printnum}{numeric}(x, gt1 = TRUE, zero = TRUE, margin = 1,
-  na_string = getOption("papaja.na_string"), ...)
+  na_string = getOption("papaja.na_string"), use_math = TRUE, ...)
 
 \method{printnum}{data.frame}(x, ...)
 }
@@ -40,6 +40,9 @@ printnum(x, ...)
 
 \item{margin}{Integer. If \code{x} is a matrix, the function is applied either across rows (\code{margin = 1})
 or columns (\code{margin = 2}).}
+
+\item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
+notation is rendered correctly.}
 }
 \description{
 Converts numeric values to character strings for reporting.

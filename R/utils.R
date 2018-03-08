@@ -197,6 +197,7 @@ convert_stat_name <- function(x) {
 print_interval <- function(
   x
   , conf_level = NULL
+  , use_math = FALSE
   , interval_type
   , ...
 ) {
@@ -204,7 +205,7 @@ print_interval <- function(
   validate(interval_type, check_class = "character", check_length = 1)
 
   if(is.data.frame(x)) x <- as.matrix(x)
-  ci <- printnum(x, ...)
+  ci <- printnum(x, use_math = use_math, ...)
 
   if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
 
@@ -217,8 +218,6 @@ print_interval <- function(
   if(!is.matrix(x)) {
     validate(ci, "x", check_length = 2)
     apa_ci <- paste0(conf_level, "$[", paste(ci, collapse = "$, $"), "]$")
-    apa_ci <- sub(pattern = "$\\infty$", replacement = "\\infty", x = apa_ci, fixed = TRUE)
-    apa_ci <- sub(pattern = "$-\\infty$", replacement = "-\\infty", x = apa_ci, fixed = TRUE)
     return(apa_ci)
   } else {
     if(!is.null(rownames(ci))) {
@@ -237,11 +236,6 @@ print_interval <- function(
     for(i in 1:length(terms)) {
       apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
     }
-
-    apa_ci <- lapply(apa_ci, function(x){
-      x <- sub("$\\infty$", "\\infty", x, fixed = TRUE)
-      x <- sub("$-\\infty$", "-\\infty", x, fixed = TRUE)
-    }) # Fix extra $
 
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     return(apa_ci)
