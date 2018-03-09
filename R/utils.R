@@ -185,6 +185,8 @@ convert_stat_name <- function(x) {
 #'    and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and coefficient names as row names.
 #' @param conf_level Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
 #'    they cannot be determined from column names or attributes of \code{x}.
+#' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
+#'    notation is rendered correctly.
 #' @param ... Arguments to pass to \code{\link{printnum}}.
 #'
 #' @keywords internal

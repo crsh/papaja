@@ -171,6 +171,7 @@ apa_print_bf.numeric <- function(
   x
   , ratio_subscript = "10"
   , auto_invert = TRUE
+  , escape = TRUE
   , scientific = TRUE
   , max = 1000
   , min = 1 / max
@@ -178,7 +179,7 @@ apa_print_bf.numeric <- function(
   # , logbf = FALSE
   , ...
 ) {
-  validate(x, check_NA = TRUE)
+  validate(x, check_NA = TRUE, check_infinite = FALSE)
   validate(ratio_subscript, check_class = "character", check_length = 1)
   validate(auto_invert, check_class = "logical", check_length = 1)
   validate(scientific, check_class = "logical", check_length = 1)
@@ -189,6 +190,7 @@ apa_print_bf.numeric <- function(
 
   ellipsis <- list(...)
   ellipsis$x <- as.vector(x)
+  ellipsis$use_math <- FALSE
 
   if(!is.null(evidential_boost)) {
     ellipsis$x <- ellipsis$x * evidential_boost
@@ -202,11 +204,15 @@ apa_print_bf.numeric <- function(
     ratio_subscript[to_invert] <- invert_subscript(ratio_subscript)
   }
 
+  if(escape) {
+    ratio_subscript <- paste0("\\textrm{", papaja:::escape_latex(ratio_subscript), "}")
+  }
+
   if(scientific & (ellipsis$x > max - 1 | ellipsis$x < min)) {
     ellipsis$format <- "e"
     if(is.null(ellipsis$digits)) ellipsis$digits <- 2
 
-    bf <- do.call("formatC", ellipsis)
+    bf <- do.call("printnum", ellipsis)
     bf <- typeset_scientific(bf)
   } else {
     if(is.null(ellipsis$zero)) ellipsis$zero <- FALSE
@@ -215,7 +221,7 @@ apa_print_bf.numeric <- function(
 
   if(!grepl("<|>", bf)) eq <- " = " else eq <- " "
 
-  bf <- paste0("$\\mathrm{BF}_{\\textrm{", ratio_subscript, "}}", eq, bf, "$")
+  bf <- paste0("$\\mathrm{BF}_{", ratio_subscript, "}", eq, bf, "$")
   bf <- setNames(bf, names(x))
   bf
 }
@@ -230,7 +236,7 @@ apa_print_bf.BFBayesFactor <- function(x, ...) {
 
 invert_subscript <- function(x) {
   seperator <- if(nchar(x) == 2) "" else "/"
-  paste(rev(unlist(strsplit(x, seperator))), collapse = "")
+  paste0(rev(unlist(strsplit(x, seperator))), collapse = seperator)
 }
 
 typeset_scientific <- function(x) {

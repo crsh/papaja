@@ -4,7 +4,7 @@
 \alias{print_interval}
 \title{Create interval estimate string}
 \usage{
-print_interval(x, conf_level = NULL, interval_type, ...)
+print_interval(x, conf_level = NULL, use_math = FALSE, interval_type, ...)
 }
 \arguments{
 \item{x}{Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
@@ -12,6 +12,9 @@ and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and c
 
 \item{conf_level}{Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
 they cannot be determined from column names or attributes of \code{x}.}
+
+\item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
+notation is rendered correctly.}
 
 \item{...}{Arguments to pass to \code{\link{printnum}}.}
 }
