@@ -856,13 +856,17 @@ apa_factorial_plot.afex_aov <- function(
 
   args <- attributes(data)
 
+  # Change in upcoming afex release (https://github.com/singmann/afex/commit/80563ee443b9005f176ee5f9fcbd07fd89a642e6#diff-e88193a056961d33007d7390f33df59e)
+  between <- if(!is.null(names(args$between))) names(args$between) else args$between
+  within <- if(!is.null(names(args$within))) names(args$within) else args$within
+
   ellipsis <- defaults(
     ellipsis
     , set = list(
       "data" = data$data$long
       , "id" = args$id
       , "dv" = args$dv
-      , "factors" = c(args$between, args$within)
+      , "factors" = c(unlist(between), unlist(within))
       , "tendency" = substitute(tendency)
       , "dispersion" = substitute(dispersion)
       , "fun_aggregate" = substitute(fun_aggregate)
