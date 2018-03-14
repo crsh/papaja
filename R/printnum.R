@@ -233,6 +233,7 @@ printnum.data.frame <- function(
     )
     , stringsAsFactors = FALSE
     , check.names = FALSE
+    , fix.empty.names = FALSE
   )
 }
 
