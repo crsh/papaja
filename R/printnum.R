@@ -8,6 +8,8 @@
 #' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (\code{margin = 1})
 #'    or columns (\code{margin = 2}).
 #' @param na_string Character. String to print if element of \code{x} is \code{NA}.
+#' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
+#'    notation is rendered correctly.
 #' @param numerals Logical. Indicates if integer should be returned as words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
 #' @param ... Further arguments that may be passed to \code{\link{formatC}}
@@ -34,8 +36,11 @@ printnum <- function(x, ...) {
 #' @rdname printnum
 #' @export
 
-printnum.default <- function(x, ...) {
-  printnum.numeric(x, ...)
+printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
+  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+  if(anyNA(x)){rep(na_string, length(x))}else{as.character(x)}
+  # Don't use printnum.numeric as a default if it only allows numeric input:
+  # printnum.numeric(x, ...)
 }
 
 
@@ -94,7 +99,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
     } else {
       required_number_word <- ((n_digits + 2) %/% 3) - 1
       if (required_number_word > length(number_names)) {
-        stop("Number is to large.")
+        stop("Number is too large.")
       }
       number <- paste(
         Recall(collapse(digits[n_digits:(3*required_number_word + 1)]))
@@ -143,6 +148,7 @@ printnum.numeric <- function(
   , zero = TRUE
   , margin = 1
   , na_string = getOption("papaja.na_string")
+  , use_math = TRUE
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -153,11 +159,13 @@ printnum.numeric <- function(
   validate(zero, check_class = "logical")
   validate(margin, check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(1, 2))
   validate(na_string, check_class = "character", check_length = 1)
+  validate(use_math, check_class = "logical")
 
   ellipsis$x <- x
   ellipsis$gt1 <- gt1
   ellipsis$zero <- zero
   ellipsis$na_string <- na_string
+  ellipsis$use_math <- use_math
 
   ellipsis <- defaults(
     ellipsis
@@ -209,12 +217,38 @@ printnum.numeric <- function(
 }
 
 
-printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", ...) {
+#' @rdname printnum
+#' @export
+
+printnum.data.frame <- function(
+  x
+  , ... # cleverly recycle (column-wise) over all possible parameters
+) {
+  as.data.frame(
+    mapply(
+      FUN = printnum
+      , x = x
+      , ...
+      , SIMPLIFY = FALSE
+    )
+    , stringsAsFactors = FALSE
+    , check.names = FALSE
+    , fix.empty.names = FALSE
+  )
+}
+
+
+
+printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = TRUE, ...) {
 
   ellipsis <- list(...)
   validate(x, check_class = "numeric", check_NA = FALSE, check_length = 1, check_infinite = FALSE)
   if(is.na(x)) return(na_string)
-  if(is.infinite(x)) return("$\\infty$")
+  if(is.infinite(x)) {
+    x_out <- paste0(ifelse(x < 0, "-", ""), "\\infty")
+    if(use_math) x_out <- paste0("$", x_out, "$")
+    return(x_out)
+  }
   if(!is.null(ellipsis$digits)) {
     validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(0, Inf))
   }

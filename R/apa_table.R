@@ -384,12 +384,8 @@ apa_table.word <- function(
 #' NULL
 
 format_cells <- function(x, format.args = NULL) {
-  numeric_columns <- sapply(x, is.numeric)
-  if(any(numeric_columns)) {
-    format.args$x <- x[, numeric_columns]
-    x[, numeric_columns] <- do.call(printnum, format.args)
-  }
-  x
+  format.args$x <- x
+  do.call("printnum.data.frame", format.args)
 }
 
 

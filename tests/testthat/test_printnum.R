@@ -83,27 +83,27 @@ test_that(
 
 
     # Data.frame
-    df_num <- as.data.frame(m_num)
+    df_num <- as.data.frame(m_num, stringsAsFactors = FALSE)
     colnames(df_num) <- paste0("Col", 1:2)
     apa_num <- printnum(df_num)
     expect_is(apa_num, "data.frame")
     expect_equal(dim(apa_num), c(4, 2))
 
-    df_correct <- as.data.frame(matrix(rep(c("0.00", "123.00", "0.10", "-12.00"), 2), ncol = 2))
+    df_correct <- as.data.frame(matrix(rep(c("0.00", "123.00", "0.10", "-12.00"), 2), ncol = 2), stringsAsFactors = FALSE)
     colnames(df_correct) <- colnames(df_num)
     expect_equivalent(apa_num, df_correct)
 
-    apa_num <- printnum(df_num, digits = c(2, 3), margin = 2)
-    df_correct <- as.data.frame(matrix(c("0.00", "123.00", "0.10", "-12.00", "0.000", "123.000", "0.100", "-12.000"), ncol = 2))
+    apa_num <- printnum(df_num, digits = c(2, 3))
+    df_correct <- as.data.frame(matrix(c("0.00", "123.00", "0.10", "-12.00", "0.000", "123.000", "0.100", "-12.000"), ncol = 2), stringsAsFactors = FALSE)
     colnames(df_correct) <- colnames(m_num)
     expect_equivalent(apa_num, df_correct)
 
-    apa_num <- printnum(df_num, digits = c(2, 3), margin = 1)
+    apa_num <- papaja:::printnum.numeric(df_num, digits = c(2, 3), margin = 1)
     df_correct <- as.data.frame(matrix(c("0.00", "123.000", "0.10", "-12.000", "0.00", "123.000", "0.10", "-12.000"), ncol = 2))
     colnames(df_correct) <- colnames(m_num)
     expect_equivalent(apa_num, df_correct)
 
-    expect_equivalent(printnum(as.data.frame(matrix(c(1, 2, NA, 4), ncol = 2))), as.data.frame(matrix(c("1.00", "2.00", "NA", "4.00"), ncol = 2)))
+    expect_equivalent(printnum(as.data.frame(matrix(c(1, 2, NA, 4), ncol = 2))), as.data.frame(matrix(c("1.00", "2.00", "NA", "4.00"), ncol = 2), stringsAsFactors = FALSE))
   }
 )
 

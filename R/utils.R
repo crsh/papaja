@@ -185,6 +185,8 @@ convert_stat_name <- function(x) {
 #'    and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and coefficient names as row names.
 #' @param conf_level Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
 #'    they cannot be determined from column names or attributes of \code{x}.
+#' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
+#'    notation is rendered correctly.
 #' @param ... Arguments to pass to \code{\link{printnum}}.
 #'
 #' @keywords internal
@@ -197,6 +199,7 @@ convert_stat_name <- function(x) {
 print_interval <- function(
   x
   , conf_level = NULL
+  , use_math = FALSE
   , interval_type
   , ...
 ) {
@@ -204,7 +207,7 @@ print_interval <- function(
   validate(interval_type, check_class = "character", check_length = 1)
 
   if(is.data.frame(x)) x <- as.matrix(x)
-  ci <- printnum(x, ...)
+  ci <- printnum(x, use_math = use_math, ...)
 
   if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
 
@@ -235,8 +238,6 @@ print_interval <- function(
     for(i in 1:length(terms)) {
       apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
     }
-
-    apa_ci <- lapply(apa_ci, function(x) sub("$\\infty$", "\\infty", x, fixed = TRUE)) # Fix extra $
 
     if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
     return(apa_ci)

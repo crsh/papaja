@@ -60,7 +60,7 @@ apa_table(
 apa_table(
   my_table
   , align = c("l", "r", "r")
-  , caption = "1 A small table."
+  , caption = "1 A small table with custom number formatting."
   , note = "This table was created using apa_table()"
   , small = TRUE
   , digits = 3
