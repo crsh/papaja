@@ -362,7 +362,7 @@ test_that(
 test_that(
   "Levene test"
   , {
-    levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = car::Moore)
+    levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = carData::Moore)
     levene_test_output <- apa_print(levene_test)
     expect_is(levene_test_output, "list")
     expect_equal(names(levene_test_output), container_names)

@@ -157,10 +157,22 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
   }
 
   # Rearrange and rename columns
-  univariate_names <- c("SS", "num Df", "Error SS", "den Df", "F", "Pr(>F)")
+  renamers <- c(
+    "SS" = "sumsq"
+    , "Sum Sq" = "sumsq"
+    , "num Df" = "df"
+    , "Error SS" = "sumsq_err"
+    , "den Df" = "df_res"
+    , "F" = "statistic"
+    , "F value" = "statistic"
+    , "Pr(>F)" = "p.value"
+  )
+
+  colnames(variance_table) <- renamers[colnames(variance_table)]
+
   broom_names <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
-  variance_table <- variance_table[, univariate_names]
-  colnames(variance_table) <- broom_names
+  variance_table <- variance_table[, broom_names]
+
 
   variance_table$term <- rownames(variance_table)
   variance_table <- data.frame(variance_table, row.names = NULL)
