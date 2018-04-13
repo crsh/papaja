@@ -165,7 +165,9 @@ apa_print.summary_emm <- function(
     stat_colnames <- c("statistic", "p.value")
   }
 
-  split_by <- attr(x, "by.vars")
+  split_by <- attr(x, "by.vars") # lsmeans
+  if(is.null(split_by)) split_by <- attr(x, "misc")$by.vars # emmeans
+
   x <- data.frame(x)
   if("null" %in% colnames(x)) x <- x[, -grep("null", colnames(x))]
   colnames(x) <- c("contrast", split_by, "estimate", "std.error", df_colname, ci_colnames, stat_colnames)

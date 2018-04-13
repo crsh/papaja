@@ -93,3 +93,13 @@ test_that(
     expect_error(apa_print(summary(tw_rm_lsm, infer = c(F, F))))
   }
 )
+
+
+# This type of thing does not work yet
+
+# emmeans(otm1_explicit_aov, ~ Block | ValenceBlock) %>%
+#   contrast(
+#     method = list("Block 2 - Block 1" = c(-1, 1))
+#     , adjust = "none"
+#   ) %>%
+#   apa_print(contrast_names = letters[1:2])
