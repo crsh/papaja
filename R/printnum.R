@@ -38,7 +38,11 @@ printnum <- function(x, ...) {
 
 printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
-  if(anyNA(x)){rep(na_string, length(x))}else{as.character(x)}
+  if(anyNA(x)){
+    rep(na_string, length(x))
+  } else {
+    as.character(x)
+  }
   # Don't use printnum.numeric as a default if it only allows numeric input:
   # printnum.numeric(x, ...)
 }
@@ -187,7 +191,7 @@ printnum.numeric <- function(
     }
   }
 
-  if(is.matrix(x) | is.data.frame(x)) {
+  if(is.matrix(x) ||is.data.frame(x)) {
     x_out <- apply(
       X = x
       , MARGIN = (3 - margin) # Parameters are applied according to margin
@@ -237,6 +241,14 @@ printnum.data.frame <- function(
   )
 }
 
+#' @rdname printnum
+#' @export
+
+printnum.labelled <-function(x, ...){
+  x_out <- NextMethod("printnum")
+  variable_label(x_out) <- variable_label(x)
+  x_out
+}
 
 
 printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = TRUE, ...) {

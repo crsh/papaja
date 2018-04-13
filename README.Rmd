@@ -187,6 +187,8 @@ Heycke, T., & Stahl, C. (2018). No Evaluative Conditioning Effects with Briefly 
 
 Barth, M., Stahl, C., & Haider, H. (2018). Assumptions of the process-dissociation procedure are violated in sequence learning. *PsyArXiv*. doi: [10.17605/OSF.IO/P7UXN](http://dx.doi.org/10.17605/OSF.IO/P7UXN) ([Data & R Markdown files](https://github.com/methexp/pdl2))
 
+Pollet, T., & Saxton, T. (2018). How diverse are the samples used in the journals ‘Evolution & Human Behavior’ and ‘Evolutionary Psychology’? *PsyArXiv*. doi: [10.17605/OSF.IO/7H24P](http://doi.org/10.17605/OSF.IO/7H24P)
+
 
 # Other related R packages
 By now, there are a couple of R packages that provide convenience functions to facilitate the reporting of statistics in accordance with APA guidelines.
