@@ -117,8 +117,8 @@ Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of
 
 Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.aov}},
+  \code{\link{apa_print.emmGrid}},
   \code{\link{apa_print.glht}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
-\concept{apa_print}

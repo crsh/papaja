@@ -205,7 +205,7 @@ apa_print_bf.numeric <- function(
   }
 
   if(escape) {
-    ratio_subscript <- paste0("\\textrm{", papaja:::escape_latex(ratio_subscript), "}")
+    ratio_subscript <- paste0("\\textrm{", escape_latex(ratio_subscript), "}")
   }
 
   if(scientific & (ellipsis$x > max - 1 | ellipsis$x < min)) {

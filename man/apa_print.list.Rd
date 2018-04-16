@@ -88,8 +88,8 @@ Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for 
 
 Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.aov}},
+  \code{\link{apa_print.emmGrid}},
   \code{\link{apa_print.glht}},
   \code{\link{apa_print.glm}},
   \code{\link{apa_print.htest}}, \code{\link{apa_print}}
 }
-\concept{apa_print}
