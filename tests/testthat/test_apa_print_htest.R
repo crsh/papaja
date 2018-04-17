@@ -13,10 +13,10 @@ test_that(
     expect_equal(t_test_output$stat, "$t(17.78) = -1.86$, $p = .079$")
 
     expect_is(t_test_output$est, "character")
-    expect_equal(t_test_output$est, "$\\Delta M = 1.58$, 95\\% CI $[-3.37$, $0.21]$")
+    expect_equal(t_test_output$est, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$")
 
     expect_is(t_test_output$full, "character")
-    expect_equal(t_test_output$full, "$\\Delta M = 1.58$, 95\\% CI $[-3.37$, $0.21]$, $t(17.78) = -1.86$, $p = .079$")
+    expect_equal(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$, $t(17.78) = -1.86$, $p = .079$")
 
 #     t_test <- t.test(extra ~ group, data = sleep, var.equal = TRUE)
 #     t_test_output <- apa_print(t_test)
@@ -200,20 +200,20 @@ test_that(
     # positive infinity ----
     expect_identical(
       object = apa_out$full_result
-      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-9.54$, $\\infty]$, $t(21.88) = -2.46$, $p = .989$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54$, $\\infty]$, $t(21.88) = -2.46$, $p = .989$"
     )
     expect_identical(
       object = apa_out$estimate
-      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-9.54$, $\\infty]$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54$, $\\infty]$"
     )
     # negative infinity ----
     expect_identical(
       object = apa2$full_result
-      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-\\infty$, $-1.70]$, $t(21.88) = -2.46$, $p = .011$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty$, $-1.70]$, $t(21.88) = -2.46$, $p = .011$"
     )
     expect_identical(
       object = apa2$estimate
-      , expected = "$\\Delta M = 5.62$, 95\\% CI $[-\\infty$, $-1.70]$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty$, $-1.70]$"
     )
   }
 )
