@@ -86,33 +86,30 @@ apa_print.summary_emm <- function(
   if(is.null(split_by)) split_by <- attr(x, "misc")$by.vars # emmeans
   pri_vars <- attr(x, "pri.vars")
   if(is.null(pri_vars)) pri_vars <- "contrast"
+  factors <- c(pri_vars, split_by)
 
-  x <- data.frame(x)
-  if("null" %in% colnames(x)) x <- x[, -grep("null", colnames(x))]
-  colnames(x) <- c(split_by, pri_vars, "estimate", "std.error", df_colname, ci_colnames, stat_colnames)
+  contrast_table <- data.frame(x)
+  if("null" %in% colnames(contrast_table)) {
+    contrast_table <- contrast_table[, -grep("null", colnames(contrast_table))]
+  }
+  colnames(contrast_table) <- c(
+    factors
+    , "estimate"
+    , "std.error"
+    , df_colname
+    , ci_colnames
+    , stat_colnames
+  )
 
   # Assamble table
-  apa_res <- apa_print_container()
+  contrast_table$estimate <- printnum(contrast_table$estimate, ...)
 
-  if(!is.null(split_by)) {
-    contrast_list <- split(x, x[, split_by])
-    contrast_list <- lapply(contrast_list, function(x) x[, -which(colnames(x) == split_by)])
-    prep_table <- merge_tables(
-      contrast_list
-      , row_names = rep(FALSE, length(contrast_list))
-      , added_stub_head = split_by
-    )
-    prep_table <- lapply(prep_table, function(x) {
-      x[, split_by] <- x[1, split_by]
-      x
-    })
-    contrast_table <- do.call(rbind, prep_table)
-    contrast_table <- droplevels(contrast_table)
-  } else {
-    contrast_table <- x
+  if(p_supplied) {
+    contrast_table$statistic <- printnum(contrast_table$statistic)
+    contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
+    contrast_table$p.value <- printp(contrast_table$p.value)
   }
 
-  ## Add confindence interval
   if(ci_supplied) {
     ci_table <- data.frame(confint = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
     contrast_table <- contrast_table[, -grep("std\\.error|ll|ul", colnames(contrast_table))]
@@ -122,29 +119,63 @@ apa_print.summary_emm <- function(
       , ci_table
       , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
     )
+    contrast_table$confint <- as.character(contrast_table$confint)
   } else {
     contrast_table <- contrast_table[, -grep("std\\.error", colnames(contrast_table))]
   }
-
 
   ## Add contrast names
   # rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
   # contrast_table <- contrast_table[, which(colnames(contrast_table) != "contrast")]
   if(!is.null(contrast_names)) contrast_table$contrast <- contrast_names
-  if(!is.null(split_by) || length(pri_vars) > 1) {
-    rownames(contrast_table) <- apply(contrast_table[, c(split_by, pri_vars)], 1, paste, collapse = "_")
+  if(length(factors) > 1) {
+    rownames(contrast_table) <- apply(contrast_table[, factors], 1, paste, collapse = "_")
   } else {
-    rownames(contrast_table) <- contrast_table[, pri_vars]
+    rownames(contrast_table) <- contrast_table[, factors]
   }
 
-  contrast_table$estimate <- printnum(contrast_table$estimate, ...)
-  if(p_supplied) {
-    contrast_table$statistic <- printnum(contrast_table$statistic)
-    contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
-    contrast_table$p.value <- printp(contrast_table$p.value)
+  ## Add structuring columns
+  if(length(factors) > 1) {
+    factors <- rev(factors)
+    str_factors <- rev(c(pri_vars[-1], split_by))
+    str_cols <- contrast_table[, str_factors, drop = FALSE]
+    for(i in seq_along(str_factors)) {
+      if(i > 1) {
+        tmp <- apply(contrast_table[, str_factors[1:i]], 1, paste, collapse = "_")
+      } else {
+        tmp <- contrast_table[, str_factors[i]]
+      }
+      str_cols[, str_factors[i]] <- as.character(contrast_table[, str_factors[i]])
+      str_cols[duplicated(tmp), str_factors[i]] <- ""
+    }
+    contrast_table[, str_factors] <- str_cols[, str_factors]
+    str_col_order <- c(str_factors, colnames(contrast_table)[!colnames(contrast_table) %in% str_factors])
+    contrast_table <- contrast_table[, str_col_order]
+    contrast_table[, pri_vars[1]] <- as.character(contrast_table[, pri_vars[1]])
+
+    # contrast_list <- split(x, x[, factors])
+    # contrast_list <- lapply(contrast_list, str_column, i)
+    # test <- do.call(rbind, contrast_list[grep(paste(levels(unlist(x[, factors[2]])), collapse = "|"), names(contrast_list))])
+    # prep_table <- merge_tables(
+    #   contrast_list
+    #   , row_names = rep(FALSE, length(contrast_list))
+    #   , added_stub_head = paste(split_by, collapse = "_")
+    # )
+    # prep_table <- lapply(prep_table, function(x) {
+    #   x[, split_by] <- x[1, split_by]
+    #   x
+    # })
+    # contrast_table <- do.call(rbind, prep_table)
+    # contrast_table <- droplevels(contrast_table)
+  # } else {
+  #   contrast_table <- x
+  # }
   }
 
   # Concatenate character strings and return as named list
+
+  apa_res <- apa_print_container()
+
   if(ci_supplied) {
     apa_res$estimate <- apply(contrast_table, 1, function(y) {
       paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
@@ -169,13 +200,11 @@ apa_print.summary_emm <- function(
   apa_res <- lapply(apa_res, as.list)
 
   # Add table
-  contrast_table$confint <- as.character(contrast_table$confint)
-
   if(p_supplied) {
     if(length(contrast_df) == 1) { # Remove df column and put df in column heading
       df <- contrast_table$df[1]
       contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      colnames(contrast_table) <- c(pri_vars, split_by, "estimate", "ci", "statistic", "p.value")
+      colnames(contrast_table) <- c(factors, "estimate", "ci", "statistic", "p.value")
       variable_label(contrast_table) <- c(
         estimate = "$\\Delta M$"
         , ci = conf_level
@@ -183,7 +212,7 @@ apa_print.summary_emm <- function(
         , p.value = "$p$"
       )
     } else {
-      colnames(contrast_table) <- c(pri_vars, split_by, "estimate", "ci", "df", "statistic", "p.value")
+      colnames(contrast_table) <- c(factors, "estimate", "ci", "df", "statistic", "p.value")
       variable_label(contrast_table) <- c(
         estimate = "$\\Delta M$"
         , ci = conf_level
@@ -193,7 +222,7 @@ apa_print.summary_emm <- function(
       )
     }
   } else {
-    colnames(contrast_table) <- c(pri_vars, split_by, "estimate", "ci")
+    colnames(contrast_table) <- c(factors, "estimate", "ci")
     variable_label(contrast_table) <- c(
       estimate = "$\\Delta M$"
       , ci = conf_level

@@ -33,7 +33,7 @@ test_that(
       object = tw_me_lsm_output$table$estimate
       , expected = structure(
         c("11.00", "12.10", "12.30")
-        , label = "$\\Delta M$"
+        , label = "$M$"
         , class = c("labelled", "character")
       )
     )
@@ -86,7 +86,7 @@ test_that(
       object = tw_int_emm_output$table$estimate
       , expected = structure(
         c("11.80", "13.00", "13.60", "10.20", "11.20", "11.00")
-        , label = "$\\Delta M$"
+        , label = "$M$"
         , class = c("labelled", "character")
       )
     )
@@ -138,7 +138,152 @@ test_that(
     expect_identical(tw_se_emm_output, tw_int_emm_output)
 
 
+    # Complex output
+    data(obk.long, package = "afex")
+
+    fw_mixed <- suppressWarnings(afex::aov_ez(
+      id = "id"
+      , dv = "value"
+      , data = obk.long
+      , between = c("treatment", "gender")
+      , within = c("phase", "hour")
+      , observed = "gender"
+    ))
+
+    fw_mixed_lsm <- lsmeans::lsmeans(fw_mixed$aov, ~ phase * hour | treatment * gender)
+    fw_mixed_emm <- emmeans::emmeans(fw_mixed, ~ phase * hour | treatment * gender)
+
+    fw_mixed_lsm_output <- apa_print(fw_mixed_lsm)
+    fw_mixed_emm_output <- apa_print(fw_mixed_emm)
+    fw_mixed_lsm_output2 <- apa_print(summary(fw_mixed_lsm, infer = c(T, T)))
+    fw_mixed_emm_output2 <- apa_print(summary(fw_mixed_emm, infer = c(T, T)))
+
+    expect_identical(fw_mixed_lsm_output, fw_mixed_lsm_output2)
+    expect_identical(fw_mixed_emm_output, fw_mixed_emm_output2)
+
+    # Not identical because slightly different CI in some conditions in original objects
+    # expect_identical(fw_mixed_lsm_output, fw_mixed_emm_output2)
+
+    # table --------------------------------------------------------------------
+    expect_identical(
+      object = fw_mixed_emm_output$table$gender
+      , expected = c(
+        "F"
+        , rep("", nrow(fw_mixed_emm_output$table) / 2 - 1)
+        , "M"
+        , rep("", nrow(fw_mixed_emm_output$table) / 2 - 1)
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$treatment
+      , expected = rep(
+        c(
+          "control"
+          , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+          , "A"
+          , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+          , "B"
+          , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+        )
+        , 2
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$hour
+      , expected = rep(
+        c(
+          "X1"
+          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+          , "X2"
+          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+          , "X3"
+          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+          , "X4"
+          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+          , "X5"
+          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+        )
+        , 6
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$phase
+      , expected = rep(
+        c("fup", "post", "pre")
+        , 30
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$estimate
+      , expected = structure(
+        printnum(as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))$emmean)
+        , label = "$M$"
+        , class = c("labelled", "character")
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$ci
+      , expected = structure(
+        unname(
+          unlist(
+            apply(
+              as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))[, c("lower.CL", "upper.CL")]
+              , 1
+              , papaja:::print_confint
+            )
+          )
+        )
+        , label = "95\\% CI"
+        , class = c("labelled", "character")
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$statistic
+      , expected = structure(
+        printnum(as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))$t.ratio)
+        , label = "$t$"
+        , class = c("labelled", "character")
+      )
+    )
+
+    expect_identical(
+      object = fw_mixed_emm_output$table$p.value
+      , expected = structure(
+        printp(as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))$p.value)
+        , label = "$p$"
+        , class = c("labelled", "character")
+      )
+    )
+
+
     # Contrasts
-    # ...
+    # data(obk.long, package = "afex")
+    #
+    # fw_mixed <- suppressWarnings(afex::aov_ez(
+    #   id = "id"
+    #   , dv = "value"
+    #   , data = obk.long
+    #   , between = c("treatment", "gender")
+    #   , within = c("phase", "hour")
+    #   , observed = "gender"
+    # ))
+    #
+    # fw_mixed_lsm <- lsmeans::lsmeans(fw_mixed$aov, ~ phase * hour | treatment * gender)
+    # fw_mixed_emm <- emmeans::emmeans(fw_mixed, ~ phase * hour | treatment * gender)
+    #
+    # fw_mixed_lsm_output <- apa_print(fw_mixed_lsm)
+    # fw_mixed_emm_output <- apa_print(fw_mixed_emm)
+    # fw_mixed_lsm_output2 <- apa_print(summary(fw_mixed_lsm, infer = c(T, T)))
+    # fw_mixed_emm_output2 <- apa_print(summary(fw_mixed_emm, infer = c(T, T)))
+    #
+    # expect_identical(tw_me_lsm_output, tw_me_lsm_output2)
+    # expect_identical(tw_me_emm_output, tw_me_emm_output2)
+    # expect_identical(tw_me_lsm_output, tw_me_emm_output2)
   }
 )
