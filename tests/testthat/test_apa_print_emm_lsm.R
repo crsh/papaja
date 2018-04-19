@@ -1,7 +1,38 @@
-context("apa_print() for least squares means")
+context("apa_print() for emmeans/lsmeans")
 
 test_that(
-  "Two-way repeated-measures ANOVA"
+  "Regression"
+  , {
+    pigs_lm <- lm(log(conc) ~ source * percent, data = emmeans::pigs)
+
+    pigs_lm_emm <- emmeans::emmeans(pigs_lm, ~ source)
+    pigs_pairs_emm_output <- apa_print(pairs(pigs_lm_emm, type = "response"))
+
+    # table --------------------------------------------------------------------
+    expect_identical(
+      object = pigs_pairs_emm_output$table$estimate
+      , expected = structure(
+        c("0.77", "0.66", "0.86")
+        , label = "Ratio"
+        , class = c("labelled", "character")
+      )
+    )
+
+#
+    # noise.lm <- lm(noise ~ size * type * side, data = emmeans::auto.noise)
+    # noise.emm <- emmeans::emmeans(noise.lm, ~ size * side * type)
+    # apa_print(emmeans::contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")) # Table order is fucked up
+
+
+    # org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = emmeans::oranges)
+    # emmeans::emtrends(org.int, ~ variety, var = "price1", mult.name = "variety")
+    # emmeans::emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
+
+  }
+)
+
+test_that(
+  "ANOVA"
   , {
     emm_basis.afex_aov <- afex:::emm_basis.afex_aov
 
@@ -18,8 +49,14 @@ test_that(
 
     tw_me_lsm_output <- apa_print(tw_me_lsm)
     tw_me_emm_output <- apa_print(tw_me_emm)
-    tw_me_lsm_output2 <- apa_print(summary(tw_me_lsm, infer = c(T, T)))
-    tw_me_emm_output2 <- apa_print(summary(tw_me_emm, infer = c(T, T)))
+    tw_me_lsm_output2 <- apa_print(
+      summary(tw_me_lsm, infer = TRUE)
+      , est_name = "M"
+    )
+    tw_me_emm_output2 <- apa_print(
+      summary(tw_me_emm, infer = TRUE)
+      , est_name = "M"
+    )
 
     expect_identical(tw_me_lsm_output, tw_me_lsm_output2)
     expect_identical(tw_me_emm_output, tw_me_emm_output2)
@@ -63,9 +100,29 @@ test_that(
     )
 
 
-    # apa_print(summary(tw_rm_lsm, infer = c(F, T)))
-    # apa_print(summary(tw_rm_lsm, infer = c(T, F)))
-    expect_error(apa_print(summary(tw_me_lsm, infer = c(F, F))))
+    expect_warning(
+      tw_me_emm_p_output <- apa_print(
+        summary(tw_me_emm, infer = c(FALSE, TRUE))
+        , est_name = "M"
+      )
+    )
+    expect_identical(
+      tw_me_lsm_output$table[, c("Valence", "estimate", "statistic", "p.value")]
+      , tw_me_emm_p_output$table
+    )
+
+    expect_warning(
+      tw_me_emm_ci_output <- apa_print(
+        summary(tw_me_emm, infer = c(TRUE, FALSE))
+        , est_name = "M"
+      )
+    )
+    expect_identical(
+      tw_me_lsm_output$table[, c("Valence", "estimate", "ci")]
+      , tw_me_emm_ci_output$table
+    )
+
+    expect_error(apa_print(summary(tw_me_lsm, infer = c(FALSE, FALSE))))
 
 
     # Interaction
@@ -74,8 +131,14 @@ test_that(
 
     tw_int_lsm_output <- apa_print(tw_int_lsm)
     tw_int_emm_output <- apa_print(tw_int_emm)
-    tw_int_lsm_output2 <- apa_print(summary(tw_int_lsm, infer = c(T, T)))
-    tw_int_emm_output2 <- apa_print(summary(tw_int_emm, infer = c(T, T)))
+    tw_int_lsm_output2 <- apa_print(
+      summary(tw_int_lsm, infer = TRUE)
+      , est_name = "M"
+    )
+    tw_int_emm_output2 <- apa_print(
+      summary(tw_int_emm, infer = TRUE)
+      , est_name = "M"
+    )
 
     expect_identical(tw_int_lsm_output, tw_int_lsm_output2)
     expect_identical(tw_int_emm_output, tw_int_emm_output2)
@@ -102,7 +165,7 @@ test_that(
       object = tw_int_emm_output$table$statistic
       , expected = structure(
         c("6.37", "7.02", "7.34", "5.51", "6.05", "5.94")
-        , label = "$t$"
+        , label = "$t(5.52)$"
         , class = c("labelled", "character")
       )
     )
@@ -122,8 +185,14 @@ test_that(
 
     tw_se_lsm_output <- apa_print(tw_se_lsm)
     tw_se_emm_output <- apa_print(tw_se_emm)
-    tw_se_lsm_output2 <- apa_print(summary(tw_se_lsm, infer = c(T, T)))
-    tw_se_emm_output2 <- apa_print(summary(tw_se_emm, infer = c(T, T)))
+    tw_se_lsm_output2 <- apa_print(
+      summary(tw_se_lsm, infer = TRUE)
+      , est_name = "M"
+    )
+    tw_se_emm_output2 <- apa_print(
+      summary(tw_se_emm, infer = TRUE)
+      , est_name = "M"
+    )
 
     expect_identical(tw_se_lsm_output, tw_se_lsm_output2)
     expect_identical(tw_se_emm_output, tw_se_emm_output2)
@@ -155,8 +224,14 @@ test_that(
 
     fw_mixed_lsm_output <- apa_print(fw_mixed_lsm)
     fw_mixed_emm_output <- apa_print(fw_mixed_emm)
-    fw_mixed_lsm_output2 <- apa_print(summary(fw_mixed_lsm, infer = c(T, T)))
-    fw_mixed_emm_output2 <- apa_print(summary(fw_mixed_emm, infer = c(T, T)))
+    fw_mixed_lsm_output2 <- apa_print(
+      summary(fw_mixed_lsm, infer = TRUE)
+      , est_name = "M"
+    )
+    fw_mixed_emm_output2 <- apa_print(
+      summary(fw_mixed_emm, infer = TRUE)
+      , est_name = "M"
+    )
 
     expect_identical(fw_mixed_lsm_output, fw_mixed_lsm_output2)
     expect_identical(fw_mixed_emm_output, fw_mixed_emm_output2)
@@ -262,28 +337,117 @@ test_that(
     )
 
 
-    # Contrasts
-    # data(obk.long, package = "afex")
-    #
-    # fw_mixed <- suppressWarnings(afex::aov_ez(
-    #   id = "id"
-    #   , dv = "value"
-    #   , data = obk.long
-    #   , between = c("treatment", "gender")
-    #   , within = c("phase", "hour")
-    #   , observed = "gender"
-    # ))
-    #
-    # fw_mixed_lsm <- lsmeans::lsmeans(fw_mixed$aov, ~ phase * hour | treatment * gender)
-    # fw_mixed_emm <- emmeans::emmeans(fw_mixed, ~ phase * hour | treatment * gender)
-    #
-    # fw_mixed_lsm_output <- apa_print(fw_mixed_lsm)
-    # fw_mixed_emm_output <- apa_print(fw_mixed_emm)
-    # fw_mixed_lsm_output2 <- apa_print(summary(fw_mixed_lsm, infer = c(T, T)))
-    # fw_mixed_emm_output2 <- apa_print(summary(fw_mixed_emm, infer = c(T, T)))
-    #
-    # expect_identical(tw_me_lsm_output, tw_me_lsm_output2)
-    # expect_identical(tw_me_emm_output, tw_me_emm_output2)
-    # expect_identical(tw_me_lsm_output, tw_me_emm_output2)
+    # Pairwise comparisons
+    tw_pairs_emm <- emmeans:::pairs.emmGrid(tw_me_emm)
+    tw_pairs_lsm <- lsmeans:::pairs.ref.grid(tw_me_lsm)
+
+    tw_pairs_emm_output <- apa_print(tw_pairs_emm)
+    tw_pairs_lsm_output <- apa_print(tw_pairs_lsm)
+    tw_pairs_emm_output2 <- apa_print(
+      summary(tw_pairs_emm, infer = TRUE)
+      , est_name = "\\Delta M"
+    )
+    tw_pairs_lsm_output2 <- apa_print(
+      summary(tw_pairs_lsm, infer = TRUE)
+      , est_name = "\\Delta M"
+    )
+
+    expect_identical(tw_pairs_emm_output, tw_pairs_emm_output2)
+    expect_identical(tw_pairs_lsm_output, tw_pairs_lsm_output2)
+    expect_identical(tw_pairs_lsm_output, tw_pairs_emm_output)
+
+    # table --------------------------------------------------------------------
+    expect_identical(
+      object = tw_pairs_emm_output$table$estimate
+      , expected = structure(
+        c("-1.10", "-1.30", "-0.20")
+        , label = "$\\Delta M$"
+        , class = c("labelled", "character")
+      )
+    )
+    expect_identical(
+      object = tw_pairs_emm_output$table$ci
+      , expected = structure(
+        c("$[-3.44$, $1.24]$",  "$[-3.64$, $1.04]$", "$[-2.54$, $2.14]$")
+        , label = "95\\% CI"
+        , class = c("labelled", "character")
+      )
+    )
+    expect_identical(
+      object = tw_pairs_emm_output$table$statistic
+      , expected = structure(
+        c("-1.34", "-1.59", "-0.24")
+        , label = "$t(8)$"
+        , class = c("labelled", "character")
+      )
+    )
+    expect_identical(
+      object = tw_pairs_emm_output$table$p.value
+      , expected = structure(
+        c(".413", ".305", ".968")
+        , label = "$p$"
+        , class = c("labelled", "character")
+      )
+    )
+
+    ## Custom contrast names
+    tw_pairs_emm_output <- apa_print(tw_pairs_emm, contrast_names = letters[1:3])
+    expect_identical(
+      object = tw_pairs_emm_output$table$contrast
+      , expected = letters[1:3]
+    )
+
+    # Custom contrasts
+    tw_se_contrast_emm <- emmeans::contrast(
+        tw_se_emm
+        , method = list("Positive - Negative" = c(1, 0, -1))
+      )
+
+    tw_se_contrast_emm_output <- apa_print(tw_se_contrast_emm)
+    tw_se_contrast_emm_output2 <- apa_print(
+      summary(tw_se_contrast_emm, infer = TRUE)
+      , est_name = "\\Delta M"
+    )
+
+    expect_identical(tw_se_contrast_emm_output, tw_se_contrast_emm_output2)
+  }
+)
+
+test_that(
+  "Estimate name guessing"
+  , {
+    emm_basis.afex_aov <- afex:::emm_basis.afex_aov
+
+    load("data/tw_rm_data.rdata")
+    tw_rm <- suppressWarnings(afex::aov_ez(
+      data = tw_rm_data
+      , id = "Subject"
+      , dv = "Recall"
+      , within = c("Task", "Valence")
+    ))
+
+    tw_me_lsm <- lsmeans::lsmeans(tw_rm$aov, ~ Valence)
+    expect_equal(est_name_from_call(tw_me_lsm), "M")
+
+    tw_pairs_lsm <- pairs(tw_me_lsm)
+    expect_equal(est_name_from_call(tw_pairs_lsm), "\\Delta M")
+
+    tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
+
+    afex::afex_options(emmeans_model = "univariate")
+
+    uni_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
+    expect_equal(est_name_from_call(uni_tw_me_emm), "M")
+
+    uni_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
+    expect_equal(est_name_from_call(uni_tw_pairs_emm), "\\Delta M")
+
+    afex::afex_options(emmeans_model = "multivariate")
+
+    mw_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
+    expect_equal(est_name_from_call(tw_me_emm), "M")
+
+    mw_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
+    expect_equal(est_name_from_call(mw_tw_pairs_emm), "\\Delta M")
   }
 )

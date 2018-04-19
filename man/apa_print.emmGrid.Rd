@@ -9,7 +9,8 @@
 \usage{
 apa_print.emmGrid(x, ...)
 
-apa_print.summary_emm(x, contrast_names = NULL, in_paren = FALSE, ...)
+apa_print.summary_emm(x, contrast_names = NULL, est_name = NULL,
+  in_paren = FALSE, ...)
 
 apa_print.lsmobj(x, ...)
 
@@ -20,7 +21,9 @@ apa_print.summary.ref.grid(x, ...)
 
 \item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
 
-\item{contrast_names}{Character. A vector of names to identify calculated contrasts.}
+\item{contrast_names}{Character. An optional vector of names to identify calculated contrasts.}
+
+\item{est_name}{Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses.}
 }

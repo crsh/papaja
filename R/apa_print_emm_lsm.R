@@ -5,7 +5,8 @@
 #' considered experimental.}
 #'
 #' @param x Object
-#' @param contrast_names Character. A vector of names to identify calculated contrasts.
+#' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
+#' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @details
@@ -33,11 +34,12 @@
 
 apa_print.emmGrid <- function(x, ...) {
   ellipsis <- list(...)
-  if(is.null(ellipsis$infer)) ellipsis$infer <- TRUE
-  ellipsis$object <- x
+  if(is.null(ellipsis$est_name)) {
+    ellipsis$est_name <- est_name_from_call(x)
+  }
 
-  summary_x <- do.call("summary", ellipsis)
-  apa_print(summary_x, ...)
+  ellipsis$x <- summary(x, infer = TRUE)
+  do.call("apa_print", ellipsis)
 }
 
 
@@ -47,10 +49,12 @@ apa_print.emmGrid <- function(x, ...) {
 apa_print.summary_emm <- function(
   x
   , contrast_names = NULL
+  , est_name = NULL
   , in_paren = FALSE
   , ...
 ) {
   if(class(x)[1] != "summary.ref.grid") validate(x, check_class = "summary_emm", check_NA = FALSE)
+  if(!is.null(est_name)) validate(est_name, check_class = "character")
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
@@ -62,10 +66,8 @@ apa_print.summary_emm <- function(
   if(!ci_supplied) {
     warning("Object 'x' does not include confidence intervals. APA guidelines recommend to routinely report confidence intervals for all estimates.")
 
-    ci_colnames <- NULL
     conf_level <- NULL
   } else {
-    ci_colnames <- c("ll", "ul")
     if(ci < 1) ci <- ci * 100
     conf_level <- paste0(ci, "\\% CI")
   }
@@ -77,7 +79,6 @@ apa_print.summary_emm <- function(
     stat_colnames <- NULL
   } else {
     dfdigits <- as.numeric(x$df %%1 > 0) * 2
-    contrast_df <- unique(x$df)
     df_colname <- "df"
     stat_colnames <- c("statistic", "p.value")
   }
@@ -85,34 +86,55 @@ apa_print.summary_emm <- function(
   split_by <- attr(x, "by.vars") # lsmeans
   if(is.null(split_by)) split_by <- attr(x, "misc")$by.vars # emmeans
   pri_vars <- attr(x, "pri.vars")
-  if(is.null(pri_vars)) pri_vars <- "contrast"
   factors <- c(pri_vars, split_by)
 
-  contrast_table <- data.frame(x)
-  if("null" %in% colnames(contrast_table)) {
-    contrast_table <- contrast_table[, -grep("null", colnames(contrast_table))]
-  }
-  colnames(contrast_table) <- c(
-    factors
-    , "estimate"
-    , "std.error"
-    , df_colname
-    , ci_colnames
-    , stat_colnames
-  )
 
   # Assamble table
+  contrast_table <- data.frame(x)
+  contrast_table[, factors] <- printnum(contrast_table[, factors])
+
+  if("null" %in% colnames(contrast_table)) { # This could go in a table note
+    contrast_table$null <- NULL
+  }
+
+  contrast_table <- rename_column(
+    contrast_table
+    , c("lsmean", "emmean", "ratio")
+    , "estimate"
+  )
+  contrast_table <- rename_column(contrast_table, "SE", "std.error")
+
+  if(pri_vars[1] == "contrast") {
+    variable_label(contrast_table) <- c(contrast = paste0("Contrast"))
+  }
+
   contrast_table$estimate <- printnum(contrast_table$estimate, ...)
+  variable_label(contrast_table) <- c(estimate = paste0("$", est_name, "$"))
 
   if(p_supplied) {
+    contrast_table <- rename_column(contrast_table, "t.ratio", "statistic")
     contrast_table$statistic <- printnum(contrast_table$statistic)
     contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
     contrast_table$p.value <- printp(contrast_table$p.value)
+    variable_label(contrast_table) <- c(p.value = "$p$")
+
+    if(length(unique(contrast_table$df)) == 1) { # Remove df column and put df in column heading
+      variable_label(contrast_table) <- c(
+        statistic = paste0("$t(", contrast_table$df[1], ")$")
+      )
+    } else {
+      variable_label(contrast_table) <- c(statistic = "$t$", df = "$df$")
+    }
   }
 
   if(ci_supplied) {
+    contrast_table <- rename_column(contrast_table, "lower.CL", "ll")
+    contrast_table <- rename_column(contrast_table, "upper.CL", "ul")
+
     ci_table <- data.frame(confint = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
-    contrast_table <- contrast_table[, -grep("std\\.error|ll|ul", colnames(contrast_table))]
+    contrast_table$std.error <- NULL
+    contrast_table$ll <- NULL
+    contrast_table$ul <- NULL
 
     contrast_table <- cbind(
       contrast_table[, 1:which(colnames(contrast_table) == "estimate")]
@@ -120,8 +142,10 @@ apa_print.summary_emm <- function(
       , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
     )
     contrast_table$confint <- as.character(contrast_table$confint)
+    contrast_table <- rename_column(contrast_table, "confint", "ci")
+    variable_label(contrast_table) <- c(ci = conf_level)
   } else {
-    contrast_table <- contrast_table[, -grep("std\\.error", colnames(contrast_table))]
+    contrast_table$std.error <- NULL
   }
 
   ## Add contrast names
@@ -178,11 +202,11 @@ apa_print.summary_emm <- function(
 
   if(ci_supplied) {
     apa_res$estimate <- apply(contrast_table, 1, function(y) {
-      paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
+      paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " ", y["ci"])
     })
   } else {
     apa_res$estimate <- apply(contrast_table, 1, function(y) {
-      paste0("$\\Delta M = ", y["estimate"], "$")
+      paste0("$", est_name, " = ", y["estimate"], "$")
     })
   }
 
@@ -193,41 +217,13 @@ apa_print.summary_emm <- function(
       paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
     })
 
+    contrast_table[, df_colname] <- NULL
+
     apa_res$full_result <- paste(apa_res$est, apa_res$stat, sep = ", ")
     names(apa_res$full_result) <- names(apa_res$est)
   }
 
   apa_res <- lapply(apa_res, as.list)
-
-  # Add table
-  if(p_supplied) {
-    if(length(contrast_df) == 1) { # Remove df column and put df in column heading
-      df <- contrast_table$df[1]
-      contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      colnames(contrast_table) <- c(factors, "estimate", "ci", "statistic", "p.value")
-      variable_label(contrast_table) <- c(
-        estimate = "$\\Delta M$"
-        , ci = conf_level
-        , statistic = paste0("$t(", df, ")$")
-        , p.value = "$p$"
-      )
-    } else {
-      colnames(contrast_table) <- c(factors, "estimate", "ci", "df", "statistic", "p.value")
-      variable_label(contrast_table) <- c(
-        estimate = "$\\Delta M$"
-        , ci = conf_level
-        , statistic = "$t$"
-        , df = "$df$"
-        , p.value = "$p$"
-      )
-    }
-  } else {
-    colnames(contrast_table) <- c(factors, "estimate", "ci")
-    variable_label(contrast_table) <- c(
-      estimate = "$\\Delta M$"
-      , ci = conf_level
-    )
-  }
 
   apa_res$table <- contrast_table
   attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
@@ -256,4 +252,37 @@ get_emm_conf_level <- function(x) {
   lsm_messages <- attr(x, "mesg")
   conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
   as.numeric(stringr::str_extract(conf_level_message, "0\\.\\d+"))
+}
+
+est_name_from_call <- function(x) {
+  # analysis_function <- as.character(attr(x, "model.info")$call[[1]])
+  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast"
+
+  # roles <- attr(x, "roles")
+  # is_multivariate <- all(roles$predictors %in% roles$multresp) ||
+  #   (roles$predictors == "contrast" & length(roles$multresp) > 0)
+  # contains_responses <- attr(x, "misc")$estType == "response"
+
+  if(x@misc$inv.lbl == "ratio" && !is.null(x@misc$predict.type) && x@misc$predict.type == "response") {
+    est_name <- "Ratio" # This could certainly be refined (e.g., OR, ratio of geometric means etc.)
+  } else {
+    est_name <- "M"
+    # est_name <- switch(
+    #   analysis_function
+    #   , aov = { "M" }
+    #   , lm = ifelse(is_multivariate, "M", "b")
+    #   # , glm = ifelse(contains_responses, "\\mathit{OR}", "b")
+    #   # , lmer = "b"
+    #   # , mixed = "M"
+    #   , { warning("apa_print() support for this model class is untested. Proceed with caution! Visit https://github.com/crsh/papaja/issues to request support for this model class."); "Estimate" }
+    # )
+
+    if(est_name != "Estimate") {
+      if(contains_contrasts) est_name <- paste("\\Delta", est_name)
+    }
+  }
+
+  est_name
+
+
 }
