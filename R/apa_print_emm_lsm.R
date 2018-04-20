@@ -5,6 +5,9 @@
 #' considered experimental.}
 #'
 #' @param x Object
+# #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
+# #'    supplied name is used.
 #' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
 #' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
@@ -49,11 +52,13 @@ apa_print.emmGrid <- function(x, ...) {
 apa_print.summary_emm <- function(
   x
   , contrast_names = NULL
+  # , stat_name = NULL
   , est_name = NULL
   , in_paren = FALSE
   , ...
 ) {
   if(class(x)[1] != "summary.ref.grid") validate(x, check_class = "summary_emm", check_NA = FALSE)
+  # if(!is.null(stat_name)) validate(est_name, check_class = "character")
   if(!is.null(est_name)) validate(est_name, check_class = "character")
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
@@ -79,6 +84,7 @@ apa_print.summary_emm <- function(
     stat_colnames <- NULL
   } else {
     dfdigits <- as.numeric(x$df %%1 > 0) * 2
+    dfdigits <- ifelse(is.na(dfdigits), 0, dfdigits) # In case df are Inf
     df_colname <- "df"
     stat_colnames <- c("statistic", "p.value")
   }
@@ -112,7 +118,7 @@ apa_print.summary_emm <- function(
   variable_label(contrast_table) <- c(estimate = paste0("$", est_name, "$"))
 
   if(p_supplied) {
-    contrast_table <- rename_column(contrast_table, "t.ratio", "statistic")
+    contrast_table <- rename_column(contrast_table, c("t.ratio", "z.ratio"), "statistic")
     contrast_table$statistic <- printnum(contrast_table$statistic)
     contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
     contrast_table$p.value <- printp(contrast_table$p.value)
@@ -128,8 +134,8 @@ apa_print.summary_emm <- function(
   }
 
   if(ci_supplied) {
-    contrast_table <- rename_column(contrast_table, "lower.CL", "ll")
-    contrast_table <- rename_column(contrast_table, "upper.CL", "ul")
+    contrast_table <- rename_column(contrast_table, c("lower.CL", "asymp.LCL"), "ll")
+    contrast_table <- rename_column(contrast_table, c("upper.CL", "asymp.UCL"), "ul")
 
     ci_table <- data.frame(confint = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
     contrast_table$std.error <- NULL
