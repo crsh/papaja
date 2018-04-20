@@ -1,35 +1,35 @@
 context("apa_print() for emmeans/lsmeans")
 
-test_that(
-  "Regression"
-  , {
-    pigs_lm <- lm(log(conc) ~ source * percent, data = emmeans::pigs)
-
-    pigs_lm_emm <- emmeans::emmeans(pigs_lm, ~ source)
-    pigs_pairs_emm_output <- apa_print(pairs(pigs_lm_emm, type = "response"))
-
-    # table --------------------------------------------------------------------
-    expect_identical(
-      object = pigs_pairs_emm_output$table$estimate
-      , expected = structure(
-        c("0.77", "0.66", "0.86")
-        , label = "Ratio"
-        , class = c("labelled", "character")
-      )
-    )
-
+# test_that(
+#   "Regression"
+#   , {
+#     pigs_lm <- lm(log(conc) ~ source * percent, data = emmeans::pigs)
 #
-    # noise.lm <- lm(noise ~ size * type * side, data = emmeans::auto.noise)
-    # noise.emm <- emmeans::emmeans(noise.lm, ~ size * side * type)
-    # apa_print(emmeans::contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")) # Table order is fucked up
-
-
-    # org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = emmeans::oranges)
-    # emmeans::emtrends(org.int, ~ variety, var = "price1", mult.name = "variety")
-    # emmeans::emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
-
-  }
-)
+#     pigs_lm_emm <- emmeans::emmeans(pigs_lm, ~ source)
+#     pigs_pairs_emm_output <- apa_print(pairs(pigs_lm_emm, type = "response"))
+#
+#     # table --------------------------------------------------------------------
+#     expect_identical(
+#       object = pigs_pairs_emm_output$table$estimate
+#       , expected = structure(
+#         c("0.77", "0.66", "0.86")
+#         , label = "Ratio"
+#         , class = c("labelled", "character")
+#       )
+#     )
+#
+#
+#     noise.lm <- lm(noise ~ size * type * side, data = emmeans::auto.noise)
+#     noise.emm <- emmeans::emmeans(noise.lm, ~ size * side * type)
+#     apa_print(emmeans::contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")) # Table order is fucked up
+#
+#
+#     org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = emmeans::oranges)
+#     emmeans::emtrends(org.int, ~ variety, var = "price1", mult.name = "variety")
+#     emmeans::emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
+#
+#   }
+# )
 
 test_that(
   "ANOVA"
