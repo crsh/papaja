@@ -17,7 +17,8 @@ apa_print.lsmobj(x, ...)
 apa_print.summary.ref.grid(x, ...)
 }
 \arguments{
-\item{x}{Object}
+\item{x}{Object
+adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the}
 
 \item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
 
