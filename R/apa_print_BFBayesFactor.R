@@ -82,7 +82,7 @@ apa_print.BFBayesFactor <- function(
   apa_res$statistic <- bf
 
   if(class(x@numerator[[1]]) %in% c("BFoneSample", "BFindepSample")) {
-    posterior_samples <- BayesFactor::posterior(x, iterations = iterations)
+    posterior_samples <- BayesFactor::posterior(x, index = 1, iterations = iterations)
     apa_res$estimate <- bf_estimates(
       x@numerator[[1]]
       , posterior_samples
