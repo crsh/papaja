@@ -93,3 +93,4 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.glm}},
   \code{\link{apa_print.htest}}, \code{\link{apa_print}}
 }
+\concept{apa_print}

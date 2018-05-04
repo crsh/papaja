@@ -94,3 +94,4 @@ Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
+\concept{apa_print}
