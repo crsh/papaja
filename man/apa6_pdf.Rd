@@ -6,41 +6,36 @@
 \title{APA article (6th edition)}
 \usage{
 apa6_pdf(fig_caption = TRUE, number_sections = FALSE, toc = FALSE,
-  pandoc_args = NULL, keep_tex = TRUE, ...)
+  keep_tex = TRUE, md_extensions = NULL, ...)
 
 apa6_word(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL,
   ...)
 }
 \arguments{
-\item{fig_caption}{Logical. Indicates if figures are rendered with captions.}
+\item{fig_caption}{\code{TRUE} to render figures with captions}
 
-\item{number_sections}{Logical. Indicates if section headers are be numbered. If
-\code{TRUE}, figure/table numbers will be of the form X.i, where X is the current first
--level section number, and i is an incremental number (the i-th figure/table); if
-\code{FALSE}, figures/tables will be numbered sequentially in the document from 1, 2,
- ..., and you cannot cross-reference section headers in this case.}
+\item{number_sections}{\code{TRUE} to number section headings}
 
-\item{toc}{Logical. Indicates if a table of contents is included.}
+\item{toc}{\code{TRUE} to include a table of contents in the output}
+
+\item{keep_tex}{Keep the intermediate tex file used in the conversion to PDF}
+
+\item{md_extensions}{Markdown extensions to be added or removed from the default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.}
+
+\item{...}{Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
-
-\item{keep_tex}{Logical. Keep the intermediate tex file used in the conversion to PDF.}
-
-\item{...}{Further arguments to pass to \code{\link[bookdown]{pdf_document2}} or \code{\link[bookdown]{word_document2}}.}
-
-\item{md_extensions}{Character. Markdown extensions to be added or removed from the
-default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.}
 }
 \description{
 Template for creating an article according to APA guidelines (6th edition) in PDF format.
 }
 \details{
-When creating PDF documents the YAML option \code{class} is passed to the class options of the LaTeX apa6 document class.
+When creating PDF documents the YAML option \code{classoption} is passed to the class options of the LaTeX apa6 document class.
    In this case, additional options are available. Refer to the apa6 document class
    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
    such as paper size or draft watermarks.
 
-   When creating PDF documents the output device for figures defaults to \code{c("pdf", "postscript", "png", "tiff")},
+   When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
    so that each figure is saved in all four formats at a resolution of 300 dpi.
 }
 \section{Functions}{
@@ -53,5 +48,5 @@ should be considered experimental.}
 NULL
 }
 \seealso{
-\code{\link[bookdown]{pdf_document2}}, \code{\link[bookdown]{word_document2}}
+\code{\link[bookdown]{pdf_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[bookdown]{word_document2}}, \code{\link[rmarkdown]{word_document}}
 }

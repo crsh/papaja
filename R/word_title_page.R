@@ -18,12 +18,10 @@ word_title_page <- function(x) {
 
   if(is.null(x$mask) || !x$mask) {
     ## Concatenate author names
-    authors <- author_ampersand(x$author, format = "word")
-    authors <- paste(unlist(lapply(authors, "[[", "name")), collapse = "")
+    authors <- paste_authors(x$author, format = "word")
 
     ## Add superscripts to affiliation line
-    affiliations <- lapply(x$affiliation, function(y) c(paste0("^", y["id"], "^"), y["institution"]))
-    affiliations <- sapply(affiliations, paste, collapse = " ")
+    affiliations <- paste_affiliations(x$affiliation, format = "word")
 
     ## Assemble author note
     corresponding_author <- x$author[which(unlist(lapply(lapply(x$author, "[[", "corresponding"), isTRUE)))]

@@ -33,7 +33,6 @@ footnotelist      : no
 lineno            : yes
 linkcolor         : "blue"
 
-lang              : "english"
 class             : "man"
 output            : papaja::apa6_pdf # Use papaja::apa6_word for Word documents
 ---
