@@ -280,20 +280,38 @@ hd_int <- function(x, level = 0.95) {
 #' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
 #'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
 
-add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
+add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE, ci_conf_level = 95) {
   # ----------------------------------------------------------------------------
   # We don't validate here because this function is intended to be used
   # internally, validation, should have happened earlier in the processing chain.
-
+  
   # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   # validate(es, check_class = "character", check_NA = FALSE)
-
+  
+  # --------------------------------------------------------------------------
+  # Calculate confidence interval function 
+  
+  calc_ci <- function (x, es) {
+    
+    es_ci <- MBESS::ci.R2(
+      R2 = x[es],
+      df.1 = x["df"],
+      df.2 = x["df_res"],
+      conf.level = ci_conf_level / 100
+    )
+    
+    if(!is.na(es_ci$Lower)){ LL <- es_ci$Lower } else { LL <- 0 }
+    if(!is.na(es_ci$Upper)){ UL <- es_ci$Upper } else { UL <- 1 }
+    
+    return(c(LL, UL))
+  }
+  
   if(!is.null(es)) {
     # Stop if the user requires a non-supported effect-size measure ----
     if(!all(es %in% c("pes", "ges", "es"))) {
       stop("Requested effect size measure(s) currently not supported: ", paste(es, collapse = ", "), ".")
     }
-
+    
     # --------------------------------------------------------------------------
     # Calculate generalized eta-squared
     #
@@ -316,8 +334,12 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
         obs_SSn2 <- 0
       }
       x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
-    }
 
+      x[ , c("es_ll", "es_ul")] <- t(apply(x[,c("ges","df", "df_res")], 1, 
+                                           function(y) calc_ci(y, es = "ges")))
+
+    }
+    
     # --------------------------------------------------------------------------
     # Calculate eta-squared
     #
@@ -334,23 +356,31 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       }
       x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
       message("Note that eta-squared is calculated correctly if and only if the design is balanced.")
+      
+      x[ , c("es_ll", "es_ul")] <- t(apply(x[,c("es","df", "df_res")], 1, 
+                                           function(y) calc_ci(y, es = "es")))
+      
     }
-
+    
     # --------------------------------------------------------------------------
     # Calculate partial eta-squared
     #
     # This one should be unproblematic and work in all cases.
     if("pes" %in% es) {
       x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+      
+      x[ , c("es_ll", "es_ul")] <- t(apply(x[,c("pes","df", "df_res")], 1, 
+                                           function(y) calc_ci(y, es = "pes")))
+      
     }
   }
-
+  
   # ----------------------------------------------------------------------------
   # Only calculate MSE if required (otherwise, Levene tests give an error).
   if(mse) {
     x$mse <- x$sumsq_err / x$df_res
   }
-
+  
   x
 }
 
