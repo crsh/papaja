@@ -50,7 +50,7 @@ library("papaja")
 ```{r analysis_preferences}
 # Seed for random number generation
 set.seed(42)
-opts_chunk$set(cache.extra = knitr::rand_seed)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
 
 

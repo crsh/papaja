@@ -423,13 +423,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   # Add pancod arguments
   args <- NULL
 
-  if(is.null(metadata$citeproc) || metadata$citeproc) {
+  if((!is.list(metadata$output) || is.null(metadata$output[[1]]$citation_package)) &
+     (is.null(metadata$citeproc) || metadata$citeproc)) {
 
     # Set CSL
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    if(is.null(metadata$replace_ampersands) || metadata$replace_ampersands) {
+    if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
       args <- set_ampersand_filter(args, metadata$csl)
     }
   }
