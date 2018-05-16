@@ -36,7 +36,7 @@ lineno            : yes
 citeproc          : no # To avoid CRAN check error
 
 class             : "man"
-output            : papaja::apa6_pdf
+output            : papaja::apa6_word
 ---
 
 ```{r message = FALSE, warning = FALSE}
@@ -83,6 +83,24 @@ apa_table(
 ```
 
 ```{r}
+var_labelled <- as.data.frame(my_table)
+variable_label(var_labelled) <- c(speed = "$\\alpha$", dist = "$\\beta$")
+
+apa_table(
+  list(
+    test = var_labelled
+    , `moar test` = var_labelled
+  )
+  , align = c("l", "r", "r")
+  , caption = "2.5 A merged table (list of two) with added stub heading and variable labels. Not escaped."
+  , note = "This table was created using apa\\_table()"
+  , added_stub_head = "Desciptives"
+  , escape = FALSE
+)
+```
+
+
+```{r}
 apa_table(
   list(
     test = my_table
@@ -119,6 +137,7 @@ apa_table(
   , align = c("l", "r", "r")
   , caption = "6 Test of column spanner and stub indenting."
   , note = "This table was created using apa_table()."
+  , row.names = TRUE
   , added_stub_head = "Desciptives"
   , col_spanners = list(Measure = c(2, 3))
   , stub_indents = list(2:3)
@@ -127,6 +146,7 @@ apa_table(
 
 ```{r}
 my_table <- rbind(t(my_table), t(my_table), t(my_table))
+rownames(my_table) <- 1:nrow(my_table)
 
 apa_table(
   my_table
@@ -143,6 +163,7 @@ apa_table(
 
 ```{r}
 my_table <- rbind(my_table, my_table, my_table, my_table, my_table, my_table, my_table)
+rownames(my_table) <- 1:nrow(my_table)
 
 apa_table(
   my_table

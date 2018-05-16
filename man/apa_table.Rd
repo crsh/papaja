@@ -8,7 +8,7 @@
 \usage{
 apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
   added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
-  placement = "tbp", landscape = FALSE, small = FALSE, escape = NULL,
+  placement = "tbp", landscape = FALSE, small = FALSE, escape = TRUE,
   format.args = NULL, ...)
 
 apa_table.latex(x, caption = NULL, note = NULL, col_spanners = NULL,
@@ -47,8 +47,7 @@ documents.}
 \item{small}{Logical. If \code{TRUE} the font size of the table content is reduced.}
 
 \item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
-column names, row names, caption, note and table contents are escaped. Default is \code{TRUE} if
-target document format is PDF.}
+column names, row names, caption, note and table contents are escaped.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
 

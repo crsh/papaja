@@ -22,8 +22,7 @@
 #'    documents.
 #' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
 #' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
-#'    column names, row names, caption, note and table contents are escaped. Default is \code{TRUE} if
-#'    target document format is PDF.
+#'    column names, row names, caption, note and table contents are escaped.
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
@@ -77,7 +76,7 @@ apa_table <- function(
   , placement = "tbp"
   , landscape = FALSE
   , small = FALSE
-  , escape = NULL
+  , escape = TRUE
   , format.args = NULL
   , ...
 ) {
@@ -86,8 +85,8 @@ apa_table <- function(
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
   if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
-  if(!is.null(escape)) validate(escape, check_class = "logical", check_length = 1)
 
+  validate(escape, check_class = "logical", check_length = 1)
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
   validate(small, check_class = "logical", check_length = 1)
@@ -103,15 +102,10 @@ apa_table <- function(
     format.args$digits <- ellipsis$digits
   }
 
-  if(is.null(escape)) {
-    ellipsis$escape <- TRUE
-  } else {
-    ellipsis$escape <- escape
-  }
-
   # List of tables?
   if(is.list(x) && !is.data.frame(x)) {
     # x <- lapply(x, as.data.frame, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    x <- lapply(x, function(y) default_label(data.frame(y, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)))
 
     ## Assemble table
     if(row_names) {
@@ -136,6 +130,7 @@ apa_table <- function(
 
   } else {
     # x <- as.data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    prep_table <- default_label(data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE))
 
     ## Assemble table
     if(row_names) {
@@ -147,9 +142,8 @@ apa_table <- function(
   }
 
   # Escape special characters
-  if(!is.null(ellipsis$escape) && ellipsis$escape) {
+  if(escape) {
     prep_table <- as.data.frame(lapply(prep_table, escape_latex, spaces = TRUE), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
-    # prep_table <- default_label(prep_table)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
     caption <- escape_latex(caption)
     note <- escape_latex(note)
@@ -174,9 +168,9 @@ apa_table <- function(
   # Pass to markup generating functions
   output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
 
-  if(!is.null(ellipsis[["format"]])) {
-    output_format <- ellipsis[["format"]]
-    ellipsis[["format"]] <- NULL
+  if(!is.null(ellipsis$format)) {
+    output_format <- ellipsis$format
+    ellipsis$format <- NULL
   } else {
     if(length(output_format) == 0 || output_format == "markdown") output_format <- "latex" # markdown_strict for render_appendix()
   }
@@ -438,7 +432,9 @@ add_row_names <- function(x, added_stub_head) {
 #' NULL
 
 indent_stubs <- function(x, lines, filler = "\ \ \ ") {
-  x <- as.data.frame(lapply(x, as.character), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+  # x <- lapply(x, function(y) default_label(data.frame(y, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)))
+
+  # x <- as.data.frame(lapply(x, as.character), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
 
   # Add indentation
   for(i in seq_along(lines)) {

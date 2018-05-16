@@ -244,20 +244,67 @@ Max & 25,000 & 120,000\\
 \begin{center}
 \begin{threeparttable}
 \caption{\label{tab:unnamed-chunk-3}2 A merged table (list of two) with added stub heading. Not escaped.}
-\begin{tabular}{lrr}
+\begin{tabular}{lr}
 \toprule
-Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
+speed & \multicolumn{1}{c}{dist}\\
 \midrule
-test &  & \\
-\ \ \ Mean & 15.40 & 42.98\\
-\ \ \ SD & 5.29 & 25.77\\
-\ \ \ Min & 4.00 & 2.00\\
-\ \ \ Max & 25.00 & 120.00\\
-moar test &  & \\
-\ \ \ Mean & 15.40 & 42.98\\
-\ \ \ SD & 5.29 & 25.77\\
-\ \ \ Min & 4.00 & 2.00\\
-\ \ \ Max & 25.00 & 120.00\\
+test & \\
+\ \ \ 15.40 & 42.98\\
+\ \ \ 5.29 & 25.77\\
+\ \ \ 4.00 & 2.00\\
+\ \ \ 25.00 & 120.00\\
+moar test & \\
+\ \ \ 15.40 & 42.98\\
+\ \ \ 5.29 & 25.77\\
+\ \ \ 4.00 & 2.00\\
+\ \ \ 25.00 & 120.00\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\textit{Note.} This table was created using apa\_table()
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var_labelled <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(my_table)}
+\KeywordTok{variable_label}\NormalTok{(var_labelled) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{speed =} \StringTok{"$}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{alpha$"}\NormalTok{, }\DataTypeTok{dist =} \StringTok{"$}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{beta$"}\NormalTok{)}
+
+\KeywordTok{apa_table}\NormalTok{(}
+  \KeywordTok{list}\NormalTok{(}
+    \DataTypeTok{test =}\NormalTok{ var_labelled}
+\NormalTok{    , }\StringTok{`}\DataTypeTok{moar test}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{var_labelled}
+\NormalTok{  )}
+\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"2.5 A merged table (list of two) with added stub heading and variable labels. Not escaped."}
+\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
+\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\DataTypeTok{escape =} \OtherTok{FALSE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:unnamed-chunk-4}2.5 A merged table (list of two) with added stub heading and variable labels. Not escaped.}
+\begin{tabular}{lr}
+\toprule
+$\alpha$ & \multicolumn{1}{c}{$\beta$}\\
+\midrule
+test & \\
+\ \ \ 15.40 & 42.98\\
+\ \ \ 5.29 & 25.77\\
+\ \ \ 4.00 & 2.00\\
+\ \ \ 25.00 & 120.00\\
+moar test & \\
+\ \ \ 15.40 & 42.98\\
+\ \ \ 5.29 & 25.77\\
+\ \ \ 4.00 & 2.00\\
+\ \ \ 25.00 & 120.00\\
 \bottomrule
 \addlinespace
 \end{tabular}
@@ -285,16 +332,16 @@ moar test &  & \\
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-4}3 A 'merged' table (list of one) with added stub heading.}
-\begin{tabular}{lrr}
+\caption{\label{tab:unnamed-chunk-5}3 A 'merged' table (list of one) with added stub heading.}
+\begin{tabular}{lr}
 \toprule
-Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
+speed & \multicolumn{1}{c}{dist}\\
 \midrule
-test &  & \\
-\ \ \ Mean & 15.40 & 42.98\\
-\ \ \ SD & 5.29 & 25.77\\
-\ \ \ Min & 4.00 & 2.00\\
-\ \ \ Max & 25.00 & 120.00\\
+test & \\
+\ \ \ 15.40 & 42.98\\
+\ \ \ 5.29 & 25.77\\
+\ \ \ 4.00 & 2.00\\
+\ \ \ 25.00 & 120.00\\
 \bottomrule
 \addlinespace
 \end{tabular}
@@ -323,7 +370,7 @@ test &  & \\
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-4}4 Test if simple row numbers are omitted from table.}
+\caption{\label{tab:unnamed-chunk-5}4 Test if simple row numbers are omitted from table.}
 \begin{tabular}{lr}
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
@@ -357,7 +404,7 @@ speed & \multicolumn{1}{c}{dist}\\
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-4}5 Test if simple row numbers are omitted from merged table (list of two).}
+\caption{\label{tab:unnamed-chunk-5}5 Test if simple row numbers are omitted from merged table (list of two).}
 \begin{tabular}{lr}
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
@@ -389,6 +436,7 @@ B & \\
 \NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
 \NormalTok{  , }\DataTypeTok{caption =} \StringTok{"6 Test of column spanner and stub indenting."}
 \NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
+\NormalTok{  , }\DataTypeTok{row.names =} \OtherTok{TRUE}
 \NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
 \NormalTok{  , }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
 \NormalTok{  , }\DataTypeTok{stub_indents =} \KeywordTok{list}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{3}\NormalTok{)}
@@ -399,7 +447,7 @@ B & \\
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-5}6 Test of column spanner and stub indenting.}
+\caption{\label{tab:unnamed-chunk-6}6 Test of column spanner and stub indenting.}
 \begin{tabular}{lrr}
 \toprule
  & \multicolumn{2}{c}{Measure} \\
@@ -423,6 +471,7 @@ Max & 25.00 & 120.00\\
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{my_table <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{t}\NormalTok{(my_table), }\KeywordTok{t}\NormalTok{(my_table), }\KeywordTok{t}\NormalTok{(my_table))}
+\KeywordTok{rownames}\NormalTok{(my_table) <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(my_table)}
 
 \KeywordTok{apa_table}\NormalTok{(}
 \NormalTok{  my_table}
@@ -442,20 +491,20 @@ Max & 25.00 & 120.00\\
 \begin{TableNotes}[para]
 \textit{Note.} This table was created using apa\_table().
 \end{TableNotes}
-\begin{longtable}{lrrlr}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:unnamed-chunk-6}7 Test of midurles and landscape mode and named stub indentation.}\\
+\begin{longtable}{lrrl}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-7}7 Test of midurles and landscape mode and named stub indentation.}\\
 \toprule
- & \multicolumn{2}{c}{Measure}  &  &\\
+ & \multicolumn{2}{c}{Measure}  &\\
 \cmidrule(r){2-3}
-Desciptives & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max}\\
+Mean & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max}\\
 \midrule
-\ \ \ speed & 15.40 & 5.29 & 4.00 & 25.00\\
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-Jo &  &  &  & \\ \midrule
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-\ \ \ speed & 15.40 & 5.29 & 4.00 & 25.00\\
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
+\ \ \ 15.40 & 5.29 & 4.00 & 25.00\\
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+Jo &  &  & \\ \midrule
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+\ \ \ 15.40 & 5.29 & 4.00 & 25.00\\
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
 \bottomrule
 \addlinespace
 \insertTableNotes
@@ -465,6 +514,7 @@ Jo &  &  &  & \\ \midrule
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{my_table <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(my_table, my_table, my_table, my_table, my_table, my_table, my_table)}
+\KeywordTok{rownames}\NormalTok{(my_table) <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(my_table)}
 
 \KeywordTok{apa_table}\NormalTok{(}
 \NormalTok{  my_table}
@@ -485,56 +535,56 @@ Jo &  &  &  & \\ \midrule
 \begin{TableNotes}[para]
 \textit{Note.} This table was created using apa\_table().
 \end{TableNotes}
-\begin{longtable}{lrrlr}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:unnamed-chunk-7}8 A long table.}\\
+\begin{longtable}{lrrl}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-8}8 A long table.}\\
 \toprule
- & \multicolumn{2}{c}{Measure}  &  &\\
+ & \multicolumn{2}{c}{Measure}  &\\
 \cmidrule(r){2-3}
-Desciptives & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max}\\
+Mean & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max}\\
 \midrule
-\ \ \ speed & 15.40 & 5.29 & 4.00 & 25.00\\
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-Jo &  &  &  & \\ \midrule
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-\ \ \ speed & 15.40 & 5.29 & 4.00 & 25.00\\
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
+\ \ \ 15.40 & 5.29 & 4.00 & 25.00\\
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+Jo &  &  & \\ \midrule
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+\ \ \ 15.40 & 5.29 & 4.00 & 25.00\\
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
 \bottomrule
 \addlinespace
 \insertTableNotes
@@ -563,56 +613,56 @@ dist & 42.98 & 25.77 & 2.00 & 120.00\\
 \begin{TableNotes}[para]
 \textit{Note.} This table was created using apa\_table().
 \end{TableNotes}
-\begin{longtable}{lrrlr}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:unnamed-chunk-8}9 A long table in landscape mode.}\\
+\begin{longtable}{lrrl}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-9}9 A long table in landscape mode.}\\
 \toprule
- & \multicolumn{2}{c}{Measure}  &  &\\
+ & \multicolumn{2}{c}{Measure}  &\\
 \cmidrule(r){2-3}
-Desciptives & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max}\\
+Mean & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max}\\
 \midrule
-\ \ \ speed & 15.40 & 5.29 & 4.00 & 25.00\\
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-Jo &  &  &  & \\ \midrule
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-\ \ \ speed & 15.40 & 5.29 & 4.00 & 25.00\\
-\ \ \ dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
-speed & 15.40 & 5.29 & 4.00 & 25.00\\
-dist & 42.98 & 25.77 & 2.00 & 120.00\\
+\ \ \ 15.40 & 5.29 & 4.00 & 25.00\\
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+Jo &  &  & \\ \midrule
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+\ \ \ 15.40 & 5.29 & 4.00 & 25.00\\
+\ \ \ 42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
+15.40 & 5.29 & 4.00 & 25.00\\
+42.98 & 25.77 & 2.00 & 120.00\\
 \bottomrule
 \addlinespace
 \insertTableNotes
@@ -638,7 +688,7 @@ dist & 42.98 & 25.77 & 2.00 & 120.00\\
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-9}}
+\caption{\label{tab:unnamed-chunk-10}}
 \begin{tabular}{lrrrrlrrrrlrrrrlrrrrlrrrr}
 \toprule
 Predictor & \multicolumn{1}{c}{$b$} & \multicolumn{1}{c}{95\% CI} & \multicolumn{1}{c}{$z$} & \multicolumn{1}{c}{$p$}\\
