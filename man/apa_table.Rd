@@ -19,7 +19,7 @@ apa_table(x, ...)
 \method{apa_table}{list}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
-  escape = TRUE, format.args = NULL, ...)
+  escape = TRUE, merge_method = "indent", format.args = NULL, ...)
 
 \method{apa_table}{data.frame}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
@@ -67,6 +67,9 @@ documents.}
 column names, row names, caption, note and table contents are escaped.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
+
+\item{merge_method}{Character. Determines how to merge tables if \code{x} is a \code{list}. Can be either
+\code{indent} or \code{table_spanner}.}
 }
 \description{
 Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
