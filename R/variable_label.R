@@ -142,41 +142,65 @@ assign_label.data.frame <- function(x, value, ...){
 #' @rdname default_label
 #' @keywords internal
 
-setGeneric(
-  "default_label"
-  , def = function(object){
-    standardGeneric("default_label")
-  }
-)
+default_label <- function(x, ...) {
+  UseMethod("default_label", x)
+}
 
+default_label.default <- function(x, ...) no_method(x)
+
+# setGeneric(
+#   "default_label"
+#   , def = function(object){
+#     standardGeneric("default_label")
+#   }
+# )
 
 
 #' @rdname default_label
 #' @keywords internal
 
-setMethod(
-  "default_label"
-  , signature = "data.frame"
-  , definition = function(object){
-
-    as.data.frame.list(
-      x = mapply(
-        FUN = function(x, value){
-          if(is.null(variable_label(x))){
-            variable_label(x) <- value
-          }
-          x
+default_label.data.frame <- function(x) {
+  as.data.frame.list(
+    x = mapply(
+      FUN = function(y, value) {
+        if(is.null(variable_label(y))) {
+          variable_label(y) <- value
         }
-        , x = object
-        , value = colnames(object)
-        , USE.NAMES = TRUE
-        , SIMPLIFY = FALSE
-      )
-      , check.names = FALSE
-      , stringsAsFactors = FALSE
+        y
+      }
+      , y = x
+      , value = colnames(x)
+      , USE.NAMES = TRUE
+      , SIMPLIFY = FALSE
     )
-  }
-)
+    , check.names = FALSE
+    , stringsAsFactors = FALSE
+  )
+}
+
+# setMethod(
+#   "default_label"
+#   , signature = "data.frame"
+#   , definition = function(object){
+#
+#     as.data.frame.list(
+#       x = mapply(
+#         FUN = function(x, value){
+#           if(is.null(variable_label(x))){
+#             variable_label(x) <- value
+#           }
+#           x
+#         }
+#         , x = object
+#         , value = colnames(object)
+#         , USE.NAMES = TRUE
+#         , SIMPLIFY = FALSE
+#       )
+#       , check.names = FALSE
+#       , stringsAsFactors = FALSE
+#     )
+#   }
+# )
 
 
 # ------------------------------------------------------------------------------

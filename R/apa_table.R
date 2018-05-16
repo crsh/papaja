@@ -65,7 +65,17 @@
 #' )
 #' @export
 
-apa_table <- function(
+apa_table <- function(x, ...) {
+  UseMethod("apa_table", x)
+}
+
+apa_table.default <- function(x, ...) no_method(x)
+
+
+#' @rdname apa_table
+#' @export
+
+apa_table.matrix <- function(
   x
   , caption = NULL
   , note = NULL
@@ -80,7 +90,116 @@ apa_table <- function(
   , format.args = NULL
   , ...
 ) {
-  if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
+  x <- data.frame(
+    x
+    , check.names = FALSE
+    , fix.empty.names = FALSE
+    , stringsAsFactors = FALSE
+  )
+
+  apa_table(
+    x
+    , caption = caption
+    , note = note
+    , stub_indents = stub_indents
+    , added_stub_head = added_stub_head
+    , col_spanners = col_spanners
+    , midrules = midrules
+    , placement = placement
+    , landscape = landscape
+    , small = small
+    , escape = escape
+    , format.args = format.args
+    , ...
+  )
+}
+
+
+#' @rdname apa_table
+#' @export
+
+apa_table.list <- function(
+  x
+  , caption = NULL
+  , note = NULL
+  , stub_indents = NULL
+  , added_stub_head = NULL
+  , col_spanners = NULL
+  , midrules = NULL
+  , placement = "tbp"
+  , landscape = FALSE
+  , small = FALSE
+  , escape = TRUE
+  , format.args = NULL
+  , ...
+) {
+  ellipsis <- list(...)
+  row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
+  validate(row_names, "row.names", check_class = "logical", check_length = 1)
+
+  if(row_names) {
+    x <- lapply(
+      x
+      , add_row_names
+      , added_stub_head = added_stub_head
+    )
+  } else {
+    x <- lapply(
+      x
+      , data.frame
+      , check.names = FALSE
+      , fix.empty.names = FALSE
+      , stringsAsFactors = FALSE
+    )
+  }
+
+  merged_table <- do.call(rbind.data.frame, x)
+  rownames(merged_table) <- NULL
+
+  # Generate list of table indentations
+  if(!is.null(names(x))) {
+    list_indents <- lapply(x, function(x) 1:nrow(x))
+    for(i in seq_along(list_indents)[-1]) {
+      list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
+    }
+  }
+
+  apa_table(
+    merged_table
+    , caption = caption
+    , note = note
+    , stub_indents = c(list_indents, stub_indents)
+    , added_stub_head = added_stub_head
+    , col_spanners = col_spanners
+    , midrules = midrules
+    , placement = placement
+    , landscape = landscape
+    , small = small
+    , escape = escape
+    , format.args = format.args
+    , ...
+  )
+}
+
+
+#' @rdname apa_table
+#' @export
+
+apa_table.data.frame <- function(
+  x
+  , caption = NULL
+  , note = NULL
+  , stub_indents = NULL
+  , added_stub_head = NULL
+  , col_spanners = NULL
+  , midrules = NULL
+  , placement = "tbp"
+  , landscape = FALSE
+  , small = FALSE
+  , escape = TRUE
+  , format.args = NULL
+  , ...
+) {
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
@@ -94,54 +213,29 @@ apa_table <- function(
 
   # Set defaults and rename ellipsis arguments
   ellipsis <- list(...)
+
   row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
+
   if(is.null(ellipsis$digits) & is.null(format.args$digits)) {
     format.args$digits <- 2
   } else if(!is.null(ellipsis$digits)) {
     format.args$digits <- ellipsis$digits
   }
 
-  # List of tables?
-  if(is.list(x) && !is.data.frame(x)) {
-    # x <- lapply(x, as.data.frame, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
-    x <- lapply(x, function(y) default_label(data.frame(y, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)))
+  # Create variable labels if necessary
+  prep_table <- default_label(x)
 
-    ## Assemble table
-    if(row_names) {
-      prep_table <- lapply(x, add_row_names, added_stub_head = added_stub_head)
-    } else {
-      prep_table <- x # lapply(x, data.frame, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
-    }
-
-    ## Round numeric cells
-    prep_table <- lapply(prep_table, format_cells, format.args)
-
-    ## Assemble table
-    # Old table merging by adding an additional column is depricated for the moment
-#     prep_table <- merge_tables(
-#       x
-#       , empty_cells = ""
-#       , row_names = row_names
-#       , added_stub_head = added_stub_head
-#     )
-
-    prep_table <- do.call(rbind, prep_table)
-
+  # Assemble table
+  if(row_names) {
+    prep_table <- add_row_names(x, added_stub_head = added_stub_head)
   } else {
-    # x <- as.data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
-    prep_table <- default_label(data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE))
-
-    ## Assemble table
-    if(row_names) {
-      prep_table <- add_row_names(x, added_stub_head = added_stub_head)
-    } else prep_table <- data.frame(x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
-
-    ## Round numeric cells
-    prep_table <- format_cells(prep_table, format.args)
+    prep_table <- x
   }
 
-  # Escape special characters
+  prep_table <- format_cells(prep_table, format.args)
+
+  ## Escape special characters
   if(escape) {
     prep_table <- as.data.frame(lapply(prep_table, escape_latex, spaces = TRUE), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
     colnames(prep_table) <- escape_latex(colnames(prep_table))
@@ -151,28 +245,22 @@ apa_table <- function(
     prep_table <- as.data.frame(lapply(prep_table, function(x) gsub("([^\\\\]+)(%)", "\\1\\\\%", x)), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
   }
 
-  # Indent stubs
-  ## Indent individual tables
-  if(is.list(x) && !is.data.frame(x) && !is.null(names(x))) {
-    list_indents <- lapply(x, function(x) 1:nrow(x))
-    for(i in seq_along(list_indents)[-1]) list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
-    prep_table <- indent_stubs(prep_table, list_indents, "\\ \\ \\ ")
-  }
-
+  ## Indent stubs
   if(!is.null(stub_indents)) prep_table <- indent_stubs(prep_table, stub_indents, "\\ \\ \\ ")
 
   # Fix ellipsis for further use
   ellipsis$escape <- FALSE
   ellipsis$row.names <- FALSE
 
-  # Pass to markup generating functions
-  output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-
+  ## Pass to markup generating functions
   if(!is.null(ellipsis$format)) {
     output_format <- ellipsis$format
     ellipsis$format <- NULL
   } else {
-    if(length(output_format) == 0 || output_format == "markdown") output_format <- "latex" # markdown_strict for render_appendix()
+    output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+
+    # Render to latex by default; render_appendix() uses markdown_strict
+    if(length(output_format) == 0 || output_format == "markdown") output_format <- "latex"
   }
 
   if(output_format == "latex") {

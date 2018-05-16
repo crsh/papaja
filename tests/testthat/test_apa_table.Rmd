@@ -36,7 +36,7 @@ lineno            : yes
 citeproc          : no # To avoid CRAN check error
 
 class             : "man"
-output            : papaja::apa6_word
+output            : papaja::apa6_pdf
 ---
 
 ```{r message = FALSE, warning = FALSE}
@@ -207,4 +207,3 @@ apa_table(
   , escape = FALSE
 )
 ```
-

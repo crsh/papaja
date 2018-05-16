@@ -2,23 +2,40 @@
 % Please edit documentation in R/apa_table.R
 \name{apa_table}
 \alias{apa_table}
+\alias{apa_table.matrix}
+\alias{apa_table.list}
+\alias{apa_table.data.frame}
 \alias{apa_table.latex}
 \alias{apa_table.word}
 \title{Prepare table for printing}
 \usage{
-apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
-  added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
-  placement = "tbp", landscape = FALSE, small = FALSE, escape = TRUE,
-  format.args = NULL, ...)
+apa_table(x, ...)
 
-apa_table.latex(x, caption = NULL, note = NULL, col_spanners = NULL,
+\method{apa_table}{matrix}(x, caption = NULL, note = NULL,
+  stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
-  ...)
+  escape = TRUE, format.args = NULL, ...)
 
-apa_table.word(x, caption = NULL, note = NULL, ...)
+\method{apa_table}{list}(x, caption = NULL, note = NULL,
+  stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
+  midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
+  escape = TRUE, format.args = NULL, ...)
+
+\method{apa_table}{data.frame}(x, caption = NULL, note = NULL,
+  stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
+  midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
+  escape = TRUE, format.args = NULL, ...)
+
+\method{apa_table}{latex}(x, caption = NULL, note = NULL,
+  col_spanners = NULL, midrules = NULL, placement = "tbp",
+  landscape = FALSE, small = FALSE, ...)
+
+\method{apa_table}{word}(x, caption = NULL, note = NULL, ...)
 }
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
+
+\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
 
 \item{caption}{Character. Caption to be printed above the table.}
 
@@ -50,8 +67,6 @@ documents.}
 column names, row names, caption, note and table contents are escaped.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
-
-\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
 }
 \description{
 Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
