@@ -80,6 +80,18 @@ apa_table(
   , added_stub_head = "Desciptives"
   , escape = FALSE
 )
+
+apa_table(
+  list(
+    test = my_table
+    , `moar test` = my_table
+  )
+  , align = c("l", "r", "r")
+  , caption = "2.25 A merged table (list of two) with table spanners."
+  , note = "This table was created using apa_table()"
+  , added_stub_head = "Desciptives"
+  , merge_method = "table_spanner"
+)
 ```
 
 ```{r}

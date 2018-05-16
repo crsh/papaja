@@ -270,6 +270,50 @@ moar test &  & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{apa_table}\NormalTok{(}
+  \KeywordTok{list}\NormalTok{(}
+    \DataTypeTok{test =}\NormalTok{ my_table}
+\NormalTok{    , }\StringTok{`}\DataTypeTok{moar test}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{my_table}
+\NormalTok{  )}
+\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"2.25 A merged table (list of two) with table spanners."}
+\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
+\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\DataTypeTok{merge_method =} \StringTok{"table_spanner"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:unnamed-chunk-3}2.25 A merged table (list of two) with table spanners.}
+\begin{tabular}{lrr}
+\toprule
+Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
+\midrule
+\multicolumn{3}{c}{test}\\
+Mean & 15.4 & 42.98\\
+SD & 5.29 & 25.77\\
+Min & 4 & 2\\
+Max & 25 & 120\\
+\multicolumn{3}{c}{moar test}\\
+Mean & 15.4 & 42.98\\
+SD & 5.29 & 25.77\\
+Min & 4 & 2\\
+Max & 25 & 120\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\textit{Note.} This table was created using apa\_table()
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{var_labelled <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(my_table)}
 \KeywordTok{variable_label}\NormalTok{(var_labelled) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{speed =} \StringTok{"$}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{alpha$"}\NormalTok{, }\DataTypeTok{dist =} \StringTok{"$}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{beta$"}\NormalTok{)}
 

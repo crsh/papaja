@@ -24,6 +24,8 @@
 #' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 #'    column names, row names, caption, note and table contents are escaped.
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
+#' @param merge_method Character. Determines how to merge tables if \code{x} is a \code{list}. Can be either
+#'   \code{indent} or \code{table_spanner}.
 #' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
 #'
 #' @details
@@ -130,12 +132,14 @@ apa_table.list <- function(
   , landscape = FALSE
   , small = FALSE
   , escape = TRUE
+  , merge_method = "indent"
   , format.args = NULL
   , ...
 ) {
   ellipsis <- list(...)
   row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
+  validate(merge_method, "merge_method", check_class = "character", check_length = 1)
 
   if(row_names) {
     x <- lapply(
@@ -153,14 +157,50 @@ apa_table.list <- function(
     )
   }
 
-  merged_table <- do.call(rbind.data.frame, x)
-  rownames(merged_table) <- NULL
+  if(!merge_method %in% c("indent", "table_spanner")) {
+    warning("merge_method '", merge_method, "' not supported. Defaulting to 'indent'.")
+    merge_method <- "indent"
+  }
 
-  # Generate list of table indentations
-  if(!is.null(names(x))) {
-    list_indents <- lapply(x, function(x) 1:nrow(x))
-    for(i in seq_along(list_indents)[-1]) {
-      list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
+  if(!is.null(ellipsis$format)) {
+    output_format <- ellipsis$format
+  } else {
+    output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+
+    # Render to latex by default; render_appendix() uses markdown_strict
+    if(length(output_format) == 0 || output_format == "markdown") output_format <- "latex"
+  }
+
+  if(merge_method == "table_spanner") {
+    if(output_format == "word") {
+      warning("merge_method '", merge_method, "' not supported for Word documents. Defaulting to 'indent'.")
+      merge_method <- "indent"
+    } else {
+      if(!is.null(names(x))) {
+        x <- mapply(
+          add_table_spanner
+          , x = x
+          , name = names(x)
+          , SIMPLIFY = FALSE
+        )
+      }
+      merged_table <- do.call(rbind.data.frame, x)
+      rownames(merged_table) <- NULL
+    }
+  }
+
+  list_indents <- list()
+
+  if(merge_method == "indent") {
+    merged_table <- do.call(rbind.data.frame, x)
+    rownames(merged_table) <- NULL
+
+    # Generate list of table indentations
+    if(!is.null(names(x))) {
+      list_indents <- lapply(x, function(x) 1:nrow(x))
+      for(i in seq_along(list_indents)[-1]) {
+        list_indents[[i]] <- list_indents[[i]] + max(list_indents[[i - 1]])
+      }
     }
   }
 
@@ -341,6 +381,9 @@ apa_table.latex <- function(
 
   table_lines <- unlist(strsplit(res_table, "\n"))
   table_lines <- table_lines[!grepl("\\\\addlinespace", table_lines)] # Remove \\addlinespace
+
+  # Fix table spanners
+  table_lines <- remove_excess_table_spanner_columns(table_lines)
 
   # Add column spanners
   if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
@@ -617,6 +660,21 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
   table_lines
 }
 
+
+add_table_spanner <- function(x, name, ...) {
+  name <- paste0("!!bs!!multicolumn!!ob!!", ncol(x), "!!cb!!!!ob!!c!!cb!!!!ob!!", name, "!!cb!!!!bs!!!!bs!!REMOVE!!REST")
+  table_spanner <- c(name, rep("", ncol(x)-1))
+  rbind(table_spanner, x)
+}
+
+remove_excess_table_spanner_columns <- function(x) {
+  table_spanner_rows <- which(grepl("REMOVE!!REST", x))
+  x[table_spanner_rows] <- gsub("REMOVE!!REST.*", "", x[table_spanner_rows])
+  x[table_spanner_rows] <- gsub("!!bs!!", "\\\\", x[table_spanner_rows])
+  x[table_spanner_rows] <- gsub("!!ob!!", "{", x[table_spanner_rows])
+  x[table_spanner_rows] <- gsub("!!cb!!", "}", x[table_spanner_rows])
+  x
+}
 
 #' Merge tables in list
 #'
