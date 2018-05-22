@@ -95,7 +95,7 @@ render_appendix <- function(
     tex <- readLines(new_name, encoding = "UTF-8")
     if(!grepl("\\\\section", tex[tex != ""][1])) tex <- c("\\section{}", tex) # Add section to start appendix
     appendix_endfloat_fix <- ifelse(
-      grepl("man", rmarkdown::metadata$class)
+      grepl("man", rmarkdown::metadata$classoption) || grepl("man", rmarkdown::metadata$class)
       , "\\makeatletter\n\\efloat@restorefloats\n\\makeatother"
       , ""
     )

@@ -357,10 +357,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ### Additional options
-  if(isTRUE(yaml_params$biblatex)) {
-    header_includes <- c(header_includes, "\\DeclareLanguageMapping{american}{american-apa}")
-  }
-
   if(isTRUE(yaml_params$lineno)) {
     header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
   }
