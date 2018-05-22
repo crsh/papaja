@@ -257,6 +257,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Set template defaults
   if(is.null(yaml_params$documentclass)) yaml_params$documentclass <- "apa6"
   if(is.null(yaml_params$classoption)) yaml_params$classoption <- "man"
+  if(!is.null(yaml_params$class)) { # Depricated class options
+    yaml_params$classoption <- paste(yaml_params$classoption, yaml_params$class, sep = ",")
+  }
 
   ## Class options
   if(isTRUE(yaml_params$mask)) yaml_params$classoption <- paste0(yaml_params$classoption, ",mask")
