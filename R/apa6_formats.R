@@ -257,16 +257,26 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Set template defaults
   if(is.null(yaml_params$documentclass)) yaml_params$documentclass <- "apa6"
   if(is.null(yaml_params$classoption)) yaml_params$classoption <- "man"
+
+  ## Class options
   if(!is.null(yaml_params$class)) { # Depricated class options
     yaml_params$classoption <- paste(yaml_params$classoption, yaml_params$class, sep = ",")
   }
-
-  ## Class options
   if(isTRUE(yaml_params$mask)) yaml_params$classoption <- paste0(yaml_params$classoption, ",mask")
   if(isTRUE(yaml_params$figsintext) || isTRUE(yaml_params$floatsintext)) {
     yaml_params$classoption <- paste0(yaml_params$classoption, ",floatsintext")
   }
   if(isTRUE(yaml_params$draft)) yaml_params$classoption <- paste0(yaml_params$classoption, ",draftall")
+
+  ## Deprecated lang arguments
+  if(!is.null(yaml_params$lang)) { # Depricated default lang options in papaja templates
+    yaml_params$lang <- switch(
+      yaml_params$lang
+      , english = "en-EN"
+      , american = "en-US"
+      , yaml_params$lang
+    )
+  }
 
   ## Add necessary header-includes
   header_includes <- list()
@@ -347,10 +357,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ### Additional options
-  if(isTRUE(yaml_params$biblatex)) {
-    header_includes <- c(header_includes, "\\DeclareLanguageMapping{american}{american-apa}")
-  }
-
   if(isTRUE(yaml_params$lineno)) {
     header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
   }
