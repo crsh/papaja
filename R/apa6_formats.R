@@ -256,12 +256,15 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   ## Set template defaults
   if(is.null(yaml_params$documentclass)) yaml_params$documentclass <- "apa6"
-  if(is.null(yaml_params$classoption)) yaml_params$classoption <- "man"
+
+  if(!is.null(yaml_params[["class"]])) { # Depricated class options
+    classoption <- paste(yaml_params[["class"]], collapse = ",")
+    yaml_params$classoption <- paste(paste(yaml_params$classoption, collapse = ","), classoption, sep = ",")
+  } else if(is.null(yaml_params$classoption)) {
+    yaml_params$classoption <- "man"
+  }
 
   ## Class options
-  if(!is.null(yaml_params$class)) { # Depricated class options
-    yaml_params$classoption <- paste(yaml_params$classoption, yaml_params$class, sep = ",")
-  }
   if(isTRUE(yaml_params$mask)) yaml_params$classoption <- paste0(yaml_params$classoption, ",mask")
   if(isTRUE(yaml_params$figsintext) || isTRUE(yaml_params$floatsintext)) {
     yaml_params$classoption <- paste0(yaml_params$classoption, ",floatsintext")
@@ -278,21 +281,8 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
-  ## Add necessary header-includes
+  ## Add necessary header includes
   header_includes <- list()
-
-  apa6_header_includes <-  system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "apa6_header_includes.tex"
-    , package = "papaja"
-  )
-  if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
-
-  apa6_header_includes <- readLines(apa6_header_includes, encoding = "UTF-8")
-  apa6_header_includes <- apa6_header_includes[!grepl("^%", apa6_header_includes)]
-  apa6_header_includes <- gsub("\\s*%.+$||\t", "", apa6_header_includes)
-
-  header_includes <- c(header_includes, apa6_header_includes)
 
   ### Essential manuscript parts
   if(!is.null(yaml_params$shorttitle)) {
@@ -342,7 +332,20 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
   }
 
-  ### Table formatting
+  ### Manuscript and table formatting
+  apa6_header_includes <-  system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "apa6_header_includes.tex"
+    , package = "papaja"
+  )
+  if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
+
+  apa6_header_includes <- readLines(apa6_header_includes, encoding = "UTF-8")
+  apa6_header_includes <- apa6_header_includes[!grepl("^%", apa6_header_includes)]
+  apa6_header_includes <- gsub("\\s*%.+$||\t", "", apa6_header_includes)
+
+  header_includes <- c(header_includes, apa6_header_includes)
+
   if(
     ((!is.null(yaml_params$figsintext) & !isTRUE(yaml_params$figsintext)) ||
     (!is.null(yaml_params$floatsintext) & !isTRUE(yaml_params$floatsintext))) &&
@@ -353,6 +356,12 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , "\\DeclareDelayedFloatFlavor{ThreePartTable}{table}" # Make endfloat play with longtable
       # , "\\DeclareDelayedFloatFlavor{ltable}{table}" # Make endfloat play with lscape
       , "\\DeclareDelayedFloatFlavor{lltable}{table}" # Make endfloat play with lscape & longtable
+      # Patch \efloat@iwrite to use \protected@write (bug in endfloat package < 2.6)
+      # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
+      # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
+      , "\\makeatletter"
+      , "\\renewcommand{\\efloat@iwrite}[1]{\\expandafter\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
+      , "\\makeatother"
     )
   }
 

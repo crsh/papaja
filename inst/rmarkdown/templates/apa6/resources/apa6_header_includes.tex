@@ -1,7 +1,7 @@
 % Manuscript styling
-\captionsetup{font=singlespacing,justification=justified}
 \usepackage{csquotes}
 \usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
 
 % Table formatting
 \usepackage{longtable}
@@ -12,20 +12,11 @@
 \usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
 \usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
-% Patch \efloat@iwrite to use \protected@write (bug in endfloat package < 2.6)
-% Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
-% Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
-\makeatletter
-\renewcommand\efloat@iwrite[1]{\expandafter\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
-\makeatother
-
 % Create new environments so endfloat can handle them
 % \newenvironment{ltable}
 %   {\begin{landscape}\begin{center}\begin{threeparttable}}
 %   {\end{threeparttable}\end{center}\end{landscape}}
-\newenvironment{lltable}
-  {\begin{landscape}\begin{center}\begin{ThreePartTable}}
-  {\end{ThreePartTable}\end{center}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
 
 % Enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
@@ -34,7 +25,6 @@
 \newlength\longtablewidth
 \setlength{\longtablewidth}{1in}
 \newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
-\makeatother
 
 % \setlength{\parindent}{0.5in}
 % \setlength{\parskip}{0pt plus 0pt minus 0pt}
