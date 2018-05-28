@@ -54,9 +54,9 @@ vignette: >
 ---
 
 ```{r include = FALSE}
-library("papaja")
 library("dplyr")
 library("afex")
+library("papaja")
 
 knitr::opts_chunk$set(fig.align = "center")
 

@@ -26,21 +26,23 @@ wordcount: "Too lazy to count"
 
 bibliography      : ["references.bib", "r-references.bib"]
 
-figsintext        : yes
+floatsintext      : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
 lineno            : yes
 linkcolor         : "blue"
+mask              : no
+draft             : no
 
-class             : "man"
+classoption       : "man"
 output            : papaja::apa6_pdf # Use papaja::apa6_word for Word documents
 ---
 
 ```{r message = FALSE, warning = FALSE}
-library("papaja")
 library("dplyr")
 library("afex")
+library("papaja")
 
 load("../tests/testthat/data/mixed_data.rdata")
 ```
