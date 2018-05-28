@@ -9,7 +9,8 @@
 #' @param added_stub_head Character. Used as stub head (name of first column) if \code{row.names = TRUE}
 #'    is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.
 #' @param col_spanners List. A named list of vectors of length 2 that contain the first and last column to
-#'    span. The name of each list element containing the vector is used as grouping column name.
+#'    span. The name of each list element containing the vector is used as grouping column name. Ignored
+#'    in MS Word documents.
 #' @param stub_indents List. A named list of vectors that contain indeces of the rows to indent. The name
 #'    of each list element containing the vector is used as title for indented sections.
 #' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
@@ -20,7 +21,7 @@
 #'    and in MS Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
-#' @param small Logical. If \code{TRUE} the font size of the table content is reduced.
+#' @param small Logical. If \code{TRUE} the font size of the table content is reduced. Ignored in MS Word documents.
 #' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 #'    column names, row names, caption, note and table contents are escaped.
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
@@ -72,6 +73,14 @@ apa_table <- function(x, ...) {
 }
 
 apa_table.default <- function(x, ...) no_method(x)
+
+
+#' @rdname apa_table
+#' @export
+
+apa_table.apa_results_table <- function(x, escape = FALSE, ...) {
+  NextMethod(x, escape = FALSE, ...)
+}
 
 
 #' @rdname apa_table
@@ -336,8 +345,6 @@ apa_table.data.frame <- function(
   }
 }
 
-#' @rdname apa_table
-#' @export
 
 apa_table.latex <- function(
   x
@@ -451,9 +458,6 @@ apa_table.latex <- function(
   cat("\n\n")
 }
 
-
-#' @rdname apa_table
-#' @export
 
 apa_table.word <- function(
   x
