@@ -185,7 +185,10 @@ apa6_word <- function(
     args <- word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from)
 
     # Set citeproc = FALSE by default to invoke ampersand filter
-    if(is.null(metadata$citeproc) || metadata$citeproc) {
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
       metadata$citeproc <- FALSE
       assign("yaml_front_matter", metadata, pos = parent.frame())
     }
@@ -475,19 +478,23 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   writeLines(augmented_input_text, input_file_connection)
   close(input_file_connection)
 
+  # Add pancod arguments
   args <- NULL
+
+  # Process markdown
+  process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
+  process_markdown(input_file, from, args, TRUE)
+
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
     # Set CSL
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args, metadata$csl)
+    if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
+      args <- set_ampersand_filter(args, metadata$csl)
+    }
   }
-
-  # Process markdown
-  process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
-  process_markdown(input_file, from, args, TRUE)
 
   args
 }
