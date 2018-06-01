@@ -140,20 +140,26 @@ apa6_word <- function(
   validate(fig_caption, check_class = "logical", check_length = 1)
 
   # Get APA6 reference file
-  reference_docx <- system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "apa6_man.docx"
-    , package = "papaja"
-  )
-  if(reference_docx == "") stop("No .docx-reference file found.")
+  ellipsis <- list(...)
+  if(is.null(ellipsis$reference_docx)) {
+    ellipsis$reference_docx <- system.file(
+      "rmarkdown", "templates", "apa6", "resources"
+      , "apa6_man.docx"
+      , package = "papaja"
+    )
+    if(ellipsis$reference_docx == "") stop("No .docx-reference file found.")
+  }
+
 
   # Call word_document() with the appropriate options
-  config <- bookdown::word_document2(
-    reference_docx = reference_docx
-    , fig_caption = fig_caption
-    , pandoc_args = pandoc_args
-    , md_extensions = md_extensions
-    , ...
+  config <- do.call(
+    bookdown::word_document2
+    , c(
+      fig_caption = fig_caption
+      , pandoc_args = pandoc_args
+      , md_extensions = md_extensions
+      , ellipsis
+    )
   )
 
   # Set chunk defaults
