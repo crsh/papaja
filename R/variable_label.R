@@ -74,7 +74,7 @@ assign_label.default <- function(x, value){
   structure(
     x
     , label = value
-    , class = c("labelled", setdiff(class(x), "labelled"))
+    , class = c("papaja_labelled", setdiff(class(x), "papaja_labelled"))
   )
 }
 
@@ -204,12 +204,12 @@ default_label.data.frame <- function(x) {
 
 
 # ------------------------------------------------------------------------------
-# Some S3 methods for class labelled, aimed at making variable labels a bit
+# Some S3 methods for class papaja_labelled, aimed at making variable labels a bit
 # more stable
 
 #' @export
 
-`[.labelled` <- function(x, ..., drop = FALSE) {
+`[.papaja_labelled` <- function(x, ..., drop = FALSE) {
   y <- NextMethod("[")
   variable_label(y) <- variable_label(x)
   y
@@ -217,7 +217,7 @@ default_label.data.frame <- function(x) {
 
 #' @export
 
-`[[.labelled` <- function(x, ..., exact = TRUE) {
+`[[.papaja_labelled` <- function(x, ..., exact = TRUE) {
   y <- NextMethod("[[")
   variable_label(y) <- variable_label(x)
   y
@@ -226,7 +226,7 @@ default_label.data.frame <- function(x) {
 
 #' @export
 
-print.labelled <- function(x, ...) {
+print.papaja_labelled <- function(x, ...) {
   unit_defined <- !is.null(attr(x, "unit"))
 
   cat(
@@ -243,7 +243,7 @@ print.labelled <- function(x, ...) {
 
 #' @export
 
-droplevels.labelled <- function(x, exclude = if(anyNA(levels(x))) NULL else NA, ...){
+droplevels.papaja_labelled <- function(x, exclude = if(anyNA(levels(x))) NULL else NA, ...){
   original_label <- variable_label(x)
   x <- NextMethod("droplevels", x, exclude = exclude, ...)
   variable_label(x) <- original_label
@@ -252,7 +252,7 @@ droplevels.labelled <- function(x, exclude = if(anyNA(levels(x))) NULL else NA, 
 
 #' @export
 
-rep.labelled <- function(x, ...){
+rep.papaja_labelled <- function(x, ...){
   y <- NextMethod()
   variable_label(y) <- variable_label(x)
   y
@@ -263,12 +263,12 @@ rep.labelled <- function(x, ...){
 #'
 #' The levels of a factor are re-ordered so that the level specified by ref is
 #' first and the others are moved down. This is a copy from \code{\link[stats]{relevel}}
-#' in the \pkg{stats} package, but preserves the \code{label} attribute and class \code{labelled}.
+#' in the \pkg{stats} package, but preserves the \code{label} attribute and class \code{papaja_labelled}.
 #' @importFrom stats relevel
 #' @inheritParams stats::relevel
 #' @export
 
-relevel.labelled <- function(x, ref, ...){
+relevel.papaja_labelled <- function(x, ref, ...){
   y <- NextMethod()
   variable_label(y) <- variable_label(x)
   y

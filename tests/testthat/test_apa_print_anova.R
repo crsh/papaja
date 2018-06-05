@@ -90,7 +90,7 @@ test_that(
       ow_afex_aov_output$table$Effect
       , structure(
         c("Intercept", "Dosage")
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
         , label = "Effect"
       )
     )
@@ -156,7 +156,7 @@ test_that(
       , expected = structure(
         c("Gender", "Dosage", "Gender $\\times$ Dosage")
         , label = "Effect"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -208,7 +208,7 @@ test_that(
       , expected = structure(
         c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage")
         , label = "Effect"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 

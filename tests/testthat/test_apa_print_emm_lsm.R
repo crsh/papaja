@@ -14,7 +14,7 @@ context("apa_print() for emmeans/lsmeans")
 #       , expected = structure(
 #         c("0.77", "0.66", "0.86")
 #         , label = "Ratio"
-#         , class = c("labelled", "character")
+#         , class = c("papaja_labelled", "character")
 #       )
 #     )
 #
@@ -71,7 +71,7 @@ test_that(
       , expected = structure(
         c("11.00", "12.10", "12.30")
         , label = "$M$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -79,7 +79,7 @@ test_that(
       , expected = structure(
         c("$[6.34$, $15.66]$",  "$[7.44$, $16.76]$", "$[7.64$, $16.96]$")
         , label = "95\\% CI"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -87,7 +87,7 @@ test_that(
       , expected = structure(
         c("6.21", "6.84", "6.95")
         , label = "$t(4.63)$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -95,7 +95,7 @@ test_that(
       , expected = structure(
         c(".002", ".001", ".001")
         , label = "$p$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -150,7 +150,7 @@ test_that(
       , expected = structure(
         c("11.80", "13.00", "13.60", "10.20", "11.20", "11.00")
         , label = "$M$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -158,7 +158,7 @@ test_that(
       , expected = structure(
         c("$[7.17$, $16.43]$",  "$[8.37$, $17.63]$", "$[8.97$, $18.23]$", "$[5.57$, $14.83]$", "$[6.57$, $15.83]$", "$[6.37$, $15.63]$")
         , label = "95\\% CI"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -166,7 +166,7 @@ test_that(
       , expected = structure(
         c("6.37", "7.02", "7.34", "5.51", "6.05", "5.94")
         , label = "$t(5.52)$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -174,7 +174,7 @@ test_that(
       , expected = structure(
         c(".001", ".001", "< .001", ".002", ".001", ".001")
         , label = "$p$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -297,7 +297,7 @@ test_that(
       , expected = structure(
         printnum(as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))$emmean)
         , label = "$M$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -314,7 +314,7 @@ test_that(
           )
         )
         , label = "95\\% CI"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -323,7 +323,7 @@ test_that(
       , expected = structure(
         printnum(as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))$t.ratio)
         , label = "$t$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -332,7 +332,7 @@ test_that(
       , expected = structure(
         printp(as.data.frame(summary(fw_mixed_emm, infer = c(T, T)))$p.value)
         , label = "$p$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
@@ -362,7 +362,7 @@ test_that(
       , expected = structure(
         c("-1.10", "-1.30", "-0.20")
         , label = "$\\Delta M$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -370,7 +370,7 @@ test_that(
       , expected = structure(
         c("$[-3.44$, $1.24]$",  "$[-3.64$, $1.04]$", "$[-2.54$, $2.14]$")
         , label = "95\\% CI"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -378,7 +378,7 @@ test_that(
       , expected = structure(
         c("-1.34", "-1.59", "-0.24")
         , label = "$t(8)$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
     expect_identical(
@@ -386,7 +386,7 @@ test_that(
       , expected = structure(
         c(".413", ".305", ".968")
         , label = "$p$"
-        , class = c("labelled", "character")
+        , class = c("papaja_labelled", "character")
       )
     )
 
