@@ -244,7 +244,7 @@ printnum.data.frame <- function(
 #' @rdname printnum
 #' @export
 
-printnum.labelled <-function(x, ...){
+printnum.papaja_labelled <-function(x, ...){
   x_out <- NextMethod("printnum")
   variable_label(x_out) <- variable_label(x)
   x_out

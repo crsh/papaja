@@ -11,7 +11,7 @@ test_that(
       , expected = structure(
         1:4
         , label = "label_1"
-        , class = c("labelled", "integer")
+        , class = c("papaja_labelled", "integer")
       )
     )
   }
@@ -39,7 +39,7 @@ test_that(
         a = structure(
           1:4
           , label = "A beautiful test label."
-          , class = c("labelled", "integer")
+          , class = c("papaja_labelled", "integer")
         )
         , b = 5:8
       )
@@ -51,10 +51,10 @@ test_that(
 context("variable_label() extraction methods")
 
 test_that(
-  "variable_label.labelled-method"
+  "variable_label.papaja_labelled-method"
   , {
     object <- 1:10
-    class(object) <- c("labelled", "integer")
+    class(object) <- c("papaja_labelled", "integer")
     attr(object, "label") <- "label1"
 
     expect_identical(
@@ -64,10 +64,10 @@ test_that(
   }
 )
 
-context("methods for class .labelled")
+context("methods for class .papaja_labelled")
 
 test_that(
-  "droplevels.labelled-method"
+  "droplevels.papaja_labelled-method"
   , {
     # only check consistency, as base behavior has changed recently
     x <- factor(letters[1:4], levels = letters[1:10])
@@ -86,7 +86,7 @@ test_that(
 )
 
 test_that(
-  "[.labelled-method, [[.labelled-method"
+  "[.papaja_labelled-method, [[.papaja_labelled-method"
   , {
     x <- factor(letters[1:4], levels = letters[1:10])
     variable_label(x) <- "Test me!"
@@ -98,7 +98,7 @@ test_that(
       , expected = structure(
         1:3
         , .Label = letters[1:10]
-        , class = c("labelled", "factor")
+        , class = c("papaja_labelled", "factor")
         , label = "Test me!"
       )
     )
@@ -108,13 +108,13 @@ test_that(
       , expected = structure(
         2L
         , .Label = letters[1:10]
-        , class = c("labelled", "factor")
+        , class = c("papaja_labelled", "factor")
         , label = "Test me!"
       )
     )
 
     expect_identical(variable_label(y), "Test me!")
-    expect_identical(class(y), c("labelled", "factor"))
+    expect_identical(class(y), c("papaja_labelled", "factor"))
     expect_identical(levels(y), letters[1:10])
   }
 )
@@ -122,7 +122,7 @@ test_that(
 
 
 test_that(
-  "rep.labelled-method"
+  "rep.papaja_labelled-method"
   , {
     o1 <- 1:3
     variable_label(o1) <- "Test me!"
@@ -138,7 +138,7 @@ test_that(
 )
 
 test_that(
-  "relevel.labelled-method"
+  "relevel.papaja_labelled-method"
   , {
     o1 <- factor(letters[1:3], levels = letters[1:3])
     variable_label(o1) <- "Test me!"
@@ -146,12 +146,12 @@ test_that(
 
     expect_identical(
       object = o1
-      , expected = structure(c(2L, 1L, 3L), .Label = c("b", "a", "c"), class = c("labelled", "factor"), label = "Test me!")
+      , expected = structure(c(2L, 1L, 3L), .Label = c("b", "a", "c"), class = c("papaja_labelled", "factor"), label = "Test me!")
     )
     # Check all attributes separately, as sometimes expect_identical seems to be sloppy
     expect_identical(variable_label(o1), expected = "Test me!")
     expect_identical(levels(o1), expected = c("b", "a", "c"))
-    expect_identical(class(o1), expected = c("labelled", "factor"))
+    expect_identical(class(o1), expected = c("papaja_labelled", "factor"))
   }
 )
 

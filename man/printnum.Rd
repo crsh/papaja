@@ -7,7 +7,7 @@
 \alias{printnum.integer}
 \alias{printnum.numeric}
 \alias{printnum.data.frame}
-\alias{printnum.labelled}
+\alias{printnum.papaja_labelled}
 \title{Prepare numeric values for printing}
 \usage{
 printnum(x, ...)
@@ -24,7 +24,7 @@ printnum(x, ...)
 
 \method{printnum}{data.frame}(x, ...)
 
-\method{printnum}{labelled}(x, ...)
+\method{printnum}{papaja_labelled}(x, ...)
 }
 \arguments{
 \item{x}{Numeric. Can be either a single value, vector, or matrix.}
