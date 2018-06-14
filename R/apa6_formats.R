@@ -295,14 +295,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   ### Essential manuscript parts
   if(!is.null(yaml_params$shorttitle)) {
-    short_title <- paste0("\\shorttitle{", yaml_params$shorttitle, "}")
+    short_title <- paste0("\\shorttitle{", escape_latex(yaml_params$shorttitle), "}")
   } else {
     short_title <- paste0("\\shorttitle{SHORTTITLE}")
   }
   header_includes <- c(header_includes, short_title)
 
   if(!is.null(yaml_params$leftheader)) {
-    header_includes <- c(header_includes, paste0("\\leftheader{", yaml_params$leftheader, "}"))
+    header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(yaml_params$leftheader), "}"))
   }
 
   corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
@@ -314,7 +314,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , sep = "\n\n"
     )
 
-    header_includes <- c(header_includes, paste0("\\authornote{", author_note, "}"))
+    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
   }
 
   affiliations <- paste_affiliations(yaml_params$affiliation, format = "latex")
@@ -323,14 +323,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   yaml_params$author <- paste_authors(yaml_params$author, format = "latex")
 
   if(!is.null(yaml_params$note)) {
-    header_includes <- c(header_includes, paste0("\\note{", yaml_params$note, "}"))
+    header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
   }
 
   if(!is.null(yaml_params$abstract)) {
     abstract <- yaml_params$abstract
     yaml_params$abstract <- NULL
 
-    header_includes <- c(header_includes, paste0("\\abstract{", abstract, "}"))
+    header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
   }
 
   if(!is.null(yaml_params$keywords) || !is.null(yaml_params$wordcount)) {
@@ -566,7 +566,7 @@ paste_affiliations <- function(x, format) {
 
     paste(
       superscript
-      , paste(location, collapse = ", ")
+      , paste(escape_latex(location), collapse = ", ")
       , collapse = " "
     )
   }

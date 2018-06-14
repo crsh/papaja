@@ -16,7 +16,7 @@ Depends:
     R (>= 2.11.1)
 Imports:
   knitr (>= 1.10.5),
-  rmarkdown(>= 1.9),
+  rmarkdown(>= 1.10),
   bookdown (>= 0.6),
   yaml,
   broom (>= 0.3.6),
@@ -24,8 +24,6 @@ Imports:
   beeswarm,
   stringr,
   methods
-Remotes:
-  rstudio/rmarkdown@81dabbc
 Suggests:
   car,
   carData,
