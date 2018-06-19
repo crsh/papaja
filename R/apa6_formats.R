@@ -375,6 +375,11 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ### Additional options
+  if(!is.null(yaml_params$geometry)) {
+    header_includes <- c(header_includes, paste0("\\geometry{", yaml_params$geometry, "}\n\n"))
+    yaml_params$geometry <- NULL
+  }
+
   if(isTRUE(yaml_params$lineno)) {
     header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
   }
