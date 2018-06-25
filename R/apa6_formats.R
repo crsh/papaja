@@ -559,21 +559,20 @@ paste_authors <- function(x, format) {
 
 paste_affiliations <- function(x, format) {
   add_superscript <- function(y, format) {
-    if(format == "latex") {
-      superscript <- paste0("\\textsuperscript{", y["id"], "}")
+    if(is.null(y[["id"]])) {
+      superscript <- NULL
+    } else if(format == "latex") {
+      superscript <- paste0("\\textsuperscript{", y[["id"]], "}")
     } else if(format == "word") {
-      superscript <- paste0("^", y["id"], "^")
+      superscript <- paste0("^", y[["id"]], "^")
     }  else {
       stop("Format not supported.")
     }
 
     location <- c(y[["institution"]], y[["city"]], y[["state"]], y[["country"]])
+    location <- paste(escape_latex(location), collapse = ", ")
 
-    paste(
-      superscript
-      , paste(escape_latex(location), collapse = ", ")
-      , collapse = " "
-    )
+    paste(superscript, location)
   }
 
   affiliations <- vapply(x, add_superscript, format = format, FUN.VALUE = "a")
