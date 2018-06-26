@@ -2,14 +2,15 @@
 % Please edit documentation in R/apa_table.R
 \name{apa_table}
 \alias{apa_table}
+\alias{apa_table.apa_results_table}
 \alias{apa_table.matrix}
 \alias{apa_table.list}
 \alias{apa_table.data.frame}
-\alias{apa_table.latex}
-\alias{apa_table.word}
 \title{Prepare table for printing}
 \usage{
 apa_table(x, ...)
+
+\method{apa_table}{apa_results_table}(x, escape = FALSE, ...)
 
 \method{apa_table}{matrix}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
@@ -25,17 +26,14 @@ apa_table(x, ...)
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
   escape = TRUE, format.args = NULL, ...)
-
-\method{apa_table}{latex}(x, caption = NULL, note = NULL,
-  col_spanners = NULL, midrules = NULL, placement = "tbp",
-  landscape = FALSE, small = FALSE, ...)
-
-\method{apa_table}{word}(x, caption = NULL, note = NULL, ...)
 }
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
 
 \item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
+
+\item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
+column names, row names, caption, note and table contents are escaped.}
 
 \item{caption}{Character. Caption to be printed above the table.}
 
@@ -48,7 +46,8 @@ of each list element containing the vector is used as title for indented section
 is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.}
 
 \item{col_spanners}{List. A named list of vectors of length 2 that contain the first and last column to
-span. The name of each list element containing the vector is used as grouping column name.}
+span. The name of each list element containing the vector is used as grouping column name. Ignored
+in MS Word documents.}
 
 \item{midrules}{Numeric. Vector of line numbers in table (not counting column headings) that should be
 followed by a horizontal rule; ignored in MS Word documents.}
@@ -61,10 +60,7 @@ and in MS Word documents.}
 \item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 documents.}
 
-\item{small}{Logical. If \code{TRUE} the font size of the table content is reduced.}
-
-\item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
-column names, row names, caption, note and table contents are escaped.}
+\item{small}{Logical. If \code{TRUE} the font size of the table content is reduced. Ignored in MS Word documents.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
 

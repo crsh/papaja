@@ -142,20 +142,26 @@ apa6_word <- function(
   validate(fig_caption, check_class = "logical", check_length = 1)
 
   # Get APA6 reference file
-  reference_docx <- system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "apa6_man.docx"
-    , package = "papaja"
-  )
-  if(reference_docx == "") stop("No .docx-reference file found.")
+  ellipsis <- list(...)
+  if(is.null(ellipsis$reference_docx)) {
+    ellipsis$reference_docx <- system.file(
+      "rmarkdown", "templates", "apa6", "resources"
+      , "apa6_man.docx"
+      , package = "papaja"
+    )
+    if(ellipsis$reference_docx == "") stop("No .docx-reference file found.")
+  }
+
 
   # Call word_document() with the appropriate options
-  config <- bookdown::word_document2(
-    reference_docx = reference_docx
-    , fig_caption = fig_caption
-    , pandoc_args = pandoc_args
-    , md_extensions = md_extensions
-    , ...
+  config <- do.call(
+    bookdown::word_document2
+    , c(
+      fig_caption = fig_caption
+      , pandoc_args = pandoc_args
+      , md_extensions = md_extensions
+      , ellipsis
+    )
   )
 
   # Set chunk defaults
@@ -186,7 +192,10 @@ apa6_word <- function(
     args <- word_pre_processor(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from)
 
     # Set citeproc = FALSE by default to invoke ampersand filter
-    if(is.null(metadata$citeproc) || metadata$citeproc) {
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
       metadata$citeproc <- FALSE
       assign("yaml_front_matter", metadata, pos = parent.frame())
     }
@@ -257,12 +266,15 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   ## Set template defaults
   if(is.null(yaml_params$documentclass)) yaml_params$documentclass <- "apa6"
-  if(is.null(yaml_params$classoption)) yaml_params$classoption <- "man"
+
+  if(!is.null(yaml_params[["class"]])) { # Depricated class options
+    classoption <- paste(yaml_params[["class"]], collapse = ",")
+    yaml_params$classoption <- paste(paste(yaml_params$classoption, collapse = ","), classoption, sep = ",")
+  } else if(is.null(yaml_params$classoption)) {
+    yaml_params$classoption <- "man"
+  }
 
   ## Class options
-  if(!is.null(yaml_params$class)) { # Depricated class options
-    yaml_params$classoption <- paste(yaml_params$classoption, yaml_params$class, sep = ",")
-  }
   if(isTRUE(yaml_params$mask)) yaml_params$classoption <- paste0(yaml_params$classoption, ",mask")
   if(isTRUE(yaml_params$figsintext) || isTRUE(yaml_params$floatsintext)) {
     yaml_params$classoption <- paste0(yaml_params$classoption, ",floatsintext")
@@ -279,9 +291,58 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
-  ## Add necessary header-includes
+  ## Add necessary header includes
   header_includes <- list()
 
+  ### Essential manuscript parts
+  if(!is.null(yaml_params$shorttitle)) {
+    short_title <- paste0("\\shorttitle{", escape_latex(yaml_params$shorttitle), "}")
+  } else {
+    short_title <- paste0("\\shorttitle{SHORTTITLE}")
+  }
+  header_includes <- c(header_includes, short_title)
+
+  if(!is.null(yaml_params$leftheader)) {
+    header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(yaml_params$leftheader), "}"))
+  }
+
+  corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
+
+  if(length(corresponding_author) > 0) {
+    author_note <- paste(
+      c(yaml_params$author_note, yaml_params$authornote)
+      , corresponding_author_line(corresponding_author[[1]])
+      , sep = "\n\n"
+    )
+
+    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+  }
+
+  affiliations <- paste_affiliations(yaml_params$affiliation, format = "latex")
+  header_includes <- c(header_includes, paste0("\\affiliation{\n\\vspace{0.5cm}\n", affiliations, "}"))
+
+  yaml_params$author <- paste_authors(yaml_params$author, format = "latex")
+
+  if(!is.null(yaml_params$note)) {
+    header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
+  }
+
+  if(!is.null(yaml_params$abstract)) {
+    abstract <- yaml_params$abstract
+    yaml_params$abstract <- NULL
+
+    header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
+  }
+
+  if(!is.null(yaml_params$keywords) || !is.null(yaml_params$wordcount)) {
+    keywords <- paste(unlist(yaml_params$keywords), collapse = ", ")
+    if(!is.null(yaml_params$wordcount)) {
+      keywords <- paste0(keywords, "\\newline\\indent Word count: ", yaml_params$wordcount)
+    }
+    header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
+  }
+
+  ### Manuscript and table formatting
   apa6_header_includes <-  system.file(
     "rmarkdown", "templates", "apa6", "resources"
     , "apa6_header_includes.tex"
@@ -295,55 +356,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   header_includes <- c(header_includes, apa6_header_includes)
 
-  ### Essential manuscript parts
-  if(!is.null(yaml_params$shorttitle)) {
-    short_title <- paste0("\\shorttitle{", yaml_params$shorttitle, "}")
-  } else {
-    short_title <- paste0("\\shorttitle{SHORTTITLE}")
-  }
-  header_includes <- c(header_includes, short_title)
-
-  if(!is.null(yaml_params$leftheader)) {
-    header_includes <- c(header_includes, paste0("\\leftheader{", yaml_params$leftheader, "}"))
-  }
-
-  corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
-
-  if(length(corresponding_author) > 0) {
-    author_note <- paste(
-      c(yaml_params$author_note, yaml_params$authornote)
-      , corresponding_author_line(corresponding_author[[1]])
-      , sep = "\n\n"
-    )
-
-    header_includes <- c(header_includes, paste0("\\authornote{", author_note, "}"))
-  }
-
-  affiliations <- paste_affiliations(yaml_params$affiliation, format = "latex")
-  header_includes <- c(header_includes, paste0("\\affiliation{\n\\vspace{0.5cm}\n", affiliations, "}"))
-
-  yaml_params$author <- paste_authors(yaml_params$author, format = "latex")
-
-  if(!is.null(yaml_params$note)) {
-    header_includes <- c(header_includes, paste0("\\note{", yaml_params$note, "}"))
-  }
-
-  if(!is.null(yaml_params$abstract)) {
-    abstract <- yaml_params$abstract
-    yaml_params$abstract <- NULL
-
-    header_includes <- c(header_includes, paste0("\\abstract{", abstract, "}"))
-  }
-
-  if(!is.null(yaml_params$keywords) || !is.null(yaml_params$wordcount)) {
-    keywords <- paste(unlist(yaml_params$keywords), collapse = ", ")
-    if(!is.null(yaml_params$wordcount)) {
-      keywords <- paste0(keywords, "\\newline\\indent Word count: ", yaml_params$wordcount)
-    }
-    header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
-  }
-
-  ### Table formatting
   if(
     ((!is.null(yaml_params$figsintext) & !isTRUE(yaml_params$figsintext)) ||
     (!is.null(yaml_params$floatsintext) & !isTRUE(yaml_params$floatsintext))) &&
@@ -354,10 +366,21 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , "\\DeclareDelayedFloatFlavor{ThreePartTable}{table}" # Make endfloat play with longtable
       # , "\\DeclareDelayedFloatFlavor{ltable}{table}" # Make endfloat play with lscape
       , "\\DeclareDelayedFloatFlavor{lltable}{table}" # Make endfloat play with lscape & longtable
+      # Patch \efloat@iwrite to use \protected@write (bug in endfloat package < 2.6)
+      # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
+      # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
+      , "\\makeatletter"
+      , "\\renewcommand{\\efloat@iwrite}[1]{\\expandafter\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
+      , "\\makeatother"
     )
   }
 
   ### Additional options
+  if(!is.null(yaml_params$geometry)) {
+    header_includes <- c(header_includes, paste0("\\geometry{", yaml_params$geometry, "}\n\n"))
+    yaml_params$geometry <- NULL
+  }
+
   if(isTRUE(yaml_params$lineno)) {
     header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
   }
@@ -480,19 +503,23 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   writeLines(augmented_input_text, input_file_connection)
   close(input_file_connection)
 
+  # Add pancod arguments
   args <- NULL
+
+  # Process markdown
+  process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
+  process_markdown(input_file, from, args, TRUE)
+
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
     # Set CSL
     args <- set_csl(input_file)
 
     # Set ampersand filter
-    args <- set_ampersand_filter(args, metadata$csl)
+    if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
+      args <- set_ampersand_filter(args, metadata$csl)
+    }
   }
-
-  # Process markdown
-  process_markdown <- utils::getFromNamespace("process_markdown", "bookdown")
-  process_markdown(input_file, from, args, TRUE)
 
   args
 }
@@ -546,21 +573,20 @@ paste_authors <- function(x, format) {
 
 paste_affiliations <- function(x, format) {
   add_superscript <- function(y, format) {
-    if(format == "latex") {
-      superscript <- paste0("\\textsuperscript{", y["id"], "}")
+    if(is.null(y[["id"]])) {
+      superscript <- NULL
+    } else if(format == "latex") {
+      superscript <- paste0("\\textsuperscript{", y[["id"]], "}")
     } else if(format == "word") {
-      superscript <- paste0("^", y["id"], "^")
+      superscript <- paste0("^", y[["id"]], "^")
     }  else {
       stop("Format not supported.")
     }
 
     location <- c(y[["institution"]], y[["city"]], y[["state"]], y[["country"]])
+    location <- paste(escape_latex(location), collapse = ", ")
 
-    paste(
-      superscript
-      , paste(location, collapse = ", ")
-      , collapse = " "
-    )
+    paste(superscript, location)
   }
 
   affiliations <- vapply(x, add_superscript, format = format, FUN.VALUE = "a")
