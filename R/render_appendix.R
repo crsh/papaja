@@ -40,7 +40,13 @@ render_appendix <- function(
 
   if(length(bibliography) > 0) {
     validate(bibliography, check_class = "character")
-    bib_call <- paste0("--bibliography=", bibliography)
+    existing_bibliographies <- bibliography[file.exists(bibliography)]
+    if(length(existing_bibliographies) > 0) {
+      bib_call <- paste0("--bibliography=", existing_bibliographies)
+    } else {
+      bib_call <- NULL
+    }
+
   }
 
   if(length(csl) > 0) {
@@ -51,7 +57,11 @@ render_appendix <- function(
       , package = "papaja"
     )
   }
-  csl_call <- paste0("--csl=", csl)
+  if(!is.null(bib_call)) {
+    csl_call <- paste0("--csl=", csl)
+  } else {
+    csl_call <- NULL
+  }
 
   if(!is.null(options)) {
     validate(options, check_class = "character")
