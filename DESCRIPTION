@@ -13,10 +13,10 @@ Authors@R: c(
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
-    R (>= 2.11.1)
+  R (>= 2.11.1)
 Imports:
   knitr (>= 1.10.5),
-  rmarkdown(>= 1.10),
+  rmarkdown (>= 1.10),
   bookdown (>= 0.6),
   yaml,
   broom (>= 0.3.6),

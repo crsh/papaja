@@ -78,10 +78,11 @@ render_appendix <- function(
     #   md_fragment <- gsub("(\\\\begin\\{figure\\})(\\[.+?\\])", "\\1", md_fragment)
     # }
 
-    md_file <- paste0(tools::file_path_sans_ext(x), ".md")
+    md_file <- paste0(tools::file_path_sans_ext(tools::file_path_as_absolute(x)), ".md")
     write(md_fragment, file = md_file, sep = "\n")
+    on.exit(file.remove(md_file))
 
-    new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
+    new_name <- paste0(tools::file_path_sans_ext(basename(x)), ".tex")
 
     # Create TeX-file
     status <- rmarkdown::pandoc_convert(
@@ -102,7 +103,6 @@ render_appendix <- function(
     tex <- c("\\clearpage", appendix_endfloat_fix, "\n\n\\begin{appendix}", tex, "\\end{appendix}")
 
     write(tex, file = new_name)
-    file.remove(md_file)
 
     if(!is.null(status)) return(status)
   } else {
