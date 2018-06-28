@@ -165,7 +165,7 @@ apa_factorial_plot.default <- function(
     nl <- nlevels(data[[i]])
     if(nl < 2) {
       warning(paste0("Factor \"", i, "\" contains only ", nl, " level(s) and is thus ignored."))
-      factors <- setdiff(i, factors)
+      factors <- setdiff(factors, i)
     }
   }
 
