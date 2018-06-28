@@ -160,6 +160,16 @@ apa_factorial_plot.default <- function(
   # Handling of dependent variable:
   data[[dv]] <- as.numeric(data[[dv]])
 
+  # Check if specified factors contain more than two levels after applying droplevels
+  for (i in c(factors)) {
+    nl <- nlevels(data[[i]])
+    if(nl < 2) {
+      warning(paste0("Factor \"", i, "\" contains only ", nl, " level(s) and is thus ignored."))
+      factors <- setdiff(i, factors)
+    }
+  }
+
+
   variable_label(data) <- original_labels
 
   ellipsis <- list(...)
