@@ -160,11 +160,11 @@ apa_factorial_plot.default <- function(
   # Handling of dependent variable:
   data[[dv]] <- as.numeric(data[[dv]])
 
-  # Check if specified factors contain more than two levels after applying droplevels
+  # Check if specified factors contain more than one level after applying `droplevels`
   for (i in c(factors)) {
     nl <- nlevels(data[[i]])
     if(nl < 2) {
-      warning(paste0("Factor \"", i, "\" contains only ", nl, " level(s) and is thus ignored."))
+      warning(paste0("Factor \"", i, "\" contains only ", nl, " level" , ifelse(nl==1, "", "s"), " and is thus ignored."))
       factors <- setdiff(factors, i)
     }
   }
