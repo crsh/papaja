@@ -75,7 +75,7 @@ apa6_pdf <- function(
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  config$pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
@@ -92,8 +92,6 @@ apa6_pdf <- function(
 
     args
   }
-
-  config$pre_processor <- pre_processor
 
   config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
@@ -185,7 +183,7 @@ apa6_word <- function(
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
+  config$pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
@@ -202,8 +200,6 @@ apa6_word <- function(
 
     args
   }
-
-  config$pre_processor <- pre_processor
 
   if(Sys.info()["sysname"] == "Windows") {
     config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
@@ -370,7 +366,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
       # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
       , "\\makeatletter"
-      , "\\renewcommand{\\efloat@iwrite}[1]{\\expandafter\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
+      , "\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
       , "\\makeatother"
     )
   }
