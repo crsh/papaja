@@ -7,7 +7,7 @@
 #'
 #' @seealso \code{\link[bookdown]{pdf_document2}}
 #' @examples NULL
-# #' @export
+#' @export
 
 
 revision_letter_pdf <- function(keep_tex = TRUE, ...) {

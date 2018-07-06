@@ -79,7 +79,7 @@ render_appendix <- function(
     # }
 
     md_file <- paste0(tools::file_path_sans_ext(tools::file_path_as_absolute(x)), ".md")
-    write(md_fragment, file = md_file, sep = "\n")
+    write(md_fragment, file = file(md_file, encoding = "UTF-8"), sep = "\n")
     on.exit(file.remove(md_file))
 
     new_name <- paste0(tools::file_path_sans_ext(basename(x)), ".tex")
@@ -94,7 +94,7 @@ render_appendix <- function(
 
     # Add appendix environment
     tex <- readLines(new_name, encoding = "UTF-8")
-    if(!grepl("\\\\section|\\\\hypertarget", tex[tex != ""][1])) tex <- c("\\section{}", tex) # Add section to start appendix
+    if(!grepl("\\\\section|\\\\hypertarget", tex[grepl("^\\\\", tex)][1])) tex <- c("\\section{}", tex) # Add section to start appendix
     appendix_endfloat_fix <- ifelse(
       grepl("man", rmarkdown::metadata$classoption) || grepl("man", rmarkdown::metadata$class)
       , "\\makeatletter\n\\efloat@restorefloats\n\\makeatother"
@@ -102,7 +102,7 @@ render_appendix <- function(
     )
     tex <- c("\\clearpage", appendix_endfloat_fix, "\n\n\\begin{appendix}", tex, "\\end{appendix}")
 
-    write(tex, file = new_name)
+    write(tex, file = file(new_name, encoding = "UTF-8"))
 
     if(!is.null(status)) return(status)
   } else {
