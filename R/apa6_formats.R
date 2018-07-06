@@ -75,7 +75,7 @@ apa6_pdf <- function(
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  config$pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
@@ -93,23 +93,23 @@ apa6_pdf <- function(
     args
   }
 
-  config$pre_processor <- pre_processor
-
   config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
-    # Remove indentation so that endfloat can process the lltable environments
-    output_text <- readLines(output_file, encoding = "UTF-8")
-    appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
-    if(length(appendix_lines) == 2) {
-      output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
-        "^\\s+"
-        , ""
-        , output_text[appendix_lines[1]:appendix_lines[2]]
-      )
-      output_file_connection <- file(output_file, encoding = "UTF-8")
-      writeLines(output_text, output_file_connection)
-      close(output_file_connection)
-    }
+    # if(!is.null(metadata$appendix)) {
+      # Remove indentation so that endfloat can process the lltable environments
+      output_text <- readLines(output_file, encoding = "UTF-8")
+      appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
+      if(length(appendix_lines) == 2) {
+        output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
+          "^\\s+"
+          , ""
+          , output_text[appendix_lines[1]:appendix_lines[2]]
+        )
+        output_file_connection <- file(output_file, encoding = "UTF-8")
+        writeLines(output_text, output_file_connection)
+        close(output_file_connection)
+      }
+    # }
 
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
@@ -177,14 +177,13 @@ apa6_word <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
   .from <- rmarkdown::from_rmarkdown(fig_caption, md_extensions)
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
+  config$pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
@@ -201,8 +200,6 @@ apa6_word <- function(
 
     args
   }
-
-  config$pre_processor <- pre_processor
 
   if(Sys.info()["sysname"] == "Windows") {
     config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
@@ -369,7 +366,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
       # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
       , "\\makeatletter"
-      , "\\renewcommand{\\efloat@iwrite}[1]{\\expandafter\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
+      , "\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
       , "\\makeatother"
     )
   }
@@ -448,11 +445,24 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Add modified YAML header
   yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
+  # augmented_input_text <- c(
+  #   augmented_input_text
+  #   , "\begingroup"
+  #   , "\setlength{\parindent}{-0.5in}"
+  #   , "\setlength{\leftskip}{0.5in}"
+  #   , "<div id='references'></div>"
+  #   , "\endgroup"
+  # )
   input_file_connection <- file(input_file, encoding = "UTF-8")
   writeLines(augmented_input_text, input_file_connection)
   close(input_file_connection)
 
-  # Add pancod arguments
+  ## Add appendix renderer
+  # if(!is.null(metadata$appendix)) {
+  #   lapply(metadata$appendix, render_appendix)
+  # }
+
+  # Add pandoc arguments
   args <- NULL
 
   if((!is.list(metadata$output) || is.null(metadata$output[[1]]$citation_package)) &
