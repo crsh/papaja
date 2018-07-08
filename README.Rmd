@@ -148,7 +148,7 @@ Like `papaja` and want to contribute? Take a look at the [open issues](https://g
 
 
 ## Papers written with papaja
-Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, let me know and I will add it to this list.
+Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
 
 ```{r include = FALSE}
 papaja_bib <- RefManageR::ReadZotero(group = "2202906", .params = list())
