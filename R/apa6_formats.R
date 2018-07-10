@@ -45,6 +45,14 @@ apa6_pdf <- function(
 
   # includes$in_header <- c(includes$in_header, apa6_header_includes)
 
+  pandoc_version <- utils::getFromNamespace("pandoc_version", "rmarkdown")
+
+  if(utils::compareVersion("2.0", as.character(pandoc_version())) <= 0) {
+    if(is.null(md_extensions) || !grepl("raw\\_attribute", md_extensions)) {
+      md_extensions <- paste0(md_extensions, "+raw_attribute")
+    }
+  }
+
   # Call pdf_document() with the appropriate options
   config <- bookdown::pdf_document2(
     # template = template
@@ -368,6 +376,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
       , "\\makeatletter"
       , "\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
+      # , "`\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}`{=latex}"
       , "\\makeatother"
     )
   }
@@ -440,7 +449,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
-  yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
+  pandoc_version <- utils::getFromNamespace("pandoc_version", "rmarkdown")
+
+  if(utils::compareVersion("2.0", as.character(pandoc_version())) <= 0) {
+    yaml_params$`header-includes` <- c(paste0("```{=latex}\n", paste0(header_includes, collapse = "\n"), "\n```\n"), yaml_params$`header-includes`)
+  } else {
+    yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
+  }
+
 
 
   ## Add modified YAML header
