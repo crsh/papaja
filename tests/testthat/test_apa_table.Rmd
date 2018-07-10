@@ -35,7 +35,7 @@ footnotelist      : no
 lineno            : yes
 citeproc          : no # To avoid CRAN check error
 
-class             : "man"
+classoption       : "man"
 output            : papaja::apa6_pdf
 ---
 

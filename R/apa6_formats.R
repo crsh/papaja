@@ -362,6 +362,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , "\\DeclareDelayedFloatFlavor{ThreePartTable}{table}" # Make endfloat play with longtable
       # , "\\DeclareDelayedFloatFlavor{ltable}{table}" # Make endfloat play with lscape
       , "\\DeclareDelayedFloatFlavor{lltable}{table}" # Make endfloat play with lscape & longtable
+      , "\\DeclareDelayedFloatFlavor*{longtable}{table}" # Make endfloat play with ordinary longtable (for kableExtra)
       # Patch \efloat@iwrite to use \protected@write (bug in endfloat package < 2.6)
       # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
       # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
@@ -439,7 +440,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
-  yaml_params$`header-includes` <- c(yaml_params$`header-includes`, header_includes)
+  yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
 
 
   ## Add modified YAML header

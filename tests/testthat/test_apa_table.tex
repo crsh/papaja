@@ -1,4 +1,4 @@
-\documentclass[,man]{apa6}
+\documentclass[man]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -142,8 +142,9 @@ Correspondence concerning this article should be addressed to First Author, Post
 
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
 \makeatletter
-\renewcommand{\efloat@iwrite}[1]{\expandafter\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
 \makeatother
 \usepackage{lineno}
 
