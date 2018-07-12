@@ -62,7 +62,7 @@ apa_table(
   , align = c("l", "r", "r")
   , caption = "1 A small table with custom number formatting."
   , note = "This table was created using apa_table()"
-  , small = TRUE
+  , font_size = "small"
   , digits = 3
   , format.args = list(decimal.mark = ",", big.mark = "")
 )
@@ -75,10 +75,11 @@ apa_table(
     , `moar test` = my_table
   )
   , align = c("l", "r", "r")
-  , caption = "2 A merged table (list of two) with added stub heading. Not escaped."
+  , caption = "2 A tiny merged table (list of two) with added stub heading. Not escaped."
   , note = "This table was created using apa\\_table()"
   , added_stub_head = "Desciptives"
   , escape = FALSE
+  , font_size = "tiny"
 )
 
 apa_table(
@@ -138,6 +139,31 @@ apa_table(
   list(A = my_table2, B = my_table2)
   , align = c("l", "r", "r")
   , caption = "5 Test if simple row numbers are omitted from merged table (list of two)."
+  , note = "This table was created using apa_table()"
+  , added_stub_head = "Desciptives"
+)
+
+apa_table(
+  list(A = my_table2[1:2, ], B = my_table2)
+  , align = c("l", "r", "r")
+  , caption = "5.25 Test if simple row numbers are omitted from merged table with unequal row numbers (list of two)."
+  , note = "This table was created using apa_table()"
+  , added_stub_head = "Desciptives"
+)
+
+apa_table(
+  list(A = cars[1:2, ], B = cars[3:6, ])
+  , align = c("l", "r", "r")
+  , caption = "5.25 Test if simple continued row numbers are omitted from merged table (list of two)."
+  , note = "This table was created using apa_table()"
+  , added_stub_head = "Desciptives"
+)
+
+apa_table(
+  list(A = cars[1:2, ], B = cars[5:7, ]
+      )
+  , align = c("l", "r", "r")
+  , caption = "5.25 Test if simple discontinued row numbers are preserved from merged table(list of two)."
   , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )

@@ -9,7 +9,7 @@
 
 word_title_page <- function(x) {
   # Create title page and abstract
-  # Hack together tables for centered elements -.-
+  # Hack together tables for centered elements
 
   apa_terms <- getOption("papaja.terms")
 

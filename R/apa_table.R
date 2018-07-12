@@ -21,7 +21,7 @@
 #'    and in MS Word documents.
 #' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 #'    documents.
-#' @param small Logical. If \code{TRUE} the font size of the table content is reduced. Ignored in MS Word documents.
+#' @param font_size Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.
 #' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 #'    column names, row names, caption, note and table contents are escaped.
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
@@ -96,10 +96,10 @@ apa_table.matrix <- function(
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
-  , small = FALSE
+  , font_size = NULL
   , escape = TRUE
-  , format.args = NULL
   , ...
+  , format.args = NULL
 ) {
   x <- data.frame(
     x
@@ -118,10 +118,10 @@ apa_table.matrix <- function(
     , midrules = midrules
     , placement = placement
     , landscape = landscape
-    , small = small
+    , font_size = font_size
     , escape = escape
-    , format.args = format.args
     , ...
+    , format.args = format.args
   )
 }
 
@@ -139,22 +139,34 @@ apa_table.list <- function(
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
-  , small = FALSE
+  , font_size = NULL
   , escape = TRUE
   , merge_method = "indent"
-  , format.args = NULL
   , ...
+  , format.args = NULL
 ) {
   ellipsis <- list(...)
   row_names <- if(is.null(ellipsis$row.names)) TRUE else ellipsis$row.names
   validate(row_names, "row.names", check_class = "logical", check_length = 1)
   validate(merge_method, "merge_method", check_class = "character", check_length = 1)
 
-  if(row_names) {
+  force_row_names <- !(
+    ( # All tables have rownames 1:x
+      all(
+        sapply(x, function(y) all(as.character(rownames(y)) == as.character(1:nrow(y))))
+      )
+    ) ||
+    all( # The aggregated tables have rownames 1:x
+      as.character(unlist(lapply(x, rownames))) == as.character(1:nrow(do.call(rbind.data.frame, x)))
+    )
+  )
+
+  if(row_names & force_row_names) {
     x <- lapply(
       x
       , add_row_names
       , added_stub_head = added_stub_head
+      , force = force_row_names
     )
   } else {
     x <- lapply(
@@ -223,7 +235,7 @@ apa_table.list <- function(
     , midrules = midrules
     , placement = placement
     , landscape = landscape
-    , small = small
+    , font_size = font_size
     , escape = escape
     , format.args = format.args
     , ...
@@ -244,20 +256,20 @@ apa_table.data.frame <- function(
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
-  , small = FALSE
+  , font_size = NULL
   , escape = TRUE
-  , format.args = NULL
   , ...
+  , format.args = NULL
 ) {
   if(!is.null(caption)) validate(caption, check_class = "character", check_length = 1)
   if(!is.null(note)) validate(note, check_class = "character", check_length = 1)
   if(!is.null(added_stub_head)) validate(added_stub_head, check_class = "character", check_length = 1)
   if(!is.null(stub_indents)) validate(stub_indents, check_class = "list")
+  if(!is.null(format.args)) validate(format.args, check_class = "list")
 
   validate(escape, check_class = "logical", check_length = 1)
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
-  validate(small, check_class = "logical", check_length = 1)
 
 
   # Set defaults and rename ellipsis arguments
@@ -327,14 +339,14 @@ apa_table.data.frame <- function(
         , midrules = midrules
         , placement = placement
         , landscape = landscape
-        , small = small
+        , font_size = font_size
         , ...
       )
       , ellipsis
     )
   } else {
     do.call(
-      function(...) apa_table.word(
+      function(...) apa_table.markdown(
         x = prep_table
         , caption = caption
         , note = note
@@ -354,13 +366,24 @@ apa_table.latex <- function(
   , midrules = NULL
   , placement = "tbp"
   , landscape = FALSE
-  , small = FALSE
+  , font_size = NULL
   , ...
 ) {
+  if(!is.null(font_size)) validate(font_size, check_class = "character", check_length = 1)
+
   apa_terms <- options()$papaja.terms
 
   # Parse ellipsis
   ellipsis <- list(...)
+
+  if(!is.null(ellipsis$small)) {
+    validate(ellipsis$small, check_class = "logical", check_length = 1)
+    if(ellipsis$small) {
+      font_size <- "small"
+      ellipsis$small <- NULL
+    }
+  }
+
   ellipsis$booktabs <- TRUE
   longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
   if(longtable || landscape) {
@@ -435,15 +458,16 @@ apa_table.latex <- function(
   }
 
   # if(longtable && placement != "h") cat("\\afterpage{\\clearpage") # Defer table to next clear page
+  cat("\n\n")
   if(!landscape && !longtable) cat("\\begin{table}", place_opt, sep = "")
   if(!landscape) cat("\n\\begin{center}\n\\begin{", table_env, "}", sep = "")
   if(!is.null(caption) && !(longtable || landscape)) cat("\n\\caption{", caption, "}", sep = "")
-  if(!is.null(note) && (longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{", apa_terms$note, ".} ", note, "\n\\end{", table_note_env, "}", sep = "")
-  if(small) cat("\n\\small{")
+  if(!is.null(note) && (longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}", sep = "")
+  if(!is.null(font_size)) cat("\n\\", font_size, "{", sep = "")
 
   cat(res_table)
-  if(small) cat("\n}")
-  if(!is.null(note) & !(longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\textit{", apa_terms$note, ".} ", note, "\n\\end{", table_note_env, "}", sep = "")
+  if(!is.null(font_size)) cat("\n}")
+  if(!is.null(note) & !(longtable || landscape)) cat("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}", sep = "")
   if(!landscape) cat("\n\\end{", table_env, "}\n\\end{center}", sep = "")
   if(!landscape && !longtable) cat("\n\\end{table}")
 
@@ -459,7 +483,7 @@ apa_table.latex <- function(
 }
 
 
-apa_table.word <- function(
+apa_table.markdown <- function(
   x
   , caption = NULL
   , note = NULL
@@ -525,14 +549,15 @@ format_cells <- function(x, format.args = NULL) {
 #'
 #' @param x data.frame or matrix.
 #' @param added_stub_head Character. Used as stub head (name of first column).
+#' @param force Logical. Should row names be added even if they are the numbers 1:nrow(x)?
 #' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
 #' NULL
 
-add_row_names <- function(x, added_stub_head) {
-  if(!is.null(rownames(x)) && all(rownames(x) != 1:nrow(x))) {
+add_row_names <- function(x, added_stub_head, force = FALSE) {
+  if(!is.null(rownames(x)) && (all(rownames(x) != 1:nrow(x))) || force) {
     row_names <- rownames(x)
     rownames(x) <- NULL
     mod_table <- data.frame(row_names, x, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)

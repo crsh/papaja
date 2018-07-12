@@ -14,18 +14,19 @@ apa_table(x, ...)
 
 \method{apa_table}{matrix}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
-  midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
-  escape = TRUE, format.args = NULL, ...)
+  midrules = NULL, placement = "tbp", landscape = FALSE,
+  font_size = NULL, escape = TRUE, ..., format.args = NULL)
 
 \method{apa_table}{list}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
-  midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
-  escape = TRUE, merge_method = "indent", format.args = NULL, ...)
+  midrules = NULL, placement = "tbp", landscape = FALSE,
+  font_size = NULL, escape = TRUE, merge_method = "indent", ...,
+  format.args = NULL)
 
 \method{apa_table}{data.frame}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
-  midrules = NULL, placement = "tbp", landscape = FALSE, small = FALSE,
-  escape = TRUE, format.args = NULL, ...)
+  midrules = NULL, placement = "tbp", landscape = FALSE,
+  font_size = NULL, escape = TRUE, ..., format.args = NULL)
 }
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
@@ -60,7 +61,7 @@ and in MS Word documents.}
 \item{landscape}{Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
 documents.}
 
-\item{small}{Logical. If \code{TRUE} the font size of the table content is reduced. Ignored in MS Word documents.}
+\item{font_size}{Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
 

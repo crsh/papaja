@@ -41,3 +41,10 @@ fetch_web_refs <- function(x, bib_name) {
   .Defunct("downloader::download")
   return(invisible())
 }
+
+
+apa_table.word <- function(x, ...) {
+  .Deprecated(msg = "'apa_table.word' is deprecated as of version 0.1.0.9793 because it was more accurately renamed to 'apa_table.markdown'.")
+
+  apa_table.markdown(x, ...)
+}

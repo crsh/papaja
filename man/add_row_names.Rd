@@ -4,12 +4,14 @@
 \alias{add_row_names}
 \title{Add row names as first column}
 \usage{
-add_row_names(x, added_stub_head)
+add_row_names(x, added_stub_head, force = FALSE)
 }
 \arguments{
 \item{x}{data.frame or matrix.}
 
 \item{added_stub_head}{Character. Used as stub head (name of first column).}
+
+\item{force}{Logical. Should row names be added even if they are the numbers 1:nrow(x)?}
 }
 \description{
 Adds row names as the first column of the table and sets \code{row.name} attribute to \code{NULL}.
