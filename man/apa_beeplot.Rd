@@ -21,8 +21,6 @@ apa_beeplot(data, ...)
 \arguments{
 \item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
 
-\item{...}{Further arguments that will be passed to \code{\link{plot.window}}.}
-
 \item{id}{Character. Variable name that identifies subjects.}
 
 \item{factors}{Character. A vector of up to four variable names that is used to stratify the data.}

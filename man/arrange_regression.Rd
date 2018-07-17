@@ -20,8 +20,6 @@ zeros are omitted if appropriate. See details.}
 \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
-
-\item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
 }
 \value{
 \code{data.frame} of class \code{apa_regression_table}.

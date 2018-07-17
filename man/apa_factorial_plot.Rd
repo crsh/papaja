@@ -22,7 +22,16 @@ apa_factorial_plot(data, ...)
 \arguments{
 \item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
 
-\item{...}{Further arguments that will be passed to \code{\link{plot.window}}.}
+\item{...}{Arguments passed on to \code{graphics::plot.window}
+\describe{
+  \item{xlim}{numeric vectors of length 2, giving the x and y
+    coordinates ranges.}
+  \item{ylim}{numeric vectors of length 2, giving the x and y
+    coordinates ranges.}
+  \item{log}{character; indicating which axes should be in log scale.}
+  \item{asp}{numeric, giving the \bold{asp}ect ratio y/x,
+    see \sQuote{Details}.}
+}}
 
 \item{id}{Character. Variable name that identifies subjects.}
 

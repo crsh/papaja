@@ -53,7 +53,10 @@ the posterior.}
 \item{evidential_boost}{Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
 corresponding models (see details).}
 
-\item{...}{Arguments passed to \code{\link{printnum}}}
+\item{...}{Arguments passed on to \code{printnum}
+\describe{
+  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
+}}
 }
 \value{
 ...

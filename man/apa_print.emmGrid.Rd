@@ -20,7 +20,10 @@ apa_print.summary.ref.grid(x, ...)
 \item{x}{Object
 adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the}
 
-\item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
+\item{...}{Arguments passed on to \code{printnum}
+\describe{
+  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
+}}
 
 \item{contrast_names}{Character. An optional vector of names to identify calculated contrasts.}
 

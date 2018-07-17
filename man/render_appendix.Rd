@@ -5,7 +5,7 @@
 \title{Render appendix}
 \usage{
 render_appendix(x, bibliography = rmarkdown::metadata$bibliography,
-  csl = rmarkdown::metadata$csl, options = NULL, quiet = TRUE, ...)
+  csl = rmarkdown::metadata$csl, quiet = TRUE, ...)
 }
 \arguments{
 \item{x}{Character. Input file name.}
@@ -13,8 +13,6 @@ render_appendix(x, bibliography = rmarkdown::metadata$bibliography,
 \item{bibliography}{Character. Location of bibliography file(s) to use.}
 
 \item{csl}{Character. Location of CSL file to use. Defaults to APA-style.}
-
-\item{options}{Character. Vector of command line options to pass to pandoc.}
 
 \item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
 If \code{FALSE} output will be included in the document.}

@@ -11,7 +11,7 @@
 #' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
 #' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
-#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
+#' @inheritDotParams printnum
 #' @details
 #'
 #'    ADJUSTED CONFIDENCE INTERVALS

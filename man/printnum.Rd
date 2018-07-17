@@ -29,7 +29,10 @@ printnum(x, ...)
 \arguments{
 \item{x}{Numeric. Can be either a single value, vector, or matrix.}
 
-\item{...}{Further arguments that may be passed to \code{\link{formatC}}}
+\item{...}{Arguments passed on to \code{formatC}
+\describe{
+  \item{}{}
+}}
 
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 

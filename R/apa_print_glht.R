@@ -10,7 +10,7 @@
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
-#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
+#' @inheritDotParams printnum
 #' @details
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees

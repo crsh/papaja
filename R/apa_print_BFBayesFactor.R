@@ -17,7 +17,7 @@
 #' @param min Numeric. Lower limit of the Bayes factor before switching to scientific notation.
 #' @param evidential_boost Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
 #'   corresponding models (see details).
-#' @param ... Arguments passed to \code{\link{printnum}}
+#' @inheritDotParams printnum
 #'
 #' @details For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
 #'   odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
