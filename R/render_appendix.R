@@ -40,7 +40,7 @@ render_appendix <- function(
 
   if(length(bibliography) > 0) {
     validate(bibliography, check_class = "character")
-    bibliography <- paste(getwd(), bibliography, sep = "/")
+    bibliography <- tools::file_path_as_absolute(bibliography)
     existing_bibliographies <- bibliography[file.exists(bibliography)]
     if(length(bibliography) > length(existing_bibliographies)) warning(paste("The following bibliography files could not be located:", bibliography[!bibliography %in% existing_bibliographies], sep = "\n", collapse = "\n"))
     if(length(existing_bibliographies) > 0) {
@@ -116,7 +116,7 @@ render_appendix <- function(
     )
     tex <- c("\\clearpage", appendix_endfloat_fix, "\n\n\\begin{appendix}", tex, "\\end{appendix}")
 
-    writeLines(tex, con = tex_connection)
+    writeLines(tex, con = tex_connection, useBytes = TRUE)
 
     if(!is.null(status)) return(status)
   } else {
