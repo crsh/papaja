@@ -1,8 +1,8 @@
 ---
 title         : "papaja: Prepare APA journal articles with R Markdown"
 nocite        : "@*"
-bibliography  : papaja_manuscripts.bib
-csl           : inst/apa_source_files.csl
+bibliography  : "inst/papaja_manuscripts.bib"
+csl           : "inst/apa_source_files.csl"
 output        : github_document
 ---
 
