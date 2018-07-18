@@ -30,7 +30,10 @@ See details.}
 
 \item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
 
-\item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
+\item{...}{Arguments passed on to \code{printnum}
+\describe{
+  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
+}}
 
 \item{standardized}{Logical. Indicates if coefficients are standardized or unstandardized and leading
 zeros are omitted if appropriate. See details.}

@@ -16,7 +16,10 @@ they cannot be determined from column names or attributes of \code{x}.}
 \item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 notation is rendered correctly.}
 
-\item{...}{Arguments to pass to \code{\link{printnum}}.}
+\item{...}{Arguments passed on to \code{printnum}
+\describe{
+  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
+}}
 }
 \description{
 Creates a character string to report an interval estimate. \emph{This function is not exported.}

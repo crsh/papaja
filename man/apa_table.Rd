@@ -31,7 +31,33 @@ apa_table(x, ...)
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
 
-\item{...}{Further arguments to pass to \code{\link[knitr]{kable}}.}
+\item{...}{Arguments passed on to \code{knitr::kable}
+\describe{
+  \item{x}{An R object, typically a matrix or data frame.}
+  \item{format}{A character string. Possible values are \code{latex},
+\code{html}, \code{markdown}, \code{pandoc}, and \code{rst}; this will be
+automatically determined if the function is called within \pkg{knitr}; it
+can also be set in the global option \code{knitr.table.format}. If
+\code{format} is a function, it must return a character string.}
+  \item{digits}{Maximum number of digits for numeric columns, passed to
+\code{round()}. This can also be a vector of length \code{ncol(x)}, to set
+the number of digits for individual columns.}
+  \item{row.names}{Logical: whether to include row names. By
+default, row names are included if \code{rownames(x)} is neither
+\code{NULL} nor identical to \code{1:nrow(x)}.}
+  \item{col.names}{A character vector of column names to be used in the table.}
+  \item{align}{Column alignment: a character vector consisting of
+ \code{'l'} (left), \code{'c'} (center) and/or \code{'r'} (right). By
+ default or if \code{align = NULL}, numeric columns are right-aligned, and
+ other columns are left-aligned. If \code{length(align) == 1L}, the string will be
+ expanded to a vector of individual letters, e.g. \code{'clc'} becomes
+\code{c('c', 'l', 'c')}, unless the output format is LaTeX.}
+  \item{caption}{The table caption.}
+  \item{format.args}{A list of arguments to be passed to \code{\link{format}()}
+to format table values, e.g. \code{list(big.mark = ',')}.}
+  \item{escape}{Boolean; whether to escape special characters when producing
+HTML or LaTeX tables.}
+}}
 
 \item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 column names, row names, caption, note and table contents are escaped.}

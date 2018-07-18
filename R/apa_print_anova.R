@@ -7,7 +7,7 @@
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
 #' @inheritParams print_anova
-#' @param ... Additional arguments passed to to \code{\link{print_anova}}.
+#' @inheritDotParams print_anova
 #' @details
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.

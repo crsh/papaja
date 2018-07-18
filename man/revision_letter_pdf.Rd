@@ -9,7 +9,10 @@ revision_letter_pdf(keep_tex = TRUE, ...)
 \arguments{
 \item{keep_tex}{Logical. Logical. Keep the intermediate tex file used in the conversion to PDF.}
 
-\item{...}{Further arguments to pass to \code{\link[bookdown]{pdf_document2}}}
+\item{...}{Arguments passed on to \code{bookdown::pdf_document2}
+\describe{
+  \item{}{}
+}}
 }
 \description{
 Template for creating an journal revision letters.

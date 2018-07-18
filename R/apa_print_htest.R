@@ -16,7 +16,7 @@
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
 #' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
-#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
+#' @inheritDotParams printnum
 #' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
 #'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include

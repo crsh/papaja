@@ -12,7 +12,7 @@
 #'    notation is rendered correctly.
 #' @param numerals Logical. Indicates if integer should be returned as words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
-#' @param ... Further arguments that may be passed to \code{\link{formatC}}
+#' @inheritDotParams formatC
 #' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
 #'    according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
 #'    exceeds length of the parameter vectors. If \code{x} is a matrix, the vectors specify the formating

@@ -187,7 +187,7 @@ convert_stat_name <- function(x) {
 #'    they cannot be determined from column names or attributes of \code{x}.
 #' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 #'    notation is rendered correctly.
-#' @param ... Arguments to pass to \code{\link{printnum}}.
+#' @inheritDotParams printnum
 #'
 #' @keywords internal
 #' @seealso \code{\link{printnum}}

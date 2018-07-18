@@ -34,7 +34,7 @@
 #' @param ylab Character or expression. Label for \emph{y} axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.
-#' @param ... Further arguments that will be passed to \code{\link{plot.window}}.
+#' @inheritDotParams graphics::plot.window
 #' @details
 #'    The measure of dispersion can be either \code{conf_int} for between-subjects confidence intervals, \code{se} for standard errors,
 #'    or any other standard function. For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}.

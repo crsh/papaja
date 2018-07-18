@@ -78,6 +78,9 @@ apa6_pdf <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
+  config$pre_knit <- modify_input_file
+  config$on_exit <- revert_original_input_file
+
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
 
@@ -184,6 +187,9 @@ apa6_word <- function(
   config$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
+
+  config$pre_knit <- modify_input_file
+  config$on_exit <- revert_original_input_file
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -457,11 +463,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
   }
 
-
-
   ## Add modified YAML header
-  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
-  augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
   # augmented_input_text <- c(
   #   augmented_input_text
   #   , "\begingroup"
@@ -470,14 +472,8 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   #   , "<div id='references'></div>"
   #   , "\endgroup"
   # )
-  input_file_connection <- file(input_file, encoding = "UTF-8")
-  writeLines(augmented_input_text, input_file_connection)
-  close(input_file_connection)
 
-  ## Add appendix renderer
-  # if(!is.null(metadata$appendix)) {
-  #   lapply(metadata$appendix, render_appendix)
-  # }
+  replace_yaml_front_matter(yaml_params, input_text, input_file)
 
   # Add pandoc arguments
   args <- NULL
@@ -485,13 +481,18 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   if((!is.list(metadata$output) || is.null(metadata$output[[1]]$citation_package)) &
      (is.null(metadata$citeproc) || metadata$citeproc)) {
 
-    # Set CSL
+    ## Set CSL
     args <- set_csl(input_file)
 
-    # Set ampersand filter
+    ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
       args <- set_ampersand_filter(args, metadata$csl)
     }
+  }
+
+  ## Add appendix
+  if(!is.null(metadata$appendix)) {
+    args <- c(args, paste0("--include-after-body=", sapply(yaml_params$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x))), ".tex"))
   }
 
   args
@@ -549,6 +550,16 @@ get_yaml_params <- function(x) {
   } else NULL
 }
 
+replace_yaml_front_matter <- function(x, input_text, input_file) {
+  yaml_delimiters <- grep("^(---|\\.\\.\\.)\\s*$", input_text)
+  augmented_input_text <- c("---", yaml::as.yaml(x), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
+
+
+  input_file_connection <- file(input_file, encoding = "UTF-8")
+  on.exit(close(input_file_connection))
+  writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
+}
+
 
 paste_authors <- function(x, format) {
 
@@ -557,7 +568,7 @@ paste_authors <- function(x, format) {
       affiliation <- if(!is.null(y[["affiliation"]])) paste0("\\textsuperscript{", y[["affiliation"]], "}") else ""
       paste0(y["name"], affiliation, collapse = "")
     })
-  } else if(format == "word") {
+  } else if(format %in% c("docx", "word")) {
     authors <- lapply(x, function(y) {
       affiliation <- if(!is.null(y[["affiliation"]])) paste0("^", y[["affiliation"]], "^") else ""
       paste0(y["name"], affiliation, collapse = "")
@@ -590,7 +601,7 @@ paste_affiliations <- function(x, format) {
       superscript <- NULL
     } else if(format == "latex") {
       superscript <- paste0("\\textsuperscript{", y[["id"]], "}")
-    } else if(format == "word") {
+    } else if(format %in% c("docx", "word")) {
       superscript <- paste0("^", y[["id"]], "^")
     }  else {
       stop("Format not supported.")
@@ -637,4 +648,55 @@ set_ampersand_filter <- function(args, csl_file) {
   }
 
   args
+}
+
+modify_input_file <- function(input, ...) {
+  input_connection <- file(input, encoding = "UTF-8")
+  on.exit(close.connection(input_connection))
+  input_text <- readLines(con = input_connection)
+
+  yaml_params <- get_yaml_params(input_text)
+
+  if(!is.null(yaml_params$appendix)) {
+    hashed_name <- base64enc::base64encode(charToRaw(basename(input)))
+
+    if(!file.copy(input, file.path(dirname(input), hashed_name))) {
+      stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
+    } else {
+      # Add render_appendix()-chunk
+      for(i in seq_along(yaml_params$appendix)) {
+        input_text <- c(
+          input_text
+          , paste0("<div custom-style='h1-pagebreak'>Appendix ", LETTERS[i], "</div>") # Ignored in PDF
+          , ""
+          , "```{r results = 'asis'}"
+          , paste0("render_appendix('", yaml_params$appendix[i], "')")
+          , "```"
+          , ""
+        )
+      }
+
+      writeLines(input_text, input_connection, useBytes = TRUE)
+    }
+  }
+
+  return(NULL)
+}
+
+revert_original_input_file <- function() {
+  # Get name of input file from render() because nothing is passed into on_exit()
+  input_file <- get("original_input", envir = parent.frame(1))
+  input_file <- tools::file_path_as_absolute(input_file)
+
+  if(!is.null(rmarkdown::metadata$appendix)) {
+    hashed_name <- base64enc::base64encode(charToRaw(basename(input_file)))
+
+    if(!file.copy(file.path(dirname(input_file), hashed_name), input_file, overwrite = TRUE)) {
+      stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", dirname(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
+    } else {
+      unlink(file.path(dirname(input_file), hashed_name))
+    }
+  }
+
+  return(NULL)
 }

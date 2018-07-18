@@ -14,7 +14,10 @@ apa_print.summary.glht(x, ci = 0.95, in_paren = FALSE, ...)
 
 \item{test}{Function. Computes p-values (adjusted for multiple comparisons).}
 
-\item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
+\item{...}{Arguments passed on to \code{printnum}
+\describe{
+  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
+}}
 
 \item{ci}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)

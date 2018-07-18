@@ -15,7 +15,7 @@
 #'    See details.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
-#' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
+#' @inheritDotParams printnum
 #' @details
 #'    The coefficients names are sanitized to facilitate their use as list names. Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_} (see \code{\link{sanitize_terms}}).

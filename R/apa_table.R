@@ -27,7 +27,7 @@
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
 #' @param merge_method Character. Determines how to merge tables if \code{x} is a \code{list}. Can be either
 #'   \code{indent} or \code{table_spanner}.
-#' @param ... Further arguments to pass to \code{\link[knitr]{kable}}.
+#' @inheritDotParams knitr::kable
 #'
 #' @details
 #'    When using \code{apa_table}, the type of the output (LaTeX or MS Word) is determined automatically
@@ -193,7 +193,7 @@ apa_table.list <- function(
   }
 
   if(merge_method == "table_spanner") {
-    if(output_format == "word") {
+    if(output_format %in% c("docx", "word")) {
       warning("merge_method '", merge_method, "' not supported for Word documents. Defaulting to 'indent'.")
       merge_method <- "indent"
     } else {

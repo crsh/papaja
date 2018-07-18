@@ -5,7 +5,7 @@
 \title{Render appendix}
 \usage{
 render_appendix(x, bibliography = rmarkdown::metadata$bibliography,
-  csl = rmarkdown::metadata$csl, quiet = TRUE, options = NULL)
+  csl = rmarkdown::metadata$csl, quiet = TRUE, ...)
 }
 \arguments{
 \item{x}{Character. Input file name.}
@@ -14,10 +14,26 @@ render_appendix(x, bibliography = rmarkdown::metadata$bibliography,
 
 \item{csl}{Character. Location of CSL file to use. Defaults to APA-style.}
 
-\item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.}
-
-\item{options}{Character. Vector of options passed to \code{\link[rmarkdown]{pandoc_convert}}.
+\item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
 If \code{FALSE} output will be included in the document.}
+
+\item{...}{Arguments passed on to \code{rmarkdown::pandoc_convert}
+\describe{
+  \item{input}{Character vector containing paths to input files
+(files must be UTF-8 encoded)}
+  \item{to}{Format to convert to (if not specified, you must specify
+\code{output})}
+  \item{from}{Format to convert from (if not specified then the format is
+determined based on the file extension of \code{input}).}
+  \item{output}{Output file (if not specified then determined based on format
+being converted to).}
+  \item{citeproc}{\code{TRUE} to run the pandoc-citeproc filter (for processing
+citations) as part of the conversion.}
+  \item{options}{Character vector of command line options to pass to pandoc.}
+  \item{verbose}{\code{TRUE} to show the pandoc command line which was executed}
+  \item{wd}{Working directory in which code will be executed. If not
+supplied, defaults to the common base directory of \code{input}.}
+}}
 }
 \description{
 This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
@@ -31,7 +47,7 @@ By default \code{x} is converted to a TeX file which can be included in an R Mar
    output:
      pdf_document:
        include:
-       after_body: appendix.tex
+         after_body: appendix.tex
    }
 
    If \code{render_appendix} is called form an R Markdown document with a target document type other
