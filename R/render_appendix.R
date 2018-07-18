@@ -78,11 +78,15 @@ render_appendix <- function(
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
   if(length(target_format) == 0) stop("render_appendix() can only be used within an R Markdown document; please include the function call in a code chunk.")
 
-  if(target_format == "latex") {
-
+  if(target_format %in% c("latex", "word", "docx")) {
     # Render Markdown fragment
     md_fragment <- knitr::knit_child(text = readLines(x, encoding = "UTF-8"), quiet = quiet)
+  } else {
+    warning(target_format, " documents currently do not support appendices via includes.")
+  }
 
+  if(target_format == "latex") {
+    # Create TeX-file
     md_file <- paste0(tools::file_path_sans_ext(tools::file_path_as_absolute(x)), ".md")
     md_connection <- file(md_file, encoding = "UTF-8")
     on.exit(closeAllConnections())
@@ -92,7 +96,6 @@ render_appendix <- function(
 
     new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
 
-    # Create TeX-file
     ellipsis$input <- md_file
     ellipsis$output <- basename(new_name)
     ellipsis$citeproc <- TRUE
@@ -119,8 +122,8 @@ render_appendix <- function(
     writeLines(tex, con = tex_connection, useBytes = TRUE)
 
     if(!is.null(status)) return(status)
-  } else {
-    warning(target_format, " documents currently do not support appendices via includes.")
+  } else if(target_format %in% c("latex", "word", "docx")) {
+    cat(md_fragment)
   }
 
   return(invisible(0))

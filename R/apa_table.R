@@ -193,7 +193,7 @@ apa_table.list <- function(
   }
 
   if(merge_method == "table_spanner") {
-    if(output_format == "word") {
+    if(output_format %in% c("docx", "word")) {
       warning("merge_method '", merge_method, "' not supported for Word documents. Defaulting to 'indent'.")
       merge_method <- "indent"
     } else {
