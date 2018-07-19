@@ -142,7 +142,7 @@ apa6_pdf <- function(
 #'    should be considered experimental.}
 #' @export
 
-apa6_word <- function(
+apa6_docx <- function(
   fig_caption = TRUE
   , pandoc_args = NULL
   , md_extensions = NULL
@@ -221,6 +221,10 @@ apa6_word <- function(
 
   config
 }
+
+#' @describeIn apa6_pdf Format to create .docx-files. Alias of \code{apa6_docx}.
+#' @export
+apa6_word <- apa6_docx
 
 
 # Set hook to print default numbers
@@ -393,7 +397,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     yaml_params$geometry <- NULL
   }
 
-  if(isTRUE(yaml_params$lineno)) {
+  if(isTRUE(yaml_params$lineno) || isTRUE(yaml_params$linenumbers) ) {
     header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
   }
 
@@ -657,6 +661,8 @@ modify_input_file <- function(input, ...) {
 
   yaml_params <- get_yaml_params(input_text)
 
+  format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
+
   if(!is.null(yaml_params$appendix)) {
     hashed_name <- base64enc::base64encode(charToRaw(basename(input)))
 
@@ -667,7 +673,12 @@ modify_input_file <- function(input, ...) {
       for(i in seq_along(yaml_params$appendix)) {
         input_text <- c(
           input_text
-          , paste0("<div custom-style='h1-pagebreak'>Appendix ", LETTERS[i], "</div>") # Ignored in PDF
+          , if(format %in% c("papaja::apa6_word", "papaja::apa6_docx")) {
+            paste0(
+              "<div custom-style='h1-pagebreak'>Appendix "
+              , if(length(yaml_params$appendix) > 1) LETTERS[i] else NULL
+              , "</div>")
+            } else NULL
           , ""
           , "```{r results = 'asis'}"
           , paste0("render_appendix('", yaml_params$appendix[i], "')")
