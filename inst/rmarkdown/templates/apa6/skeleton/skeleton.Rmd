@@ -34,7 +34,7 @@ floatsintext      : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-lineno            : yes
+linenumbers       : yes
 mask              : no
 draft             : no
 
