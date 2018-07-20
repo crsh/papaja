@@ -37,10 +37,12 @@ render_appendix <- function(
   , ...
 ) {
   validate(x, check_class = "character", check_length = 1)
+  if(!is.null(csl)) validate(csl, check_class = "character", check_length = 1)
+  validate(quiet, check_class = "logical", check_length = 1)
 
   if(length(bibliography) > 0) {
     validate(bibliography, check_class = "character")
-    bibliography <- tools::file_path_as_absolute(bibliography)
+    bibliography <- sapply(bibliography, tools::file_path_as_absolute)
     existing_bibliographies <- bibliography[file.exists(bibliography)]
     if(length(bibliography) > length(existing_bibliographies)) warning(paste("The following bibliography files could not be located:", bibliography[!bibliography %in% existing_bibliographies], sep = "\n", collapse = "\n"))
     if(length(existing_bibliographies) > 0) {
@@ -50,28 +52,30 @@ render_appendix <- function(
     }
   }
 
-  if(length(csl) > 0) {
-    validate(csl, check_class = "character", check_length = 1)
+  if(is.list(rmarkdown::metadata$output) && is.list(rmarkdown::metadata$output[[1]]) && !is.null(rmarkdown::metadata$output[[1]]$citation_package)) {
+    citation_package_call <- paste0("--", rmarkdown::metadata$output[[1]]$citation_package)
   } else {
-    csl <- system.file(
-      "rmd", "apa6.csl"
-      , package = "papaja"
-    )
+    citation_package_call <- NULL
   }
-  if(!is.null(bib_call)) {
+
+  if(is.null(citation_package_call)) {
+    if(!is.null(bib_call) & length(csl) > 0) {
+      validate(csl, check_class = "character", check_length = 1)
+    } else {
+      csl <- system.file(
+        "rmd", "apa6.csl"
+        , package = "papaja"
+      )
+    }
+
     csl_call <- paste0("--csl=", csl)
   } else {
+    bib_call <- gsub("^--", "-M ", bib_call)
     csl_call <- NULL
   }
 
   ellipsis <- list(...)
-
-  if(!is.null(ellipsis$options)) {
-    validate(ellipsis$options, check_class = "character")
-    ellipsis$options <- c(ellipsis$options, bib_call, csl_call)
-  } else if(length(bibliography) > 0) {
-    ellipsis$options <- c(bib_call, csl_call)
-  }
+  ellipsis$options <- c(ellipsis$options, bib_call, csl_call, citation_package_call)
 
   validate(quiet, check_class = "logical", check_length = 1)
 
@@ -98,7 +102,7 @@ render_appendix <- function(
 
     ellipsis$input <- md_file
     ellipsis$output <- basename(new_name)
-    ellipsis$citeproc <- TRUE
+    ellipsis$citeproc <- is.null(citation_package_call)
 
     status <- do.call(rmarkdown::pandoc_convert, ellipsis)
 

@@ -482,7 +482,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   # Add pandoc arguments
   args <- NULL
 
-  if((!is.list(metadata$output) || is.null(metadata$output[[1]]$citation_package)) &
+  if((!is.list(metadata$output) ||  !is.list(rmarkdown::metadata$output[[1]]) || is.null(metadata$output[[1]]$citation_package)) &
      (is.null(metadata$citeproc) || metadata$citeproc)) {
 
     ## Set CSL
