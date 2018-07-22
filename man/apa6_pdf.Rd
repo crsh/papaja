@@ -2,11 +2,15 @@
 % Please edit documentation in R/apa6_formats.R
 \name{apa6_pdf}
 \alias{apa6_pdf}
+\alias{apa6_docx}
 \alias{apa6_word}
 \title{APA article (6th edition)}
 \usage{
 apa6_pdf(fig_caption = TRUE, number_sections = FALSE, toc = FALSE,
   keep_tex = TRUE, md_extensions = NULL, ...)
+
+apa6_docx(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL,
+  ...)
 
 apa6_word(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL,
   ...)
@@ -40,8 +44,10 @@ When creating PDF documents the YAML option \code{classoption} is passed to the 
 }
 \section{Functions}{
 \itemize{
-\item \code{apa6_word}: Format to create .docx-files. \code{class} parameter is ignored. \emph{This function
+\item \code{apa6_docx}: Format to create .docx-files. \code{class} parameter is ignored. \emph{This function
 should be considered experimental.}
+
+\item \code{apa6_word}: Format to create .docx-files. Alias of \code{apa6_docx}.
 }}
 
 \examples{

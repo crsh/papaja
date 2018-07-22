@@ -89,6 +89,7 @@ arrange_anova.anova <- function(x) {
 
 arrange_anova.summary.aov <- function(x) {
   variance_table <- broom::tidy(x[[1]])
+  variance_table <- as.data.frame(variance_table)
 
   # When processing aovlist via lapply a dummy term "aovlist_residuals" preserves the SS_error of the intercept
   # term to calculate generalized eta squared correctly later on.
