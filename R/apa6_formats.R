@@ -658,7 +658,7 @@ modify_input_file <- function(input, ...) {
   yaml_params <- get_yaml_params(input_text)
 
   if(!is.null(yaml_params$appendix)) {
-    hashed_name <- base64enc::base64encode(charToRaw(basename(input)))
+    hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input))), ".Rmd")
 
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
       stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
@@ -689,7 +689,7 @@ revert_original_input_file <- function() {
   input_file <- tools::file_path_as_absolute(input_file)
 
   if(!is.null(rmarkdown::metadata$appendix)) {
-    hashed_name <- base64enc::base64encode(charToRaw(basename(input_file)))
+    hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input_file))), ".Rmd")
 
     if(!file.copy(file.path(dirname(input_file), hashed_name), input_file, overwrite = TRUE)) {
       stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", dirname(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))

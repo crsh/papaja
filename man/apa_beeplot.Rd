@@ -21,6 +21,11 @@ apa_beeplot(data, ...)
 \arguments{
 \item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
 
+\item{...}{Arguments passed on to \code{apa_factorial_plot}
+\describe{
+  \item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
+}}
+
 \item{id}{Character. Variable name that identifies subjects.}
 
 \item{factors}{Character. A vector of up to four variable names that is used to stratify the data.}
@@ -128,4 +133,3 @@ Other plots for factorial designs: \code{\link{apa_barplot}},
   \code{\link{apa_factorial_plot}},
   \code{\link{apa_lineplot}}
 }
-\concept{plots for factorial designs}

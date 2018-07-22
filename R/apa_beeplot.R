@@ -4,6 +4,7 @@
 #' a factorial design and sets APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
+#' @inheritDotParams apa_factorial_plot
 #' @family plots for factorial designs
 #' @examples
 #' apa_beeplot(

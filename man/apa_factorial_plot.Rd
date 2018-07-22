@@ -130,4 +130,3 @@ apa_factorial_plot(
 Other plots for factorial designs: \code{\link{apa_barplot}},
   \code{\link{apa_beeplot}}, \code{\link{apa_lineplot}}
 }
-\concept{plots for factorial designs}

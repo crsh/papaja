@@ -23,7 +23,8 @@ Imports:
   boot,
   beeswarm,
   stringr,
-  methods
+  methods,
+  base64enc
 Suggests:
   car,
   carData,
