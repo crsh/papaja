@@ -106,21 +106,43 @@ apa6_pdf <- function(
 
   config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
-    # if(!is.null(metadata$appendix)) {
-      # Remove indentation so that endfloat can process the lltable environments
-      output_text <- readLines(output_file, encoding = "UTF-8")
-      appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
-      if(length(appendix_lines) == 2) {
-        output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
-          "^\\s+"
-          , ""
-          , output_text[appendix_lines[1]:appendix_lines[2]]
-        )
-        output_file_connection <- file(output_file, encoding = "UTF-8")
-        writeLines(output_text, output_file_connection)
-        close(output_file_connection)
-      }
-    # }
+    output_text <- readLines(output_file, encoding = "UTF-8")
+
+    # Remove indentation so that endfloat can process the lltable environments
+    appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
+    if(length(appendix_lines) == 2) {
+      output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
+        "^\\s+"
+        , ""
+        , output_text[appendix_lines[1]:appendix_lines[2]]
+      )
+    }
+
+    # Correct abstract environment
+    output_text <- paste(output_text, collapse = "\n")
+
+    authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
+    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
+
+    note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
+    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
+
+    output_text <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "", output_text)
+    output_text <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "", output_text)
+
+    output_text <- gsub(
+      "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
+      , paste0("\\\\abstract{\\1}\n\n\\\\begin\\{document\\}\n\\\\maketitle")
+      , output_text
+    )
+
+    abstract_location <- stringi::stri_locate_all(output_text, regex = "\\\\abstract\\{")[[1]]
+
+    stringi::stri_sub(output_text, from = abstract_location[1], to  = abstract_location[1] - 1) <- paste0(authornote, "\n", note, "\n")
+
+    output_file_connection <- file(output_file, encoding = "UTF-8")
+    writeLines(output_text, output_file_connection)
+    close(output_file_connection)
 
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
@@ -309,6 +331,10 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   header_includes <- list()
 
   ### Essential manuscript parts
+  if(!is.null(yaml_params$title)) {
+    yaml_params$title <- "TITLE"
+  }
+
   if(!is.null(yaml_params$shorttitle)) {
     short_title <- paste0("\\shorttitle{", escape_latex(yaml_params$shorttitle), "}")
   } else {
@@ -322,6 +348,8 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
 
+
+  #### Pass the following through abstract field so pandoc parses markdown
   if(length(corresponding_author) > 0) {
     author_note <- paste(
       c(yaml_params$author_note, yaml_params$authornote)
@@ -329,7 +357,13 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , sep = "\n\n"
     )
 
-    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+    yaml_params$abstract <- paste0(yaml_params$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
+    # header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+  }
+
+  if(!is.null(yaml_params$note)) {
+    yaml_params$abstract <- paste0(yaml_params$abstract, "\n!!!papaja-note(", yaml_params$note, ")papaja-note!!!")
+    # header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
   }
 
   affiliations <- paste_affiliations(yaml_params$affiliation, format = "latex")
@@ -337,16 +371,12 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   yaml_params$author <- paste_authors(yaml_params$author, format = "latex")
 
-  if(!is.null(yaml_params$note)) {
-    header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
-  }
-
-  if(!is.null(yaml_params$abstract)) {
-    abstract <- yaml_params$abstract
-    yaml_params$abstract <- NULL
-
-    header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
-  }
+  # if(!is.null(yaml_params$abstract)) {
+  #   abstract <- yaml_params$abstract
+  #   yaml_params$abstract <- NULL
+  #
+  #   header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
+  # }
 
   if(!is.null(yaml_params$keywords) || !is.null(yaml_params$wordcount)) {
     keywords <- paste(unlist(yaml_params$keywords), collapse = ", ")
