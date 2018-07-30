@@ -165,23 +165,24 @@ printnum.numeric <- function(
   validate(na_string, check_class = "character", check_length = 1)
   validate(use_math, check_class = "logical")
 
-  ellipsis$x <- x
-  ellipsis$gt1 <- gt1
-  ellipsis$zero <- zero
-  ellipsis$na_string <- na_string
-  ellipsis$use_math <- use_math
-
   ellipsis <- defaults(
     ellipsis
+    , set = list(
+      x = x
+      , gt1 = gt1
+      , zero = zero
+      , na_string = na_string
+      , use_math = use_math
+    )
     , set.if.null = list(
       digits = 2
       , big.mark = ","
     )
   )
 
-  if(!is.null(ellipsis$digits)) {
+  # if(!is.null(ellipsis$digits)) { # if not necessary because default is set beforehand
     validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf))
-  }
+  #}
 
   if(length(x) > 1) {
     # print_args <- list(digits = digits, gt1 = gt1, zero = zero)
@@ -191,26 +192,10 @@ printnum.numeric <- function(
     }
   }
 
-  if(is.matrix(x) ||is.data.frame(x)) {
-    x_out <- apply(
-      X = x
-      , MARGIN = (3 - margin) # Parameters are applied according to margin
-      , FUN = function(x) {
-        ellipsis$x <- x
-        do.call("printnum", ellipsis)
-      }
-      # Inception!
-    )
+    # not necessary because of.data.frame-method:
+    # if(is.data.frame(x)) x_out <- as.data.frame(x_out)
 
-    if(margin == 2 || nrow(x) == 1) {
-      x_out <- t(x_out) # Reverse transposition caused by apply
-      dimnames(x_out) <- dimnames(x)
-    }
-
-    if(!is.matrix(x_out) && is.matrix(x)) x_out <- as.matrix(x_out, ncol = ncol(x))
-    if(is.data.frame(x)) x_out <- as.data.frame(x_out)
-
-  } else if(is.numeric(x) & length(x) > 1) {
+  if(is.numeric(x) & length(x) > 1) {
     # print_args <- lapply(print_args, rep, length = length(x)) # Recycle arguments
     x_out <- sapply(seq_along(x), vprintnumber, x)
     names(x_out) <- names(x)
@@ -226,20 +211,66 @@ printnum.numeric <- function(
 
 printnum.data.frame <- function(
   x
+  , margin = 2
   , ... # cleverly recycle (column-wise) over all possible parameters
 ) {
-  as.data.frame(
-    mapply(
+
+  if(margin == 1) {
+    ellipsis <- list(...)
+    ellipsis$x <- x
+    ellipsis$margin <- margin
+    x_out <- do.call("printnum.matrix", ellipsis)
+  } else {
+    x_out <- mapply(
       FUN = printnum
       , x = x
       , ...
       , SIMPLIFY = FALSE
     )
+  }
+
+  x_out <- as.data.frame(
+    x_out
     , stringsAsFactors = FALSE
     , check.names = FALSE
     , fix.empty.names = FALSE
   )
+
+  rownames(x_out) <- rownames(x)
+  x_out
 }
+
+#' @rdname printnum
+#' @export
+
+printnum.matrix <- function(
+  x
+  , margin = 2
+  , ...
+) {
+
+  ellipsis <- list(...)
+
+  x_out <- apply(
+    X = x
+    , MARGIN = (3 - margin) # Parameters are applied according to margin
+    , FUN = function(x) {
+      ellipsis$x <- x
+      do.call("printnum", ellipsis)
+    }
+    # Inception!
+  )
+
+  if(margin == 2 || nrow(x) == 1) {
+    x_out <- t(x_out) # Reverse transposition caused by apply
+    dimnames(x_out) <- dimnames(x)
+  }
+
+  if(!is.matrix(x_out)) x_out <- matrix(x_out, ncol = ncol(x))
+
+  x_out
+}
+
 
 #' @rdname printnum
 #' @export
