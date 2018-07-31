@@ -98,8 +98,8 @@ test_that(
     colnames(df_correct) <- colnames(m_num)
     expect_equivalent(apa_num, df_correct)
 
-    apa_num <- papaja:::printnum.numeric(df_num, digits = c(2, 3), margin = 1)
-    df_correct <- as.data.frame(matrix(c("0.00", "123.000", "0.10", "-12.000", "0.00", "123.000", "0.10", "-12.000"), ncol = 2))
+    apa_num <- printnum(df_num, digits = c(2, 3), margin = 1)
+    df_correct <- as.data.frame(matrix(c("0.00", "123.000", "0.10", "-12.000", "0.00", "123.000", "0.10", "-12.000"), ncol = 2), stringsAsFactors = FALSE)
     colnames(df_correct) <- colnames(m_num)
     expect_equivalent(apa_num, df_correct)
 

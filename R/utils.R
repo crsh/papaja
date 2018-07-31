@@ -278,7 +278,7 @@ print_hdint <- function(
 
 sanitize_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
-  x <- gsub("\\(|\\)", "", x)                       # Remove parentheses
+  x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
   x
 }
@@ -299,7 +299,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
 
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
-  x <- gsub("\\(|\\)|`|.+\\$", "", x)                 # Remove parentheses and backticks
+  x <- gsub(pattern = "\\(|\\)|`|.+\\$", replacement = "", x = x)                 # Remove parentheses and backticks
   x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
   x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
   for (i in 1:length(x)) {

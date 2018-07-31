@@ -7,6 +7,7 @@
 \alias{printnum.integer}
 \alias{printnum.numeric}
 \alias{printnum.data.frame}
+\alias{printnum.matrix}
 \alias{printnum.papaja_labelled}
 \title{Prepare numeric values for printing}
 \usage{
@@ -22,7 +23,9 @@ printnum(x, ...)
 \method{printnum}{numeric}(x, gt1 = TRUE, zero = TRUE, margin = 1,
   na_string = getOption("papaja.na_string"), use_math = TRUE, ...)
 
-\method{printnum}{data.frame}(x, ...)
+\method{printnum}{data.frame}(x, margin = 2, ...)
+
+\method{printnum}{matrix}(x, margin = 2, ...)
 
 \method{printnum}{papaja_labelled}(x, ...)
 }
