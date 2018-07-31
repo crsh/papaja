@@ -117,7 +117,24 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination.")
   }
 
-  # split by between factors
+  # ----------------------------------------------------------------------------
+  # Handling of missing values
+
+  if(anyNA(data[[dv]])) {
+    excluded_id <- sort(unique(data[[id]][is.na(data[[dv]])]))
+
+    data <- data[!data[[id]]%in%excluded_id, ]
+
+    warning(
+      "Because of missing values, the following cases were removed from calculation of within-subjects confidence intervals:\n"
+      , id
+      , ": "
+      , paste(excluded_id, collapse = ", ")
+    )
+  }
+
+
+  # split by between-subjects factors
   if (is.null(between)) {
     splitted <- list(data)
   } else if(length(between)>1){
