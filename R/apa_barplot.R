@@ -55,6 +55,7 @@ apa_barplot.default <- function(
   , level = 0.95
   , fun_aggregate = mean
   , na.rm = TRUE
+  , use = "all.obs"
   , reference = 0
   , intercept = NULL
   , args_x_axis = NULL
@@ -80,6 +81,7 @@ apa_barplot.default <- function(
       , level = level
       , fun_aggregate = substitute(fun_aggregate)
       , na.rm = na.rm
+      , use = use
       , reference = reference
       , intercept = intercept
       , args_x_axis = args_x_axis
