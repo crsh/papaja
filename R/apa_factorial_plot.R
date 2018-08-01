@@ -17,7 +17,7 @@
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
 #' @param use Character. Specifies a method to exclude cases if there are missing values \emph{after} aggregating.
 #'    Possible options are \code{"all.obs"} or \code{"complete.obs"}.
-#' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to\code{0}.
+#' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to \code{0}.
 #' @param intercept Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
