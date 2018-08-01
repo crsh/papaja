@@ -59,7 +59,6 @@ apa_lineplot.default <- function(
   , fun_aggregate = mean
   , na.rm = TRUE
   , use = "all.obs"
-  , reference = 0
   , intercept = NULL
   , args_x_axis = NULL
   , args_y_axis = NULL

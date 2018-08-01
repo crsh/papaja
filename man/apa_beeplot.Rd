@@ -10,11 +10,10 @@ apa_beeplot(data, ...)
 
 \method{apa_beeplot}{default}(data, id, factors = NULL, dv, tendency = mean,
   dispersion = conf_int, level = 0.95, fun_aggregate = mean,
-  na.rm = TRUE, use = "all.obs", reference = 0, intercept = NULL,
-  args_x_axis = NULL, args_y_axis = NULL, args_title = NULL,
-  args_points = NULL, args_swarm = NULL, args_error_bars = NULL,
-  args_legend = NULL, jit = 0.3, xlab = NULL, ylab = NULL,
-  main = NULL, ...)
+  na.rm = TRUE, use = "all.obs", intercept = NULL, args_x_axis = NULL,
+  args_y_axis = NULL, args_title = NULL, args_points = NULL,
+  args_swarm = NULL, args_error_bars = NULL, args_legend = NULL,
+  jit = 0.3, xlab = NULL, ylab = NULL, main = NULL, ...)
 
 \method{apa_beeplot}{afex_aov}(data, tendency = mean, dispersion = conf_int,
   fun_aggregate = mean, ...)
@@ -48,8 +47,6 @@ before calculating descriptive statistics for each cell of the design. Defaults 
 
 \item{use}{Character. Specifies a method to exclude cases if there are missing values \emph{after} aggregating.
 Possible options are \code{"all.obs"} or \code{"complete.obs"}.}
-
-\item{reference}{Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to \code{0}.}
 
 \item{intercept}{Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.}
