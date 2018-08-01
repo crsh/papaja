@@ -331,7 +331,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   header_includes <- list()
 
   ### Essential manuscript parts
-  if(!is.null(yaml_params$title)) {
+  if(is.null(yaml_params$title)) {
     yaml_params$title <- "TITLE"
   }
 
