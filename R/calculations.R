@@ -122,40 +122,28 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # ----------------------------------------------------------------------------
   # Handling of missing values
 
-  # explicit NAs
-  if(anyNA(data[[dv]])) {
-    excluded_id <- sort(unique(data[[id]][is.na(data[[dv]])]))
-    data <- data[!(data[[id]]%in%excluded_id), ]
-    data[[id]] <- droplevels(data[[id]])
+  data <- complete_observations(data = data, id = id, dv = dv, within = within)
 
+  # print warnings ----
+  if("removed_cases_explicit_NA" %in% names(attributes(data))) {
     warning(
       "Because of missing values, the following cases were removed from calculation of within-subjects confidence intervals:\n"
       , id
       , ": "
-      , paste(excluded_id, collapse = ", ")
+      , paste(attr(data, "removed_cases_explicit_NA"), collapse = ", ")
+    )
+  }
+  if("removed_cases_implicit_NA" %in% names(attributes(data))) {
+    warning(
+      "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\n"
+      , id
+      , ": "
+      , paste(attr(data, "removed_cases_implicit_NA"), collapse = ", ")
     )
   }
 
-  # implicit NAs
-  if(length(within) > 0) {
-    cross_table <- table(data[, c(id, within)])
-    obs_per_person <- apply(X = cross_table, MARGIN = 1, FUN = sum)
-    within_combinations <- prod(unlist(lapply(X = data[, within, drop = FALSE], FUN = nlevels)))
 
-    if(any(obs_per_person!=within_combinations)) {
-      excluded_id <- names(obs_per_person[obs_per_person!=within_combinations])
-
-      data <- data[!data[[id]]%in%excluded_id, ]
-      warning(
-        "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\n"
-        , id
-        , ": "
-        , paste(excluded_id, collapse = ", ")
-      )
-    }
-  }
-
-  # split by between-subjects factors
+  # split by between-subjects factors ----
   if (is.null(between)) {
     splitted <- list(data)
   } else if(length(between)>1){

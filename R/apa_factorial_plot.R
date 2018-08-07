@@ -291,10 +291,17 @@ apa_factorial_plot.default <- function(
   # ----------------------------------------------------------------------------
   # Check if there are incomplete observations and eventually remove them
   if(use=="complete.obs") {
-    excluded_id <- sort(unique(aggregated[[id]][is.na(aggregated[[dv]])]))
-
-    data <- data[!data[[id]]%in%excluded_id, ]
-    aggregated <- aggregated[!aggregated[[id]]%in%excluded_id, ]
+    # excluded_id <- sort(unique(aggregated[[id]][is.na(aggregated[[dv]])]))
+    #
+    # data <- data[!data[[id]]%in%excluded_id, ]
+    # aggregated <- aggregated[!aggregated[[id]]%in%excluded_id, ]
+    tmp <- determine_within_between(data = aggregated, id = id, factors = factors)
+    aggregated <- complete_observations(data = aggregated, id = id, within = tmp$within, dv = dv)
+    removed_cases <- unlist(attributes(aggregated)[c("removed_cases_implicit_NA", "removed_cases_explicit_NA")])
+    if(!is.null(removed_cases)) {
+      excluded_id <- sort(unique(removed_cases))
+      data <- data[!excluded_id %in% data[[id]], ]
+    }
   }
 
   ## Calculate central tendencies ----------------------------------------------

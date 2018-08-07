@@ -501,3 +501,41 @@ determine_within_between <- function(data, id, factors) {
   )
 }
 
+
+#' @keywords internal
+
+complete_observations <- function(data, id, within, dv) {
+
+  explicit_NA <- NULL
+  implicit_NA <- NULL
+
+  # explicit NAs
+  if(anyNA(data[[dv]])) {
+    excluded_id <- sort(unique(data[[id]][is.na(data[[dv]])]))
+    data <- data[!(data[[id]] %in% excluded_id), ]
+    data[[id]] <- droplevels(data[[id]])
+
+    explicit_NA <- excluded_id
+  }
+
+  # implicit NAs
+  if(length(within) > 0) {
+    cross_table <- table(data[, c(id, within)])
+    obs_per_person <- apply(X = cross_table, MARGIN = 1, FUN = sum)
+    within_combinations <- prod(unlist(lapply(X = data[, within, drop = FALSE], FUN = nlevels)))
+
+    if(any(obs_per_person != within_combinations)) {
+      excluded_id <- names(obs_per_person[obs_per_person != within_combinations])
+
+      data <- data[!data[[id]] %in% excluded_id, ]
+      data[[id]] <- droplevels(data[[id]])
+      implicit_NA <- excluded_id
+    }
+  }
+  attr(data, "removed_cases_explicit_NA") <- explicit_NA
+  attr(data, "removed_cases_implicit_NA") <- implicit_NA
+
+  data
+
+}
+
