@@ -13,7 +13,7 @@
 #'
 #'    When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
 #'    so that each figure is saved in all four formats at a resolution of 300 dpi.
-#' @seealso \code{\link[bookdown]{pdf_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[bookdown]{word_document2}}, \code{\link[rmarkdown]{word_document}}
+#' @seealso \code{\link[bookdown]{html_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
 #' @examples NULL
 #' @export
 
@@ -140,9 +140,9 @@ apa6_pdf <- function(
 
     stringi::stri_sub(output_text, from = abstract_location[1], to  = abstract_location[1] - 1) <- paste0(authornote, "\n", note, "\n")
 
-    output_file_connection <- file(output_file, encoding = "UTF-8")
-    writeLines(output_text, output_file_connection)
-    close(output_file_connection)
+    output_file_connection <- file(output_file)
+    on.exit(close(output_file_connection))
+    writeLines(output_text, output_file_connection, useBytes = TRUE)
 
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
@@ -547,9 +547,10 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-  input_file_connection <- file(input_file, encoding = "UTF-8")
-  writeLines(augmented_input_text, input_file_connection)
-  close(input_file_connection)
+  # input_file_connection <- file(input_file)
+  # on.exit(close(input_file_connection))
+  # writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
+  replace_yaml_front_matter(yaml_params, augmented_input_text, input_file)
 
   # Add pancod arguments
   args <- NULL
@@ -589,7 +590,7 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
   augmented_input_text <- c("---", yaml::as.yaml(x), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
 
 
-  input_file_connection <- file(input_file, encoding = "UTF-8")
+  input_file_connection <- file(input_file)
   on.exit(close(input_file_connection))
   writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
 }
@@ -671,8 +672,8 @@ set_ampersand_filter <- function(args, csl_file) {
     ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
     filter_path <- "_papaja_ampersand_filter.bat"
     filter_path_connection <- file(filter_path, encoding = "UTF-8")
+    on.exit(close(filter_path_connection))
     writeLines(ampersand_filter, filter_path_connection)
-    close(filter_path_connection)
   }
 
   if(!is.null(args)) { # CSL has not been specified manually
