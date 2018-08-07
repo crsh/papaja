@@ -45,9 +45,7 @@ apa6_pdf <- function(
 
   # includes$in_header <- c(includes$in_header, apa6_header_includes)
 
-  pandoc_version <- utils::getFromNamespace("pandoc_version", "rmarkdown")
-
-  if(utils::compareVersion("2.0", as.character(pandoc_version())) <= 0) {
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     if(is.null(md_extensions) || !grepl("raw\\_attribute", md_extensions)) {
       md_extensions <- paste0(md_extensions, "+raw_attribute")
     }
@@ -489,9 +487,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
-  pandoc_version <- utils::getFromNamespace("pandoc_version", "rmarkdown")
-
-  if(utils::compareVersion("2.0", as.character(pandoc_version())) <= 0) {
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     yaml_params$`header-includes` <- c(paste0("```{=latex}\n", paste0(header_includes, collapse = "\n"), "\n```\n"), yaml_params$`header-includes`)
   } else {
     yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
@@ -662,18 +658,23 @@ set_ampersand_filter <- function(args, csl_file) {
 
   # Correct in-text ampersands
   filter_path <- system.file(
-    "rmd", "ampersand_filter.sh"
+    "rmd", "ampersand_filter.R"
     , package = "papaja"
   )
 
-  if(Sys.info()["sysname"] == "Windows") {
-    filter_path <- gsub("\\.sh", ".bat", filter_path)
-    ampersand_filter <- readLines(filter_path)
-    ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
-    filter_path <- "_papaja_ampersand_filter.bat"
-    filter_path_connection <- file(filter_path, encoding = "UTF-8")
-    on.exit(close(filter_path_connection))
-    writeLines(ampersand_filter, filter_path_connection)
+  ## Use legacy shell or bash script with older versions of pandoc
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) > 0) {
+    if(Sys.info()["sysname"] == "Windows") {
+      filter_path <- gsub("\\.sh", ".bat", filter_path)
+      ampersand_filter <- readLines(filter_path)
+      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
+      filter_path <- "_papaja_ampersand_filter.bat"
+      filter_path_connection <- file(filter_path, encoding = "UTF-8")
+      on.exit(close(filter_path_connection))
+      writeLines(ampersand_filter, filter_path_connection)
+    } else {
+      filter_path <- gsub("\\.R", ".sh", filter_path)
+    }
   }
 
   if(!is.null(args)) { # CSL has not been specified manually
