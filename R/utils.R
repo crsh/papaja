@@ -471,3 +471,33 @@ rename_column <- function(x, current_name, new_name) {
   x
 }
 
+
+#' @keywords internal
+
+determine_within_between <- function(data, id, factors) {
+
+  data <- droplevels(data)
+
+  number_of_levels <- function(x) {
+    length(unique(x))
+  }
+
+  within <- c()
+  between <- c()
+
+  for (i in factors) {
+    n_levels <- aggregate(x = data[[i]], by = list(data[[id]]), FUN = number_of_levels)
+    if(any(n_levels$x>1)) {
+      within <- c(within, i)
+    } else {
+      between <- c(between, i)
+    }
+  }
+
+  # return
+  list(
+    "within" = within
+    , "between" =  between
+  )
+}
+

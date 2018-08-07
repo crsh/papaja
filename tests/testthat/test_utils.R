@@ -57,3 +57,15 @@ test_that(
     expect_equal(in_paren("$F(1, 234) = 1$"), "$F[1, 234] = 1$")
   }
 )
+
+test_that(
+  "determine_within_between"
+  , {
+    test <- determine_within_between(data = npk, id = "block", factors = c("N", "P", "K"))
+    expect_equal(test, list(within = c("N", "P", "K"), between = NULL))
+
+    data <- npk[2:16, ]
+    test <- determine_within_between(data = data, id = "block", factors = c("N", "P", "K"))
+    expect_equal(test, list(within = c("N", "P", "K"), between = NULL))
+  }
+)

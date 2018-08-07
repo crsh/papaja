@@ -89,8 +89,6 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # comment out again!
   # data <- fast_aggregate(data = data, factors = c(id, factors), dv = dv, fun = mean)
-  between <- c()
-  within <- c()
 
   # `split()` (below) needs standard factors, because it does not apply `as.factor`
   # by default
@@ -98,14 +96,18 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     data[[i]] <- as.factor(data[[i]])
   }
 
-  for (i in 1:length(factors)) {
+  # for (i in 1:length(factors)) {
+  #   if (all(rowSums(table(data[[id]], data[[factors[i]]])>0)==1)) {
+  #     between <- c(between, factors[i])
+  #   } else {
+  #     within <- c(within, factors[i])
+  #   }
+  # }
 
-    if (all(rowSums(table(data[[id]], data[[factors[i]]])>0)==1)) {
-      between <- c(between, factors[i])
-    } else {
-      within <- c(within, factors[i])
-    }
-  }
+  tmp <- determine_within_between(data = data, id = id, factors = factors)
+
+  between <- tmp$between
+  within <- tmp$within
 
 #   print(sapply(X = factors, FUN = function(x){
 #     ifelse(all(rowSums(table(data[[id]], data[[x]]))==1), "between", "within")
@@ -120,10 +122,11 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # ----------------------------------------------------------------------------
   # Handling of missing values
 
+  # explicit NAs
   if(anyNA(data[[dv]])) {
     excluded_id <- sort(unique(data[[id]][is.na(data[[dv]])]))
-
-    data <- data[!data[[id]]%in%excluded_id, ]
+    data <- data[!(data[[id]]%in%excluded_id), ]
+    data[[id]] <- droplevels(data[[id]])
 
     warning(
       "Because of missing values, the following cases were removed from calculation of within-subjects confidence intervals:\n"
@@ -133,6 +136,24 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     )
   }
 
+  # implicit NAs
+  if(length(within) > 0) {
+    cross_table <- table(data[, c(id, within)])
+    obs_per_person <- apply(X = cross_table, MARGIN = 1, FUN = sum)
+    within_combinations <- prod(unlist(lapply(X = data[, within, drop = FALSE], FUN = nlevels)))
+
+    if(any(obs_per_person!=within_combinations)) {
+      excluded_id <- names(obs_per_person[obs_per_person!=within_combinations])
+
+      data <- data[!data[[id]]%in%excluded_id, ]
+      warning(
+        "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\n"
+        , id
+        , ": "
+        , paste(excluded_id, collapse = ", ")
+      )
+    }
+  }
 
   # split by between-subjects factors
   if (is.null(between)) {
