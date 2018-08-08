@@ -15,7 +15,9 @@
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
 #'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
 #' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to\code{0}.
+#' @param use Character. Specifies a method to exclude cases if there are missing values \emph{after} aggregating.
+#'    Possible options are \code{"all.obs"} or \code{"complete.obs"}.
+#' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to \code{0}.
 #' @param intercept Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
@@ -90,6 +92,7 @@ apa_factorial_plot.default <- function(
   , level = 0.95
   , fun_aggregate = mean
   , na.rm = TRUE
+  , use = "all.obs"
   , reference = 0
   , intercept = NULL
   , args_x_axis = NULL
@@ -120,6 +123,10 @@ apa_factorial_plot.default <- function(
   validate(level, check_class = "numeric", check_range = c(0,1))
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
+  validate(use, check_class = "character", check_length = 1)
+  if(!use%in%c("all.obs", "complete.obs")) {
+    stop('Parameter `use` must be either "all.obs" or "complete.obs".')
+  }
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE)
   if(!is.null(args_x_axis)) validate(args_x_axis, check_class = "list")
@@ -279,6 +286,22 @@ apa_factorial_plot.default <- function(
     }
   } else {
     aggregated <- data
+  }
+
+  # ----------------------------------------------------------------------------
+  # Check if there are incomplete observations and eventually remove them
+  if(use=="complete.obs") {
+    # excluded_id <- sort(unique(aggregated[[id]][is.na(aggregated[[dv]])]))
+    #
+    # data <- data[!data[[id]]%in%excluded_id, ]
+    # aggregated <- aggregated[!aggregated[[id]]%in%excluded_id, ]
+    tmp <- determine_within_between(data = aggregated, id = id, factors = factors)
+    aggregated <- complete_observations(data = aggregated, id = id, within = tmp$within, dv = dv)
+    removed_cases <- unlist(attributes(aggregated)[c("removed_cases_implicit_NA", "removed_cases_explicit_NA")])
+    if(!is.null(removed_cases)) {
+      excluded_id <- sort(unique(removed_cases))
+      data <- data[!data[[id]] %in% excluded_id, ]
+    }
   }
 
   ## Calculate central tendencies ----------------------------------------------

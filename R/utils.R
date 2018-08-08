@@ -471,3 +471,87 @@ rename_column <- function(x, current_name, new_name) {
   x
 }
 
+
+#' @keywords internal
+
+determine_within_between <- function(data, id, factors) {
+
+  data <- droplevels(data)
+
+  number_of_levels <- function(x) {
+    length(unique(x))
+  }
+
+  within <- c()
+  between <- c()
+
+  for (i in factors) {
+    n_levels <- aggregate(x = data[[i]], by = list(data[[id]]), FUN = number_of_levels)
+    if(any(n_levels$x>1)) {
+      within <- c(within, i)
+    } else {
+      between <- c(between, i)
+    }
+  }
+
+  # return
+  list(
+    "within" = within
+    , "between" =  between
+  )
+}
+
+#' Remove Incomplete Observations from Data Frame
+#'
+#' This is an internal function that is used to remove incomplete observations
+#' from a \code{data.frame}. It removes (1) explicit NAs and (2) cases with
+#' implicit NAs, i.e. participants who did not provide observations for all
+#' combinations of (possibly multiple) within-subjects factors.
+#'
+#' @param data The \code{data.frame} to be processed.
+#' @param id Character. Name of the column containing the subject identifier.
+#' @param within Character. Names of the columns containing within-subjects factors.
+#' @param dv Character. Name of the column containing the dependent variable.
+#' @return
+#'   A \code{data.frame} where NAs and incomplete observations are removed.
+#'   It also has up to two additional attributes \code{removed_cases_explicit_NA}
+#'   and \code{removed_cases_implicit_NA}, carrying the subject identifiers of
+#'   participants whose data has been removed.
+#'
+#' @keywords internal
+
+complete_observations <- function(data, id, within, dv) {
+
+  explicit_NA <- NULL
+  implicit_NA <- NULL
+
+  # explicit NAs
+  if(anyNA(data[[dv]])) {
+    excluded_id <- sort(unique(data[[id]][is.na(data[[dv]])]))
+    data <- data[!(data[[id]] %in% excluded_id), ]
+    data[[id]] <- droplevels(data[[id]])
+
+    explicit_NA <- as.character(excluded_id)
+  }
+
+  # implicit NAs
+  if(length(within) > 0) {
+    cross_table <- table(data[, c(id, within)])
+    obs_per_person <- apply(X = cross_table, MARGIN = 1, FUN = sum)
+    within_combinations <- prod(unlist(lapply(X = data[, within, drop = FALSE], FUN = nlevels)))
+
+    if(any(obs_per_person != within_combinations)) {
+      excluded_id <- names(obs_per_person[obs_per_person != within_combinations])
+
+      data <- data[!data[[id]] %in% excluded_id, ]
+      data[[id]] <- droplevels(data[[id]])
+      implicit_NA <- excluded_id
+    }
+  }
+  attr(data, "removed_cases_explicit_NA") <- explicit_NA
+  attr(data, "removed_cases_implicit_NA") <- implicit_NA
+
+  data
+
+}
+

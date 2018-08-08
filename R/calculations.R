@@ -91,8 +91,6 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # comment out again!
   # data <- fast_aggregate(data = data, factors = c(id, factors), dv = dv, fun = mean)
-  between <- c()
-  within <- c()
 
   # `split()` (below) needs standard factors, because it does not apply `as.factor`
   # by default
@@ -100,14 +98,18 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     data[[i]] <- as.factor(data[[i]])
   }
 
-  for (i in 1:length(factors)) {
+  # for (i in 1:length(factors)) {
+  #   if (all(rowSums(table(data[[id]], data[[factors[i]]])>0)==1)) {
+  #     between <- c(between, factors[i])
+  #   } else {
+  #     within <- c(within, factors[i])
+  #   }
+  # }
 
-    if (all(rowSums(table(data[[id]], data[[factors[i]]])>0)==1)) {
-      between <- c(between, factors[i])
-    } else {
-      within <- c(within, factors[i])
-    }
-  }
+  tmp <- determine_within_between(data = data, id = id, factors = factors)
+
+  between <- tmp$between
+  within <- tmp$within
 
 #   print(sapply(X = factors, FUN = function(x){
 #     ifelse(all(rowSums(table(data[[id]], data[[x]]))==1), "between", "within")
@@ -119,7 +121,31 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination.")
   }
 
-  # split by between factors
+  # ----------------------------------------------------------------------------
+  # Handling of missing values
+
+  data <- complete_observations(data = data, id = id, dv = dv, within = within)
+
+  # print warnings ----
+  if("removed_cases_explicit_NA" %in% names(attributes(data))) {
+    warning(
+      "Because of NAs in the dependent variable, the following cases were removed from calculation of within-subjects confidence intervals:\n"
+      , id
+      , ": "
+      , paste(attr(data, "removed_cases_explicit_NA"), collapse = ", ")
+    )
+  }
+  if("removed_cases_implicit_NA" %in% names(attributes(data))) {
+    warning(
+      "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\n"
+      , id
+      , ": "
+      , paste(attr(data, "removed_cases_implicit_NA"), collapse = ", ")
+    )
+  }
+
+
+  # split by between-subjects factors ----
   if (is.null(between)) {
     splitted <- list(data)
   } else if(length(between)>1){

@@ -57,3 +57,63 @@ test_that(
     expect_equal(in_paren("$F(1, 234) = 1$"), "$F[1, 234] = 1$")
   }
 )
+
+test_that(
+  "determine_within_between"
+  , {
+    test <- determine_within_between(data = npk, id = "block", factors = c("N", "P", "K"))
+    expect_equal(test, list(within = c("N", "P", "K"), between = NULL))
+
+    data <- npk[2:16, ]
+    test <- determine_within_between(data = data, id = "block", factors = c("N", "P", "K"))
+    expect_identical(test, list(within = c("N", "P", "K"), between = NULL))
+  }
+)
+
+test_that(
+  "complete_observations"
+  , {
+    test <- complete_observations(data = npk, id = "block", dv = "yield", within = c("N", "P"))
+
+    expect_identical(
+      object = test
+      , expected = npk
+    )
+
+    data <- npk
+    data$yield[5] <- NA
+    test <- papaja:::complete_observations(data = data, id = "block", dv = "yield", within = c("N", "K"))
+
+    expect_identical(
+      object = test
+      , expected = structure(
+        list(
+          block = structure(
+            c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 5L, 5L, 5L, 5L)
+            , .Label = c("1", "3", "4", "5", "6")
+            , class = "factor"
+          )
+          , N = structure(
+            c(1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L)
+            , .Label = c("0", "1"), class = "factor"
+          )
+          , P = structure(
+            c(2L, 2L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 1L)
+            , .Label = c("0", "1")
+            , class = "factor"
+          )
+          , K = structure(
+            c(2L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 1L)
+            , .Label = c("0", "1")
+            , class = "factor"
+          )
+          , yield = c(49.5, 62.8, 46.8, 57, 62.8, 55.8, 69.5, 55, 62, 48.8, 45.5, 44.2, 52, 51.5, 49.8, 48.8, 57.2, 59, 53.2, 56)
+        )
+        , .Names = c("block", "N", "P", "K", "yield")
+        , row.names = c(1L, 2L, 3L, 4L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L)
+        , class = "data.frame"
+        , removed_cases_explicit_NA = c("2")
+      )
+    )
+  }
+)
