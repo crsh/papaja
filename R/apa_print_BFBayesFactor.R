@@ -17,7 +17,7 @@
 #' @param min Numeric. Lower limit of the Bayes factor before switching to scientific notation.
 #' @param evidential_boost Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
 #'   corresponding models (see details).
-#' @inheritDotParams printnum
+#' @inheritDotParams printnum.numeric -x -margin
 #'
 #' @details For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
 #'   odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
@@ -30,6 +30,7 @@
 #'   \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
 #' @family apa_print
 #' @importFrom stats formula terms setNames median
+#' @keywords internal
 #' @export
 #'
 #' @examples
@@ -98,13 +99,9 @@ apa_print.BFBayesFactor <- function(
   apa_res
 }
 
-#' @rdname apa_print.BFBayesFactor
-#' @export
-
-setMethod("apa_print", "BFBayesFactor", apa_print.BFBayesFactor)
-
 
 #' @rdname apa_print.BFBayesFactor
+#' @keywords internal
 #' @export
 
 apa_print.BFBayesFactorTop <- function(x, ...) {
@@ -137,12 +134,7 @@ apa_print.BFBayesFactorTop <- function(x, ...) {
 
 
 #' @rdname apa_print.BFBayesFactor
-#' @export
-
-setMethod("apa_print", "BFBayesFactorTop", apa_print.BFBayesFactorTop)
-
-
-#' @rdname apa_print.BFBayesFactor
+#' @keywords internal
 #' @export
 
 apa_print.BFBayesFactorList <- function(x, ...) {
@@ -154,6 +146,18 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 
   apa_res
 }
+
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+setMethod(f = "apa_print", signature = "BFBayesFactor", definition = apa_print.BFBayesFactor)
+
+#' @rdname apa_print.BFBayesFactor
+#' @export
+
+setMethod(f = "apa_print", signature = "BFBayesFactorTop", definition = apa_print.BFBayesFactorTop)
+
 
 #' @rdname apa_print.BFBayesFactor
 #' @export
@@ -294,16 +298,12 @@ bf_estimates_ttest <- function(
   estimate
 }
 
-setMethod(
-  f = "bf_estimates"
-  , signature = "BFoneSample"
-  , definition = bf_estimates_ttest
+suppressMessages(
+  setMethod(f = "bf_estimates", signature = "BFoneSample", definition = bf_estimates_ttest)
 )
 
-setMethod(
-  f = "bf_estimates"
-  , signature = "BFindepSample"
-  , definition = bf_estimates_ttest
+suppressMessages(
+  setMethod(f = "bf_estimates", signature = "BFindepSample", definition = bf_estimates_ttest)
 )
 
 

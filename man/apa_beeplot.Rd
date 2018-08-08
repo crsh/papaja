@@ -8,15 +8,16 @@
 \usage{
 apa_beeplot(data, ...)
 
-\method{apa_beeplot}{default}(data, id, factors = NULL, dv, tendency = mean,
-  dispersion = conf_int, level = 0.95, fun_aggregate = mean,
-  na.rm = TRUE, reference = 0, intercept = NULL, args_x_axis = NULL,
-  args_y_axis = NULL, args_title = NULL, args_points = NULL,
-  args_swarm = NULL, args_error_bars = NULL, args_legend = NULL,
-  jit = 0.3, xlab = NULL, ylab = NULL, main = NULL, ...)
+\method{apa_beeplot}{default}(data, id, factors = NULL, dv,
+  tendency = mean, dispersion = conf_int, level = 0.95,
+  fun_aggregate = mean, na.rm = TRUE, reference = 0,
+  intercept = NULL, args_x_axis = NULL, args_y_axis = NULL,
+  args_title = NULL, args_points = NULL, args_swarm = NULL,
+  args_error_bars = NULL, args_legend = NULL, jit = 0.3,
+  xlab = NULL, ylab = NULL, main = NULL, ...)
 
-\method{apa_beeplot}{afex_aov}(data, tendency = mean, dispersion = conf_int,
-  fun_aggregate = mean, ...)
+\method{apa_beeplot}{afex_aov}(data, tendency = mean,
+  dispersion = conf_int, fun_aggregate = mean, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data or an object of class \code{afex_aov}}
@@ -133,3 +134,4 @@ Other plots for factorial designs: \code{\link{apa_barplot}},
   \code{\link{apa_factorial_plot}},
   \code{\link{apa_lineplot}}
 }
+\concept{plots for factorial designs}

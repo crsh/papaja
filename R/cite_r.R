@@ -90,7 +90,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   pkg_names <- names(pkg_citations)
   pkg_names <- unique(gsub("\\_\\D", "", pkg_names))
   pkg_names <- gsub("survival-book", "survival", pkg_names)
-  pkg_versions <- sapply(pkg_names, function(x) if(x %in% installed.packages()) paste0("Version ", as.character(utils::packageVersion(x)), "; ") else "")
+  pkg_versions <- sapply(pkg_names, function(x) if(x %in% utils::installed.packages()) paste0("Version ", as.character(utils::packageVersion(x)), "; ") else "")
   pkg_keys <- sapply(pkg_names, function(x){
     keys <- pkg_citations[grepl(x, names(pkg_citations))]
     paste0("@", keys, collapse = "; ")

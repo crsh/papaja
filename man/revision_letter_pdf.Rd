@@ -21,5 +21,5 @@ Template for creating an journal revision letters.
 NULL
 }
 \seealso{
-\code{\link[bookdown]{pdf_document2}}
+\code{\link[bookdown]{html_document2}}
 }

@@ -43,5 +43,5 @@ Suggests:
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
