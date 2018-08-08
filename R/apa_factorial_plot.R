@@ -300,7 +300,7 @@ apa_factorial_plot.default <- function(
     removed_cases <- unlist(attributes(aggregated)[c("removed_cases_implicit_NA", "removed_cases_explicit_NA")])
     if(!is.null(removed_cases)) {
       excluded_id <- sort(unique(removed_cases))
-      data <- data[!excluded_id %in% data[[id]], ]
+      data <- data[!data[[id]] %in% excluded_id, ]
     }
   }
 

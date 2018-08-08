@@ -181,4 +181,31 @@ test_that(
   }
 )
 
+test_that(
+  'apa_factorial_plot.default(): use = "complete.obs"'
+  , {
+    object_1 <- apa_factorial_plot(
+      data = npk[2:24, ]
+      , id = "block"
+      , dv = "yield"
+      , factors = c("N", "P")
+      , dispersion = wsci
+      , use = "complete.obs"
+      , plot = c("lines", "points", "error_bars", "swarms", "bars")
+    )
+
+    expect_equal(
+      object = attributes(object_1$data)$removed_cases_implicit_NA
+      , expected = "1"
+    )
+
+    reference_object <- default_label(droplevels(npk[5:24, c("block", "N", "P", "yield")]))
+    attr(reference_object, "removed_cases_implicit_NA") <- "1"
+    expect_equal(
+      object = object_1$data
+      , expected = reference_object
+    )
+  }
+)
+
 file.remove("Rplots.pdf")

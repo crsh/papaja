@@ -531,7 +531,7 @@ complete_observations <- function(data, id, within, dv) {
     data <- data[!(data[[id]] %in% excluded_id), ]
     data[[id]] <- droplevels(data[[id]])
 
-    explicit_NA <- excluded_id
+    explicit_NA <- as.character(excluded_id)
   }
 
   # implicit NAs

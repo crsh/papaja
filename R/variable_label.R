@@ -160,7 +160,8 @@ default_label.default <- function(x, ...) no_method(x)
 #' @keywords internal
 
 default_label.data.frame <- function(x) {
-  as.data.frame.list(
+
+  x_out <- as.data.frame.list(
     x = mapply(
       FUN = function(y, value) {
         if(is.null(variable_label(y))) {
@@ -175,7 +176,11 @@ default_label.data.frame <- function(x) {
     )
     , check.names = FALSE
     , stringsAsFactors = FALSE
+    , col.names = attr(x, "names")
+    , row.names = attr(x, "row.names") # `rownames(x)` would coerce to character
   )
+  attributes(x_out) <- attributes(x)
+  x_out
 }
 
 # setMethod(

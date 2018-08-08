@@ -66,7 +66,7 @@ test_that(
 
     data <- npk[2:16, ]
     test <- determine_within_between(data = data, id = "block", factors = c("N", "P", "K"))
-    expect_equal(test, list(within = c("N", "P", "K"), between = NULL))
+    expect_identical(test, list(within = c("N", "P", "K"), between = NULL))
   }
 )
 
@@ -112,7 +112,7 @@ test_that(
         , .Names = c("block", "N", "P", "K", "yield")
         , row.names = c(1L, 2L, 3L, 4L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L)
         , class = "data.frame"
-        , removed_cases_explicit_NA = structure(2L, .Label = c("1", "2", "3", "4", "5", "6"), class = "factor")
+        , removed_cases_explicit_NA = c("2")
       )
     )
   }
