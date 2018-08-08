@@ -4,7 +4,7 @@ r:
   - release
   - devel
 
-pandoc_version: 2.0.3
+pandoc_version: 2.2.1
 
 cache: packages
 
@@ -27,7 +27,7 @@ r_packages:
 
 # Install other dependencies # longtable lscape tabularx
 before_install:
-  - tlmgr install apa6 was threeparttablex endfloat substr lineno
+  - tlmgr install apa6 booktabs caption csquotes endfloat environ etoolbox fancyhdr fancyvrb framed lineno microtype mptopdf ms parskip pgf sttools threeparttable threeparttablex trimspaces txfonts upquote url was xcolor
 
 addons:
  apt:
