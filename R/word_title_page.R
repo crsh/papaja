@@ -59,7 +59,7 @@ word_title_page <- function(x) {
     , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , author_note
     , "\n"
-    , paste0("<div custom-style='h1-pagebreak'>", apa_terms$abstract, "</div>")
+    , paste0("<div custom-style='Title'>", apa_terms$abstract, "</div>")
     , "\n"
     , x$abstract
     , paste0("*", apa_terms$keywords, ":* ", x$keywords)
