@@ -120,10 +120,10 @@ apa6_pdf <- function(
     output_text <- paste(output_text, collapse = "\n")
 
     authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
-    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
+    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\authornote\\{\\1\\}", authornote)
 
     note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
-    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
+    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\note\\{\\1\\}", note)
 
     output_text <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "", output_text)
     output_text <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "", output_text)
@@ -134,9 +134,16 @@ apa6_pdf <- function(
       , output_text
     )
 
-    abstract_location <- stringi::stri_locate_all(output_text, regex = "\\\\abstract\\{")[[1]]
+    abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
 
-    stringi::stri_sub(output_text, from = abstract_location[1], to  = abstract_location[1] - 1) <- paste0(authornote, "\n", note, "\n")
+    output_text <- paste0(
+      substr(output_text, start = 1, stop = abstract_location[1])
+      , authornote
+      , "\n"
+      , note
+      , "\n"
+      , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
+    )
 
     output_file_connection <- file(output_file)
     on.exit(close(output_file_connection))
