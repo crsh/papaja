@@ -63,7 +63,7 @@ apa_print.summary_emm <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
-  ci <- get_emm_conf_level(x)
+  ci <- attr(x, "misc")$level
   ci_supplied <- !length(ci) == 0
   p_supplied <- "p.value" %in% colnames(x)
   if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?lsmeans::summary' for details.")
@@ -110,8 +110,8 @@ apa_print.summary_emm <- function(
   )
   contrast_table <- rename_column(contrast_table, "SE", "std.error")
 
-  if(pri_vars[1] == "contrast") {
-    variable_label(contrast_table) <- c(contrast = paste0("Contrast"))
+  if("contrast" %in% pri_vars) {
+    variable_label(contrast_table) <- c(contrast = "Contrast")
   }
 
   contrast_table$estimate <- printnum(contrast_table$estimate, ...)
@@ -159,14 +159,25 @@ apa_print.summary_emm <- function(
   # contrast_table <- contrast_table[, which(colnames(contrast_table) != "contrast")]
   if(!is.null(contrast_names)) contrast_table$contrast <- contrast_names
   if(length(factors) > 1) {
-    rownames(contrast_table) <- apply(contrast_table[, factors], 1, paste, collapse = "_")
+    rownames(contrast_table) <- sanitize_terms(
+      gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
+        "^\\_|\\_(\\_)", "\\1"
+        , gsub(" |\\.", "", apply(contrast_table[, factors], 1, paste, collapse = "_"))
+      )
+    )
   } else {
-    rownames(contrast_table) <- contrast_table[, factors]
+    rownames(contrast_table) <- sanitize_terms(
+      gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
+        "^\\_|\\_(\\_)", "\\1"
+        , gsub(" |\\.", "", contrast_table[, factors])
+      )
+    )
   }
 
   ## Add structuring columns
-  if(length(factors) > 1) {
-    factors <- rev(factors)
+  if(length(factors) > 1 && !any(contrast_table[, factors] == ".")) {
+
+    factors[-which(factors == "contrast")] <- rev(factors[-which(factors == "contrast")])
     str_factors <- rev(c(pri_vars[-1], split_by))
     str_cols <- contrast_table[, str_factors, drop = FALSE]
     for(i in seq_along(str_factors)) {
@@ -251,13 +262,6 @@ apa_print.lsmobj <- function(x, ...) {
 apa_print.summary.ref.grid <- function(x, ...) {
   validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
   apa_print.summary_emm(x, ...)
-}
-
-
-get_emm_conf_level <- function(x) {
-  lsm_messages <- attr(x, "mesg")
-  conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
-  as.numeric(stringr::str_extract(conf_level_message, "0\\.\\d+"))
 }
 
 est_name_from_call <- function(x) {

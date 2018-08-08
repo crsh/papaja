@@ -6,6 +6,8 @@
 # models: list of lm-objects
 
 delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
+  if(!package_available("boot")) stop("Please install the package 'boot' to calculate bootstrap confidence intervals.")
+
   validate(x, check_class = "data.frame")
   validate(length(models), "length(models)", check_range = c(2, Inf))
   validate(ci, check_range = c(0, 1))

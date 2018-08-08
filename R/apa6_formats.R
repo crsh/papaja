@@ -13,7 +13,7 @@
 #'
 #'    When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
 #'    so that each figure is saved in all four formats at a resolution of 300 dpi.
-#' @seealso \code{\link[bookdown]{pdf_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[bookdown]{word_document2}}, \code{\link[rmarkdown]{word_document}}
+#' @seealso \code{\link[bookdown]{html_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
 #' @examples NULL
 #' @export
 
@@ -45,9 +45,7 @@ apa6_pdf <- function(
 
   # includes$in_header <- c(includes$in_header, apa6_header_includes)
 
-  pandoc_version <- utils::getFromNamespace("pandoc_version", "rmarkdown")
-
-  if(utils::compareVersion("2.0", as.character(pandoc_version())) <= 0) {
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     if(is.null(md_extensions) || !grepl("raw\\_attribute", md_extensions)) {
       md_extensions <- paste0(md_extensions, "+raw_attribute")
     }
@@ -122,10 +120,10 @@ apa6_pdf <- function(
     output_text <- paste(output_text, collapse = "\n")
 
     authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
-    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
+    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\authornote\\{\\1\\}", authornote)
 
     note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
-    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
+    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\note\\{\\1\\}", note)
 
     output_text <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "", output_text)
     output_text <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "", output_text)
@@ -136,13 +134,20 @@ apa6_pdf <- function(
       , output_text
     )
 
-    abstract_location <- stringi::stri_locate_all(output_text, regex = "\\\\abstract\\{")[[1]]
+    abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
 
-    stringi::stri_sub(output_text, from = abstract_location[1], to  = abstract_location[1] - 1) <- paste0(authornote, "\n", note, "\n")
+    output_text <- paste0(
+      substr(output_text, start = 1, stop = abstract_location[1])
+      , authornote
+      , "\n"
+      , note
+      , "\n"
+      , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
+    )
 
-    output_file_connection <- file(output_file, encoding = "UTF-8")
-    writeLines(output_text, output_file_connection)
-    close(output_file_connection)
+    output_file_connection <- file(output_file)
+    on.exit(close(output_file_connection))
+    writeLines(output_text, output_file_connection, useBytes = TRUE)
 
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
@@ -331,7 +336,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   header_includes <- list()
 
   ### Essential manuscript parts
-  if(!is.null(yaml_params$title)) {
+  if(is.null(yaml_params$title)) {
     yaml_params$title <- "TITLE"
   }
 
@@ -489,9 +494,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
-  pandoc_version <- utils::getFromNamespace("pandoc_version", "rmarkdown")
-
-  if(utils::compareVersion("2.0", as.character(pandoc_version())) <= 0) {
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     yaml_params$`header-includes` <- c(paste0("```{=latex}\n", paste0(header_includes, collapse = "\n"), "\n```\n"), yaml_params$`header-includes`)
   } else {
     yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
@@ -547,9 +550,10 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-  input_file_connection <- file(input_file, encoding = "UTF-8")
-  writeLines(augmented_input_text, input_file_connection)
-  close(input_file_connection)
+  # input_file_connection <- file(input_file)
+  # on.exit(close(input_file_connection))
+  # writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
+  replace_yaml_front_matter(yaml_params, augmented_input_text, input_file)
 
   # Add pancod arguments
   args <- NULL
@@ -589,7 +593,7 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
   augmented_input_text <- c("---", yaml::as.yaml(x), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
 
 
-  input_file_connection <- file(input_file, encoding = "UTF-8")
+  input_file_connection <- file(input_file)
   on.exit(close(input_file_connection))
   writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
 }
@@ -661,18 +665,23 @@ set_ampersand_filter <- function(args, csl_file) {
 
   # Correct in-text ampersands
   filter_path <- system.file(
-    "rmd", "ampersand_filter.sh"
+    "rmd", "ampersand_filter.R"
     , package = "papaja"
   )
 
-  if(Sys.info()["sysname"] == "Windows") {
-    filter_path <- gsub("\\.sh", ".bat", filter_path)
-    ampersand_filter <- readLines(filter_path)
-    ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
-    filter_path <- "_papaja_ampersand_filter.bat"
-    filter_path_connection <- file(filter_path, encoding = "UTF-8")
-    writeLines(ampersand_filter, filter_path_connection)
-    close(filter_path_connection)
+  ## Use legacy shell or bash script with older versions of pandoc
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) > 0) {
+    if(Sys.info()["sysname"] == "Windows") {
+      filter_path <- gsub("\\.sh", ".bat", filter_path)
+      ampersand_filter <- readLines(filter_path)
+      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
+      filter_path <- "_papaja_ampersand_filter.bat"
+      filter_path_connection <- file(filter_path, encoding = "UTF-8")
+      on.exit(close(filter_path_connection))
+      writeLines(ampersand_filter, filter_path_connection)
+    } else {
+      filter_path <- gsub("\\.R", ".sh", filter_path)
+    }
   }
 
   if(!is.null(args)) { # CSL has not been specified manually
@@ -705,7 +714,7 @@ modify_input_file <- function(input, ...) {
           input_text
           , if(format %in% c("papaja::apa6_word", "papaja::apa6_docx")) {
             paste0(
-              "<div custom-style='h1-pagebreak'>Appendix "
+              "<div custom-style='Title'>Appendix "
               , if(length(yaml_params$appendix) > 1) LETTERS[i] else NULL
               , "</div>")
             } else NULL

@@ -671,7 +671,9 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
   do.call("title", args_title)
 
-  if("swarms" %in% ellipsis$plot){
+  if("swarms" %in% ellipsis$plot) {
+    if(!package_available("beeswarm")) stop("Please install the package 'beeswarm' to plot beeswarms.")
+
     args_swarm <- defaults(
       args_swarm
       , set.if.null = list(

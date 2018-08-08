@@ -8,8 +8,8 @@
 r_refs(file, append = TRUE, prefix = "R-", type_pref = c("Article",
   "Book"), tweak = TRUE)
 
-create_bib(x, file, append = TRUE, prefix = "R-", type_pref = c("Article",
-  "Book"), tweak = TRUE)
+create_bib(x, file, append = TRUE, prefix = "R-",
+  type_pref = c("Article", "Book"), tweak = TRUE)
 }
 \arguments{
 \item{file}{Character. The path and name of the file to be created or updated.}
@@ -58,5 +58,5 @@ in a Markdown-document using pandoc or LaTeX.
 NULL
 }
 \seealso{
-\code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toBibtex}}
+\code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toLatex}}
 }

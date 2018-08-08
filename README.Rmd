@@ -22,25 +22,23 @@ Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/exa
 
 
 ## Installation
-### Requirements
-To use `papaja` you need to make sure the following software is installed on your computer:
-  
-- [R](http://www.r-project.org/) (2.11.1 or later)
-- [RStudio](http://www.rstudio.com/) (at least 0.98.932, but ideally 1.1.453 or later) is optional; if you don't use RStudio, you need to install [pandoc](http://johnmacfarlane.net/pandoc/) using the [instructions for your operating system](https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md)
-- A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, obviously, or [TeX Live](http://www.tug.org/texlive/) for Linux).
-    - **Windows** users should use MikTex if possible. Currently, pandoc and the Windows version of Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6). Make sure you install the *complete*---not the basic---version.
-    - **Ubuntu 14.04** users need a few additional TeX packages for the document class `apa6` to work:
-  
-~~~{sh}
-sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern
-~~~
 
-### Install papaja
-Once all that is taken care of, install `papaja` from GitHub:
-  
-~~~{r}
+To enable `papaja`'s full set of features you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/) and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution (e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](http://www.tug.org/texlive/) for Linux).
+
+Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduction.html#getting-started) for detailed installation instructions.
+
+`papaja` is not yet available on CRAN but you can install it from this repository:
+
+```{r install_papapja, eval = FALSE}
+# Install devtools package if necessary
+if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+
+# Install the stable development verions from GitHub
 devtools::install_github("crsh/papaja")
-~~~
+
+# Install the latest development snapshot from GitHub
+devtools::install_github("crsh/papaja@devel")
+```
 
 
 ## How to use papaja

@@ -34,7 +34,7 @@
 #'    is used. If multiple references of the prefered type are given in the CITATION file all are cited.
 #'    Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
 #'    \code{\link[utils]{citation}}.
-#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toBibtex}}
+#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toLatex}}
 #' @examples NULL
 #' @export
 
@@ -145,11 +145,11 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
   if(!is.null(file)) {
     # cat(iconv(unlist(bib), to = "UTF-8"), sep = "\n", file = file, append = append)
     bib_con <- file(file, encoding = "UTF-8", open = if(append) "a" else "w")
+    on.exit(close(bib_con))
     writeLines(
       unlist(bib)
       , bib_con
     )
-    close(bib_con)
   }
   invisible(bib)
 }

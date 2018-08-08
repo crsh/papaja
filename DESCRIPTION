@@ -15,31 +15,28 @@ BugReports: https://github.com/crsh/papaja/issues
 Depends:
   R (>= 2.11.1)
 Imports:
-  knitr (>= 1.10.5),
-  rmarkdown (>= 1.10),
+  base64enc,
   bookdown (>= 0.6),
-  yaml,
   broom (>= 0.3.6),
-  boot,
-  beeswarm,
-  stringi,
-  stringr,
+  knitr (>= 1.10.5),
   methods,
-  base64enc
+  rmarkdown (>= 1.10),
+  yaml
 Suggests:
+  afex,
+  BayesFactor,
+  boot,
   car,
   carData,
-  afex,
-  lsmeans,
-  emmeans,
-  multcomp,
-  MBESS,
-  ggplot2,
-  dplyr,
   downloader,
-  testthat,
-  BayesFactor,
-  latex2exp
+  dplyr,
+  emmeans,
+  ggplot2,
+  latex2exp,
+  lsmeans,
+  MBESS,
+  multcomp,
+  testthat
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8

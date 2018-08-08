@@ -4,7 +4,8 @@
 \alias{print_interval}
 \title{Create interval estimate string}
 \usage{
-print_interval(x, conf_level = NULL, use_math = FALSE, interval_type, ...)
+print_interval(x, conf_level = NULL, use_math = FALSE, interval_type,
+  ...)
 }
 \arguments{
 \item{x}{Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
