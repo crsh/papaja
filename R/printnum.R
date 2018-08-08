@@ -39,7 +39,11 @@ printnum <- function(x, ...) {
 printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
 
-  as.character(x)
+  x <- as.character(x)
+  if(anyNA(x)) {
+    x[is.na(x)] <- na_string
+  }
+  x
 }
 
 

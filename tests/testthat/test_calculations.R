@@ -261,7 +261,7 @@ test_that(
     aggregated$yield[5] <- NA
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))
-      , "Because of missing values, the following cases were removed from calculation of within-subjects confidence intervals:\nblock: 2"
+      , "Because of NAs in the dependent variable, the following cases were removed from calculation of within-subjects confidence intervals:\nblock: 2"
     )
   }
 )

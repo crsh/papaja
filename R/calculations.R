@@ -127,7 +127,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # print warnings ----
   if("removed_cases_explicit_NA" %in% names(attributes(data))) {
     warning(
-      "Because of missing values, the following cases were removed from calculation of within-subjects confidence intervals:\n"
+      "Because of NAs in the dependent variable, the following cases were removed from calculation of within-subjects confidence intervals:\n"
       , id
       , ": "
       , paste(attr(data, "removed_cases_explicit_NA"), collapse = ", ")

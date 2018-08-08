@@ -21,8 +21,8 @@ test_that(
 
     expect_equal(printnum(-0.0001), "0.00")
 
-    expect_equal(printnum(NA), "NA")
-    expect_equal(printnum(NA, na_string = "-"), "-")
+    expect_equal(printnum(c(NA, "a")), c("NA", "a"))
+    expect_equal(printnum(c(NA, "b"), na_string = "-"), c("-", "b"))
   }
 )
 
