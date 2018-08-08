@@ -22,8 +22,10 @@ Imports:
   broom (>= 0.3.6),
   boot,
   beeswarm,
+  stringi,
   stringr,
-  methods
+  methods,
+  base64enc
 Suggests:
   car,
   carData,

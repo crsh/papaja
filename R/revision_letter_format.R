@@ -5,7 +5,7 @@
 #' @param keep_tex Logical. Logical. Keep the intermediate tex file used in the conversion to PDF.
 #' @inheritDotParams bookdown::pdf_document2
 #'
-#' @seealso \code{\link[bookdown]{pdf_document2}}
+#' @seealso \code{\link[bookdown]{html_document2}}
 #' @examples NULL
 #' @export
 

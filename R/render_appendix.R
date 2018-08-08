@@ -47,9 +47,9 @@ render_appendix <- function(
     if(length(bibliography) > length(existing_bibliographies)) warning(paste("The following bibliography files could not be located:", bibliography[!bibliography %in% existing_bibliographies], sep = "\n", collapse = "\n"))
     if(length(existing_bibliographies) > 0) {
       bib_call <- paste0("--bibliography=", existing_bibliographies)
-    } else {
-      bib_call <- NULL
     }
+  } else {
+    bib_call <- NULL
   }
 
   if(is.list(rmarkdown::metadata$output) && is.list(rmarkdown::metadata$output[[1]]) && !is.null(rmarkdown::metadata$output[[1]]$citation_package)) {

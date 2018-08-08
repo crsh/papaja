@@ -13,7 +13,7 @@
 #'
 #'    When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
 #'    so that each figure is saved in all four formats at a resolution of 300 dpi.
-#' @seealso \code{\link[bookdown]{pdf_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[bookdown]{word_document2}}, \code{\link[rmarkdown]{word_document}}
+#' @seealso \code{\link[bookdown]{html_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
 #' @examples NULL
 #' @export
 
@@ -106,21 +106,43 @@ apa6_pdf <- function(
 
   config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
-    # if(!is.null(metadata$appendix)) {
-      # Remove indentation so that endfloat can process the lltable environments
-      output_text <- readLines(output_file, encoding = "UTF-8")
-      appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
-      if(length(appendix_lines) == 2) {
-        output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
-          "^\\s+"
-          , ""
-          , output_text[appendix_lines[1]:appendix_lines[2]]
-        )
-        output_file_connection <- file(output_file, encoding = "UTF-8")
-        writeLines(output_text, output_file_connection)
-        close(output_file_connection)
-      }
-    # }
+    output_text <- readLines(output_file, encoding = "UTF-8")
+
+    # Remove indentation so that endfloat can process the lltable environments
+    appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
+    if(length(appendix_lines) == 2) {
+      output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
+        "^\\s+"
+        , ""
+        , output_text[appendix_lines[1]:appendix_lines[2]]
+      )
+    }
+
+    # Correct abstract environment
+    output_text <- paste(output_text, collapse = "\n")
+
+    authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
+    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
+
+    note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
+    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
+
+    output_text <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "", output_text)
+    output_text <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "", output_text)
+
+    output_text <- gsub(
+      "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
+      , paste0("\\\\abstract{\\1}\n\n\\\\begin\\{document\\}\n\\\\maketitle")
+      , output_text
+    )
+
+    abstract_location <- stringi::stri_locate_all(output_text, regex = "\\\\abstract\\{")[[1]]
+
+    stringi::stri_sub(output_text, from = abstract_location[1], to  = abstract_location[1] - 1) <- paste0(authornote, "\n", note, "\n")
+
+    output_file_connection <- file(output_file)
+    on.exit(close(output_file_connection))
+    writeLines(output_text, output_file_connection, useBytes = TRUE)
 
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
@@ -309,6 +331,10 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   header_includes <- list()
 
   ### Essential manuscript parts
+  if(is.null(yaml_params$title)) {
+    yaml_params$title <- "TITLE"
+  }
+
   if(!is.null(yaml_params$shorttitle)) {
     short_title <- paste0("\\shorttitle{", escape_latex(yaml_params$shorttitle), "}")
   } else {
@@ -322,6 +348,8 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
 
+
+  #### Pass the following through abstract field so pandoc parses markdown
   if(length(corresponding_author) > 0) {
     author_note <- paste(
       c(yaml_params$author_note, yaml_params$authornote)
@@ -329,7 +357,13 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , sep = "\n\n"
     )
 
-    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+    yaml_params$abstract <- paste0(yaml_params$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
+    # header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+  }
+
+  if(!is.null(yaml_params$note)) {
+    yaml_params$abstract <- paste0(yaml_params$abstract, "\n!!!papaja-note(", yaml_params$note, ")papaja-note!!!")
+    # header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
   }
 
   affiliations <- paste_affiliations(yaml_params$affiliation, format = "latex")
@@ -337,16 +371,12 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   yaml_params$author <- paste_authors(yaml_params$author, format = "latex")
 
-  if(!is.null(yaml_params$note)) {
-    header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
-  }
-
-  if(!is.null(yaml_params$abstract)) {
-    abstract <- yaml_params$abstract
-    yaml_params$abstract <- NULL
-
-    header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
-  }
+  # if(!is.null(yaml_params$abstract)) {
+  #   abstract <- yaml_params$abstract
+  #   yaml_params$abstract <- NULL
+  #
+  #   header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
+  # }
 
   if(!is.null(yaml_params$keywords) || !is.null(yaml_params$wordcount)) {
     keywords <- paste(unlist(yaml_params$keywords), collapse = ", ")
@@ -517,9 +547,10 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   ## Add modified YAML header
   augmented_input_text <- c("---", yaml::as.yaml(yaml_params), "---", augmented_input_text)
-  input_file_connection <- file(input_file, encoding = "UTF-8")
-  writeLines(augmented_input_text, input_file_connection)
-  close(input_file_connection)
+  # input_file_connection <- file(input_file)
+  # on.exit(close(input_file_connection))
+  # writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
+  replace_yaml_front_matter(yaml_params, augmented_input_text, input_file)
 
   # Add pancod arguments
   args <- NULL
@@ -559,7 +590,7 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
   augmented_input_text <- c("---", yaml::as.yaml(x), "---", input_text[(yaml_delimiters[2] + 1):length(input_text)])
 
 
-  input_file_connection <- file(input_file, encoding = "UTF-8")
+  input_file_connection <- file(input_file)
   on.exit(close(input_file_connection))
   writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
 }
@@ -641,8 +672,8 @@ set_ampersand_filter <- function(args, csl_file) {
     ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
     filter_path <- "_papaja_ampersand_filter.bat"
     filter_path_connection <- file(filter_path, encoding = "UTF-8")
+    on.exit(close(filter_path_connection))
     writeLines(ampersand_filter, filter_path_connection)
-    close(filter_path_connection)
   }
 
   if(!is.null(args)) { # CSL has not been specified manually
@@ -664,7 +695,7 @@ modify_input_file <- function(input, ...) {
   format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
 
   if(!is.null(yaml_params$appendix)) {
-    hashed_name <- base64enc::base64encode(charToRaw(basename(input)))
+    hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input))), ".Rmd")
 
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
       stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
@@ -700,7 +731,7 @@ revert_original_input_file <- function() {
   input_file <- tools::file_path_as_absolute(input_file)
 
   if(!is.null(rmarkdown::metadata$appendix)) {
-    hashed_name <- base64enc::base64encode(charToRaw(basename(input_file)))
+    hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input_file))), ".Rmd")
 
     if(!file.copy(file.path(dirname(input_file), hashed_name), input_file, overwrite = TRUE)) {
       stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", dirname(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
