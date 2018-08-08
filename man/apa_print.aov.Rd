@@ -19,14 +19,16 @@ apa_print.aovlist(x, ...)
 
 apa_print.summary.aovlist(x, ...)
 
-apa_print.Anova.mlm(x, correction = getOption("papaja.sphericity_correction"),
+apa_print.Anova.mlm(x,
+  correction = getOption("papaja.sphericity_correction"),
   intercept = FALSE, ...)
 
 apa_print.summary.Anova.mlm(x,
-  correction = getOption("papaja.sphericity_correction"), intercept = FALSE,
-  ...)
+  correction = getOption("papaja.sphericity_correction"),
+  intercept = FALSE, ...)
 
-apa_print.afex_aov(x, correction = getOption("papaja.sphericity_correction"),
+apa_print.afex_aov(x,
+  correction = getOption("papaja.sphericity_correction"),
   intercept = FALSE, ...)
 
 apa_print.anova(x, ...)
@@ -90,3 +92,4 @@ Other apa_print: \code{\link{apa_print.BFBayesFactor}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
+\concept{apa_print}

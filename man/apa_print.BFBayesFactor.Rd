@@ -3,28 +3,28 @@
 \docType{methods}
 \name{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactor}
-\alias{apa_print,BFBayesFactor-method}
 \alias{apa_print.BFBayesFactorTop}
-\alias{apa_print,BFBayesFactorTop-method}
 \alias{apa_print.BFBayesFactorList}
+\alias{apa_print,BFBayesFactor-method}
+\alias{apa_print,BFBayesFactorTop-method}
 \alias{apa_print,BFBayesFactorList-method}
 \title{Format Bayes factors (APA 6th edition)}
 \usage{
-apa_print.BFBayesFactor(x, iterations = 10000, central_tendency = median,
-  hdi = 0.95, standardized = FALSE, ratio_subscript = "10",
-  auto_invert = TRUE, scientific = TRUE, max = 1000, min = 1/max,
-  evidential_boost = NULL, ...)
-
-\S4method{apa_print}{BFBayesFactor}(x, iterations = 10000,
+apa_print.BFBayesFactor(x, iterations = 10000,
   central_tendency = median, hdi = 0.95, standardized = FALSE,
   ratio_subscript = "10", auto_invert = TRUE, scientific = TRUE,
   max = 1000, min = 1/max, evidential_boost = NULL, ...)
 
 apa_print.BFBayesFactorTop(x, ...)
 
-\S4method{apa_print}{BFBayesFactorTop}(x, ...)
-
 apa_print.BFBayesFactorList(x, ...)
+
+\S4method{apa_print}{BFBayesFactor}(x, iterations = 10000,
+  central_tendency = median, hdi = 0.95, standardized = FALSE,
+  ratio_subscript = "10", auto_invert = TRUE, scientific = TRUE,
+  max = 1000, min = 1/max, evidential_boost = NULL, ...)
+
+\S4method{apa_print}{BFBayesFactorTop}(x, ...)
 
 \S4method{apa_print}{BFBayesFactorList}(x, ...)
 }
@@ -53,9 +53,13 @@ the posterior.}
 \item{evidential_boost}{Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
 corresponding models (see details).}
 
-\item{...}{Arguments passed on to \code{printnum}
+\item{...}{Arguments passed on to \code{printnum.numeric}
 \describe{
-  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
+  \item{gt1}{Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.}
+  \item{zero}{Logical. Indicates if the statistic can, in principal, be 0.}
+  \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
+  \item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
+notation is rendered correctly.}
 }}
 }
 \value{
@@ -97,3 +101,5 @@ Other apa_print: \code{\link{apa_print.aov}},
   \code{\link{apa_print.htest}},
   \code{\link{apa_print.list}}, \code{\link{apa_print}}
 }
+\concept{apa_print}
+\keyword{internal}

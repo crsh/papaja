@@ -10,11 +10,11 @@ apa_lineplot(data, ...)
 
 \method{apa_lineplot}{default}(data, id, factors = NULL, dv,
   tendency = mean, dispersion = conf_int, level = 0.95,
-  fun_aggregate = mean, na.rm = TRUE, reference = 0, intercept = NULL,
-  args_x_axis = NULL, args_y_axis = NULL, args_title = NULL,
-  args_points = NULL, args_lines = NULL, args_error_bars = NULL,
-  args_legend = NULL, jit = 0.3, xlab = NULL, ylab = NULL,
-  main = NULL, ...)
+  fun_aggregate = mean, na.rm = TRUE, reference = 0,
+  intercept = NULL, args_x_axis = NULL, args_y_axis = NULL,
+  args_title = NULL, args_points = NULL, args_lines = NULL,
+  args_error_bars = NULL, args_legend = NULL, jit = 0.3,
+  xlab = NULL, ylab = NULL, main = NULL, ...)
 
 \method{apa_lineplot}{afex_aov}(data, tendency = mean,
   dispersion = conf_int, fun_aggregate = mean, ...)
@@ -135,3 +135,4 @@ Other plots for factorial designs: \code{\link{apa_barplot}},
   \code{\link{apa_beeplot}},
   \code{\link{apa_factorial_plot}}
 }
+\concept{plots for factorial designs}
