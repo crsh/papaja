@@ -6,7 +6,7 @@ ampersand_filter <- function() {
 
   intext_regex <- "\"citationMode\":\\{\"t\":\"AuthorInText\".*?\\}\\]\\]\\}"
 
-  intext_citations <- unlist(regmatches(ast, gregexpr(intext_regex, ast, useBytes = TRUE)))
+  intext_citations <- unique(unlist(regmatches(ast, gregexpr(intext_regex, ast, useBytes = TRUE))))
   corrected_citations <- gsub("&", "and", intext_citations, useBytes = TRUE)
 
   for(i in seq_along(corrected_citations)) {
