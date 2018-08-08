@@ -12,10 +12,10 @@ affiliation       :
   - id            : "1"
     institution   : "University of Cologne"
 
-author_note: > 
+author_note: |
   `papaja` has not yet been submitted to CRAN; a development version is available at https://github.com/crsh/papaja.
 
-abstract: >
+abstract: |
   This manuscript demonstrates how to use R Markdown and papaja to
   create an APA conform manuscript. papaja builds on R Markdown, which
   uses pandoc to turn Markdown into PDF or Word documents. The conversion
@@ -30,13 +30,13 @@ floatsintext      : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-lineno            : yes
+linenumbers       : yes
 linkcolor         : "blue"
 mask              : no
 draft             : no
 
 classoption       : "man"
-output            : papaja::apa6_pdf # Use papaja::apa6_word for Word documents
+output            : papaja::apa6_pdf # Use papaja::apa6_docx for Word documents
 ---
 
 ```{r message = FALSE, warning = FALSE}
@@ -235,7 +235,7 @@ If you want a thesis-like document you can change the `class` in the YAML front 
 You can also preview a polished journal typesetting by changing the `class` to `jou`.
 Refer to the `apa6` document class [documentation](ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf) for further `class` options, such as paper size or draft watermarks.
 
-When creating PDF documents, line numbering can be activated by setting the `lineno` argument in the YAML front matter to `yes`.
+When creating PDF documents, line numbering can be activated by setting the `linenumbers` argument in the YAML front matter to `yes`.
 Moreover, you can create lists of figure or table captions at the end of the document by setting `figurelist` or `tablelist` to `yes`, respectively.
 These option have no effect on Word documents.
 
@@ -244,7 +244,7 @@ That's all I have; enjoy writing your manuscript.
 If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or open a pull request.
 If you want to contribute, take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
 Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support.
-Any new S3/S4-method for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
+Any new S3/S4-method for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
 
 # References
 

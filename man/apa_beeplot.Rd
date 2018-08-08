@@ -8,10 +8,9 @@
 \usage{
 apa_beeplot(data, ...)
 
-
 \method{apa_beeplot}{default}(data, id, factors = NULL, dv,
   tendency = mean, dispersion = conf_int, level = 0.95,
-  fun_aggregate = mean, na.rm = TRUE, reference = 0,
+  fun_aggregate = mean, na.rm = TRUE, use = "all.obs",
   intercept = NULL, args_x_axis = NULL, args_y_axis = NULL,
   args_title = NULL, args_points = NULL, args_swarm = NULL,
   args_error_bars = NULL, args_legend = NULL, jit = 0.3,

@@ -410,6 +410,29 @@ test_that(
     )
 
     expect_identical(tw_se_contrast_emm_output, tw_se_contrast_emm_output2)
+
+    # Simple contrasts
+    simple_pairs <- pairs(
+      emmeans::emmeans(fw_mixed, ~ gender | treatment)
+    )
+
+    tw_between_emm <- emmeans::emmeans(fw_mixed, ~ treatment * gender)
+    simple_pairs2 <- pairs(
+      tw_between_emm
+      , simple = "gender"
+    )
+
+    simple_pairs_output <- apa_print(simple_pairs)
+    simple_pairs2_output <- apa_print(simple_pairs2)
+
+    expect_equal(names(simple_pairs_output$estimate), c("F_M_control", "F_M_A", "F_M_B"))
+    expect_identical(simple_pairs_output, simple_pairs2_output)
+
+    simple_contrasts <- emmeans::contrast(tw_between_emm, "consec", simple = "each", combine = TRUE)
+    simple_contrasts_output <- apa_print(simple_contrasts)
+
+    # simple_contrasts2 <- emmeans::contrast(tw_between_emm, "consec", simple = "each")
+    # simple_contrasts2_output <- apa_print(simple_contrasts2)
   }
 )
 

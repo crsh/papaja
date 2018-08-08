@@ -1,3 +1,77 @@
+# papaja 0.1.0.98XX
+
+### Template
+
+- LaTeX template
+    - Complete rewrite of template as adaptation of `rmarkdown::pdf_document()` template to enable all options available in the standard template (e.g., A4 paper as requested by @wuschLOR, #193; #106)
+    - Adds new `appendix` fields in YAML front matter (#168)
+    - Enables markdown formatting in `abstract`, `author_note`, and `note` fields (#232)
+    - Renames `lineno` fields in YAML front matter to `linenumbers`
+    - Fixes bug that caused `citation_package` specification to be ignored (reported by @doomlab, #188)
+    - Fixes encoding bug in `endfloat` package (reported by @TobiasKoeln, #133)
+    - Adds `longtable` as `endfloat` environment (reported by @tormodb, #194)
+    - Fixes option clash for `geometry` package (reported by @PenelopeLQ, #218)
+- DOCX reference file
+    - New style for tables
+    - Applies non-bold style to abstract and references title
+- Skeleton
+    - Adds RNG seed for caching to first chunk
+    - Includes Nature abstract template
+
+### Existing functions
+
+- `printnum.numeric()`
+    - New option `use_math` to control whether to insert `$` into the output so that `Inf` or scientific notation is rendered correctly. Fixes bug that caused an error when printing confidence intervals for one-sided t-tests (#192)
+- `apa_print.htest()`
+    - Corrected incorrect sign in calculation of mean differences for t-tests (reported by @jstbcs)
+- `apa_table()`
+    - Is now an S3 generic function
+    - New method to merge multiple tables in a list using table spanners (#62)
+    - Adds new `font_size` option, which extends `small` (#223)
+    - Fixed bug that caused digits to be applied by row rather than by column (reported by Matti Heino, #173)
+    - `escape = TRUE` is now a visible (in documentation) default (reported by @baguadoramirez, #180)
+    - Fixes error due to partial matching of `format` argument (reported by @mischavk, #223)
+- `apa_factorial_plot()`
+    - Fixed bug that caused `jit` parameter to be ignored (#177)
+    - Adds new option `use` to improve and explicate handling of NAs (#190)
+- `render_appendix()`
+    - Preparations for `pandoc` 2.0 support (reported by @dhagmann, #204)
+    - Reenables placement options for figures and tables in appendices (reported by @TobiasKoeln, #172)
+    - Enabled rendering appendices in subdirectories (reported by @jvcasillas, #168)
+    - Adds support for mulitple bibliography files (reported by @jvcasillas, #168)
+    - No longer fails when bibliography file specified in the YAML front matter is not found (#189)
+    - Enforces UTF-8 encoding
+- `apa6_docx()`/`apa6_word()`
+    - Accepts custom DOCX reference file (suggested by [Flo](https://stackoverflow.com/questions/49326234/format-text-for-word-output-while-using-rmd-template))
+- `apa6_pdf()`
+    - Utilizes `raw_attributes` extension in `pandoc` > 2.0 (reported by @mischavk, #227)
+- `cite_r()`
+    - Omitts version numbers if package is not installed
+- `wsci()`
+    - Prevents incorrect calculation of confidence intervals in the presence of implicitly or explictly missing data (#191)
+
+### New functions
+
+- `apa6_docx()`
+
+Experimental:
+
+- `apa_print.emmGrid()`
+- `apa_print.summary_emm()`
+- `revision_letter_pdf()`
+
+
+### Misc
+
+- Improved support for labelled variables in `printnum()`-methods
+- Renamed `labelled` class to `papaja_labelled` to avoid problems due to conflicting implementations of `labelled` in the `haven` and `Hmisc` packages (see tidyverse/haven#329; first reported by @andreifoldes, #199)
+- Author affiliations can now also be provided without `id`
+- New experimental revision letter template
+- Fixes various encoding problems on Windows (reported by @SongchaoChen, #139, @peter1328, #159, and @mdingemanse, #209)
+- Utilizes native R filter to fix in-text citations in `pandoc` > 2.0 (#186)
+
+
+
 # papaja 0.1.0.9709
 
 ### Template
@@ -132,6 +206,7 @@ Experimental:
     - Expressions can now be used as legend titles (see #94)
 
 
+
 # papaja 0.1.0.9456
 
 ### Template
@@ -168,6 +243,8 @@ Experimental:
 
 ### Misc
 - MBESS package is now suggested and not imported
+
+
 
 # papaja 0.1.0.9423
 
@@ -246,6 +323,7 @@ Experimental:
 - Added vignette
 
 
+
 # papaja 0.1.0.9054
 
 ### Template
@@ -289,6 +367,8 @@ Experimental:
 - Set up proper package structure for automatic unit testing
 - Created news file
 - Fixed some typos in the example document
+
+
 
 # papaja 0.1.0.9000
 

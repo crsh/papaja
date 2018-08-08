@@ -63,7 +63,7 @@ apa_print.summary_emm <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
-  ci <- attr(x, "misc")$level
+  ci <- get_emm_conf_level(x)
   ci_supplied <- !length(ci) == 0
   p_supplied <- "p.value" %in% colnames(x)
   if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?lsmeans::summary' for details.")
@@ -262,6 +262,13 @@ apa_print.lsmobj <- function(x, ...) {
 apa_print.summary.ref.grid <- function(x, ...) {
   validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
   apa_print.summary_emm(x, ...)
+}
+
+get_emm_conf_level <- function(x) {
+  lsm_messages <- attr(x, "mesg")
+  conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
+  ci <- unlist(regmatches(conf_level_message, gregexpr("0\\.\\d+", conf_level_message, useBytes = TRUE)))
+  as.numeric(ci)
 }
 
 est_name_from_call <- function(x) {

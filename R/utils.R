@@ -486,7 +486,7 @@ determine_within_between <- function(data, id, factors) {
   between <- c()
 
   for (i in factors) {
-    n_levels <- aggregate(x = data[[i]], by = list(data[[id]]), FUN = number_of_levels)
+    n_levels <- stats::aggregate(x = data[[i]], by = list(data[[id]]), FUN = number_of_levels)
     if(any(n_levels$x>1)) {
       within <- c(within, i)
     } else {

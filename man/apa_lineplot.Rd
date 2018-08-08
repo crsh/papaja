@@ -10,11 +10,11 @@ apa_lineplot(data, ...)
 
 \method{apa_lineplot}{default}(data, id, factors = NULL, dv,
   tendency = mean, dispersion = conf_int, level = 0.95,
-  fun_aggregate = mean, na.rm = TRUE, use = "all.obs", intercept = NULL,
-  args_x_axis = NULL, args_y_axis = NULL, args_title = NULL,
-  args_points = NULL, args_lines = NULL, args_error_bars = NULL,
-  args_legend = NULL, jit = 0.3, xlab = NULL, ylab = NULL,
-  main = NULL, ...)
+  fun_aggregate = mean, na.rm = TRUE, use = "all.obs",
+  intercept = NULL, args_x_axis = NULL, args_y_axis = NULL,
+  args_title = NULL, args_points = NULL, args_lines = NULL,
+  args_error_bars = NULL, args_legend = NULL, jit = 0.3,
+  xlab = NULL, ylab = NULL, main = NULL, ...)
 
 \method{apa_lineplot}{afex_aov}(data, tendency = mean,
   dispersion = conf_int, fun_aggregate = mean, ...)

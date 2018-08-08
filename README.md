@@ -19,26 +19,21 @@ Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/exa
 Installation
 ------------
 
-### Requirements
+To enable `papaja`'s full set of features you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/) and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution (e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](http://www.tug.org/texlive/) for Linux).
 
-To use `papaja` you need to make sure the following software is installed on your computer:
+Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduction.html#getting-started) for detailed installation instructions.
 
--   [R](http://www.r-project.org/) (2.11.1 or later)
--   [RStudio](http://www.rstudio.com/) (at least 0.98.932, but ideally 1.1.453 or later) is optional; if you don't use RStudio, you need to install [pandoc](http://johnmacfarlane.net/pandoc/) using the [instructions for your operating system](https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md)
--   A [TeX](http://de.wikipedia.org/wiki/TeX) distribution (2013 or later; e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, obviously, or [TeX Live](http://www.tug.org/texlive/) for Linux).
-    -   **Windows** users should use MikTex if possible. Currently, pandoc and the Windows version of Tex Live [don't seem to like each other](https://github.com/rstudio/rmarkdown/issues/6). Make sure you install the *complete*---not the basic---version.
-    -   **Ubuntu 14.04** users need a few additional TeX packages for the document class `apa6` to work:
+`papaja` is not yet available on CRAN but you can install it from this repository:
 
-``` {sh}
-sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern
-```
+``` r
+# Install devtools package if necessary
+if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
 
-### Install papaja
-
-Once all that is taken care of, install `papaja` from GitHub:
-
-``` {r}
+# Install the stable development verions from GitHub
 devtools::install_github("crsh/papaja")
+
+# Install the latest development snapshot from GitHub
+devtools::install_github("crsh/papaja@devel")
 ```
 
 How to use papaja
@@ -136,32 +131,18 @@ rmarkdown::render("mymanuscript.Rmd")
 Contribute
 ----------
 
-Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
+Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3/S4-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
 
 Papers written with papaja
 --------------------------
 
 Although `papaja` is not yet on CRAN and is still undergoing a lot of changes, there are peer-reviewed publications that use it. If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
 
-Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness and Cognition*, *37*, 27–43. <https://doi.org/10.1016/j.concog.2015.08.003>
-
 Aust, F., & Edwards, J. D. (2016). Incremental validity of Useful Field of View subtests for the prediction of instrumental activities of daily living. *Journal of Clinical and Experimental Neuropsychology*, *38*(5), 497–515. <https://doi.org/10.1080/13803395.2015.1125453>
 
-Stahl, C., & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, *34*(5), 382–412. <https://doi.org/10.1521/soco.2016.34.5.382>
+Aust, F., Haaf, J. M., & Stahl, C. (2018). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. <https://doi.org/10.1037/xlm0000600> (R Markdown and data files: https://osf.io/vnmby/)
 
-Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. *Journal of Experimental Psychology: General*, *145*, 1107–1131. <https://doi.org/10.1037/xge0000191>
-
-Stahl, C., Henze, L., & Aust, F. (2016). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. <https://doi.org/10.17605/osf.io/zr7m8> (R Markdown and data files: https://osf.io/jxm7z/)
-
-Haaf, J. M., & Rouder, J. N. (2017). Developing constraint in bayesian mixed models. *Psychological Methods*, *22*(4), 779–798. <https://doi.org/10.1037/met0000156> (R Markdown and data files: https://github.com/perceptionandcognitionlab/ctx-indiff)
-
-Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A test of evaluative conditioning for brief visual conditioned stimuli using auditory unconditioned stimuli. *Royal Society Open Science*, *4*(9), 160935. <https://doi.org/10.1098/rsos.160935>
-
-McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Moral Dumbfounding: Identifying Measurable Indicators of Moral Dumbfounding. *Collabra: Psychology*, *3*(1). <https://doi.org/10.1525/collabra.79> (R Markdown and data files: https://osf.io/wm6vc/)
-
-Papenberg, M., Willing, S., & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, *59*(2), 245–266. Retrieved from <http://www.psychologie-aktuell.com/fileadmin/download/ptam/2-2017_20170627/06_Papenberg_.pdf>
-
-Sauer, S. (2017). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. <https://doi.org/10.3758/s13428-017-0949-8> (R Markdown and data files: https://osf.io/6vhja/)
+Barth, M., Stahl, C., & Haider, H. (2018). Assumptions of the process-dissociation procedure are violated in implicit sequence learning. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. <https://doi.org/10.1037/xlm0000614> (R Markdown and data files: https://github.com/methexp/pdl2)
 
 Beaton, D., Sunderland, K. M., Levine, B., Mandzia, J., Masellis, M., Swartz, R. H., … Strother, S. C. (2018). Generalization of the minimum covariance determinant algorithm for categorical and mixed data types. *bioRxiv*. <https://doi.org/10.1101/333005>
 
@@ -187,6 +168,10 @@ Craddock, M., Klepousniotou, E., El-Deredy, W., Poliakoff, E., & Lloyd, D. M. (2
 
 Derringer, J. (2018). A simple correction for non-independent tests. *PsyArXiv*. <https://doi.org/10/gdrbxc> (R Markdown and data files: https://osf.io/re5w2/)
 
+Faulkenberry, T. J., Cruise, A., & Shaki, S. (2018). Task instructions modulate unit–decade binding in two-digit number representation. *Psychological Research*. <https://doi.org/10.1007/s00426-018-1057-9> (R Markdown and data files: https://github.com/tomfaulkenberry/twodigittaskmanip)
+
+Haaf, J. M., & Rouder, J. N. (2017). Developing constraint in bayesian mixed models. *Psychological Methods*, *22*(4), 779–798. <https://doi.org/10.1037/met0000156> (R Markdown and data files: https://github.com/perceptionandcognitionlab/ctx-indiff)
+
 Hardwicke, T., & Ioannidis. (2018). Mapping the Universe of Registered Reports. *PsyArXiv*. <https://doi.org/10.31222/osf.io/fzpcy> (R Markdown and data files: https://osf.io/7dpwb/)
 
 Hardwicke, T., Mathur, M., MacDonald, K., Nilsonne, G., Banks, G., Kidwell, M., … Frank, M. (2018). Data availability, reusability, and analytic reproducibility: Evaluating the impact of a mandatory open data policy at the journal Cognition. *PsyArXiv*. <https://doi.org/10.17605/osf.io/39cfb> (R Markdown and data files: https://osf.io/wn8fd/)
@@ -197,19 +182,39 @@ Heino, M. T. J., Vuorre, M., & Hankonen, N. (2018). Bayesian evaluation of behav
 
 Heycke, T., & Stahl, C. (2018). No Evaluative Conditioning Effects with Briefly Presented Stimuli. *PsyArXiv*. <https://doi.org/10.17605/osf.io/ujq4g> (R Markdown and data files: https://osf.io/3dn7e/)
 
+Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A test of evaluative conditioning for brief visual conditioned stimuli using auditory unconditioned stimuli. *Royal Society Open Science*, *4*(9), 160935. <https://doi.org/10.1098/rsos.160935>
+
 Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds or one? A registered replication of Rydell et al. (2006). *Cognition and Emotion*, *0*(0), 1–20. <https://doi.org/10.1080/02699931.2018.1429389> (R Markdown and data files: https://osf.io/c57sr/)
 
 Heyman, T., & Heyman, G. (2018). Can prediction-based distributional semantic models predict typicality? *PsyArXiv*. <https://doi.org/10.17605/osf.io/59xtd> (R Markdown and data files: https://osf.io/nkfjy/)
 
 Jordan, K., Buchanan, E., & Padfield, W. (2018). Focus on the Target: The Role of Attentional Focus in Decisions about War. *PsyArXiv*. <https://doi.org/10.17605/osf.io/9fgu8> (R Markdown and data files: https://osf.io/r8qp2/)
 
-Maxwell, N., & Buchanan, E. (2018). Investigating the Interaction between Associative, Semantic, and Thematic Database Norms for Memory Judgments and Retrieval. *PsyArXiv*. <https://doi.org/10.17605/osf.io/fcesn> (R Markdown and data files: https://osf.io/y8h7v/)
+Lakens, D., Scheel, A. M., & Isager, P. M. (2018). Equivalence Testing for Psychological Research: A Tutorial. *Advances in Methods and Practices in Psychological Science*, *1*(2), 259–269. <https://doi.org/10.1177/2515245918770963> (R Markdown and data files: https://osf.io/qamc6/)
+
+Maxwell, N., & Buchanan, E. (2018a). Investigating the Interaction between Associative, Semantic, and Thematic Database Norms for Memory Judgments and Retrieval. *PsyArXiv*. <https://doi.org/10.17605/osf.io/fcesn> (R Markdown and data files: https://osf.io/y8h7v/)
+
+Maxwell, N., & Buchanan, E. (2018b). Modeling Memory: Exploring the Relationship Between Word Overlap and Single Word Norms when Predicting Relatedness Judgments and Retrieval. *PsyArXiv*. <https://doi.org/10.17605/osf.io/qekad> (R Markdown and data files: https://osf.io/j7qtc/)
+
+McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Moral Dumbfounding: Identifying Measurable Indicators of Moral Dumbfounding. *Collabra: Psychology*, *3*(1). <https://doi.org/10.1525/collabra.79> (R Markdown and data files: https://osf.io/wm6vc/)
+
+Papenberg, M., Willing, S., & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, *59*(2), 245–266. Retrieved from <http://www.psychologie-aktuell.com/fileadmin/download/ptam/2-2017_20170627/06_Papenberg_.pdf>
 
 Pavlacic, J., Buchanan, E., Maxwell, N., Hopke, T., & Schulenberg, S. (2018). A Meta-Analysis of Expressive Writing on Positive Psychology Variables and Traumatic Stress. *PsyArXiv*. <https://doi.org/10.17605/osf.io/u98cw> (R Markdown and data files: https://osf.io/4mjqt/)
 
 Pollet, T. V., & Saxton, T. (2018). How diverse are the samples used in the journals “Evolution & Human Behavior” and “Evolutionary Psychology”? *PsyArXiv*. <https://doi.org/10.17605/osf.io/7h24p>
 
 Rouder, J. N., Haaf, J. M., & Aust, F. (2018). From theories to models to predictions: A Bayesian model comparison approach. *Communication Monographs*, *85*(1), 41–56. <https://doi.org/10.1080/03637751.2017.1394581>
+
+Sauer, S. (2017). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. <https://doi.org/10.3758/s13428-017-0949-8> (R Markdown and data files: https://osf.io/6vhja/)
+
+Stahl, C., & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, *34*(5), 382–412. <https://doi.org/10.1521/soco.2016.34.5.382>
+
+Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness and Cognition*, *37*, 27–43. <https://doi.org/10.1016/j.concog.2015.08.003>
+
+Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. *Journal of Experimental Psychology: General*, *145*, 1107–1131. <https://doi.org/10.1037/xge0000191>
+
+Stahl, C., Henze, L., & Aust, F. (2016). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. <https://doi.org/10.17605/osf.io/zr7m8> (R Markdown and data files: https://osf.io/jxm7z/)
 
 Stevens, J. R., & Soh, L.-K. (2018). Predicting similarity judgments in intertemporal choice with machine learning. *Psychonomic Bulletin & Review*, *25*(2), 627–635. <https://doi.org/10/gdfghk>
 

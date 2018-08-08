@@ -10,12 +10,12 @@ apa_factorial_plot(data, ...)
 
 \method{apa_factorial_plot}{default}(data, id, factors = NULL, dv,
   tendency = mean, dispersion = conf_int, level = 0.95,
-  fun_aggregate = mean, na.rm = TRUE, use = "all.obs", reference = 0,
-  intercept = NULL, args_x_axis = NULL, args_y_axis = NULL,
-  args_title = NULL, args_rect = NULL, args_points = NULL,
-  args_lines = NULL, args_swarm = NULL, args_error_bars = NULL,
-  args_legend = NULL, plot = NULL, jit = 0.3, xlab = NULL,
-  ylab = NULL, main = NULL, ...)
+  fun_aggregate = mean, na.rm = TRUE, use = "all.obs",
+  reference = 0, intercept = NULL, args_x_axis = NULL,
+  args_y_axis = NULL, args_title = NULL, args_rect = NULL,
+  args_points = NULL, args_lines = NULL, args_swarm = NULL,
+  args_error_bars = NULL, args_legend = NULL, plot = NULL,
+  jit = 0.3, xlab = NULL, ylab = NULL, main = NULL, ...)
 
 \method{apa_factorial_plot}{afex_aov}(data, tendency = mean,
   dispersion = conf_int, fun_aggregate = mean, ...)
