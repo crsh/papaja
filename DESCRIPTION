@@ -1,6 +1,6 @@
 Package: papaja
 Title: Prepare reproducible APA journal articles with R Markdown
-Version: 0.1.0.9837
+Version: 0.1.0.9838
 Description: papaja (Preparing APA Journal Articles) provides document formats
     and helper functions to produce complete APA manuscripts from R Markdown-files
     (PDF and Word documents).
