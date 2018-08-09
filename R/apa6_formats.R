@@ -77,7 +77,6 @@ apa6_pdf <- function(
   config$clean_supporting <- FALSE # Always keep images files
 
   config$pre_knit <- modify_input_file
-  config$on_exit <- revert_original_input_file
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -158,7 +157,12 @@ apa6_pdf <- function(
   }
 
   if(Sys.info()["sysname"] == "Windows") {
-    config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+    config$on_exit <- function() {
+      revert_original_input_file(2)
+      if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+    }
+  } else {
+    config$on_exit <- revert_original_input_file
   }
 
   config
@@ -216,7 +220,6 @@ apa6_docx <- function(
   config$clean_supporting <- FALSE # Always keep images files
 
   config$pre_knit <- modify_input_file
-  config$on_exit <- revert_original_input_file
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -243,7 +246,12 @@ apa6_docx <- function(
   }
 
   if(Sys.info()["sysname"] == "Windows") {
-    config$on_exit <- function() if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+    config$on_exit <- function() {
+      revert_original_input_file(2)
+      if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
+    }
+  } else {
+    config$on_exit <- revert_original_input_file
   }
 
   config
@@ -407,7 +415,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   if(
     ((!is.null(yaml_params$figsintext) & !isTRUE(yaml_params$figsintext)) ||
-    (!is.null(yaml_params$floatsintext) & !isTRUE(yaml_params$floatsintext))) &&
+     (!is.null(yaml_params$floatsintext) & !isTRUE(yaml_params$floatsintext))) &&
     grepl("man", yaml_params$classoption)
   ) {
     header_includes <- c(
@@ -672,7 +680,7 @@ set_ampersand_filter <- function(args, csl_file) {
   ## Use legacy shell or bash script with older versions of pandoc
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) > 0) {
     if(Sys.info()["sysname"] == "Windows") {
-      filter_path <- gsub("\\.sh", ".bat", filter_path)
+      filter_path <- gsub("\\.R", ".bat", filter_path)
       ampersand_filter <- readLines(filter_path)
       ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
       filter_path <- "_papaja_ampersand_filter.bat"
@@ -716,8 +724,9 @@ modify_input_file <- function(input, ...) {
             paste0(
               "<div custom-style='Title'>Appendix "
               , if(length(yaml_params$appendix) > 1) LETTERS[i] else NULL
-              , "</div>")
-            } else NULL
+              , "</div>"
+            )
+          } else NULL
           , ""
           , "```{r results = 'asis'}"
           , paste0("render_appendix('", yaml_params$appendix[i], "')")
@@ -733,9 +742,9 @@ modify_input_file <- function(input, ...) {
   return(NULL)
 }
 
-revert_original_input_file <- function() {
+revert_original_input_file <- function(x = 1) {
   # Get name of input file from render() because nothing is passed into on_exit()
-  input_file <- get("original_input", envir = parent.frame(1))
+  input_file <- get("original_input", envir = parent.frame(x))
   input_file <- tools::file_path_as_absolute(input_file)
 
   if(!is.null(rmarkdown::metadata$appendix)) {
