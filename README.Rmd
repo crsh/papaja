@@ -75,7 +75,7 @@ apa_table(apa_lm$table, caption = "Iris regression table.")
 Table. *Iris regression table.*
 
 | Predictor     | *b*   | 95% CI          | *t(146)*   | *p*       |
-|:--------------|:-----:|:---------------:|:----------:|:---------:|
+|:--------------|------:|:---------------:|-----------:|----------:|
 | Intercept     | 1.04  |  [0.51, 1.58]   | 3.85       | &lt; .001 |
 | Sepal Length  | 0.61  |  [0.48, 0.73]   | 9.77       | &lt; .001 |
 | Petal Width   | 0.56  |  [0.32, 0.80]   | 4.55       | &lt; .001 |
@@ -98,8 +98,12 @@ colnames(print_classes) <- apply(print_classes, 2, function(x) {
   toupper(col_names)
 })
 print_classes[is.na(print_classes)] <- ""
+print_classes[grepl("lsm|emm|glht|ref\\.grid|BayesFactor", print_classes)] <- paste0(print_classes[grepl("lsm|emm|glht|ref\\.grid|BayesFactor", print_classes)], "<sup>*</sup>")
+
 knitr::kable(print_classes)
 ```
+
+\* Not fully tested, don't trust blindly!
 
 
 ### Plot functions
