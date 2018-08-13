@@ -197,6 +197,19 @@ apa_table.list <- function(
       warning("merge_method '", merge_method, "' not supported for Word documents. Defaulting to 'indent'.")
       merge_method <- "indent"
     } else {
+      if(!is.null(format.args)) validate(format.args, check_class = "list")
+
+      # Set defaults and rename ellipsis arguments
+      ellipsis <- list(...)
+
+      if(is.null(ellipsis$digits) & is.null(format.args$digits)) {
+        format.args$digits <- 2
+      } else if(!is.null(ellipsis$digits)) {
+        format.args$digits <- ellipsis$digits
+      }
+
+      x <- lapply(x, format_cells, format.args)
+
       if(!is.null(names(x))) {
         x <- mapply(
           add_table_spanner
