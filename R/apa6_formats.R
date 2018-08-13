@@ -122,7 +122,7 @@ apa6_pdf <- function(
     authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\authornote\\{\\1\\}", authornote)
 
     note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
-    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\note\\{\\1\\}", note)
+    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
 
     output_text <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "", output_text)
     output_text <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "", output_text)
@@ -728,7 +728,7 @@ modify_input_file <- function(input, ...) {
             )
           } else NULL
           , ""
-          , "```{r results = 'asis'}"
+          , "```{r echo = FALSE, results = 'asis'}"
           , paste0("render_appendix('", yaml_params$appendix[i], "')")
           , "```"
           , ""

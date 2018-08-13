@@ -57,11 +57,11 @@ classoption       : "man"
 output            : papaja::apa6_pdf
 ---
 
-```{r load_packages, include = FALSE}
+```{r setup, include = FALSE}
 library("papaja")
 ```
 
-```{r analysis_preferences}
+```{r analysis-preferences}
 # Seed for random number generation
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
