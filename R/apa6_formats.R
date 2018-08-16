@@ -119,13 +119,13 @@ apa6_pdf <- function(
     output_text <- paste(output_text, collapse = "\n")
 
     authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
-    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\authornote\\{\\1\\}", authornote)
+    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
 
     note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
     note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
 
-    output_text <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "", output_text)
-    output_text <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "", output_text)
+    output_text <- gsub("!!!papaja-author-note\\(.*\\)papaja-author-note!!!", "", output_text)
+    output_text <- gsub("!!!papaja-note\\(.*\\)papaja-note!!!", "", output_text)
 
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
@@ -135,8 +135,10 @@ apa6_pdf <- function(
 
     abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
 
+    cat(substr(output_text, start = 1, stop = abstract_location[1]))
+
     output_text <- paste0(
-      substr(output_text, start = 1, stop = abstract_location[1])
+      substr(output_text, start = 1, stop = abstract_location[1] - 1)
       , authornote
       , "\n"
       , note
@@ -363,10 +365,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
 
   #### Pass the following through abstract field so pandoc parses markdown
-  if(length(corresponding_author) > 0) {
+  if(
+    !is.null(yaml_params$author_note) ||
+    !is.null(yaml_params$authornote) ||
+    length(corresponding_author) > 0
+  ) {
     author_note <- paste(
       c(yaml_params$author_note, yaml_params$authornote)
-      , corresponding_author_line(corresponding_author[[1]])
+      , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
       , sep = "\n\n"
     )
 
