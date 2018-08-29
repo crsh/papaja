@@ -19,7 +19,9 @@
 #' @export
 
 variable_label.default <- function(x, ...){
-  attr(x, "label")
+  # use `exact = TRUE` so that only variable labels, and not value labels from
+  # haven are extracted
+  attr(x, "label", exact = TRUE)
 }
 
 #' @rdname variable_label

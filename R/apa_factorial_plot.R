@@ -349,13 +349,13 @@ apa_factorial_plot.default <- function(
       ylim = c(
         min(
           0
-          , y.values[, "lower_limit"]
-          , aggregated[, dv]
+          , y.values[["lower_limit"]]
+          , aggregated[[dv]]
           , na.rm = TRUE
         )
         , max(
-          y.values[, "upper_limit"]
-          , aggregated[, dv]
+          y.values[["upper_limit"]]
+          , aggregated[[dv]]
           , na.rm = TRUE
         )
       )
@@ -462,8 +462,8 @@ apa_factorial_plot.default <- function(
     for (i in levels(y.values[[factors[3]]])){
       for (j in levels(y.values[[factors[4]]])) {
         ellipsis.i <- defaults(ellipsis, set = list(
-          y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j,]
-          , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j,]
+          y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j, ]
+          , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j, ]
           , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
         ), set.if.null = list(
         ))
@@ -685,13 +685,13 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
     for (i in levels(aggregated[[factors[1]]])) {
       for (j in levels(aggregated[[factors[2]]])) {
-        coord <- beeswarm::swarmx(x = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "x"]
-                                  , y = aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, dv]
+        coord <- beeswarm::swarmx(x = aggregated[["x"]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
+                                  , y = aggregated[[dv]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
                                   , cex = args_swarm$cex
                                   , priority = args_swarm$priority
                   )
-        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmx"] <- coord[["x"]]
-        aggregated[aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j, "swarmy"] <- coord[["y"]]
+        aggregated[["swarmx"]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- coord[["x"]]
+        aggregated[["swarmy"]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- coord[["y"]]
       }
     }
 
@@ -717,8 +717,8 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
   e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
 
   if("swarms" %in% ellipsis$plot){
-    agg.x <- tapply(aggregated[, "swarmx"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
-    agg.y <- tapply(aggregated[, "swarmy"], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.x <- tapply(aggregated[["swarmx"]], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
+    agg.y <- tapply(aggregated[["swarmy"]], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   }
 
   ## default colors for tendency points (which are inherited by swarm points)
