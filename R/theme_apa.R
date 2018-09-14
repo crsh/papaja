@@ -53,10 +53,10 @@ theme_apa <- function(base_size = 12, base_family = "", box = FALSE) {
       )
 
       , panel.spacing = ggplot2::unit(ggplot2::rel(14), "points")
-      , panel.grid.major.x = ggplot2::element_line(size = NA)
-      , panel.grid.minor.x = ggplot2::element_line(size = NA)
-      , panel.grid.major.y = ggplot2::element_line(size = NA)
-      , panel.grid.minor.y = ggplot2::element_line(size = NA)
+      , panel.grid.major.x = ggplot2::element_blank()
+      , panel.grid.minor.x = ggplot2::element_blank()
+      , panel.grid.major.y = ggplot2::element_blank()
+      , panel.grid.minor.y = ggplot2::element_blank()
 
       , strip.background = ggplot2::element_rect(fill = NA, color = NA)
       , strip.text.x = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, ggplot2::rel(16), 0))
