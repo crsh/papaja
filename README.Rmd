@@ -14,7 +14,9 @@ output        : github_document
 
 `papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
-**Note, at this point `papaja` is in active development and should be considered alpha. If you experience any problems, please [open an issue](https://github.com/crsh/papaja/issues) on Github.**
+Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
+
+**`papaja` is in active development and should be considered alpha. If you experience any problems, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa) or [open an issue](https://github.com/crsh/papaja/issues) on Github.**
   
 
 ## Examples
