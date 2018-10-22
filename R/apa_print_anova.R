@@ -27,7 +27,7 @@
 #'    }
 #' @references
 #'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
-#'    , 37 (3), 379--384. doi:\href{http://dx.doi.org/10.3758/BF03192707}{10.3758/BF03192707}
+#'    , 37 (3), 379--384. doi:\href{https://doi.org/10.3758/BF03192707}{10.3758/BF03192707}
 #'
 #' @family apa_print
 #' @seealso \code{\link{aov}}, \code{\link[car]{Anova}}, \code{\link{apa_print.list}}
