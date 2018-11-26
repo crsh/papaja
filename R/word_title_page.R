@@ -54,18 +54,24 @@ word_title_page <- function(x) {
     )
   }
 
+  abstract <- paste0(
+    "<div custom-style='Title'>", apa_terms$abstract, "</div>"
+    , "\n"
+    , x$abstract
+  )
+
+  keywords <- paste0("*", apa_terms$keywords, ":* ", x$keywords, "\n")
+  wordcount <- paste0("*", apa_terms$word_count, ":* ", x$wordcount, "\n")
+
   c(
     author_information
     , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , author_note
     , "\n"
-    , paste0("<div custom-style='Title'>", apa_terms$abstract, "</div>")
-    , "\n"
-    , x$abstract
-    , paste0("*", apa_terms$keywords, ":* ", x$keywords)
-    , "\n"
-    , paste0(apa_terms$word_count, ": ", x$wordcount)
-    , "\n"
+    , ifelse(is.null(x$abstract), "", abstract)
+    # is.null(x$abstract) for consistency with apa6_pdf()
+    , ifelse(is.null(x$abstract) || is.null(x$keywords), "", keywords)
+    , ifelse(is.null(x$abstract) || is.null(x$wordcount), "", wordcount)
     , paste0("<div custom-style='Title'>", x$title, "</div>\n\n")
   )
 }

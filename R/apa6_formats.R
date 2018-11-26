@@ -144,6 +144,13 @@ apa6_pdf <- function(
       , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
     )
 
+    # Remove abstract environment if empty
+    output_text <- gsub(
+      "\\\\abstract\\{\n\n\\}"
+      , ""
+      , output_text
+    )
+
     output_file_connection <- file(output_file)
     on.exit(close(output_file_connection))
     writeLines(output_text, output_file_connection, useBytes = TRUE)
