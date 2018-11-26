@@ -23,8 +23,19 @@ Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/exa
 
 ## Installation
 
-To enable `papaja`'s full set of features you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/) and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution (e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](http://www.tug.org/texlive/) for Linux).
+To use `papaja` you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/).
+If you want to create PDF- in addition to DOCX-documents you additionally need
+and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution.
+If you have no use for TeX beyond rendering R Markdown documents, I recommend you use [TinyTex](https://yihui.name/tinytex/).
+TinyTex can be installed from within R as follows.
 
+```{r eval = FALSE}
+if(!"tinytex" %in% rownames(installed.packages())) install.packages("tinytex")
+
+tinytex::install_tinytex()
+```
+
+Otherwise consider [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](http://www.tug.org/texlive/) for Linux.
 Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduction.html#getting-started) for detailed installation instructions.
 
 `papaja` is not yet available on CRAN but you can install it from this repository:
