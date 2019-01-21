@@ -8,8 +8,6 @@ output        : github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
----
-
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
 
 `papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
@@ -278,6 +276,7 @@ Obviously, not all journals require manuscripts and articles to be prepared acco
 If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful.
 
 - [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article Templates for R Markdown
+- [chi-proc-rmd-template](https://github.com/ulyngs/chi-proc-rmd-template): ACM CHI Proceedings R Markdown Template
 - [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
 If you know of other packages and templates, drop us a note, so we can add them here.

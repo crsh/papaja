@@ -3,8 +3,6 @@ papaja: Prepare APA journal articles with R Markdown
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
------
-
 [![Project Status: WIP - Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
 public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
@@ -256,6 +254,16 @@ https://osf.io/uhv3d/)
 
 </div>
 
+<div id="ref-bol_understanding_2018">
+
+Bol, N., Dienlin, T., Kruikemeier, S., Sax, M., Boerman, S. C.,
+Strycharz, J., … de Vreese, C. H. (2018). Understanding the Effects of
+Personalization as a Privacy Calculus: Analyzing Self-Disclosure Across
+Health, News, and Commerce Contexts†. *Journal of Computer-Mediated
+Communication*, *23*(6), 370–388. <https://doi.org/10/gftcm6>
+
+</div>
+
 <div id="ref-buchanan_does_2018">
 
 Buchanan, E., Foreman, R., Johnson, B., Pavlacic, J., Swadley, R., &
@@ -443,18 +451,17 @@ Open Science*, *4*(9), 160935. <https://doi.org/10.1098/rsos.160935>
 <div id="ref-heycke_two_2018">
 
 Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds
-or one? A registered replication of Rydell et al. (2006). *Cognition and
-Emotion*, *0*(0), 1–20. <https://doi.org/10.1080/02699931.2018.1429389>
-(R Markdown and data files: https://osf.io/c57sr/)
+or one? A registered replication of Rydell et al. (2006). *Cognition and
+Emotion*, *32*(8), 1708–1727.
+<https://doi.org/10.1080/02699931.2018.1429389>
 
 </div>
 
 <div id="ref-heycke_no_2018">
 
-Heycke, T., & Stahl, C. (2018). No Evaluative Conditioning Effects with
-Briefly Presented Stimuli. *PsyArXiv*.
-<https://doi.org/10.17605/osf.io/ujq4g> (R Markdown and data files:
-https://osf.io/3dn7e/)
+Heycke, T., & Stahl, C. (2018). No evaluative conditioning effects with
+briefly presented stimuli. *Psychological Research*.
+<https://doi.org/10.1007/s00426-018-1109-1>
 
 </div>
 
@@ -525,6 +532,16 @@ https://osf.io/wm6vc/)
 
 </div>
 
+<div id="ref-moors_unconscious_2019">
+
+Moors, P., & Hesselmann, G. (2019). Unconscious arithmetic: Assessing
+the robustness of the results reported by Karpinski, Briggs, and Yale
+(2018). *Consciousness and Cognition*, *68*, 97–106.
+<https://doi.org/10.1016/j.concog.2019.01.003> (R Markdown and data
+files: https://osf.io/cybfe/)
+
+</div>
+
 <div id="ref-papenberg_sequentially_2017">
 
 Papenberg, M., Willing, S., & Musch, J. (2017). Sequentially presented
@@ -542,6 +559,15 @@ Pavlacic, J., Buchanan, E., Maxwell, N., Hopke, T., & Schulenberg, S.
 Variables and Traumatic Stress. *PsyArXiv*.
 <https://doi.org/10.17605/osf.io/u98cw> (R Markdown and data files:
 https://osf.io/4mjqt/)
+
+</div>
+
+<div id="ref-peterka-bonetta_relationship_2019">
+
+Peterka-Bonetta, J., Sindermann, C., Sha, P., Zhou, M., & Montag, C.
+(2019). The relationship between Internet Use Disorder, depression and
+burnout among Chinese and German college students. *Addictive
+Behaviors*, *89*, 188–199. <https://doi.org/10/gd4rcw>
 
 </div>
 
@@ -798,7 +824,10 @@ journal article templates, the following list of `rmarkdown`/`pandoc`
 packages and templates may be helpful.
 
   - [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article
-    Templates for R Markdown
+    Templates for R
+    Markdown
+  - [chi-proc-rmd-template](https://github.com/ulyngs/chi-proc-rmd-template):
+    ACM CHI Proceedings R Markdown Template
   - [Michael Sachs’ pandoc journal
     templates](https://github.com/sachsmc/pandoc-journal-templates):
     Pandoc templates for the major statistics and biostatistics journals
