@@ -291,6 +291,8 @@ inline_numbers <- function (x) {
     x <- printnum(x)
   } else if(is.character(x)) {
     x
+  } else {
+    paste(as.character(x), collapse = ', ')
   }
 }
 
