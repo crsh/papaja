@@ -350,12 +350,12 @@ apa_factorial_plot.default <- function(
         min(
           0
           , y.values[, "lower_limit"]
-          , aggregated[, dv]
+          , aggregated[[dv]]
           , na.rm = TRUE
         )
         , max(
           y.values[, "upper_limit"]
-          , aggregated[, dv]
+          , aggregated[[dv]]
           , na.rm = TRUE
         )
       )
