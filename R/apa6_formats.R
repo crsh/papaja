@@ -472,7 +472,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   if(isTRUE(yaml_params$lof) || isTRUE(yaml_params$figurelist)) {
-    yaml_params$lof <- FALSE
+    yaml_params$lof <- NULL
     yaml_params$figurelist <- TRUE
 
     header_includes <- c(
@@ -494,7 +494,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   if(isTRUE(yaml_params$lot) || isTRUE(yaml_params$tablelist)) {
-    yaml_params$lot <- FALSE
+    yaml_params$lot <- NULL
     yaml_params$tablelist <- TRUE
 
     header_includes <- c(
