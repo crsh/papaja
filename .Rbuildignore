@@ -1,3 +1,5 @@
+^Meta$
+^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 
@@ -6,8 +8,6 @@
 ^cran-comments\.md$
 ^\.travis\.yml
 ^example$
-^inst/rmarkdown/templates/revision_letter$
 _config.yml
-
 ^inst/papaja_manuscripts.bib
 ^inst/apa_source_files.csl

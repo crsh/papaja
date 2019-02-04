@@ -19,7 +19,7 @@ revision_letter_pdf <- function(keep_tex = TRUE, ...) {
   if(!is.null(ellipsis$template)) ellipsis$template <- NULL
 
   # Get template
-  template <- template <-  system.file(
+  template <- system.file(
     "rmarkdown", "templates", "revision_letter", "resources"
     , "revision_letter.tex"
     , package = "papaja"
