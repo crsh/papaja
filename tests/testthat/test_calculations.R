@@ -224,7 +224,10 @@ test_that(
     object_2 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Morey", level = .98)
 
     expect_identical(
-      object = attributes(object_1)
+      object = attributes(object_1)[
+        c("class", "names", "row.names", "Between-subjects factors", "Within-subjects factors"
+          , "Dependent variable", "Subject identifier", "Confidence level", "Method")
+      ] # default order changed from R 3.4 to 3.5
       , expected = list(
           class = "data.frame"
           , names = c("N", "yield")
