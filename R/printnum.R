@@ -59,7 +59,7 @@ printnum.list <- function(x, ...) {
 #' @rdname printnum
 #' @export
 
-printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string = getOption("papaja.na_string"), ...) {
+printnum.integer <- function(x, numerals = x > 10, capitalize = FALSE, na_string = getOption("papaja.na_string"), ...) {
   validate(x, check_integer = TRUE)
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
@@ -355,7 +355,7 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 #' @export
 
 printp <- function(x, na_string = "") {
-  validate(x, check_class = "numeric", check_range = c(0, 1))
+  validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
   validate(na_string, check_class = "character", check_length = 1)
 
   p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)
