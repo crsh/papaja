@@ -7,7 +7,8 @@
 ^README_files$
 ^cran-comments\.md$
 ^\.travis\.yml
+^.github$
 ^example$
-_config.yml
+^_config.yml$
 ^inst/papaja_manuscripts.bib
 ^inst/apa_source_files.csl

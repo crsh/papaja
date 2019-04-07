@@ -142,18 +142,7 @@ apa_print.summary_emm <- function(
 
   ## Set variable labels
   if(p_supplied) {
-    if(!multiple_df) { # Remove df column and put df in column heading
-      df <- contrast_table$df[1]
-      contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
-      # contrast_table$ci <- as.character(contrast_table$ci)
-      variable_label(contrast_table) <- c(
-        estimate = paste0("$", est_name, "$")
-        , ci = conf_level
-        , statistic = paste0("$t(", df, ")$")
-        , p.value = "$p$"
-      )
-    } else {
+    if(multiple_df) { # Put df in column heading
       # colnames(contrast_table) <- c("estimate", "ci", "statistic", "df", "p.value")
       # contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
@@ -261,6 +250,21 @@ apa_print.summary_emm <- function(
   }
 
   apa_res <- lapply(apa_res, as.list)
+
+  if(p_supplied) {
+    if(!multiple_df) { # Remove df column and put df in column heading
+      df <- contrast_table$df[1]
+      contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
+      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
+      # contrast_table$ci <- as.character(contrast_table$ci)
+      variable_label(contrast_table) <- c(
+        estimate = paste0("$", est_name, "$")
+        , ci = conf_level
+        , statistic = paste0("$t(", df, ")$")
+        , p.value = "$p$"
+      )
+    }
+  }
 
   apa_res$table <- contrast_table
   attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
