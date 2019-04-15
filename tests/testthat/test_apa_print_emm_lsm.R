@@ -412,14 +412,45 @@ test_that(
     simple_pairs_output <- apa_print(simple_pairs)
     simple_pairs2_output <- apa_print(simple_pairs2)
 
-    expect_equal(names(simple_pairs_output$estimate), c("F_M_control", "F_M_A", "F_M_B"))
+    expect_equal(names(simple_pairs_output$estimate), c("control_F_M", "A_F_M", "B_F_M"))
     expect_identical(simple_pairs_output, simple_pairs2_output)
 
-    simple_contrasts <- emmeans::contrast(tw_between_emm, "consec", simple = "each", combine = TRUE)
+    simple_contrasts <- emmeans::contrast(tw_between_emm, "consec", simple = "each", combine = TRUE, adjust = "none")
     simple_contrasts_output <- apa_print(simple_contrasts)
 
-    # simple_contrasts2 <- emmeans::contrast(tw_between_emm, "consec", simple = "each")
-    # simple_contrasts2_output <- apa_print(simple_contrasts2)
+    simple_contrasts2 <- emmeans::contrast(tw_between_emm, "consec", simple = "each", adjust = "none")
+    simple_contrasts2_output1 <- apa_print(simple_contrasts2$`simple contrasts for gender`)
+    simple_contrasts2_output2 <- apa_print(simple_contrasts2$`simple contrasts for treatment`)
+
+    expect_identical(
+      simple_contrasts_output$full_result[grepl("M_F$", names(simple_contrasts_output$full_result))]
+      , simple_contrasts2_output1$full_result
+    )
+
+    expect_identical(
+      simple_contrasts_output$full_result[grepl("^(F|M)_", names(simple_contrasts_output$full_result))]
+      , simple_contrasts2_output2$full_result
+    )
+
+    # Joint tests
+    tw_rm <- suppressWarnings(afex::aov_ez(
+      data = tw_rm_data
+      , id = "Subject"
+      , dv = "Recall"
+      , within = c("Task", "Valence")
+      , anova_table = list(correction = "none")
+    ))
+
+    tw_rm_output <- apa_print(tw_rm)
+
+    tw_rm_emm <- emmeans::emmeans(tw_rm$aov, ~ Task * Valence)
+    emm_aov <- emmeans::joint_tests(tw_rm_emm)
+
+    # emm_aov_output <- apa_print(emm_aov)
+
+    emm_split_aov <- emmeans::joint_tests(tw_rm_emm, by = "Task")
+
+    # emm_split_aov_output <- apa_print(emm_split_aov)
   }
 )
 
@@ -450,8 +481,19 @@ test_that(
     uni_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
     expect_equal(est_name_from_call(uni_tw_me_emm), "M")
 
+    uni_tw_me_consec_emm <- emmeans::emmeans(tw_rm, consec ~ Valence)
+    expect_equal(est_name_from_call(uni_tw_me_consec_emm$emmeans), "M")
+    expect_equal(est_name_from_call(uni_tw_me_consec_emm$contrasts), "\\Delta M")
+
     uni_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
     expect_equal(est_name_from_call(uni_tw_pairs_emm), "\\Delta M")
+
+    tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence* Task)
+    tw_pairs_contrasts_emm <- emmeans::contrast(tw_me_emm, "consec", simple = "each")
+    expect_equal(est_name_from_call(tw_pairs_contrasts_emm$`simple contrasts for Valence`), "\\Delta M")
+
+    tw_pairs_contrasts_emm2 <- emmeans::contrast(tw_me_emm, "consec", simple = "each", combine= TRUE)
+    expect_equal(est_name_from_call(tw_pairs_contrasts_emm2), "\\Delta M")
 
     afex::afex_options(emmeans_model = "multivariate")
 
