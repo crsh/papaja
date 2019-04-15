@@ -288,7 +288,7 @@ inline_numbers <- function (x) {
       paste(paste(printed_number[1:(n - 1)], collapse = ", "), printed_number[n], sep = ", and ")
     }
   } else if(is.integer(x)) {
-    x <- printnum(x)
+    x <- printnum(x, numerals = x > 10)
   } else if(is.character(x)) {
     x
   } else {
