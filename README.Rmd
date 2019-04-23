@@ -8,8 +8,6 @@ output        : github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
----
-
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
 
 `papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
@@ -23,8 +21,19 @@ Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/exa
 
 ## Installation
 
-To enable `papaja`'s full set of features you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/) and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution (e.g., [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](http://www.tug.org/texlive/) for Linux).
+To use `papaja` you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/).
+If you want to create PDF- in addition to DOCX-documents you additionally need
+and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution.
+If you have no use for TeX beyond rendering R Markdown documents, I recommend you use [TinyTex](https://yihui.name/tinytex/).
+TinyTex can be installed from within R as follows.
 
+```{r eval = FALSE}
+if(!"tinytex" %in% rownames(installed.packages())) install.packages("tinytex")
+
+tinytex::install_tinytex()
+```
+
+Otherwise consider [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](http://www.tug.org/texlive/) for Linux.
 Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduction.html#getting-started) for detailed installation instructions.
 
 `papaja` is not yet available on CRAN but you can install it from this repository:
@@ -272,6 +281,7 @@ Obviously, not all journals require manuscripts and articles to be prepared acco
 If you are looking for other journal article templates, the following list of `rmarkdown`/`pandoc` packages and templates may be helpful.
 
 - [rticles](https://github.com/rstudio/rticles): LaTeX Journal Article Templates for R Markdown
+- [chi-proc-rmd-template](https://github.com/ulyngs/chi-proc-rmd-template): ACM CHI Proceedings R Markdown Template
 - [Michael Sachs' pandoc journal templates](https://github.com/sachsmc/pandoc-journal-templates): Pandoc templates for the major statistics and biostatistics journals
 
 If you know of other packages and templates, drop us a note, so we can add them here.

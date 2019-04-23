@@ -355,7 +355,7 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 #' @export
 
 printp <- function(x, na_string = "") {
-  validate(x, check_class = "numeric", check_range = c(0, 1))
+  validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
   validate(na_string, check_class = "character", check_length = 1)
 
   p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)

@@ -42,17 +42,19 @@ can also be set in the global option \code{knitr.table.format}. If
   \item{digits}{Maximum number of digits for numeric columns, passed to
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
 the number of digits for individual columns.}
-  \item{row.names}{Logical: whether to include row names. By
-default, row names are included if \code{rownames(x)} is neither
-\code{NULL} nor identical to \code{1:nrow(x)}.}
+  \item{row.names}{Logical: whether to include row names. By default, row names
+are included if \code{rownames(x)} is neither \code{NULL} nor identical to
+\code{1:nrow(x)}.}
   \item{col.names}{A character vector of column names to be used in the table.}
-  \item{align}{Column alignment: a character vector consisting of
- \code{'l'} (left), \code{'c'} (center) and/or \code{'r'} (right). By
- default or if \code{align = NULL}, numeric columns are right-aligned, and
- other columns are left-aligned. If \code{length(align) == 1L}, the string will be
- expanded to a vector of individual letters, e.g. \code{'clc'} becomes
+  \item{align}{Column alignment: a character vector consisting of \code{'l'}
+(left), \code{'c'} (center) and/or \code{'r'} (right). By default or if
+\code{align = NULL}, numeric columns are right-aligned, and other columns
+are left-aligned. If \code{length(align) == 1L}, the string will be
+expanded to a vector of individual letters, e.g. \code{'clc'} becomes
 \code{c('c', 'l', 'c')}, unless the output format is LaTeX.}
   \item{caption}{The table caption.}
+  \item{label}{The table reference label. By default, the label is obtained
+from \code{knitr::\link{opts_current}$get('label')}.}
   \item{format.args}{A list of arguments to be passed to \code{\link{format}()}
 to format table values, e.g. \code{list(big.mark = ',')}.}
   \item{escape}{Boolean; whether to escape special characters when producing

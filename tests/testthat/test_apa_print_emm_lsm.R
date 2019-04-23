@@ -44,7 +44,7 @@ test_that(
       , within = c("Task", "Valence")
     ))
 
-    tw_me_lsm <- lsmeans::lsmeans(tw_rm$aov, ~ Valence)
+    tw_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
     tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
 
     tw_me_lsm_output <- apa_print(tw_me_lsm)
@@ -126,7 +126,7 @@ test_that(
 
 
     # Interaction
-    tw_int_lsm <- lsmeans::lsmeans(tw_rm$aov, ~ Valence * Task)
+    tw_int_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence * Task)
     tw_int_emm <- emmeans::emmeans(tw_rm, ~ Valence * Task)
 
     tw_int_lsm_output <- apa_print(tw_int_lsm)
@@ -180,7 +180,7 @@ test_that(
 
 
     # Simple effects
-    tw_se_lsm <- lsmeans::lsmeans(tw_rm$aov, ~ Valence | Task)
+    tw_se_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence | Task)
     tw_se_emm <- emmeans::emmeans(tw_rm, ~ Valence | Task)
 
     tw_se_lsm_output <- apa_print(tw_se_lsm)
@@ -219,7 +219,7 @@ test_that(
       , observed = "gender"
     ))
 
-    fw_mixed_lsm <- lsmeans::lsmeans(fw_mixed$aov, ~ phase * hour | treatment * gender)
+    fw_mixed_lsm <- lsmeans::lsmeans(fw_mixed, ~ phase * hour | treatment * gender)
     fw_mixed_emm <- emmeans::emmeans(fw_mixed, ~ phase * hour | treatment * gender)
 
     fw_mixed_lsm_output <- apa_print(fw_mixed_lsm)
@@ -235,9 +235,7 @@ test_that(
 
     expect_identical(fw_mixed_lsm_output, fw_mixed_lsm_output2)
     expect_identical(fw_mixed_emm_output, fw_mixed_emm_output2)
-
-    # Not identical because slightly different CI in some conditions in original objects
-    # expect_identical(fw_mixed_lsm_output, fw_mixed_emm_output2)
+    expect_identical(fw_mixed_lsm_output, fw_mixed_emm_output2)
 
     # table --------------------------------------------------------------------
     expect_identical(
@@ -337,28 +335,13 @@ test_that(
     )
 
 
-    # Pairwise comparisons
-    tw_pairs_emm <- emmeans:::pairs.emmGrid(tw_me_emm)
-    tw_pairs_lsm <- lsmeans:::pairs.ref.grid(tw_me_lsm)
-
-    tw_pairs_emm_output <- apa_print(tw_pairs_emm)
-    tw_pairs_lsm_output <- apa_print(tw_pairs_lsm)
-    tw_pairs_emm_output2 <- apa_print(
-      summary(tw_pairs_emm, infer = TRUE)
-      , est_name = "\\Delta M"
-    )
-    tw_pairs_lsm_output2 <- apa_print(
-      summary(tw_pairs_lsm, infer = TRUE)
-      , est_name = "\\Delta M"
-    )
-
-    expect_identical(tw_pairs_emm_output, tw_pairs_emm_output2)
-    expect_identical(tw_pairs_lsm_output, tw_pairs_lsm_output2)
-    expect_identical(tw_pairs_lsm_output, tw_pairs_emm_output)
+    # Pairs
+    tw_me_pairs_emm <- pairs(tw_me_emm)
+    tw_me_pairs_emm_output <- apa_print(tw_me_pairs_emm)
 
     # table --------------------------------------------------------------------
     expect_identical(
-      object = tw_pairs_emm_output$table$estimate
+      object = tw_me_pairs_emm_output$table$estimate
       , expected = structure(
         c("-1.10", "-1.30", "-0.20")
         , label = "$\\Delta M$"
@@ -366,7 +349,7 @@ test_that(
       )
     )
     expect_identical(
-      object = tw_pairs_emm_output$table$ci
+      object = tw_me_pairs_emm_output$table$ci
       , expected = structure(
         c("$[-3.44$, $1.24]$",  "$[-3.64$, $1.04]$", "$[-2.54$, $2.14]$")
         , label = "95\\% CI"
@@ -374,7 +357,7 @@ test_that(
       )
     )
     expect_identical(
-      object = tw_pairs_emm_output$table$statistic
+      object = tw_me_pairs_emm_output$table$statistic
       , expected = structure(
         c("-1.34", "-1.59", "-0.24")
         , label = "$t(8)$"
@@ -382,7 +365,7 @@ test_that(
       )
     )
     expect_identical(
-      object = tw_pairs_emm_output$table$p.value
+      object = tw_me_pairs_emm_output$table$p.value
       , expected = structure(
         c(".413", ".305", ".968")
         , label = "$p$"
@@ -391,10 +374,14 @@ test_that(
     )
 
     ## Custom contrast names
-    tw_pairs_emm_output <- apa_print(tw_pairs_emm, contrast_names = letters[1:3])
+    tw_me_pairs_emm_output <- apa_print(tw_me_pairs_emm, contrast_names = letters[1:3])
     expect_identical(
-      object = tw_pairs_emm_output$table$contrast
-      , expected = letters[1:3]
+      object = tw_me_pairs_emm_output$table$contrast
+      , expected = structure(
+        letters[1:3]
+        , label = "Contrast"
+        , class = c("papaja_labelled", "character")
+      )
     )
 
     # Custom contrasts
@@ -425,14 +412,45 @@ test_that(
     simple_pairs_output <- apa_print(simple_pairs)
     simple_pairs2_output <- apa_print(simple_pairs2)
 
-    expect_equal(names(simple_pairs_output$estimate), c("F_M_control", "F_M_A", "F_M_B"))
+    expect_equal(names(simple_pairs_output$estimate), c("control_F_M", "A_F_M", "B_F_M"))
     expect_identical(simple_pairs_output, simple_pairs2_output)
 
-    simple_contrasts <- emmeans::contrast(tw_between_emm, "consec", simple = "each", combine = TRUE)
+    simple_contrasts <- emmeans::contrast(tw_between_emm, "consec", simple = "each", combine = TRUE, adjust = "none")
     simple_contrasts_output <- apa_print(simple_contrasts)
 
-    # simple_contrasts2 <- emmeans::contrast(tw_between_emm, "consec", simple = "each")
-    # simple_contrasts2_output <- apa_print(simple_contrasts2)
+    simple_contrasts2 <- emmeans::contrast(tw_between_emm, "consec", simple = "each", adjust = "none")
+    simple_contrasts2_output1 <- apa_print(simple_contrasts2$`simple contrasts for gender`)
+    simple_contrasts2_output2 <- apa_print(simple_contrasts2$`simple contrasts for treatment`)
+
+    expect_identical(
+      simple_contrasts_output$full_result[grepl("M_F$", names(simple_contrasts_output$full_result))]
+      , simple_contrasts2_output1$full_result
+    )
+
+    expect_identical(
+      simple_contrasts_output$full_result[grepl("^(F|M)_", names(simple_contrasts_output$full_result))]
+      , simple_contrasts2_output2$full_result
+    )
+
+    # Joint tests
+    tw_rm <- suppressWarnings(afex::aov_ez(
+      data = tw_rm_data
+      , id = "Subject"
+      , dv = "Recall"
+      , within = c("Task", "Valence")
+      , anova_table = list(correction = "none")
+    ))
+
+    tw_rm_output <- apa_print(tw_rm)
+
+    tw_rm_emm <- emmeans::emmeans(tw_rm$aov, ~ Task * Valence)
+    emm_aov <- emmeans::joint_tests(tw_rm_emm)
+
+    # emm_aov_output <- apa_print(emm_aov)
+
+    emm_split_aov <- emmeans::joint_tests(tw_rm_emm, by = "Task")
+
+    # emm_split_aov_output <- apa_print(emm_split_aov)
   }
 )
 
@@ -449,26 +467,38 @@ test_that(
       , within = c("Task", "Valence")
     ))
 
-    tw_me_lsm <- lsmeans::lsmeans(tw_rm$aov, ~ Valence)
+    ow_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
+    expect_equal(est_name_from_call(ow_me_lsm), "M")
+
+    tw_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence * Task)
     expect_equal(est_name_from_call(tw_me_lsm), "M")
 
-    tw_pairs_lsm <- pairs(tw_me_lsm)
-    expect_equal(est_name_from_call(tw_pairs_lsm), "\\Delta M")
-
-    tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
+    ow_pairs_lsm <- pairs(ow_me_lsm)
+    expect_equal(est_name_from_call(ow_pairs_lsm), "\\Delta M")
 
     afex::afex_options(emmeans_model = "univariate")
 
     uni_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
     expect_equal(est_name_from_call(uni_tw_me_emm), "M")
 
+    uni_tw_me_consec_emm <- emmeans::emmeans(tw_rm, consec ~ Valence)
+    expect_equal(est_name_from_call(uni_tw_me_consec_emm$emmeans), "M")
+    expect_equal(est_name_from_call(uni_tw_me_consec_emm$contrasts), "\\Delta M")
+
     uni_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
     expect_equal(est_name_from_call(uni_tw_pairs_emm), "\\Delta M")
+
+    tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence* Task)
+    tw_pairs_contrasts_emm <- emmeans::contrast(tw_me_emm, "consec", simple = "each")
+    expect_equal(est_name_from_call(tw_pairs_contrasts_emm$`simple contrasts for Valence`), "\\Delta M")
+
+    tw_pairs_contrasts_emm2 <- emmeans::contrast(tw_me_emm, "consec", simple = "each", combine= TRUE)
+    expect_equal(est_name_from_call(tw_pairs_contrasts_emm2), "\\Delta M")
 
     afex::afex_options(emmeans_model = "multivariate")
 
     mw_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
-    expect_equal(est_name_from_call(tw_me_emm), "M")
+    expect_equal(est_name_from_call(uni_tw_me_emm), "M")
 
     mw_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
     expect_equal(est_name_from_call(mw_tw_pairs_emm), "\\Delta M")

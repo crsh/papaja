@@ -23,6 +23,7 @@ Imports:
   rmarkdown (>= 1.10),
   yaml
 Suggests:
+  tinytex,
   afex,
   BayesFactor,
   beeswarm,
@@ -38,8 +39,9 @@ Suggests:
   MBESS,
   multcomp,
   testthat
+SystemRequirements: Rendering the document template requires pandoc (>= 1.12.3; http://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

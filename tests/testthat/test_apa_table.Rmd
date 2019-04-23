@@ -41,7 +41,7 @@ output            : papaja::apa6_pdf
 
 ```{r message = FALSE, warning = FALSE}
 library("papaja")
-knitr::opts_chunk$set(echo = TRUE, results = "asis")
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
@@ -56,7 +56,9 @@ apa_table(
   , note = "This table was created using apa_table()"
   , small = TRUE
 )
+```
 
+```{r}
 apa_table(
   my_table
   , align = c("l", "r", "r")
@@ -67,6 +69,7 @@ apa_table(
   , format.args = list(decimal.mark = ",", big.mark = "")
 )
 ```
+
 
 ```{r}
 apa_table(
@@ -81,7 +84,9 @@ apa_table(
   , escape = FALSE
   , font_size = "tiny"
 )
+```
 
+```{r}
 apa_table(
   list(
     test = my_table
@@ -123,7 +128,10 @@ apa_table(
   , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
+```
 
+
+```{r}
 my_table2 <- my_table
 rownames(my_table2) <- 1:nrow(my_table2)
 
@@ -134,7 +142,10 @@ apa_table(
   , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
+```
 
+
+```{r}
 apa_table(
   list(A = my_table2, B = my_table2)
   , align = c("l", "r", "r")
@@ -142,7 +153,10 @@ apa_table(
   , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
+```
 
+
+```{r}
 apa_table(
   list(A = my_table2[1:2, ], B = my_table2)
   , align = c("l", "r", "r")
@@ -150,7 +164,10 @@ apa_table(
   , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
+```
 
+
+```{r}
 apa_table(
   list(A = cars[1:2, ], B = cars[3:6, ])
   , align = c("l", "r", "r")
@@ -158,7 +175,10 @@ apa_table(
   , note = "This table was created using apa_table()"
   , added_stub_head = "Desciptives"
 )
+```
 
+
+```{r}
 apa_table(
   list(A = cars[1:2, ], B = cars[5:7, ]
       )

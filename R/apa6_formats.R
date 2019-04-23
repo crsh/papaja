@@ -144,6 +144,13 @@ apa6_pdf <- function(
       , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
     )
 
+    # Remove abstract environment if empty
+    output_text <- gsub(
+      "\\\\abstract\\{\n\n\\}"
+      , ""
+      , output_text
+    )
+
     output_file_connection <- file(output_file)
     on.exit(close(output_file_connection))
     writeLines(output_text, output_file_connection, useBytes = TRUE)
@@ -281,9 +288,11 @@ inline_numbers <- function (x) {
       paste(paste(printed_number[1:(n - 1)], collapse = ", "), printed_number[n], sep = ", and ")
     }
   } else if(is.integer(x)) {
-    x <- printnum(x)
+    x <- printnum(x, numerals = x > 10)
   } else if(is.character(x)) {
     x
+  } else {
+    paste(as.character(x), collapse = ', ')
   }
 }
 
@@ -463,7 +472,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   if(isTRUE(yaml_params$lof) || isTRUE(yaml_params$figurelist)) {
-    yaml_params$lof <- FALSE
+    yaml_params$lof <- NULL
     yaml_params$figurelist <- TRUE
 
     header_includes <- c(
@@ -485,7 +494,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   if(isTRUE(yaml_params$lot) || isTRUE(yaml_params$tablelist)) {
-    yaml_params$lot <- FALSE
+    yaml_params$lot <- NULL
     yaml_params$tablelist <- TRUE
 
     header_includes <- c(

@@ -4,8 +4,6 @@ authors     : "First Author & Second Author"
 journal     : "Journal title"
 manuscript  : "Manuscript number"
 
-bibliography: [""]
-
 class       : "draft"
 
 output      : papaja::revision_letter_pdf
@@ -13,8 +11,8 @@ output      : papaja::revision_letter_pdf
 
 Dear Dr. Editor,
 
-thank you very much for taking the time to consider our manuscript for publication at the _Journal XYZ_.
-In the following we address your and each reviewer's concerns point-by-point.
+thank you very much for taking the time to consider our manuscript for publication at _`r rmarkdown::metadata$journal`_.
+In the following we address your and each reviewers' concerns point-by-point.
 
 
 # Reviewer \#1
@@ -55,5 +53,9 @@ This is our response
 
 # References
 
-\setlength{\leftskip}{0.4in}
-\setlength{\parindent}{-0.4in}
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id = "refs"></div>
+\endgroup

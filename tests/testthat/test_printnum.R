@@ -255,7 +255,6 @@ test_that(
   "Input validation"
   , {
     expect_error(printp(NULL), "The parameter 'x' is NULL.")
-    expect_error(printp(NA), "The parameter 'x' is NA.")
     expect_error(printp("A"), "The parameter 'x' must be of class 'numeric'.")
     expect_error(printp(1.01), "The parameter 'x' must be between 0 and 1.")
     expect_error(printp(-0.01), "The parameter 'x' must be between 0 and 1.")
