@@ -300,7 +300,7 @@ inline_numbers <- function (x) {
 # Preprocessor functions are adaptations from the RMarkdown package
 # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
 
-set_csl <- function(x) {
+set_default_csl <- function(x) {
   # Use APA6 CSL citations template if no other file is supplied
   has_csl <- function(text) {
     length(grep("^csl:.*$", text)) > 0
@@ -540,13 +540,28 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
      (is.null(metadata$citeproc) || metadata$citeproc)) {
 
     ## Set CSL
-    args <- set_csl(input_file)
+    args <- set_default_csl(input_file)
+    csl_specified <- is.null(args)
 
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
-      args <- set_ampersand_filter(args, metadata$csl)
+      if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+        if(csl_specified) {
+          args <- c(args, "--csl", metadata$csl)
+        }
+
+        args <- set_pandoc_citeproc(args)
+        args <- set_lua_filter(args, "replace_ampersands.lua")
+      } else { # Legacy R-based filter
+        args <- set_ampersand_filter(args, metadata$csl)
+      }
     }
   }
+
+  # Set additional lua filters
+  # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+  #   args <- set_lua_filter(args, "wordcount.lua")
+  # }
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
@@ -585,14 +600,30 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
-    # Set CSL
-    args <- set_csl(input_file)
+    ## Set CSL
+    args <- set_default_csl(input_file)
+    csl_specified <- is.null(args)
 
-    # Set ampersand filter
+    ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
-      args <- set_ampersand_filter(args, metadata$csl)
+      if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+        if(csl_specified) {
+          args <- c(args, "--csl", metadata$csl)
+        }
+
+        args <- set_pandoc_citeproc(args)
+        args <- set_lua_filter(args, "replace_ampersands.lua")
+      } else { # Legacy R-based filter
+        args <- set_ampersand_filter(args, metadata$csl)
+      }
     }
   }
+
+  # Set additional lua filters
+  # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+  #   args <- set_lua_filter(args, "pagebreak.lua")
+  #   args <- set_lua_filter(args, "wordcount.lua")
+  # }
 
   args
 }
@@ -682,8 +713,6 @@ paste_affiliations <- function(x, format) {
 
 
 set_ampersand_filter <- function(args, csl_file) {
-  pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
-
   # Correct in-text ampersands
   filter_path <- system.file(
     "rmd", "ampersand_filter.R"
@@ -691,7 +720,7 @@ set_ampersand_filter <- function(args, csl_file) {
   )
 
   ## Use legacy shell or bash script with older versions of pandoc
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) > 0) {
+  # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) > 0) {
     if(Sys.info()["sysname"] == "Windows") {
       filter_path <- gsub("\\.R", ".bat", filter_path)
       ampersand_filter <- readLines(filter_path)
@@ -703,13 +732,32 @@ set_ampersand_filter <- function(args, csl_file) {
     } else {
       filter_path <- gsub("\\.R", ".sh", filter_path)
     }
+  # }
+
+  if(is.null(args)) { # CSL has not been specified manually
+    args <- c(args, "--csl", csl_file)
   }
 
-  if(!is.null(args)) { # CSL has not been specified manually
-    args <- c(args, "--filter", pandoc_citeproc(), "--filter", filter_path)
-  } else {
-    args <- c(args, "--csl", csl_file, "--filter", pandoc_citeproc(), "--filter", filter_path)
-  }
+  args <- set_pandoc_citeproc(args)
+  args <- c(args, "--filter", filter_path)
+
+  args
+}
+
+set_pandoc_citeproc <- function(args) {
+  pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
+  args <- c(args, "--filter", pandoc_citeproc())
+  args
+}
+
+set_lua_filter <- function(args, filter_name) {
+  # Correct in-text ampersands
+  filter_path <- system.file(
+    "rmd", filter_name
+    , package = "papaja"
+  )
+
+  args <- c(args, "--lua-filter", filter_path)
 
   args
 }
