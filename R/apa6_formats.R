@@ -559,9 +559,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   # Set additional lua filters
-  # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-  #   args <- set_lua_filter(args, "wordcount.lua")
-  # }
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+    if(is.null(metadata$count_words) || metadata$count_words) args <- set_lua_filter(args, "wordcount.lua")
+  }
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
@@ -622,7 +622,6 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   # Set additional lua filters
   # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
   #   args <- set_lua_filter(args, "pagebreak.lua")
-  #   args <- set_lua_filter(args, "wordcount.lua")
   # }
 
   args
