@@ -1,10 +1,10 @@
-language: r
+language: R
 r:
   - oldrel
   - release
   - devel
 
-pandoc_version: 2.2.1
+pandoc_version: 2.3.1
 
 cache: packages
 
@@ -12,6 +12,9 @@ cache: packages
 warnings_are_errors: true
 
 # Suggested packages needed to run tests
+r_binary_packages:
+  - gsl
+
 r_packages:
   - car
   - afex
@@ -33,6 +36,6 @@ addons:
  apt:
    packages:
    - lmodern
-   - libgsl0ldbl # GNU scientific library for MBESS
-   - libgsl0-dev # GNU scientific library for MBESS
+   # - libgsl0ldbl # GNU scientific library for MBESS
+   # - libgsl0-dev # GNU scientific library for MBESS
    - libnlopt-dev # nloptr
