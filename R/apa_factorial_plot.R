@@ -895,13 +895,27 @@ apa_factorial_plot.afex_aov <- function(
   between <- if(!is.null(names(args$between))) names(args$between) else args$between
   within <- if(!is.null(names(args$within))) names(args$within) else args$within
 
+  afex_factors <- c(unlist(between), unlist(within))
+
+  # Allow changing plot axes ----
+  if(is.null(ellipsis$factors)) {
+    factors <- afex_factors
+  } else {
+    if(setequal(ellipsis$factors, afex_factors)) {
+      factors <- ellipsis$factors
+    } else {
+      stop("The set of factors contained in the `afex_aov` object does not match argument `factors`.")
+    }
+  }
+
+  # ----
   ellipsis <- defaults(
     ellipsis
     , set = list(
       "data" = data$data$long
       , "id" = args$id
       , "dv" = args$dv
-      , "factors" = c(unlist(between), unlist(within))
+      , "factors" = factors
       , "tendency" = substitute(tendency)
       , "dispersion" = substitute(dispersion)
       , "fun_aggregate" = substitute(fun_aggregate)
