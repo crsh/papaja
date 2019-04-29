@@ -550,8 +550,8 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
           args <- c(args, "--csl", metadata$csl)
         }
 
-        args <- set_pandoc_citeproc(args)
-        args <- set_lua_filter(args, "replace_ampersands.lua")
+        args <- rmdfiltr::add_citeproc_filter(args)
+        args <- rmdfiltr::add_replace_ampersands_filter(args)
       } else { # Legacy R-based filter
         args <- set_ampersand_filter(args, metadata$csl)
       }
@@ -609,8 +609,8 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
           args <- c(args, "--csl", metadata$csl)
         }
 
-        args <- set_pandoc_citeproc(args)
-        args <- set_lua_filter(args, "replace_ampersands.lua")
+        args <- rmdfiltr::add_citeproc_filter(args)
+        args <- rmdfiltr::add_replace_ampersands_filter(args)
       } else { # Legacy R-based filter
         args <- set_ampersand_filter(args, metadata$csl)
       }
@@ -735,18 +735,11 @@ set_ampersand_filter <- function(args, csl_file) {
     args <- c(args, "--csl", csl_file)
   }
 
-  args <- set_pandoc_citeproc(args)
+  args <- rmdfiltr::add_citeproc_filter(args)
   args <- c(args, "--filter", filter_path)
 
   args
 }
-
-set_pandoc_citeproc <- function(args) {
-  pandoc_citeproc <- utils::getFromNamespace("pandoc_citeproc", "rmarkdown")
-  args <- c(args, "--filter", pandoc_citeproc())
-  args
-}
-
 
 
 modify_input_file <- function(input, ...) {
