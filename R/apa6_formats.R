@@ -559,9 +559,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   # Set additional lua filters
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    if(is.null(metadata$count_words) || metadata$count_words) args <- set_lua_filter(args, "wordcount.lua")
-  }
+  args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
@@ -749,17 +747,7 @@ set_pandoc_citeproc <- function(args) {
   args
 }
 
-set_lua_filter <- function(args, filter_name) {
-  # Correct in-text ampersands
-  filter_path <- system.file(
-    "rmd", filter_name
-    , package = "papaja"
-  )
 
-  args <- c(args, "--lua-filter", filter_path)
-
-  args
-}
 
 modify_input_file <- function(input, ...) {
   input_connection <- file(input, encoding = "UTF-8")
@@ -818,4 +806,15 @@ revert_original_input_file <- function(x = 1) {
   }
 
   return(NULL)
+}
+
+set_lua_filter <- function(args = NULL, filter_name) {
+  if(!is.null(args)) assertthat::assert_that(is.character(args))
+  assertthat::assert_that(length(filter_name) == 1)
+  assertthat::assert_that(is.character(filter_name))
+
+  filter_path <- system.file("rmd", filter_name, package = "papaja")
+  args <- c(args, "--lua-filter", filter_path)
+
+  args
 }

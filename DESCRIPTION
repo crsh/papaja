@@ -22,6 +22,8 @@ Imports:
   methods,
   rmarkdown (>= 1.10),
   yaml
+Remotes:
+  crsh/rmdfiltr
 Suggests:
   tinytex,
   afex,
@@ -39,7 +41,7 @@ Suggests:
   MBESS,
   multcomp,
   testthat
-SystemRequirements: Rendering the document template requires pandoc (>= 1.12.3; http://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
+SystemRequirements: Rendering the document template requires pandoc (>= 1.12.3; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
