@@ -107,8 +107,8 @@ arrange_anova.summary.aov <- function(x) {
     variance_table$meansq <- NA
     variance_table$term <- "(Intercept)"
   } else {
-    variance_table$sumsq_err <- variance_table[nrow(variance_table), "sumsq"]
-    variance_table$df_res <- variance_table[nrow(variance_table), "df"]
+    variance_table$sumsq_err <- variance_table$sumsq[nrow(variance_table)]
+    variance_table$df_res <- variance_table$df[nrow(variance_table)]
     variance_table <- variance_table[-nrow(variance_table), ]
   }
 
