@@ -431,19 +431,34 @@ apa_table.latex <- function(
   # Add column spanners
   if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
 
-  if((longtable || landscape) & !is.null(caption)) table_lines <- c(table_lines[1:2], paste0("\\caption{", caption, "}\\\\"), table_lines[-c(1:2)])
+  # Add repeating table caption (and column names) for longtables
+  table_content_start <- grep("\\\\midrule", table_lines)
 
-  table_content_boarders <- grep("\\\\midrule|\\\\bottomrule", table_lines)
+  if((longtable || landscape) & !is.null(caption)) {
+    table_lines <- c(
+      table_lines[1:2]
+      , paste0("\\caption{", caption, "}\\\\")
+      , table_lines[3:table_content_start]
+      , "\\endfirsthead"
+      , paste0("\\caption*{\\normalfont{Table \\ref{tab:", current_chunk, "} continued}}\\\\")
+      , table_lines[3:table_content_start]
+      , "\\endhead"
+      , table_lines[-c(1:table_content_start)]
+    )
+
+    table_content_start <- grep("\\\\endhead", table_lines)
+  }
 
   # Add extra space before note
-  if(!is.null(note)) table_lines[table_content_boarders[2]] <- paste(table_lines[table_content_boarders[2]], "\\addlinespace", sep = "\n")
+  table_content_end <- grep("\\\\bottomrule", table_lines)
+  if(!is.null(note)) table_lines[table_content_end] <- paste(table_lines[table_content_end], "\\addlinespace", sep = "\n")
 
   # Add midrules
   if(!is.null(midrules)) {
     validate(midrules, check_class = "numeric", check_range = c(1, n_rows))
 
-    table_lines[table_content_boarders[1] + midrules] <- paste(
-      table_lines[table_content_boarders[1] + midrules]
+    table_lines[table_content_start + midrules] <- paste(
+      table_lines[table_content_start + midrules]
       , "\\midrule"
     )
   }
