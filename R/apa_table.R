@@ -540,7 +540,7 @@ apa_table.markdown <- function(
   colnames(x) <- unlist(variable_label(x))
   colnames(x)[1] <- if(!is.na(variable_label(x)[[1]])) variable_label(x)[[1]] else ""
 
-  res_table <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
+  table_output <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
   caption <- paste0("*", caption, "*")
@@ -550,18 +550,30 @@ apa_table.markdown <- function(
   # Print table
   # cat("<caption>")
   # cat(apa_terms$table, ". ", sep = "")
-  cat(caption)
+  # cat(caption)
   # cat("</caption>\n")
 
-  print(res_table)
+  # print(res_table)
+
+  table_output <- c(caption, table_output)
 
   if(!is.null(note)) {
-    cat("\n")
-    cat("<center>")
-    cat("*", apa_terms$note, ".* ", note, sep = "")
-    cat("</center>")
-    cat("\n\n\n\n")
+    # cat("\n")
+    # cat("<center>")
+    # cat("*", apa_terms$note, ".* ", note, sep = "")
+    # cat("</center>")
+    # cat("\n\n\n\n")
+
+    table_output <- c(
+      table_output
+      , "\n<center>"
+      , paste0("*", apa_terms$note, ".* ", note)
+      , "</center>\n\n\n\n"
+    )
   }
+
+  table_output <- knitr::asis_output(table_output)
+  table_output
 }
 
 
