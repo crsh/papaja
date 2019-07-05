@@ -117,7 +117,7 @@ render_appendix <- function(
     }
 
     appendix_endfloat_fix <- ifelse(
-      grepl("man", rmarkdown::metadata$classoption) || grepl("man", rmarkdown::metadata$class)
+      any(grepl("man", c(rmarkdown::metadata$classoption, rmarkdown::metadata$class)))
       , "\\makeatletter\n\\efloat@restorefloats\n\\makeatother"
       , ""
     )
