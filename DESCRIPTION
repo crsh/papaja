@@ -21,9 +21,8 @@ Imports:
   knitr (>= 1.10.5),
   methods,
   rmarkdown (>= 1.10),
+  rmdfiltr,
   yaml
-Remotes:
-  crsh/rmdfiltr
 Suggests:
   tinytex,
   afex,
