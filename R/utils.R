@@ -48,8 +48,8 @@ validate <- function(
     else return(TRUE)
   }
 
-  if(check_infinite && "numeric" %in% methods::is(x) && is.infinite(x)) stop(paste("The parameter '", name, "' must be finite.", sep = ""))
-  if(check_integer && "numeric" %in% methods::is(x) && x %% 1 != 0) stop(paste("The parameter '", name, "' must be an integer.", sep = ""))
+  if(check_infinite && inherits(x, "numeric") && any(is.infinite(x))) stop(paste("The parameter '", name, "' must be finite.", sep = ""))
+  if(check_integer && inherits(x, "numeric") && any(x %% 1 != 0)) stop(paste("The parameter '", name, "' must be an integer.", sep = ""))
 
   for(x.class in check_class) {
     if(!methods::is(x, x.class)) stop(paste("The parameter '", name, "' must be of class '", x.class, "'.", sep = ""))
@@ -152,7 +152,7 @@ convert_stat_name <- function(x) {
 
   new_stat_name <- gsub("-squared", "^2", x, ignore.case = TRUE)
 
-  if(length(new_stat_name) == 2 && grepl("mean", new_stat_name)) new_stat_name <- "\\Delta M"
+  if(length(new_stat_name) == 2 && all(grepl("mean", new_stat_name))) new_stat_name <- "\\Delta M"
   if(all(grepl("prop \\d", new_stat_name))) {
     new_stat_name <- NULL
     return(new_stat_name)

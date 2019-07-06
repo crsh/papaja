@@ -37,8 +37,9 @@ theme_apa <- function(base_size = 12, base_family = "", box = FALSE) {
       , axis.text.x = ggplot2::element_text(size = ggplot2::rel(1), margin = ggplot2::margin(ggplot2::rel(6), 0, 0, 0))
       , axis.text.y = ggplot2::element_text(size = ggplot2::rel(1), margin = ggplot2::margin(0, ggplot2::rel(6), 0, 0))
       , axis.text.y.right = ggplot2::element_text(size = ggplot2::rel(1), margin = ggplot2::margin(0, 0, 0, ggplot2::rel(6)))
-      , axis.line.x = ggplot2::element_line()
-      , axis.line.y = ggplot2::element_line()
+      , axis.line = ggplot2::element_line()
+      # , axis.line.x = ggplot2::element_line()
+      # , axis.line.y = ggplot2::element_line()
 
       , legend.title = ggplot2::element_text()
       , legend.key = ggplot2::element_rect(fill = NA, color = NA)
@@ -59,8 +60,8 @@ theme_apa <- function(base_size = 12, base_family = "", box = FALSE) {
       , panel.grid.minor.y = ggplot2::element_blank()
 
       , strip.background = ggplot2::element_rect(fill = NA, color = NA)
-      , strip.text.x = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, ggplot2::rel(16), 0))
-      , strip.text.y = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, 0, ggplot2::rel(16)))
+      , strip.text.x = ggplot2::element_text(size = ggplot2::rel(1.2), margin = ggplot2::margin(0, 0, ggplot2::rel(10), 0))
+      , strip.text.y = ggplot2::element_text(size = ggplot2::rel(1.2), margin = ggplot2::margin(0, 0, 0, ggplot2::rel(10)))
     )
 
   if(box) {

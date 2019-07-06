@@ -11,12 +11,21 @@
 #' @keywords internal
 #' @examples NULL
 
-fast_aggregate <- function(data, factors, dv, fun) {
+fast_aggregate <- function(data, factors, dv, fun, na.rm = TRUE) {
   # subset: this is a bit faster than subset.data.frame
   data <- data[, colnames(data) %in% c(factors, dv)]
   # the dplyr magic: this construct seems to be as fast as using pipes
   grouped <- dplyr::grouped_df(data, vars = factors, drop = TRUE)
-  agg_data <- as.data.frame(dplyr::summarise_all(.tbl = grouped, .funs = dplyr::funs(fun(., na.rm = TRUE))))
+
+  dv_ <- dplyr::sym(dv)
+  args <- list(x = dplyr::quo(!!dv_), na.rm = na.rm)
+  agg_data <- as.data.frame(dplyr::summarise(.data = grouped, temporary_dv_name = fun(!!!args)))
+  # do this in base R to avoid using `:=`
+  colnames(agg_data)[colnames(agg_data) == "temporary_dv_name"] <- dv
+
+  # soft-deprecated in dplyr:
+  # agg_data <- as.data.frame(dplyr::summarise_all(.tbl = grouped, .funs = dplyr::funs(fun(., na.rm = TRUE))))
 
   return(agg_data)
 }
+
