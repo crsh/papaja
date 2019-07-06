@@ -25,25 +25,27 @@ Imports:
 Remotes:
   crsh/rmdfiltr
 Suggests:
-  tinytex,
-  afex,
-  BayesFactor,
-  beeswarm,
-  boot,
-  car,
-  carData,
-  downloader,
-  dplyr,
-  emmeans,
-  ggplot2,
-  latex2exp,
-  lsmeans,
-  MBESS,
-  multcomp,
-  testthat
+    tinytex,
+    afex,
+    BayesFactor,
+    beeswarm,
+    boot,
+    car,
+    carData,
+    downloader,
+    dplyr,
+    emmeans,
+    ggplot2,
+    latex2exp,
+    lsmeans,
+    MBESS,
+    multcomp,
+    testthat,
+    spelling
 SystemRequirements: Rendering the document template requires pandoc (>= 1.12.3; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
+Language: en-US

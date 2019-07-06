@@ -12,3 +12,5 @@
 ^_config.yml$
 ^inst/papaja_manuscripts.bib
 ^inst/apa_source_files.csl
+^CODE_OF_CONDUCT\.md$
+^\.github$
