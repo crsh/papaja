@@ -14,10 +14,7 @@ apa_print.summary.glht(x, ci = 0.95, in_paren = FALSE, ...)
 
 \item{test}{Function. Computes p-values (adjusted for multiple comparisons).}
 
-\item{...}{Arguments passed on to \code{printnum}
-\describe{
-  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
-}}
+\item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
 
 \item{ci}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
@@ -38,12 +35,14 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
    }
 }
 \description{
-Takes \code{glht} objects to create formatted character strings to report the results in
+Takes various \code{lsmeans} and \code{emmeans} objects methods to create formatted character strings to report the results in
 accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
 considered experimental.}
 }
 \details{
-If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
+ADJUSTED CONFIDENCE INTERVALS
+
+   If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
    of freedom, are replaced with brackets.
 }
 \examples{

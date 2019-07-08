@@ -14,8 +14,10 @@ and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and c
 \item{conf_level}{Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
 they cannot be determined from column names or attributes of \code{x}.}
 
-\item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-notation is rendered correctly.}
+\item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific}
+
+\item{interval_type}{Character. Abbreviation indicating the type of interval
+estimate, e.g. \code{CI}.}
 
 \item{...}{Arguments passed on to \code{printnum}
 \describe{

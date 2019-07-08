@@ -4,7 +4,7 @@
 \alias{fast_aggregate}
 \title{Aggregate data much faster using dplyr}
 \usage{
-fast_aggregate(data, factors, dv, fun)
+fast_aggregate(data, factors, dv, fun, na.rm = TRUE)
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}

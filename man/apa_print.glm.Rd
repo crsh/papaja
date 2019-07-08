@@ -63,7 +63,7 @@ The coefficients names are sanitized to facilitate their use as list names. Pare
    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
    of freedom, are replaced with brackets.
 
-   \code{est_name} is placed in the output string and is then passed to pandoc or LaTeX through \pkg{kntir}.
+   \code{est_name} is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
    Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
    text (e.g., \code{\\\\beta} yields \eqn{\beta}).
 
@@ -72,7 +72,7 @@ The coefficients names are sanitized to facilitate their use as list names. Pare
 
    If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
 
-   If \code{x} is an \code{lm}-objects and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
+   If \code{x} is an \code{lm}-object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
    are computed using \code{\link[MBESS]{ci.R2}} to obtain a confidence region that corresponds to the
    \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95\% CI or
    \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004). If
