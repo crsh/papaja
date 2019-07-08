@@ -490,7 +490,7 @@ apa_table.latex <- function(
 
   # if(longtable && placement != "h") cat("\\afterpage{\\clearpage") # Defer table to next clear page
   # table_output <- c(table_output, "\n\n")
-  if(!landscape && !longtable) table_output <- c(table_output, paste0("\\begin{table}", place_opt))
+  if(!landscape && !longtable) table_output <- c(table_output, paste0("\\begin{table*}", place_opt))
   if(!landscape) table_output <- c(table_output, paste0("\n\\begin{center}\n\\begin{", table_env, "}"))
   if(!is.null(caption) && !(longtable || landscape)) table_output <- c(table_output, paste0("\n\\caption{", caption, "}"))
   if(!is.null(note) && (longtable || landscape)) table_output <- c(table_output, paste0("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}"))
@@ -501,7 +501,7 @@ apa_table.latex <- function(
   if(!is.null(font_size)) table_output <- c(table_output, "\n}")
   if(!is.null(note) & !(longtable || landscape)) table_output <- c(table_output, paste0("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}"))
   if(!landscape) table_output <- c(table_output, paste0("\n\\end{", table_env, "}\n\\end{center}"))
-  if(!landscape && !longtable) table_output <- c(table_output, "\n\\end{table}")
+  if(!landscape && !longtable) table_output <- c(table_output, "\n\\end{table*}")
 
   if(landscape) {
     # if(longtable) {
