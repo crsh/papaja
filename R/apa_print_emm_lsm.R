@@ -58,10 +58,16 @@ apa_print.summary_emm <- function(
   , ...
 ) {
   if(class(x)[1] != "summary.ref.grid") validate(x, check_class = "summary_emm", check_NA = FALSE)
-  # if(!is.null(stat_name)) validate(est_name, check_class = "character")
+  # if(!is.null(stat_name)) validate(stat_name, check_class = "character")
   if(!is.null(est_name)) validate(est_name, check_class = "character")
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
+
+  # # Indentify joint_tests() output
+  # if(attr(x, "estName") == "F.ratio") {
+  #   apa_res <- apa_print_summary_emm_joint_tests(x, ...)
+  #   return(apa_res)
+  # }
 
   ci <- get_emm_conf_level(x)
   ci_supplied <- !length(ci) == 0
@@ -167,7 +173,7 @@ apa_print.summary_emm <- function(
   # contrast_table <- contrast_table[, which(colnames(contrast_table) != "contrast")]
   if(!is.null(contrast_names)) contrast_table$contrast <- contrast_names
   if(length(factors) > 1) {
-    contrast_row_names <- apply(contrast_table[, factors], 1, paste, collapse = "_")
+    contrast_row_names <- apply(contrast_table[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])], 1, paste, collapse = "_")
   } else {
     contrast_row_names <- contrast_table[, factors]
   }
@@ -222,8 +228,11 @@ apa_print.summary_emm <- function(
     variable_label(contrast_table) <- c(contrast = "Contrast")
   }
 
-  # Concatenate character strings and return as named list
+  if(any(contrast_table[, factors] == ".")) {
+    contrast_table[, factors] <- apply(contrast_table[, factors], 2, gsub, pattern = "\\.", replacement = "")
+  }
 
+  # Concatenate character strings and return as named list
   apa_res <- apa_print_container()
 
   if(ci_supplied) {
@@ -288,6 +297,13 @@ apa_print.summary.ref.grid <- function(x, ...) {
   apa_print.summary_emm(x, ...)
 }
 
+
+# apa_print_summary_emm_joint_tests <- function(x, ...) {
+#
+# }
+
+
+
 get_emm_conf_level <- function(x) {
   lsm_messages <- attr(x, "mesg")
   conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
@@ -297,7 +313,7 @@ get_emm_conf_level <- function(x) {
 
 est_name_from_call <- function(x) {
   # analysis_function <- as.character(attr(x, "model.info")$call[[1]])
-  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast"
+  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("paris", "contrast")
 
   # roles <- attr(x, "roles")
   # is_multivariate <- all(roles$predictors %in% roles$multresp) ||
@@ -324,6 +340,4 @@ est_name_from_call <- function(x) {
   }
 
   est_name
-
-
 }
