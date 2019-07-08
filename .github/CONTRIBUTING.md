@@ -46,16 +46,3 @@ GitHub username, and links to relevant issue(s)/PR(s).
 
 Please note that the papaja project is released with a [contributor code of conduct](CODE_OF_CONDUCT.md).
 By contributing to this project you agree to abide by its terms.
-
-
-- input validation
-- unit tests
-- working s3/s4 dispatch
-- If possible use broom
-- If possible at all, do not compute
-- Standard apa_print structure
-- Extended apa_print structure
-- variable labels
-
-
-- minimze dependencies
