@@ -89,12 +89,15 @@ validate <- function(
 #' @keywords internal
 
 apa_print_container <- function() {
-  list(
+  x <- list(
     estimate = NULL
     , statistic = NULL
     , full_result = NULL
     , table = NULL
   )
+
+  class(x) <- c("apa_results", class(x))
+  x
 }
 
 
@@ -186,7 +189,8 @@ convert_stat_name <- function(x) {
 #' @param conf_level Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
 #'    they cannot be determined from column names or attributes of \code{x}.
 #' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-#'    notation is rendered correctly.
+#' @param interval_type Character. Abbreviation indicating the type of interval
+#'   estimate, e.g. \code{CI}.
 #' @inheritDotParams printnum
 #'
 #' @keywords internal
@@ -247,17 +251,19 @@ print_interval <- function(
 print_confint <- function(
   x
   , conf_level = NULL
+  , interval_type = "CI"
   , ...
 ) {
-  print_interval(x, conf_level = conf_level, interval_type = "CI", ...)
+  print_interval(x, conf_level = conf_level, interval_type = interval_type, ...)
 }
 
 print_hdint <- function(
   x
   , conf_level = NULL
+  , interval_type = "HDI"
   , ...
 ) {
-  print_interval(x, conf_level = conf_level, interval_type = "HDI", ...)
+  print_interval(x, conf_level = conf_level, interval_type = interval_type, ...)
 }
 
 

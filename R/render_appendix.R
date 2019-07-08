@@ -126,7 +126,7 @@ render_appendix <- function(
     writeLines(tex, con = tex_connection, useBytes = TRUE)
 
     if(!is.null(status)) return(status)
-  } else if(target_format %in% c("latex", "word", "docx")) {
+  } else if(target_format %in% c("word", "docx")) {
     cat(md_fragment)
   }
 

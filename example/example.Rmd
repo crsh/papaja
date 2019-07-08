@@ -78,7 +78,7 @@ By default the R code will not be displayed in the final documents.
 If you wish to show off your code you need to set `echo = TRUE` in the chunk options.
 For example, to include summary statistics of your data you could use the following code:
 
-```{r echo = TRUE, results = 'markup'}
+```{r echo = FALSE, results = 'markup'}
 summary(mixed_data[, -1])
 ```
 
@@ -88,7 +88,7 @@ But, surely, this is not what you want your submission to look like.
 For prettier tables, I suggest you try `apa_table()`, which builds on `knitr`'s `kable()`, and `printnum()`, which can be used to properly round and report numbers.
 For the table to display correctly set the chunk option `results = "asis"` in the chunk that produces the table.
 
-```{r results = 'asis', echo = TRUE}
+```{r results = 'asis', echo = FALSE}
 descriptives <- mixed_data %>% group_by(Dosage) %>%
   summarize(
     Mean = mean(Recall)
@@ -123,7 +123,7 @@ The resulting documents should suffice to enable collaboration with Wordy collea
 ### Embed plots
 As usual in R Markdown, you can embed R-generated plots into your document, see Figure\ \@ref(fig:beeplot).
 
-```{r beeplot, fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals.", echo = TRUE, dev.args = list(bg = 'white')}
+```{r beeplot, fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals.", echo = FALSE, dev.args = list(bg = 'white')}
 apa_beeplot(
   mixed_data
   , id = "Subject"
@@ -153,7 +153,7 @@ However, as anywhere in R Markdown documents you can use \LaTeX commands if the 
 `apa_print()` will help you report the results of your statistical analyses.
 The function will format the contents of R objects and produce readily reportable text.
 
-```{r echo = TRUE}
+```{r echo = FALSE}
 recall_anova <- afex::aov_car(
   Recall ~ (Task * Valence * Dosage) + Error(Subject/(Task * Valence)) + Dosage
   , data = mixed_data
@@ -165,7 +165,7 @@ recall_anova_results_p <- apa_print(recall_anova, es = "pes", in_paren = TRUE)
 
 Now, you can report the results of your analyses like so:
 
-```{r eval = FALSE, echo = TRUE}
+```{r eval = FALSE, echo = FALSE}
 Item valence (`r anova_results_p$full$Valence`) and the task affected recall
 performance, `r anova_results$full$Task`; the dosage, however, had no effect
 on recall, `r anova_results$full$Dosage`. There was no significant interaction.
@@ -177,7 +177,7 @@ on recall, `r anova_results$full$Dosage`. There was no significant interaction.
 
 What's even more fun, you can easily create a complete ANOVA table using by passing `recall_anova_results$table` to `apa_table()`, see Table\ \@ref(tab:anova).
 
-```{r anova, results = "asis", echo = TRUE}
+```{r anova, results = "asis", echo = FALSE}
 apa_table(
   recall_anova_results$table
   , align = c("l", "r", "c", "r", "r", "r")
@@ -209,7 +209,7 @@ As citations are the currency of science, it's easy to compensate volunteers for
 I suspect that, among other things, this is rarely done because it is tedious work.
 That's why papaja makes citing R and its packages easy:
 
-```{r echo = TRUE}
+```{r echo = FALSE}
 r_refs(file = "r-references.bib")
 my_citation <- cite_r(file = "r-references.bib")
 ```
