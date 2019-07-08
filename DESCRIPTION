@@ -22,7 +22,9 @@ Imports:
   methods,
   rmarkdown (>= 1.10),
   rmdfiltr,
-  yaml
+  yaml,
+  lme4,
+  broom.mixed
 Suggests:
     tinytex,
     afex,
