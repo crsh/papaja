@@ -34,10 +34,10 @@ apa_print.metafor <- function(
 
   apa_res <- papaja:::apa_print_container()
 
-  apa_res$estimate <- paste0("$", est_name, " = ", round(x$b, x$digits[["est"]]), " 95\\% CI = $[", round(x$ci.lb, digits = x$digits[["ci"]]), "$, $", round(x$ci.ub, digits = x$digits[["ci"]]), "]$")
+  apa_res$estimate <- paste0("$", est_name, "$ = ", round(x$b, x$digits[["est"]]), " $95\\% CI$ = $[", round(x$ci.lb, digits = x$digits[["ci"]]), "$, $", round(x$ci.ub, digits = x$digits[["ci"]]), "]$")
   apa_res$estimate <- setNames(apa_res$estimate, row.names(x$beta))
 
-  apa_res$statistic <- paste0("$z = ", round(x$zval, digits = x$digits[["test"]]), ", p = ", printp(x$pval))
+  apa_res$statistic <- paste0("$z$ = ", round(x$zval, digits = x$digits[["test"]]), ", $p$ = ", printp(x$pval))
   apa_res$statistic <- setNames(apa_res$statistic, row.names(x$beta))
 
   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic)
@@ -46,7 +46,7 @@ apa_print.metafor <- function(
   apa_res$table$estimate <- broom::tidy(x)
 
   apa_res$table$heterogeneity <- broom::glance(x)
-names(apa_res$table$heterogeneity) <- c("k", "measure", "method", "I$^2^$", "H^2", "tau^2", "tau^2 se", "Cochran Q~e~", "Cochran Q~e~ p", "Cochran Q~m~", "Cochran Q~m~ p")
+  names(apa_res$table$heterogeneity) <- c("k", "measure", "method", "I$^2$", "H$^2$", "$\\tau^2$", "$\\tau^2$ se", "Cochran Q$_e$", "Cochran Q$_e$ $p$", "Cochran Q$_m$", "Cochran Q$_m$ $p$")
 
   apa_res
 }
