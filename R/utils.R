@@ -155,7 +155,13 @@ convert_stat_name <- function(x) {
 
   new_stat_name <- gsub("-squared", "^2", x, ignore.case = TRUE)
 
-  if(length(new_stat_name) == 2 && all(grepl("mean", new_stat_name))) new_stat_name <- "\\Delta M"
+  if(length(new_stat_name) == 2) {
+    if(all(grepl("mean", new_stat_name))) {
+      new_stat_name <- "\\Delta M"
+    } else if(all(grepl("prop", new_stat_name))) {
+      new_stat_name <- "\\Delta p"
+    }
+  }
   if(all(grepl("prop \\d", new_stat_name))) {
     new_stat_name <- NULL
     return(new_stat_name)
