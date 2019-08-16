@@ -559,7 +559,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   # Set additional lua filters
-  args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+    args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  }
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
@@ -618,7 +620,9 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   }
 
   # Set additional lua filters
-  args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+    args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  }
 
   # Set additional lua filters
   # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
