@@ -471,7 +471,7 @@ apa_table.latex <- function(
       , "\\noalign{\\getlongtablewidth\\global\\LTcapwidth=\\longtablewidth}"
     )
   }
-  res_table <- paste(table_lines, collapse = "\n")
+  # res_table <- paste(table_lines, collapse = "\n")
 
   # Print table
   place_opt <- paste0("[", placement, "]")
@@ -496,7 +496,8 @@ apa_table.latex <- function(
   if(!is.null(note) && (longtable || landscape)) table_output <- c(table_output, paste0("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}"))
   if(!is.null(font_size)) table_output <- c(table_output, paste0("\n\\", font_size, "{"))
 
-  table_output <- c(table_output, res_table)
+  table_output <- c(table_output, table_lines)
+  # table_output <- c(table_output, res_table)
 
   if(!is.null(font_size)) table_output <- c(table_output, "\n}")
   if(!is.null(note) & !(longtable || landscape)) table_output <- c(table_output, paste0("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}"))
@@ -513,8 +514,9 @@ apa_table.latex <- function(
   # if(longtable && placement != "h") cat("\n}")
   table_output <- c(table_output, "\n\n")
 
-  table_output <- knitr::asis_output(table_output)
-  table_output
+  knitr::asis_output(paste(table_output, collapse = "\n"))
+  # table_output <- knitr::asis_output(table_output)
+  # table_output
 
   # cat("\n\n")
   # if(!landscape && !longtable) cat("\\begin{table}", place_opt, sep = "")
@@ -587,8 +589,9 @@ apa_table.markdown <- function(
     )
   }
 
-  table_output <- knitr::asis_output(table_output)
-  table_output
+  knitr::asis_output(paste(table_output, collapse = "\n"))
+  # table_output <- knitr::asis_output(table_output)
+  # table_output
 }
 
 
