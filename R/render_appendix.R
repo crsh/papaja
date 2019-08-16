@@ -109,6 +109,7 @@ render_appendix <- function(
     # Add appendix environment
     tex_connection <- file(new_name, encoding = "UTF-8")
     tex <- readLines(con = tex_connection)
+    tex <- enc2native(tex)
 
     ## Check whether Rmd starts with heading, otherwise add empty section
     md_fragment <- unlist(strsplit(md_fragment, split = "\n"))

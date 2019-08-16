@@ -756,14 +756,14 @@ modify_input_file <- function(input, ...) {
 
   yaml_params <- get_yaml_params(input_text)
 
-  format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
-
   if(!is.null(yaml_params$appendix)) {
     hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input))), ".Rmd")
 
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
       stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
     } else {
+      format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
+
       # Add render_appendix()-chunk
       for(i in seq_along(yaml_params$appendix)) {
         input_text <- c(
