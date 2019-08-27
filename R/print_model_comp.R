@@ -91,10 +91,7 @@ print_model_comp <- function(
   x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
 
   ### Add 'equals' where necessary
-  eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
-  for (i in eq) {
-    x$p.value[i] <- paste0("= ", x$p.value[i])
-  }
+  x$p.value <- add_equals(x$p.value)
 
   apa_res$statistic <- apply(x, 1, function(y) {
     stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], "$, $p ", y["p.value"], "$")

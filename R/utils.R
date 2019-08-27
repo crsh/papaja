@@ -567,3 +567,26 @@ complete_observations <- function(data, id, within, dv) {
 
 }
 
+
+#' Add Equals Where Necessary
+#'
+#' This is an internal function that prepends every element of a character
+#' vector with an 'equals' sign if the respective element does not contain one of
+#' \code{c("=", "<", ">")}.
+#'
+#' @param x A character vector.
+#'
+#' @keywords internal
+
+
+add_equals <-function(x) {
+
+  validate(x, check_class = "character")
+
+  to_add <- !grepl(x, pattern = "=|<|>") # should we add geq and leq?
+
+  if(any(to_add)) {
+    x[to_add] <- paste0("= ", x[to_add])
+  }
+  x
+}

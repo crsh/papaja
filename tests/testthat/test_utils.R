@@ -18,6 +18,26 @@ test_that(
 
 
 test_that(
+  "add_equals()"
+  , {
+    x <- list(
+      character = add_equals(c(".4", "=1.6", "<.001", ">.99"))
+      , length_zero = add_equals(character(0))
+      , no_substitution = add_equals(c(">.4", "=1.6"))
+    )
+    expect_identical(
+      object = x
+      , expected = list(
+        character = c("= .4", "=1.6", "<.001", ">.99")
+        , length_zero = character(0)
+        , no_substitution = c(">.4", "=1.6")
+      )
+    )
+  }
+)
+
+
+test_that(
   "print_confint()"
   , {
     x <- c(44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1)

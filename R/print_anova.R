@@ -124,10 +124,8 @@ print_anova <- function(
   if(mse) variable_label(anova_table$MSE) <- mse_long
 
   ## Add 'equals' where necessary
-  eq <- (1:nrow(x))[!grepl(x$p.value, pattern = "<|>|=")]
-  for (i in eq) {
-    x$p.value[i] <- paste0("= ", x$p.value[i])
-  }
+  x$p.value <- add_equals(x$p.value)
+
 
   # Concatenate character strings and return as named list
   apa_res <- apa_print_container()
