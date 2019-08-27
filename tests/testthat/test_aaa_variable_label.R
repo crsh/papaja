@@ -3,7 +3,7 @@ context("variable_label() replacement methods")
 test_that(
   "variable_label<-.default"
   , {
-    object_1 <-1:4
+    object_1 <- 1:4
     variable_label(object_1) <- "label_1"
 
     expect_identical(
@@ -26,10 +26,12 @@ test_that(
     expect_error(
       variable_label(object) <- c("not_in_data" = "test")
       , "Some requested columns could not be found in data.frame."
+      , fixed = TRUE
     )
     expect_error(
       variable_label(object) <- "a"
-      , "Assigned label is required to be a named character vector."
+      , "The assigned label(s) must be passed as a named character vector."
+      , fixed = TRUE
     )
     variable_label(object) <- c("a" = "A beautiful test label.")
 
@@ -45,6 +47,27 @@ test_that(
       )
     )
 
+    object <- label_variables(
+      object
+      , a = "A different, but equally beautiful, test label."
+      , b = "A mediocre reinterpretation of the a's label."
+    )
+
+    expect_identical(
+      object = object
+      , expected = data.frame(
+        a = structure(
+          1:4
+          , label = "A different, but equally beautiful, test label."
+          , class = c("papaja_labelled", "integer")
+        )
+        , b = structure(
+          5:8
+          , label = "A mediocre reinterpretation of the a's label."
+          , class = c("papaja_labelled", "integer")
+        )
+      )
+    )
   }
 )
 
