@@ -60,6 +60,18 @@ variable_label.data.frame <- function(x, ...){
 }
 
 
+# A pipable alternative
+
+#' @rdname variable_label
+#' @export
+
+label_variable <- function(x, ...){
+  ellipsis <- unlist(list(...))
+  assign_label.data.frame(x, value = ellipsis)
+}
+
+
+
 # ------------------------------------------------------------------------------
 # Workhorse functions
 
@@ -91,7 +103,7 @@ assign_label.data.frame <- function(x, value, ...){
   # a frequency table, you frequently have repeating column names):
   columns_to_annotate <- colnames(x) %in% names(value)
   if(is.null(names(value))){
-    stop("Assigned label is required to be a named character vector.")
+    stop("The assigned label(s) must be passed as a named character vector.")
   }
 
   if(!all(names(value) %in% colnames(x))){
@@ -134,7 +146,10 @@ assign_label.data.frame <- function(x, value, ...){
 
 `variable_labels<-` <- `variable_label<-`
 
+#' @rdname variable_label
+#' @export
 
+"label_variables" <- label_variable
 
 
 #' @title Set default variable labels from column names
