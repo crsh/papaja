@@ -310,7 +310,7 @@ label_range <- function(y) {
   if(inherits(y, "factor")) return(nlevels(y))
   if(inherits(y, "character")) return(length(unique(y[!is.na(y)])))
   
-  character(0)
+  return("")
 }
 
   tidied_labels <- data.frame(
