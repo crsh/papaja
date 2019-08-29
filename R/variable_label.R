@@ -304,13 +304,14 @@ tidy_variable_lables <- function(x) {
   x <- default_label.data.frame(x)
   labels <- unlist(variable_labels(x))
 
-  label_range <- function(y) {
-    switch (class(y)[class(y) != "papaja_labelled"],
-            numeric = paste0("[", min(y), ", ", max(y), "]")
-            , factor = nlevels(y)
-            , character = length(unique(y))
-    )
-  }
+label_range <- function(y) {
+  
+  if(inherits(y, "numeric")) return(paste0("[", min(y, na.rm = TRUE), ", ", max(y, na.rm = TRUE), "]"))
+  if(inherits(y, "factor")) return(nlevels(y))
+  if(inherits(y, "character")) return(length(unique(y[!is.na(y)])))
+  
+  character(0)
+}
 
   tidied_labels <- data.frame(
     variable = names(labels)
@@ -318,6 +319,7 @@ tidy_variable_lables <- function(x) {
     , type = sapply(x, function(y) paste(class(y), collapse = ", "))
     , range = sapply(x, label_range)
     , missing = sapply(x, function(y) sum(is.na(y)))
+    , stringsAsFactors = FALSE
   )
 
   if(isTRUE(package_available("skimr"))) {
