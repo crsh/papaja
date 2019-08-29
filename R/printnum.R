@@ -12,6 +12,7 @@
 #'    notation is rendered correctly.
 #' @param numerals Logical. Indicates if integer should be returned as words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
+#' @param zero_string Character. Word to print if \code{x} is a zero integer.
 #' @inheritDotParams base::formatC -x
 #'
 #' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
@@ -59,20 +60,23 @@ printnum.list <- function(x, ...) {
 #' @rdname printnum
 #' @export
 
-printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string = getOption("papaja.na_string"), ...) {
+printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string = "no", na_string = getOption("papaja.na_string"), ...) {
   validate(x, check_integer = TRUE)
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
   validate(na_string, check_class = "character", check_length = 1)
+  validate(zero_string, check_class = "character", check_length = 1)
 
   if(numerals) return(x)
   if(anyNA(x)) return(rep(na_string, length(x)))
+
+  zero_string <- tolower(zero_string)
 
   # Based on a function that John Fox posted on the R mailing list
   # http://tolstoy.newcastle.edu.au/R/help/05/04/2715.html
 
   number_to_words <- function(x) {
-    single_digits <- c("", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    single_digits <- c(zero_string, "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
     names(single_digits) <- 0:9
     teens <- c("ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", " seventeen", "eighteen", "nineteen")
     names(teens) <- 0:9
