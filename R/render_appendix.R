@@ -114,7 +114,7 @@ render_appendix <- function(
     # Check whether Rmd starts with heading, otherwise add empty section ----
     # when checking, ignore rows with latex newlines or html comments
     md_fragment <- unlist(strsplit(md_fragment, split = "\n"))
-    write(md_fragment, file = "md_fragment.md")
+
     if(!grepl(pattern = "^#(\\b|\\s)", x = md_fragment[!grepl("^\\\\|^<!--", md_fragment) & md_fragment != ""][1])) {
       tex <- c("\\section{}", tex)
     }
