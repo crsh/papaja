@@ -296,3 +296,63 @@ relevel.papaja_labelled <- function(x, ref, ...){
   y
 }
 
+
+# ------------------------------------------------------------------------------
+# Functions to generate very simple codebooks
+
+tidy_variable_lables <- function(x) {
+  x <- default_label.data.frame(x)
+  labels <- unlist(variable_labels(x))
+
+label_range <- function(y) {
+  
+  if(inherits(y, "numeric")) return(paste0("[", min(y, na.rm = TRUE), ", ", max(y, na.rm = TRUE), "]"))
+  if(inherits(y, "factor")) return(nlevels(y))
+  if(inherits(y, "character")) return(length(unique(y[!is.na(y)])))
+  
+  return("")
+}
+
+  tidied_labels <- data.frame(
+    variable = names(labels)
+    , label = ifelse(labels == names(labels), NA, labels)
+    , type = sapply(x, function(y) paste(class(y), collapse = ", "))
+    , range = sapply(x, label_range)
+    , missing = sapply(x, function(y) sum(is.na(y)))
+    , stringsAsFactors = FALSE
+  )
+
+  if(isTRUE(package_available("skimr"))) {
+    tidied_labels <- cbind(
+      tidied_labels
+      , distribution = sapply(x, function(y) if (is.numeric(y)) skimr::inline_hist(y) else "")
+    )
+  }
+
+  tidied_labels
+}
+
+
+#' Simple codebook
+#'
+#' Generate a simple codebook in CSV-format
+#'
+#' @param x data.frame. Data to be written.
+#' @inheritDotParams utils::write.table -x
+#'
+#' @details If the \pkg{skimr} package is installed, an inline histogram is added
+#'   for all numeric variables.
+#'
+#' @seealso \code{\link[utils]{write.csv}}
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' variable_labels(cars) <- c(speed = "Speed [ft/s]", dist = "Distance traveled [m]")
+#' simple_codebook(cars, file = "cars_codebook.csv")
+#' }
+
+simple_codebook <- function(x, ...) {
+  tidied_labels <- tidy_variable_lables(x)
+  utils::write.csv(tidied_labels, ...)
+}
