@@ -78,6 +78,7 @@ print_manova <- function(
 
   x <- x[x$Effect != "Residuals", colnames(x) != "df", drop = FALSE]
 
+  sanitized_terms <- sanitize_terms(x$Effect)
   x[["Effect"]] <- prettify_terms(x[["Effect"]])
   x[[multivariate_stat]] <- printnum(x[[multivariate_stat]])
   x[["F"]] <- printnum(x[["F"]])
@@ -101,7 +102,7 @@ print_manova <- function(
     stat
   }))
   if(in_paren) res$statistic <- in_paren(res$statistic)
-  names(res$statistic) <- gsub(x$Effect, pattern = " $\\times$ ", replacement = "_", fixed = TRUE)
+  names(res$statistic) <- sanitized_terms
 
   res$full_result <- res$statistic
 

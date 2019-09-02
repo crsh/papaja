@@ -247,9 +247,7 @@ apa_print.summary_emm <- function(
 
   if(p_supplied) {
     apa_res$statistic <- apply(contrast_table, 1, function(y) {
-      if(!grepl("<|>", y["p.value"])) eq <- "= " else eq <- ""
-
-      paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
+      paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", add_equals(y["p.value"]), "$")
     })
 
     # contrast_table[, df_colname] <- NULL

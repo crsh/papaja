@@ -66,7 +66,7 @@ test_that(
     expect_error(
       apa_print(car::Manova(manova(formula = cbind(yield, yield2) ~ N * P, data = data), type = 3))
       , fixed = TRUE
-      , regexp = "Anova.mlm objects from car::Manova are not supported, yet. You can try using stats::manova instead if Type I oder Type II sums of squares are adequate for your analysis."
+      , regexp = "Anova.mlm objects from car::Manova are not supported, yet. Visit https://github.com/crsh/papaja/issues to request support for this class. You can try using stats::manova instead if Type I oder Type II sums of squares are adequate for your analysis."
     )
   }
 )

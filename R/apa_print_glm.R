@@ -205,7 +205,7 @@ apa_print.lm <- function(
   glance_x <- broom::glance(x)
 
   p <- printp(glance_x$p.value)
-  if(!grepl("<|>", p)) p <- paste("=", p)
+  p <- add_equals(p)
 
   apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", p, "$") # glance_x$df
   if(in_paren) apa_res$statistic$modelfit$r2 <- in_paren(apa_res$statistic$modelfit$r2)
@@ -267,7 +267,7 @@ apa_glm_res <- function(x, in_paren, conf_level) {
   apa_res <- apa_print_container()
 
   apa_res$statistic <- apply(x[, -1], 1, function(y) {
-    if(!grepl("<|>", y["p.value"])) y["p.value"] <- paste("=", y["p.value"])
+    y["p.value"] <- add_equals(y["p.value"])
 
     stat <- paste0("$", gsub("\\$", "", variable_label(x$statistic)), " = ",  y["statistic"], "$, $p ", y["p.value"], "$")
     if(in_paren) stat <- in_paren(stat)

@@ -65,8 +65,7 @@ print_model_comp <- function(
       seq_along(delta_r2s)
       , function(y) {
         delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
-        eq <- if(grepl(delta_r2_res, pattern = "<|>|=")) "" else " = "
-        paste0("$\\Delta R^2", eq, delta_r2_res, "$")
+        paste0("$\\Delta R^2 ", add_equals(delta_r2_res), "$")
       }
     )
   } else { # Bootstrap CI
@@ -76,10 +75,9 @@ print_model_comp <- function(
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     delta_r2s <- diff(r2s)
     delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
-    eq <- ifelse(grepl(delta_r2_res, pattern = "<|>|="), "", " = ")
 
     apa_res$estimate <- paste0(
-      "$\\Delta R^2", eq, delta_r2_res, "$, ", ci * 100, "\\% CI "
+      "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", ci * 100, "\\% CI "
       , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
     )
   }

@@ -223,11 +223,10 @@ apa_print_bf.numeric <- function(
     bf <- do.call("printnum", ellipsis)
   }
 
-  if(!grepl("<|>", bf)) eq <- " = " else eq <- " "
 
   bf_name <- if(!log) "BF" else "log BF"
 
-  bf <- paste0("$\\mathrm{", bf_name, "}_{", ratio_subscript, "}", eq, bf, "$")
+  bf <- paste0("$\\mathrm{", bf_name, "}_{", ratio_subscript, "} ", add_equals(bf), "$")
   bf <- setNames(bf, names(x))
   bf
 }
