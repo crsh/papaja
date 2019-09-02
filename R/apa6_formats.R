@@ -448,6 +448,11 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ### Additional options
+  # Enable placement for table star environment
+  if(any(grepl("jou", c(rmarkdown::metadata$classoption, rmarkdown::metadata$class)))) {
+    header_includes <- c(header_includes, "\\usepackage{dblfloatfix}\n\n")
+  }
+
   if(!is.null(yaml_params$geometry)) {
     header_includes <- c(header_includes, paste0("\\geometry{", yaml_params$geometry, "}\n\n"))
     yaml_params$geometry <- NULL
