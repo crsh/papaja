@@ -76,7 +76,9 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
   # http://tolstoy.newcastle.edu.au/R/help/05/04/2715.html
 
   number_to_words <- function(x) {
-    single_digits <- c(zero_string, "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    if(x == 0) return(zero_string)
+
+    single_digits <- c("", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
     names(single_digits) <- 0:9
     teens <- c("ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", " seventeen", "eighteen", "nineteen")
     names(teens) <- 0:9
@@ -124,7 +126,10 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
   clean_number <- function(x) {
     x <- gsub("^\ +|\ +$", "", x)
     x <- gsub("\ +,", ",", x)
-    gsub("(\ *,|-|\ +and)$", "", x)
+    x <- gsub(paste0("( and ", zero_string, "|-", zero_string, "|, ", zero_string, ")"), "", x)
+    x <- gsub("(\ *,|-|\ +and)$", "", x)
+    if(!grepl(" and ", x)) x <- gsub(", ", " and ", x)
+    x
   }
 
   if(length(x) > 1) {

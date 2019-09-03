@@ -230,13 +230,17 @@ test_that(
 test_that(
   "Integers"
   , {
+    expect_equal(printnum(0L, numerals = FALSE), "no")
     expect_equal(printnum(1L, numerals = FALSE), "one")
     expect_equal(printnum(10L, numerals = FALSE), "ten")
     expect_equal(printnum(13L, numerals = FALSE), "thirteen")
     expect_equal(printnum(50L, numerals = FALSE), "fifty")
+    expect_equal(printnum(20L, numerals = FALSE), "twenty")
     expect_equal(printnum(23L, numerals = FALSE), "twenty-three")
     expect_equal(printnum(100L, numerals = FALSE), "one hundred")
     expect_equal(printnum(139L, numerals = FALSE), "one hundred and thirty-nine")
+    expect_equal(printnum(1001L, numerals = FALSE), "one thousand and one")
+    expect_equal(printnum(2020L, numerals = FALSE), "two thousand and twenty")
     expect_equal(printnum(3871L, numerals = FALSE), "three thousand, eight hundred and seventy-one")
     expect_equal(printnum(c(10000000L, 3L), numerals = FALSE), c("ten million", "three"))
 
