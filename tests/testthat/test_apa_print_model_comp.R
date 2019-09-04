@@ -47,7 +47,9 @@ test_that(
 
     expect_is(model_comp$table, "data.frame")
     expect_equal(colnames(model_comp$table), c("Baseline", "Length", "Both"))
-    expect_identical(model_comp$table, correct_table)
+    expect_identical(model_comp$table$Baseline, correct_table$Baseline)
+    expect_identical(model_comp$table$Length, correct_table$Length)
+    expect_identical(model_comp$table$Both, correct_table$Both)
 
 
     # Test omission of incomplete model names & CI
