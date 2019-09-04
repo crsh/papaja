@@ -65,6 +65,10 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
   validate(na_string, check_class = "character", check_length = 1)
+
+  # Prevent partial matching through printnum.data.frame()
+  system_call <- sys.call()
+  if(!is.null(system_call[["zero"]]) && is.null(system_call[["zero_string"]])) zero_string <- "no"
   validate(zero_string, check_class = "character", check_length = 1)
 
   if(numerals) return(x)
