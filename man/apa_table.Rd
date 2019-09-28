@@ -15,18 +15,20 @@ apa_table(x, ...)
 \method{apa_table}{matrix}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE,
-  font_size = NULL, escape = TRUE, ..., format.args = NULL)
+  font_size = NULL, escape = TRUE, span_text_columns = TRUE, ...,
+  format.args = NULL)
 
 \method{apa_table}{list}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE,
-  font_size = NULL, escape = TRUE, merge_method = "indent", ...,
-  format.args = NULL)
+  font_size = NULL, escape = TRUE, merge_method = "indent",
+  span_text_columns = TRUE, ..., format.args = NULL)
 
 \method{apa_table}{data.frame}(x, caption = NULL, note = NULL,
   stub_indents = NULL, added_stub_head = NULL, col_spanners = NULL,
   midrules = NULL, placement = "tbp", landscape = FALSE,
-  font_size = NULL, escape = TRUE, ..., format.args = NULL)
+  font_size = NULL, escape = TRUE, span_text_columns = TRUE, ...,
+  format.args = NULL)
 }
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
@@ -90,6 +92,10 @@ and in MS Word documents.}
 documents.}
 
 \item{font_size}{Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.}
+
+\item{span_text_columns}{Logical. If \code{TRUE} tables span across text columns
+in two-column PDF documents (e.g. when setting \code{classoption: jou}).
+Ignored in other documents.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
 

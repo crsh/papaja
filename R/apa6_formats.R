@@ -448,6 +448,11 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ### Additional options
+  # Enable placement for table star environment
+  if(any(grepl("jou", c(rmarkdown::metadata$classoption, rmarkdown::metadata$class)))) {
+    header_includes <- c(header_includes, "\\usepackage{dblfloatfix}\n\n")
+  }
+
   if(!is.null(yaml_params$geometry)) {
     header_includes <- c(header_includes, paste0("\\geometry{", yaml_params$geometry, "}\n\n"))
     yaml_params$geometry <- NULL
@@ -559,7 +564,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   # Set additional lua filters
-  args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+    args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  }
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
@@ -618,7 +625,9 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   }
 
   # Set additional lua filters
-  args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+    args <- rmdfiltr::add_wordcount_filter(args, report = "warn")
+  }
 
   # Set additional lua filters
   # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
@@ -752,14 +761,14 @@ modify_input_file <- function(input, ...) {
 
   yaml_params <- get_yaml_params(input_text)
 
-  format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
-
   if(!is.null(yaml_params$appendix)) {
     hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input))), ".Rmd")
 
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
       stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
     } else {
+      format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
+
       # Add render_appendix()-chunk
       for(i in seq_along(yaml_params$appendix)) {
         input_text <- c(

@@ -180,7 +180,7 @@ apa_print_bf.numeric <- function(
   , max = 1000
   , min = 1 / max
   , evidential_boost = NULL
-  # , logbf = FALSE
+  , log = FALSE
   , ...
 ) {
   validate(x, check_NA = TRUE, check_infinite = FALSE)
@@ -190,7 +190,7 @@ apa_print_bf.numeric <- function(
   validate(max, check_class = "numeric", check_length = 1)
   validate(min, check_class = "numeric", check_length = 1)
   if(!is.null(evidential_boost)) validate(evidential_boost, check_class = "numeric", check_length = length(x))
-  # validate(logbf, check_class = "logical", check_length = 1)
+  validate(log, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
   ellipsis$x <- as.vector(x)
@@ -225,7 +225,9 @@ apa_print_bf.numeric <- function(
 
   if(!grepl("<|>", bf)) eq <- " = " else eq <- " "
 
-  bf <- paste0("$\\mathrm{BF}_{", ratio_subscript, "}", eq, bf, "$")
+  bf_name <- if(!log) "BF" else "log BF"
+
+  bf <- paste0("$\\mathrm{", bf_name, "}_{", ratio_subscript, "}", eq, bf, "$")
   bf <- setNames(bf, names(x))
   bf
 }

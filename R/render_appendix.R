@@ -109,10 +109,13 @@ render_appendix <- function(
     # Add appendix environment
     tex_connection <- file(new_name, encoding = "UTF-8")
     tex <- readLines(con = tex_connection)
+    tex <- enc2native(tex)
 
-    ## Check whether Rmd starts with heading, otherwise add empty section
+    # Check whether Rmd starts with heading, otherwise add empty section ----
+    # when checking, ignore rows with latex newlines or html comments
     md_fragment <- unlist(strsplit(md_fragment, split = "\n"))
-    if(!grepl("^#(\\b|\\s)", md_fragment[!grepl("^\\\\", md_fragment) & md_fragment != ""][1])) {
+
+    if(!grepl(pattern = "^#(\\b|\\s)", x = md_fragment[!grepl("^\\\\|^<!--", md_fragment) & md_fragment != ""][1])) {
       tex <- c("\\section{}", tex)
     }
 
