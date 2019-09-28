@@ -316,7 +316,9 @@ apa_table.data.frame <- function(
     caption <- escape_latex(caption)
     note <- escape_latex(note)
   } else {
+    ## Do escape % and &, these will break the table
     prep_table <- as.data.frame(lapply(prep_table, function(x) gsub("([^\\\\]+)(%)", "\\1\\\\%", x)), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    prep_table <- as.data.frame(lapply(prep_table, function(x) gsub("([^\\\\])(&)", "\\1\\\\&", x)), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
   }
 
   ## Indent stubs
