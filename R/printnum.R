@@ -61,7 +61,7 @@ printnum.list <- function(x, ...) {
 #' @export
 
 printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string = "no", na_string = getOption("papaja.na_string"), ...) {
-  validate(x, check_integer = TRUE)
+  validate(x, check_integer = TRUE, check_NA = FALSE)
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
   validate(na_string, check_class = "character", check_length = 1)
