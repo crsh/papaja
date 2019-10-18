@@ -74,8 +74,9 @@ print_anova <- function(
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
   x$p.value <- printp(x$p.value)
-  x[, c("df", "df_res")] <- apply(x[, c("df", "df_res")],  c(1, 2), function(y) as.character(round(y, digits = 2)))
-  if(!is.null(es)) x[, es] <- printnum(x[, es, drop = FALSE], digits = 3, gt1 = FALSE)
+  x$df <- print_df(x$df)
+  x$df_res <- print_df(x$df_res)
+  for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = FALSE)}
   if(mse) x$mse <- printnum(x$mse, digits = 2)
 
   # Assemble table

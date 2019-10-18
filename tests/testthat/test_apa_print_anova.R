@@ -276,7 +276,7 @@ test_that(
 
     # DF corrections
     rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "GG")
-    expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.15, 4.6) = 189.11$, $\\mathit{MSE} = 9.34$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
+    expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.15, 4.60) = 189.11$, $\\mathit{MSE} = 9.34$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
 
     rm_afex_anova.mlm_output <- apa_print(rm_afex_aov$Anova, correction = "HF")
     expect_equal(rm_afex_anova.mlm_output$full$Valence, "$F(1.32, 5.26) = 189.11$, $\\mathit{MSE} = 8.16$, $p < .001$, $\\hat{\\eta}^2_G = .932$")

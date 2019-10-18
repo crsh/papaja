@@ -369,3 +369,14 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   p <- printnum(x, digits = digits, gt1 = FALSE, zero = FALSE, na_string = na_string, add_equals = add_equals)
   p
 }
+
+
+#' @keywords internal
+
+print_df <- function(x, digits = 2L) {
+  if(is.integer(x)) {
+    return(printnum(x))
+  }
+  return(printnum(x, digits = as.numeric(x %% 1 != 0) * digits))
+}
+

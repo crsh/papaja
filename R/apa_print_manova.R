@@ -82,8 +82,8 @@ print_manova <- function(
   x[["Effect"]] <- prettify_terms(x[["Effect"]])
   x[[multivariate_stat]] <- printnum(x[[multivariate_stat]])
   x[["F"]] <- printnum(x[["F"]])
-  x[["df1"]] <-as.character(round(x[["df1"]], digits = 2))
-  x[["df2"]] <-as.character(round(x[["df2"]], digits = 2))
+  x[["df1"]] <- print_df(x[["df1"]])
+  x[["df2"]] <- print_df(x[["df2"]])
   x[["p"]] <- printp(x[["p"]])
 
   x <- sort_terms(x, "Effect")
