@@ -93,14 +93,13 @@ print_manova <- function(
   # assemble final output object
   res <- apa_print_container()
 
-  res$statistic <- as.list(apply(X = x, MARGIN = 1, function(y) {
-    stat <- paste0(
-      "$", estimate_names[[multivariate_stat]], " = ", y[[multivariate_stat]], "$, "
-      , "$F(", y[["df1"]], ", ", y[["df2"]], ") = ", y[["F"]], "$, "
-      , "$p ", add_equals(y[["p"]]), "$"
+  res$statistic <- as.list(
+    paste0(
+      "$", estimate_names[[multivariate_stat]], " = ", x[[multivariate_stat]], "$, "
+      , "$F(", x[["df1"]], ", ", x[["df2"]], ") = ", x[["F"]], "$, "
+      , "$p ", add_equals(x[["p"]]), "$"
     )
-    stat
-  }))
+  )
   if(in_paren) res$statistic <- in_paren(res$statistic)
   names(res$statistic) <- sanitized_terms
 
