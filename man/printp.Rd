@@ -4,15 +4,17 @@
 \alias{printp}
 \title{Prepare numeric values for printing as p-value}
 \usage{
-printp(x, na_string = "")
+printp(x, digits = 3L, na_string = "", add_equals = FALSE)
 }
 \arguments{
 \item{x}{Numeric. Can be either a single value, vector, or matrix.}
 
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
+
+\item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
 }
 \description{
-Convenience wrapper for \code{printnum.numeric} to print p-values with three decimal places.
+Convenience wrapper for \code{printnum.numeric} to print \emph{p} values.
 }
 \examples{
 printnum(0.05)

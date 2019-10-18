@@ -10,6 +10,7 @@
 #' @param na_string Character. String to print if element of \code{x} is \code{NA}.
 #' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 #'    notation is rendered correctly.
+#' @param add_equals Logical. Indicates if the output string should be prepended with an \emph{equals} sign.
 #' @param numerals Logical. Indicates if integer should be returned as words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
 #' @inheritDotParams base::formatC -x
@@ -153,6 +154,7 @@ printnum.numeric <- function(
   , margin = 1
   , na_string = getOption("papaja.na_string")
   , use_math = TRUE
+  , add_equals = FALSE
   , ...
 ) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
@@ -164,6 +166,7 @@ printnum.numeric <- function(
   validate(margin, check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(1, 2))
   validate(na_string, check_class = "character", check_length = 1)
   validate(use_math, check_class = "logical")
+  validate(add_equals, check_class = "logical")
 
   ellipsis <- defaults(
     ellipsis
@@ -201,6 +204,10 @@ printnum.numeric <- function(
     names(x_out) <- names(x)
   } else {
     x_out <- do.call("printnumber", ellipsis)
+  }
+
+  if(add_equals) {
+    x_out <- add_equals(x_out)
   }
   x_out
 }
@@ -345,7 +352,7 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 
 #' Prepare numeric values for printing as p-value
 #'
-#' Convenience wrapper for \code{printnum.numeric} to print p-values with three decimal places.
+#' Convenience wrapper for \code{printnum.numeric} to print \emph{p} values.
 #'
 #' @inheritParams printnum.numeric
 #' @examples
@@ -354,10 +361,11 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 #' printnum(0.99999999)
 #' @export
 
-printp <- function(x, na_string = "") {
+printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
   validate(na_string, check_class = "character", check_length = 1)
+  validate(digits, check_class = "numeric")
 
-  p <- printnum(x, digits = 3, gt1 = FALSE, zero = FALSE, na_string = na_string)
+  p <- printnum(x, digits = digits, gt1 = FALSE, zero = FALSE, na_string = na_string, add_equals = add_equals)
   p
 }
