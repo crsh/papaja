@@ -135,6 +135,14 @@ arrange_anova.summary.aovlist <- function(x) {
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
   validate(correction, check_class = "character", check_length = 1)
 
+  # univariate.tests is NULL if the object comes from a MANOVA
+  if(is.null(x$univariate.tests)) {
+    stop(
+      "Anova.mlm objects from car::Manova are not supported, yet. Visit https://github.com/crsh/papaja/issues to request support for this class. "
+      , "You can try using stats::manova instead if Type I oder Type II sums of squares are adequate for your analysis."
+    )
+  }
+
   variance_table <- as.data.frame(unclass(x$univariate.tests))
 
   # Correct degrees of freedom

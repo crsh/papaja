@@ -22,7 +22,8 @@ printnum(x, ...)
   zero_string = "no", na_string = getOption("papaja.na_string"), ...)
 
 \method{printnum}{numeric}(x, gt1 = TRUE, zero = TRUE, margin = 1,
-  na_string = getOption("papaja.na_string"), use_math = TRUE, ...)
+  na_string = getOption("papaja.na_string"), use_math = TRUE,
+  add_equals = FALSE, ...)
 
 \method{printnum}{data.frame}(x, margin = 2, ...)
 
@@ -152,6 +153,8 @@ or columns (\code{margin = 2}).}
 
 \item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 notation is rendered correctly.}
+
+\item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
 }
 \description{
 Converts numeric values to character strings for reporting.

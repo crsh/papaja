@@ -80,9 +80,7 @@ apa_print.summary.glht <- function(
   })
 
   apa_res$statistic <- apply(contrast_table, 1, function(y) {
-    if(!grepl("<|>", y["p.value"])) eq <- "= " else eq <- ""
-
-    paste0("$", test_stat, " = ", y["statistic"], "$, $p ", eq, y["p.value"], "$")
+    paste0("$", test_stat, " = ", y["statistic"], "$, $p ", add_equals(y["p.value"]), "$")
   })
 
   apa_res$full_result <- paste(apa_res$estimate, apa_res$stat, sep = ", ")

@@ -110,10 +110,9 @@ apa_print.htest <- function(
 
   # p-value
   p <- printp(x$p.value)
-  if(!grepl("<|>", p)) eq <- "= " else eq <- ""
 
   apa_res <- apa_print_container()
-  apa_res$statistic <- paste0("$", stat_name, " = ", stat, "$, $p ", eq, p, "$")
+  apa_res$statistic <- paste0("$", stat_name, " = ", stat, "$, $p ", add_equals(p), "$")
   if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
 
   # Estimate
@@ -136,15 +135,14 @@ apa_print.htest <- function(
   }
 
   if(!is.null(est)) {
-    if(!grepl("<|>", est)) eq <- " = " else eq <- ""
 
     if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-      apa_res$estimate <- paste0("$", est_name, eq, est, "$, ", do.call(function(...) print_confint(x$conf.int, ...), ellipsis))
+      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$, ", do.call(function(...) print_confint(x$conf.int, ...), ellipsis))
     } else if(!is.null(ci)) { # Use supplied CI
       ellipsis$margin <- 2 # Ignore margin argument passed by user
-      apa_res$estimate <- paste0("$", est_name, eq, est, "$, ", do.call(function(...) print_confint(ci, ...), ellipsis))
+      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$, ", do.call(function(...) print_confint(ci, ...), ellipsis))
     } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
-      apa_res$estimate <- paste0("$", est_name, eq, est, "$")
+      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$")
     }
 
     apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
