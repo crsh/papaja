@@ -59,6 +59,8 @@ output            : papaja::apa6_pdf
 
 ```{r setup, include = FALSE}
 library("papaja")
+papaja::r_refs("r-references.bib")
+
 ```
 
 ```{r analysis-preferences}
