@@ -84,18 +84,13 @@ print_model_comp <- function(
 
   ## stat
   ### Rounding and filling with zeros
-  x$statistic <- printnum(x$statistic, digits = 2)
-  x$p.value <- printp(x$p.value)
-  x[, c("df", "df_res")] <- round(x[, c("df","df_res")], digits = 2)
+  x$statistic <- printnum(x$statistic)
+  x$df <- print_df(x$df)
+  x$df_res <- print_df(x$df_res)
+  x$p.value <- printp(x$p.value, add_equals = TRUE)
 
-  ### Add 'equals' where necessary
-  x$p.value <- add_equals(x$p.value)
-
-  apa_res$statistic <- apply(x, 1, function(y) {
-    stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], "$, $p ", y["p.value"], "$")
-    if(in_paren) stat <- in_paren(stat)
-    stat
-  })
+  apa_res$statistic <- paste0("$F(", x[["df"]], ", ", x[["df_res"]], ") = ", x[["statistic"]], "$, $p ", x[["p.value"]], "$")
+  if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
   names(apa_res$statistic) <- x$term
 
   ## full
