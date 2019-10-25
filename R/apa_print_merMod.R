@@ -3,28 +3,46 @@
 
 apa_print.merMod <- function(x, ...) {
 
-  if(package_available("lmerTest")) {
-    x <- lmerTest::as_lmerModLmerTest(x)
-  }
-print(class(x))
-  apa_print(summary(x, ...))
-}
+  # if(package_available("lmerTest")) {
+  #   x <- lmerTest::as_lmerModLmerTest(x)
+  # }
+  args <- list(...)
 
+  args_confint <- defaults(
+    args$args_confint
+    , set = list(
+      object = x
+      , parm = "beta_"
+    )
+    , set.if.null = list(
+      level = .95
+    )
+  )
 
-#' @export
+  x_summary <- summary(x)
+  confidence_intervals <- as.data.frame(
+    do.call("confint", args_confint)
+    , stringsAsFactors = FALSE
+  )[rownames(x_summary$coefficients), ] # ensure same arrangement as in model object
 
-apa_print.summary.merMod <- function(
-  x
-  , ...
-) {
-  lmerTest <- methods::is(x, "summary.lmerModLmerTest")
+  print_cis <- print_confint(confidence_intervals)
+
+  confidence_col <- paste0(
+    "["
+    , printnum(confidence_intervals[[1]])
+    , ", "
+    , printnum(confidence_intervals[[2]])
+    , "]"
+  )
+
+  isLmerTest <- methods::is(x, "lmerModLmerTest")
 
   term <- prettify_terms(
-    rownames(x$coefficients)
+    rownames(x_summary$coefficients)
   )
 
   res_table <- as.data.frame(
-    x$coefficients
+    x_summary$coefficients
     , row.names = NULL
   )
   rownames(res_table) <- NULL
@@ -37,22 +55,28 @@ apa_print.summary.merMod <- function(
     , "Pr(>|t|)" = "p.value"
   )
   colnames(res_table) <- renamers[colnames(res_table)]
-
   res_table <- cbind(term, res_table)
+
+
+  # prepare pretty table ----
   res_table$estimate <- printnum(res_table$estimate)
   res_table$std.err <- printnum(res_table$std.err)
   res_table$statistic <- printnum(res_table$statistic)
+  res_table$conf.int <- confidence_col
 
-  if(lmerTest) {
+  if(isLmerTest) {
     res_table$df <- print_df(res_table$df)
     res_table$p.value <- printp(res_table$p.value)
-    res_table <- res_table[, c("term", "estimate", "std.err", "statistic", "df", "p.value")]
+    res_table <- res_table[, c("term", "estimate", "conf.int", "statistic", "df", "p.value")]
+  } else {
+    res_table <- res_table[, c("term", "estimate", "conf.int", "statistic")]
   }
 
   variable_labels(res_table) <- c(
     term = "Term"
     , estimate = "$b$"
     , std.err = "$\\mathit{SE}$"
+    , conf.int = paste0(args$confint$level * 100, "% CI")
     , statistic = "$t$"
     , df = "$\\mathit{df}$"
     , p.value = "$p$"
@@ -62,10 +86,12 @@ apa_print.summary.merMod <- function(
   res <- apa_print_container()
   res$table <- res_table
 
-  res$estimate <- as.list(paste0("$b = ", res_table$estimate, "$"))
+  res$estimate <- as.list(
+    paste0("$b = ", res_table$estimate, "$, ", unlist(print_cis))
+  )
   names(res$estimate) <- sanitize_terms(res_table$term)
 
-  if(lmerTest) {
+  if(isLmerTest) {
     res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p = ", res_table$p.value, "$"))
   } else {
     res$statistic <- as.list(paste0("$t = ", res_table$statistic, "$"))
@@ -78,3 +104,4 @@ apa_print.summary.merMod <- function(
   # return
   res
 }
+

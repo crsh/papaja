@@ -4,20 +4,22 @@ test_that(
   "first few tests"
   , {
     testthat::skip_on_travis()
-    model_object <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
-    summary_object <- summary(model_object)
-    apa1 <- apa_print(model_object)
+    model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
+    model_lmerTest <- lmerTest::as_lmerModLmerTest(model_lme4)
+
+    apa_lme4 <- apa_print(model_lme4)
+    apa_lmerTest <- apa_print(model_lmerTest)
 
     expect_identical(
-      object = apa1$estimate
+      object = apa_lmerTest$estimate
       , expected = list(Intercept = "$b = 52.07$", N1 = "$b = 5.62$")
     )
     expect_identical(
-      object = apa1$statistic
+      object = apa_lmerTest$statistic
       , expected = list(Intercept = "$t(8.17) = 27.06$, $p = < .001$", N1 = "$t(17.00) = 3.06$, $p = .007$")
     )
     expect_identical(
-      object = apa1$full_result
+      object = apa_lmerTest$full_result
       , expected = list(
         Intercept = "$b = 52.07$, $t(8.17) = 27.06$, $p = < .001$"
         , N1 = "$b = 5.62$, $t(17.00) = 3.06$, $p = .007$"
