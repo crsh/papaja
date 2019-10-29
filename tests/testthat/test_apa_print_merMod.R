@@ -21,7 +21,7 @@ test_that(
     expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
-        Intercept = "$b = 52.07$, $t(8.17) = 27.06$, $p = < .001$"
+        Intercept = "$b = 52.07$, $t(8.17) = 27.06$, $p < .001$"
         , N1 = "$b = 5.62$, $t(17.00) = 3.06$, $p = .007$"
       )
     )

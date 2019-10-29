@@ -92,7 +92,7 @@ apa_print.merMod <- function(x, ...) {
   names(res$estimate) <- sanitize_terms(res_table$term)
 
   if(isLmerTest) {
-    res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p = ", res_table$p.value, "$"))
+    res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p ", add_equals(res_table$p.value), "$"))
   } else {
     res$statistic <- as.list(paste0("$t = ", res_table$statistic, "$"))
   }
