@@ -363,15 +363,16 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 
 
 
-#' Prepare numeric values for printing as p-value
+#' Prepare numeric values for printing as p value
 #'
 #' Convenience wrapper for \code{printnum.numeric} to print \emph{p} values.
 #'
-#' @inheritParams printnum.numeric
+#' @param digits Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.
+#' @inheritParams printnum
 #' @examples
-#' printnum(0.05)
-#' printnum(0.0005)
-#' printnum(0.99999999)
+#' printp(0.05)
+#' printp(0.0005)
+#' printp(0.99999999)
 #' @export
 
 printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
