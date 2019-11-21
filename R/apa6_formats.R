@@ -781,7 +781,7 @@ modify_input_file <- function(input, ...) {
             )
           } else NULL
           , ""
-          , "```{r echo = FALSE, results = 'asis'}"
+          , "```{r echo = FALSE, results = 'asis', cache = FALSE}"
           , paste0("render_appendix('", yaml_params$appendix[i], "')")
           , "```"
           , ""
