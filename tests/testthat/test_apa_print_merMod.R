@@ -12,21 +12,45 @@ test_that(
 
     expect_identical(
       object = apa_lmerTest$estimate
-      , expected = list(Intercept = "$b = 52.07$", N1 = "$b = 5.62$")
+      , expected = list(
+        Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$"
+        , N1 = "$b = 5.62$, 95\\% CI $[1.92$, $9.31]$"
+      )
     )
     expect_identical(
       object = apa_lmerTest$statistic
-      , expected = list(Intercept = "$t(8.17) = 27.06$, $p = < .001$", N1 = "$t(17.00) = 3.06$, $p = .007$")
+      , expected = list(
+        Intercept = "$t(8.17) = 27.06$, $p < .001$"
+        , N1 = "$t(17.00) = 3.06$, $p = .007$"
+      )
     )
     expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
-        Intercept = "$b = 52.07$, $t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$b = 5.62$, $t(17.00) = 3.06$, $p = .007$"
+        Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$, $t(8.17) = 27.06$, $p < .001$"
+        , N1 = "$b = 5.62$, 95\\% CI $[1.92$, $9.31]$, $t(17.00) = 3.06$, $p = .007$"
       )
     )
 
-    # model_object2 <- lmerTest::lmer(formula = yield ~ N + (1|block), data = npk)
+    expect_identical(
+      object = apa_lme4$estimate
+      , expected = apa_lmerTest$estimate
+    )
+    expect_identical(
+      object = apa_lme4$statistic
+      , expected = list(
+        Intercept = "$t = 27.06$"
+        , N1 = "$t = 3.06$"
+      )
+    )
+    expect_identical(
+      object = apa_lme4$full_result
+      , expected = list(
+        Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$, $t = 27.06$"
+        , N1 = "$b = 5.62$, 95\\% CI $[1.92$, $9.31]$, $t = 3.06$"
+      )
+    )
+
 
   }
 )
