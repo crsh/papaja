@@ -812,14 +812,3 @@ revert_original_input_file <- function(x = 1) {
 
   return(NULL)
 }
-
-# set_lua_filter <- function(args = NULL, filter_name) {
-#   if(!is.null(args)) assertthat::assert_that(is.character(args))
-#   assertthat::assert_that(length(filter_name) == 1)
-#   assertthat::assert_that(is.character(filter_name))
-#
-#   filter_path <- system.file("rmd", filter_name, package = "papaja")
-#   args <- c(args, "--lua-filter", filter_path)
-#
-#   args
-# }
