@@ -23,27 +23,27 @@ apa6_pdf <- function(
   , toc = FALSE
   , keep_tex = TRUE
   , md_extensions = NULL
-  # , includes = NULL
+  , includes = NULL
   , ...
 ) {
   validate(fig_caption, check_class = "logical", check_length = 1)
   validate(number_sections, check_class = "logical", check_length = 1)
   validate(toc, check_class = "logical", check_length = 1)
   validate(keep_tex, check_class = "logical", check_length = 1)
-  # if(!is.null(includes)) {
-  #   validate(includes, check_class = "list")
-  # } else {
-  #   includes <- rmarkdown::includes()
-  # }
+  if(!is.null(includes)) {
+    validate(includes, check_class = "list")
+  } else {
+    includes <- rmarkdown::includes()
+  }
 
-  # apa6_header_includes <-  system.file(
-  #   "rmarkdown", "templates", "apa6", "resources"
-  #   , "apa6_header_includes.tex"
-  #   , package = "papaja"
-  # )
-  # if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
+  apa6_header_includes <-  system.file(
+    "rmarkdown", "templates", "apa6", "resources"
+    , "apa6_header_includes.tex"
+    , package = "papaja"
+  )
+  if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
 
-  # includes$in_header <- c(includes$in_header, apa6_header_includes)
+  includes$in_header <- c(includes$in_header, apa6_header_includes)
 
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     if(is.null(md_extensions) || !grepl("raw\\_attribute", md_extensions)) {
@@ -60,7 +60,7 @@ apa6_pdf <- function(
     , toc = toc
     , keep_tex = keep_tex
     , md_extensions = md_extensions
-    # , includes = includes
+    , includes = includes
     , ...
   )
 
@@ -118,14 +118,14 @@ apa6_pdf <- function(
     # Correct abstract environment
     output_text <- paste(output_text, collapse = "\n")
 
-    authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
-    authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
-
-    note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
-    note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
-
-    output_text <- gsub("!!!papaja-author-note\\(.*\\)papaja-author-note!!!", "", output_text)
-    output_text <- gsub("!!!papaja-note\\(.*\\)papaja-note!!!", "", output_text)
+    # authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
+    # authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
+    #
+    # note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
+    # note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
+    #
+    # output_text <- gsub("!!!papaja-author-note\\(.*\\)papaja-author-note!!!", "", output_text)
+    # output_text <- gsub("!!!papaja-note\\(.*\\)papaja-note!!!", "", output_text)
 
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
@@ -133,23 +133,34 @@ apa6_pdf <- function(
       , output_text
     )
 
-    abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
-
-    output_text <- paste0(
-      substr(output_text, start = 1, stop = abstract_location[1] - 1)
-      , authornote
-      , "\n"
-      , note
-      , "\n"
-      , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
-    )
+    # abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
+    #
+    # output_text <- paste0(
+    #   substr(output_text, start = 1, stop = abstract_location[1] - 1)
+    #   , authornote
+    #   , "\n"
+    #   , note
+    #   , "\n"
+    #   , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
+    # )
 
     # Remove abstract environment if empty
-    output_text <- gsub(
-      "\\\\abstract\\{\n\n\\}"
-      , ""
-      , output_text
-    )
+    output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text)
+
+    # Remove pandoc author environment
+    output_text <- gsub("\\\\author\\{true\\}", "", output_text)
+
+    # Remove pandoc listof...s
+    if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
+      output_text <- sub("\\\\listoffigures", "", output_text) # Replace first occurance
+    }
+    if(sum(gregexpr("\\listoftables", output_text, fixed = TRUE)[[1]] > 0)) {
+      output_text <- sub("\\\\listoftables", "", output_text) # Replace first occurance
+    }
+
+    # Prevent (re-)loading of geometry package
+    output_text <- gsub("\\\\usepackage\\[?.*\\]?\\{geometry\\}", "", output_text)
+
 
     output_file_connection <- file(output_file)
     on.exit(close(output_file_connection))
@@ -318,226 +329,6 @@ set_default_csl <- function(x) {
 
 pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
 
-  # Parse and modify YAML header
-  input_text <- readLines(input_file, encoding = "UTF-8")
-  yaml_params <- get_yaml_params(input_text)
-
-  ## Set template defaults
-  if(is.null(yaml_params$documentclass)) yaml_params$documentclass <- "apa6"
-
-  if(!is.null(yaml_params[["class"]])) { # Depricated class options
-    classoption <- paste(yaml_params[["class"]], collapse = ",")
-    yaml_params$classoption <- paste(paste(yaml_params$classoption, collapse = ","), classoption, sep = ",")
-  } else if(is.null(yaml_params$classoption)) {
-    yaml_params$classoption <- "man"
-  }
-
-  ## Class options
-  if(isTRUE(yaml_params$mask)) yaml_params$classoption <- paste0(yaml_params$classoption, ",mask")
-  if(isTRUE(yaml_params$figsintext) || isTRUE(yaml_params$floatsintext)) {
-    yaml_params$classoption <- paste0(yaml_params$classoption, ",floatsintext")
-  }
-  if(isTRUE(yaml_params$draft)) yaml_params$classoption <- paste0(yaml_params$classoption, ",draftall")
-
-  ## Deprecated lang arguments
-  if(!is.null(yaml_params$lang)) { # Depricated default lang options in papaja templates
-    yaml_params$lang <- switch(
-      yaml_params$lang
-      , english = "en-EN"
-      , american = "en-US"
-      , yaml_params$lang
-    )
-  }
-
-  ## Add necessary header includes
-  header_includes <- list()
-
-  ### Essential manuscript parts
-  if(is.null(yaml_params$title)) {
-    yaml_params$title <- "TITLE"
-  }
-
-  if(!is.null(yaml_params$shorttitle)) {
-    short_title <- paste0("\\shorttitle{", escape_latex(yaml_params$shorttitle), "}")
-  } else {
-    short_title <- paste0("\\shorttitle{SHORTTITLE}")
-  }
-  header_includes <- c(header_includes, short_title)
-
-  if(!is.null(yaml_params$leftheader)) {
-    header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(yaml_params$leftheader), "}"))
-  }
-
-  corresponding_author <- yaml_params$author[which(unlist(lapply(lapply(yaml_params$author, "[[", "corresponding"), isTRUE)))]
-
-
-  #### Pass the following through abstract field so pandoc parses markdown
-  if(
-    !is.null(yaml_params$author_note) ||
-    !is.null(yaml_params$authornote) ||
-    length(corresponding_author) > 0
-  ) {
-    author_note <- paste(
-      c(yaml_params$author_note, yaml_params$authornote)
-      , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
-      , sep = "\n\n"
-    )
-
-    yaml_params$abstract <- paste0(yaml_params$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
-    # header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
-  }
-
-  if(!is.null(yaml_params$note)) {
-    yaml_params$abstract <- paste0(yaml_params$abstract, "\n!!!papaja-note(", yaml_params$note, ")papaja-note!!!")
-    # header_includes <- c(header_includes, paste0("\\note{", escape_latex(yaml_params$note), "}"))
-  }
-
-  affiliations <- paste_affiliations(yaml_params$affiliation, format = "latex")
-  header_includes <- c(header_includes, paste0("\\affiliation{\n\\vspace{0.5cm}\n", affiliations, "}"))
-
-  yaml_params$author <- paste_authors(yaml_params$author, format = "latex")
-
-  # if(!is.null(yaml_params$abstract)) {
-  #   abstract <- yaml_params$abstract
-  #   yaml_params$abstract <- NULL
-  #
-  #   header_includes <- c(header_includes, paste0("\\abstract{", escape_latex(abstract), "}"))
-  # }
-
-  if(!is.null(yaml_params$keywords) || !is.null(yaml_params$wordcount)) {
-    keywords <- paste(unlist(yaml_params$keywords), collapse = ", ")
-    if(!is.null(yaml_params$wordcount)) {
-      keywords <- paste0(keywords, "\\newline\\indent Word count: ", yaml_params$wordcount)
-    }
-    header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
-  }
-
-  ### Manuscript and table formatting
-  apa6_header_includes <-  system.file(
-    "rmarkdown", "templates", "apa6", "resources"
-    , "apa6_header_includes.tex"
-    , package = "papaja"
-  )
-  if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
-
-  apa6_header_includes <- readLines(apa6_header_includes, encoding = "UTF-8")
-  apa6_header_includes <- apa6_header_includes[!grepl("^%", apa6_header_includes)]
-  apa6_header_includes <- gsub("\\s*%.+$||\t", "", apa6_header_includes)
-
-  header_includes <- c(header_includes, apa6_header_includes)
-
-  if(
-    ((!is.null(yaml_params$figsintext) & !isTRUE(yaml_params$figsintext)) ||
-     (!is.null(yaml_params$floatsintext) & !isTRUE(yaml_params$floatsintext))) &&
-    grepl("man", yaml_params$classoption)
-  ) {
-    header_includes <- c(
-      header_includes
-      , "\\DeclareDelayedFloatFlavor{ThreePartTable}{table}" # Make endfloat play with longtable
-      # , "\\DeclareDelayedFloatFlavor{ltable}{table}" # Make endfloat play with lscape
-      , "\\DeclareDelayedFloatFlavor{lltable}{table}" # Make endfloat play with lscape & longtable
-      , "\\DeclareDelayedFloatFlavor*{longtable}{table}" # Make endfloat play with ordinary longtable (for kableExtra)
-      # Patch \efloat@iwrite to use \protected@write (bug in endfloat package < 2.6)
-      # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
-      # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
-      , "\\makeatletter"
-      , "\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
-      # , "`\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}`{=latex}"
-      , "\\makeatother"
-    )
-  }
-
-  ### Additional options
-  # Enable placement for table star environment
-  if(any(grepl("jou", c(rmarkdown::metadata$classoption, rmarkdown::metadata$class)))) {
-    header_includes <- c(header_includes, "\\usepackage{dblfloatfix}\n\n")
-  }
-
-  if(!is.null(yaml_params$geometry)) {
-    header_includes <- c(header_includes, paste0("\\geometry{", yaml_params$geometry, "}\n\n"))
-    yaml_params$geometry <- NULL
-  }
-
-  if(isTRUE(yaml_params$lineno) || isTRUE(yaml_params$linenumbers) ) {
-    header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
-  }
-
-  if(isTRUE(yaml_params$footnotelist)) {
-    header_includes <- c(
-      header_includes
-      , "\\usepackage{endnotes}"
-      , "\\let\\footnote\\endnote"
-    )
-
-    yaml_params$`include-after` <- c(yaml_params$`include-after`, "\\theendnotes")
-  }
-
-  if(isTRUE(yaml_params$lof) || isTRUE(yaml_params$figurelist) || isTRUE(yaml_params$lot) || isTRUE(yaml_params$tablelist)) {
-    header_includes <- c(header_includes, "\\usepackage[titles]{tocloft}")
-  }
-
-  if(isTRUE(yaml_params$lof) || isTRUE(yaml_params$figurelist)) {
-    yaml_params$lof <- NULL
-    yaml_params$figurelist <- TRUE
-
-    header_includes <- c(
-      header_includes
-      , "\\cftpagenumbersoff{figure}"
-      , "\\renewcommand{\\cftfigpresnum}{\\itshape\\figurename\\enspace}"
-      , "\\renewcommand{\\cftfigaftersnum}{.\\space}"
-      , "\\setlength{\\cftfigindent}{0pt}"
-      , "\\setlength{\\cftafterloftitleskip}{0pt}"
-      , "\\settowidth{\\cftfignumwidth}{Figure 10.\\qquad}"
-    )
-
-    yaml_params$`include-after` <- c(
-      yaml_params$`include-after`
-      , "\\clearpage"
-      , "\\renewcommand{\\listfigurename}{Figure captions}"
-      , "\\listoffigures"
-    )
-  }
-
-  if(isTRUE(yaml_params$lot) || isTRUE(yaml_params$tablelist)) {
-    yaml_params$lot <- NULL
-    yaml_params$tablelist <- TRUE
-
-    header_includes <- c(
-      header_includes
-      , "\\cftpagenumbersoff{table}"
-      , "\\renewcommand{\\cfttabpresnum}{\\itshape\\tablename\\enspace}"
-      , "\\renewcommand{\\cfttabaftersnum}{.\\space}"
-      , "\\setlength{\\cfttabindent}{0pt}"
-      , "\\setlength{\\cftafterloftitleskip}{0pt}"
-      , "\\settowidth{\\cfttabnumwidth}{Table 10.\\qquad}"
-    )
-
-    yaml_params$`include-after` <- c(
-      yaml_params$`include-after`
-      , "\\clearpage"
-      , "\\renewcommand{\\listtablename}{Table captions}"
-      , "\\listoftables"
-    )
-  }
-
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    yaml_params$`header-includes` <- c(paste0("```{=latex}\n", paste0(header_includes, collapse = "\n"), "\n```\n"), yaml_params$`header-includes`)
-  } else {
-    yaml_params$`header-includes` <- c(header_includes, yaml_params$`header-includes`)
-  }
-
-  ## Add modified YAML header
-  # augmented_input_text <- c(
-  #   augmented_input_text
-  #   , "\begingroup"
-  #   , "\setlength{\parindent}{-0.5in}"
-  #   , "\setlength{\leftskip}{0.5in}"
-  #   , "<div id='references'></div>"
-  #   , "\endgroup"
-  # )
-
-  replace_yaml_front_matter(yaml_params, input_text, input_file)
-
   # Add pandoc arguments
   args <- NULL
 
@@ -563,14 +354,245 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     }
   }
 
-  # Set additional lua filters
+  ## Set additional lua filters
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
   }
 
+  ## Set template variables and defaults
+  if(is.null(metadata$documentclass)) metadata$documentclass <- "apa6"
+
+  if(!is.null(metadata[["class"]])) { # Depricated class options
+    classoption <- paste(metadata[["class"]], collapse = ",")
+    metadata$classoption <- paste(paste(metadata$classoption, collapse = ","), classoption, sep = ",")
+  } else if(is.null(metadata$classoption)) {
+    metadata$classoption <- "man"
+  }
+
+  if(isTRUE(metadata$mask)) metadata$classoption <- paste0(metadata$classoption, ",mask")
+
+  if(isTRUE(metadata$figsintext) || isTRUE(metadata$floatsintext)) {
+    metadata$classoption <- paste0(metadata$classoption, ",floatsintext")
+  }
+
+  if(isTRUE(metadata$draft)) metadata$classoption <- paste0(metadata$classoption, ",draftall")
+
+  args <- c(args, "--variable", paste0("classoption:", metadata$classoption))
+
+  if (is.null(metadata$lang)) {
+    lang_tag <- "en-EN"
+  } else { # Depricated default lang options in papaja templates
+    lang_tag <- switch(
+      metadata$lang
+      , english = "en-EN"
+      , american = "en-US"
+      , metadata$lang
+    )
+  }
+
+  args <- c(args, "--variable", paste0("lang:", lang_tag))
+
+  if(is.null(metadata$title)) {
+    args <- c(args, "--variable", "title:TITLE")
+  }
+
+
+  # Add necessary includes
+  header_includes <- c()
+  after_body_includes <- c()
+  before_body_includes <- c()
+
+
+  ## Essential manuscript parts
+  if(!is.null(metadata$shorttitle)) {
+    short_title <- paste0("\\shorttitle{", escape_latex(metadata$shorttitle), "}")
+  } else {
+    short_title <- paste0("\\shorttitle{SHORTTITLE}")
+  }
+  header_includes <- c(header_includes, short_title)
+
+  if(!is.null(metadata$leftheader)) {
+    header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
+  }
+
+  if(!is.null(metadata$author)) {
+    authors <- paste_authors(metadata$author, format = "latex")
+
+    corresponding_author <- metadata$author[which(unlist(lapply(lapply(metadata$author, "[[", "corresponding"), isTRUE)))]
+  } else {
+    authors <- "\\phantom{a}"
+    corresponding_author <- NULL
+  }
+
+  header_includes <- c(header_includes, paste0("\\author{", authors, "}"))
+
+  if(!is.null(metadata$author) && !is.null(metadata$affiliation)) {
+    affiliations <- paste0("\n\\vspace{0.5cm}\n", paste_affiliations(metadata$affiliation, format = "latex"))
+  } else {
+    affiliations <- "\\phantom{a}"
+  }
+
+  header_includes <- c(header_includes, paste0("\\affiliation{", affiliations, "}"))
+
+  ### Pass the following through abstract field so pandoc parses markdown
+  if(
+    !is.null(metadata$author_note) ||
+    !is.null(metadata$authornote) ||
+    length(corresponding_author) > 0
+  ) {
+    author_note <- paste( # TODO
+      c(metadata$author_note, metadata$authornote)
+      , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
+      , sep = "\n\n"
+    )
+
+    # TODO
+    # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
+    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+  }
+
+  # TODO
+  if(!is.null(metadata$note)) {
+    # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-note(", metadata$note, ")papaja-note!!!")
+    header_includes <- c(header_includes, paste0("\\note{", escape_latex(metadata$note), "}"))
+  }
+
+  if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
+    keywords <- paste(unlist(metadata$keywords), collapse = ", ")
+    if(!is.null(metadata$wordcount)) {
+      keywords <- paste0(keywords, "\\newline\\indent Word count: ", metadata$wordcount)
+    }
+    header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
+  }
+
+  ## Manuscript and table formatting
+  # apa6_header_includes <-  system.file(
+  #   "rmarkdown", "templates", "apa6", "resources"
+  #   , "apa6_header_includes.tex"
+  #   , package = "papaja"
+  # )
+  # if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
+  #
+  # apa6_header_includes <- readLines(apa6_header_includes, encoding = "UTF-8")
+  # apa6_header_includes <- apa6_header_includes[!grepl("^%", apa6_header_includes)]
+  # apa6_header_includes <- gsub("\\s*%.+$||\t", "", apa6_header_includes)
+  #
+  # header_includes <- c(header_includes, apa6_header_includes)
+
+  if(
+    ((!is.null(metadata$figsintext) & !isTRUE(metadata$figsintext)) ||
+     (!is.null(metadata$floatsintext) & !isTRUE(metadata$floatsintext))) &&
+    grepl("man", metadata$classoption)
+  ) {
+    header_includes <- c(
+      header_includes
+      , "\\DeclareDelayedFloatFlavor{ThreePartTable}{table}" # Make endfloat play with longtable
+      # , "\\DeclareDelayedFloatFlavor{ltable}{table}" # Make endfloat play with lscape
+      , "\\DeclareDelayedFloatFlavor{lltable}{table}" # Make endfloat play with lscape & longtable
+      , "\\DeclareDelayedFloatFlavor*{longtable}{table}" # Make endfloat play with ordinary longtable (for kableExtra)
+      # Patch \efloat@iwrite to use \protected@write (bug in endfloat package < 2.6)
+      # Solution found at https://tex.stackexchange.com/questions/144372/error-when-using-endfloat-with-unicode-characters/144425
+      # Details at https://github.com/axelsommerfeldt/endfloat/blob/master/README#L58
+      , "\\makeatletter"
+      , "\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}"
+      # , "`\\renewcommand{\\efloat@iwrite}[1]{\\immediate\\expandafter\\protected@write\\csname efloat@post#1\\endcsname{}}`{=latex}"
+      , "\\makeatother"
+    )
+  }
+
+  ## Additional options
+  # Enable placement for table star environment
+  if(any(grepl("jou", c(metadata$classoption, metadata$class)))) {
+    header_includes <- c(header_includes, "\\usepackage{dblfloatfix}\n\n")
+  }
+
+  if(isTRUE(metadata$lineno) || isTRUE(metadata$linenumbers) ) {
+    header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
+  }
+
+  if(!is.null(metadata$geometry)) {
+    header_includes <- c(header_includes, paste0("\\geometry{", metadata$geometry, "}\n\n"))
+  }
+
+  if(isTRUE(metadata$footnotelist)) {
+    header_includes <- c(
+      header_includes
+      , "\\usepackage{endnotes}"
+      , "\\let\\footnote\\endnote"
+    )
+
+    after_body_includes <- c(after_body_includes, "\\clearpage", "\\theendnotes")
+  }
+
+  if(isTRUE(metadata$lof) || isTRUE(metadata$figurelist) || isTRUE(metadata$lot) || isTRUE(metadata$tablelist)) {
+    header_includes <- c(header_includes, "\\usepackage[titles]{tocloft}")
+  }
+
+  if(isTRUE(metadata$lof) || isTRUE(metadata$figurelist)) {
+    header_includes <- c(
+      header_includes
+      , "\\cftpagenumbersoff{figure}"
+      , "\\renewcommand{\\cftfigpresnum}{\\itshape\\figurename\\enspace}"
+      , "\\renewcommand{\\cftfigaftersnum}{.\\space}"
+      , "\\setlength{\\cftfigindent}{0pt}"
+      , "\\setlength{\\cftafterloftitleskip}{0pt}"
+      , "\\settowidth{\\cftfignumwidth}{Figure 10.\\qquad}"
+    )
+
+    after_body_includes <- c(
+      after_body_includes
+      , "\\clearpage"
+      , "\\renewcommand{\\listfigurename}{Figure captions}"
+      , "\\listoffigures"
+    )
+  }
+
+  if(isTRUE(metadata$lot) || isTRUE(metadata$tablelist)) {
+
+    header_includes <- c(
+      header_includes
+      , "\\cftpagenumbersoff{table}"
+      , "\\renewcommand{\\cfttabpresnum}{\\itshape\\tablename\\enspace}"
+      , "\\renewcommand{\\cfttabaftersnum}{.\\space}"
+      , "\\setlength{\\cfttabindent}{0pt}"
+      , "\\setlength{\\cftafterloftitleskip}{0pt}"
+      , "\\settowidth{\\cfttabnumwidth}{Table 10.\\qquad}"
+    )
+
+    after_body_includes <- c(
+      after_body_includes
+      , "\\clearpage"
+      , "\\renewcommand{\\listtablename}{Table captions}"
+      , "\\listoftables"
+    )
+  }
+
+  tmp_includes_file <- function(x) {
+    tmp_file <- tempfile(pattern = "includes_", tmpdir = tempdir(), fileext = ".tex")
+    writeLines(x, con = tmp_file)
+    tmp_file
+  }
+
+  header_includes <- c(header_includes, metadata$`header-includes`)
+  if(length(header_includes) > 0) {
+    args <- c(args, "--include-in-header", tmp_includes_file(header_includes))
+  }
+
+  before_body_includes <- c(before_body_includes, metadata$`before-includes`)
+  if(length(before_body_includes) > 0) {
+    args <- c(args, "--include-before", tmp_includes_file(before_body_includes))
+  }
+
+  after_body_includes <- c(after_body_includes, metadata$`after-includes`)
+  if(length(after_body_includes) > 0) {
+    args <- c(args, "--include-after", tmp_includes_file(after_body_includes))
+  }
+
+
   ## Add appendix
   if(!is.null(metadata$appendix)) {
-    args <- c(args, paste0("--include-after-body=", sapply(yaml_params$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x))), ".tex"))
+    appendices <- sapply(yaml_params$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x)))
+    args <- c(args, paste0("--include-after-body=", appendices, ".tex"))
   }
 
   args
@@ -596,7 +618,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   # writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
   replace_yaml_front_matter(yaml_params, augmented_input_text, input_file)
 
-  # Add pancod arguments
+  # Add pandoc arguments
   args <- NULL
 
   # Process markdown
@@ -628,11 +650,6 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
   }
-
-  # Set additional lua filters
-  # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-  #   args <- set_lua_filter(args, "pagebreak.lua")
-  # }
 
   args
 }

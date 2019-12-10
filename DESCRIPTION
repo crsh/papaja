@@ -16,11 +16,11 @@ Depends:
   R (>= 2.11.1)
 Imports:
   base64enc,
-  bookdown (>= 0.6),
+  bookdown (>= 0.9.1),
   broom (>= 0.5.2.9001),
-  knitr (>= 1.10.5),
+  knitr (>= 1.26),
   methods,
-  rmarkdown (>= 1.10),
+  rmarkdown (>= 1.18),
   rmdfiltr,
   yaml
 Remotes:
