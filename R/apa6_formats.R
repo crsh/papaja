@@ -686,7 +686,7 @@ paste_authors <- function(x, format) {
     })
   } else if(format %in% c("docx", "word")) {
     authors <- lapply(x, function(y) {
-      affiliation <- if(!is.null(y[["affiliation"]])) paste0("^", y[["affiliation"]], "^") else ""
+      affiliation <- if(!is.null(y[["affiliation"]]) && y[["affiliation"]] != "") paste0("^", y[["affiliation"]], "^") else ""
       paste0(y["name"], affiliation, collapse = "")
     })
   } else {
@@ -713,7 +713,7 @@ paste_authors <- function(x, format) {
 
 paste_affiliations <- function(x, format) {
   add_superscript <- function(y, format) {
-    if(is.null(y[["id"]])) {
+    if(is.null(y[["id"]]) || y[["id"]] == "") {
       superscript <- NULL
     } else if(format == "latex") {
       superscript <- paste0("\\textsuperscript{", y[["id"]], "}")
