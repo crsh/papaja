@@ -148,7 +148,7 @@ apa6_pdf <- function(
     output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text)
 
     # Remove pandoc author environment
-    output_text <- gsub("\\\\author\\{true\\}", "", output_text)
+    output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text)
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
@@ -591,7 +591,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
-    appendices <- sapply(yaml_params$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x)))
+    appendices <- sapply(metadata$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x)))
     args <- c(args, paste0("--include-after-body=", appendices, ".tex"))
   }
 
