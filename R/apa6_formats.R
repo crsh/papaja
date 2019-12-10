@@ -360,7 +360,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ## Set template variables and defaults
-  if(is.null(metadata$documentclass)) metadata$documentclass <- "apa6"
+  if(is.null(metadata$documentclass)) {
+    args <- c(args, "--variable", "documentclass:apa6")
+  }
 
   if(!is.null(metadata[["class"]])) { # Depricated class options
     classoption <- paste(metadata[["class"]], collapse = ",")
