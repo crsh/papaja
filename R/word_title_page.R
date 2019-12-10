@@ -31,7 +31,7 @@ word_title_page <- function(x) {
 
     if(length(author_note) > 0) {
       author_note <- c(
-        paste0("# ", apa_terms$author_note)
+        "<div custom-style='Author'>", apa_terms$author_note, "</div>"
         , "\n"
         , paste(author_note, collapse = "\n\n")
       )
@@ -41,15 +41,10 @@ word_title_page <- function(x) {
     padding <- paste0(c("\n", rep("&nbsp;", 148)), collapse = "") # Add spacer to last row
     author_information <- c(
       "\n\n"
-      , paste(
-        knitr::kable(
-          c(authors, affiliations, padding, x$note)
-          , format = "pandoc"
-          , align = "c"
-          , col.names = NULL
-        )
-        , collapse = "\n"
-      )
+      , "<div custom-style='Author'>", authors, "</div>"
+      , "<div custom-style='Author'>", affiliations, "</div>"
+      , padding
+      , "<div custom-style='Author'>", x$note, "</div>"
       , "\n\n&nbsp;\n"
     )
   }
@@ -58,6 +53,7 @@ word_title_page <- function(x) {
     "<div custom-style='Title'>", apa_terms$abstract, "</div>"
     , "\n"
     , x$abstract
+    , "\n"
   )
 
   keywords <- paste0("*", apa_terms$keywords, ":* ", x$keywords, "\n")
