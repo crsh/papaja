@@ -60,6 +60,7 @@ corresponding models (see details).}
   \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
   \item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 notation is rendered correctly.}
+  \item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
 }}
 }
 \value{

@@ -50,7 +50,7 @@ test_that(
 test_that(
   "Wilcoxon tests"
   , {
-    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep))
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep, exact = FALSE)
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_equal(names(wilcox_test_output), container_names)
@@ -58,7 +58,7 @@ test_that(
 
     expect_equal(wilcox_test_output$stat, "$W = 25.50$, $p = .069$")
 
-    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep, conf.int = TRUE))
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep, conf.int = TRUE, exact = FALSE)
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_is(wilcox_test_output$est, "character")
@@ -67,13 +67,13 @@ test_that(
     expect_is(wilcox_test_output$full, "character")
     expect_equal(wilcox_test_output$full, "$Mdn_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$, $W = 25.50$, $p = .069$")
 
-    wilcox_test <- suppressWarnings(wilcox.test(extra ~ group, data = sleep, paired = TRUE))
+    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, exact = FALSE)
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_equal(wilcox_test_output$stat, "$V = 0.00$, $p = .009$")
 
 
-    wilcox_test <- suppressWarnings(wilcox.test(sleep$extra, mu = 0, conf.int = TRUE))
+    wilcox_test <- wilcox.test(sleep$extra, mu = 0, conf.int = TRUE, exact = FALSE)
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_equal(wilcox_test_output$full, "$Mdn^* = 1.60$, 95\\% CI $[0.45$, $2.65]$, $V = 162.50$, $p = .007$")

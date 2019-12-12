@@ -7,13 +7,11 @@
 \title{APA article (6th edition)}
 \usage{
 apa6_pdf(fig_caption = TRUE, number_sections = FALSE, toc = FALSE,
-  keep_tex = TRUE, md_extensions = NULL, ...)
+  keep_tex = TRUE, md_extensions = NULL, includes = NULL, ...)
 
-apa6_docx(fig_caption = TRUE, pandoc_args = NULL,
-  md_extensions = NULL, ...)
+apa6_docx(fig_caption = TRUE, md_extensions = NULL, ...)
 
-apa6_word(fig_caption = TRUE, pandoc_args = NULL,
-  md_extensions = NULL, ...)
+apa6_word(fig_caption = TRUE, md_extensions = NULL, ...)
 }
 \arguments{
 \item{fig_caption}{\code{TRUE} to render figures with captions}
@@ -26,9 +24,10 @@ apa6_word(fig_caption = TRUE, pandoc_args = NULL,
 
 \item{md_extensions}{Markdown extensions to be added or removed from the default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.}
 
-\item{...}{Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.}
+\item{includes}{Named list of additional content to include within the
+document (typically created using the \code{\link{includes}} function).}
 
-\item{pandoc_args}{Additional command line options to pass to pandoc}
+\item{...}{Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.}
 }
 \description{
 Template for creating an article according to APA guidelines (6th edition) in PDF format.

@@ -20,9 +20,6 @@ The function creates and locks a non-exported object \code{apa_lang} that is use
    a title page and adds the abstract. You should, therefore, always call \code{apa_prepare_doc} at the
    very beginning of the R Markdown document.
 }
-\examples{
-apa_prepare_doc()
-}
 \seealso{
 \code{\link{apa6_word}}
 }

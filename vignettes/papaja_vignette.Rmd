@@ -273,7 +273,7 @@ That's all I have; enjoy writing your manuscript.
 If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or open a pull request.
 If you want to contribute, take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
 Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support.
-Any new S3/S4-method for this function are always appreciated (e.g., `glm`, `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
+Any new S3/S4-method for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `BFBayesFactor`).
 
 # References
 
