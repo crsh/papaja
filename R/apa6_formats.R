@@ -193,7 +193,7 @@ apa6_pdf <- function(
 
 apa6_docx <- function(
   fig_caption = TRUE
-  , pandoc_args = NULL
+  # , pandoc_args = NULL
   , md_extensions = NULL
   , ...
 ) {
@@ -216,7 +216,7 @@ apa6_docx <- function(
     bookdown::word_document2
     , c(
       fig_caption = fig_caption
-      , pandoc_args = pandoc_args
+      # , pandoc_args = pandoc_args
       , md_extensions = md_extensions
       , ellipsis
     )
@@ -261,6 +261,38 @@ apa6_docx <- function(
     }
 
     args
+  }
+
+  config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
+
+    # Add correct running head
+    docx_files <- zip::zip_list(zipfile = output_file)$filename
+
+    if(!is.null(metadata$shorttitle)) {
+      running_head <- metadata$shorttitle
+    } else {
+      running_head <- metadata$title
+    }
+
+    zip::unzip(zipfile = output_file)
+    on.exit(
+      unlink(c("[Content_Types].xml", "_rels", "word", "docProps"), recursive = TRUE)
+    )
+
+    for(i in paste0("word/header", 2:3, ".xml")) {
+      xml <- readLines(i, warn = FALSE)
+      xml <- gsub("TITLE", running_head, xml, useBytes = TRUE)
+      i_con <- file(i)
+      writeLines(xml, con = i_con, useBytes = TRUE)
+      close(i_con)
+    }
+
+    zip::zipr(
+      zipfile = output_file
+      , files = c("[Content_Types].xml", "_rels", "word", "docProps")
+      , recurse = TRUE
+      , include_directories = FALSE
+    )
   }
 
   if(Sys.info()["sysname"] == "Windows") {
@@ -651,6 +683,14 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   # Set additional lua filters
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
+
+    docx_fixes_lua <-  system.file(
+      "rmd", "docx_fixes.lua"
+      , package = "papaja"
+    )
+    if(docx_fixes_lua == "") stop("docx_fixes Lua-filter not found.")
+
+    args <- rmdfiltr::add_custom_filter(args, filter_path = docx_fixes_lua, lua = TRUE, error = FALSE)
   }
 
   args
@@ -735,7 +775,7 @@ paste_affiliations <- function(x, format) {
   if(format == "latex") {
     paste(affiliations, collapse = "\\\\")
   } else {
-    affiliations
+    paste(affiliations, collapse = "\n\n")
   }
 }
 

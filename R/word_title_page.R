@@ -61,7 +61,7 @@ word_title_page <- function(x) {
 
   c(
     author_information
-    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
+    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , author_note
     , "\n"
     , ifelse(is.null(x$abstract), "", abstract)

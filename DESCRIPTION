@@ -22,7 +22,8 @@ Imports:
   methods,
   rmarkdown (>= 1.18),
   rmdfiltr,
-  yaml
+  yaml,
+  zip
 Remotes:
   tidymodels/broom
 Suggests:

@@ -580,7 +580,7 @@ apa_table.markdown <- function(
 
   caption <- paste0("*", caption, "*")
   current_chunk <- knitr::opts_current$get("label")
-  if(!is.null(current_chunk)) caption <- paste0("<caption>(\\#tab:", current_chunk, ")</caption>\n\n<caption>", caption, "</caption>\n\n")
+  if(!is.null(current_chunk)) caption <- paste0("<caption>(\\#tab:", current_chunk, ")</caption>\n\n<div custom-style='Table Caption'>", caption, "</div>\n\n")
 
   # Print table
   # cat("<caption>")
@@ -601,9 +601,9 @@ apa_table.markdown <- function(
 
     table_output <- c(
       table_output
-      , "\n<center>"
+      , "\n<div custom-style='Compact'>"
       , paste0("*", apa_terms$note, ".* ", note)
-      , "</center>\n\n\n\n"
+      , "</div>\n\n&nbsp;\n\n"
     )
   }
 
