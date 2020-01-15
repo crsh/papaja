@@ -346,7 +346,7 @@ inline_numbers <- function (x) {
 set_default_csl <- function(x) {
   # Use APA6 CSL citations template if no other file is supplied
   has_csl <- function(text) {
-    length(grep("^csl:.*$", text)) > 0
+    length(grep("^csl\\s*:.*$", text)) > 0
   }
 
   if (!has_csl(readLines(x, warn = FALSE))) {
