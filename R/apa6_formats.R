@@ -95,7 +95,7 @@ apa6_pdf <- function(
       (is.null(metadata$citeproc) || metadata$citeproc)
     ) {
       metadata$citeproc <- FALSE
-      assign("yaml_front_matter", metadata, pos = parent.frame())
+      assign("front_matter", metadata, pos = parent.frame())
     }
 
     args
