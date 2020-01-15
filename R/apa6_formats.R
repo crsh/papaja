@@ -543,6 +543,10 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   if(isTRUE(metadata$lineno) || isTRUE(metadata$linenumbers) ) {
     header_includes <- c(header_includes, "\\usepackage{lineno}\n\n\\linenumbers")
   }
+  # Add after lineno to avoid LaTeX warning
+  # https://tex.stackexchange.com/questions/447006/lineno-package-in-latex-causes-warning-message
+  header_includes <- c(header_includes, "\\usepackage{csquotes}")
+
 
   if(!is.null(metadata$geometry)) {
     header_includes <- c(header_includes, paste0("\\geometry{", metadata$geometry, "}\n\n"))
