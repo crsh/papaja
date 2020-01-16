@@ -430,6 +430,15 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     args <- c(args, "--variable", "title:TITLE")
   }
 
+  ## Surpresses redefinitino of paragraph and subparagraph
+  if(is.null(metadata$subparagraph)) { # For compatibility with older pandoc versions
+    args <- c(args, "--variable", "subparagraph:yes")
+  }
+
+  if(is.null(metadata$`block-headings`)) {
+    args <- c(args, "--variable", "block-headings:no")
+  }
+
 
   # Add necessary includes
   header_includes <- c()
