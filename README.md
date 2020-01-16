@@ -131,14 +131,15 @@ Table. *Iris regression table.*
 `papaja` currently provides methods for the following object
 classes:
 
-| A-B                        | B-H                            | L-S                       | S-Z                           |
-| :------------------------- | :----------------------------- | :------------------------ | :---------------------------- |
-| afex\_aov                  | BFBayesFactorList<sup>\*</sup> | list                      | summary.aovlist               |
-| anova                      | BFBayesFactorTop<sup>\*</sup>  | lm                        | summary.glht<sup>\*</sup>     |
-| Anova.mlm                  | emmGrid<sup>\*</sup>           | lsmobj<sup>\*</sup>       | summary.glm                   |
-| aov                        | glht<sup>\*</sup>              | summary\_emm<sup>\*</sup> | summary.lm                    |
-| aovlist                    | glm                            | summary.Anova.mlm         | summary.ref.grid<sup>\*</sup> |
-| BFBayesFactor<sup>\*</sup> | htest                          | summary.aov               |                               |
+| A-B                            | B-L                           | L-S                       | S-Z                           |
+| :----------------------------- | :---------------------------- | :------------------------ | :---------------------------- |
+| afex\_aov                      | BFBayesFactorTop<sup>\*</sup> | lsmobj<sup>\*</sup>       | summary.glm                   |
+| anova                          | emmGrid<sup>\*</sup>          | manova                    | summary.lm                    |
+| Anova.mlm                      | glht<sup>\*</sup>             | summary\_emm<sup>\*</sup> | summary.manova                |
+| aov                            | glm                           | summary.Anova.mlm         | summary.ref.grid<sup>\*</sup> |
+| aovlist                        | htest                         | summary.aov               |                               |
+| BFBayesFactor<sup>\*</sup>     | list                          | summary.aovlist           |                               |
+| BFBayesFactorList<sup>\*</sup> | lm                            | summary.glht<sup>\*</sup> |                               |
 
 \* Not fully tested, don’t trust blindly\!
 
@@ -185,6 +186,16 @@ rmarkdown::draft(
 rmarkdown::render("mymanuscript.Rmd")
 ```
 
+## Getting help
+
+If you have questions related to the use of `papaja`
+[StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a
+[`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is
+a great place to get answers. If you think you have found a bug, please
+[open issues](https://github.com/crsh/papaja/issues) and provide a
+[minimal complete verifiable
+example](https://stackoverflow.com/help/mcve).
+
 ## Contribute
 
 Like `papaja` and want to contribute? Take a look at the [open
@@ -221,6 +232,24 @@ account of expectancy-liking dissociations in evaluative conditioning.
 *Journal of Experimental Psychology: Learning, Memory, and Cognition*.
 <https://doi.org/10/gdxv8n> (R Markdown and data files:
 https://osf.io/vnmby/)
+
+</div>
+
+<div id="ref-aust_enhancing_2019">
+
+Aust, F., & Stahl, C. (2019). The enhancing effect of caffeine on
+mnemonic discrimination is at best small. *PsyArXiv*.
+<https://doi.org/10/gf6jwz> (R Markdown and data files:
+https://osf.io/p7f4m/)
+
+</div>
+
+<div id="ref-barrett_automating_2019">
+
+Barrett, T. S., Borrie, S. A., & Yoho, S. E. (2019). Automating with
+Autoscore: Introducing an R package for automating the scoring of
+orthographic transcripts. *PsyArXiv*. <https://doi.org/10/gf4cqp> (R
+Markdown and data files: https://osf.io/htqvr/)
 
 </div>
 
@@ -337,6 +366,14 @@ https://osf.io/9bcws/)
 
 </div>
 
+<div id="ref-chen_does_2019">
+
+Chen, S.-C., de Koning, B., & Zwaan, R. A. (2019). Does Object Size
+Matter with Regard to the Mental Simulation of Object Orientation?
+*Experimental Psychology*. <https://doi.org/10/ggfzxw>
+
+</div>
+
 <div id="ref-craddock_transcranial_2018">
 
 Craddock, M., Klepousniotou, E., El-Deredy, W., Poliakoff, E., & Lloyd,
@@ -435,7 +472,16 @@ Heino, M. T. J., Vuorre, M., & Hankonen, N. (2018). Bayesian evaluation
 of behavior change interventions: A brief introduction and a practical
 example. *Health Psychology and Behavioral Medicine*, *6*(1), 49–78.
 <https://doi.org/10.1080/21642850.2018.1428102> (R Markdown and data
-files: https://zenodo.org/record/1209814\#.wvy3h4jovgm)
+files: https://github.com/heinonmatti/baseline-visu)
+
+</div>
+
+<div id="ref-heycke_contingency_2018">
+
+Heycke, T. (2018, July). *Contingency Awareness in Evaluative
+Conditioning: Investigations Using Subliminal Stimulus Presentations*
+(text.thesis.doctoral). Universität zu Köln. Retrieved from
+<http://www.uni-koeln.de/>
 
 </div>
 
@@ -454,6 +500,14 @@ Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds
 or one? A registered replication of Rydell et al. (2006). *Cognition and
 Emotion*, *32*(8), 1708–1727.
 <https://doi.org/10.1080/02699931.2018.1429389>
+
+</div>
+
+<div id="ref-heycke_screen_2019">
+
+Heycke, T., & Spitzer, L. (2019). Screen Recordings as a Tool to
+Document Computer Assisted Data Collection Procedures. *Psychologica
+Belgica*, *59*(1), 269–280. <https://doi.org/10/gf5t5c>
 
 </div>
 
@@ -480,6 +534,15 @@ Jordan, K., Buchanan, E., & Padfield, W. (2018). Focus on the Target:
 The Role of Attentional Focus in Decisions about War. *PsyArXiv*.
 <https://doi.org/10.17605/osf.io/9fgu8> (R Markdown and data files:
 https://osf.io/r8qp2/)
+
+</div>
+
+<div id="ref-kothe_retention_2019">
+
+Kothe, E. J., & Ling, M. (2019). Retention of participants recruited to
+a one-year longitudinal study via Prolific. *PsyArXiv*.
+<https://doi.org/10.31234/osf.io/5yv2u> (R Markdown and data files:
+https://osf.io/yjstk/)
 
 </div>
 
@@ -532,13 +595,31 @@ https://osf.io/wm6vc/)
 
 </div>
 
+<div id="ref-mchugh_reasons_2020">
+
+McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2020). Reasons
+or rationalizations: The role of principles in the moral dumbfounding
+paradigm. *Journal of Behavioral Decision Making*, bdm.2167.
+<https://doi.org/10/ggf94x>
+
+</div>
+
 <div id="ref-moors_unconscious_2019">
 
 Moors, P., & Hesselmann, G. (2019). Unconscious arithmetic: Assessing
 the robustness of the results reported by Karpinski, Briggs, and Yale
 (2018). *Consciousness and Cognition*, *68*, 97–106.
-<https://doi.org/10.1016/j.concog.2019.01.003> (R Markdown and data
-files: https://osf.io/cybfe/)
+<https://doi.org/10/gftmrj>
+
+</div>
+
+<div id="ref-morin-lessard_selective_2019">
+
+Morin-Lessard, E., Poulin-Dubois, D., Segalowitz, N., & Byers-Heinlein,
+K. (2019). Selective attention to the mouth of talking faces in
+monolinguals and bilinguals aged 5 months to 5 years. *PsyArXiv*.
+<https://doi.org/10.31234/osf.io/5pkne> (R Markdown and data files:
+https://osf.io/ikvyr/)
 
 </div>
 
@@ -702,6 +783,33 @@ Vuorre, M., & Curley, J. P. (2018). Curating Research Assets: A Tutorial
 on the Git Version Control System. *PsyArXiv*.
 <https://doi.org/10.31234/osf.io/6tzh8> (R Markdown and data files:
 https://github.com/mvuorre/reproguide-curate)
+
+</div>
+
+<div id="ref-xu_challenges_2019">
+
+Xu, R., DeShon, R. P., & Dishop, C. R. (2019). Challenges and
+Opportunities in the Estimation of Dynamic Models. *Organizational
+Research Methods*, 109442811984263. <https://doi.org/10/gf3vbj>
+
+</div>
+
+<div id="ref-zhang_missing_2019">
+
+Zhang, H., Qu, C., Miller, K. F., & Cortina, K. S. (2019). Missing the
+joke: Reduced rereading of garden-path jokes during mind-wandering.
+*Journal of Experimental Psychology: Learning, Memory, and Cognition*.
+<https://doi.org/10/gf68nd>
+
+</div>
+
+<div id="ref-zhang_all-atom_2019">
+
+Zhang, T., Hu, G., Yang, Y., Wang, J., & Zhou, Y. (2019). All-Atom
+Knowledge-Based Potential for RNA Structure Discrimination Based on the
+Distance-Scaled Finite Ideal-Gas Reference State. *Journal of
+Computational Biology*.
+<https://doi.org/10/ggcp6w>
 
 </div>
 
