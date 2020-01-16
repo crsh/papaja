@@ -46,18 +46,18 @@
 #'    }
 #' @references
 #'    Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for an Effect Size Measure in Multiple Linear Regression.
-#'    \emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{http://dx.doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
+#'    \emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
 #'
 #'    Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
-#'    \emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{http://dx.doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
+#'    \emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
 #'
 #'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
 #'    Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-#'    doi:\href{http://dx.doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+#'    doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 #'
 #'    Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
 #'    implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
-#'    doi:\href{http://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+#'    doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 #' @family apa_print
 #' @seealso \code{\link[stats]{anova}}
 #' @examples
