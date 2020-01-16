@@ -64,35 +64,26 @@ printnum(x, ...)
     \code{"f"} gives numbers in the usual
     \code{xxx.xxx} format;  \code{"e"} and \code{"E"} give \code{n.ddde+nn} or
     \code{n.dddE+nn} (scientific format); \code{"g"} and \code{"G"} put
-    \code{x[i]} into scientific format only if it saves space to do so
-    \emph{and} drop trailing zeros and decimal point - unless \code{flag}
-    contains \code{"#"} which keeps trailing zeros for the \code{"g", "G"}
-    formats.
+    \code{x[i]} into scientific format only if it saves space to do so.
 
-    \code{"fg"} (our own hybrid format) uses fixed format as \code{"f"},
-    but \code{digits} as the minimum number of \emph{significant} digits.
-    This can lead to quite long result strings, see examples below.  Note
-    that unlike \code{\link{signif}} this prints large numbers with
+    \code{"fg"} uses fixed format as \code{"f"}, but \code{digits} as
+    the minimum number of \emph{significant} digits.  This can lead
+    to quite long result strings, see examples below.  Note that unlike
+    \code{\link{signif}} this prints large numbers with
     more significant digits than \code{digits}.  Trailing zeros are
     \emph{dropped} in this format, unless \code{flag} contains
     \code{"#"}.}
   \item{flag}{for \code{formatC}, a character string giving a
     format modifier as in Kernighan and Ritchie (1988, page 243) or the
-    C+99 standard.\describe{
-      \item{\code{"0"}}{pads leading zeros;}
-      \item{\code{"-"}}{does left adjustment,}
-      \item{\code{"+"}}{ensures a sign in all cases, i.e., \code{"+"} for
-	positive numbers ,}
-      \item{\code{" "}}{if the first character is not a sign, the space
-	character \code{" "} will be used instead.}
-      \item{\code{"#"}}{specifies \dQuote{an alternative output form},
-	specifically depending on \code{format}.}
-      \item{\code{"'"}}{on some platform--locale combination, activates
-	\dQuote{thousands' grouping} for decimal conversion,}
-      \item{\code{"I"}}{in some versions of \file{glibc} allow for integer
-	conversion to use the locale's alternative output digits, if any.}
-    }
-    There can be more than one of these flags, in any order.  Other characters
+    C+99 standard.
+    \code{"0"} pads leading zeros; \code{"-"} does left adjustment,
+    others are \code{"+"}, \code{" "}, and \code{"#"}; on some
+    platform--locale combination, \code{"'"} activates
+    \dQuote{thousands' grouping} for decimal conversion, and versions of
+    \file{glibc} allow \code{"I"} for integer conversion to use the locale's
+    alternative output digits, if any.
+
+    There can be more than one of these, in any order.  Other characters
     used to have no effect for \code{character} formatting, but signal
     an error since \R 3.4.0.
   }
@@ -118,22 +109,9 @@ printnum(x, ...)
   \item{zero.print}{logical, character string or \code{NULL} specifying
     if and how \emph{zeros} should be formatted specially.  Useful for
     pretty printing \sQuote{sparse} objects.}
-  \item{replace.zero}{logical; if \code{zero.print} is a
-    character string, indicates if the exact zero entries in \code{x}
-    should be simply replaced by \code{zero.print}.  Otherwise,
-    depending on the widths of the respective strings, the (formatted)
-    zeroes are \emph{partly} replaced by \code{zero.print} and then
-    padded with \code{" "} to the right were applicable.  In that case
-    (false \code{replace[.zero]}), if the \code{zero.print} string does
-    not fit, a warning is produced (if \code{warn.non.fitting} is true).
-
-    This works via \code{prettyNum()}, which calls \code{.format.zeros(*,
-    replace=replace.zero)} three times in this case, see the \sQuote{Details}.
-  }
   \item{drop0trailing}{logical, indicating if trailing zeros,
     i.e., \code{"0"} \emph{after} the decimal mark, should be removed;
-    also drops \code{"e+00"} in exponential formats.  This is simply passed
-    to \code{prettyNum()}, see the \sQuote{Details}.}
+    also drops \code{"e+00"} in exponential formats.}
 }}
 
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}

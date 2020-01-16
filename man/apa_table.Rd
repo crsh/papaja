@@ -60,7 +60,8 @@ from \code{knitr::\link{opts_current}$get('label')}.}
   \item{format.args}{A list of arguments to be passed to \code{\link{format}()}
 to format table values, e.g. \code{list(big.mark = ',')}.}
   \item{escape}{Boolean; whether to escape special characters when producing
-HTML or LaTeX tables.}
+HTML or LaTeX tables. When \code{escape = FALSE}, you have to make sure
+that special characters will not trigger syntax errors in LaTeX or HTML.}
 }}
 
 \item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
