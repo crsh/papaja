@@ -77,7 +77,12 @@ test_that(
 
     # Bootstrapped Delta R^2 CI
     skip_on_cran() # The bootstrapping is computationally too expensive
-    set.seed(28247582, sample.kind = "Rounding") # set sample.kind to reproduce old behavior prior to R 3.6.0
+    if(R.version$major >= 3 & as.numeric(R.version$minor) >= 6) {
+      set.seed(28247582, sample.kind = "Rounding")
+    } else {
+      set.seed(28247582)
+    }
+    # set sample.kind to reproduce old behavior prior to R 3.6.0
     model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 2500)
 
     expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.77$, $.87]$")
