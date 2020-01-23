@@ -10,7 +10,7 @@ output        : github_document
 
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
 
-`papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
+`papaja` is an R package in the making including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
 Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
 
@@ -26,7 +26,7 @@ The example document also contains some basic instructions.
 
 To use `papaja` you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/).
 If you want to create PDF- in addition to DOCX-documents you additionally need
-and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution.
+a [TeX](http://de.wikipedia.org/wiki/TeX) distribution.
 If you have no use for TeX beyond rendering R Markdown documents, I recommend you use [TinyTex](https://yihui.name/tinytex/).
 TinyTex can be installed from within R as follows.
 
@@ -74,7 +74,7 @@ my_lm <- lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris
 apa_lm <- apa_print(my_lm)
 ```
 
-One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document (remember to set the chunk option `results = "asis"`).
+One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document.
 
 ```{r eval = FALSE}
 apa_table(apa_lm$table, caption = "Iris regression table.")
