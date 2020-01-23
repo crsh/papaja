@@ -84,7 +84,7 @@ render_appendix <- function(
 
   if(target_format %in% c("latex", "word", "docx")) {
     # Render Markdown fragment
-    md_fragment <- knitr::knit_child(text = readLines(x, encoding = "UTF-8"), quiet = quiet)
+    md_fragment <- knitr::knit_child(input = x, quiet = quiet)
   } else {
     warning(target_format, " documents currently do not support appendices via includes.")
   }
