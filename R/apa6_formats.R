@@ -76,7 +76,7 @@ apa6_pdf <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- modify_input_file
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format="papaja::apa6_pdf") }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -237,7 +237,7 @@ apa6_docx <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- modify_input_file
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format="papaja::apa6_docx") }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -826,7 +826,7 @@ set_ampersand_filter <- function(args, csl_file) {
 }
 
 
-modify_input_file <- function(input, ...) {
+modify_input_file <- function(input, format) {
   input_connection <- file(input, encoding = "UTF-8")
   on.exit(close.connection(input_connection))
   input_text <- readLines(con = input_connection)
@@ -839,8 +839,6 @@ modify_input_file <- function(input, ...) {
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
       stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
     } else {
-      format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
-
       # Add render_appendix()-chunk
       for(i in seq_along(yaml_params$appendix)) {
         input_text <- c(
@@ -854,7 +852,7 @@ modify_input_file <- function(input, ...) {
           } else NULL
           , ""
           , "```{r echo = FALSE, results = 'asis', cache = FALSE}"
-          , paste0("render_appendix('", yaml_params$appendix[i], "')")
+          , paste0("papaja::render_appendix('", yaml_params$appendix[i], "')")
           , "```"
           , ""
         )
