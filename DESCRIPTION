@@ -21,7 +21,7 @@ Imports:
   knitr (>= 1.26),
   methods,
   rmarkdown (>= 2.0),
-  rmdfiltr,
+  rmdfiltr (>= 0.1.2),
   yaml,
   zip
 Remotes:
