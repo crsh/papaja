@@ -103,7 +103,7 @@ apa_print.summary_emm <- function(
 
 
   # Assamble table
-  contrast_table <- data.frame(x)
+  contrast_table <- data.frame(x, check.names = FALSE)
   contrast_table[, factors] <- printnum(contrast_table[, factors])
 
   if("null" %in% colnames(contrast_table)) { # This could go in a table note
