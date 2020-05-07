@@ -138,6 +138,12 @@ apa_print.anova <- function(
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
+    if(!is.null(attr(variance_table, "ddf"))) {
+      return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    } # lmerTest::anova.merModLmerTest
+    if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
+      stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
+    }
     return(print_anova(variance_table, ...))
   } else if("apa_model_comp" %in% class(variance_table)) {
     stop("Model comparison objects of class 'anova' are not supported. See ?apa_print.list to report model comparisons.")

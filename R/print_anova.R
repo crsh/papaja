@@ -136,6 +136,7 @@ print_anova <- function(
     if(in_paren) stat <- in_paren(stat)
     stat
   })
+  apa_res$statistic <- as.vector(apa_res$statistic, mode = "list")
 
   if(!is.null(es)) {
     apa_res$estimate <- apply(x, 1, function(y) {

@@ -47,7 +47,7 @@ arrange_anova.default <- function(x, ...) {
 arrange_anova.anova <- function(x) {
   object <- as.data.frame(x)
   resid_row <- apply(object, 1, function(x) any(is.na(x)))
-  x <- data.frame(array(NA, dim = c(nrow(object) - 1, 7)), row.names = NULL) # Create empty object
+  x <- data.frame(array(NA, dim = c(nrow(object) - sum(resid_row), 7)), row.names = NULL) # Create empty object
   colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
 
   # Model comparison
@@ -60,7 +60,17 @@ arrange_anova.anova <- function(x) {
     x$term <- paste0("model", 2:nrow(object))
 
     class(x) <- c("apa_model_comp", class(x))
+  } else if("LRT" %in% colnames(object)){ # lmerTest
 
+    x <- data.frame(
+      term = rownames(object)
+      , logLik = object$logLik
+      , AIC = object$AIC
+      , statistic = object$LRT
+      , df = object$Df
+      , p.value = object[["Pr(>Chisq)"]]
+    )
+    class(x) <- c("apa_variance_table", "data.frame")
   } else if(is.null(object[["Sum Sq"]])) { # car::levenTest
     x <- x[, -which(colnames(x) %in% c("sumsq", "sumsq_err"))]
 
@@ -69,7 +79,23 @@ arrange_anova.anova <- function(x) {
     x$term <- rownames(object)[!resid_row]
     class(x) <- c("apa_variance_table", class(x))
 
-  } else { # Analysis of variance
+  } else if("NumDF" %in% colnames(object)) { # lmerTest::anova.lmerModLmerTest
+
+    x$term <- rownames(object)
+    x$sumsq <- object[["Sum Sq"]]
+    x$df <- object[["NumDF"]]
+    x$df_res <- object[["DenDF"]]
+    x$statistic <- object[["F value"]]
+    x$p.value <- object[["Pr(>F)"]]
+    x$sumsq_err <- NULL
+
+    class(x) <- c("apa_variance_table", class(x))
+    attr(x, "ddf") <- c(
+      "Satterthwaite"
+      , "Kenward-Roger"
+    )[c(grepl(pattern = "Satterthwaite", x = x), grepl(pattern = "Kenward-Roger", x = x))]
+
+  }  else { # Analysis of variance
 
     x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum Sq", "Df", "F value", "Pr(>F)")]
     x$sumsq_err <- object[resid_row, "Sum Sq"]
@@ -153,7 +179,7 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
       variance_table[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[GG])"]
     } else {
       if (correction[1] == "HF") {
-        if (any(x$pval.adjustments[,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+        if (any(x$pval.adjustments[, "HF eps"] > 1)) message("HF eps > 1 treated as 1.")
         variance_table[row.names(x$pval.adjustments), "num Df"] <- variance_table[row.names(x$pval.adjustments), "num Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
         variance_table[row.names(x$pval.adjustments), "den Df"] <- variance_table[row.names(x$pval.adjustments), "den Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
         variance_table[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[HF])"]
