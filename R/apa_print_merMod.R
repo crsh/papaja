@@ -20,20 +20,28 @@ apa_print.merMod <- function(x, ...) {
   )
 
   x_summary <- summary(x)
-  confidence_intervals <- as.data.frame(
+  confidence_intervals <- try(as.data.frame(
     do.call("confint", args_confint)
     , stringsAsFactors = FALSE
-  )[rownames(x_summary$coefficients), ] # ensure same arrangement as in model object
+  )[rownames(x_summary$coefficients), ], silent = TRUE) # ensure same arrangement as in model object
 
-  print_cis <- print_confint(confidence_intervals)
+  if(inherits(confidence_intervals, "data.frame")) {
+    print_cis <- print_confint(confidence_intervals)
 
-  confidence_col <- paste0(
-    "["
-    , printnum(confidence_intervals[[1]])
-    , ", "
-    , printnum(confidence_intervals[[2]])
-    , "]"
-  )
+    confidence_col <- paste0(
+      "["
+      , printnum(confidence_intervals[[1]])
+      , ", "
+      , printnum(confidence_intervals[[2]])
+      , "]"
+    )
+  } else{
+    warning(confidence_intervals)
+    confidence_col <- NULL
+    print_cis <- NULL
+  }
+
+
 
   isLmerTest <- methods::is(x, "lmerModLmerTest")
 
@@ -53,6 +61,7 @@ apa_print.merMod <- function(x, ...) {
     , "t value" = "statistic"
     , df = "df"
     , "Pr(>|t|)" = "p.value"
+    , "Pr(>|z|)" = "p.value"
   )
   colnames(res_table) <- renamers[colnames(res_table)]
   res_table <- cbind(term, res_table)
@@ -64,13 +73,20 @@ apa_print.merMod <- function(x, ...) {
   res_table$statistic <- printnum(res_table$statistic)
   res_table$conf.int <- confidence_col
 
+  if(is.null(res_table$conf.int)) {
+    est_cols <- c("term", "estimate", "statistic")
+  } else {
+    est_cols <- c("term", "estimate", "conf.int", "statistic")
+  }
+
   if(isLmerTest) {
     res_table$df <- print_df(res_table$df)
     res_table$p.value <- printp(res_table$p.value)
-    res_table <- res_table[, c("term", "estimate", "conf.int", "statistic", "df", "p.value")]
+    res_table <- res_table[, c(est_cols, "df", "p.value")]
   } else {
-    res_table <- res_table[, c("term", "estimate", "conf.int", "statistic")]
+    res_table <- res_table[, est_cols]
   }
+  # p values for glmms seem to be possible, but are calculated from z values
 
   variable_labels(res_table) <- c(
     term = "Term"
