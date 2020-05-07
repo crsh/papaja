@@ -76,13 +76,14 @@ apa_print.merMod <- function(x, ...) {
     term = "Term"
     , estimate = "$b$"
     , std.err = "$\\mathit{SE}$"
-    , conf.int = paste0(args$confint$level * 100, "% CI")
+    , conf.int = paste0(args_confint$level * 100, "% CI")
     , statistic = "$t$"
     , df = "$\\mathit{df}$"
     , p.value = "$p$"
   )[colnames(res_table)]
   class(res_table) <- c("apa_results_table", "data.frame")
 
+  # prepare final output container ----
   res <- apa_print_container()
   res$table <- res_table
 
@@ -92,7 +93,7 @@ apa_print.merMod <- function(x, ...) {
   names(res$estimate) <- sanitize_terms(res_table$term)
 
   if(isLmerTest) {
-    res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p = ", res_table$p.value, "$"))
+    res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p ", add_equals(res_table$p.value), "$"))
   } else {
     res$statistic <- as.list(paste0("$t = ", res_table$statistic, "$"))
   }
