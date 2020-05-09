@@ -50,7 +50,7 @@ arrange_anova.anova <- function(x) {
   x <- data.frame(array(NA, dim = c(nrow(object) - sum(resid_row), 7)), row.names = NULL) # Create empty object
   colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
 
-  # Model comparison
+  # Model comparisons (lm()) ----
   if(any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading")))) {
 
     x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum of Sq", "Df", "F", "Pr(>F)")]
@@ -60,47 +60,54 @@ arrange_anova.anova <- function(x) {
     x$term <- paste0("model", 2:nrow(object))
 
     class(x) <- c("apa_model_comp", class(x))
-  } else if("LRT" %in% colnames(object)){ # lmerTest
+  } else {
+    # --------------------------------------------------------------------------
+    # - stats::anova.lm()
+    # - car::leveneTest()
+    # - afex::mixed(method %in% c("KR", "S"))
+    # - lme4::summary.merMod()
+    # - lmerTest::summary.lmerModLmerTest()
 
-    x <- data.frame(
-      term = rownames(object)
-      , logLik = object$logLik
-      , AIC = object$AIC
-      , statistic = object$LRT
-      , df = object$Df
-      , p.value = object[["Pr(>Chisq)"]]
+    # c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+
+    renamers <- c(
+      "Sum Sq"    = "sumsq"
+      , "Df"      = "df"
+      , "F value" = "statistic"
+      , "Pr(>F)"  = "p.value"
+      # nuisance
+      , "Mean Sq" = "meansq"
+      # fixed-effects tables from lmerModlmerTest
+      , NumDF = "df"
+      , DenDF = "df_res"
+      # model comparisons from lme4 and lmerTest
+      , "logLik" = "logLik"
+      , "AIC" = "AIC"
+      , "BIC" = "BIC"
+      , "LRT" = "statistic"
+      , "Chisq" = "statistic"
+      , "Pr(>Chisq)" = "p.value"
+      # anova objects from afex::mixed
+      , "Effect" = "term"
+      , "num Df" = "df"
+      , "den Df" = "df_res"
+      , "F"      = "statistic"
+      , "Pr(>F)" = "p.value"
     )
-    class(x) <- c("apa_variance_table", "data.frame")
-  } else if(is.null(object[["Sum Sq"]])) { # car::levenTest
-    x <- x[, -which(colnames(x) %in% c("sumsq", "sumsq_err"))]
 
-    x[, c("df", "statistic", "p.value")] <- object[!resid_row, c("Df", "F value", "Pr(>F)")]
-    x$df_res <- object[resid_row, "Df"]
-    x$term <- rownames(object)[!resid_row]
-    class(x) <- c("apa_variance_table", class(x))
+    colnames(object) <- renamers[colnames(object)]
 
-  } else if("NumDF" %in% colnames(object)) { # lmerTest::anova.lmerModLmerTest
+    x <- object[!resid_row, ]
 
-    x$term <- rownames(object)
-    x$sumsq <- object[["Sum Sq"]]
-    x$df <- object[["NumDF"]]
-    x$df_res <- object[["DenDF"]]
-    x$statistic <- object[["F value"]]
-    x$p.value <- object[["Pr(>F)"]]
-    x$sumsq_err <- NULL
+    if(any(resid_row)) {
+      stopifnot(sum(resid_row) == 1)
+      x$df_res <- object$df[resid_row]
+      x$sumsq_err <- object$sumsq[resid_row]
+    }
 
-    class(x) <- c("apa_variance_table", class(x))
-    attr(x, "ddf") <- c(
-      "Satterthwaite"
-      , "Kenward-Roger"
-    )[c(grepl(pattern = "Satterthwaite", x = x), grepl(pattern = "Kenward-Roger", x = x))]
-
-  }  else { # Analysis of variance
-
-    x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum Sq", "Df", "F value", "Pr(>F)")]
-    x$sumsq_err <- object[resid_row, "Sum Sq"]
-    x$df_res <- object[resid_row, "Df"]
-    x$term <- rownames(object)[!resid_row]
+    if(is.null(x$term)) {
+      x$term <- rownames(object)[!resid_row]
+    }
 
     class(x) <- c("apa_variance_table", class(x))
     attr(x, "correction") <- "none"
