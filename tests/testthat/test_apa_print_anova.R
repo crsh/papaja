@@ -385,7 +385,7 @@ test_that(
           , df2 = structure(22L, label = "$\\mathit{df}_2$", class = c("papaja_labelled", "integer"))
           , MSE = structure("31.23", label = "$\\mathit{MSE}$", class = c("papaja_labelled", "character"))
           , p = structure(".022", label = "$p$", class = c("papaja_labelled", "character"))
-          , ges = structure(".216", label = c(ges = "$\\hat{\\eta}^2_G$"), class = c("papaja_labelled","character"))
+          , ges = structure(".216", label = "$\\hat{\\eta}^2_G$", class = c("papaja_labelled","character"))
         )
         , row.names = 1L
         , class = c("apa_results_table", "data.frame")

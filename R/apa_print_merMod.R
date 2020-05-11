@@ -1,12 +1,14 @@
-
+#' @param args_confint
 #' @export
 
 apa_print.merMod <- function(x, ...) {
 
-  # if(package_available("lmerTest")) {
-  #   x <- lmerTest::as_lmerModLmerTest(x)
-  # }
-  args <- list(...)
+  args <- defaults(
+    list(...)
+    , set.if.null = list(
+      args_confint = list()
+    )
+  )
 
   args_confint <- defaults(
     args$args_confint
@@ -15,33 +17,27 @@ apa_print.merMod <- function(x, ...) {
       , parm = "beta_"
     )
     , set.if.null = list(
-      level = .95
+      level = 0.95
+      , method = if(methods::is(x, "glmerMod")){"boot"} else {"profile"}
+      , nsim = 2e3
     )
   )
 
   x_summary <- summary(x)
-  confidence_intervals <- try(as.data.frame(
+  confidence_intervals <- as.data.frame(
     do.call("confint", args_confint)
     , stringsAsFactors = FALSE
-  )[rownames(x_summary$coefficients), ], silent = TRUE) # ensure same arrangement as in model object
+  )[rownames(x_summary$coefficients), ] # ensure same arrangement as in model object
 
-  if(inherits(confidence_intervals, "data.frame")) {
-    print_cis <- print_confint(confidence_intervals)
+  print_cis <- print_confint(confidence_intervals)
 
-    confidence_col <- paste0(
-      "["
-      , printnum(confidence_intervals[[1]])
-      , ", "
-      , printnum(confidence_intervals[[2]])
-      , "]"
-    )
-  } else{
-    warning(confidence_intervals)
-    confidence_col <- NULL
-    print_cis <- NULL
-  }
-
-
+  confidence_col <- paste0(
+    "["
+    , printnum(confidence_intervals[[1]])
+    , ", "
+    , printnum(confidence_intervals[[2]])
+    , "]"
+  )
 
   isLmerTest <- methods::is(x, "lmerModLmerTest")
 
@@ -122,3 +118,11 @@ apa_print.merMod <- function(x, ...) {
   res
 }
 
+#' @export
+
+apa_print.mixed <- function(x, ...) {
+
+  anova_table <- x$anova_table
+  attr(anova_table, "method") <- attr(x, "method")
+  apa_print(anova_table, ...)
+}

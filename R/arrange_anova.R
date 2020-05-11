@@ -64,11 +64,22 @@ arrange_anova.anova <- function(x) {
     # --------------------------------------------------------------------------
     # - stats::anova.lm()
     # - car::leveneTest()
-    # - afex::mixed(method %in% c("KR", "S"))
+    # - afex::mixed(method %in% c("KR", "S", "PB"))
     # - lme4::summary.merMod()
     # - lmerTest::summary.lmerModLmerTest()
 
     # c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+
+    # anova_table from mixed(method = "PB") contain two columns with *p* values,
+    # but also df from asymptotic theory
+    col_names <- colnames(object)
+    if("Chi Df" %in% col_names && "Pr(>PB)" %in% col_names) {
+      object$`Chi Df` <- NULL
+      object$`Pr(>Chisq)` <- NULL
+    }
+    if("Chi Df" %in% col_names && "Df" %in% col_names) {
+      object$Df <- NULL
+    }
 
     renamers <- c(
       "Sum Sq"    = "sumsq"
@@ -78,24 +89,32 @@ arrange_anova.anova <- function(x) {
       # nuisance
       , "Mean Sq" = "meansq"
       # fixed-effects tables from lmerModlmerTest
-      , NumDF = "df"
-      , DenDF = "df_res"
+      , "NumDF"     = "df"
+      , "DenDF"     = "df_res"
       # model comparisons from lme4 and lmerTest
       , "logLik" = "logLik"
-      , "AIC" = "AIC"
-      , "BIC" = "BIC"
-      , "LRT" = "statistic"
-      , "Chisq" = "statistic"
+      , "AIC"    = "AIC"
+      , "BIC"    = "BIC"
+      , "LRT"    = "statistic"
+      , "Chisq"  = "statistic"
       , "Pr(>Chisq)" = "p.value"
       # anova objects from afex::mixed
-      , "Effect" = "term"
-      , "num Df" = "df"
-      , "den Df" = "df_res"
-      , "F"      = "statistic"
-      , "Pr(>F)" = "p.value"
+      , "Effect"  = "term"
+      , "Chi Df"  = "df"
+      , "num Df"  = "df"
+      , "den Df"  = "df_res"
+      , "F"       = "statistic"
+      , "Pr(>F)"  = "p.value"
+      , "Pr(>PB)" = "p.value"
+      , "npar"    = "n.parameters"
     )
 
+    if(!all(colnames(object) %in% names(renamers))) {
+      warning("Some columns could not be renamed.", setdiff(names(renamers), colnames(object)))
+    }
+
     colnames(object) <- renamers[colnames(object)]
+
 
     x <- object[!resid_row, ]
 

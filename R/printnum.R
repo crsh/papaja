@@ -375,9 +375,10 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
 #' @keywords internal
 
 print_df <- function(x, digits = 2L) {
-  if(is.integer(x)) {
-    return(printnum(x))
-  }
+
+  if(is.null(x))    return(NULL)
+  if(is.integer(x)) return(printnum(x))
+
   return(printnum(x, digits = as.numeric(x %% 1 != 0) * digits))
 }
 

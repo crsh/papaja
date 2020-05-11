@@ -107,7 +107,10 @@ assign_label.data.frame <- function(x, value, ...){
   }
 
   if(!all(names(value) %in% colnames(x))){
-    stop("Some requested columns could not be found in data.frame.")
+    stop(
+      "Some requested columns could not be found in data.frame:\n"
+      , paste(setdiff(names(value), colnames(x)), collapse = ", ")
+    )
   }
   # do not coerce to vector if only one column is changed:
   modified_object <- x[, columns_to_annotate, drop = FALSE]
