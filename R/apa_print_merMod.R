@@ -1,4 +1,14 @@
-#' @param args_confint
+#' Format Statistics from Hierarchical Linear Models (APA 6th edition)
+#'
+#' These methods take objects from various R functions that calculate
+#' hierarchical linear models to create formatted character strings
+#' to report the results in accordance with APA manuscript guidelines.
+#'
+#' @param x A fitted hierarchical linear model, either from \code{\link{lme4::lmer}},
+#'   \code{\link{lmerTest::lmer}}, or \code{\link{afex::mixed}}.
+#' @param args_confint Named list. Additional arguments that are passed to \code{\link{lme4::confint.merMod}}
+#' @family apa_print
+#' @rdname apa_print.merMod
 #' @export
 
 apa_print.merMod <- function(x, ...) {
@@ -118,6 +128,7 @@ apa_print.merMod <- function(x, ...) {
   res
 }
 
+#' @rdname apa_print.merMod
 #' @export
 
 apa_print.mixed <- function(x, ...) {
