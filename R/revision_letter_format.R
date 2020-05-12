@@ -29,7 +29,12 @@ revision_letter_pdf <- function(keep_tex = TRUE, ...) {
   # Create format
   revision_letter_format <- do.call(bookdown::pdf_document2, ellipsis)
 
-  revision_letter_format$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
+  # Set chunk defaults
+  revision_letter_format$knitr$opts_chunk$echo <- FALSE
+  revision_letter_format$knitr$opts_chunk$message <- FALSE
+  config$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
+  config$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
+  config$knitr$knit_hooks$inline <- inline_numbers
 
   ## Overwrite preprocessor to set correct margin and CSL defaults
   saved_files_dir <- NULL
