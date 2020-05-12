@@ -130,6 +130,7 @@ print_model_comp <- function(
       , dimnames = list(NULL, diff_vars)
     )
   }
+  model_diffs <- as.data.frame(model_diffs, stringsAsFactors = FALSE)
 
   model_fits <- printnum(
     model_fits
@@ -166,11 +167,15 @@ print_model_comp <- function(
   colnames(diff_stats) <- c("$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ") # Space enable duplicate row names
   diff_stats <- rbind("", diff_stats)
 
-  model_stats_table <- t(cbind(model_fits, model_diffs[, 1, drop = FALSE], diff_stats, model_diffs[, 2:3]))
+  model_stats_table <- as.data.frame(
+    t(cbind(model_fits, model_diffs[, 1, drop = FALSE], diff_stats, model_diffs[, 2:3]))
+    , stringsAsFactors = FALSE
+    , make.names = NA
+  )
   colnames(model_stats_table) <- names(models)
   apa_res$table <- rbind(coef_table, model_stats_table)
   apa_res$table[is.na(apa_res$table)] <- ""
-  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
+  class(apa_res$table) <- c("apa_results_table", "data.frame")
 
   apa_res[c("estimate", "statistic", "full_result")] <- lapply(apa_res[c("estimate", "statistic", "full_result")], as.list)
   apa_res

@@ -48,3 +48,15 @@ print.apa_results_table <- function(x, ...) {
 
   invisible(x)
 }
+
+
+# #' @export
+
+`$.apa_results_table` <- function(x, name) {
+  if(name == "F") {
+    message("Indexing an apa_results_table with `$F` is deprecated. Use `$statistic` instead.")
+    return(x$statistic)
+  } else {
+    x[[name]]
+  }
+}
