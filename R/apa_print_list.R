@@ -67,6 +67,7 @@
 #'
 #'    # No bootstrapped Delta R^2 CI
 #'    apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
+#' @method apa_print list
 #' @export
 
 apa_print.list <- function(

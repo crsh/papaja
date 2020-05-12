@@ -10,6 +10,7 @@
 #' @param ... Further arguments, currently ignored.
 #' @family apa_print
 #' @rdname apa_print.merMod
+#' @method apa_print merMod
 #' @export
 #' @md
 
@@ -126,6 +127,7 @@ apa_print.merMod <- function(x, args_confint, ...) {
 }
 
 #' @rdname apa_print.merMod
+#' @method apa_print mixed
 #' @export
 
 apa_print.mixed <- function(x, ...) {

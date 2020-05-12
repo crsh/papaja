@@ -1,6 +1,7 @@
 
 #' @param test For MANOVA, the multivariate test statistic to be reported, see \code{\link{summary.manova}}.
 #' @rdname apa_print.aov
+#' @method apa_print manova
 #' @export
 
 apa_print.manova <- function(x, test = "Pillai", ...) {
@@ -14,6 +15,7 @@ apa_print.manova <- function(x, test = "Pillai", ...) {
 
 
 #' @rdname apa_print.aov
+#' @method apa_print summary.manova
 #' @export
 
 apa_print.summary.manova <- function(x, ...) {
