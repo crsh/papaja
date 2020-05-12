@@ -14,18 +14,18 @@ apa_print.manova <- function(x, test = "Pillai", ...) {
 }
 
 
-#' @rdname apa_print.aov
-#' @method apa_print summary.manova
-#' @export
-
-apa_print.summary.manova <- function(x, ...) {
-
-  tidied_x <- as.data.frame(
-    x = broom::tidy(x, ...)
-    , stringsAsFactors = FALSE
-  )
-  print_manova(x = tidied_x, ...)
-}
+# #' @rdname apa_print.aov
+# #' @method apa_print summary.manova
+# #' @export
+#
+# apa_print.summary.manova <- function(x, ...) {
+#
+#   tidied_x <- as.data.frame(
+#     x = broom::tidy(x, ...)
+#     , stringsAsFactors = FALSE
+#   )
+#   print_manova(x = tidied_x, ...)
+# }
 
 
 
