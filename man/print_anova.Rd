@@ -4,8 +4,14 @@
 \alias{print_anova}
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
-print_anova(x, intercept = FALSE, observed = NULL, es = "ges",
-  mse = getOption("papaja.mse"), in_paren = FALSE)
+print_anova(
+  x,
+  intercept = FALSE,
+  observed = NULL,
+  es = "ges",
+  mse = getOption("papaja.mse"),
+  in_paren = FALSE
+)
 }
 \arguments{
 \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}

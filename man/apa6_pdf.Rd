@@ -6,14 +6,18 @@
 \alias{apa6_word}
 \title{APA article (6th edition)}
 \usage{
-apa6_pdf(fig_caption = TRUE, number_sections = FALSE, toc = FALSE,
-  keep_tex = TRUE, md_extensions = NULL, ...)
+apa6_pdf(
+  fig_caption = TRUE,
+  number_sections = FALSE,
+  toc = FALSE,
+  keep_tex = TRUE,
+  md_extensions = NULL,
+  ...
+)
 
-apa6_docx(fig_caption = TRUE, pandoc_args = NULL,
-  md_extensions = NULL, ...)
+apa6_docx(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL, ...)
 
-apa6_word(fig_caption = TRUE, pandoc_args = NULL,
-  md_extensions = NULL, ...)
+apa6_word(fig_caption = TRUE, pandoc_args = NULL, md_extensions = NULL, ...)
 }
 \arguments{
 \item{fig_caption}{\code{TRUE} to render figures with captions}

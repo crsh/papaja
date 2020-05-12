@@ -4,8 +4,7 @@
 \alias{add_effect_sizes}
 \title{Effect sizes for Analysis of Variance}
 \usage{
-add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE,
-  intercept = FALSE)
+add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
 }
 \arguments{
 \item{x}{An object of class \code{apa_variance_table}.}

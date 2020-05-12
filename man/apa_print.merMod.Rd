@@ -3,17 +3,19 @@
 \name{apa_print.merMod}
 \alias{apa_print.merMod}
 \alias{apa_print.mixed}
-\title{Format Statistics from Hierarchical Linear Models (APA 6th edition)}
+\title{Format Statistics from (Generalized) Hierarchical Linear Models (APA 6th edition)}
 \usage{
-apa_print.merMod(x, ...)
+\method{apa_print}{merMod}(x, args_confint, ...)
 
-apa_print.mixed(x, ...)
+\method{apa_print}{mixed}(x, ...)
 }
 \arguments{
-\item{x}{A fitted hierarchical linear model, either from \code{\link{lme4::lmer}}(),
-\code{\link{lmerTest::lmer}}, or \code{\link{afex::mixed}}.}
+\item{x}{A fitted hierarchical linear model, either from \code{\link[lme4:lmer]{lme4::lmer()}},
+\code{\link[lmerTest:lmer]{lmerTest::lmer()}}, or \code{\link[afex:mixed]{afex::mixed()}}.}
 
-\item{args_confint}{Named list. Additional arguments that are passed to \code{\link{lme4::confint.merMod}}}
+\item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}.}
+
+\item{...}{Further arguments, currently ignored.}
 }
 \description{
 These methods take objects from various R functions that calculate

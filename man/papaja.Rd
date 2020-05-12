@@ -3,7 +3,6 @@
 \docType{package}
 \name{papaja}
 \alias{papaja}
-\alias{papaja-package}
 \title{APA manuscripts from R Markdown}
 \description{
 \pkg{papaja} is a R-package in the making including a \href{http://rmarkdown.rstudio.com/}{R Markdown} template

@@ -7,8 +7,7 @@
 \usage{
 wsci(data, id, factors, dv, level = 0.95, method = "Morey")
 
-within_subjects_conf_int(data, id, factors, dv, level = 0.95,
-  method = "Morey")
+within_subjects_conf_int(data, id, factors, dv, level = 0.95, method = "Morey")
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}
