@@ -7,6 +7,7 @@
 #' @param x A fitted hierarchical linear model, either from [lme4::lmer()],
 #'   [lmerTest::lmer()], or [afex::mixed()].
 #' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()].
+#' @inheritParams print_anova
 #' @param ... Further arguments, currently ignored.
 #' @family apa_print
 #' @rdname apa_print.merMod
@@ -14,7 +15,11 @@
 #' @export
 #' @md
 
-apa_print.merMod <- function(x, args_confint, ...) {
+apa_print.merMod <- function(
+  x
+  , args_confint
+  , in_paren = FALSE, ...
+) {
 
   args <- list(...)
 
@@ -110,17 +115,18 @@ apa_print.merMod <- function(x, args_confint, ...) {
   res$estimate <- as.list(
     paste0("$b = ", res_table$estimate, "$, ", unlist(print_cis))
   )
-  names(res$estimate) <- sanitize_terms(res_table$term)
+  # if(in_paren) res$estimate <- in_paren(res$estimate) # not necessary, yet
 
   if(isLmerTest) {
     res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p ", add_equals(res_table$p.value), "$"))
   } else {
     res$statistic <- as.list(paste0("$t = ", res_table$statistic, "$"))
   }
-  names(res$statistic) <- names(res$estimate)
+  if(in_paren) res$statistic <- in_paren(res$statistic)
 
   res$full_result <- as.list(paste0(res$estimate, ", ", res$statistic))
-  names(res$full_result) <- names(res$estimate)
+
+  names(res$full_result) <- names(res$statistic) <- names(res$estimate) <- sanitize_terms(res_table$term)
 
   # return
   res

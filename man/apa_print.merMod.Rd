@@ -5,7 +5,7 @@
 \alias{apa_print.mixed}
 \title{Format Statistics from (Generalized) Hierarchical Linear Models (APA 6th edition)}
 \usage{
-\method{apa_print}{merMod}(x, args_confint, ...)
+\method{apa_print}{merMod}(x, args_confint, in_paren = FALSE, ...)
 
 \method{apa_print}{mixed}(x, ...)
 }
@@ -14,6 +14,8 @@
 \code{\link[lmerTest:lmer]{lmerTest::lmer()}}, or \code{\link[afex:mixed]{afex::mixed()}}.}
 
 \item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}.}
+
+\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
 \item{...}{Further arguments, currently ignored.}
 }

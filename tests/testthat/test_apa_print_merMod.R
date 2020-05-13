@@ -3,7 +3,7 @@ context("apa_print() for hierarchical linear models")
 test_that(
   "Fixed-effects summaries and model comparisons."
   , {
-    testthat::skip_on_travis()
+    testthat::skip_on_cran()
     model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
     # model2_lme4 <- lme4::lmer(formula = yield ~ N + P + (1|block), data = npk)
     model_lmerTest <- lmerTest::as_lmerModLmerTest(model_lme4)
@@ -12,6 +12,7 @@ test_that(
     apa_lme4 <- apa_print(model_lme4)
     # apa2_lme4 <-apa_print(model2_lme4)
     apa_lmerTest <- apa_print(model_lmerTest)
+    apa_lmerTest_in_paren <- apa_print(model_lmerTest, in_paren = TRUE)
 
     testthat::expect_identical(
       object = apa_lmerTest$estimate
@@ -52,6 +53,11 @@ test_that(
         Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$, $t = 27.06$"
         , N1 = "$b = 5.62$, 95\\% CI $[1.92$, $9.31]$, $t = 3.06$"
       )
+    )
+
+    expect_identical( # in_paren
+      , object = apa_lmerTest_in_paren$full_result$N1
+      , expected = "$b = 5.62$, 95\\% CI $[1.92$, $9.31]$, $t[17.00] = 3.06$, $p = .007$"
     )
 
     ranova_out <- lmerTest::ranova(model_lmerTest)
