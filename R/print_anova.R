@@ -47,7 +47,7 @@ print_anova <- function(
   # SS_error of the intercept   # term to calculate generalized eta squared
   # correctly. This term contains NAs.
   validate(x, check_class = "data.frame", check_NA = FALSE)
-  # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
+  validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   validate(intercept, check_class = "logical", check_length = 1)
 
   if(!is.null(observed)) validate(observed, check_class = "character")

@@ -66,7 +66,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
   validate(capitalize, check_class = "logical", check_length = 1)
   validate(na_string, check_class = "character", check_length = 1)
 
-  if(numerals) return(x)
+  if(numerals) return(as.character(x))
   if(anyNA(x)) return(rep(na_string, length(x)))
 
   # Based on a function that John Fox posted on the R mailing list

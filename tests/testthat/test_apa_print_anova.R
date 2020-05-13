@@ -381,8 +381,8 @@ test_that(
         list(
           Effect = structure("N", label = "Effect", class = c("papaja_labelled", "character"))
           , F = structure("6.06", label = "$F$", class = c("papaja_labelled", "character"))
-          , df1 = structure(1L, label = "$\\mathit{df}_1$", class = c("papaja_labelled", "integer"))
-          , df2 = structure(22L, label = "$\\mathit{df}_2$", class = c("papaja_labelled", "integer"))
+          , df1 = structure("1", label = "$\\mathit{df}_1$", class = c("papaja_labelled", "character"))
+          , df2 = structure("22", label = "$\\mathit{df}_2$", class = c("papaja_labelled", "character"))
           , MSE = structure("31.23", label = "$\\mathit{MSE}$", class = c("papaja_labelled", "character"))
           , p = structure(".022", label = "$p$", class = c("papaja_labelled", "character"))
           , ges = structure(".216", label = "$\\hat{\\eta}^2_G$", class = c("papaja_labelled","character"))
