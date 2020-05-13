@@ -59,6 +59,8 @@ output            : papaja::apa6_pdf
 
 ```{r setup, include = FALSE}
 library("papaja")
+r_refs("r-references.bib")
+
 ```
 
 ```{r analysis-preferences}
@@ -90,9 +92,6 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 \newpage
 
 # References
-```{r create_r-references}
-r_refs(file = "r-references.bib")
-```
 
 \begingroup
 \setlength{\parindent}{-0.5in}
