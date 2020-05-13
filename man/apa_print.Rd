@@ -42,7 +42,6 @@ Other apa_print:
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
-\code{\link{apa_print.list}()},
-\code{\link{apa_print.merMod}()}
+\code{\link{apa_print.list}()}
 }
 \concept{apa_print}
