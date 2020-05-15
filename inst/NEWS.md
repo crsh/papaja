@@ -1,3 +1,35 @@
+# papaja (UPCOMING)
+
+### Template
+
+### Existing functions
+
+- `apa_print()`
+    - Fixed method dispatch that sometimes failed (#361, #250)
+- `apa_print.list()`
+    - Each column of a model comparison table used to have names, these have now been
+      removed to enable unit testing across different R releases and improve consistency
+      across output objects from `apa_print()`.
+- `printnum.integer()`
+    - Now always returns a `character`
+- `printp()`
+    - Fixed examples in documentation
+- `variable_labels.data.frame()`
+    - When trying to assign labels to columns that do not exist, as of now the function
+      not only throws an error, but also returns the names of the missing columns.
+- `wsci()`, `within_subjects_conf_int()`
+    - Experimental: Returned object now has class `c("papaja_wsci", "data.frame")` and returns an
+      attribute `means` for post processing (see new function `summary.papaja_wsci`).
+
+### New functions
+
+- `apa_print.manova()`
+    - Added a `apa_print` method for MANOVA models from the `stats` package.
+- `summary.papaja_wsci()`
+    - Experimental: Returns means and confidence limits calculated from the output
+      of `wsci()` (suggested by @jstevens5, #362)
+
+
 # papaja 0.1.0.98XX
 
 ### Template
