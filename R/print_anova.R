@@ -181,9 +181,9 @@ print_anova <- function(
     apa_res$full_result <- paste(apa_res$statistic, apa_res$estimate, sep = ", ")
 
     names(apa_res$full_result) <- names(apa_res$estimate)
-    apa_res <- lapply(apa_res, as.list)
+    apa_res[] <- lapply(apa_res, as.list) # [] for preserving class
   }
   apa_res$table <- sort_terms(as.data.frame(anova_table), "Effect")
-  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
+  class(apa_res$table) <- c("apa_results_table", "data.frame")
   apa_res
 }
