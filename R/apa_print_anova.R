@@ -150,21 +150,21 @@ apa_print.anova <- function(
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
-    # lmerTest::anova.merModLmerTest ----
-    if(!is.null(attr(variance_table, "ddf"))) {
-      return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
-    }
-    # afex::mixed ----
-    if(any(grepl("Mixed Model", object_heading))) {
-      attr(variance_table, "correction") <- unname(
-        c(KR = "KR", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
-      )
-      return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
-    }
-    # lmerTest::ranova ----
-    if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
-      stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
-    }
+    # # lmerTest::anova.merModLmerTest ----
+    # if(!is.null(attr(variance_table, "ddf"))) {
+    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    # }
+    # # afex::mixed ----
+    # if(any(grepl("Mixed Model", object_heading))) {
+    #   attr(variance_table, "correction") <- unname(
+    #     c(KR = "KR", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
+    #   )
+    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    # }
+    # # lmerTest::ranova ----
+    # if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
+    #   stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
+    # }
     # anova::lm (single model) ----
     return(print_anova(variance_table, ...))
   } else if("apa_model_comp" %in% class(variance_table)) {
