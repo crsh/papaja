@@ -51,6 +51,9 @@ This is our response
 \Hard
 \NotEstimated
 
+
+\clearpage
+
 # References
 
 \begingroup
@@ -58,4 +61,5 @@ This is our response
 \setlength{\leftskip}{0.5in}
 
 <div id = "refs"></div>
+
 \endgroup
