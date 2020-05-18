@@ -60,7 +60,7 @@ revision_letter_pdf <- function(keep_tex = TRUE, ...) {
 #'
 #' Includes a labelled quote from a LaTeX document 'asis'.
 #'
-#' @param x Character. Quote label.
+#' @param x Character. One or more quote labels.
 #' @param file Character. Path to LaTeX file from which to quote.
 #'
 #' @details Searches the LaTeX document for a labelled quotes preceeded and
@@ -70,15 +70,19 @@ revision_letter_pdf <- function(keep_tex = TRUE, ...) {
 #' @export
 
 quote_from_tex <- function(x, file) {
-  tex <- readLines(file)
-  start <- which(grepl(paste0("% <@~{#", x, "}"), x = tex, fixed = TRUE))
-  end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
+  if(length(x) > 1) {
+    quoted_tex <- lapply(x, quote_from_tex, file = file)
+  } else {
+    tex <- readLines(file)
+    start <- which(grepl(paste0("% <@~{#", x, "}"), x = tex, fixed = TRUE))
+    end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
 
-  quoted_tex <- paste(
-    paste("> ", tex[(start + 1)])
-    , paste(tex[(start + 2):(end - 1)], collapse = "\n")
-    , sep = "\n"
-  )
-
+    quoted_tex <- paste(
+      paste("> ", tex[(start + 1)])
+      , paste(tex[(start + 2):(end - 1)], collapse = "\n")
+      , "\n"
+      , sep = "\n"
+    )
+  }
   knitr::asis_output(quoted_tex)
 }
