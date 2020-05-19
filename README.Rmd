@@ -12,15 +12,16 @@ output        : github_document
 
 `papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
-Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
+If you are looking for an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 
 **`papaja` is in active development and should be considered alpha. If you experience any problems, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa) or [open an issue](https://github.com/crsh/papaja/issues) on Github.**
   
 
 ## Examples
+
 Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
 The example document also contains some basic instructions.
-
+For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 
 ## Installation
 
@@ -164,7 +165,8 @@ If you want to use `papaja` in your next CodeOcean project you can use this caps
 
 
 ## Getting help
-If you have questions related to the use of `papaja` [StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a [`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is a great place to get answers.
+For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
+If you have questions related to the use of `papaja` that are not answered in the manual, [StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a [`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is a great place to get answers.
 If you think you have found a bug, please [open issues](https://github.com/crsh/papaja/issues) and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 
 
