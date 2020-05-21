@@ -159,7 +159,7 @@ apa_print.htest <- function(
     if(!is.null(x$estimate)) {
       paste0(
         gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
-        , papaja:::add_equals(x$estimate)
+        , add_equals(x$estimate)
         , "$"
       )
     }
@@ -193,14 +193,14 @@ apa_print.htest <- function(
         gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
         , dfs
         , " "
-        , papaja:::add_equals(x$statistic)
+        , add_equals(x$statistic)
         , "$"
       )
     }
     , if(!is.null(x$p.value)) {
       paste0(
         "$p "
-        , papaja:::add_equals(x$p.value)
+        , add_equals(x$p.value)
         , "$"
       )
     })
