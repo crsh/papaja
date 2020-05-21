@@ -23,7 +23,7 @@
 #'    a reproducible example in your report!).
 #'
 #'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-#'    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
+#'    \pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
 #'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
@@ -82,73 +82,136 @@ apa_print.htest <- function(
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  ellipsis <- list(...)
+  args <- list(...)
 
-  if(is.null(stat_name) & !is.null(names(x$statistic))) {
-    stat_name <- names(x$statistic)
-    stat_name <- convert_stat_name(stat_name)
+
+  # coerce htest to a proper data frame ----
+
+  if(length(x$estimate) == 2L) {
+    x$estimate <- unname(diff(rev(x$estimate)))
+    names(x$estimate) <- names(x$null.value)
   }
-  stat <- printnum(x$statistic)
+  if(length(x$estimate) > 2L) x$estimate <- NULL
 
-  if(!is.null(x$sample.size)) n <- x$sample.size
+  if(!is.null(x$conf.int)) x$conf.int <- list(x$conf.int)
+  if(is.null(x$conf.int)) x$conf.int <- NULL
+  if(is.null(x$parameter)) x$parameter <- NULL
 
-  if(!is.null(x$parameter)) {
-    # Statistic and degrees of freedom
-    parameter_names <- tolower(names(x$parameter))
-    if(length(parameter_names) == 1 && parameter_names == "df") {
-      dfdigits <- (x$parameter %%1 != 0) * 2
-      if(stat_name == "\\chi^2") {
-        if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ", n = ", n, ")")
-      } else {
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ")")
-      }
-    } else if(length(parameter_names) == 2 && identical(parameter_names, c("num df", "denom df"))) {
-      dfdigits <- (x$parameter %%1 != 0) * 2
-      stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("num df", parameter_names)], digits = dfdigits[1]), ", ", printnum(x$parameter[grep("denom df", parameter_names)], digits = dfdigits[2]), ")")
+  x$null.value  <- NULL
+  x$alternative <- NULL
+  x$method      <- NULL
+  x$data.name   <- NULL
+
+  x_list <- lapply(x, FUN = function(x) {
+    if(!is.null(x)) {
+      matrix(x, nrow = 1, dimnames = list(NULL, names(x)))
     }
+  })
+
+  y <- as.data.frame(
+    x_list
+    , stringsAsFactors = FALSE
+  )
+
+  # Call sanitite_table with args ----
+
+  if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(args$gt1)) args$gt1 <- FALSE
+
+  args$x <- y
+  x <- do.call("sanitize_table", args)
+
+
+  # htest-specific modifications ----
+  if(is.null(n)) n <- y$sample.size
+  if("$\\chi^2$" %in% unlist(variable_labels(x))){
+    if(is.null(n)) {
+      stop("Please provide the sample size to report.")
+    } else {
+      n <- paste0(", n = ", n)
+    }
+  } else {
+    n <- NULL
   }
 
-  # p-value
-  p <- printp(x$p.value)
+  if(!is.null(est_name)) {
+    # todo: if estimate not in table
+    variable_label(x) <- c(estimate = paste0("$", est_name, "$"))
+  }
+  if(!is.null(stat_name)) {
+    # todo: if statistic not in table
+    variable_label(x) <- c(statistic = paste0("$", stat_name, "$"))
+  }
+  if(!is.null(ci)) {
+    args$x <- sort(as.numeric(ci))
+    x$conf.int[] <- paste0(
+      "["
+      , paste(do.call("printnum", args), collapse = ", ")
+      , "]"
+    )
+  }
 
+  # Build output container ----
   apa_res <- apa_print_container()
-  apa_res$statistic <- paste0("$", stat_name, " = ", stat, "$, $p ", add_equals(p), "$")
+
+
+  # estimate ----
+  apa_res$estimate <- paste(c(
+    if(!is.null(x$estimate)) {
+      paste0(
+        gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
+        , papaja:::add_equals(x$estimate)
+        , "$"
+      )
+    }
+    , if(!is.null(x$conf.int)) {
+      paste0(
+        attr(x$conf.int, "conf.level") * 100
+        , "\\% CI "
+        ,
+        gsub(
+        x = gsub(
+          x = gsub(x = gsub(
+            x = x$conf.int, pattern = "\\$", replacement = ""
+          ), pattern = "\\[", replacement = "$[")
+          , pattern = "\\]", replacement = "]$")
+        , pattern = ", ", replacement = "$, $")
+      )
+    }
+  ), collapse = ", ")
+
+  if(in_paren) apa_res$estimate <- in_paren(apa_res$estimate)
+
+  # statistic ----
+  dfs <- NULL
+  if(!is.null(x$df)) dfs <- paste0("(", x$df, n, ")")
+  if(!is.null(x$df1) && !is.null(x$df2)) dfs <- paste0("(", x$df1, ", ", x$df2, ")")
+
+  apa_res$statistic <- paste(
+    c(
+    if(!is.null(x$statistic)) {
+      paste0(
+        gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
+        , dfs
+        , " "
+        , papaja:::add_equals(x$statistic)
+        , "$"
+      )
+    }
+    , if(!is.null(x$p.value)) {
+      paste0(
+        "$p "
+        , papaja:::add_equals(x$p.value)
+        , "$"
+      )
+    })
+    , collapse = ", "
+  )
   if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
 
-  # Estimate
-  if(is.null(est_name) & !is.null(names(x$estimate))) {
-    est_name <- convert_stat_name(names(x$estimate))
-  }
+  # full_result ----
+  apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
 
-  if(is.null(x$estimate)) {
-    est <- NULL
-  } else {
-    if(is.null(est_name)) {
-      warning("Cannot determine name of estimate supplied in ", deparse(substitute(x)), " of class 'htest'. Estimate is omitted from output string. Please set parameter 'est_name' to obtain an estimate.")
-      est <- NULL
-    } else if(!is.null(names(x$estimate)) && est_name %in% c("\\Delta M", "\\Delta p")) {
-      est <- do.call(function(...) printnum(diff(rev(x$estimate)), ...), ellipsis)
-    } else if(length(x$estimate) == 1) {
-      if(est_name %in% c("r", "r_{\\mathrm{s}}", "\\uptau") & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
-      est <- do.call(function(...) printnum(x$estimate, ...), ellipsis)
-    }
-  }
+  apa_res$table <- x
 
-  if(!is.null(est)) {
-
-    if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$, ", do.call(function(...) print_confint(x$conf.int, ...), ellipsis))
-    } else if(!is.null(ci)) { # Use supplied CI
-      ellipsis$margin <- 2 # Ignore margin argument passed by user
-      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$, ", do.call(function(...) print_confint(ci, ...), ellipsis))
-    } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
-      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$")
-    }
-
-    apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
-  }
-  # Do not assign if table is not a data.frame
-  # attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
   apa_res
 }
