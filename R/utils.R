@@ -193,8 +193,10 @@ sanitize_table <- function(
 ) {
 
   args <- list(...)
-  # x <- as.data.frame(x, stringsAsFactors = FALSE) # use make.names
 
+  colnames(x) <- make.names(colnames(x))
+
+  # sanitize_table ----
   renamers <- c(
     # nuisance parameters
     "Sum Sq"    = "sumsq"
@@ -218,7 +220,8 @@ sanitize_table <- function(
     , "difference.in.means"     = "estimate"
     # ----
     , "conf.int" = "conf.int"
-    , "stderr"   = "stderr"
+    , "stderr"   = "std.err"
+    , "std.err"  = "std.err"
     # statistic
     , "t"         = "statistic"
     , "statistic" = "statistic"
@@ -246,8 +249,8 @@ sanitize_table <- function(
     , "den Df"     = "df2"
     , "NumDF"      = "df1"
     , "DenDF"      = "df2"
-    , parameter.num.df   = "df1"
-    , parameter.denom.df = "df2"
+    , "parameter.num.df"   = "df1"
+    , "parameter.denom.df" = "df2"
     # p.value
     , "p.value"    = "p.value"
     , "Pr(>Chisq)" = "p.value"
@@ -275,8 +278,9 @@ sanitize_table <- function(
     , "mean.of.the.differences" = "$M_d$"
     , "difference.in.location"  = "$\\mathit{Mdn}_d$"
     , "difference.in.means"     = "$\\Delta M$"
-    # kghgs
+    # standard error
     , "stderr"   = "$\\mathit{SE}$"
+    , "std.err"  = "$\\mathit{SE}$"
     # statistic
     , "statistic" = stat_label
     , "t"         = "$t$"
@@ -321,7 +325,13 @@ sanitize_table <- function(
 
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
   colnames(x)[names_in_renamers] <- renamers[colnames(x)[names_in_renamers]]
+  x
+}
 
+print_table <- function(x, ...) {
+
+  args <- list(...)
+  # print_table ----
   for (i in colnames(x)) {
     if(i == "p.value") {
       x[[i]] <- printp(x[[i]])
@@ -342,9 +352,103 @@ sanitize_table <- function(
     }
   }
 
+  # rearrange ----
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  x <- x[, ordered_cols, drop = FALSE]
+
   class(x) <- c("apa_results_table", "data.frame")
   x
 }
+
+create_container <- function(x, in_paren, add_par = NULL) {
+  validate(x, check_class = "apa_results_table")
+  validate(in_paren, check_class = "logical")
+
+
+  # Build output container ----
+  apa_res <- apa_print_container()
+
+
+  # estimate ----
+  estimate_list <- list()
+  estimate_list$sep <- ", "
+
+  if(!is.null(x$estimate)) {
+    estimate_list$estimate <- paste0(
+      gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
+      , add_equals(x$estimate)
+      , "$"
+    )
+  }
+  if(!is.null(x$conf.int)) {
+    estimate_list$conf.int <- paste0(
+      attr(x$conf.int, "conf.level") * 100
+      , "\\% CI "
+      ,
+      gsub(
+        x = gsub(
+          x = gsub(x = gsub(
+            x = x$conf.int, pattern = "\\$", replacement = ""
+          ), pattern = "\\[", replacement = "$[")
+          , pattern = "\\]", replacement = "]$")
+        , pattern = ", ", replacement = "$, $")
+    )
+  }
+  # todo: try to add standard error if conf.int not available
+  if(length(estimate_list) > 1L) {
+    apa_res$estimate <- do.call("paste", estimate_list)
+    if(in_paren) apa_res$estimate <- in_paren(apa_res$estimate)
+  }
+
+  # statistic ----
+  dfs <- NULL
+  if(!is.null(x$df)) dfs <- paste0("(", x$df, add_par, ")")
+  if(!is.null(x$df1) && !is.null(x$df2)) dfs <- paste0("(", x$df1, ", ", x$df2, ")")
+
+  stat_list <- list()
+  stat_list$sep <- ", "
+
+  if(!is.null(x$statistic)) {
+    stat_list$statistic <- paste0(
+      gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
+      , dfs
+      , " "
+      , add_equals(x$statistic)
+      , "$"
+    )
+  }
+  if(!is.null(x$p.value)) {
+    stat_list$p.value <- paste0(
+      "$p "
+      , add_equals(x$p.value)
+      , "$"
+    )
+  }
+
+  if(length(stat_list) > 1L) {
+    apa_res$statistic <- do.call("paste", stat_list)
+    if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
+  }
+
+
+  # full_result ----
+  full_list <- list(sep = ", ")
+  if(!is.null(apa_res$estimate))  full_list$est  <- apa_res$estimate
+  if(!is.null(apa_res$statistic)) full_list$stat <- apa_res$statistic
+
+  apa_res$full_result <- do.call("paste", full_list)
+
+
+  # return as lists if more than one term
+  apa_res[1:3] <- lapply(X = apa_res[1:3], FUN = function(x){
+    if(length(x) > 1L) return(as.list(x))
+    if(length(x) == 1L) return(x)
+  })
+
+  apa_res$table <- x
+  apa_res
+}
+
 
 
 #' Create interval estimate string

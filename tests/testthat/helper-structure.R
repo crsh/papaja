@@ -5,6 +5,7 @@ container_names <- c("estimate", "statistic", "full_result", "table")
 
 expect_apa_results <- function(
   object
+  , col.names = NULL
   , ...
 ) {
 
@@ -15,6 +16,13 @@ expect_apa_results <- function(
   expect_identical(names(object), container_names)
 
   # estimate ----
+  if (!is.null(object$est)) {
+    if(is.list(object$est)) {
+      lapply(X = object$est, FUN = expect_type, "character")
+    } else {
+      expect_type(object$est, "character")
+    }
+  }
 
   # statistic ----
 
@@ -27,6 +35,9 @@ expect_apa_results <- function(
       # All columns should be character and labelled
       expect_s3_class(!!x, class = c("papaja_labelled", "character"), exact = TRUE)
     })
+    if(!is.null(col.names)) {
+      expect_identical(colnames(object$table), col.names)
+    }
   }
   # Invisibly return the value
   invisible(act$val)
