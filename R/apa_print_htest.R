@@ -113,7 +113,7 @@ apa_print.htest <- function(
     , stringsAsFactors = FALSE
   )
 
-  # Call sanitite_table with args ----
+  # Call sanitize_table with args ----
 
   if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(args$gt1)) args$gt1 <- FALSE
 
@@ -155,30 +155,32 @@ apa_print.htest <- function(
 
 
   # estimate ----
-  apa_res$estimate <- paste(c(
-    if(!is.null(x$estimate)) {
-      paste0(
-        gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
-        , add_equals(x$estimate)
-        , "$"
-      )
-    }
-    , if(!is.null(x$conf.int)) {
-      paste0(
-        attr(x$conf.int, "conf.level") * 100
-        , "\\% CI "
-        ,
-        gsub(
+
+  estimate_list <- list()
+  estimate_list$sep <- ", "
+
+  if(!is.null(x$estimate)) {
+    estimate_list$estimate <- paste0(
+      gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
+      , add_equals(x$estimate)
+      , "$"
+    )
+  }
+  if(!is.null(x$conf.int)) {
+    estimate_list$conf.int <- paste0(
+      attr(x$conf.int, "conf.level") * 100
+      , "\\% CI "
+      ,
+      gsub(
         x = gsub(
           x = gsub(x = gsub(
             x = x$conf.int, pattern = "\\$", replacement = ""
           ), pattern = "\\[", replacement = "$[")
           , pattern = "\\]", replacement = "]$")
         , pattern = ", ", replacement = "$, $")
-      )
-    }
-  ), collapse = ", ")
-
+    )
+  }
+  apa_res$estimate <- do.call("paste", estimate_list)
   if(in_paren) apa_res$estimate <- in_paren(apa_res$estimate)
 
   # statistic ----
@@ -186,30 +188,40 @@ apa_print.htest <- function(
   if(!is.null(x$df)) dfs <- paste0("(", x$df, n, ")")
   if(!is.null(x$df1) && !is.null(x$df2)) dfs <- paste0("(", x$df1, ", ", x$df2, ")")
 
-  apa_res$statistic <- paste(
-    c(
-    if(!is.null(x$statistic)) {
-      paste0(
-        gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
-        , dfs
-        , " "
-        , add_equals(x$statistic)
-        , "$"
-      )
-    }
-    , if(!is.null(x$p.value)) {
-      paste0(
-        "$p "
-        , add_equals(x$p.value)
-        , "$"
-      )
-    })
-    , collapse = ", "
-  )
+  stat_list <- list()
+  stat_list$sep <- ", "
+
+  if(!is.null(x$statistic)) {
+    stat_list$statistic <- paste0(
+      gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
+      , dfs
+      , " "
+      , add_equals(x$statistic)
+      , "$"
+    )
+  }
+  if(!is.null(x$p.value)) {
+    stat_list$p.value <- paste0(
+      "$p "
+      , add_equals(x$p.value)
+      , "$"
+    )
+  }
+
+  apa_res$statistic <- do.call("paste", stat_list)
   if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
 
   # full_result ----
-  apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+  apa_res$full_result <- do.call(
+    "paste"
+    , list(apa_res$estimate, apa_res$statistic, sep = ", ")
+  )
+
+  apa_res[1:3] <- lapply(X = apa_res[1:3], FUN = function(x){
+    if(length(x) > 1L) return(as.list(x))
+    if(length(x) == 1L) return(x)
+    NULL
+  })
 
   apa_res$table <- x
 
