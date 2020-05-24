@@ -389,6 +389,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Set additional lua filters
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
+
+    if(isTRUE(metadata$quote_labels)) {
+      label_quotes_filter <- system.file(
+        "lua", "label_quotes.lua"
+        , package = "papaja"
+      )
+      args <- rmdfiltr::add_custom_filter(args, filter_path = label_quotes_filter, lua = TRUE)
+    }
   }
 
   ## Set template variables and defaults
@@ -698,7 +706,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
 
     docx_fixes_lua <-  system.file(
-      "rmd", "docx_fixes.lua"
+      "lua", "docx_fixes.lua"
       , package = "papaja"
     )
     if(docx_fixes_lua == "") stop("docx_fixes Lua-filter not found.")
