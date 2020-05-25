@@ -199,8 +199,8 @@ sanitize_table <- function(
   # sanitize_table ----
   renamers <- c(
     # nuisance parameters
-    "Sum Sq"    = "sumsq"
-    , "Mean Sq" = "meansq"
+    "Sum.Sq"    = "sumsq"
+    , "Mean.Sq" = "meansq"
     , "logLik"  = "loglik"
     , "AIC"     = "AIC"
     , "BIC"     = "BIC"
@@ -222,9 +222,15 @@ sanitize_table <- function(
     , "conf.int" = "conf.int"
     , "stderr"   = "std.err"
     , "std.err"  = "std.err"
+    # multivariate.statistic
+    , "Pillai"    = "multivariate.statistic"
+    , "Wilks"     = "multivariate.statistic"
+    , "Roy"       = "multivariate.statistic"
+    , "Hotelling.Lawley" = "multivariate.statistic"
     # statistic
     , "t"         = "statistic"
     , "statistic" = "statistic"
+    , "approx.F"  = "statistic"
     , "F value"   = "statistic"
     , "F"         = "statistic"
     , "LRT"       = "statistic"
@@ -239,29 +245,31 @@ sanitize_table <- function(
     , "Bartlett.s.K.2"          = "statistic"
     , "Bartlett.s.K.squared"    = "statistic"
     # df, df1, df2
+    , "multivariate.df1" = "multivariate.df1"
+    , "multivariate.df2" = "multivariate.df2"
     , "parameter"  = "df"
     , "df"         = "df"
     , "Df"         = "df"
-    , "Chi Df"     = "df"
+    , "Chi.Df"     = "df"
     , "parameter1" = "df1"
     , "parameter2" = "df2"
-    , "num Df"     = "df1"
-    , "den Df"     = "df2"
+    , "num.Df"     = "df1"
+    , "den.Df"     = "df2"
     , "NumDF"      = "df1"
     , "DenDF"      = "df2"
     , "parameter.num.df"   = "df1"
     , "parameter.denom.df" = "df2"
     # p.value
     , "p.value"    = "p.value"
-    , "Pr(>Chisq)" = "p.value"
-    , "Pr(>F)"     = "p.value"
-    , "Pr(>PB)"    = "p.value"
+    , "Pr..Chisq." = "p.value"
+    , "Pr..F."     = "p.value"
+    , "Pr..PB."    = "p.value"
   )
 
   new_labels <- c(
     # nuisance parameters
-    "Sum Sq"    = "$\\mathit{SS}$"
-    , "Mean Sq" = "$\\mathit{MS}$"
+    "Sum.Sq"    = "$\\mathit{SS}$"
+    , "Mean.Sq" = "$\\mathit{MS}$"
     , "logLik"  = "$\\ln L$"
     , "AIC"     = "$\\mathit{AIC}$"
     , "BIC"     = "$\\mathit{BIC}$"
@@ -281,11 +289,17 @@ sanitize_table <- function(
     # standard error
     , "stderr"   = "$\\mathit{SE}$"
     , "std.err"  = "$\\mathit{SE}$"
+    # multivariate.statistic
+    , "Pillai"           = "$V$"
+    , "Wilks"            = "$\\Lambda$"
+    , "Hotelling.Lawley" = "$T$"
+    , "Roy"              = "$\\theta$"
     # statistic
     , "statistic" = stat_label
     , "t"         = "$t$"
-    , "F value"   = "$F$"
+    , "F.value"   = "$F$"
     , "F"         = "$F$"
+    , "approx.F"  = "$F$"
     , "LRT"       = "$\\chi^2$"
     , "chisq"     = "$\\chi^2$"
     , "Chisq"     = "$\\chi^2$"
@@ -298,21 +312,23 @@ sanitize_table <- function(
     , "Bartlett.s.K.2"          = "$K^2$"
     , "Bartlett.s.K.squared"    = "$K^2$"
     # df, df1, df2
+    , "multivariate.df1" = "$\\mathit{df}_1$"
+    , "multivariate.df1" = "$\\mathit{df}_1$"
     , "parameter" = "$\\mathit{df}$"
     , "df"        = "$\\mathit{df}$"
     , "Df"        = "$\\mathit{df}$"
-    , "Chi Df"    = "$\\mathit{df}$"
-    , "num Df"    = "$\\mathit{df}_1$"
-    , "den Df"    = "$\\mathit{df}_2$"
+    , "Chi.Df"    = "$\\mathit{df}$"
+    , "num.Df"    = "$\\mathit{df}_1$"
+    , "den.Df"    = "$\\mathit{df}_2$"
     , "NumDF"     = "$\\mathit{df}_1$"
     , "DenDF"     = "$\\mathit{df}_2$"
     , "parameter.num.df"   = "$\\mathit{df}_1$"
     , "parameter.denom.df" = "$\\mathit{df}_2$"
     # p.value
     , "p.value"    = "$p$"
-    , "Pr(>Chisq)" = "$p$"
-    , "Pr(>F)"     = "$p$"
-    , "Pr(>PB)"    = "$p$"
+    , "Pr..Chisq." = "$p$"
+    , "Pr..F."     = "$p$"
+    , "Pr..PB."    = "$p$"
   )
 
 
@@ -335,7 +351,7 @@ print_table <- function(x, ...) {
   for (i in colnames(x)) {
     if(i == "p.value") {
       x[[i]] <- printp(x[[i]])
-    } else if(i %in% c("df", "df1", "df2")) {
+    } else if(i %in% c("df", "df1", "df2", "multivariate.df1", "multivariate.df2")) {
       x[[i]] <- print_df(x[[i]])
     } else if(i == "conf.int") {
       tmp <- unlist(lapply(X = x[[i]], FUN = function(x, ...){
@@ -347,20 +363,25 @@ print_table <- function(x, ...) {
     } else if (i == "estimate"){
       args$x <- x[[i]]
       x[[i]] <- do.call("printnum", args)
+    } else if (i == "term"){
+      x[[i]] <- prettify_terms(x[[i]])  # todo: standardized ???
     } else {
       x[[i]] <- printnum(x[[i]])
     }
   }
 
   # rearrange ----
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
   x <- x[, ordered_cols, drop = FALSE]
+  if(!is.null(x$term)) x <- sort_terms(x, "term")
+  rownames(x) <- NULL
 
   class(x) <- c("apa_results_table", "data.frame")
   x
 }
 
-create_container <- function(x, in_paren, add_par = NULL) {
+create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL) {
   validate(x, check_class = "apa_results_table")
   validate(in_paren, check_class = "logical")
 
@@ -408,6 +429,14 @@ create_container <- function(x, in_paren, add_par = NULL) {
   stat_list <- list()
   stat_list$sep <- ", "
 
+  if(!is.null(x$multivariate.statistic)) {
+    stat_list$multivariate.statistic <- paste0(
+      gsub(x = variable_label(x$multivariate.statistic), pattern = "\\$$", replacement = " ")
+      , add_equals(x$multivariate.statistic)
+      , "$"
+    )
+  }
+
   if(!is.null(x$statistic)) {
     stat_list$statistic <- paste0(
       gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
@@ -441,7 +470,12 @@ create_container <- function(x, in_paren, add_par = NULL) {
 
   # return as lists if more than one term
   apa_res[1:3] <- lapply(X = apa_res[1:3], FUN = function(x){
-    if(length(x) > 1L) return(as.list(x))
+    if(length(x) > 1L) {
+      y <- as.list(x)
+      if(!is.null(sanitized_terms)) names(y) <- sanitized_terms
+      return(y)
+    }
+
     if(length(x) == 1L) return(x)
   })
 

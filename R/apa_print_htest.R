@@ -113,11 +113,10 @@ apa_print.htest <- function(
     , stringsAsFactors = FALSE
   )
 
-  # Call sanitize_table with args ----
-
+  # sanitize and prettify table ----
+  args$x <- sanitize_table(y)
   if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(args$gt1)) args$gt1 <- FALSE
 
-  args$x <- sanitize_table(y)
   x <- do.call("print_table", args)
 
 
@@ -150,5 +149,5 @@ apa_print.htest <- function(
     )
   }
 
-  create_container(x, in_paren = in_paren, add_par = n)
+  create_container(x, in_paren = in_paren, add_par = n, sanitized_terms = sanitize_terms(y$term))
 }
