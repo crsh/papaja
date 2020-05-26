@@ -79,13 +79,13 @@ apa_print.htest <- function(
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf), check_length = 1)
-  if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
+  if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
 
 
-  # coerce htest to a proper data frame ----
+  # Arrange table, i.e. coerce htest to a proper data frame ----
 
   if(length(x$estimate) == 2L) {
     x$estimate <- unname(diff(rev(x$estimate)))
@@ -93,7 +93,13 @@ apa_print.htest <- function(
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
 
-  conf_int <- list(x$conf.int)
+  if(is.null(ci)) {
+    conf_int <- list(x$conf.int)
+  } else {
+    conf_int <- list(ci)
+  }
+
+
 
   if(is.null(x$parameter)) x$parameter <- NULL
 
@@ -115,10 +121,11 @@ apa_print.htest <- function(
   )
   if(!identical(conf_int, list(NULL))) y$conf.int <- conf_int
 
-  # sanitize and prettify table ----
+  # sanitize table ----
   ellipsis$x <- sanitize_table(y)
-  if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
 
+  # Prettify table ----
+  if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
   x <- do.call("print_table", ellipsis)
 
 
@@ -136,20 +143,20 @@ apa_print.htest <- function(
 
   if(!is.null(est_name)) {
     # todo: if estimate not in table
+    if(!("estimate" %in% colnames(x))) stop("No estimate available in results table.")
     variable_label(x) <- c(estimate = paste0("$", est_name, "$"))
   }
   if(!is.null(stat_name)) {
     # todo: if statistic not in table
+    if(!("statistic" %in% colnames(x))) stop("No statistic available in results table.")
     variable_label(x) <- c(statistic = paste0("$", stat_name, "$"))
   }
-  if(!is.null(ci)) {
-    ellipsis$x <- sort(as.numeric(ci))
-    x$conf.int[] <- paste0(
-      "["
-      , paste(do.call("printnum", ellipsis), collapse = ", ")
-      , "]"
-    )
-  }
 
-  create_container(x, in_paren = in_paren, add_par = n, sanitized_terms = sanitize_terms(y$term))
+  # Create output object ----
+  create_container(
+    x
+    , in_paren = in_paren
+    , add_par = n
+    , sanitized_terms = sanitize_terms(y$term)
+  )
 }
