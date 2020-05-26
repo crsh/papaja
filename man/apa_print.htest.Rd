@@ -90,7 +90,7 @@ apa_print(cor_stat)
 smokers  <- c(83, 90, 129, 70)
 patients <- c(86, 93, 136, 82)
 prop_stat <- prop.test(smokers, patients)
-apa_print(prop_stat, n = sum(patients), est_name = "\\\\Delta p")
+apa_print(prop_stat, n = sum(patients))
 }
 \seealso{
 Other apa_print: 
