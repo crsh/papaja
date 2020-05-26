@@ -209,7 +209,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     stop("No within-subjects factors specified.")
   }
   values <- ee
-  means <- aggregate(x = data[[dv]], by = data[, factors, drop = FALSE], FUN = mean)
+  means <- stats::aggregate(x = data[[dv]], by = data[, factors, drop = FALSE], FUN = mean)
   colnames(means)[ncol(means)] <- dv
 
   attr(values, "Between-subjects factors") <- if(is.null(between)){"none"} else {between}
@@ -230,16 +230,23 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 
 within_subjects_conf_int <- wsci
 
-#' @rdname wsci
+
+#' Summarize Within-Subjects Confidence Intervals
+#'
+#' Calculate upper and lower limits of within-subjects confidence intervals calculated
+#' with \code{\link{wsci}} and return them along the respective means.
+#'
+#' @param object An object of class \code{papaja_wsci}, generated with function \code{\link{wsci}}.
+#' @param ... Further arguments that may be passed, currently ignored.
 #' @export
 
-summary.papaja_wsci <- function(x) {
+summary.papaja_wsci <- function(object, ...) {
 
-  means <- attr(x, "means")
+  means <- attr(object, "means")
   colnames(means)[ncol(means)] <- "mean"
-  colnames(x)[ncol(x)] <- "ci_diff"
+  colnames(object)[ncol(object)] <- "ci_diff"
 
-  y <- merge(x = x, y = means, sort = FALSE)
+  y <- merge(x = object, y = means, sort = FALSE)
   y$lower_limit <- y$mean - y$ci_diff
   y$upper_limit <- y$mean + y$ci_diff
   y$ci_diff <- NULL
