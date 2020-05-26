@@ -82,7 +82,7 @@ apa_print.htest <- function(
   if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  args <- list(...)
+  ellipsis <- list(...)
 
 
   # coerce htest to a proper data frame ----
@@ -93,10 +93,11 @@ apa_print.htest <- function(
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
 
-  if(!is.null(x$conf.int)) x$conf.int <- list(x$conf.int)
-  if(is.null(x$conf.int)) x$conf.int <- NULL
+  conf_int <- list(x$conf.int)
+
   if(is.null(x$parameter)) x$parameter <- NULL
 
+  x$conf.int    <- NULL
   x$null.value  <- NULL
   x$alternative <- NULL
   x$method      <- NULL
@@ -112,12 +113,13 @@ apa_print.htest <- function(
     x_list
     , stringsAsFactors = FALSE
   )
+  if(!identical(conf_int, list(NULL))) y$conf.int <- conf_int
 
   # sanitize and prettify table ----
-  args$x <- sanitize_table(y)
-  if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(args$gt1)) args$gt1 <- FALSE
+  ellipsis$x <- sanitize_table(y)
+  if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
 
-  x <- do.call("print_table", args)
+  x <- do.call("print_table", ellipsis)
 
 
   # htest-specific modifications ----
@@ -141,10 +143,10 @@ apa_print.htest <- function(
     variable_label(x) <- c(statistic = paste0("$", stat_name, "$"))
   }
   if(!is.null(ci)) {
-    args$x <- sort(as.numeric(ci))
+    ellipsis$x <- sort(as.numeric(ci))
     x$conf.int[] <- paste0(
       "["
-      , paste(do.call("printnum", args), collapse = ", ")
+      , paste(do.call("printnum", ellipsis), collapse = ", ")
       , "]"
     )
   }

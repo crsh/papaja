@@ -117,20 +117,24 @@ assign_label.data.frame <- function(x, value, ...){
   colnames(modified_object) <- colnames(x)[columns_to_annotate]
   ordered_value <- value[colnames(modified_object)]
 
-  d <- mapply(
-    FUN = assign_label.default
-    , modified_object
-    , value = ordered_value
-    , USE.NAMES = TRUE
-    , SIMPLIFY = FALSE
-  )
-  d <- as.data.frame(
-    d
-    , col.names = names(modified_object)
-    , stringsAsFactors = FALSE
-    , check.names = FALSE
-  )
-  x[, columns_to_annotate] <- d
+  for(i in seq_along(colnames(x))) {
+    if(colnames(x)[i] %in% names(value)) x[[i]] <- assign_label(x[[i]], value[[colnames(x)[i]]])
+  }
+
+  # d <- mapply(
+  #   FUN = assign_label.default
+  #   , modified_object
+  #   , value = ordered_value
+  #   , USE.NAMES = TRUE
+  #   , SIMPLIFY = FALSE
+  # )
+  # d <- as.data.frame(
+  #   d
+  #   , col.names = names(modified_object)
+  #   , stringsAsFactors = FALSE
+  #   , check.names = FALSE
+  # )
+  # x[, columns_to_annotate] <- d
 
   x
 }

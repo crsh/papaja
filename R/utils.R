@@ -194,6 +194,15 @@ sanitize_table <- function(
 
   args <- list(...)
 
+  conf_level <- attr(x$conf.int, "conf.level")
+  if(is.null(conf_level)) {
+    conf_level <- attr(x$conf.int[[1]], "conf.level")
+  }
+  conf_label <- paste0(
+    if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+    , "CI"
+  )
+  # print(conf_label)
   colnames(x) <- make.names(colnames(x))
 
   # sanitize_table ----
@@ -266,6 +275,7 @@ sanitize_table <- function(
     , "Pr..PB."    = "p.value"
   )
 
+
   new_labels <- c(
     # nuisance parameters
     "Sum.Sq"    = "$\\mathit{SS}$"
@@ -286,6 +296,8 @@ sanitize_table <- function(
     , "mean.of.the.differences" = "$M_d$"
     , "difference.in.location"  = "$\\mathit{Mdn}_d$"
     , "difference.in.means"     = "$\\Delta M$"
+    # conf.int
+    , conf.int = conf_label
     # standard error
     , "stderr"   = "$\\mathit{SE}$"
     , "std.err"  = "$\\mathit{SE}$"
