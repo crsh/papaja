@@ -17,24 +17,27 @@ affiliation:
   - id            : "2"
     institution   : "Konstanz Business School"
 
-author_note: >
+author_note: |
   Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
 
   Enter author note here.
 
-abstract: >
+abstract: |
   Enter abstract here (note the indentation, if you start a new paragraph).
   
 keywords          : "keywords"
 wordcount         : "X"
 
-figsintext        : no
+floatsintext      : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-lineno            : yes
+linenumbers       : yes
+mask              : no
+draft             : no
 citeproc          : no # To avoid CRAN check error
 
+documentclass     : "apa6"
 classoption       : "man"
 output            : papaja::apa6_pdf
 ---

@@ -47,7 +47,7 @@
 #' apa_print(t_stat)
 #' apa_print(t_stat, stat_name = "tee")
 #'
-#' wilcox_stat <- wilcox.test(extra ~ group, data = sleep)
+#' wilcox_stat <- wilcox.test(extra ~ group, data = sleep, exact = FALSE)
 #' apa_print(wilcox_stat)
 #'
 #' # Correlations
@@ -62,7 +62,7 @@
 #' smokers  <- c(83, 90, 129, 70)
 #' patients <- c(86, 93, 136, 82)
 #' prop_stat <- prop.test(smokers, patients)
-#' apa_print(prop_stat, n = sum(patients))
+#' apa_print(prop_stat, n = sum(patients), est_name = "\\Delta p")
 #' @method apa_print htest
 #' @export
 

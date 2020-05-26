@@ -12,7 +12,6 @@
 #'    a title page and adds the abstract. You should, therefore, always call \code{apa_prepare_doc} at the
 #'    very beginning of the R Markdown document.
 #' @seealso \code{\link{apa6_word}}
-#' @examples apa_prepare_doc()
 #' @export
 
 apa_prepare_doc <- function() {

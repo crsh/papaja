@@ -12,6 +12,7 @@ apa_table(x, ...)
 
 \method{apa_table}{apa_results_table}(x, escape = FALSE, ...)
 
+
 \method{apa_table}{matrix}(
   x,
   caption = NULL,
@@ -60,6 +61,7 @@ apa_table(x, ...)
   ...,
   format.args = NULL
 )
+
 }
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
@@ -85,9 +87,11 @@ are included if \code{rownames(x)} is neither \code{NULL} nor identical to
 are left-aligned. If \code{length(align) == 1L}, the string will be
 expanded to a vector of individual letters, e.g. \code{'clc'} becomes
 \code{c('c', 'l', 'c')}, unless the output format is LaTeX.}
+
     \item{\code{label}}{The table reference label. By default, the label is obtained
 from \code{knitr::\link[knitr]{opts_current}$get('label')}.}
   }}
+
 
 \item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 column names, row names, caption, note and table contents are escaped.}
@@ -118,6 +122,10 @@ and in MS Word documents.}
 documents.}
 
 \item{font_size}{Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.}
+
+\item{span_text_columns}{Logical. If \code{TRUE} tables span across text columns
+in two-column PDF documents (e.g. when setting \code{classoption: jou}).
+Ignored in other documents.}
 
 \item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
 

@@ -31,9 +31,10 @@ before_install:
   - tlmgr install apa6 booktabs caption csquotes endfloat environ etoolbox fancyhdr fancyvrb framed lineno microtype mptopdf ms parskip pgf sttools threeparttable threeparttablex trimspaces txfonts upquote url was xcolor
 
 addons:
- apt:
-   packages:
-   - lmodern
-   # - libgsl0ldbl # GNU scientific library for MBESS
-   - libgsl-dev # GNU scientific library for MBESS
-   - libnlopt-dev # nloptr
+  apt:
+    packages:
+    - lmodern
+    # - libgsl0ldbl # GNU scientific library for MBESS
+    - libgsl-dev # GNU scientific library for MBESS
+    - libnlopt-dev # nloptr
+

@@ -24,6 +24,9 @@
 #' @param font_size Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.
 #' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 #'    column names, row names, caption, note and table contents are escaped.
+#' @param span_text_columns Logical. If \code{TRUE} tables span across text columns
+#'    in two-column PDF documents (e.g. when setting \code{classoption: jou}).
+#'    Ignored in other documents.
 #' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
 #' @param merge_method Character. Determines how to merge tables if \code{x} is a \code{list}. Can be either
 #'   \code{indent} or \code{table_spanner}.
@@ -98,6 +101,7 @@ apa_table.matrix <- function(
   , landscape = FALSE
   , font_size = NULL
   , escape = TRUE
+  , span_text_columns = TRUE
   , ...
   , format.args = NULL
 ) {
@@ -120,6 +124,7 @@ apa_table.matrix <- function(
     , landscape = landscape
     , font_size = font_size
     , escape = escape
+    , span_text_columns = span_text_columns
     , ...
     , format.args = format.args
   )
@@ -142,6 +147,7 @@ apa_table.list <- function(
   , font_size = NULL
   , escape = TRUE
   , merge_method = "indent"
+  , span_text_columns = TRUE
   , ...
   , format.args = NULL
 ) {
@@ -250,6 +256,7 @@ apa_table.list <- function(
     , landscape = landscape
     , font_size = font_size
     , escape = escape
+    , span_text_columns = span_text_columns
     , format.args = format.args
     , ...
   )
@@ -271,6 +278,7 @@ apa_table.data.frame <- function(
   , landscape = FALSE
   , font_size = NULL
   , escape = TRUE
+  , span_text_columns = TRUE
   , ...
   , format.args = NULL
 ) {
@@ -316,7 +324,9 @@ apa_table.data.frame <- function(
     caption <- escape_latex(caption)
     note <- escape_latex(note)
   } else {
+    ## Do escape % and &, these will break the table
     prep_table <- as.data.frame(lapply(prep_table, function(x) gsub("([^\\\\]+)(%)", "\\1\\\\%", x)), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
+    prep_table <- as.data.frame(lapply(prep_table, function(x) gsub("([^\\\\])(&)", "\\1\\\\&", x)), check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)
   }
 
   ## Indent stubs
@@ -353,6 +363,7 @@ apa_table.data.frame <- function(
         , placement = placement
         , landscape = landscape
         , font_size = font_size
+        , span_text_columns = span_text_columns
         , ...
       )
       , ellipsis
@@ -380,6 +391,7 @@ apa_table.latex <- function(
   , placement = "tbp"
   , landscape = FALSE
   , font_size = NULL
+  , span_text_columns = TRUE
   , ...
 ) {
   if(!is.null(font_size)) validate(font_size, check_class = "character", check_length = 1)
@@ -400,10 +412,10 @@ apa_table.latex <- function(
   ellipsis$booktabs <- TRUE
   longtable <- if(!is.null(ellipsis$longtable)) ellipsis$longtable else FALSE
   if(longtable || landscape) {
-    table_env <-  "ThreePartTable"
+    tabular_env <-  "ThreePartTable"
     table_note_env <- "TableNotes"
   } else {
-    table_env <- "threeparttable"
+    tabular_env <- "threeparttable"
     table_note_env <- "tablenotes"
   }
 
@@ -490,8 +502,14 @@ apa_table.latex <- function(
 
   # if(longtable && placement != "h") cat("\\afterpage{\\clearpage") # Defer table to next clear page
   # table_output <- c(table_output, "\n\n")
-  if(!landscape && !longtable) table_output <- c(table_output, paste0("\\begin{table}", place_opt))
-  if(!landscape) table_output <- c(table_output, paste0("\n\\begin{center}\n\\begin{", table_env, "}"))
+  if(any(grepl("jou", c(rmarkdown::metadata$classoption, rmarkdown::metadata$class))) && span_text_columns) {
+    table_env <- "table*"
+  } else {
+    table_env <- "table"
+  }
+
+  if(!landscape && !longtable) table_output <- c(table_output, paste0("\\begin{", table_env, "}", place_opt))
+  if(!landscape) table_output <- c(table_output, paste0("\n\\begin{center}\n\\begin{", tabular_env, "}"))
   if(!is.null(caption) && !(longtable || landscape)) table_output <- c(table_output, paste0("\n\\caption{", caption, "}"))
   if(!is.null(note) && (longtable || landscape)) table_output <- c(table_output, paste0("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}"))
   if(!is.null(font_size)) table_output <- c(table_output, paste0("\n\\", font_size, "{"))
@@ -501,8 +519,8 @@ apa_table.latex <- function(
 
   if(!is.null(font_size)) table_output <- c(table_output, "\n}")
   if(!is.null(note) & !(longtable || landscape)) table_output <- c(table_output, paste0("\n\\begin{", table_note_env, "}[para]\n\\normalsize{\\textit{", apa_terms$note, ".} ", note, "}\n\\end{", table_note_env, "}"))
-  if(!landscape) table_output <- c(table_output, paste0("\n\\end{", table_env, "}\n\\end{center}"))
-  if(!landscape && !longtable) table_output <- c(table_output, "\n\\end{table}")
+  if(!landscape) table_output <- c(table_output, paste0("\n\\end{", tabular_env, "}\n\\end{center}"))
+  if(!landscape && !longtable) table_output <- c(table_output, paste0("\n\\end{", table_env, "}"))
 
   if(landscape) {
     # if(longtable) {
@@ -562,7 +580,7 @@ apa_table.markdown <- function(
 
   caption <- paste0("*", caption, "*")
   current_chunk <- knitr::opts_current$get("label")
-  if(!is.null(current_chunk)) caption <- paste0("<caption>(\\#tab:", current_chunk, ")</caption>\n\n<caption>", caption, "</caption>\n\n")
+  if(!is.null(current_chunk)) caption <- paste0("<caption>(\\#tab:", current_chunk, ")</caption>\n\n<div custom-style='Table Caption'>", caption, "</div>\n\n")
 
   # Print table
   # cat("<caption>")
@@ -583,9 +601,9 @@ apa_table.markdown <- function(
 
     table_output <- c(
       table_output
-      , "\n<center>"
+      , "\n<div custom-style='Compact'>"
       , paste0("*", apa_terms$note, ".* ", note)
-      , "</center>\n\n\n\n"
+      , "</div>\n\n&nbsp;\n\n"
     )
   }
 

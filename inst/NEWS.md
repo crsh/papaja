@@ -1,3 +1,4 @@
+
 # papaja (UPCOMING)
 
 ### Template
@@ -30,7 +31,49 @@
       of `wsci()` (suggested by @jstevens5, #362)
 
 
-# papaja 0.1.0.98XX
+
+# papaja 0.1.0.9942
+
+### Template
+
+- Lua filters for `pandoc` 2.0 or later
+    - New ampersand filter that's faster and robust to encoding issues (see #225 and #262)
+    - Word count filter is automatically applied (see R Markdown tab, #63)
+- LaTeX
+    - Fixed bug that printed `NA` at the top of the appendix in `doc` mode (reported by @paul-grassl, #295)
+    - Fixed bug that caused problems with special characters in appendices (reported by @AlexChristensen, #283)
+    - In `jou` mode, tables now span both columns unless requested otherwise (reported by @saladspices, #52, also see #298 by @jstbcs)
+    - Level 4 and 5 headings are now properly runin (reported by @jamesrrae, #292)
+    - Abstarct heading is no longer numbered, when setting `number_sections: true` (reported by @tcgriffith, #332)
+    - Fixed LaTeX warning `Command \@parboxrestore  has changed.` (fix suggested by @CrumpLab, #336)
+- Word
+    - Overall improved template styles to reduce the need for manual fixes ()
+
+### Existing functions
+
+- `apa_table()`
+    - Returns an object of class `knit_asis`; it's no longer necessary to set the chunk option `results = "asis"` for tables to be rendered (#280)
+    - Column headings are repeated when long tables span multiple pages (suggested by @mischavk, #289)
+    - Fixed bug that cause issues with the rendering of tables in Word documents (reported by @mdanka, #301)
+    - In PDF files `&` in cells are automatically escaped ()
+- `apa_print()`
+    - Output is now of class `apa_results`
+- `apa_print-htest()`
+    - An estimate is now reported for 2x2 contingency tables
+- `printnum.integer()`
+    - Now prints a `zero_string` instead of `""` when `x` is `0` (suggested by @e-schott, #311)
+    - Improved input validation fixes error when `NA`is passed (reported by @JanaJarecki, #317)
+- `printnum.numeric()`
+    - New `add_equals` argument (suggested by @mvuorre, #313)
+
+### New functions
+
+- `label_variable()`/`label_variables()`: Pipable methods to set variable labels
+- `simple_codebook()`: Creates a simple code book from variable labels
+- `apa_print.manova()`/`apa_print.summary.manova()`: Support for standard manova output
+
+
+# papaja 0.1.0.9837
 
 ### Template
 

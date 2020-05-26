@@ -84,7 +84,7 @@ render_appendix <- function(
 
   if(target_format %in% c("latex", "word", "docx")) {
     # Render Markdown fragment
-    md_fragment <- knitr::knit_child(text = readLines(x, encoding = "UTF-8"), quiet = quiet)
+    md_fragment <- knitr::knit_child(input = x, quiet = quiet)
   } else {
     warning(target_format, " documents currently do not support appendices via includes.")
   }
@@ -111,9 +111,11 @@ render_appendix <- function(
     tex <- readLines(con = tex_connection)
     tex <- enc2native(tex)
 
-    ## Check whether Rmd starts with heading, otherwise add empty section
+    # Check whether Rmd starts with heading, otherwise add empty section ----
+    # when checking, ignore rows with latex newlines or html comments
     md_fragment <- unlist(strsplit(md_fragment, split = "\n"))
-    if(!grepl("^#(\\b|\\s)", md_fragment[!grepl("^\\\\", md_fragment) & md_fragment != ""][1])) {
+
+    if(!grepl(pattern = "^#(\\b|\\s)", x = md_fragment[!grepl("^\\\\|^<!--", md_fragment) & md_fragment != ""][1])) {
       tex <- c("\\section{}", tex)
     }
 

@@ -55,7 +55,9 @@ test_that(
 
     expect_is(model_comp$table, "data.frame")
     expect_equal(colnames(model_comp$table), c("Baseline", "Length", "Both"))
-    expect_identical(model_comp$table, correct_table)
+    expect_identical(model_comp$table$Baseline, correct_table$Baseline)
+    expect_identical(model_comp$table$Length, correct_table$Length)
+    expect_identical(model_comp$table$Both, correct_table$Both)
 
 
     # Test omission of incomplete model names & CI
@@ -83,10 +85,12 @@ test_that(
 
     # Bootstrapped Delta R^2 CI
     skip_on_cran() # The bootstrapping is computationally too expensive
+
     set.seed(1337)
     model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 1e3)
 
     expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.76$, $.86]$")
+
     expect_equal(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01$, $.04]$")
 
     model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, ci = 0.5)

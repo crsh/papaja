@@ -17,24 +17,14 @@ printnum(x, ...)
 
 \method{printnum}{list}(x, ...)
 
-\method{printnum}{integer}(
-  x,
-  numerals = TRUE,
-  capitalize = FALSE,
-  na_string = getOption("papaja.na_string"),
-  ...
-)
 
-\method{printnum}{numeric}(
-  x,
-  gt1 = TRUE,
-  zero = TRUE,
-  margin = 1,
-  na_string = getOption("papaja.na_string"),
-  use_math = TRUE,
-  add_equals = FALSE,
-  ...
-)
+\method{printnum}{integer}(x, numerals = TRUE, capitalize = FALSE,
+  zero_string = "no", na_string = getOption("papaja.na_string"), ...)
+
+\method{printnum}{numeric}(x, gt1 = TRUE, zero = TRUE, margin = 1,
+  na_string = getOption("papaja.na_string"), use_math = TRUE,
+  add_equals = FALSE, ...)
+
 
 \method{printnum}{data.frame}(x, margin = 2, ...)
 
@@ -90,21 +80,15 @@ printnum(x, ...)
     \code{"#"}.}
     \item{\code{flag}}{for \code{formatC}, a character string giving a
     format modifier as in Kernighan and Ritchie (1988, page 243) or the
-    C+99 standard.\describe{
-      \item{\code{"0"}}{pads leading zeros;}
-      \item{\code{"-"}}{does left adjustment,}
-      \item{\code{"+"}}{ensures a sign in all cases, i.e., \code{"+"} for
-	positive numbers ,}
-      \item{\code{" "}}{if the first character is not a sign, the space
-	character \code{" "} will be used instead.}
-      \item{\code{"#"}}{specifies \dQuote{an alternative output form},
-	specifically depending on \code{format}.}
-      \item{\code{"'"}}{on some platform--locale combination, activates
-	\dQuote{thousands' grouping} for decimal conversion,}
-      \item{\code{"I"}}{in some versions of \file{glibc} allow for integer
-	conversion to use the locale's alternative output digits, if any.}
-    }
-    There can be more than one of these flags, in any order.  Other characters
+    C+99 standard.
+    \code{"0"} pads leading zeros; \code{"-"} does left adjustment,
+    others are \code{"+"}, \code{" "}, and \code{"#"}; on some
+    platform--locale combination, \code{"'"} activates
+    \dQuote{thousands' grouping} for decimal conversion, and versions of
+    \file{glibc} allow \code{"I"} for integer conversion to use the locale's
+    alternative output digits, if any.
+
+    There can be more than one of these, in any order.  Other characters
     used to have no effect for \code{character} formatting, but signal
     an error since \R 3.4.0.
   }
@@ -148,11 +132,14 @@ printnum(x, ...)
     to \code{prettyNum()}, see the \sQuote{Details}.}
   }}
 
+
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 
 \item{numerals}{Logical. Indicates if integer should be returned as words.}
 
 \item{capitalize}{Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.}
+
+\item{zero_string}{Character. Word to print if \code{x} is a zero integer.}
 
 \item{gt1}{Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.}
 

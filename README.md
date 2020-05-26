@@ -19,8 +19,11 @@ can create PDF documents, or Word documents if you have to. Moreover,
 `papaja` supplies R-functions that facilitate reporting results of your
 analyses in accordance with APA guidelines.
 
-**Note, at this point `papaja` is in active development and should be
-considered alpha. If you experience any problems, please [open an
+Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
+
+**`papaja` is in active development and should be considered alpha. If
+you experience any problems, ask a question on Stack Overflow [using the
+`papaja` tag](https://t.co/Z3auyUrbTa) or [open an
 issue](https://github.com/crsh/papaja/issues) on Github.**
 
 ## Examples
@@ -131,14 +134,15 @@ Table. *Iris regression table.*
 `papaja` currently provides methods for the following object
 classes:
 
-| A-B                        | B-H                            | L-S                       | S-Z                           |
-| :------------------------- | :----------------------------- | :------------------------ | :---------------------------- |
-| afex\_aov                  | BFBayesFactorList<sup>\*</sup> | list                      | summary.aovlist               |
-| anova                      | BFBayesFactorTop<sup>\*</sup>  | lm                        | summary.glht<sup>\*</sup>     |
-| Anova.mlm                  | emmGrid<sup>\*</sup>           | lsmobj<sup>\*</sup>       | summary.glm                   |
-| aov                        | glht<sup>\*</sup>              | summary\_emm<sup>\*</sup> | summary.lm                    |
-| aovlist                    | glm                            | summary.Anova.mlm         | summary.ref.grid<sup>\*</sup> |
-| BFBayesFactor<sup>\*</sup> | htest                          | summary.aov               |                               |
+| A-B                            | B-L                           | L-S                       | S-Z                           |
+| :----------------------------- | :---------------------------- | :------------------------ | :---------------------------- |
+| afex\_aov                      | BFBayesFactorTop<sup>\*</sup> | lsmobj<sup>\*</sup>       | summary.glm                   |
+| anova                          | emmGrid<sup>\*</sup>          | manova                    | summary.lm                    |
+| Anova.mlm                      | glht<sup>\*</sup>             | summary\_emm<sup>\*</sup> | summary.manova                |
+| aov                            | glm                           | summary.Anova.mlm         | summary.ref.grid<sup>\*</sup> |
+| aovlist                        | htest                         | summary.aov               |                               |
+| BFBayesFactor<sup>\*</sup>     | list                          | summary.aovlist           |                               |
+| BFBayesFactorList<sup>\*</sup> | lm                            | summary.glht<sup>\*</sup> |                               |
 
 \* Not fully tested, don’t trust blindly\!
 
@@ -185,6 +189,16 @@ rmarkdown::draft(
 rmarkdown::render("mymanuscript.Rmd")
 ```
 
+## Getting help
+
+If you have questions related to the use of `papaja`
+[StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a
+[`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is
+a great place to get answers. If you think you have found a bug, please
+[open issues](https://github.com/crsh/papaja/issues) and provide a
+[minimal complete verifiable
+example](https://stackoverflow.com/help/mcve).
+
 ## Contribute
 
 Like `papaja` and want to contribute? Take a look at the [open
@@ -196,10 +210,10 @@ this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`,
 
 ## Papers written with papaja
 
-Although `papaja` is not yet on CRAN and is still undergoing a lot of
-changes, there are peer-reviewed publications that use it. If you have
-published a paper that was written with `papaja`, you can add the
-reference to the [public Zotero
+Please cite `papaja` if you use it (`citation('papaja')` will provide
+the reference). Below are some peer-reviewed publications that used
+`papaja`. If you have published a paper that was written with `papaja`,
+you can add the reference to the [public Zotero
 group](https://www.zotero.org/groups/2202906/papaja) yourself or send it
 to me.
 
@@ -221,6 +235,24 @@ account of expectancy-liking dissociations in evaluative conditioning.
 *Journal of Experimental Psychology: Learning, Memory, and Cognition*.
 <https://doi.org/10/gdxv8n> (R Markdown and data files:
 https://osf.io/vnmby/)
+
+</div>
+
+<div id="ref-aust_enhancing_2019">
+
+Aust, F., & Stahl, C. (2019). The enhancing effect of caffeine on
+mnemonic discrimination is at best small. *PsyArXiv*.
+<https://doi.org/10/gf6jwz> (R Markdown and data files:
+https://osf.io/p7f4m/)
+
+</div>
+
+<div id="ref-barrett_automating_2019">
+
+Barrett, T. S., Borrie, S. A., & Yoho, S. E. (2019). Automating with
+Autoscore: Introducing an R package for automating the scoring of
+orthographic transcripts. *PsyArXiv*. <https://doi.org/10/gf4cqp> (R
+Markdown and data files: https://osf.io/htqvr/)
 
 </div>
 
@@ -337,6 +369,14 @@ https://osf.io/9bcws/)
 
 </div>
 
+<div id="ref-chen_does_2019">
+
+Chen, S.-C., de Koning, B., & Zwaan, R. A. (2019). Does Object Size
+Matter with Regard to the Mental Simulation of Object Orientation?
+*Experimental Psychology*. <https://doi.org/10/ggfzxw>
+
+</div>
+
 <div id="ref-craddock_transcranial_2018">
 
 Craddock, M., Klepousniotou, E., El-Deredy, W., Poliakoff, E., & Lloyd,
@@ -435,7 +475,16 @@ Heino, M. T. J., Vuorre, M., & Hankonen, N. (2018). Bayesian evaluation
 of behavior change interventions: A brief introduction and a practical
 example. *Health Psychology and Behavioral Medicine*, *6*(1), 49–78.
 <https://doi.org/10.1080/21642850.2018.1428102> (R Markdown and data
-files: https://zenodo.org/record/1209814\#.wvy3h4jovgm)
+files: https://github.com/heinonmatti/baseline-visu)
+
+</div>
+
+<div id="ref-heycke_contingency_2018">
+
+Heycke, T. (2018, July). *Contingency Awareness in Evaluative
+Conditioning: Investigations Using Subliminal Stimulus Presentations*
+(text.thesis.doctoral). Universität zu Köln. Retrieved from
+<http://www.uni-koeln.de/>
 
 </div>
 
@@ -454,6 +503,14 @@ Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds
 or one? A registered replication of Rydell et al. (2006). *Cognition and
 Emotion*, *32*(8), 1708–1727.
 <https://doi.org/10.1080/02699931.2018.1429389>
+
+</div>
+
+<div id="ref-heycke_screen_2019">
+
+Heycke, T., & Spitzer, L. (2019). Screen Recordings as a Tool to
+Document Computer Assisted Data Collection Procedures. *Psychologica
+Belgica*, *59*(1), 269–280. <https://doi.org/10/gf5t5c>
 
 </div>
 
@@ -480,6 +537,15 @@ Jordan, K., Buchanan, E., & Padfield, W. (2018). Focus on the Target:
 The Role of Attentional Focus in Decisions about War. *PsyArXiv*.
 <https://doi.org/10.17605/osf.io/9fgu8> (R Markdown and data files:
 https://osf.io/r8qp2/)
+
+</div>
+
+<div id="ref-kothe_retention_2019">
+
+Kothe, E. J., & Ling, M. (2019). Retention of participants recruited to
+a one-year longitudinal study via Prolific. *PsyArXiv*.
+<https://doi.org/10.31234/osf.io/5yv2u> (R Markdown and data files:
+https://osf.io/yjstk/)
 
 </div>
 
@@ -532,13 +598,31 @@ https://osf.io/wm6vc/)
 
 </div>
 
+<div id="ref-mchugh_reasons_2020">
+
+McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2020). Reasons
+or rationalizations: The role of principles in the moral dumbfounding
+paradigm. *Journal of Behavioral Decision Making*, bdm.2167.
+<https://doi.org/10/ggf94x>
+
+</div>
+
 <div id="ref-moors_unconscious_2019">
 
 Moors, P., & Hesselmann, G. (2019). Unconscious arithmetic: Assessing
 the robustness of the results reported by Karpinski, Briggs, and Yale
 (2018). *Consciousness and Cognition*, *68*, 97–106.
-<https://doi.org/10.1016/j.concog.2019.01.003> (R Markdown and data
-files: https://osf.io/cybfe/)
+<https://doi.org/10/gftmrj>
+
+</div>
+
+<div id="ref-morin-lessard_selective_2019">
+
+Morin-Lessard, E., Poulin-Dubois, D., Segalowitz, N., & Byers-Heinlein,
+K. (2019). Selective attention to the mouth of talking faces in
+monolinguals and bilinguals aged 5 months to 5 years. *PsyArXiv*.
+<https://doi.org/10.31234/osf.io/5pkne> (R Markdown and data files:
+https://osf.io/ikvyr/)
 
 </div>
 
@@ -705,97 +789,33 @@ https://github.com/mvuorre/reproguide-curate)
 
 </div>
 
+<div id="ref-xu_challenges_2019">
+
+Xu, R., DeShon, R. P., & Dishop, C. R. (2019). Challenges and
+Opportunities in the Estimation of Dynamic Models. *Organizational
+Research Methods*, 109442811984263. <https://doi.org/10/gf3vbj>
+
 </div>
 
-<!-- ### Journal publications -->
+<div id="ref-zhang_missing_2019">
 
-<!-- Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of implicit and explicit learning in applications of the process-dissociation procedure to the SRT task. *Consciousness & Cognition*, 37, 27–43. -->
+Zhang, H., Qu, C., Miller, K. F., & Cortina, K. S. (2019). Missing the
+joke: Reduced rereading of garden-path jokes during mind-wandering.
+*Journal of Experimental Psychology: Learning, Memory, and Cognition*.
+<https://doi.org/10/gf68nd>
 
-<!-- doi: [10.1016/j.concog.2015.08.003](http://dx.doi.org/10.1016/j.concog.2015.08.003) -->
+</div>
 
-<!-- Aust, F., & Edwards, J. D. (2016). Incremental validity of Useful Field of View subtests for the prediction of Instrumental Activities of Daily Living. *Journal of Clinical and Experimental Neuropsychology*, 38, 497-515. -->
+<div id="ref-zhang_all-atom_2019">
 
-<!-- doi: [10.1080/13803395.2015.1125453](http://dx.doi.org/10.1080/13803395.2015.1125453) -->
+Zhang, T., Hu, G., Yang, Y., Wang, J., & Zhou, Y. (2019). All-Atom
+Knowledge-Based Potential for RNA Structure Discrimination Based on the
+Distance-Scaled Finite Ideal-Gas Reference State. *Journal of
+Computational Biology*. <https://doi.org/10/ggcp6w>
 
-<!-- Stahl, C., Haaf, J., & Corneille, O. (2016). Subliminal Evaluative Conditioning? Above-Chance CS Identification May Be Necessary and Insufficient for Attitude Learning. *Journal of Experimental Psychology: General*, 145 (9), 1107-1131. -->
+</div>
 
-<!-- doi: [10.1037/xge0000191](http://dx.doi.org/10.1037/xge0000191) -->
-
-<!-- Stahl, C. & Heycke, T. (2016). Evaluative Conditioning with Simultaneous and Sequential Pairings Under Incidental and Intentional Learning Conditions. *Social Cognition*, 34, 382-412. doi: [10.1521/soco.2016.34.5.382](http://dx.doi.org/10.1521/soco.2016.34.5.382) -->
-
-<!-- Papenberg, M., Willing, S. & Musch, J. (2017). Sequentially presented response options prevent the use of testwiseness cues in multiple-choice testing. *Psychological Test and Assessment Modeling*, 59, 245-266. -->
-
-<!-- Heycke, T., Aust, F., & Stahl, C. (2017). Subliminal influence on preferences? A test of evaluative conditioning for brief visual conditioned stimuli using auditory unconditioned stimuli. *Royal Society Open Science*, 4, 160935. doi: [10.1098/rsos.160935](http://dx.doi.org/10.1098/rsos.160935) ([Data & R Markdown files](https://osf.io/cx5eh/)) -->
-
-<!-- McHugh, C., McGann, M., Igou, E. R., & Kinsella, E. L. (2017). Searching for Moral Dumbfounding: Identifying Measurable Indicators of Moral Dumbfounding. *Collabra: Psychology*, 3(1), 23. doi: [10.1525/collabra.79](http://doi.org/10.1525/collabra.79) ([Data & R Markdown files](https://osf.io/wm6vc/)) -->
-
-<!-- Haaf, J. M., & Rouder, J. N. (2017). Developing constraint in Bayesian mixed models. Psychological Methods, 22(4), 779-798. doi: [10.1037/met0000156](http://doi.org/10.1037/met0000156) ([R Markdown files](https://github.com/PerceptionAndCognitionLab/ctx-indiff)) -->
-
-<!-- Rouder, J. N., Haaf, J. M., & Aust, F. (2018). From theories to models to predictions: A Bayesian model comparison approach. *Communication Monographs*, 85(1), 41-56. doi: [10.1080/03637751.2017.1394581](https://doi.org/10.1080/03637751.2017.1394581) -->
-
-<!-- Heycke, T., Gehrmann, S., Haaf, J. M., & Stahl, C. (2018). Of two minds or one? A registered replication of Rydell et al. (2006). Cognition and Emotion, 0(0), 1–20. doi: [10.1080/02699931.2018.1429389](http://doi.org/10.1080/02699931.2018.1429389) ([Data & R Markdown files](https://osf.io/c57sr/)) -->
-
-<!-- Heino, Matti T. J., Vuorre, M., & Hankonen, N. (2018) Bayesian evaluation of behavior change interventions: a brief introduction and a practical example. _Health Psychology and Behavioral Medicine_, 6(1), 49-78. doi: [10.1080/21642850.2018.1428102](https://dx.doi.org/10.1080/21642850.2018.1428102) ([Data & R Markdown files](https://zenodo.org/record/1209814#.Wvy3H4jOVGM)) -->
-
-<!-- Sauer, S. (in press). Observation oriented modeling revised from a statistical point of view. *Behavior Research Methods*. doi: [10.3758/s13428-017-0949-8](https://doi.org/10.3758/s13428-017-0949-8) ([Data & R Markdown files](https://osf.io/6vhja/)) -->
-
-<!-- Aust, F., Haaf, J. M., & Stahl, C. (in press). A memory-based judgment account of expectancy-liking dissociations in evaluative conditioning. _Journal of Experimental Psychology: Learning, Memory, and Cognition_. ([Data & R Markdown files](https://osf.io/vnmby/)) -->
-
-<!-- Barth, M., Stahl, C., & Haider, H. (in press). Assumptions of the process-dissociation procedure are violated in sequence learning. _Journal of Experimental Psychology: Learning, Memory, and Cognition_.  ([Data & R Markdown files](https://github.com/methexp/pdl2)) -->
-
-<!-- Lakens, D., Scheel, A. M., & Isager, P. M. (in press). Equivalence Testing for Psychological Research: A Tutorial. _Advances in Methods and Practices in Psychological Science_. ([Data & R Markdown files](https://osf.io/qamc6/)) -->
-
-<!-- s -->
-
-<!-- Bergmann, C., Tsuji, S., Piccinini, P. E., Lewis, M., Braginsky, M., Frank, M. C., & Cristia, A. (in press). Promoting replicability in developmental research through meta-analyses: Insights from language acquisition research. _Child Development_, . doi: [doi.org/10.1111/cdev.13079](http://doi.org/10.1111/cdev.13079) ([Data & R Markdown files](https://osf.io/uhv3d/)) -->
-
-<!-- Buchanan, E. M., & Scofield, J. E. (in press). Methods to Detect Low Quality Data and Its Implication for Psychological Research. _Behavior Research Methods_. doi: [10.3758/s13428-018-1035-6](http://dx.doi.org/10.3758/s13428-018-1035-6) ([Data & R Markdown files](https://osf.io/x6t8a/)) -->
-
-<!-- ### Preprints -->
-
-<!-- Stahl, C., Henze, L., & Aust, F. (2016, September 21). False memory for perceptually similar but conceptually distinct line drawings. *PsyArXiv*. doi: [10.17605/OSF.IO/ZR7M8](http://dx.doi.org/10.17605/OSF.IO/ZR7M8) ([Data & R Markdown files](https://osf.io/jxm7z/)) -->
-
-<!-- Urry, H. L., Sifre, E., Song, J., Steinberg, H., Bornstein, M., Kim, J., … Andrews, M. (2017, March 13). Replication of Eskine, K. J., Kacinik, N. A., & Prinz, J. J. (2011) at Tufts University - Spring, 2017. Preprint retrieved from https://osf.io/fu384/ ([Data & R Markdown files](https://osf.io/ddmkm)) -->
-
-<!-- Buchanan, E. M, & Scofield, J. E. (2017, August 25). Bulletproof Bias? Considering the Type of Data in Common Proportion of Variance Effect Sizes. Preprint retrieved from https://osf.io/cs4vy/ ([Data & R Markdown files](https://osf.io/urd8q/)) -->
-
-<!-- Heyman, T., & Heyman, G. (2018, February 2). Can prediction-based distributional semantic models predict typicality?  *PsyArXiv*. doi: [10.17605/OSF.IO/59XTD](http://doi.org/10.17605/OSF.IO/59XTD) ([Data & R Markdown files](https://osf.io/nkfjy/)) -->
-
-<!-- Heycke, T., & Stahl, C. (2018, February 21). No Evaluative Conditioning Effects with Briefly Presented Stimuli. *PsyArXiv*. doi: [10.17605/OSF.IO/UJQ4G](http://dx.doi.org/10.17605/OSF.IO/UJQ4G) ([Data & R Markdown files](https://osf.io/3dn7e/)) -->
-
-<!-- Hardwicke, T. E., Mathur, M. B., MacDonald, K. E., Nilsonne, G., Banks, G. C.,... Frank, M. C. (2018, March 19). Data availability, reusability, and analytic reproducibility: Evaluating the impact of a mandatory open data policy at the journal Cognition. *PsyArXiv*. doi: [10.17605/OSF.IO/39CFB](http://doi.org/10.17605/OSF.IO/39CFB) ([Data & R Markdown files](https://osf.io/wn8fd/)) -->
-
-<!-- Pollet, T., & Saxton, T. (2018, April 1). How diverse are the samples used in the journals ‘Evolution & Human Behavior’ and ‘Evolutionary Psychology’? *PsyArXiv*. doi: [10.17605/OSF.IO/7H24P](http://doi.org/10.17605/OSF.IO/7H24P) -->
-
-<!-- Harms, C., & Lakens, D. (2018, April 4). Making 'Null Effects' Informative: Statistical Techniques and Inferential Frameworks.  *PsyArXiv*. doi: [10.17605/OSF.IO/48ZCA](http://doi.org/10.17605/OSF.IO/48ZCA) ([Data & R Markdown files](https://osf.io/wptju/)) -->
-
-<!-- Hardwicke, T. E., & Ioannidis, j. (2018, April 16). Mapping the Universe of Registered Reports. *PsyArXiv*. doi: [10.17605/OSF.IO/FZPCY](http://doi.org/10.17605/OSF.IO/FZPCY) ([Data & R Markdown files](https://osf.io/7dpwb/)) -->
-
-<!-- Derringer, J. (2018, April 16). A simple correction for non-independent tests. *PsyArXiv*. doi: [10.17605/OSF.IO/F2TYW](http://doi.org/10.17605/OSF.IO/F2TYW) ([Data & R Markdown files](https://osf.io/re5w2/)) -->
-
-<!-- Faulkenberry, T. J., Cruise, A., & Shaki, S. (2018, May 17). Task characteristics modulate unit-decade binding in two-digit number representation. Preprint retrieved from https://github.com/tomfaulkenberry/twoDigitTaskManip ([Data & R Markdown files](https://github.com/tomfaulkenberry/twoDigitTaskManip)) -->
-
-<!-- Buchanan, E. M., Foreman, R. E., Johnson, B., Pavlacic, J. M., Swadley, R. N., & Schulenberg, S. E. (2018, May 21). Does the Delivery Matter? Examining Randomization at the Item Level. *PsyArXiv*. doi: [10.17605/OSF.IO/P93DF](http://doi.org/10.17605/OSF.IO/P93DF) ([Data & R Markdown files](https://osf.io/gvx7s/)) -->
-
-<!-- Valentine, K. D., Buchanan, E. M., Scofield, J. E., & Beauchamp, M. T. (2018, May 21). Beyond p-values: Utilizing Multiple Estimates to Evaluate Evidence. *PsyArXiv*. doi: [10.17605/OSF.IO/9HP7Y](http://doi.org/10.17605/OSF.IO/9HP7Y) ([Data & R Markdown files](https://osf.io/u9hf4/)) -->
-
-<!-- Buchanan, E. M., Johnson, B. N., Miller, A., Stockburger, D. W., & Beauchamp, M. (2018, May 21). Perceived Grading and Student Evaluation of Instruction. *PsyArXiv*. doi: [10.17605/OSF.IO/7X4UF](http://doi.org/10.17605/OSF.IO/7X4UF) ([Data & R Markdown files](https://osf.io/jdpfs/)) -->
-
-<!-- Maxwell, N., & Buchanan, E. M. (2018, May 21). Investigating the Interaction between Associative, Semantic, and Thematic Database Norms for Memory Judgments and Retrieval. *PsyArXiv*. doi: [10.17605/OSF.IO/FCESN](http://doi.org/10.17605/OSF.IO/FCESN) ([Data & R Markdown files](https://osf.io/y8h7v/)) -->
-
-<!-- Buchanan, E. M., Valentine, K. D., & Maxwell, N. (2018, May 21). The LAB: Linguistic Annotated Bibliography. *PsyArXiv*. doi: [10.17605/OSF.IO/H3BWX](http://doi.org/10.17605/OSF.IO/H3BWX) ([Data & R Markdown files](https://osf.io/9bcws/)) -->
-
-<!-- Buchanan, E. M., Valentine, K. D., & Maxwell, N. (2018, May 21). English Semantic Feature Production Norms: An Extended Database of 4,436 Concepts. *PsyArXiv*. doi: [10.17605/OSF.IO/GXBF4](http://doi.org/10.17605/OSF.IO/GXBF4) ([Data & R Markdown files](https://osf.io/cjyzw/)) -->
-
-<!-- Pavlacic, J. M., Buchanan, E. M., Maxwell, N., Hopke, T. G., & Schulenberg, S. E. (2018, May 21). A Meta-Analysis of Expressive Writing on Positive Psychology Variables and Traumatic Stress. *PsyArXiv*. doi: [10.17605/OSF.IO/U98CW](http://doi.org/10.17605/OSF.IO/U98CW) ([Data & R Markdown files](https://osf.io/4mjqt/)) -->
-
-<!-- Buchanan, E. M., Scofield, J. E., & Nunley, N. (2018, May 21). The N400's 3 As: Association, Automaticity, Attenuation (and Some Semantics Too). *PsyArXiv*. doi: [10.17605/OSF.IO/6W2SE](http://doi.org/10.17605/OSF.IO/6W2SE) ([Data & R Markdown files](https://osf.io/h5sd6/)) -->
-
-<!-- Jordan, K. N., Buchanan, E. M., & Padfield, W. E. (2018, May 21). Focus on the Target: The Role of Attentional Focus in Decisions about War. *PsyArXiv*. doi: [10.17605/OSF.IO/9FGU8](http://doi.org/10.17605/OSF.IO/9FGU8) ([Data & R Markdown files](https://osf.io/r8qp2/)) -->
-
-<!-- Buchanan, E. M., & Valentine, K. D. (2018, May 21). An Extension of the QWERTY Effect: Not Just the Right Hand, Expertise and Typability Predict Valence Ratings of Words. *PsyArXiv*. doi: [10.17605/OSF.IO/K7DX5](http://doi.org/10.17605/OSF.IO/K7DX5) ([Data & R Markdown files](https://osf.io/zs2qj/)) -->
-
-<!-- Maxwell, N., & Buchanan, E. M. (2018, May 21). Modeling Memory: Exploring the Relationship Between Word Overlap and Single Word Norms when Predicting Relatedness Judgments and Retrieval. *PsyArXiv*. doi: [10.17605/OSF.IO/QEKAD](http://doi.org/10.17605/OSF.IO/QEKAD) ([Data & R Markdown files](https://osf.io/j7qtc/)) -->
+</div>
 
 # Other related R packages
 

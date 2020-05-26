@@ -120,6 +120,7 @@ print_model_comp <- function(
   model_fits <- lapply(models, broom::glance)
   model_fits <- do.call(rbind, model_fits)
   model_fits <- model_fits[, c("r.squared", "statistic", "df", "df.residual", "p.value", "AIC", "BIC")]
+
   diff_vars <- c("r.squared", "AIC", "BIC")
   model_diffs <- apply(model_fits[, diff_vars], 2, diff)
   if(length(models) == 2) {

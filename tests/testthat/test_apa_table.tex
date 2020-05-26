@@ -1,4 +1,7 @@
-\documentclass[man]{apa6}
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[english,man]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -6,25 +9,27 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \usepackage{hyperref}
-\hypersetup{unicode=true,
+\hypersetup{
             pdftitle={The title},
-            pdfauthor={First Author~\& Ernst-August Doelle},
             pdfkeywords={keywords},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -78,60 +83,65 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
 
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
 
-
-  \title{The title}
-    \author{First Author\textsuperscript{1}~\& Ernst-August Doelle\textsuperscript{1,2}}
-    \date{}
-  
-\shorttitle{Title}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
-\keywords{keywords\newline\indent Word count: X}
-\usepackage{csquotes}
+% Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
 
+% Table formatting
 \usepackage{longtable}
 \usepackage{lscape}
-\usepackage{multirow}
-\usepackage{tabularx}
-\usepackage[flushleft]{threeparttable}
-\usepackage{threeparttablex}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 \newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
 
+% Enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
 \makeatletter
 \newcommand\LastLTentrywidth{1em}
 \newlength\longtablewidth
 \setlength{\longtablewidth}{1in}
 \newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
 
+% \setlength{\parindent}{0.5in}
+% \setlength{\parskip}{0pt plus 0pt minus 0pt}
 
+% \usepackage{etoolbox}
+\makeatletter
+\patchcmd{\HyOrg@maketitle}
+  {\section{\normalfont\normalsize\abstractname}}
+  {\section*{\normalfont\normalsize\abstractname}}
+  {}{\typeout{Failed to patch abstract.}}
+\makeatother
+\shorttitle{Title}
+\author{First Author\textsuperscript{1}\ \& Ernst-August Doelle\textsuperscript{1,2}}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
+\authornote{Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
+
+Enter author note here.
+
+
+Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: my@email.com}
+\keywords{keywords\newline\indent Word count: X}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -141,16 +151,21 @@
 \usepackage{lineno}
 
 \linenumbers
+\usepackage{csquotes}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,main=english]{babel}
+\else
+  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{english}
+\fi
 
-\authornote{Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
-Enter author note here.
+\title{The title}
 
-Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: \href{mailto:my@email.com}{\nolinkurl{my@email.com}}}
+\date{}
 
 \abstract{
 Enter abstract here (note the indentation, if you start a new paragraph).
-
-
 }
 
 \begin{document}
@@ -173,10 +188,14 @@ Enter abstract here (note the indentation, if you start a new paragraph).
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-2}0 Single row table.}
+
 \small{
+
 \begin{tabular}{lrr}
 \toprule
  & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -185,12 +204,16 @@ Mean & 15.40 & 42.98\\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 }
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -208,10 +231,14 @@ Mean & 15.40 & 42.98\\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-3}1 A small table with custom number formatting.}
+
 \small{
+
 \begin{tabular}{lrr}
 \toprule
  & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -223,12 +250,16 @@ Max & 25,000 & 120,000\\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 }
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -249,10 +280,14 @@ Max & 25,000 & 120,000\\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-4}2 A tiny merged table (list of two) with added stub heading. Not escaped.}
+
 \tiny{
+
 \begin{tabular}{lrr}
 \toprule
 Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -270,12 +305,16 @@ moar test &  & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 }
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -295,9 +334,12 @@ moar test &  & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-5}2.25 A merged table (list of two) with table spanners.}
+
 \begin{tabular}{lrr}
 \toprule
 Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -315,11 +357,14 @@ Max & 25.00 & 120.00\\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -342,9 +387,12 @@ Max & 25.00 & 120.00\\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-6}2.5 A merged table (list of two) with added stub heading and variable labels. Not escaped.}
+
 \begin{tabular}{lrr}
 \toprule
 Desciptives & \multicolumn{1}{c}{$\alpha$} & \multicolumn{1}{c}{$\beta$}\\
@@ -362,11 +410,14 @@ moar test &  & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -384,9 +435,12 @@ moar test &  & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-7}3 A 'merged' table (list of one) with added stub heading.}
+
 \begin{tabular}{lrr}
 \toprule
 Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -399,11 +453,14 @@ test &  & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -422,9 +479,12 @@ test &  & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-8}4 Test if simple row numbers are omitted from table.}
+
 \begin{tabular}{lr}
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
@@ -436,11 +496,14 @@ speed & \multicolumn{1}{c}{dist}\\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -456,9 +519,12 @@ speed & \multicolumn{1}{c}{dist}\\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-9}5 Test if simple row numbers are omitted from merged table (list of two).}
+
 \begin{tabular}{lr}
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
@@ -476,11 +542,14 @@ B & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -496,9 +565,12 @@ B & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-10}5.25 Test if simple row numbers are omitted from merged table with unequal row numbers (list of two).}
+
 \begin{tabular}{lr}
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
@@ -514,11 +586,14 @@ B & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -534,9 +609,12 @@ B & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-11}5.25 Test if simple continued row numbers are omitted from merged table (list of two).}
+
 \begin{tabular}{lr}
 \toprule
 speed & \multicolumn{1}{c}{dist}\\
@@ -552,11 +630,14 @@ B & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -573,9 +654,12 @@ B & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-12}5.25 Test if simple discontinued row numbers are preserved from merged table(list of two).}
+
 \begin{tabular}{lrr}
 \toprule
 Desciptives & \multicolumn{1}{c}{speed} & \multicolumn{1}{c}{dist}\\
@@ -590,11 +674,14 @@ B &  & \\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table()}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -613,9 +700,12 @@ B &  & \\
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-13}6 Test of column spanner and stub indenting.}
+
 \begin{tabular}{lrr}
 \toprule
  & \multicolumn{2}{c}{Measure} \\
@@ -629,11 +719,14 @@ Max & 25.00 & 120.00\\
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table().}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table}
 
 \begin{Shaded}
@@ -656,9 +749,11 @@ Max & 25.00 & 120.00\\
 \end{Shaded}
 
 \begin{lltable}
+
 \begin{TableNotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table().}
 \end{TableNotes}
+
 \begin{longtable}{lrrl}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
 \caption{\label{tab:unnamed-chunk-14}7 Test of midurles and landscape mode and named stub indentation.}\\
 \toprule
@@ -685,6 +780,7 @@ Jo &  &  & \\ \midrule
 \addlinespace
 \insertTableNotes
 \end{longtable}
+
 \end{lltable}
 
 \begin{Shaded}
@@ -708,9 +804,11 @@ Jo &  &  & \\ \midrule
 
 \begin{center}
 \begin{ThreePartTable}
+
 \begin{TableNotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table().}
 \end{TableNotes}
+
 \begin{longtable}{lrrl}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
 \caption{\label{tab:unnamed-chunk-15}8 A long table.}\\
 \toprule
@@ -773,6 +871,7 @@ Jo &  &  & \\ \midrule
 \addlinespace
 \insertTableNotes
 \end{longtable}
+
 \end{ThreePartTable}
 \end{center}
 
@@ -794,9 +893,11 @@ Jo &  &  & \\ \midrule
 \end{Shaded}
 
 \begin{lltable}
+
 \begin{TableNotes}[para]
 \normalsize{\textit{Note.} This table was created using apa\_table().}
 \end{TableNotes}
+
 \begin{longtable}{lrrl}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
 \caption{\label{tab:unnamed-chunk-16}9 A long table in landscape mode.}\\
 \toprule
@@ -859,6 +960,7 @@ Jo &  &  & \\ \midrule
 \addlinespace
 \insertTableNotes
 \end{longtable}
+
 \end{lltable}
 
 \begin{Shaded}
@@ -878,10 +980,13 @@ Jo &  &  & \\ \midrule
 \end{Shaded}
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:unnamed-chunk-17}}
-\begin{tabular}{lrrrrlrrrrlrrrrlrrrrlrrrr}
+
+\begin{tabular}{lrrrr}
 \toprule
 Predictor & \multicolumn{1}{c}{$b$} & \multicolumn{1}{c}{95\% CI} & \multicolumn{1}{c}{$z$} & \multicolumn{1}{c}{$p$}\\
 \midrule
@@ -892,9 +997,10 @@ Treatment2 & 0.00 & $[-0.39$, $0.39]$ & 0.00 & > .999\\
 Treatment3 & 0.00 & $[-0.39$, $0.39]$ & 0.00 & > .999\\
 \bottomrule
 \end{tabular}
+
 \end{threeparttable}
 \end{center}
-\end{table}
 
+\end{table}
 
 \end{document}

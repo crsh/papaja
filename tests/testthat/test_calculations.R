@@ -48,6 +48,25 @@ test_that(
     test <- wsci(data = data, id = "id", dv = "dv", factors = c("F1", "F2", "F3"), method = "Morey")
 
     expect_equal(as.matrix(test), Rmisc)
+
+    summary_wsci <- summary(test) # test summary.papaja_wsci
+
+    expect_equal(
+      object = summary_wsci
+      , expected = structure(
+        list(
+          F1 = structure(c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L), .Label = c("-1", "1"), class = "factor")
+          , F2 = structure(c(1L, 1L, 2L, 2L, 1L, 1L, 2L, 2L), .Label = c("-1", "1"), class = "factor")
+          , F3 = structure(c(1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L), .Label = c("-1", "1"), class = "factor")
+          , mean = c(-5.68031150731317, -2.97982538093662, -1.96539153361576, 0.7461516618629, -2.99678094868138, 2.02256032005783, 2.04110502114339, 3.75282615631945)
+          , lower_limit = c(-16.5983264256805, -20.8291738335329, -7.51207923813347, -10.2804151932351, -11.0075875024338, 1.68149708762336, -19.0755332530318, -2.21109381019798)
+          , upper_limit = c(5.23770341105414, 14.8695230716597, 3.58129617090195, 11.7727185169609, 5.01402560507109, 2.36362355249229, 23.1577432953186, 9.71674612283687)
+        )
+        , row.names = c(NA, -8L)
+        , class = "data.frame"
+      )
+    )
+
   }
 )
 
@@ -226,10 +245,10 @@ test_that(
     expect_identical(
       object = attributes(object_1)[
         c("class", "names", "row.names", "Between-subjects factors", "Within-subjects factors"
-          , "Dependent variable", "Subject identifier", "Confidence level", "Method")
+          , "Dependent variable", "Subject identifier", "Confidence level", "Method", "means")
       ] # default order changed from R 3.4 to 3.5
       , expected = list(
-          class = "data.frame"
+          class = c("papaja_wsci", "data.frame")
           , names = c("N", "yield")
           , row.names = c(1L, 2L)
           , `Between-subjects factors` = "none"
@@ -238,6 +257,7 @@ test_that(
           , `Subject identifier` = "block"
           , `Confidence level` = 0.98
           , Method = "Cousineau"
+          , means = aggregate(formula = yield ~ N, data = aggregated_data, FUN = mean)
       )
     )
     expect_identical(

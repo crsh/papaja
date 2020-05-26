@@ -13,6 +13,7 @@
 #' @param add_equals Logical. Indicates if the output string should be prepended with an \emph{equals} sign.
 #' @param numerals Logical. Indicates if integer should be returned as words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
+#' @param zero_string Character. Word to print if \code{x} is a zero integer.
 #' @inheritDotParams base::formatC -x
 #'
 #' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
@@ -60,19 +61,28 @@ printnum.list <- function(x, ...) {
 #' @rdname printnum
 #' @export
 
-printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string = getOption("papaja.na_string"), ...) {
-  validate(x, check_integer = TRUE)
+printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string = "no", na_string = getOption("papaja.na_string"), ...) {
+  validate(x, check_integer = TRUE, check_NA = FALSE)
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
   validate(na_string, check_class = "character", check_length = 1)
 
+  # Prevent partial matching through printnum.data.frame()
+  system_call <- sys.call()
+  if(!is.null(system_call[["zero"]]) && is.null(system_call[["zero_string"]])) zero_string <- "no"
+  validate(zero_string, check_class = "character", check_length = 1)
+
   if(numerals) return(as.character(x))
   if(anyNA(x)) return(rep(na_string, length(x)))
+
+  zero_string <- tolower(zero_string)
 
   # Based on a function that John Fox posted on the R mailing list
   # http://tolstoy.newcastle.edu.au/R/help/05/04/2715.html
 
   number_to_words <- function(x) {
+    if(x == 0) return(zero_string)
+
     single_digits <- c("", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
     names(single_digits) <- 0:9
     teens <- c("ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", " seventeen", "eighteen", "nineteen")
@@ -121,7 +131,10 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, na_string =
   clean_number <- function(x) {
     x <- gsub("^\ +|\ +$", "", x)
     x <- gsub("\ +,", ",", x)
-    gsub("(\ *,|-|\ +and)$", "", x)
+    x <- gsub(paste0("( and ", zero_string, "|-", zero_string, "|, ", zero_string, ")"), "", x)
+    x <- gsub("(\ *,|-|\ +and)$", "", x)
+    if(!grepl(" and ", x)) x <- gsub(", ", " and ", x)
+    x
   }
 
   if(length(x) > 1) {
@@ -350,7 +363,7 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 
 
 
-#' Prepare numeric values for printing as p-value
+#' Prepare numeric values for printing as p value
 #'
 #' Convenience wrapper for \code{printnum.numeric} to print \emph{p} values.
 #'

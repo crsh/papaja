@@ -82,6 +82,9 @@ corresponding models (see details).}
 notation is rendered correctly.}
     \item{\code{add_equals}}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
   }}
+
+}}
+
 }
 \value{
 ...
