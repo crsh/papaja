@@ -5,11 +5,22 @@
 \alias{create_bib}
 \title{Create a reference file for R and its packages}
 \usage{
-r_refs(file, append = TRUE, prefix = "R-", type_pref = c("Article",
-  "Book"), tweak = TRUE)
+r_refs(
+  file,
+  append = TRUE,
+  prefix = "R-",
+  type_pref = c("Article", "Book"),
+  tweak = TRUE
+)
 
-create_bib(x, file, append = TRUE, prefix = "R-",
-  type_pref = c("Article", "Book"), tweak = TRUE)
+create_bib(
+  x,
+  file,
+  append = TRUE,
+  prefix = "R-",
+  type_pref = c("Article", "Book"),
+  tweak = TRUE
+)
 }
 \arguments{
 \item{file}{Character. The path and name of the file to be created or updated.}

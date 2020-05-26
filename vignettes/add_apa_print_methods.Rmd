@@ -186,7 +186,7 @@ This is why there are usually multiple `apa_print()`-methods that are called sub
 For convenience, `apa_print.aov()` calls `summary()` with its default arguments and passes the result onto `apa_print.summary.aov()`.
 
 ```{r apa-print-aov}
-apa_print.aov
+papaja:::apa_print.aov
 ```
 
 This approach furthermore ensures that a variety of object types are supported while minimizing code redundancy.

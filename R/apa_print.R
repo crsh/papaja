@@ -32,4 +32,7 @@ apa_print <- function(x, ...) {
 # #' @importClassesFrom BayesFactor BFBayesFactor
 setGeneric("apa_print")
 
+#' @method apa_print default
+#' @export
+
 apa_print.default <- function(x, ...) no_method(x)

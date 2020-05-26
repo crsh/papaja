@@ -4,8 +4,15 @@
 \alias{apa_print.htest}
 \title{Format statistics (APA 6th edition)}
 \usage{
-apa_print.htest(x, stat_name = NULL, est_name = NULL, n = NULL,
-  ci = NULL, in_paren = FALSE, ...)
+\method{apa_print}{htest}(
+  x,
+  stat_name = NULL,
+  est_name = NULL,
+  n = NULL,
+  ci = NULL,
+  in_paren = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{\code{htest} object. See details.}
@@ -27,10 +34,11 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
 
 \item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
 
-\item{...}{Arguments passed on to \code{printnum}
-\describe{
-  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
-}}
+\item{...}{
+  Arguments passed on to \code{\link[=printnum]{printnum}}
+  \describe{
+    \item{\code{}}{}
+  }}
 }
 \value{
 \code{apa_print()} returns a list containing the following components according to the input:
@@ -85,11 +93,13 @@ prop_stat <- prop.test(smokers, patients)
 apa_print(prop_stat, n = sum(patients), est_name = "\\\\Delta p")
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.emmGrid}},
-  \code{\link{apa_print.glht}},
-  \code{\link{apa_print.glm}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print}}
+Other apa_print: 
+\code{\link{apa_print.BFBayesFactor}()},
+\code{\link{apa_print.aov}()},
+\code{\link{apa_print.emmGrid}()},
+\code{\link{apa_print.glht}()},
+\code{\link{apa_print.glm}()},
+\code{\link{apa_print.list}()},
+\code{\link{apa_print}()}
 }
 \concept{apa_print}

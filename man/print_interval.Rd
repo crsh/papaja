@@ -4,8 +4,7 @@
 \alias{print_interval}
 \title{Create interval estimate string}
 \usage{
-print_interval(x, conf_level = NULL, use_math = FALSE, interval_type,
-  ...)
+print_interval(x, conf_level = NULL, use_math = FALSE, interval_type, ...)
 }
 \arguments{
 \item{x}{Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
@@ -19,10 +18,11 @@ they cannot be determined from column names or attributes of \code{x}.}
 \item{interval_type}{Character. Abbreviation indicating the type of interval
 estimate, e.g. \code{CI}.}
 
-\item{...}{Arguments passed on to \code{printnum}
-\describe{
-  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
-}}
+\item{...}{
+  Arguments passed on to \code{\link[=printnum]{printnum}}
+  \describe{
+    \item{\code{}}{}
+  }}
 }
 \description{
 Creates a character string to report an interval estimate. \emph{This function is not exported.}
