@@ -92,8 +92,6 @@ assign_label.default <- function(x, value){
   )
 }
 
-
-
 #' @keywords internal
 
 assign_label.data.frame <- function(x, value, ...){
@@ -101,7 +99,7 @@ assign_label.data.frame <- function(x, value, ...){
   # The following code is optimized to work even in this horrible case.
   # This is especially important for default_label and apa_table (e.g., in
   # a frequency table, you frequently have repeating column names):
-  columns_to_annotate <- colnames(x) %in% names(value)
+
   if(is.null(names(value))){
     stop("The assigned label(s) must be passed as a named character vector.")
   }
@@ -112,25 +110,12 @@ assign_label.data.frame <- function(x, value, ...){
       , paste(setdiff(names(value), colnames(x)), collapse = ", ")
     )
   }
-  # do not coerce to vector if only one column is changed:
-  modified_object <- x[, columns_to_annotate, drop = FALSE]
-  colnames(modified_object) <- colnames(x)[columns_to_annotate]
-  ordered_value <- value[colnames(modified_object)]
 
-  d <- mapply(
-    FUN = assign_label.default
-    , modified_object
-    , value = ordered_value
-    , USE.NAMES = TRUE
-    , SIMPLIFY = FALSE
-  )
-  d <- as.data.frame(
-    d
-    , col.names = names(modified_object)
-    , stringsAsFactors = FALSE
-    , check.names = FALSE
-  )
-  x[, columns_to_annotate] <- d
+  for(i in seq_along(colnames(x))) {
+    if(colnames(x)[i] %in% names(value)) {
+      x[[i]] <- assign_label(x[[i]], value[[colnames(x)[i]]])
+    }
+  }
 
   x
 }

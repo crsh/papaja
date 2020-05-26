@@ -25,6 +25,7 @@ r_packages:
   - testthat
   - BayesFactor
   - latex2exp
+  - rlang
 
 # Install other dependencies # longtable lscape tabularx
 before_install:

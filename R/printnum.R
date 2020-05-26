@@ -384,7 +384,11 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   p
 }
 
-
+#' Print Degrees of Freedom
+#'
+#' This is an internal function for processing degrees of freedom. It takes care
+#' of printing trailing digits only if non-integer values are given.
+#'
 #' @keywords internal
 
 print_df <- function(x, digits = 2L) {
@@ -392,6 +396,12 @@ print_df <- function(x, digits = 2L) {
   if(is.null(x))    return(NULL)
   if(is.integer(x)) return(printnum(x))
 
-  return(printnum(x, digits = as.numeric(x %% 1 != 0) * digits))
+  x_digits <- ifelse(
+    is.finite(x)
+    , as.integer(x %% 1 > 0) * digits
+    , 0L
+  )
+
+  return(printnum(x, digits = x_digits))
 }
 

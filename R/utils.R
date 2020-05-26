@@ -185,6 +185,317 @@ convert_stat_name <- function(x) {
   new_stat_name
 }
 
+sanitize_table <- function(
+  x
+  , stat_label = NULL
+  , est_label = NULL
+  , ...
+) {
+
+  args <- list(...)
+
+  conf_level <- attr(x$conf.int, "conf.level")
+  if(is.null(conf_level)) {
+    conf_level <- attr(x$conf.int[[1]], "conf.level")
+  }
+  conf_label <- paste0(
+    if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+    , "CI"
+  )
+  # print(conf_label)
+  colnames(x) <- make.names(colnames(x))
+
+  # sanitize_table ----
+  renamers <- c(
+    # nuisance parameters
+    "Sum.Sq"    = "sumsq"
+    , "Mean.Sq" = "meansq"
+    , "logLik"  = "loglik"
+    , "AIC"     = "AIC"
+    , "BIC"     = "BIC"
+    , "npar"    = "n.parameters"
+    # term
+    , "Effect"  = "term"
+    # estimate
+    , "estimate"                = "estimate"
+    , "mean.of.the.differences" = "estimate"
+    , "cor"                     = "estimate"
+    , "rho"                     = "estimate"
+    , "tau"                     = "estimate"
+    , "mean.of.x"               = "estimate"
+    , "X.pseudo.median"         = "estimate"
+    , "mean.of.the.differences" = "estimate"
+    , "difference.in.location"  = "estimate"
+    , "difference.in.means"     = "estimate"
+    # ----
+    , "conf.int" = "conf.int"
+    , "stderr"   = "std.err"
+    , "std.err"  = "std.err"
+    # multivariate.statistic
+    , "Pillai"    = "multivariate.statistic"
+    , "Wilks"     = "multivariate.statistic"
+    , "Roy"       = "multivariate.statistic"
+    , "Hotelling.Lawley" = "multivariate.statistic"
+    # statistic
+    , "t"         = "statistic"
+    , "statistic" = "statistic"
+    , "approx.F"  = "statistic"
+    , "F value"   = "statistic"
+    , "F"         = "statistic"
+    , "LRT"       = "statistic"
+    , "Chisq"     = "statistic"
+    , "chisq"     = "statistic"
+    , "X.squared" = "statistic"
+    , "V"         = "statistic"
+    , "W"         = "statistic"
+    , "S"         = "statistic"
+    , "T"         = "statistic"
+    , "z"         = "statistic"
+    , "Bartlett.s.K.2"          = "statistic"
+    , "Bartlett.s.K.squared"    = "statistic"
+    # df, df1, df2
+    , "multivariate.df1" = "multivariate.df1"
+    , "multivariate.df2" = "multivariate.df2"
+    , "parameter"  = "df"
+    , "df"         = "df"
+    , "Df"         = "df"
+    , "Chi.Df"     = "df"
+    , "parameter1" = "df1"
+    , "parameter2" = "df2"
+    , "num.Df"     = "df1"
+    , "den.Df"     = "df2"
+    , "NumDF"      = "df1"
+    , "DenDF"      = "df2"
+    , "parameter.num.df"   = "df1"
+    , "parameter.denom.df" = "df2"
+    # p.value
+    , "p.value"    = "p.value"
+    , "Pr..Chisq." = "p.value"
+    , "Pr..F."     = "p.value"
+    , "Pr..PB."    = "p.value"
+  )
+
+
+  new_labels <- c(
+    # nuisance parameters
+    "Sum.Sq"    = "$\\mathit{SS}$"
+    , "Mean.Sq" = "$\\mathit{MS}$"
+    , "logLik"  = "$\\ln L$"
+    , "AIC"     = "$\\mathit{AIC}$"
+    , "BIC"     = "$\\mathit{BIC}$"
+    , "npar"    = "$k$"
+    # term
+    , "Effect"   = "Effect"
+    # estimate
+    , "estimate"                = est_label
+    , "cor"                     = "$r$"
+    , "rho"                     = "$r_{\\mathrm{s}}$" # capital or small S???
+    , "tau"                     = "$\\uptau$"
+    , "mean.of.x"               = "$M$"
+    , "X.pseudo.median"         = "$\\mathit{Mdn}^*$"
+    , "mean.of.the.differences" = "$M_d$"
+    , "difference.in.location"  = "$\\mathit{Mdn}_d$"
+    , "difference.in.means"     = "$\\Delta M$"
+    # conf.int
+    , conf.int = conf_label
+    # standard error
+    , "stderr"   = "$\\mathit{SE}$"
+    , "std.err"  = "$\\mathit{SE}$"
+    # multivariate.statistic
+    , "Pillai"           = "$V$"
+    , "Wilks"            = "$\\Lambda$"
+    , "Hotelling.Lawley" = "$T$"
+    , "Roy"              = "$\\theta$"
+    # statistic
+    , "statistic" = stat_label
+    , "t"         = "$t$"
+    , "F.value"   = "$F$"
+    , "F"         = "$F$"
+    , "approx.F"  = "$F$"
+    , "LRT"       = "$\\chi^2$"
+    , "chisq"     = "$\\chi^2$"
+    , "Chisq"     = "$\\chi^2$"
+    , "X.squared" = "$\\chi^2$"
+    , "W"                       = "$W$"
+    , "V"                       = "$V$"
+    , "S"                       = "$S$"
+    , "T"                       = "$T$"
+    , "z"                       = "$z$"
+    , "Bartlett.s.K.2"          = "$K^2$"
+    , "Bartlett.s.K.squared"    = "$K^2$"
+    # df, df1, df2
+    , "multivariate.df1" = "$\\mathit{df}_1$"
+    , "multivariate.df1" = "$\\mathit{df}_1$"
+    , "parameter" = "$\\mathit{df}$"
+    , "df"        = "$\\mathit{df}$"
+    , "Df"        = "$\\mathit{df}$"
+    , "Chi.Df"    = "$\\mathit{df}$"
+    , "num.Df"    = "$\\mathit{df}_1$"
+    , "den.Df"    = "$\\mathit{df}_2$"
+    , "NumDF"     = "$\\mathit{df}_1$"
+    , "DenDF"     = "$\\mathit{df}_2$"
+    , "parameter.num.df"   = "$\\mathit{df}_1$"
+    , "parameter.denom.df" = "$\\mathit{df}_2$"
+    # p.value
+    , "p.value"    = "$p$"
+    , "Pr..Chisq." = "$p$"
+    , "Pr..F."     = "$p$"
+    , "Pr..PB."    = "$p$"
+  )
+
+
+
+  names_in_renamers <- colnames(x) %in% names(renamers)
+
+  if(!all(names_in_renamers)) {
+    warning("Some columns could not be renamed.", colnames(x)[!names_in_renamers])
+  }
+
+  variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
+  colnames(x)[names_in_renamers] <- renamers[colnames(x)[names_in_renamers]]
+  x
+}
+
+print_table <- function(x, ...) {
+
+  args <- list(...)
+  # print_table ----
+  for (i in colnames(x)) {
+    if(i == "p.value") {
+      x[[i]] <- printp(x[[i]])
+    } else if(i %in% c("df", "df1", "df2", "multivariate.df1", "multivariate.df2")) {
+      x[[i]] <- print_df(x[[i]])
+    } else if(i == "conf.int") {
+      tmp <- unlist(lapply(X = x[[i]], FUN = function(x, ...){
+        paste0("[", paste(printnum(x, ...), collapse = ", "), "]")
+      }, ...))
+      variable_label(tmp) <- variable_label(x[[i]])
+      attr(tmp, "conf.level") <- attr(x[[i]][[1]], "conf.level")
+      x[[i]] <- tmp
+    } else if (i == "estimate"){
+      args$x <- x[[i]]
+      x[[i]] <- do.call("printnum", args)
+    } else if (i == "term"){
+      x[[i]] <- prettify_terms(x[[i]])  # todo: standardized ???
+    } else {
+      x[[i]] <- printnum(x[[i]])
+    }
+  }
+
+  # rearrange ----
+  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  x <- x[, ordered_cols, drop = FALSE]
+  if(!is.null(x$term)) x <- sort_terms(x, "term")
+  rownames(x) <- NULL
+
+  class(x) <- c("apa_results_table", "data.frame")
+  x
+}
+
+create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL) {
+  validate(x, check_class = "apa_results_table")
+  validate(in_paren, check_class = "logical")
+
+
+  # Build output container ----
+  apa_res <- apa_print_container()
+
+
+  # estimate ----
+  estimate_list <- list()
+  estimate_list$sep <- ", "
+
+  if(!is.null(x$estimate)) {
+    estimate_list$estimate <- paste0(
+      gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
+      , add_equals(x$estimate)
+      , "$"
+    )
+  }
+  if(!is.null(x$conf.int)) {
+    estimate_list$conf.int <- paste0(
+      attr(x$conf.int, "conf.level") * 100
+      , "\\% CI "
+      ,
+      gsub(
+        x = gsub(
+          x = gsub(x = gsub(
+            x = x$conf.int, pattern = "\\$", replacement = ""
+          ), pattern = "\\[", replacement = "$[")
+          , pattern = "\\]", replacement = "]$")
+        , pattern = ", ", replacement = "$, $")
+    )
+  }
+  # todo: try to add standard error if conf.int not available
+  if(length(estimate_list) > 1L) {
+    apa_res$estimate <- do.call("paste", estimate_list)
+    if(in_paren) apa_res$estimate <- in_paren(apa_res$estimate)
+  }
+
+  # statistic ----
+  dfs <- NULL
+  if(!is.null(x$df)) dfs <- paste0("(", x$df, add_par, ")")
+  if(!is.null(x$df1) && !is.null(x$df2)) dfs <- paste0("(", x$df1, ", ", x$df2, ")")
+
+  stat_list <- list()
+  stat_list$sep <- ", "
+
+  if(!is.null(x$multivariate.statistic)) {
+    stat_list$multivariate.statistic <- paste0(
+      gsub(x = variable_label(x$multivariate.statistic), pattern = "\\$$", replacement = " ")
+      , add_equals(x$multivariate.statistic)
+      , "$"
+    )
+  }
+
+  if(!is.null(x$statistic)) {
+    stat_list$statistic <- paste0(
+      gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
+      , dfs
+      , " "
+      , add_equals(x$statistic)
+      , "$"
+    )
+  }
+  if(!is.null(x$p.value)) {
+    stat_list$p.value <- paste0(
+      "$p "
+      , add_equals(x$p.value)
+      , "$"
+    )
+  }
+
+  if(length(stat_list) > 1L) {
+    apa_res$statistic <- do.call("paste", stat_list)
+    if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
+  }
+
+
+  # full_result ----
+  full_list <- list(sep = ", ")
+  if(!is.null(apa_res$estimate))  full_list$est  <- apa_res$estimate
+  if(!is.null(apa_res$statistic)) full_list$stat <- apa_res$statistic
+
+  apa_res$full_result <- do.call("paste", full_list)
+
+
+  # return as lists if more than one term
+  apa_res[1:3] <- lapply(X = apa_res[1:3], FUN = function(x){
+    if(length(x) > 1L) {
+      y <- as.list(x)
+      if(!is.null(sanitized_terms)) names(y) <- sanitized_terms
+      return(y)
+    }
+
+    if(length(x) == 1L) return(x)
+  })
+
+  apa_res$table <- x
+  apa_res
+}
+
+
 
 #' Create interval estimate string
 #'

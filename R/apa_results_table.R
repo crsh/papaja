@@ -50,24 +50,32 @@ print.apa_results_table <- function(x, ...) {
 }
 
 
+#' #' Extract or Replace Columns of an APA Results Table
+#' #'
+#' #' blabla
+#' #'
+#' #' @rdname extract_apa_results_table
 #' #' @export
 #'
 #' `$.apa_results_table` <- function(x, name) {
 #'
-#'   aliases <- list(
-#'     "F" = "statistic"
-#'     # , "p" = "p.value" # no, because partical matching solves this issue
-#'     , "predictor" = "term"
+#'   aliases <- c(
+#'     "F"         = "statistic"
+#'     , "t"         = "statistic"
+#'     , "p"         = "p.value"
+#'     , "Predictor" = "term"
+#'     , "Effect"    = "term"
+#'     , "term"      = "term"
 #'   )
-#'   pmatch(name, c(names(aliases), colnames(x)))
+#'   name <- c(aliases, colnames(x))[pmatch(name, c(names(aliases), colnames(x)))]
 #'
-#'   if(name %in% names(aliases)) {
+#'   if(names(name) %in% names(aliases)) {
 #'     message("Indexing an apa_results_table with `$"
-#'     , name
-#'     , "` is deprecated. Use `$"
-#'     , aliases[name]
-#'     , "` instead.")
-#'     name <- aliases[name]
+#'             , names(name)
+#'             , "` is deprecated. Use `$"
+#'             , name
+#'             , "` instead.")
 #'   }
-#'   NextMethod("$", object = x, name = name) # dispatch to data.frame method
+#'   x[[name]]
 #' }
+
