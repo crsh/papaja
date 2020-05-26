@@ -10,6 +10,7 @@
 \alias{apa_print.afex_aov}
 \alias{apa_print.anova}
 \alias{apa_print.manova}
+\alias{apa_print.summary.manova}
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
 \method{apa_print}{aov}(x, ...)
@@ -44,6 +45,8 @@
 \method{apa_print}{anova}(x, ...)
 
 \method{apa_print}{manova}(x, test = "Pillai", ...)
+
+\method{apa_print}{summary.manova}(x, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
