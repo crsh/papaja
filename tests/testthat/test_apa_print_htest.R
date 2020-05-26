@@ -8,24 +8,37 @@ test_that(
 
     expect_apa_results(
       t_test_output
-      , col.names = c("estimate", "conf.int", "statistic", "df", "p.value")
+      , labels = list(
+        estimate = "$\\Delta M$"
+        , conf.int = "95\\% CI"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
     )
 
     expect_identical(t_test_output$stat, "$t(17.78) = -1.86$, $p = .079$")
     expect_identical(t_test_output$est, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$")
     expect_identical(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$, $t(17.78) = -1.86$, $p = .079$")
 
+
     t_test <- t.test(extra ~ group, data = sleep, conf.level = .99)
     t_test_output <- apa_print(t_test)
-    expect_identical(
-      object = variable_labels(t_test_output$table)
-      , list(
+
+    expect_apa_results(
+      object = t_test_output
+      , labels = list(
         estimate = "$\\Delta M$"
         , conf.int = "99\\% CI"
         , statistic = "$t$"
         , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
+    )
+
+    expect_identical(
+      object = t_test_output$full_result
+      , expected = "$\\Delta M = -1.58$, 99\\% CI $[-4.03$, $0.87]$, $t(17.78) = -1.86$, $p = .079$"
     )
 
 #     t_test <- t.test(extra ~ group, data = sleep, var.equal = TRUE)
@@ -37,25 +50,57 @@ test_that(
 
     t_test <- t.test(extra ~ group, data = sleep, paired = TRUE)
     t_test_output <- apa_print(t_test)
-    expect_apa_results(t_test_output, col.names = c("estimate", "conf.int", "statistic", "df", "p.value"))
+    expect_apa_results(
+      t_test_output
+      , labels = list(
+        estimate = "$M_d$"
+        , conf.int = "95\\% CI"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
     expect_identical(t_test_output$full, "$M_d = -1.58$, 95\\% CI $[-2.46$, $-0.70]$, $t(9) = -4.06$, $p = .003$")
 
     t_test <- t.test(sleep$extra, mu = 0)
     t_test_output <- apa_print(t_test)
-    expect_apa_results(t_test_output, col.names = c("estimate", "conf.int", "statistic", "df", "p.value"))
-    expect_equal(t_test_output$full, "$M = 1.54$, 95\\% CI $[0.60$, $2.48]$, $t(19) = 3.41$, $p = .003$")
-
-    t_test_output <- apa_print(t_test, ci = matrix(c(1, 2), ncol = 2, dimnames = list(NULL, c("2.5 \\%", "97.5 \\%"))))
-    expect_equal(t_test_output$est, "$M = 1.54$, 95\\% CI $[1.00$, $2.00]$")
+    expect_apa_results(
+      t_test_output
+      , labels = list(
+        estimate = "$M$"
+        , conf.int = "95\\% CI"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
+    expect_identical(
+      t_test_output$full
+      , "$M = 1.54$, 95\\% CI $[0.60$, $2.48]$, $t(19) = 3.41$, $p = .003$"
+    )
+    # Provide a custom ci, check values and labelling
+    ci <- structure(c(1.0, 2.0), "conf.level" = .7)
+    t_test_output <- apa_print(t_test, ci = ci)
+    expect_apa_results(
+      t_test_output
+      , labels = list(
+        estimate = "$M$"
+        , conf.int = "70\\% CI"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
+    expect_identical(t_test_output$est, "$M = 1.54$, 70\\% CI $[1.00$, $2.00]$")
 
     t_test_output <- apa_print(t_test, stat_name = "foobar")
-    expect_equal(t_test_output$stat, "$foobar(19) = 3.41$, $p = .003$")
+    expect_identical(t_test_output$stat, "$foobar(19) = 3.41$, $p = .003$")
 
     t_test_output <- apa_print(t_test, est_name = "foobar")
-    expect_equal(t_test_output$est, "$foobar = 1.54$, 95\\% CI $[0.60$, $2.48]$")
+    expect_identical(t_test_output$est, "$foobar = 1.54$, 95\\% CI $[0.60$, $2.48]$")
 
     t_test_output <- apa_print(t_test, digits = 3)
-    expect_equal(t_test_output$est, "$M = 1.540$, 95\\% CI $[0.596$, $2.484]$")
+    expect_identical(t_test_output$est, "$M = 1.540$, 95\\% CI $[0.596$, $2.484]$")
   }
 )
 
@@ -67,7 +112,10 @@ test_that(
 
     expect_apa_results(
       wilcox_test_output
-      , col.names = c("statistic", "p.value")
+      , labels = list(
+        statistic = "$W$"
+        , p.value = "$p$"
+      )
     )
 
     expect_identical(wilcox_test_output$stat, "$W = 25.50$, $p = .069$")
@@ -77,7 +125,12 @@ test_that(
 
     expect_apa_results(
       wilcox_test_output
-      , col.names = c("estimate", "conf.int", "statistic", "p.value")
+      , labels = list(
+        estimate    = "$\\mathit{Mdn}_d$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$W$"
+        , p.value   = "$p$"
+      )
     )
     expect_identical(wilcox_test_output$est,  "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$")
     expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$, $W = 25.50$, $p = .069$")
@@ -88,7 +141,10 @@ test_that(
 
     expect_apa_results(
       wilcox_test_output
-      , col.names = c("statistic", "p.value")
+      , labels = list(
+        statistic = "$V$"
+        , p.value = "$p$"
+      )
     )
     expect_identical(wilcox_test_output$stat, "$V = 0.00$, $p = .009$")
     expect_identical(wilcox_test_output$full, wilcox_test_output$stat)
@@ -97,8 +153,15 @@ test_that(
     wilcox_test <- suppressWarnings(wilcox.test(sleep$extra, mu = 0, conf.int = TRUE, conf.level = .96))
     wilcox_test_output <- apa_print(wilcox_test)
 
-
-    expect_apa_results(wilcox_test_output, col.names = c("estimate", "conf.int", "statistic", "p.value"))
+    expect_apa_results(
+      wilcox_test_output
+      , labels = list(
+        estimate    = "$\\mathit{Mdn}^*$"
+        , conf.int  = "96\\% CI"
+        , statistic = "$V$"
+        , p.value   = "$p$"
+      )
+    )
     expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}^* = 1.60$, 96\\% CI $[0.40$, $2.70]$, $V = 162.50$, $p = .007$")
   }
 )
@@ -109,31 +172,65 @@ test_that(
     x <- c(44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1)
     y <- c( 2.6,  3.1,  2.5,  5.0,  3.6,  4.0,  5.2,  2.8,  3.8)
 
+    # Pearson's correlation ----
     cor_test <- cor.test(x, y)
     cor_test_output <- apa_print(cor_test)
 
-    expect_apa_results(cor_test_output, col.names = c("estimate", "conf.int", "statistic", "df", "p.value"))
+    expect_apa_results(
+      cor_test_output
+      ,  labels = list(
+        estimate    = "$r$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
+        , p.value  = "$p$"
+      )
+    )
 
     expect_identical(cor_test_output$stat, "$t(7) = 1.84$, $p = .108$")
     expect_identical(cor_test_output$est, "$r = .57$, 95\\% CI $[-.15$, $.90]$")
     expect_identical(cor_test_output$full, "$r = .57$, 95\\% CI $[-.15$, $.90]$, $t(7) = 1.84$, $p = .108$")
 
+    # Spearman's rank correlation ----
     cor_test <- cor.test(x, y, method = "spearman")
     cor_test_output <- apa_print(cor_test)
 
-    expect_apa_results(cor_test_output, col.names = c("estimate", "statistic", "p.value"))
+    expect_apa_results(
+      cor_test_output
+      , labels = list(
+        estimate    = "$r_{\\mathrm{s}}$"
+        , statistic = "$S$"
+        , p.value   = "$p$"
+      )
+    )
     expect_identical(cor_test_output$full, "$r_{\\mathrm{s}} = .60$, $S = 48.00$, $p = .097$")
 
+    # Kendall's tau, exact statistic ----
     cor_test <- cor.test(x, y, method = "kendall")
     cor_test_output <- apa_print(cor_test)
 
-    expect_apa_results(cor_test_output, col.names = c("estimate", "statistic", "p.value"))
+    expect_apa_results(
+      cor_test_output
+      , labels = list(
+        estimate    = "$\\uptau$"
+        , statistic = "$T$"
+        , p.value   = "$p$"
+      )
+    )
     expect_identical(cor_test_output$full, "$\\uptau = .44$, $T = 26.00$, $p = .119$")
 
+    # Kendall's tau with normal approcimation ----
     cor_test <- cor.test(x, y, method = "kendall", exact = FALSE)
     cor_test_output <- apa_print(cor_test)
 
-    expect_apa_results(cor_test_output, col.names = c("estimate", "statistic", "p.value"))
+    expect_apa_results(
+      cor_test_output
+      , labels = list(
+        estimate    = "$\\uptau$"
+        , statistic = "$z$"
+        , p.value   = "$p$"
+      )
+    )
     expect_identical(cor_test_output$full, "$\\uptau = .44$, $z = 1.67$, $p = .095$")
   }
 )
@@ -148,7 +245,14 @@ test_that(
     expect_error(apa_print(prop_test), "Please provide the sample size to report.")
     prop_test_output <- suppressWarnings(apa_print(prop_test, n = sum(patients)))
 
-    expect_apa_results(prop_test_output, col.names = c("statistic", "df", "p.value"))
+    expect_apa_results(
+      prop_test_output
+      ,  labels = list(
+        statistic = "$\\chi^2$"
+        , df      = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
     expect_identical(prop_test_output$stat, "$\\chi^2(3, n = 397) = 12.60$, $p = .006$")
   }
 )
@@ -161,7 +265,11 @@ test_that(
 
     expect_apa_results(
       bartlett_test_output
-      , col.names = c("statistic", "df", "p.value")
+      , labels = list(
+        statistic = "$K^2$"
+        , df      = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
     )
 
     expect_identical(bartlett_test_output$stat, "$K^2(5) = 25.96$, $p < .001$")
@@ -180,13 +288,25 @@ test_that(
     mauchly_test <- mauchly.test(mlmfit, X = ~ deg + noise, idata = mauchly_data)
     mauchly_output <- apa_print(mauchly_test)
 
-    expect_apa_results(mauchly_output, col.names = c("statistic", "p.value"))
-    expect_equal(mauchly_output$stat, "$W = 0.89$, $p = .638$")
+    expect_apa_results(
+      mauchly_output
+      , labels = list(
+        statistic = "$W$"
+        , p.value = "$p$"
+      )
+    )
+    expect_identical(mauchly_output$stat, "$W = 0.89$, $p = .638$")
 
     mauchly_test <- mauchly.test(mlmfit, M = ~ deg + noise, X = ~ noise, idata = mauchly_data)
     mauchly_output <- apa_print(mauchly_test)
 
-    expect_apa_results(mauchly_output, col.names = c("statistic", "p.value"))
+    expect_apa_results(
+      mauchly_output
+      , labels = list(
+        statistic = "$W$"
+        , p.value = "$p$"
+      )
+    )
     expect_identical(mauchly_output$stat, "$W = 0.96$, $p = .850$")
   }
 )
@@ -197,7 +317,15 @@ test_that(
     oneway_test <- oneway.test(extra ~ group, data = sleep)
     oneway_output <- apa_print(oneway_test)
 
-    expect_apa_results(oneway_output, col.names = c("statistic", "df1", "df2", "p.value"))
+    expect_apa_results(
+      oneway_output
+      , labels = list(
+        statistic = "$F$"
+        , df1     = "$\\mathit{df}_1$"
+        , df2     = "$\\mathit{df}_2$"
+        , p.value = "$p$"
+      )
+    )
     expect_identical(oneway_output$stat, "$F(1, 17.78) = 3.46$, $p = .079$")
     expect_identical(oneway_output$full, oneway_output$stat)
   }
@@ -213,7 +341,7 @@ test_that(
     t2 <- t.test(formula = yield ~ N, data = npk, alternative = "less")
     apa2 <- apa_print(t2)
 
-    expect_apa_results(apa_out, col.names = c("estimate", "conf.int", "statistic", "df", "p.value"))
+    expect_apa_results(apa_out, col.names = c("estimate" , "conf.int", "statistic", "df", "p.value"))
     expect_apa_results(apa2, col.names = c("estimate", "conf.int", "statistic", "df", "p.value"))
 
     # positive infinity ----
@@ -225,6 +353,11 @@ test_that(
       object = apa_out$estimate
       , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54$, $\\infty]$"
     )
+    expect_identical(
+      apa_out$table$conf.int
+      , expected = structure("[-9.54, $\\infty$]", label = "95\\% CI", class = c("papaja_labelled", "character"), conf.level = .95)
+    )
+
     # negative infinity ----
     expect_identical(
       object = apa2$full_result
@@ -233,6 +366,15 @@ test_that(
     expect_identical(
       object = apa2$estimate
       , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty$, $-1.70]$"
+    )
+    expect_identical(
+      apa2$table$conf.int
+      , expected = structure(
+        "[$-\\infty$, -1.70]"
+        , label = "95\\% CI"
+        , class = c("papaja_labelled", "character")
+        , conf.level = .95
+      )
     )
   }
 )
