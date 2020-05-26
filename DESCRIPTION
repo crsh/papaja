@@ -24,8 +24,6 @@ Imports:
   rmdfiltr (>= 0.1.2),
   yaml,
   zip
-Remotes:
-  tidymodels/broom
 Suggests:
   tinytex,
   afex,
