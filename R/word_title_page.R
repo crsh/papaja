@@ -27,6 +27,7 @@ word_title_page <- function(x) {
     corresponding_author <- x$author[which(unlist(lapply(lapply(x$author, "[[", "corresponding"), isTRUE)))]
 
     if(!is.null(x$author_note)) author_note <- x$author_note
+    if(!is.null(x$authornote)) author_note <- x$authornote
     if(length(corresponding_author) > 0) author_note <- c(author_note, corresponding_author_line(corresponding_author[[1]]))
 
     if(length(author_note) > 0) {

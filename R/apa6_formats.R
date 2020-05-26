@@ -67,7 +67,6 @@ apa6_pdf <- function(
   # Set chunk defaults
   config$knitr$opts_chunk$echo <- FALSE
   config$knitr$opts_chunk$message <- FALSE
-  # config$knitr$opts_chunk$results <- "asis"
   config$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
   config$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   config$knitr$knit_hooks$inline <- inline_numbers
@@ -115,7 +114,16 @@ apa6_pdf <- function(
       )
     }
 
-    # Correct abstract environment
+    # Correct abstract and note environment
+    ## Note is added to the end of the document by Lua filter and needs to be
+    ## moved to the preamble
+    lua_addition_start <- which(grepl("^% papaja Lua-filter additions$", output_text))
+    body_end <- which(grepl("^\\\\end\\{document\\}$", output_text))
+
+    if(length(lua_addition_start) > 0) {
+      header_additions <- output_text[c(lua_addition_start:(body_end - 1))]
+      output_text <- output_text[-c(lua_addition_start:(body_end - 1))]
+    }
     output_text <- paste(output_text, collapse = "\n")
 
     # authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
@@ -127,9 +135,14 @@ apa6_pdf <- function(
     # output_text <- gsub("!!!papaja-author-note\\(.*\\)papaja-author-note!!!", "", output_text)
     # output_text <- gsub("!!!papaja-note\\(.*\\)papaja-note!!!", "", output_text)
 
+
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
-      , paste0("\\\\abstract{\\1}\n\n\\\\begin\\{document\\}\n\\\\maketitle")
+      , paste0(
+        "\\\\abstract{\\1}\n\n"
+        , if(length(lua_addition_start) > 0) paste(gsub("\\", "\\\\", header_additions, fixed = TRUE), collapse = "\n") else NULL
+        , "\n\n\\\\begin\\{document\\}\n\\\\maketitle"
+      )
       , output_text
     )
 
@@ -390,6 +403,12 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
 
+    parse_metadata_filter <- system.file(
+      "lua", "parse_metadata.lua"
+      , package = "papaja"
+    )
+    args <- rmdfiltr::add_custom_filter(args, filter_path = parse_metadata_filter, lua = TRUE)
+
     if(isTRUE(metadata$quote_labels)) {
       label_quotes_filter <- system.file(
         "lua", "label_quotes.lua"
@@ -486,27 +505,27 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   header_includes <- c(header_includes, paste0("\\affiliation{", affiliations, "}"))
 
   ### Pass the following through abstract field so pandoc parses markdown
-  if(
-    !is.null(metadata$author_note) ||
-    !is.null(metadata$authornote) ||
-    length(corresponding_author) > 0
-  ) {
-    author_note <- paste( # TODO
-      c(metadata$author_note, metadata$authornote)
-      , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
-      , sep = "\n\n"
-    )
-
-    # TODO
-    # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
-    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
-  }
+  # if(
+  #   !is.null(metadata$author_note) ||
+  #   !is.null(metadata$authornote) ||
+  #   length(corresponding_author) > 0
+  # ) {
+  #   author_note <- paste( # TODO
+  #     c(metadata$author_note, metadata$authornote)
+  #     , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
+  #     , sep = "\n\n"
+  #   )
+  #
+  #   # TODO
+  #   # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
+  #   header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+  # }
 
   # TODO
-  if(!is.null(metadata$note)) {
-    # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-note(", metadata$note, ")papaja-note!!!")
-    header_includes <- c(header_includes, paste0("\\note{", escape_latex(metadata$note), "}"))
-  }
+  # if(!is.null(metadata$note)) {
+  #   # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-note(", metadata$note, ")papaja-note!!!")
+  #   header_includes <- c(header_includes, paste0("\\note{", escape_latex(metadata$note), "}"))
+  # }
 
   if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
     keywords <- paste(unlist(metadata$keywords), collapse = ", ")
