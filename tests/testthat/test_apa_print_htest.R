@@ -15,6 +15,19 @@ test_that(
     expect_identical(t_test_output$est, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$")
     expect_identical(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$, $t(17.78) = -1.86$, $p = .079$")
 
+    t_test <- t.test(extra ~ group, data = sleep, conf.level = .99)
+    t_test_output <- apa_print(t_test)
+    expect_identical(
+      object = variable_labels(t_test_output$table)
+      , list(
+        estimate = "$\\Delta M$"
+        , conf.int = "99\\% CI"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
+
 #     t_test <- t.test(extra ~ group, data = sleep, var.equal = TRUE)
 #     t_test_output <- apa_print(t_test)
 #     expect_equal(t_test_output$stat, "$t(18) = -1.86$, $p = .079$")
@@ -81,12 +94,12 @@ test_that(
     expect_identical(wilcox_test_output$full, wilcox_test_output$stat)
 
 
-    wilcox_test <- suppressWarnings(wilcox.test(sleep$extra, mu = 0, conf.int = TRUE))
+    wilcox_test <- suppressWarnings(wilcox.test(sleep$extra, mu = 0, conf.int = TRUE, conf.level = .96))
     wilcox_test_output <- apa_print(wilcox_test)
 
 
     expect_apa_results(wilcox_test_output, col.names = c("estimate", "conf.int", "statistic", "p.value"))
-    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}^* = 1.60$, 95\\% CI $[0.45$, $2.65]$, $V = 162.50$, $p = .007$")
+    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}^* = 1.60$, 96\\% CI $[0.40$, $2.70]$, $V = 162.50$, $p = .007$")
   }
 )
 
