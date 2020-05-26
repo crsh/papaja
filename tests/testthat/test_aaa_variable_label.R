@@ -23,6 +23,8 @@ test_that(
   "variable_label<-.data.frame"
   , {
     object <- data.frame(a = 1:4, b = 5:8)
+    object$c <- list(1:2, 3:4, 5:6, 7:8) # add a list column
+
     expect_error(
       variable_label(object) <- c("not_in_data" = "test")
       , "Some requested columns could not be found in data.frame:\nnot_in_data"
@@ -33,17 +35,26 @@ test_that(
       , "The assigned label(s) must be passed as a named character vector."
       , fixed = TRUE
     )
-    variable_label(object) <- c("a" = "A beautiful test label.")
+    variable_label(object) <- c("a" = "A beautiful test label.", c = "Deal with list columns")
 
     expect_identical(
       object = object
-      , expected = data.frame(
-        a = structure(
-          1:4
-          , label = "A beautiful test label."
-          , class = c("papaja_labelled", "integer")
+      , expected = structure(
+        list(
+          a = structure(
+            1:4
+            , label = "A beautiful test label."
+            , class = c("papaja_labelled", "integer")
+          )
+          , b = 5:8
+          , c = structure(
+            list(1:2, 3:4, 5:6, 7:8)
+            , label = "Deal with list columns"
+            , class = c("papaja_labelled", "list")
+          )
         )
-        , b = 5:8
+        , row.names = c(NA, -4L)
+        , class = "data.frame"
       )
     )
 
@@ -55,21 +66,31 @@ test_that(
 
     expect_identical(
       object = object
-      , expected = data.frame(
-        a = structure(
-          1:4
-          , label = "A different, but equally beautiful, test label."
-          , class = c("papaja_labelled", "integer")
+      , expected = structure(
+        list(
+          a = structure(
+            1:4
+            , label = "A different, but equally beautiful, test label."
+            , class = c("papaja_labelled", "integer")
+          )
+          , b = structure(
+            5:8
+            , label = "A mediocre reinterpretation of the a's label."
+            , class = c("papaja_labelled", "integer")
+          )
+          , c = structure(
+            list(1:2, 3:4, 5:6, 7:8)
+            , label = "Deal with list columns"
+            , class = c("papaja_labelled", "list")
+          )
         )
-        , b = structure(
-          5:8
-          , label = "A mediocre reinterpretation of the a's label."
-          , class = c("papaja_labelled", "integer")
-        )
+        , row.names = c(NA, -4L)
+        , class = "data.frame"
       )
     )
   }
 )
+
 
 context("variable_label() extraction methods")
 
@@ -177,6 +198,8 @@ test_that(
     expect_identical(class(o1), expected = c("papaja_labelled", "factor"))
   }
 )
+
+
 
 
 
