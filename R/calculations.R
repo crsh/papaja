@@ -230,12 +230,10 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 
 within_subjects_conf_int <- wsci
 
-
-
 #' @rdname wsci
 #' @export
 
-summary.papaja_wsci <- function(x, ...) {
+summary.papaja_wsci <- function(x) {
 
   means <- attr(x, "means")
   colnames(means)[ncol(means)] <- "mean"

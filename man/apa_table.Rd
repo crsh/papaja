@@ -12,7 +12,6 @@ apa_table(x, ...)
 
 \method{apa_table}{apa_results_table}(x, escape = FALSE, ...)
 
-
 \method{apa_table}{matrix}(
   x,
   caption = NULL,
@@ -25,6 +24,7 @@ apa_table(x, ...)
   landscape = FALSE,
   font_size = NULL,
   escape = TRUE,
+  span_text_columns = TRUE,
   ...,
   format.args = NULL
 )
@@ -42,6 +42,7 @@ apa_table(x, ...)
   font_size = NULL,
   escape = TRUE,
   merge_method = "indent",
+  span_text_columns = TRUE,
   ...,
   format.args = NULL
 )
@@ -58,10 +59,10 @@ apa_table(x, ...)
   landscape = FALSE,
   font_size = NULL,
   escape = TRUE,
+  span_text_columns = TRUE,
   ...,
   format.args = NULL
 )
-
 }
 \arguments{
 \item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.}
@@ -87,11 +88,9 @@ are included if \code{rownames(x)} is neither \code{NULL} nor identical to
 are left-aligned. If \code{length(align) == 1L}, the string will be
 expanded to a vector of individual letters, e.g. \code{'clc'} becomes
 \code{c('c', 'l', 'c')}, unless the output format is LaTeX.}
-
     \item{\code{label}}{The table reference label. By default, the label is obtained
 from \code{knitr::\link[knitr]{opts_current}$get('label')}.}
   }}
-
 
 \item{escape}{Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
 column names, row names, caption, note and table contents are escaped.}

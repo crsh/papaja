@@ -9,7 +9,8 @@
 wsci(data, id, factors, dv, level = 0.95, method = "Morey")
 
 within_subjects_conf_int(data, id, factors, dv, level = 0.95, method = "Morey")
-\method{summary}{papaja_wsci}(x, ...)
+
+\method{summary}{papaja_wsci}(x)
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}
