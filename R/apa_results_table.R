@@ -48,3 +48,26 @@ print.apa_results_table <- function(x, ...) {
 
   invisible(x)
 }
+
+
+#' #' @export
+#'
+#' `$.apa_results_table` <- function(x, name) {
+#'
+#'   aliases <- list(
+#'     "F" = "statistic"
+#'     # , "p" = "p.value" # no, because partical matching solves this issue
+#'     , "predictor" = "term"
+#'   )
+#'   pmatch(name, c(names(aliases), colnames(x)))
+#'
+#'   if(name %in% names(aliases)) {
+#'     message("Indexing an apa_results_table with `$"
+#'     , name
+#'     , "` is deprecated. Use `$"
+#'     , aliases[name]
+#'     , "` instead.")
+#'     name <- aliases[name]
+#'   }
+#'   NextMethod("$", object = x, name = name) # dispatch to data.frame method
+#' }

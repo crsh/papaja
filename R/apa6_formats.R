@@ -657,9 +657,16 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     args <- c(args, "--include-before", tmp_includes_file(before_body_includes))
   }
 
+
+  # Set additional lua filters
+  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
+    args <- rmdfiltr::add_wordcount_filter(args)
+  }
+
   after_body_includes <- c(after_body_includes, metadata$`after-includes`)
   if(length(after_body_includes) > 0) {
     args <- c(args, "--include-after", tmp_includes_file(after_body_includes))
+
   }
 
 

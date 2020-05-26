@@ -47,10 +47,10 @@ arrange_anova.default <- function(x, ...) {
 arrange_anova.anova <- function(x) {
   object <- as.data.frame(x)
   resid_row <- apply(object, 1, function(x) any(is.na(x)))
-  x <- data.frame(array(NA, dim = c(nrow(object) - 1, 7)), row.names = NULL) # Create empty object
+  x <- data.frame(array(NA, dim = c(nrow(object) - sum(resid_row), 7)), row.names = NULL) # Create empty object
   colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
 
-  # Model comparison
+  # Model comparisons (lm()) ----
   if(any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading")))) {
 
     x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum of Sq", "Df", "F", "Pr(>F)")]
@@ -60,21 +60,73 @@ arrange_anova.anova <- function(x) {
     x$term <- paste0("model", 2:nrow(object))
 
     class(x) <- c("apa_model_comp", class(x))
+  } else {
+    # --------------------------------------------------------------------------
+    # - stats::anova.lm()
+    # - car::leveneTest()
+    # - afex::mixed(method %in% c("KR", "S", "PB"))
+    # - lme4::summary.merMod()
+    # - lmerTest::summary.lmerModLmerTest()
 
-  } else if(is.null(object[["Sum Sq"]])) { # car::levenTest
-    x <- x[, -which(colnames(x) %in% c("sumsq", "sumsq_err"))]
+    # c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
 
-    x[, c("df", "statistic", "p.value")] <- object[!resid_row, c("Df", "F value", "Pr(>F)")]
-    x$df_res <- object[resid_row, "Df"]
-    x$term <- rownames(object)[!resid_row]
-    class(x) <- c("apa_variance_table", class(x))
+    # anova_table from mixed(method = "PB") contain two columns with *p* values,
+    # but also df from asymptotic theory
+    col_names <- colnames(object)
+    if("Chi Df" %in% col_names && "Pr(>PB)" %in% col_names) {
+      object$`Chi Df` <- NULL
+      object$`Pr(>Chisq)` <- NULL
+    }
+    if("Chi Df" %in% col_names && "Df" %in% col_names) {
+      object$Df <- NULL
+    }
 
-  } else { # Analysis of variance
+    renamers <- c(
+      "Sum Sq"    = "sumsq"
+      , "Df"      = "df"
+      , "F value" = "statistic"
+      , "Pr(>F)"  = "p.value"
+      # nuisance
+      , "Mean Sq" = "meansq"
+      # fixed-effects tables from lmerModlmerTest
+      , "NumDF"     = "df"
+      , "DenDF"     = "df_res"
+      # model comparisons from lme4 and lmerTest
+      , "logLik" = "logLik"
+      , "AIC"    = "AIC"
+      , "BIC"    = "BIC"
+      , "LRT"    = "statistic"
+      , "Chisq"  = "statistic"
+      , "Pr(>Chisq)" = "p.value"
+      # anova objects from afex::mixed
+      , "Effect"  = "term"
+      , "Chi Df"  = "df"
+      , "num Df"  = "df"
+      , "den Df"  = "df_res"
+      , "F"       = "statistic"
+      , "Pr(>F)"  = "p.value"
+      , "Pr(>PB)" = "p.value"
+      , "npar"    = "n.parameters"
+    )
 
-    x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum Sq", "Df", "F value", "Pr(>F)")]
-    x$sumsq_err <- object[resid_row, "Sum Sq"]
-    x$df_res <- object[resid_row, "Df"]
-    x$term <- rownames(object)[!resid_row]
+    if(!all(colnames(object) %in% names(renamers))) {
+      warning("Some columns could not be renamed.", setdiff(names(renamers), colnames(object)))
+    }
+
+    colnames(object) <- renamers[colnames(object)]
+
+
+    x <- object[!resid_row, ]
+
+    if(any(resid_row)) {
+      stopifnot(sum(resid_row) == 1)
+      x$df_res <- object$df[resid_row]
+      x$sumsq_err <- object$sumsq[resid_row]
+    }
+
+    if(is.null(x$term)) {
+      x$term <- rownames(object)[!resid_row]
+    }
 
     class(x) <- c("apa_variance_table", class(x))
     attr(x, "correction") <- "none"
@@ -153,7 +205,7 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
       variance_table[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[GG])"]
     } else {
       if (correction[1] == "HF") {
-        if (any(x$pval.adjustments[,"HF eps"] > 1)) warning("HF eps > 1 treated as 1")
+        if (any(x$pval.adjustments[, "HF eps"] > 1)) message("HF eps > 1 treated as 1.")
         variance_table[row.names(x$pval.adjustments), "num Df"] <- variance_table[row.names(x$pval.adjustments), "num Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
         variance_table[row.names(x$pval.adjustments), "den Df"] <- variance_table[row.names(x$pval.adjustments), "den Df"] * pmin(1, x$pval.adjustments[, "HF eps"])
         variance_table[row.names(x$pval.adjustments), "Pr(>F)"] <- x$pval.adjustments[,"Pr(>F[HF])"]

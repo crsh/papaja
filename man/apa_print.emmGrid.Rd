@@ -7,23 +7,23 @@
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
-apa_print.emmGrid(x, ...)
+\method{apa_print}{emmGrid}(x, ...)
 
-apa_print.summary_emm(x, contrast_names = NULL, est_name = NULL,
-  in_paren = FALSE, ...)
+\method{apa_print}{summary_emm}(x, contrast_names = NULL, est_name = NULL, in_paren = FALSE, ...)
 
-apa_print.lsmobj(x, ...)
+\method{apa_print}{lsmobj}(x, ...)
 
-apa_print.summary.ref.grid(x, ...)
+\method{apa_print}{summary.ref.grid}(x, ...)
 }
 \arguments{
 \item{x}{Object
 adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the}
 
-\item{...}{Arguments passed on to \code{printnum}
-\describe{
-  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
-}}
+\item{...}{
+  Arguments passed on to \code{\link[=printnum]{printnum}}
+  \describe{
+    \item{\code{}}{}
+  }}
 
 \item{contrast_names}{Character. An optional vector of names to identify calculated contrasts.}
 
@@ -58,11 +58,13 @@ ADJUSTED CONFIDENCE INTERVALS
    NULL
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.glht}},
-  \code{\link{apa_print.glm}},
-  \code{\link{apa_print.htest}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print}}
+Other apa_print: 
+\code{\link{apa_print.BFBayesFactor}()},
+\code{\link{apa_print.aov}()},
+\code{\link{apa_print.glht}()},
+\code{\link{apa_print.glm}()},
+\code{\link{apa_print.htest}()},
+\code{\link{apa_print.list}()},
+\code{\link{apa_print}()}
 }
 \concept{apa_print}

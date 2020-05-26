@@ -79,63 +79,89 @@ print_anova <- function(
   for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = FALSE)}
   if(mse) x$mse <- printnum(x$mse, digits = 2)
 
-  # Assemble table
-  anova_table <- data.frame(x[, c("term", "statistic","df", "df_res", if(mse) "mse" else NULL, "p.value", es)], row.names = NULL)
+  # Assemble table -------------------------------------------------------------
+  cols <- intersect(
+    c("term", "statistic","df", "df_res", "mse", "p.value", es)
+    , colnames(x)
+  )
+  anova_table <- data.frame(x[, cols], row.names = NULL)
   anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
 
-  ## Define appropriate column names
-  es_long <- c()
-  if("pes" %in% es) {
-    es_long <- c(es_long, "$\\hat{\\eta}^2_p$")
-  }
-  if("ges" %in% es) {
-    es_long <- c(es_long, "$\\hat{\\eta}^2_G$")
-  }
-  if("es" %in% es) {
-    es_long <- c(es_long, "$\\hat{\\eta}^2$")
-  }
-
-
-  mse_long <- if(mse) "$\\mathit{MSE}$" else NULL
   correction_type <- attr(x, "correction")
 
-  colnames(anova_table) <- c("Effect", "F", "df1", "df2", if(mse){"MSE"}else{NULL}, "p", es)
+  statistic <- attr(x, "statistic")
+  if(is.null(statistic)) statistic <- "F"
+  if(is.null(anova_table$df_res)) statistic <- "chisq"
+
+  names(es) <- es
+  renamers <- c(
+    term = "Effect"
+    , statistic = statistic   # defaults to "F" for backwards compatibility
+    , df = if(is.null(anova_table$df_res)){ "df" } else { "df1" }
+    , df_res = "df2"
+    , mse = "MSE"
+    , p.value = "p"
+    , es
+  )
+
+  colnames(anova_table) <- renamers[colnames(anova_table)]
   class(anova_table) <- "data.frame"
 
   if(!is.null(correction_type) && correction_type != "none") {
     variable_label(anova_table) <- c(
-      "Effect" = "Effect"
-      , "F" = "$F$"
-      , "df1" = paste0("$\\mathit{df}_1^{", correction_type, "}$")
-      , "df2" = paste0("$\\mathit{df}_2^{", correction_type, "}$")
-      , "p" = "$p$"
-    )
+      "Effect"  = "Effect"
+      , "F"     = "$F$"
+      , "chisq" = "$\\Chi^2$"
+      , "df"    = "$\\mathit{df}"
+      , "df1"   = paste0("$\\mathit{df}_1^{", correction_type, "}$")
+      , "df2"   = paste0("$\\mathit{df}_2^{", correction_type, "}$")
+      , "p"     = "$p$"
+      , "pes"   = "$\\hat{\\eta}^2_p$"
+      , "ges"   = "$\\hat{\\eta}^2_G$"
+      , "es"    = "$\\hat{\\eta}^2$"
+      , "MSE"   = "$\\mathit{MSE}$"
+    )[colnames(anova_table)]
   } else {
     variable_label(anova_table) <- c(
-      "Effect" = "Effect"
-      , "F" = "$F$"
-      , "df1" = "$\\mathit{df}_1$"
-      , "df2" = "$\\mathit{df}_2$"
-      , "p" = "$p$"
-    )
+      "Effect"  = "Effect"
+      , "F"     = "$F$"
+      , "chisq" = "$\\Chi^2$"
+      , "df"    = "$\\mathit{df}"
+      , "df1"   = "$\\mathit{df}_1$"
+      , "df2"   = "$\\mathit{df}_2$"
+      , "p"     = "$p$"
+      , "pes"   = "$\\hat{\\eta}^2_p$"
+      , "ges"   = "$\\hat{\\eta}^2_G$"
+      , "es"    = "$\\hat{\\eta}^2$"
+      , "MSE"   = "$\\mathit{MSE}$"
+    )[colnames(anova_table)]
   }
-  names(es_long) <- es
-  if(length(es)>0)
-    variable_label(anova_table[, es]) <- es_long
-  if(mse) variable_label(anova_table$MSE) <- mse_long
 
-  ## Add 'equals' where necessary
-  x$p.value <- add_equals(x$p.value)
 
+  # Assemble term lists --------------------------------------------------------
 
   # Concatenate character strings and return as named list
   apa_res <- apa_print_container()
 
-  apa_res$statistic <- apply(x, 1, function(y) {
-    stat <- paste0("$F(", y["df"], ", ", y["df_res"], ") = ", y["statistic"], if(mse){ paste0("$, $\\mathit{MSE} = ", y["mse"])} else {NULL}, "$, $p ", y["p.value"], "$")
-    if(in_paren) stat <- in_paren(stat)
-    stat
-  })
+  apa_res$statistic <- paste0(
+    c("F" = "$F", "chisq" = "$\\Chi^2")[statistic]
+    , if(!is.null(x$df)) { "(" } else { NULL }
+    , x$df
+    , if(!is.null(x$df_res)) { ", " } else { NULL }
+    , x$df_res
+    , if(!is.null(x$df)) { ")" } else { NULL }
+    , " = "
+    , x$statistic
+    , if(mse) { "$, $\\mathit{MSE} = " } else { NULL }
+    , if(mse) { x$mse } else { NULL }
+    , "$, $p "
+    , add_equals(x$p.value)
+    , "$"
+  )
+
+  if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
+  names(apa_res$statistic) <- rownames(x)
+  apa_res$statistic <- as.vector(apa_res$statistic, mode = "list")
 
   if(!is.null(es)) {
     apa_res$estimate <- apply(x, 1, function(y) {
@@ -155,9 +181,9 @@ print_anova <- function(
     apa_res$full_result <- paste(apa_res$statistic, apa_res$estimate, sep = ", ")
 
     names(apa_res$full_result) <- names(apa_res$estimate)
-    apa_res <- lapply(apa_res, as.list)
+    apa_res[] <- lapply(apa_res, as.list) # [] for preserving class
   }
   apa_res$table <- sort_terms(as.data.frame(anova_table), "Effect")
-  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
+  class(apa_res$table) <- c("apa_results_table", "data.frame")
   apa_res
 }

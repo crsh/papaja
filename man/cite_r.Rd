@@ -4,8 +4,13 @@
 \alias{cite_r}
 \title{Cite R and R-packages}
 \usage{
-cite_r(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL,
-  withhold = TRUE)
+cite_r(
+  file = NULL,
+  prefix = "R-",
+  footnote = FALSE,
+  pkgs = NULL,
+  withhold = TRUE
+)
 }
 \arguments{
 \item{file}{Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL} only R

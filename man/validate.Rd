@@ -4,10 +4,19 @@
 \alias{validate}
 \title{Validate function input}
 \usage{
-validate(x, name = NULL, check_class = NULL, check_mode = NULL,
-  check_integer = FALSE, check_NA = TRUE, check_infinite = TRUE,
-  check_length = NULL, check_dim = NULL, check_range = NULL,
-  check_cols = NULL)
+validate(
+  x,
+  name = NULL,
+  check_class = NULL,
+  check_mode = NULL,
+  check_integer = FALSE,
+  check_NA = TRUE,
+  check_infinite = TRUE,
+  check_length = NULL,
+  check_dim = NULL,
+  check_range = NULL,
+  check_cols = NULL
+)
 }
 \arguments{
 \item{x}{Function input.}
