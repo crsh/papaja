@@ -163,7 +163,7 @@ apa6_pdf <- function(
     output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc author environment
-    output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text, useBytes = TRUE)
+    # output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
@@ -487,16 +487,16 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
   }
 
-  if(!is.null(metadata$author)) {
-    authors <- paste_authors(metadata$author, format = "latex")
+  # if(!is.null(metadata$author)) {
+  #   authors <- paste_authors(metadata$author, format = "latex")
+  #
+  #   corresponding_author <- metadata$author[which(unlist(lapply(lapply(metadata$author, "[[", "corresponding"), isTRUE)))]
+  # } else {
+  #   authors <- "\\phantom{a}"
+  #   corresponding_author <- NULL
+  # }
 
-    corresponding_author <- metadata$author[which(unlist(lapply(lapply(metadata$author, "[[", "corresponding"), isTRUE)))]
-  } else {
-    authors <- "\\phantom{a}"
-    corresponding_author <- NULL
-  }
-
-  header_includes <- c(header_includes, paste0("\\author{", authors, "}"))
+  # header_includes <- c(header_includes, paste0("\\author{", authors, "}"))
 
   if(!is.null(metadata$author) && !is.null(metadata$affiliation)) {
     affiliations <- paste0("\n\\vspace{0.5cm}\n", paste_affiliations(metadata$affiliation, format = "latex"))
