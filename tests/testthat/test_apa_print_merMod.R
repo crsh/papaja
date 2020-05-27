@@ -3,11 +3,10 @@ context("apa_print() for hierarchical linear models")
 test_that(
   "Fixed-effects summaries and model comparisons."
   , {
-    testthat::skip_on_cran()
+    skip_on_cran()
     model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
     model2_lme4 <- lme4::lmer(formula = yield ~ N + P + (1|block), data = npk)
     model_lmerTest <- lmerTest::as_lmerModLmerTest(model_lme4)
-    x <- model_lmerTest
 
     # glm <- lme4::glmer(formula = 1/yield ~ N + (1|block), data = npk, family = inverse.gaussian(link = "1/mu^2"))
     apa_lme4 <- apa_print(model_lme4)
@@ -24,22 +23,33 @@ test_that(
         , statistic = "$t$"
       )
     )
+    expect_apa_results(
+      apa_lmerTest
+      , labels = list(
+        term        = "Term"
+        , estimate  = "$b$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
 
-    testthat::expect_identical(
+    expect_identical(
       object = apa_lmerTest$estimate
       , expected = list(
         Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$"
         , N1 = "$b = 5.62$, 95\\% CI $[1.92$, $9.31]$"
       )
     )
-    testthat::expect_identical(
+    expect_identical(
       object = apa_lmerTest$statistic
       , expected = list(
         Intercept = "$t(8.17) = 27.06$, $p < .001$"
         , N1 = "$t(17.00) = 3.06$, $p = .007$"
       )
     )
-    testthat::expect_identical(
+    expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
         Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$, $t(8.17) = 27.06$, $p < .001$"
@@ -47,18 +57,18 @@ test_that(
       )
     )
 
-    testthat::expect_identical(
+    expect_identical(
       object = apa_lme4$estimate
       , expected = apa_lmerTest$estimate
     )
-    testthat::expect_identical(
+    expect_identical(
       object = apa_lme4$statistic
       , expected = list(
         Intercept = "$t = 27.06$"
         , N1 = "$t = 3.06$"
       )
     )
-    testthat::expect_identical(
+    expect_identical(
       object = apa_lme4$full_result
       , expected = list(
         Intercept = "$b = 52.07$, 95\\% CI $[48.17$, $55.97]$, $t = 27.06$"
@@ -72,7 +82,7 @@ test_that(
     )
 
     ranova_out <- lmerTest::ranova(model_lmerTest)
-    testthat::expect_error(
+    expect_error(
       apa_print(ranova_out)
       , "Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support."
     )
