@@ -11,7 +11,10 @@ expect_apa_results <- function(
 ) {
 
   # Capture object and label
-  act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
+  act <- list(
+    value = object
+    , label = deparse(substitute(object))
+  )
 
   expect_s3_class(object, c("apa_results", "list"), exact = TRUE)
   expect_identical(names(object), container_names)
@@ -49,7 +52,7 @@ expect_apa_results <- function(
     expect(
       identical(table_class, c("apa_results_table", "data.frame"))
       , sprintf(
-        "The table element of %s has class `%s`, not `%s`."
+        "The table element of `%s` has class `%s`, not `%s`."
         , act$lab, paste(table_class, collapse = "/"), "apa_results_table/data.frame"
       )
     )
