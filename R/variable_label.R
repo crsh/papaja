@@ -112,7 +112,7 @@ assign_label.data.frame <- function(x, value, ...){
   }
 
   for(i in seq_along(colnames(x))) {
-    if(colnames(x)[i] %in% names(value)) {
+    if(any(colnames(x)[i] == names(value))) {
       x[[i]] <- assign_label(x[[i]], value[[colnames(x)[i]]])
     }
   }
@@ -293,11 +293,11 @@ tidy_variable_lables <- function(x) {
   labels <- unlist(variable_labels(x))
 
 label_range <- function(y) {
-  
+
   if(inherits(y, "numeric")) return(paste0("[", min(y, na.rm = TRUE), ", ", max(y, na.rm = TRUE), "]"))
   if(inherits(y, "factor")) return(nlevels(y))
   if(inherits(y, "character")) return(length(unique(y[!is.na(y)])))
-  
+
   return("")
 }
 

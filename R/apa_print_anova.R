@@ -137,7 +137,12 @@ apa_print.anova <- function(
   # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
 
-  ellipsis <- list(...)
+  ellipsis <- defaults(
+    list(...)
+    , set.if.null = list(
+      in_paren = FALSE
+    )
+  )
   variance_table <- arrange_anova(x)
   object_heading <- attr(x, "heading")
 
@@ -150,21 +155,46 @@ apa_print.anova <- function(
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
-    # # lmerTest::anova.merModLmerTest ----
-    # if(!is.null(attr(variance_table, "ddf"))) {
-    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
-    # }
-    # # afex::mixed ----
-    # if(any(grepl("Mixed Model", object_heading))) {
-    #   attr(variance_table, "correction") <- unname(
-    #     c(KR = "KR", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
-    #   )
-    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
-    # }
-    # # lmerTest::ranova ----
-    # if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
-    #   stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
-    # }
+    # lmerTest::anova.merModLmerTest ----
+    if(!is.null(attr(variance_table, "ddf"))) {
+      return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    }
+    # afex::mixed ----
+    if(any(grepl("Mixed Model", object_heading))) {
+      correction <- unname(
+        c(KR = "\\mathit{KR}", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
+      )
+      x <- as.data.frame(x, stringsAsFactors = FALSE)
+      x$Effect <- rownames(x)
+      rownames(x) <- NULL
+
+      # anova_table from mixed(method = "PB") contain two columns with *p* values,
+      # but also df from asymptotic theory
+      col_names <- colnames(x)
+      if("Chi Df" %in% col_names && "Pr(>PB)" %in% col_names) {
+        x$`Chi Df` <- NULL
+        x$`Pr(>Chisq)` <- NULL
+      }
+      if("Chi Df" %in% col_names && "Df" %in% col_names) {
+        x$Df <- NULL
+      }
+
+      attr(x, "correction") <- correction
+      # Sanitize, prettify, create container ----
+      sanitized_table <- sanitize_table(x)
+      prettified_table <- print_table(sanitized_table)
+      return(
+        create_container(
+          prettified_table
+          , sanitized_terms = sanitize_terms(x$Effect)
+          , in_paren = ellipsis$in_paren
+        )
+      )
+    }
+    # lmerTest::ranova ----
+    if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
+      stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
+    }
     # anova::lm (single model) ----
     return(print_anova(variance_table, ...))
   } else if("apa_model_comp" %in% class(variance_table)) {

@@ -197,13 +197,22 @@ sanitize_table <- function(
 
   conf_level <- attr(x$conf.int, "conf.level")
   if(is.null(conf_level)) {
-    conf_level <- attr(x$conf.int[[1]], "conf.level")
+    conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
   }
   conf_label <- paste0(
     if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
     , "CI"
   )
-  # print(conf_label)
+
+  correction_type <- attr(x, "correction")
+  if(is.null(correction_type)) {
+    label_df1 <- "$\\mathit{df}_1$"
+    label_df2 <- "$\\mathit{df}_2$"
+  } else {
+    label_df1 <- paste0("$\\mathit{df}_1^{", correction_type, "}$")
+    label_df2 <- paste0("$\\mathit{df}_2^{", correction_type, "}$")
+  }
+
   colnames(x) <- make.names(colnames(x))
 
   # sanitize_table ----
@@ -216,8 +225,10 @@ sanitize_table <- function(
     , "BIC"     = "BIC"
     , "npar"    = "n.parameters"
     # term
+    , "term"    = "term"
     , "Effect"  = "term"
     # estimate
+    , "Estimate"                = "estimate"
     , "estimate"                = "estimate"
     , "mean.of.the.differences" = "estimate"
     , "cor"                     = "estimate"
@@ -229,9 +240,10 @@ sanitize_table <- function(
     , "difference.in.location"  = "estimate"
     , "difference.in.means"     = "estimate"
     # ----
-    , "conf.int" = "conf.int"
-    , "stderr"   = "std.err"
-    , "std.err"  = "std.err"
+    , "conf.int"   = "conf.int"
+    , "Std..Error" = "std.err"
+    , "stderr"     = "std.err"
+    , "std.err"    = "std.err"
     # multivariate.statistic
     , "Pillai"    = "multivariate.statistic"
     , "Wilks"     = "multivariate.statistic"
@@ -239,6 +251,7 @@ sanitize_table <- function(
     , "Hotelling.Lawley" = "multivariate.statistic"
     # statistic
     , "t"         = "statistic"
+    , "t.value"   = "statistic"
     , "statistic" = "statistic"
     , "approx.F"  = "statistic"
     , "F value"   = "statistic"
@@ -274,6 +287,7 @@ sanitize_table <- function(
     , "Pr..Chisq." = "p.value"
     , "Pr..F."     = "p.value"
     , "Pr..PB."    = "p.value"
+    , "Pr...t.."   = "p.value"
   )
 
 
@@ -286,8 +300,10 @@ sanitize_table <- function(
     , "BIC"     = "$\\mathit{BIC}$"
     , "npar"    = "$k$"
     # term
+    , "term"     = "Term"
     , "Effect"   = "Effect"
     # estimate
+    , "Estimate"                = est_label
     , "estimate"                = est_label
     , "cor"                     = "$r$"
     , "rho"                     = "$r_{\\mathrm{s}}$" # capital or small S???
@@ -300,8 +316,9 @@ sanitize_table <- function(
     # conf.int
     , conf.int = conf_label
     # standard error
-    , "stderr"   = "$\\mathit{SE}$"
-    , "std.err"  = "$\\mathit{SE}$"
+    , "stderr"     = "$\\mathit{SE}$"
+    , "std.err"    = "$\\mathit{SE}$"
+    , "Std..Error" = "$\\mathit{SE}$"
     # multivariate.statistic
     , "Pillai"           = "$V$"
     , "Wilks"            = "$\\Lambda$"
@@ -310,6 +327,7 @@ sanitize_table <- function(
     # statistic
     , "statistic" = stat_label
     , "t"         = "$t$"
+    , "t.value"   = "$t$"
     , "F.value"   = "$F$"
     , "F"         = "$F$"
     , "approx.F"  = "$F$"
@@ -331,17 +349,19 @@ sanitize_table <- function(
     , "df"        = "$\\mathit{df}$"
     , "Df"        = "$\\mathit{df}$"
     , "Chi.Df"    = "$\\mathit{df}$"
-    , "num.Df"    = "$\\mathit{df}_1$"
-    , "den.Df"    = "$\\mathit{df}_2$"
-    , "NumDF"     = "$\\mathit{df}_1$"
-    , "DenDF"     = "$\\mathit{df}_2$"
-    , "parameter.num.df"   = "$\\mathit{df}_1$"
-    , "parameter.denom.df" = "$\\mathit{df}_2$"
+    , "num.Df"    = label_df1
+    , "den.Df"    = label_df2
+    , "NumDF"     = label_df1
+    , "DenDF"     = label_df2
+    , "parameter.num.df"   = label_df1
+    , "parameter.denom.df" = label_df2
     # p.value
     , "p.value"    = "$p$"
     , "Pr..Chisq." = "$p$"
     , "Pr..F."     = "$p$"
     , "Pr..PB."    = "$p$"
+    , "Pr...t.."   = "$p$"
+    , "Pr...z.."   = "$p$"
   )
 
 
@@ -371,7 +391,6 @@ print_table <- function(x, ...) {
         paste0("[", paste(printnum(x, ...), collapse = ", "), "]")
       }, ...))
       variable_label(tmp) <- variable_label(x[[i]])
-      attr(tmp, "conf.level") <- attr(x[[i]][[1]], "conf.level")
       x[[i]] <- tmp
     } else if (i == "estimate"){
       args$x <- x[[i]]
@@ -415,8 +434,8 @@ create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL
   }
   if(!is.null(x$conf.int)) {
     estimate_list$conf.int <- paste0(
-      attr(x$conf.int, "conf.level") * 100
-      , "\\% CI "
+      variable_label(x$conf.int)
+      , " "
       ,
       gsub(
         x = gsub(

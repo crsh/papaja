@@ -70,16 +70,7 @@ arrange_anova.anova <- function(x) {
 
     # c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
 
-    # anova_table from mixed(method = "PB") contain two columns with *p* values,
-    # but also df from asymptotic theory
-    col_names <- colnames(object)
-    if("Chi Df" %in% col_names && "Pr(>PB)" %in% col_names) {
-      object$`Chi Df` <- NULL
-      object$`Pr(>Chisq)` <- NULL
-    }
-    if("Chi Df" %in% col_names && "Df" %in% col_names) {
-      object$Df <- NULL
-    }
+
 
     renamers <- c(
       "Sum Sq"    = "sumsq"
