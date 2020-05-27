@@ -88,17 +88,18 @@ validate <- function(
 #'    }
 #' @keywords internal
 
-apa_print_container <- function() {
-  x <- list(
-    estimate = NULL
-    , statistic = NULL
-    , full_result = NULL
-    , table = NULL
+apa_print_container <- function(){
+  structure(
+    list(
+      estimate = NULL
+      , statistic = NULL
+      , full_result = NULL
+      , table = NULL
+    )
+    , class = c("apa_results", "list")
   )
-
-  class(x) <- c("apa_results", class(x))
-  x
 }
+
 
 
 #' Escape symbols for LaTeX output
@@ -403,8 +404,7 @@ create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL
 
 
   # estimate ----
-  estimate_list <- list()
-  estimate_list$sep <- ", "
+  estimate_list <- list(sep = ", ")
 
   if(!is.null(x$estimate)) {
     estimate_list$estimate <- paste0(
@@ -433,13 +433,13 @@ create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL
     if(in_paren) apa_res$estimate <- in_paren(apa_res$estimate)
   }
 
+
   # statistic ----
   dfs <- NULL
   if(!is.null(x$df)) dfs <- paste0("(", x$df, add_par, ")")
   if(!is.null(x$df1) && !is.null(x$df2)) dfs <- paste0("(", x$df1, ", ", x$df2, ")")
 
-  stat_list <- list()
-  stat_list$sep <- ", "
+  stat_list <- list(sep = ", ")
 
   if(!is.null(x$multivariate.statistic)) {
     stat_list$multivariate.statistic <- paste0(
@@ -448,7 +448,6 @@ create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL
       , "$"
     )
   }
-
   if(!is.null(x$statistic)) {
     stat_list$statistic <- paste0(
       gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
