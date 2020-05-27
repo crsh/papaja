@@ -75,7 +75,7 @@ apa6_pdf <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format="papaja::apa6_pdf") }
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format = "papaja::apa6_pdf") }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -111,6 +111,7 @@ apa6_pdf <- function(
         "^\\s+"
         , ""
         , output_text[appendix_lines[1]:appendix_lines[2]]
+        , useBytes = TRUE
       )
     }
 
@@ -118,11 +119,11 @@ apa6_pdf <- function(
     ## Note is added to the end of the document by Lua filter and needs to be
     ## moved to the preamble
     lua_addition_start <- which(grepl("^% papaja Lua-filter additions$", output_text))
-    body_end <- which(grepl("^\\\\end\\{document\\}$", output_text))
+    lua_addition_end <- which(grepl("^% End of papaja Lua-filter additions$", output_text))
 
     if(length(lua_addition_start) > 0) {
-      header_additions <- output_text[c(lua_addition_start:(body_end - 1))]
-      output_text <- output_text[-c(lua_addition_start:(body_end - 1))]
+      header_additions <- output_text[c((lua_addition_start + 1):(lua_addition_end - 1))]
+      output_text <- output_text[-c((lua_addition_start + 1):(lua_addition_end - 1))]
     }
     output_text <- paste(output_text, collapse = "\n")
 
@@ -140,10 +141,11 @@ apa6_pdf <- function(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
       , paste0(
         "\\\\abstract{\\1}\n\n"
-        , if(length(lua_addition_start) > 0) paste(gsub("\\", "\\\\", header_additions, fixed = TRUE), collapse = "\n") else NULL
+        , if(length(lua_addition_start) > 0) paste(gsub("\\", "\\\\", header_additions, useBytes = TRUE, fixed = TRUE), collapse = "\n") else NULL
         , "\n\n\\\\begin\\{document\\}\n\\\\maketitle"
       )
       , output_text
+      , useBytes = TRUE
     )
 
     # abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
@@ -158,21 +160,21 @@ apa6_pdf <- function(
     # )
 
     # Remove abstract environment if empty
-    output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text)
+    output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc author environment
-    output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text)
+    output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoffigures", "", output_text) # Replace first occurance
+      output_text <- sub("\\\\listoffigures", "", output_text, useBytes = TRUE) # Replace first occurance
     }
     if(sum(gregexpr("\\listoftables", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoftables", "", output_text) # Replace first occurance
+      output_text <- sub("\\\\listoftables", "", output_text, useBytes = TRUE) # Replace first occurance
     }
 
     # Prevent (re-)loading of geometry package
-    output_text <- gsub("\\\\usepackage\\[?.*\\]?\\{geometry\\}", "", output_text)
+    output_text <- gsub("\\\\usepackage\\[?.*\\]?\\{geometry\\}", "", output_text, useBytes = TRUE)
 
 
     output_file_connection <- file(output_file)
@@ -655,12 +657,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   before_body_includes <- c(before_body_includes, metadata$`before-includes`)
   if(length(before_body_includes) > 0) {
     args <- c(args, "--include-before", tmp_includes_file(before_body_includes))
-  }
-
-
-  # Set additional lua filters
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    args <- rmdfiltr::add_wordcount_filter(args)
   }
 
   after_body_includes <- c(after_body_includes, metadata$`after-includes`)

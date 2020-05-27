@@ -74,6 +74,10 @@ function Pandoc (document)
     document.blocks:extend(make_latex_envir("authornote", document.meta.authornote))
   end
 
+  if document.meta.note ~= nil or document.meta.authornote ~= nil then
+    document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
+  end
+
   return document
 end
 
