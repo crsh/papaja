@@ -404,7 +404,11 @@ print_table <- function(x, ...) {
 
   # rearrange ----
   multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+
+  se <- NULL
+  if(!any(colnames(x) == "conf.int")) se <- "std.err"
+
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
   x <- x[, ordered_cols, drop = FALSE]
   if(!is.null(x$term)) x <- sort_terms(x, "term")
   rownames(x) <- NULL
@@ -446,6 +450,7 @@ create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL
         , pattern = ", ", replacement = "$, $")
     )
   }
+
   # todo: try to add standard error if conf.int not available
   if(length(estimate_list) > 1L) {
     apa_res$estimate <- do.call("paste", estimate_list)
