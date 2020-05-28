@@ -379,3 +379,14 @@ test_that(
     )
   }
 )
+
+test_that(
+  "Degenerate htest objects"
+  , {
+    degenerate <- t.test(yield ~ N, npk)
+    degenerate$statistic <- degenerate$estimate <- NULL
+
+    expect_error(apa_print(degenerate, est_name = "M"), "No estimate available in results table.")
+    expect_error(apa_print(degenerate, stat_name = "t"), "No statistic available in results table.")
+  }
+)
