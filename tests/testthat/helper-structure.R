@@ -1,7 +1,28 @@
 container_names <- c("estimate", "statistic", "full_result", "table")
 
 
-# Test the general structure of apa_results
+# Define a helper function that may be applied recursively to lists ----
+expect_reporting_string <- function(object, ...) {
+  UseMethod("expect_reporting_string")
+}
+expect_reporting_string.default <- function(object, ...) {
+  # do nothing if NULL is passed
+  if(!is.null(object)) expect_type(object, "character")
+}
+expect_reporting_string.list <- function(object, ...) {
+  lapply(X = object, FUN = expect_reporting_string)
+}
+
+# Test the general structure of apa_results ----
+# 1. class apa_results/list
+# 2. names container_names
+# 3. anyNA?
+# 4. reporting strings either character or list
+# 5. table class: apa_results_table/data.frame
+# 6. table columns: each column of class papaja_labelled/character
+# 7. Optional: Test specific col.names
+# 8. Optional: Test variable labels (and col.names)
+
 
 expect_apa_results <- function(
   object
@@ -19,32 +40,20 @@ expect_apa_results <- function(
   expect_s3_class(object, c("apa_results", "list"), exact = TRUE)
   expect_identical(names(object), container_names)
 
+  # Check for missing values ----
+  expect(
+    !anyNA(object, recursive = TRUE)
+    , sprintf("The object `%s` contains missing values.", act$lab)
+  )
+
   # estimate ----
-  if (!is.null(object$est)) {
-    if(is.list(object$est)) {
-      lapply(X = object$est, FUN = expect_type, "character")
-    } else {
-      expect_type(object$est, "character")
-    }
-  }
+  expect_reporting_string(object$est)
 
   # statistic ----
-  if (!is.null(object$stat)) {
-    if(is.list(object$stat)) {
-      lapply(X = object$stat, FUN = expect_type, "character")
-    } else {
-      expect_type(object$stat, "character")
-    }
-  }
+  expect_reporting_string(object$stat)
 
   # full_result ----
-  if (!is.null(object$full)) {
-    if(is.list(object$full)) {
-      lapply(X = object$full, FUN = expect_type, "character")
-    } else {
-      expect_type(object$full, "character")
-    }
-  }
+  expect_reporting_string(object$full)
 
   # table ----
   if(!is.null(object$table)) { # allow NULL until we can add table everywhere
@@ -78,11 +87,16 @@ expect_apa_results <- function(
   invisible(act$val)
 }
 
+# Test the test, work in progress ----
+# expect_failure() somehow doesn't detect failure
+
 test_that(
   "expect_apa_results"
   , {
     test <- papaja:::apa_print_container()
-    test$table <- data.frame(a = 1)
+    test$estimate <- NA_character_
+    # test$table <- data.frame(a = 1)
+    # expect_failure(expect_apa_results(test))
     # class(test$table) <- c("apa_results_table", "data.frame")
     # expect_failure(
     #   expect_apa_results(test)

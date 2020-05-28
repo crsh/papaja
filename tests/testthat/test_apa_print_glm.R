@@ -11,9 +11,6 @@ test_that(
 
     lm_fit_output <- apa_print(lm_fit)
 
-    expect_is(lm_fit_output, "list")
-    expect_equal(names(lm_fit_output), container_names)
-
     # stat
     expect_is(lm_fit_output$stat, "list")
     expect_equal(length(lm_fit_output$stat), 3)
@@ -61,7 +58,6 @@ test_that(
     expect_equal(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00$, $0.33]$, $F(1, 18) = 1.42$, $p = .249$")
 
     # table
-    expect_is(lm_fit_output$table, "data.frame")
     expect_equal(nrow(lm_fit_output$table), 2)
     expect_equal(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$b$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
     expect_equal(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
@@ -130,8 +126,7 @@ test_that(
 
     glm_fit_output <- apa_print(glm_fit)
 
-    expect_is(glm_fit_output, "list")
-    expect_equal(names(glm_fit_output), container_names)
+    expect_apa_results(glm_fit_output)
 
     # stat
     expect_is(glm_fit_output$stat, "list")
@@ -174,7 +169,6 @@ test_that(
     expect_equal(glm_fit_output$full$outcome3, "$b = -0.29$, 95\\% CI $[-0.68$, $0.08]$, $z = -1.52$, $p = .128$")
 
     # table
-    expect_is(glm_fit_output$table, "data.frame")
     expect_equal(nrow(glm_fit_output$table), 3)
     expect_equal(variable_label(glm_fit_output$table), list(predictor = "Predictor", estimate = "$b$", ci = "95\\% CI", statistic = "$z$", p.value = "$p$"))
     expect_equal(colnames(glm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
