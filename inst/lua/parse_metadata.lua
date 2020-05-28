@@ -91,6 +91,7 @@ end
 --- author note
 local function create_correspondence_blocks(authors)
   local corresponding_authors = List:new{}
+  local equal_contributors_i = List:new{}
   local equal_contributors = {table.unpack(authors)}
 
   for i, author in ipairs(authors) do
@@ -104,36 +105,64 @@ local function create_correspondence_blocks(authors)
       table.insert(corresponding_authors, {pandoc.Str(contact_info)})
     end
     if not authors[i].equal_contrib then
-      table.remove(equal_contributors, i)
+      equal_contributors_i[#equal_contributors_i + 1] = i
     end
   end
 
-  local equal_contributor_inline = #equal_contributors < # authors
-    and create_authors_inlines(equal_contributors, "and", false)
-    or List:new{pandoc.Str"All", pandoc.Space(), pandoc.Str"authors"}
+  for i=1, #equal_contributors_i do
+    table.remove(equal_contributors, equal_contributors_i[#equal_contributors_i + 1 - i])
+  end
+  -- for i=1, #equal_contributors_i do
+  --   table.remove(equal_contributors, equal_contributors_i[#equal_contributors_i + 2 - i])
+  -- end
 
   if #corresponding_authors == 0 and #equal_contributors == 0 then
     return nil
   end
 
-  local test = List:new{
-    pandoc.Superscript(equal_contributor_mark[1]), pandoc.Space()
-  }
+  local equal_contributor_inline
+  if #equal_contributors == 0 then
+    equal_contributor_inline = List:new{}
+  else
+    if #equal_contributors < #authors then
+      equal_contributor_inline = create_authors_inlines(equal_contributors, "and", false)
+    else
+      equal_contributor_inline = List:new{pandoc.Str"All", pandoc.Space(), pandoc.Str"authors"}
+    end
+  end
 
-  local contributor_line = List:new{
-    pandoc.Space(), pandoc.Str"contributed", pandoc.Space(), pandoc.Str"equally",
-    pandoc.Space(), pandoc.Str"to", pandoc.Space(), pandoc.Str"this", pandoc.Space(),
-    pandoc.Str"work", pandoc.Str".", pandoc.Space()
-  }
+  local mark
+  if #equal_contributors > 0 then
+    mark = List:new{pandoc.Superscript(equal_contributor_mark[1]), pandoc.Space()}
+  else
+    mark = List:new{}
+  end
 
-  local correspondence_line = List:new{
-    pandoc.Str"Correspondence", pandoc.Space(), pandoc.Str"concerning", pandoc.Space(),
-    pandoc.Str"this", pandoc.Space(), pandoc.Str"article", pandoc.Space(),
-    pandoc.Str"should", pandoc.Space(), pandoc.Str"be", pandoc.Space(),
-    pandoc.Str"addressed", pandoc.Space(), pandoc.Str"to", pandoc.Space()
-  }
+  local contributor_line
+  if #equal_contributors > 0 then
+    contributor_line = List:new{
+      pandoc.Space(), pandoc.Str"contributed", pandoc.Space(), pandoc.Str"equally",
+      pandoc.Space(), pandoc.Str"to", pandoc.Space(), pandoc.Str"this", pandoc.Space(),
+      pandoc.Str"work", pandoc.Str".", pandoc.Space()
+    }
+  else
+    contributor_line = List:new{}
+  end
 
-  return pandoc.Para(test .. equal_contributor_inline .. contributor_line .. correspondence_line .. contact_info)
+  local correspondence_line
+  if #corresponding_authors > 0 then
+    correspondence_line = List:new{
+      pandoc.Str"Correspondence", pandoc.Space(), pandoc.Str"concerning", pandoc.Space(),
+      pandoc.Str"this", pandoc.Space(), pandoc.Str"article", pandoc.Space(),
+      pandoc.Str"should", pandoc.Space(), pandoc.Str"be", pandoc.Space(),
+      pandoc.Str"addressed", pandoc.Space(), pandoc.Str"to", pandoc.Space()
+    }
+  else
+    contact_info = List:new{}
+    correspondence_line =  List:new{}
+  end
+
+  return pandoc.Para(mark .. equal_contributor_inline .. contributor_line .. correspondence_line .. contact_info)
 end
 
 
