@@ -4,8 +4,15 @@
 \alias{apa_factorial_plot_single}
 \title{Plots for factorial designs that conform to APA guidelines, two-factors internal function}
 \usage{
-apa_factorial_plot_single(aggregated, y.values, id, dv, factors,
-  intercept = NULL, ...)
+apa_factorial_plot_single(
+  aggregated,
+  y.values,
+  id,
+  dv,
+  factors,
+  intercept = NULL,
+  ...
+)
 }
 \arguments{
 \item{aggregated}{A \code{data.frame}, the \emph{aggregated} data.}

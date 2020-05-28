@@ -25,7 +25,7 @@ test_that(
     object <- data.frame(a = 1:4, b = 5:8)
     expect_error(
       variable_label(object) <- c("not_in_data" = "test")
-      , "Some requested columns could not be found in data.frame."
+      , "Some requested columns could not be found in data.frame:\nnot_in_data"
       , fixed = TRUE
     )
     expect_error(

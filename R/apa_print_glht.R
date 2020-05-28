@@ -33,6 +33,7 @@
 #' @family apa_print
 #' @examples
 #'    NULL
+#' @method apa_print glht
 #' @export
 
 apa_print.glht <- function(x, test = multcomp::adjusted(), ...) {
@@ -42,6 +43,7 @@ apa_print.glht <- function(x, test = multcomp::adjusted(), ...) {
 }
 
 #' @rdname apa_print.glht
+#' @method apa_print summary.glht
 #' @export
 
 apa_print.summary.glht <- function(
@@ -276,6 +278,7 @@ apa_print.summary.glht <- function(
 # }
 
 #' @rdname apa_print.glht
+#' @method apa_print summary.ref.grid
 #' @export
 
 # apa_print.summary.ref.grid <- function(x, ...) {

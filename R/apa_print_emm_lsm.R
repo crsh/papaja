@@ -33,6 +33,7 @@
 #' @family apa_print
 #' @examples
 #'    NULL
+#' @method apa_print emmGrid
 #' @export
 
 apa_print.emmGrid <- function(x, ...) {
@@ -47,6 +48,7 @@ apa_print.emmGrid <- function(x, ...) {
 
 
 #' @rdname apa_print.emmGrid
+#' @method apa_print summary_emm
 #' @export
 
 apa_print.summary_emm <- function(
@@ -103,7 +105,7 @@ apa_print.summary_emm <- function(
 
 
   # Assamble table
-  contrast_table <- data.frame(x)
+  contrast_table <- data.frame(x, check.names = FALSE)
   contrast_table[, factors] <- printnum(contrast_table[, factors])
 
   if("null" %in% colnames(contrast_table)) { # This could go in a table note
@@ -281,6 +283,7 @@ apa_print.summary_emm <- function(
 
 
 #' @rdname apa_print.emmGrid
+#' @method apa_print lsmobj
 #' @export
 
 apa_print.lsmobj <- function(x, ...) {
@@ -288,6 +291,7 @@ apa_print.lsmobj <- function(x, ...) {
 }
 
 #' @rdname apa_print.emmGrid
+#' @method apa_print summary.ref.grid
 #' @export
 
 apa_print.summary.ref.grid <- function(x, ...) {

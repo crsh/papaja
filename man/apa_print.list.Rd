@@ -4,9 +4,15 @@
 \alias{apa_print.list}
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
-apa_print.list(x, anova_fun = stats::anova, ci = 0.9,
-  boot_samples = 10000, observed_predictors = TRUE, in_paren = FALSE,
-  ...)
+\method{apa_print}{list}(
+  x,
+  anova_fun = stats::anova,
+  ci = 0.9,
+  boot_samples = 10000,
+  observed_predictors = TRUE,
+  in_paren = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the output object.}
@@ -87,11 +93,13 @@ Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for 
 \seealso{
 \code{\link[stats]{anova}}
 
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.emmGrid}},
-  \code{\link{apa_print.glht}},
-  \code{\link{apa_print.glm}},
-  \code{\link{apa_print.htest}}, \code{\link{apa_print}}
+Other apa_print: 
+\code{\link{apa_print.BFBayesFactor}()},
+\code{\link{apa_print.aov}()},
+\code{\link{apa_print.emmGrid}()},
+\code{\link{apa_print.glht}()},
+\code{\link{apa_print.glm}()},
+\code{\link{apa_print.htest}()},
+\code{\link{apa_print}()}
 }
 \concept{apa_print}

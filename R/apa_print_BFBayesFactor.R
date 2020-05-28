@@ -31,6 +31,7 @@
 #' @family apa_print
 #' @importFrom stats formula terms setNames median
 #' @keywords internal
+#' @method apa_print BFBayesFactor
 #' @export
 #'
 #' @examples
@@ -102,6 +103,7 @@ apa_print.BFBayesFactor <- function(
 
 #' @rdname apa_print.BFBayesFactor
 #' @keywords internal
+#' @method apa_print BFBayesFactorTop
 #' @export
 
 apa_print.BFBayesFactorTop <- function(x, ...) {
@@ -135,6 +137,7 @@ apa_print.BFBayesFactorTop <- function(x, ...) {
 
 #' @rdname apa_print.BFBayesFactor
 #' @keywords internal
+#' @method apa_print BFBayesFactorList
 #' @export
 
 apa_print.BFBayesFactorList <- function(x, ...) {

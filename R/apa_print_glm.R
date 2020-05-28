@@ -88,6 +88,7 @@
 #' glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
 #'
 #' apa_print(glm.D93)
+#' @method apa_print glm
 #' @export
 
 apa_print.glm <- function(
@@ -148,6 +149,7 @@ apa_print.glm <- function(
 
 
 #' @rdname apa_print.glm
+#' @method apa_print lm
 #' @export
 
 apa_print.lm <- function(
@@ -242,6 +244,7 @@ apa_print.lm <- function(
 
 
 #' @rdname apa_print.glm
+#' @method apa_print summary.glm
 #' @export
 
 apa_print.summary.glm <- function(x, ...) {
@@ -253,6 +256,7 @@ apa_print.summary.glm <- function(x, ...) {
 
 
 #' @rdname apa_print.glm
+#' @method apa_print summary.lm
 #' @export
 
 apa_print.summary.lm <- function(x, ...) {
@@ -279,9 +283,9 @@ apa_glm_res <- function(x, in_paren, conf_level) {
   })
 
   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
-  apa_res <- lapply(apa_res, as.list)
+  apa_res[] <- lapply(apa_res, as.list) # preserve class by using []
 
   apa_res$table <- sort_terms(as.data.frame(x), "predictor")
-  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
+  class(apa_res$table) <- c("apa_results_table", "data.frame")
   apa_res
 }

@@ -67,7 +67,6 @@ apa6_pdf <- function(
   # Set chunk defaults
   config$knitr$opts_chunk$echo <- FALSE
   config$knitr$opts_chunk$message <- FALSE
-  # config$knitr$opts_chunk$results <- "asis"
   config$knitr$opts_chunk$fig.cap <- " " # Ensures that figure environments are added
   config$knitr$opts_knit$rmarkdown.pandoc.to <- "latex"
   config$knitr$knit_hooks$inline <- inline_numbers
@@ -76,7 +75,7 @@ apa6_pdf <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- modify_input_file
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format = "papaja::apa6_pdf") }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -112,10 +111,20 @@ apa6_pdf <- function(
         "^\\s+"
         , ""
         , output_text[appendix_lines[1]:appendix_lines[2]]
+        , useBytes = TRUE
       )
     }
 
-    # Correct abstract environment
+    # Correct abstract and note environment
+    ## Note is added to the end of the document by Lua filter and needs to be
+    ## moved to the preamble
+    lua_addition_start <- which(grepl("^% papaja Lua-filter additions$", output_text))
+    lua_addition_end <- which(grepl("^% End of papaja Lua-filter additions$", output_text))
+
+    if(length(lua_addition_start) > 0) {
+      header_additions <- output_text[c((lua_addition_start + 1):(lua_addition_end - 1))]
+      output_text <- output_text[-c((lua_addition_start + 1):(lua_addition_end - 1))]
+    }
     output_text <- paste(output_text, collapse = "\n")
 
     # authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
@@ -127,10 +136,16 @@ apa6_pdf <- function(
     # output_text <- gsub("!!!papaja-author-note\\(.*\\)papaja-author-note!!!", "", output_text)
     # output_text <- gsub("!!!papaja-note\\(.*\\)papaja-note!!!", "", output_text)
 
+
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
-      , paste0("\\\\abstract{\\1}\n\n\\\\begin\\{document\\}\n\\\\maketitle")
+      , paste0(
+        "\\\\abstract{\\1}\n\n"
+        , if(length(lua_addition_start) > 0) paste(gsub("\\", "\\\\", header_additions, useBytes = TRUE, fixed = TRUE), collapse = "\n") else NULL
+        , "\n\n\\\\begin\\{document\\}\n\\\\maketitle"
+      )
       , output_text
+      , useBytes = TRUE
     )
 
     # abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
@@ -145,21 +160,21 @@ apa6_pdf <- function(
     # )
 
     # Remove abstract environment if empty
-    output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text)
+    output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc author environment
-    output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text)
+    # output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoffigures", "", output_text) # Replace first occurance
+      output_text <- sub("\\\\listoffigures", "", output_text, useBytes = TRUE) # Replace first occurance
     }
     if(sum(gregexpr("\\listoftables", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoftables", "", output_text) # Replace first occurance
+      output_text <- sub("\\\\listoftables", "", output_text, useBytes = TRUE) # Replace first occurance
     }
 
     # Prevent (re-)loading of geometry package
-    output_text <- gsub("\\\\usepackage\\[?.*\\]?\\{geometry\\}", "", output_text)
+    output_text <- gsub("\\\\usepackage\\[?.*\\]?\\{geometry\\}", "", output_text, useBytes = TRUE)
 
 
     output_file_connection <- file(output_file)
@@ -237,7 +252,7 @@ apa6_docx <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- modify_input_file
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format="papaja::apa6_docx") }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -389,6 +404,20 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   ## Set additional lua filters
   if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
+
+    parse_metadata_filter <- system.file(
+      "lua", "parse_metadata.lua"
+      , package = "papaja"
+    )
+    args <- rmdfiltr::add_custom_filter(args, filter_path = parse_metadata_filter, lua = TRUE)
+
+    if(isTRUE(metadata$quote_labels)) {
+      label_quotes_filter <- system.file(
+        "lua", "label_quotes.lua"
+        , package = "papaja"
+      )
+      args <- rmdfiltr::add_custom_filter(args, filter_path = label_quotes_filter, lua = TRUE)
+    }
   }
 
   ## Set template variables and defaults
@@ -458,16 +487,16 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
   }
 
-  if(!is.null(metadata$author)) {
-    authors <- paste_authors(metadata$author, format = "latex")
+  # if(!is.null(metadata$author)) {
+  #   authors <- paste_authors(metadata$author, format = "latex")
+  #
+  #   corresponding_author <- metadata$author[which(unlist(lapply(lapply(metadata$author, "[[", "corresponding"), isTRUE)))]
+  # } else {
+  #   authors <- "\\phantom{a}"
+  #   corresponding_author <- NULL
+  # }
 
-    corresponding_author <- metadata$author[which(unlist(lapply(lapply(metadata$author, "[[", "corresponding"), isTRUE)))]
-  } else {
-    authors <- "\\phantom{a}"
-    corresponding_author <- NULL
-  }
-
-  header_includes <- c(header_includes, paste0("\\author{", authors, "}"))
+  # header_includes <- c(header_includes, paste0("\\author{", authors, "}"))
 
   if(!is.null(metadata$author) && !is.null(metadata$affiliation)) {
     affiliations <- paste0("\n\\vspace{0.5cm}\n", paste_affiliations(metadata$affiliation, format = "latex"))
@@ -478,27 +507,27 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   header_includes <- c(header_includes, paste0("\\affiliation{", affiliations, "}"))
 
   ### Pass the following through abstract field so pandoc parses markdown
-  if(
-    !is.null(metadata$author_note) ||
-    !is.null(metadata$authornote) ||
-    length(corresponding_author) > 0
-  ) {
-    author_note <- paste( # TODO
-      c(metadata$author_note, metadata$authornote)
-      , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
-      , sep = "\n\n"
-    )
-
-    # TODO
-    # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
-    header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
-  }
+  # if(
+  #   !is.null(metadata$author_note) ||
+  #   !is.null(metadata$authornote) ||
+  #   length(corresponding_author) > 0
+  # ) {
+  #   author_note <- paste( # TODO
+  #     c(metadata$author_note, metadata$authornote)
+  #     , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
+  #     , sep = "\n\n"
+  #   )
+  #
+  #   # TODO
+  #   # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
+  #   header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
+  # }
 
   # TODO
-  if(!is.null(metadata$note)) {
-    # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-note(", metadata$note, ")papaja-note!!!")
-    header_includes <- c(header_includes, paste0("\\note{", escape_latex(metadata$note), "}"))
-  }
+  # if(!is.null(metadata$note)) {
+  #   # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-note(", metadata$note, ")papaja-note!!!")
+  #   header_includes <- c(header_includes, paste0("\\note{", escape_latex(metadata$note), "}"))
+  # }
 
   if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
     keywords <- paste(unlist(metadata$keywords), collapse = ", ")
@@ -633,6 +662,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   after_body_includes <- c(after_body_includes, metadata$`after-includes`)
   if(length(after_body_includes) > 0) {
     args <- c(args, "--include-after", tmp_includes_file(after_body_includes))
+
   }
 
 
@@ -698,7 +728,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
     args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
 
     docx_fixes_lua <-  system.file(
-      "rmd", "docx_fixes.lua"
+      "lua", "docx_fixes.lua"
       , package = "papaja"
     )
     if(docx_fixes_lua == "") stop("docx_fixes Lua-filter not found.")
@@ -826,7 +856,7 @@ set_ampersand_filter <- function(args, csl_file) {
 }
 
 
-modify_input_file <- function(input, ...) {
+modify_input_file <- function(input, format) {
   input_connection <- file(input, encoding = "UTF-8")
   on.exit(close.connection(input_connection))
   input_text <- readLines(con = input_connection)
@@ -839,8 +869,6 @@ modify_input_file <- function(input, ...) {
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
       stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
     } else {
-      format <- if(is.character(yaml_params$output)) yaml_params$output else names(yaml_params$output)
-
       # Add render_appendix()-chunk
       for(i in seq_along(yaml_params$appendix)) {
         input_text <- c(
@@ -854,7 +882,7 @@ modify_input_file <- function(input, ...) {
           } else NULL
           , ""
           , "```{r echo = FALSE, results = 'asis', cache = FALSE}"
-          , paste0("render_appendix('", yaml_params$appendix[i], "')")
+          , paste0("papaja::render_appendix('", yaml_params$appendix[i], "')")
           , "```"
           , ""
         )

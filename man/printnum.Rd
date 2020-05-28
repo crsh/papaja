@@ -13,17 +13,29 @@
 \usage{
 printnum(x, ...)
 
-\method{printnum}{default}(x, na_string = getOption("papaja.na_string"),
-  ...)
+\method{printnum}{default}(x, na_string = getOption("papaja.na_string"), ...)
 
 \method{printnum}{list}(x, ...)
 
-\method{printnum}{integer}(x, numerals = TRUE, capitalize = FALSE,
-  zero_string = "no", na_string = getOption("papaja.na_string"), ...)
+\method{printnum}{integer}(
+  x,
+  numerals = TRUE,
+  capitalize = FALSE,
+  zero_string = "no",
+  na_string = getOption("papaja.na_string"),
+  ...
+)
 
-\method{printnum}{numeric}(x, gt1 = TRUE, zero = TRUE, margin = 1,
-  na_string = getOption("papaja.na_string"), use_math = TRUE,
-  add_equals = FALSE, ...)
+\method{printnum}{numeric}(
+  x,
+  gt1 = TRUE,
+  zero = TRUE,
+  margin = 1,
+  na_string = getOption("papaja.na_string"),
+  use_math = TRUE,
+  add_equals = FALSE,
+  ...
+)
 
 \method{printnum}{data.frame}(x, margin = 2, ...)
 
@@ -34,9 +46,10 @@ printnum(x, ...)
 \arguments{
 \item{x}{Numeric. Can be either a single value, vector, or matrix.}
 
-\item{...}{Arguments passed on to \code{base::formatC}
-\describe{
-  \item{digits}{the desired number of digits after the decimal
+\item{...}{
+  Arguments passed on to \code{\link[base:formatC]{base::formatC}}
+  \describe{
+    \item{\code{digits}}{the desired number of digits after the decimal
     point (\code{format = "f"}) or \emph{significant} digits
     (\code{format = "g"}, \code{= "e"} or \code{= "fg"}).
 
@@ -47,7 +60,7 @@ printnum(x, ...)
     accurate, depending on the OS and compiler used.  This limit is
     just a precaution against segfaults in the underlying C runtime.)
   }
-  \item{width}{the total field width; if both \code{digits} and
+    \item{\code{width}}{the total field width; if both \code{digits} and
     \code{width} are unspecified, \code{width} defaults to 1,
     otherwise to \code{digits + 1}.  \code{width = 0} will use
     \code{width = digits}, \code{width < 0} means left
@@ -56,7 +69,7 @@ printnum(x, ...)
     \code{width}.  For character data this is interpreted in characters
     (not bytes nor display width).
   }
-  \item{format}{equal to \code{"d"}  (for integers), \code{"f"},
+    \item{\code{format}}{equal to \code{"d"}  (for integers), \code{"f"},
     \code{"e"}, \code{"E"}, \code{"g"}, \code{"G"}, \code{"fg"} (for
     reals), or \code{"s"} (for strings).  Default is \code{"d"} for
     integers, \code{"g"} for reals.
@@ -64,55 +77,77 @@ printnum(x, ...)
     \code{"f"} gives numbers in the usual
     \code{xxx.xxx} format;  \code{"e"} and \code{"E"} give \code{n.ddde+nn} or
     \code{n.dddE+nn} (scientific format); \code{"g"} and \code{"G"} put
-    \code{x[i]} into scientific format only if it saves space to do so.
+    \code{x[i]} into scientific format only if it saves space to do so
+    \emph{and} drop trailing zeros and decimal point - unless \code{flag}
+    contains \code{"#"} which keeps trailing zeros for the \code{"g", "G"}
+    formats.
 
-    \code{"fg"} uses fixed format as \code{"f"}, but \code{digits} as
-    the minimum number of \emph{significant} digits.  This can lead
-    to quite long result strings, see examples below.  Note that unlike
-    \code{\link{signif}} this prints large numbers with
+    \code{"fg"} (our own hybrid format) uses fixed format as \code{"f"},
+    but \code{digits} as the minimum number of \emph{significant} digits.
+    This can lead to quite long result strings, see examples below.  Note
+    that unlike \code{\link[base]{signif}} this prints large numbers with
     more significant digits than \code{digits}.  Trailing zeros are
     \emph{dropped} in this format, unless \code{flag} contains
     \code{"#"}.}
-  \item{flag}{for \code{formatC}, a character string giving a
+    \item{\code{flag}}{for \code{formatC}, a character string giving a
     format modifier as in Kernighan and Ritchie (1988, page 243) or the
-    C+99 standard.
-    \code{"0"} pads leading zeros; \code{"-"} does left adjustment,
-    others are \code{"+"}, \code{" "}, and \code{"#"}; on some
-    platform--locale combination, \code{"'"} activates
-    \dQuote{thousands' grouping} for decimal conversion, and versions of
-    \file{glibc} allow \code{"I"} for integer conversion to use the locale's
-    alternative output digits, if any.
-
-    There can be more than one of these, in any order.  Other characters
+    C+99 standard.\describe{
+      \item{\code{"0"}}{pads leading zeros;}
+      \item{\code{"-"}}{does left adjustment,}
+      \item{\code{"+"}}{ensures a sign in all cases, i.e., \code{"+"} for
+	positive numbers ,}
+      \item{\code{" "}}{if the first character is not a sign, the space
+	character \code{" "} will be used instead.}
+      \item{\code{"#"}}{specifies \dQuote{an alternative output form},
+	specifically depending on \code{format}.}
+      \item{\code{"'"}}{on some platform--locale combination, activates
+	\dQuote{thousands' grouping} for decimal conversion,}
+      \item{\code{"I"}}{in some versions of \file{glibc} allow for integer
+	conversion to use the locale's alternative output digits, if any.}
+    }
+    There can be more than one of these flags, in any order.  Other characters
     used to have no effect for \code{character} formatting, but signal
     an error since \R 3.4.0.
   }
-  \item{mode}{\code{"double"} (or \code{"real"}), \code{"integer"} or
+    \item{\code{mode}}{\code{"double"} (or \code{"real"}), \code{"integer"} or
     \code{"character"}.
     Default: Determined from the storage mode of \code{x}.}
-  \item{big.mark}{character; if not empty used as mark between every
+    \item{\code{big.mark}}{character; if not empty used as mark between every
     \code{big.interval} decimals \emph{before} (hence \code{big}) the
     decimal point.}
-  \item{big.interval}{see \code{big.mark} above; defaults to 3.}
-  \item{small.mark}{character; if not empty used as mark between every
+    \item{\code{big.interval}}{see \code{big.mark} above; defaults to 3.}
+    \item{\code{small.mark}}{character; if not empty used as mark between every
     \code{small.interval} decimals \emph{after} (hence \code{small}) the
     decimal point.}
-  \item{small.interval}{see \code{small.mark} above; defaults to 5.}
-  \item{decimal.mark}{the character to be used to indicate the numeric
+    \item{\code{small.interval}}{see \code{small.mark} above; defaults to 5.}
+    \item{\code{decimal.mark}}{the character to be used to indicate the numeric
     decimal point.}
-  \item{preserve.width}{string specifying if the string widths should
+    \item{\code{preserve.width}}{string specifying if the string widths should
     be preserved where possible in those cases where marks
     (\code{big.mark} or \code{small.mark}) are added.  \code{"common"},
-    the default, corresponds to \code{\link{format}}-like behavior
+    the default, corresponds to \code{\link[base]{format}}-like behavior
     whereas \code{"individual"} is the default in
     \code{formatC()}. Value can be abbreviated.}
-  \item{zero.print}{logical, character string or \code{NULL} specifying
+    \item{\code{zero.print}}{logical, character string or \code{NULL} specifying
     if and how \emph{zeros} should be formatted specially.  Useful for
     pretty printing \sQuote{sparse} objects.}
-  \item{drop0trailing}{logical, indicating if trailing zeros,
+    \item{\code{replace.zero}}{logical; if \code{zero.print} is a
+    character string, indicates if the exact zero entries in \code{x}
+    should be simply replaced by \code{zero.print}.  Otherwise,
+    depending on the widths of the respective strings, the (formatted)
+    zeroes are \emph{partly} replaced by \code{zero.print} and then
+    padded with \code{" "} to the right were applicable.  In that case
+    (false \code{replace[.zero]}), if the \code{zero.print} string does
+    not fit, a warning is produced (if \code{warn.non.fitting} is true).
+
+    This works via \code{prettyNum()}, which calls \code{.format.zeros(*,
+    replace=replace.zero)} three times in this case, see the \sQuote{Details}.
+  }
+    \item{\code{drop0trailing}}{logical, indicating if trailing zeros,
     i.e., \code{"0"} \emph{after} the decimal mark, should be removed;
-    also drops \code{"e+00"} in exponential formats.}
-}}
+    also drops \code{"e+00"} in exponential formats.  This is simply passed
+    to \code{prettyNum()}, see the \sQuote{Details}.}
+  }}
 
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 

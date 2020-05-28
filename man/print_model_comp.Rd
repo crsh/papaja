@@ -4,8 +4,14 @@
 \alias{print_model_comp}
 \title{Format statistics model comparisons (APA 6th edition)}
 \usage{
-print_model_comp(x, models = NULL, ci = NULL, boot_samples = 1000,
-  in_paren = FALSE, observed_predictors = TRUE)
+print_model_comp(
+  x,
+  models = NULL,
+  ci = NULL,
+  boot_samples = 1000,
+  in_paren = FALSE,
+  observed_predictors = TRUE
+)
 }
 \arguments{
 \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
