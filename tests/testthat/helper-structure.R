@@ -1,24 +1,11 @@
 container_names <- c("estimate", "statistic", "full_result", "table")
 
-
-# Define a helper function that may be applied recursively to lists ----
-expect_reporting_string <- function(object, ...) {
-  UseMethod("expect_reporting_string")
-}
-expect_reporting_string.default <- function(object, ...) {
-  # do nothing if NULL is passed
-  if(!is.null(object)) expect_type(object, "character")
-}
-expect_reporting_string.list <- function(object, ...) {
-  lapply(X = object, FUN = expect_reporting_string)
-}
-
 # Test the general structure of apa_results ----
 # 1. class apa_results/list
 # 2. names container_names
 # 3. anyNA?
-# 4. reporting strings either character or list
-# 5. table class: apa_results_table/data.frame
+# 4. reporting strings either character or list or NULL
+# 5. table class: apa_results_table/data.frame or NULL
 # 6. table columns: each column of class papaja_labelled/character
 # 7. Optional: Test specific col.names
 # 8. Optional: Test variable labels (and col.names)
@@ -31,7 +18,15 @@ expect_apa_results <- function(
   , ...
 ) {
 
-  # Capture object and label
+  # Recursive helper function ----
+  expect_reporting_string <- function(object, ...) {
+    if(is.null(object)) return(invisible(object))
+    y <- rapply(list(object), f = expect_type, type = "character")
+    invisible(object)
+  }
+
+
+  # Capture object and label ---------------------------------------------------
   act <- list(
     value = object
     , label = deparse(substitute(object))
