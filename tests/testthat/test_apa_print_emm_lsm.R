@@ -62,8 +62,8 @@ test_that(
     expect_identical(tw_me_emm_output, tw_me_emm_output2)
     expect_identical(tw_me_lsm_output, tw_me_emm_output2)
 
-    expect_is(tw_me_lsm_output, "list")
-    expect_equal(names(tw_me_lsm_output), container_names)
+    expect_apa_results(tw_me_lsm_output)
+
 
     # table --------------------------------------------------------------------
     expect_identical(
