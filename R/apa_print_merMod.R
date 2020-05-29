@@ -1,14 +1,18 @@
-#' Format Statistics from (Generalized) Hierarchical Linear Models (APA 6th edition)
+#' Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)
 #'
 #' These methods take objects from various R functions that calculate
-#' hierarchical linear models to create formatted character strings
+#' hierarchical (generalized) linear models to create formatted character strings
 #' to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x A fitted hierarchical linear model, either from [lme4::lmer()],
 #'   [lmerTest::lmer()], or [afex::mixed()].
-#' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()].
+#' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
 #' @inheritParams print_anova
-#' @param ... Further arguments, currently ignored.
+#' @param ... Further arguments that are passed to [printnum()].
+#' @details
+#'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. For linear models,
+#'   profile confidence intervals
+#'
 #' @family apa_print
 #' @rdname apa_print.merMod
 #' @method apa_print merMod
@@ -18,11 +22,20 @@
 apa_print.merMod <- function(
   x
   , args_confint
-  , in_paren = FALSE, ...
+  , in_paren = FALSE
+  , est_name
+  , ...
 ) {
 
   # Input validation and processing ----
   args <- list(...)
+
+  if(missing(est_name) || is.null(est_name)) {
+    est_name <- "$\\hat{\\beta}$"
+  } else {
+    validate(est_name, check_class = "character", check_length = 1L)
+    est_name <- paste0("$", gsub(est_name, pattern = "\\$", replacement = ""), "$")
+  }
 
   args_confint <- defaults(
     if(missing(args_confint)) { list() } else { args_confint }
@@ -31,11 +44,13 @@ apa_print.merMod <- function(
       , parm = "beta_"
     )
     , set.if.null = list(
-      level = 0.95
+      level = .95
       , method = if(methods::is(x, "glmerMod")){"boot"} else {"profile"}
-      , nsim = 2e3
+      , nsim = 2e3L
     )
   )
+
+
 
 
   # Rearrange ----
@@ -60,8 +75,8 @@ apa_print.merMod <- function(
 
 
   # sanitize, prettify, create container ----
-  sanitized_table  <- sanitize_table(res_table, est_label = "$b$")
-  prettified_table <- print_table(sanitized_table)
+  sanitized_table  <- sanitize_table(res_table, est_label = est_name)
+  prettified_table <- print_table(sanitized_table, ...)
 
   create_container(
     prettified_table
