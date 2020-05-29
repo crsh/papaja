@@ -43,10 +43,6 @@ local function author_inline_generator(sups)
         author_marks[#author_marks + 1] = {pandoc.Str(idx_str)}
       end
 
-      -- if is_corresponding_author(author) then
-      --   author_marks[#author_marks + 1] = get_mark 'corresponding_author'
-      -- end
-
       local res = List.clone(author.name)
       res[#res + 1] = pandoc.Superscript(intercalate(author_marks, {pandoc.Str ","}))
 
@@ -81,21 +77,99 @@ local function create_authors_inlines(authors, and_str, sups)
   return result
 end
 
-
---- Check whether the given author is a corresponding author
-local function is_corresponding_author(author)
-  return author.corresponding and author.address and author.email
-end
-
---- Generate a block element containing the correspondence information for the
---- author note
-local function create_correspondence_blocks(authors)
-  local corresponding_authors = List:new{}
+--- Generate equal contributor elements for the author note
+local function create_equal_contributors(authors)
   local equal_contributors_i = List:new{}
   local equal_contributors = {table.unpack(authors)}
 
   for i, author in ipairs(authors) do
-    if is_corresponding_author(author) then
+    if not author.equal_contrib then
+      equal_contributors_i[#equal_contributors_i + 1] = i
+    end
+  end
+
+  for i = 1, #equal_contributors_i do
+    table.remove(equal_contributors, equal_contributors_i[#equal_contributors_i + 1 - i])
+  end
+
+  if #equal_contributors == 0 then
+    return List.new{}
+  end
+
+  local mark
+  if #equal_contributors > 0 then
+    mark = List:new{pandoc.Superscript(equal_contributor_mark[1]), pandoc.Str(" ")}
+  else
+    mark = List:new{}
+  end
+
+  local equal_contributors_inline
+  if #equal_contributors == 0 then
+    equal_contributors_inline = List:new{}
+  else
+    if #equal_contributors < #authors then
+      equal_contributors_inline = create_authors_inlines(equal_contributors, "and", false)
+    else
+      equal_contributors_inline = List:new{pandoc.Str"All", pandoc.Space(), pandoc.Str"authors"}
+    end
+  end
+
+  local contribution_line
+  if #equal_contributors > 0 then
+    contribution_line = List:new{
+      pandoc.Space(), pandoc.Str"contributed", pandoc.Space(), pandoc.Str"equally",
+      pandoc.Space(), pandoc.Str"to", pandoc.Space(), pandoc.Str"this", pandoc.Space(),
+      pandoc.Str"work", pandoc.Str".", pandoc.Space()
+    }
+  else
+    contribution_line = List:new{}
+  end
+
+  return mark .. equal_contributors_inline .. contribution_line
+end
+
+
+--- Generate a roles elements for the author note
+local function create_roles(authors)
+  local authors_roles = List:new{}
+
+  authors_roles:extend(
+    List:new{
+      pandoc.Str "The", pandoc.Space(), pandoc.Str "authors", pandoc.Space(),
+      pandoc.Str "made", pandoc.Space(), pandoc.Str "the", pandoc.Space(),
+      pandoc.Str "following", pandoc.Space(), pandoc.Str "contributions",
+      pandoc.Str ".", pandoc.Space()
+    }
+  )
+
+  local no_roles = #authors_roles
+
+  for i, author in ipairs(authors) do
+    if author.role then
+      authors_roles:extend(author.name)
+      authors_roles:extend(List:new{pandoc.Str ":", pandoc.Space()})
+      authors_roles:extend(intercalate(author.role, {pandoc.Str ",", pandoc.Space()}))
+      authors_roles:extend(List:new{pandoc.Str ";", pandoc.Space()})
+    end
+  end
+
+  if #authors_roles == no_roles then
+    return List.new{}
+  else
+    table.remove(authors_roles, #authors_roles)
+    table.remove(authors_roles, #authors_roles)
+    authors_roles:extend(List:new{pandoc.Str ".", pandoc.Space()})
+    return authors_roles
+  end
+end
+
+
+--- Generate a correspondence elements for the author note
+local function create_correspondence(authors)
+  local corresponding_authors = List:new{}
+
+  for i, author in ipairs(authors) do
+    if author.corresponding and author.address and author.email then
       contact_info = List:new(
         author.name .. List:new{pandoc.Str ",", pandoc.Space()} ..
         author.address ..
@@ -104,49 +178,10 @@ local function create_correspondence_blocks(authors)
       )
       table.insert(corresponding_authors, {pandoc.Str(contact_info)})
     end
-    if not authors[i].equal_contrib then
-      equal_contributors_i[#equal_contributors_i + 1] = i
-    end
   end
 
-  for i=1, #equal_contributors_i do
-    table.remove(equal_contributors, equal_contributors_i[#equal_contributors_i + 1 - i])
-  end
-  -- for i=1, #equal_contributors_i do
-  --   table.remove(equal_contributors, equal_contributors_i[#equal_contributors_i + 2 - i])
-  -- end
-
-  if #corresponding_authors == 0 and #equal_contributors == 0 then
-    return nil
-  end
-
-  local equal_contributor_inline
-  if #equal_contributors == 0 then
-    equal_contributor_inline = List:new{}
-  else
-    if #equal_contributors < #authors then
-      equal_contributor_inline = create_authors_inlines(equal_contributors, "and", false)
-    else
-      equal_contributor_inline = List:new{pandoc.Str"All", pandoc.Space(), pandoc.Str"authors"}
-    end
-  end
-
-  local mark
-  if #equal_contributors > 0 then
-    mark = List:new{pandoc.Superscript(equal_contributor_mark[1]), pandoc.Space()}
-  else
-    mark = List:new{}
-  end
-
-  local contributor_line
-  if #equal_contributors > 0 then
-    contributor_line = List:new{
-      pandoc.Space(), pandoc.Str"contributed", pandoc.Space(), pandoc.Str"equally",
-      pandoc.Space(), pandoc.Str"to", pandoc.Space(), pandoc.Str"this", pandoc.Space(),
-      pandoc.Str"work", pandoc.Str".", pandoc.Space()
-    }
-  else
-    contributor_line = List:new{}
+  if #corresponding_authors == 0 then
+    return List.new{}
   end
 
   local correspondence_line
@@ -162,8 +197,9 @@ local function create_correspondence_blocks(authors)
     correspondence_line =  List:new{}
   end
 
-  return pandoc.Para(mark .. equal_contributor_inline .. contributor_line .. correspondence_line .. contact_info)
+  return correspondence_line .. contact_info
 end
+
 
 
 --- Create raw LaTeX environments from metadata fields
@@ -194,7 +230,16 @@ function Pandoc (document)
 
   if document.meta.authornote ~= nil then
     if document.meta.author ~= nil then
-      table.insert(document.meta.authornote, create_correspondence_blocks(document.meta.author))
+      local roles = create_roles(document.meta.author)
+      local equal_contributors = create_equal_contributors(document.meta.author)
+      if #roles > 0 or #equal_contributors > 0 then
+        table.insert(document.meta.authornote, pandoc.Para(roles .. equal_contributors))
+      end
+
+      local correspondence = create_correspondence(document.meta.author)
+      if  #correspondence > 0 then
+        table.insert(document.meta.authornote, pandoc.Para(correspondence))
+      end
     end
     document.blocks:extend(make_latex_envir("authornote", document.meta.authornote))
   end
