@@ -17,6 +17,8 @@
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
+\item{est_name}{An optional character. The label to be used for fixed-effects coefficients.}
+
 \item{...}{Further arguments that are passed to \code{\link[=printnum]{printnum()}}.}
 }
 \description{

@@ -7,6 +7,7 @@
 #' @param x A fitted hierarchical linear model, either from [lme4::lmer()],
 #'   [lmerTest::lmer()], or [afex::mixed()].
 #' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
+#' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
 #' @inheritParams print_anova
 #' @param ... Further arguments that are passed to [printnum()].
 #' @details
