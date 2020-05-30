@@ -45,16 +45,12 @@ apa6_pdf <- function(
 
   includes$in_header <- c(includes$in_header, apa6_header_includes)
 
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    if(is.null(md_extensions) || !grepl("raw\\_attribute", md_extensions)) {
-      md_extensions <- paste0(md_extensions, "+raw_attribute")
-    }
+  if(is.null(md_extensions) || !grepl("raw\\_attribute", md_extensions)) {
+    md_extensions <- paste0(md_extensions, "+raw_attribute")
   }
 
   # Call pdf_document() with the appropriate options
   config <- bookdown::pdf_document2(
-    # template = template
-    # , fig_caption = fig_caption
     fig_caption = fig_caption
     , number_sections = number_sections
     , toc = toc
@@ -127,15 +123,6 @@ apa6_pdf <- function(
     }
     output_text <- paste(output_text, collapse = "\n")
 
-    # authornote <- regmatches(output_text, regexpr("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", output_text))
-    # authornote <- gsub("!!!papaja-author-note\\((.+)\\)papaja-author-note!!!", "\\\\authornote\\{\\1\\}", authornote)
-    #
-    # note <- regmatches(output_text, regexpr("!!!papaja-note\\((.+)\\)papaja-note!!!", output_text))
-    # note <- gsub("!!!papaja-note\\((.+)\\)papaja-note!!!", "\\\\note\\{\\1\\}", note)
-    #
-    # output_text <- gsub("!!!papaja-author-note\\(.*\\)papaja-author-note!!!", "", output_text)
-    # output_text <- gsub("!!!papaja-note\\(.*\\)papaja-note!!!", "", output_text)
-
 
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
@@ -148,22 +135,8 @@ apa6_pdf <- function(
       , useBytes = TRUE
     )
 
-    # abstract_location <- gregexpr(pattern = "\\\\abstract\\{", output_text)[[1]]
-    #
-    # output_text <- paste0(
-    #   substr(output_text, start = 1, stop = abstract_location[1] - 1)
-    #   , authornote
-    #   , "\n"
-    #   , note
-    #   , "\n"
-    #   , substr(output_text, start = abstract_location[1], stop = nchar(output_text))
-    # )
-
     # Remove abstract environment if empty
     output_text <- gsub("\\\\abstract\\{\n\n\\}", "", output_text, useBytes = TRUE)
-
-    # Remove pandoc author environment
-    # output_text <- gsub("\\\\author\\{((true)|(\\\\and)|\\s)+\\}", "", output_text, useBytes = TRUE)
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
@@ -192,7 +165,6 @@ apa6_pdf <- function(
   if(Sys.info()["sysname"] == "Windows") {
     config$on_exit <- function() {
       revert_original_input_file(2)
-      if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
     }
   } else {
     config$on_exit <- revert_original_input_file
@@ -240,7 +212,6 @@ apa6_docx <- function(
   # Set chunk defaults
   config$knitr$opts_chunk$echo <- FALSE
   config$knitr$opts_chunk$message <- FALSE
-  # config$knitr$opts_chunk$results <- "asis"
   config$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
   config$knitr$knit_hooks$inline <- inline_numbers
   # config$knitr$knit_hooks$plot <- function(x, options) {
@@ -313,7 +284,6 @@ apa6_docx <- function(
   if(Sys.info()["sysname"] == "Windows") {
     config$on_exit <- function() {
       revert_original_input_file(2)
-      if(file.exists("_papaja_ampersand_filter.bat")) file.remove("_papaja_ampersand_filter.bat")
     }
   } else {
     config$on_exit <- revert_original_input_file
@@ -388,36 +358,30 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
-      if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-        if(csl_specified) {
-          args <- c(args, "--csl", metadata$csl)
-        }
-
-        args <- rmdfiltr::add_citeproc_filter(args)
-        args <- rmdfiltr::add_replace_ampersands_filter(args)
-      } else { # Legacy R-based filter
-        args <- set_ampersand_filter(args, metadata$csl)
+      if(csl_specified) {
+        args <- c(args, "--csl", metadata$csl)
       }
+
+      args <- rmdfiltr::add_citeproc_filter(args)
+      args <- rmdfiltr::add_replace_ampersands_filter(args)
     }
   }
 
   ## Set additional lua filters
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
+  args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
 
-    parse_metadata_filter <- system.file(
-      "lua", "parse_metadata.lua"
+  parse_metadata_filter <- system.file(
+    "lua", "parse_metadata.lua"
+    , package = "papaja"
+  )
+  args <- rmdfiltr::add_custom_filter(args, filter_path = parse_metadata_filter, lua = TRUE)
+
+  if(isTRUE(metadata$quote_labels)) {
+    label_quotes_filter <- system.file(
+      "lua", "label_quotes.lua"
       , package = "papaja"
     )
-    args <- rmdfiltr::add_custom_filter(args, filter_path = parse_metadata_filter, lua = TRUE)
-
-    if(isTRUE(metadata$quote_labels)) {
-      label_quotes_filter <- system.file(
-        "lua", "label_quotes.lua"
-        , package = "papaja"
-      )
-      args <- rmdfiltr::add_custom_filter(args, filter_path = label_quotes_filter, lua = TRUE)
-    }
+    args <- rmdfiltr::add_custom_filter(args, filter_path = label_quotes_filter, lua = TRUE)
   }
 
   ## Set template variables and defaults
@@ -487,48 +451,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
   }
 
-  # if(!is.null(metadata$author)) {
-  #   authors <- paste_authors(metadata$author, format = "latex")
-  #
-  #   corresponding_author <- metadata$author[which(unlist(lapply(lapply(metadata$author, "[[", "corresponding"), isTRUE)))]
-  # } else {
-  #   authors <- "\\phantom{a}"
-  #   corresponding_author <- NULL
-  # }
-
-  # header_includes <- c(header_includes, paste0("\\author{", authors, "}"))
-
-  if(!is.null(metadata$author) && !is.null(metadata$affiliation)) {
-    affiliations <- paste0("\n\\vspace{0.5cm}\n", paste_affiliations(metadata$affiliation, format = "latex"))
-  } else {
-    affiliations <- "\\phantom{a}"
-  }
-
-  header_includes <- c(header_includes, paste0("\\affiliation{", affiliations, "}"))
-
-  ### Pass the following through abstract field so pandoc parses markdown
-  # if(
-  #   !is.null(metadata$author_note) ||
-  #   !is.null(metadata$authornote) ||
-  #   length(corresponding_author) > 0
-  # ) {
-  #   author_note <- paste( # TODO
-  #     c(metadata$author_note, metadata$authornote)
-  #     , if(length(corresponding_author) > 0) corresponding_author_line(corresponding_author[[1]]) else NULL
-  #     , sep = "\n\n"
-  #   )
-  #
-  #   # TODO
-  #   # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-author-note(", author_note, ")papaja-author-note!!!")
-  #   header_includes <- c(header_includes, paste0("\\authornote{", escape_latex(author_note), "}"))
-  # }
-
-  # TODO
-  # if(!is.null(metadata$note)) {
-  #   # metadata$abstract <- paste0(metadata$abstract, "\n!!!papaja-note(", metadata$note, ")papaja-note!!!")
-  #   header_includes <- c(header_includes, paste0("\\note{", escape_latex(metadata$note), "}"))
-  # }
-
   if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
     keywords <- paste(unlist(metadata$keywords), collapse = ", ")
     if(!is.null(metadata$wordcount)) {
@@ -538,18 +460,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ## Manuscript and table formatting
-  # apa6_header_includes <-  system.file(
-  #   "rmarkdown", "templates", "apa6", "resources"
-  #   , "apa6_header_includes.tex"
-  #   , package = "papaja"
-  # )
-  # if(apa6_header_includes == "") stop("LaTeX header includes file not found.")
-  #
-  # apa6_header_includes <- readLines(apa6_header_includes, encoding = "UTF-8")
-  # apa6_header_includes <- apa6_header_includes[!grepl("^%", apa6_header_includes)]
-  # apa6_header_includes <- gsub("\\s*%.+$||\t", "", apa6_header_includes)
-  #
-  # header_includes <- c(header_includes, apa6_header_includes)
 
   if(
     ((!is.null(metadata$figsintext) & !isTRUE(metadata$figsintext)) ||
@@ -710,31 +620,25 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
 
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
-      if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-        if(csl_specified) {
-          args <- c(args, "--csl", metadata$csl)
-        }
-
-        args <- rmdfiltr::add_citeproc_filter(args)
-        args <- rmdfiltr::add_replace_ampersands_filter(args)
-      } else { # Legacy R-based filter
-        args <- set_ampersand_filter(args, metadata$csl)
+      if(csl_specified) {
+        args <- c(args, "--csl", metadata$csl)
       }
+
+      args <- rmdfiltr::add_citeproc_filter(args)
+      args <- rmdfiltr::add_replace_ampersands_filter(args)
     }
   }
 
   # Set additional lua filters
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
+  args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
 
-    docx_fixes_lua <-  system.file(
-      "lua", "docx_fixes.lua"
-      , package = "papaja"
-    )
-    if(docx_fixes_lua == "") stop("docx_fixes Lua-filter not found.")
+  docx_fixes_lua <-  system.file(
+    "lua", "docx_fixes.lua"
+    , package = "papaja"
+  )
+  if(docx_fixes_lua == "") stop("docx_fixes Lua-filter not found.")
 
-    args <- rmdfiltr::add_custom_filter(args, filter_path = docx_fixes_lua, lua = TRUE, error = FALSE)
-  }
+  args <- rmdfiltr::add_custom_filter(args, filter_path = docx_fixes_lua, lua = TRUE, error = FALSE)
 
   args
 }
@@ -759,100 +663,6 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
   input_file_connection <- file(input_file)
   on.exit(close(input_file_connection))
   writeLines(augmented_input_text, input_file_connection, useBytes = TRUE)
-}
-
-
-paste_authors <- function(x, format) {
-
-  if(format == "latex") {
-    authors <- lapply(x, function(y) {
-      affiliation <- if(!is.null(y[["affiliation"]])) paste0("\\textsuperscript{", y[["affiliation"]], "}") else ""
-      paste0(y["name"], affiliation, collapse = "")
-    })
-  } else if(format %in% c("docx", "word")) {
-    authors <- lapply(x, function(y) {
-      affiliation <- if(!is.null(y[["affiliation"]]) && y[["affiliation"]] != "") paste0("^", y[["affiliation"]], "^") else ""
-      paste0(y["name"], affiliation, collapse = "")
-    })
-  } else {
-    stop("Format not supported.")
-  }
-
-  authors <- unlist(authors)
-
-  n_authors <- length(authors)
-  x[[1]]$name <- authors[1]
-  if(n_authors >= 2) {
-    if(n_authors > 2) {
-      x[[n_authors]]$name <- paste(", &", authors[n_authors])
-      for(i in 2:(n_authors - 1)) {
-        x[[i]]$name <- paste(",", authors[i])
-      }
-    } else {
-      x[[n_authors]]$name <- paste("\\ &", authors[n_authors]) # Otherwise space before ampersand disappears
-    }
-  }
-  if(format == "latex") x[[n_authors]]$name <- gsub("\\&", "\\\\&", x[[n_authors]]$name)
-  paste(unlist(lapply(x, "[[", "name")), collapse = "")
-}
-
-paste_affiliations <- function(x, format) {
-  add_superscript <- function(y, format) {
-    if(is.null(y[["id"]]) || y[["id"]] == "") {
-      superscript <- NULL
-    } else if(format == "latex") {
-      superscript <- paste0("\\textsuperscript{", y[["id"]], "}")
-    } else if(format %in% c("docx", "word")) {
-      superscript <- paste0("^", y[["id"]], "^")
-    }  else {
-      stop("Format not supported.")
-    }
-
-    location <- c(y[["institution"]], y[["city"]], y[["state"]], y[["country"]])
-    location <- paste(escape_latex(location), collapse = ", ")
-
-    paste(superscript, location)
-  }
-
-  affiliations <- vapply(x, add_superscript, format = format, FUN.VALUE = "a")
-  if(format == "latex") {
-    paste(affiliations, collapse = "\\\\")
-  } else {
-    paste(affiliations, collapse = "\n\n")
-  }
-}
-
-
-set_ampersand_filter <- function(args, csl_file) {
-  # Correct in-text ampersands
-  filter_path <- system.file(
-    "rmd", "ampersand_filter.R"
-    , package = "papaja"
-  )
-
-  ## Use legacy shell or bash script with older versions of pandoc
-  # if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) > 0) {
-    if(Sys.info()["sysname"] == "Windows") {
-      filter_path <- gsub("\\.R", ".bat", filter_path)
-      ampersand_filter <- readLines(filter_path)
-      ampersand_filter[2] <- gsub("PATHTORSCRIPT", paste0(R.home("bin"), "/Rscript.exe"), ampersand_filter[2])
-      filter_path <- "_papaja_ampersand_filter.bat"
-      filter_path_connection <- file(filter_path, encoding = "UTF-8")
-      on.exit(close(filter_path_connection))
-      writeLines(ampersand_filter, filter_path_connection)
-    } else {
-      filter_path <- gsub("\\.R", ".sh", filter_path)
-    }
-  # }
-
-  if(is.null(args)) { # CSL has not been specified manually
-    args <- c(args, "--csl", csl_file)
-  }
-
-  args <- rmdfiltr::add_citeproc_filter(args)
-  args <- c(args, "--filter", filter_path)
-
-  args
 }
 
 

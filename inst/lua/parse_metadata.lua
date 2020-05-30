@@ -51,9 +51,9 @@ local function author_inline_generator(sups)
   end
 end
 
---- Generate a list of inlines containing all authors.
+--- Generate a list of inlines containing all authors
 local function create_authors_inlines(authors, and_str, sups)
-  local padded_and_str = List:new{pandoc.Space(), pandoc.Str (and_str), pandoc.Space()}
+  local padded_and_str = List:new{pandoc.Space(), pandoc.Str(and_str), pandoc.Space()}
 
   local inlines_generator = author_inline_generator(sups)
   local inlines = List:new(authors):map(inlines_generator)
@@ -76,6 +76,46 @@ local function create_authors_inlines(authors, and_str, sups)
 
   return result
 end
+
+
+--- Create inlines for a single affilliation
+local function affiliation_inline_generator()
+  return function (affiliation)
+    local affiliation_marks = List:new{}
+
+
+    if not affiliation.id and not affiliation.institution then
+      return nil
+    end
+
+    local res = List:new{
+      pandoc.Superscript(affiliation.id[1]), pandoc.Space(),
+      table.unpack(affiliation.institution)
+    }
+
+    return res
+  end
+end
+
+--- Generate a list of inlines containing all affiliations
+local function create_affiliation_inlines(affiliation)
+  local inlines_generator = affiliation_inline_generator()
+  local inlines = List:new(affiliation):map(inlines_generator)
+
+  local result = List:new{}
+  result:extend(inlines)
+  if #result > 1 then
+    result = intercalate(result, {pandoc.RawInline("latex", "\\\\")})
+  end
+
+  local test = List:new{}
+  for i=1, #result do
+    table.insert(test, result[i])
+  end
+
+  return List:new{pandoc.RawInline("latex", "\\vspace{0.5cm}")} .. test
+end
+
 
 --- Generate equal contributor elements for the author note
 local function create_equal_contributors(authors)
@@ -202,19 +242,45 @@ end
 
 
 
+
+
+
+function table.flatten(arr)
+	local result = { }
+
+	local function flatten(arr)
+		for _, v in ipairs(arr) do
+			if type(v) == "table" then
+				flatten(v)
+			else
+				table.insert(result, v)
+			end
+		end
+	end
+
+	flatten(arr)
+	return result
+end
+
+
+
+
 --- Create raw LaTeX environments from metadata fields
 local function make_latex_envir(name, metadata)
   local data = {table.unpack(metadata)}
   local pandoc_type = data[1].t
 
-  if pandoc_type == "Str" or pandoc_type == "RawInline" then
-    return List:new{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
-  end
+
+  -- if pandoc_type == "Str" or pandoc_type == "RawInline" then
+  --   return List:new{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
+  -- end
   if pandoc_type == "Para" or pandoc_type == "Plain" then
     local envir = List:new{pandoc.Para(pandoc.RawInline("latex", "\\" .. name .. "{"))}
     envir:extend(data)
     envir:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "}"))})
     return envir
+  else
+    return List:new{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
   end
 end
 
@@ -244,7 +310,17 @@ function Pandoc (document)
     document.blocks:extend(make_latex_envir("authornote", document.meta.authornote))
   end
 
-  if document.meta.note ~= nil or document.meta.authornote ~= nil then
+  if document.meta.affiliation ~= nil then
+    local affiliations = create_affiliation_inlines(document.meta.affiliation)
+    if #affiliations > 0 then
+      document.meta.affiliation = affiliations
+      document.blocks:extend(make_latex_envir("affiliation", document.meta.affiliation))
+    end
+  else
+    document.blocks:extend(make_latex_envir("affiliation", {pandoc.RawInline("latex", "\\phantom{0}")}))
+  end
+
+  if document.meta.note ~= nil or document.meta.authornote ~= nil  or document.meta.affiliation ~= nil then
     document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
   end
 

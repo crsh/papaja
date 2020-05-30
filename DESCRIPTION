@@ -47,7 +47,7 @@ Suggests:
   lmerTest
 Remotes: 
   tidymodels/broom
-SystemRequirements: Rendering the document template requires pandoc (>= 1.12.3; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
+SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
