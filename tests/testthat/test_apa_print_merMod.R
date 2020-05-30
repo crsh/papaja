@@ -1,7 +1,7 @@
 context("apa_print() for hierarchical linear models")
 
 test_that(
-  "Fixed-effects summaries and model comparisons."
+  "Fixed-effects summaries"
   , {
     skip_on_cran()
     model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
@@ -92,11 +92,46 @@ test_that(
       , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.7269$, $9.5064]$, $t[17.00] = 3.06$, $p = .007$"
     )
 
-    ranova_out <- lmerTest::ranova(model_lmerTest)
+    fm1 <-lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
+    ranova_out <- lmerTest::ranova(fm1)
     expect_error(
       apa_print(ranova_out)
       , "Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support."
     )
+  }
+)
+
+test_that(
+  "ANOVA tables from lmerTest::anova()"
+  , {
+    fm1 <-lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
+    # fm2 <-lmerTest::lmer(Reaction ~ Days + (1|Subject)   , lme4::sleepstudy)
+
+    model_KR <- anova(fm1, type = "III", ddf = "Kenward")
+    model_S <- anova(fm1, type = "II")
+    apa_KR <- apa_print(model_KR)
+    apa_S <- apa_print(model_S)
+    expect_apa_results(
+      apa_KR
+      , labels = list(
+        term        = "Effect"
+        , statistic = "$F$"
+        , df1       = "$\\mathit{df}_1^{\\mathit{KR}}$"
+        , df2       = "$\\mathit{df}_2^{\\mathit{KR}}$"
+        , p.value   = "$p$"
+      )
+    )
+    expect_apa_results(
+      apa_S
+      , labels = list(
+        term        = "Effect"
+        , statistic = "$F$"
+        , df1       = "$\\mathit{df}_1^{S}$"
+        , df2       = "$\\mathit{df}_2^{S}$"
+        , p.value   = "$p$"
+      )
+    )
+
   }
 )
 

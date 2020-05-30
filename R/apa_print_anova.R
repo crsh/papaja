@@ -159,6 +159,24 @@ apa_print.anova <- function(
     if(!is.null(attr(variance_table, "ddf"))) {
       return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
     }
+    if(any(grepl("Satterthwaite|Kenward", object_heading))) {
+      # determine correction type
+      sub_heading <- object_heading[grepl("Satterthwaite|Kenward", object_heading)][[1]]
+      attr(x, "correction") <- c("\\mathit{KR}", "S")[c(grepl("Kenward", sub_heading), grepl("Satterth", sub_heading))]
+      x$Effect <- rownames(x)
+
+      # Sanitize, prettify, create container ----
+      sanitized_table <- sanitize_table(x)
+      prettified_table <- print_table(sanitized_table)
+      return(
+        create_container(
+          prettified_table
+          , sanitized_terms = sanitize_terms(x$Effect)
+          , in_paren = ellipsis$in_paren
+        )
+      )
+    }
+
     # afex::mixed ----
     if(any(grepl("Mixed Model", object_heading))) {
       correction <- unname(

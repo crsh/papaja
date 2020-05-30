@@ -254,7 +254,7 @@ sanitize_table <- function(
     , "t.value"   = "statistic"
     , "statistic" = "statistic"
     , "approx.F"  = "statistic"
-    , "F value"   = "statistic"
+    , "F.value"   = "statistic"
     , "F"         = "statistic"
     , "LRT"       = "statistic"
     , "Chisq"     = "statistic"
