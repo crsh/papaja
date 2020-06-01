@@ -104,7 +104,6 @@ test_that(
   "Fixed effects from hierarchical generalized linear models"
   , {
     skip_on_cran()
-    skip_on_travis()
 
     # from lme4::glmer examples:
     gm1 <- lme4::glmer(
