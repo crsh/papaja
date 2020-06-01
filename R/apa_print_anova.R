@@ -156,9 +156,9 @@ apa_print.anova <- function(
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
     # lmerTest::anova.merModLmerTest ----
-    if(!is.null(attr(variance_table, "ddf"))) {
-      return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
-    }
+    # if(!is.null(attr(variance_table, "ddf"))) {
+    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    # }
     if(any(grepl("Satterthwaite|Kenward", object_heading))) {
       # determine correction type
       sub_heading <- object_heading[grepl("Satterthwaite|Kenward", object_heading)][[1]]

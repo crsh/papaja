@@ -102,15 +102,17 @@ test_that(
 )
 
 test_that(
-  "ANOVA tables from lmerTest::anova()"
+  "Single-model ANOVA tables from lmerTest::anova()"
   , {
     fm1 <-lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
-    # fm2 <-lmerTest::lmer(Reaction ~ Days + (1|Subject)   , lme4::sleepstudy)
+    fm2 <-lme4::lmer(Reaction ~ Days + (1|Subject)   , lme4::sleepstudy)
 
     model_KR <- anova(fm1, type = "III", ddf = "Kenward")
     model_S <- anova(fm1, type = "II")
+
     apa_KR <- apa_print(model_KR)
     apa_S <- apa_print(model_S)
+
     expect_apa_results(
       apa_KR
       , labels = list(
@@ -131,7 +133,6 @@ test_that(
         , p.value   = "$p$"
       )
     )
-
   }
 )
 
