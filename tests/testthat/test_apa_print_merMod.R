@@ -113,8 +113,7 @@ test_that(
       , family = stats::binomial
     )
 
-    set.seed(42L)
-    apa_gm1 <- apa_print(gm1, args_confint = list(nsim = 50L, level = .90))
+    apa_gm1 <- apa_print(gm1, args_confint = list(level = .90))
 
     expect_apa_results(
       apa_gm1
@@ -130,10 +129,10 @@ test_that(
     expect_identical(
       object = apa_gm1$full_result
       , expected = list(
-        Intercept = "$\\hat{\\beta} = -1.40$, 90\\% CI $[-1.74$, $-1.13]$, $z = -6.05$, $p < .001$"
-        , period2 = "$\\hat{\\beta} = -0.99$, 90\\% CI $[-1.55$, $-0.50]$, $z = -3.27$, $p = .001$"
-        , period3 = "$\\hat{\\beta} = -1.13$, 90\\% CI $[-1.62$, $-0.69]$, $z = -3.49$, $p < .001$"
-        , period4 = "$\\hat{\\beta} = -1.58$, 90\\% CI $[-2.51$, $-0.81]$, $z = -3.74$, $p < .001$"
+        Intercept = "$\\hat{\\beta} = -1.40$, 90\\% CI $[-1.81$, $-1.02]$, $z = -6.05$, $p < .001$"
+        , period2 = "$\\hat{\\beta} = -0.99$, 90\\% CI $[-1.51$, $-0.50]$, $z = -3.27$, $p = .001$"
+        , period3 = "$\\hat{\\beta} = -1.13$, 90\\% CI $[-1.69$, $-0.61]$, $z = -3.49$, $p < .001$"
+        , period4 = "$\\hat{\\beta} = -1.58$, 90\\% CI $[-2.34$, $-0.92]$, $z = -3.74$, $p < .001$"
       )
     )
   }
