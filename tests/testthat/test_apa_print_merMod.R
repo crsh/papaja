@@ -5,10 +5,9 @@ test_that(
   , {
     skip_on_cran()
     model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
-    model2_lme4 <- lme4::lmer(formula = yield ~ N + P + (1|block), data = npk)
+    # model2_lme4 <- lme4::lmer(formula = yield ~ N + P + (1|block), data = npk)
     model_lmerTest <- lmerTest::as_lmerModLmerTest(model_lme4)
 
-    # glm <- lme4::glmer(formula = 1/yield ~ N + (1|block), data = npk, family = inverse.gaussian(link = "1/mu^2"))
     apa_lme4 <- apa_print(model_lme4)
     # apa2_lme4 <-apa_print(model2_lme4)
     apa_lmerTest <- apa_print(model_lmerTest)
@@ -97,6 +96,45 @@ test_that(
     expect_error(
       apa_print(ranova_out)
       , "Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support."
+    )
+  }
+)
+
+test_that(
+  "Fixed effects from hierarchical generalized linear models"
+  , {
+    skip_on_cran()
+    skip_on_travis()
+
+    # from lme4::glmer examples:
+    gm1 <- lme4::glmer(
+      formula = cbind(incidence, size - incidence) ~ period + (1 | herd)
+      , data = lme4::cbpp
+      , family = stats::binomial
+    )
+
+    set.seed(42L)
+    apa_gm1 <- apa_print(gm1, args_confint = list(nsim = 50L, level = .90))
+
+    expect_apa_results(
+      apa_gm1
+      , labels =  list(
+        term = "Term"
+        , estimate  = "$\\hat{\\beta}$"
+        , conf.int  = "90\\% CI"
+        , statistic = "$z$"
+        , p.value   = "$p$"
+      )
+    )
+
+    expect_identical(
+      object = apa_gm1$full_result
+      , expected = list(
+        Intercept = "$\\hat{\\beta} = -1.40$, 90\\% CI $[-1.74$, $-1.13]$, $z = -6.05$, $p < .001$"
+        , period2 = "$\\hat{\\beta} = -0.99$, 90\\% CI $[-1.55$, $-0.50]$, $z = -3.27$, $p = .001$"
+        , period3 = "$\\hat{\\beta} = -1.13$, 90\\% CI $[-1.62$, $-0.69]$, $z = -3.49$, $p < .001$"
+        , period4 = "$\\hat{\\beta} = -1.58$, 90\\% CI $[-2.51$, $-0.81]$, $z = -3.74$, $p < .001$"
+      )
     )
   }
 )

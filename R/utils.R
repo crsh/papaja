@@ -252,6 +252,7 @@ sanitize_table <- function(
     # statistic
     , "t"         = "statistic"
     , "t.value"   = "statistic"
+    , "z.value"   = "statistic"
     , "statistic" = "statistic"
     , "approx.F"  = "statistic"
     , "F.value"   = "statistic"
@@ -288,6 +289,7 @@ sanitize_table <- function(
     , "Pr..F."     = "p.value"
     , "Pr..PB."    = "p.value"
     , "Pr...t.."   = "p.value"
+    , "Pr...z.."   = "p.value"
   )
 
 
@@ -328,6 +330,7 @@ sanitize_table <- function(
     , "statistic" = stat_label
     , "t"         = "$t$"
     , "t.value"   = "$t$"
+    , "z.value"   = "$z$"
     , "F.value"   = "$F$"
     , "F"         = "$F$"
     , "approx.F"  = "$F$"
