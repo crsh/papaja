@@ -685,7 +685,7 @@ modify_input_file <- function(input, format) {
           input_text
           , if(format %in% c("papaja::apa6_word", "papaja::apa6_docx")) {
             paste0(
-              "<div custom-style='h1-titlepage'>Appendix "
+              "<div custom-style='h1-pagebreak'>Appendix "
               , if(length(yaml_params$appendix) > 1) LETTERS[i] else NULL
               , "</div>"
             )
