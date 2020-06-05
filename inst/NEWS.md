@@ -25,7 +25,7 @@
 ### New functions
 
 - `apa_print.manova()`
-    - Added a `apa_print` method for MANOVA models from the `stats` package.
+    - Experimental: Added an `apa_print` method for MANOVA models from the `stats` package.
 - `summary.papaja_wsci()`
     - Experimental: Returns means and confidence limits calculated from the output
       of `wsci()` (suggested by @jstevens5, #362)
