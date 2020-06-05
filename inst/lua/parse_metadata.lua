@@ -83,9 +83,12 @@ local function affiliation_inline_generator()
   return function (affiliation)
     local affiliation_marks = List:new{}
 
-
     if not affiliation.id and not affiliation.institution then
       return nil
+    end
+
+    if affiliation.id[1] == nil then
+      affiliation.id[1] = ""
     end
 
     local res = List:new{
@@ -104,9 +107,7 @@ local function create_affiliation_inlines(affiliation)
 
   local result = List:new{}
   result:extend(inlines)
-  if #result > 1 then
-    result = intercalate(result, {pandoc.RawInline("latex", "\\\\")})
-  end
+  result = intercalate(result, {pandoc.RawInline("latex", "\\\\")})
 
   local test = List:new{}
   for i=1, #result do
