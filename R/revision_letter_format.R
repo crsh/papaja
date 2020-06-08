@@ -68,23 +68,17 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
-      if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-        if(csl_specified) {
-          args <- c(args, "--csl", metadata$csl)
-        }
-
-        args <- rmdfiltr::add_citeproc_filter(args)
-        args <- rmdfiltr::add_replace_ampersands_filter(args)
-      } else { # Legacy R-based filter
-        args <- set_ampersand_filter(args, metadata$csl)
+      if(csl_specified) {
+        args <- c(args, "--csl", metadata$csl)
       }
+
+      args <- rmdfiltr::add_citeproc_filter(args)
+      args <- rmdfiltr::add_replace_ampersands_filter(args)
     }
   }
 
   ## Set additional lua filters
-  if(utils::compareVersion("2.0", as.character(rmarkdown::pandoc_version())) <= 0) {
-    args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
-  }
+  args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
 
   args
 }

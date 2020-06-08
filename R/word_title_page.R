@@ -51,7 +51,7 @@ word_title_page <- function(x) {
   }
 
   abstract <- paste0(
-    "<div custom-style='Title'>", apa_terms$abstract, "</div>"
+    "<div custom-style='h1-pagebreak'>", apa_terms$abstract, "</div>"
     , "\n"
     , x$abstract
     , "\n"
@@ -69,6 +69,67 @@ word_title_page <- function(x) {
     # is.null(x$abstract) for consistency with apa6_pdf()
     , ifelse(is.null(x$abstract) || is.null(x$keywords), "", keywords)
     , ifelse(is.null(x$abstract) || is.null(x$wordcount), "", wordcount)
-    , paste0("<div custom-style='Title'>", x$title, "</div>\n\n")
+    , paste0("<div custom-style='h1-pagebreak'>", x$title, "</div>\n\n")
   )
+}
+
+
+paste_authors <- function(x, format) {
+
+  if(format == "latex") {
+    authors <- lapply(x, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]])) paste0("\\textsuperscript{", y[["affiliation"]], "}") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+  } else if(format %in% c("docx", "word")) {
+    authors <- lapply(x, function(y) {
+      affiliation <- if(!is.null(y[["affiliation"]]) && y[["affiliation"]] != "") paste0("^", y[["affiliation"]], "^") else ""
+      paste0(y["name"], affiliation, collapse = "")
+    })
+  } else {
+    stop("Format not supported.")
+  }
+
+  authors <- unlist(authors)
+
+  n_authors <- length(authors)
+  x[[1]]$name <- authors[1]
+  if(n_authors >= 2) {
+    if(n_authors > 2) {
+      x[[n_authors]]$name <- paste(", &", authors[n_authors])
+      for(i in 2:(n_authors - 1)) {
+        x[[i]]$name <- paste(",", authors[i])
+      }
+    } else {
+      x[[n_authors]]$name <- paste("\\ &", authors[n_authors]) # Otherwise space before ampersand disappears
+    }
+  }
+  if(format == "latex") x[[n_authors]]$name <- gsub("\\&", "\\\\&", x[[n_authors]]$name)
+  paste(unlist(lapply(x, "[[", "name")), collapse = "")
+}
+
+paste_affiliations <- function(x, format) {
+  add_superscript <- function(y, format) {
+    if(is.null(y[["id"]]) || y[["id"]] == "") {
+      superscript <- NULL
+    } else if(format == "latex") {
+      superscript <- paste0("\\textsuperscript{", y[["id"]], "}")
+    } else if(format %in% c("docx", "word")) {
+      superscript <- paste0("^", y[["id"]], "^")
+    }  else {
+      stop("Format not supported.")
+    }
+
+    location <- c(y[["institution"]], y[["city"]], y[["state"]], y[["country"]])
+    location <- paste(escape_latex(location), collapse = ", ")
+
+    paste(superscript, location)
+  }
+
+  affiliations <- vapply(x, add_superscript, format = format, FUN.VALUE = "a")
+  if(format == "latex") {
+    paste(affiliations, collapse = "\\\\")
+  } else {
+    paste(affiliations, collapse = "\n\n")
+  }
 }
