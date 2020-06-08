@@ -13,7 +13,7 @@ Authors@R: c(
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
-  R (>= 2.11.1)
+  R (>= 3.6)
 Imports:
   base64enc,
   bookdown (>= 0.9.1),
