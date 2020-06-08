@@ -137,3 +137,14 @@ test_that(
     )
   }
 )
+
+test_that(
+  "sanitize_table"
+  , {
+    expect_warning(
+      out <- papaja:::sanitize_table(npk)
+      , regexp = "Some columns could not be renamed: block, N, P, K, yield"
+    )
+    expect_identical(object = out, expected = npk)
+  }
+)

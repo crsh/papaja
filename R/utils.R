@@ -371,8 +371,13 @@ sanitize_table <- function(
 
   names_in_renamers <- colnames(x) %in% names(renamers)
 
+  warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
+  Therefore, be careful when using its output. Moreover, please visit https://github.com/crsh/papaja/issues and
+  file an issue together with the code that generated the output object. In doing so, you help us to fully
+  support the type of analysis you just conducted and make papaja a lttle bit better."
+
   if(!all(names_in_renamers)) {
-    warning("Some columns could not be renamed.", colnames(x)[!names_in_renamers])
+    warning("Some columns could not be renamed: ", paste(colnames(x)[!names_in_renamers], collapse = ", "), warning_unexpected)
   }
 
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
