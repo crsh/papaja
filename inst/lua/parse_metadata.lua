@@ -275,7 +275,7 @@ local function make_latex_envir(name, metadata)
   -- if pandoc_type == "Str" or pandoc_type == "RawInline" then
   --   return List:new{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
   -- end
-  if pandoc_type == "Para" or pandoc_type == "Plain" then
+  if pandoc_type == "Para" or pandoc_type == "Plain" or pandoc_type == "RawBlock" then
     local envir = List:new{pandoc.Para(pandoc.RawInline("latex", "\\" .. name .. "{"))}
     envir:extend(data)
     envir:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "}"))})
