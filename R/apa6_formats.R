@@ -267,7 +267,7 @@ apa6_docx <- function(
 
     for(i in paste0("word/header", 2:3, ".xml")) {
       xml <- readLines(i, warn = FALSE)
-      xml <- gsub("TITLE", running_head, xml, useBytes = TRUE)
+      xml <- gsub("TITLE", toupper(running_head), xml, useBytes = TRUE)
       i_con <- file(i)
       writeLines(xml, con = i_con, useBytes = TRUE)
       close(i_con)
