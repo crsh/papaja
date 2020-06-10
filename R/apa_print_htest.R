@@ -122,11 +122,11 @@ apa_print.htest <- function(
   if(!identical(conf_int, list(NULL))) y$conf.int <- conf_int
 
   # sanitize table ----
-  ellipsis$x <- sanitize_table(y)
+  ellipsis$x <- canonize(y)
 
   # Prettify table ----
   if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
-  x <- do.call("print_table", ellipsis)
+  x <- do.call("beautify", ellipsis)
 
 
   # htest-specific modifications ----

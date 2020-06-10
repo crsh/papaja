@@ -186,14 +186,25 @@ convert_stat_name <- function(x) {
   new_stat_name
 }
 
-sanitize_table <- function(
+
+
+#' Transform to a Canonical Table
+#'
+#' Internal function that transforms a \code{data.frame} by renaming and labeling columns.
+#'
+#' @param x A \code{data.frame}.
+#' @param stat_label Label for column \code{statistic}.
+#' @param est_label  Label for column \code{estimate}.
+#'
+#' @keywords internal
+
+canonize <- function(
   x
   , stat_label = NULL
   , est_label = NULL
-  , ...
 ) {
 
-  args <- list(...)
+  # args <- list(...)
 
   conf_level <- attr(x$conf.int, "conf.level")
   if(is.null(conf_level)) {
@@ -206,7 +217,7 @@ sanitize_table <- function(
   # print(conf_label)
   colnames(x) <- make.names(colnames(x))
 
-  # sanitize_table ----
+  # use canonical colnames ----
   renamers <- c(
     # nuisance parameters
     "Sum.Sq"    = "sumsq"
@@ -217,6 +228,7 @@ sanitize_table <- function(
     , "npar"    = "n.parameters"
     # term
     , "Effect"  = "term"
+    , "Term"    = "term"
     # estimate
     , "estimate"                = "estimate"
     , "mean.of.the.differences" = "estimate"
@@ -228,10 +240,12 @@ sanitize_table <- function(
     , "mean.of.the.differences" = "estimate"
     , "difference.in.location"  = "estimate"
     , "difference.in.means"     = "estimate"
+    , "coefficients"            = "estimate"
     # ----
     , "conf.int" = "conf.int"
-    , "stderr"   = "std.err"
-    , "std.err"  = "std.err"
+    , "stderr"   = "std.error"
+    , "std.err"  = "std.error"
+    , "sigma"    = "std.error"
     # multivariate.statistic
     , "Pillai"    = "multivariate.statistic"
     , "Wilks"     = "multivariate.statistic"
@@ -239,6 +253,7 @@ sanitize_table <- function(
     , "Hotelling.Lawley" = "multivariate.statistic"
     # statistic
     , "t"         = "statistic"
+    , "tstat"     = "statistic"
     , "statistic" = "statistic"
     , "approx.F"  = "statistic"
     , "F value"   = "statistic"
@@ -274,6 +289,7 @@ sanitize_table <- function(
     , "Pr..Chisq." = "p.value"
     , "Pr..F."     = "p.value"
     , "Pr..PB."    = "p.value"
+    , "pvalues"    = "p.value"
   )
 
 
@@ -287,8 +303,10 @@ sanitize_table <- function(
     , "npar"    = "$k$"
     # term
     , "Effect"   = "Effect"
+    , "Term"     = "Term"
     # estimate
     , "estimate"                = est_label
+    , "coefficients"            = est_label
     , "cor"                     = "$r$"
     , "rho"                     = "$r_{\\mathrm{s}}$" # capital or small S???
     , "tau"                     = "$\\uptau$"
@@ -302,6 +320,7 @@ sanitize_table <- function(
     # standard error
     , "stderr"   = "$\\mathit{SE}$"
     , "std.err"  = "$\\mathit{SE}$"
+    , "sigma"    = "$\\mathit{SE}$"
     # multivariate.statistic
     , "Pillai"           = "$V$"
     , "Wilks"            = "$\\Lambda$"
@@ -310,6 +329,7 @@ sanitize_table <- function(
     # statistic
     , "statistic" = stat_label
     , "t"         = "$t$"
+    , "tstat"     = "$t$"
     , "F.value"   = "$F$"
     , "F"         = "$F$"
     , "approx.F"  = "$F$"
@@ -342,6 +362,7 @@ sanitize_table <- function(
     , "Pr..Chisq." = "$p$"
     , "Pr..F."     = "$p$"
     , "Pr..PB."    = "$p$"
+    , "pvalues"    = "$p$"
   )
 
 
@@ -357,10 +378,25 @@ sanitize_table <- function(
   x
 }
 
-print_table <- function(x, ...) {
+#' Beautify a Canonical Table
+#'
+#' Internal function that takes an object created by \code{\link{canonize}} and
+#' applies proper rounding. Term names are beautified by removing parentheses and replacing
+#' colons with \code{$\times$}. Moreover, both rows and columns are sorted.
+#'
+#' @param x An object created by \code{\link{canonize}}.
+#' @param standardized Logical. If TRUE the name of the function \code{scale} will be removed from term names.
+#' @param ... Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).
+#' @keywords internal
+
+beautify <- function(x, standardized = FALSE, ...) {
+
+  validate(x, check_class = "data.frame")
+  validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
 
   args <- list(...)
-  # print_table ----
+
+  # apply printnum ----
   for (i in colnames(x)) {
     if(i == "p.value") {
       x[[i]] <- printp(x[[i]])
@@ -377,7 +413,7 @@ print_table <- function(x, ...) {
       args$x <- x[[i]]
       x[[i]] <- do.call("printnum", args)
     } else if (i == "term"){
-      x[[i]] <- prettify_terms(x[[i]])  # todo: standardized ???
+      x[[i]] <- prettify_terms(x[[i]], standardized = standardized)  # todo: standardized ???
     } else {
       x[[i]] <- printnum(x[[i]])
     }
@@ -394,7 +430,18 @@ print_table <- function(x, ...) {
   x
 }
 
+
+#' Create APA Results List from a Beautified Table
+#'
+#' Internal function that takes a beautified table and constructs an object of class
+#' \code{c("apa_results", "list")}, the canonical output object from \code{\link{apa_print}}.
+
+#' @param in_paren Logical. Indicates if parentheses in the output strings (e.g., thos around degrees of freedom)
+#'   should be replaced with brackets. Useful if the complete output strings are supposed to be reported within parentheses.
+#' @keywords internal
+
 create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL) {
+
   validate(x, check_class = "apa_results_table")
   validate(in_paren, check_class = "logical")
 
