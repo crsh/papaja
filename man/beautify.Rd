@@ -16,6 +16,6 @@ beautify(x, standardized = FALSE, ...)
 \description{
 Internal function that takes an object created by \code{\link{canonize}} and
 applies proper rounding. Term names are beautified by removing parentheses and replacing
-colons with \code{$\times$}. Moreover, both rows and columns are sorted.
+colons with \code{$\\times$}. Moreover, both rows and columns are sorted.
 }
 \keyword{internal}

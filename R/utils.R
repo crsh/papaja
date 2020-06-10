@@ -382,7 +382,7 @@ canonize <- function(
 #'
 #' Internal function that takes an object created by \code{\link{canonize}} and
 #' applies proper rounding. Term names are beautified by removing parentheses and replacing
-#' colons with \code{$\times$}. Moreover, both rows and columns are sorted.
+#' colons with \code{$\\times$}. Moreover, both rows and columns are sorted.
 #'
 #' @param x An object created by \code{\link{canonize}}.
 #' @param standardized Logical. If TRUE the name of the function \code{scale} will be removed from term names.
