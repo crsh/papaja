@@ -91,8 +91,19 @@ test_that(
       , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.7269$, $9.5064]$, $t[17.00] = 3.06$, $p = .007$"
     )
 
-    fm1 <-lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
+    # Test reduction of (Days | Subject) to (1 | Subject):
+    data <- lme4::sleepstudy
+
+    fm1 <- lmerTest::lmer(Reaction ~ Days + (Days|Subject), data)
     ranova_out <- lmerTest::ranova(fm1)
+
+    # Also test reduction of two terms to single:
+    set.seed(12305L)
+    data$Days2 <- rnorm(nrow(data))
+    data$Reaction2 <- data$Reaction + data$Days2*(as.integer(data$Subject)-mean(as.integer(data$Subject)))
+    fm2 <- lmerTest::lmer(Reaction2 ~ Days + (Days + Days2|Subject), data)
+    lmerTest::ranova(fm2)
+
     expect_error(
       apa_print(ranova_out)
       , "Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support."
