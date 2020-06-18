@@ -287,9 +287,7 @@ end
 
 function Pandoc (document)
 
-  if document.meta.note ~= nil or document.meta.authornote ~= nil then
-    document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% papaja Lua-filter additions"))})
-  end
+  document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% papaja Lua-filter additions"))})
 
   if document.meta.note ~= nil then
     document.blocks:extend(make_latex_envir("note", document.meta.note))
@@ -321,9 +319,7 @@ function Pandoc (document)
     document.blocks:extend(make_latex_envir("affiliation", {pandoc.RawInline("latex", "\\phantom{0}")}))
   end
 
-  if document.meta.note ~= nil or document.meta.authornote ~= nil  or document.meta.affiliation ~= nil then
-    document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
-  end
+  document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
 
   if document.meta.author ~= nil then
     document.meta.author = pandoc.MetaInlines(create_authors_inlines(document.meta.author, "&", true))

@@ -117,18 +117,22 @@ apa6_pdf <- function(
     lua_addition_start <- which(grepl("^% papaja Lua-filter additions$", output_text))
     lua_addition_end <- which(grepl("^% End of papaja Lua-filter additions$", output_text))
 
-    if(length(lua_addition_start) > 0) {
+    if(lua_addition_end - lua_addition_start > 1) {
       header_additions <- output_text[c((lua_addition_start + 1):(lua_addition_end - 1))]
-      output_text <- output_text[-c((lua_addition_start + 1):(lua_addition_end - 1))]
+      output_text <- output_text[-c(lua_addition_start:lua_addition_end)]
+      begin_doc <- which(output_text == "\\begin{document}")
+      output_text <- c(
+        output_text[1:(begin_doc-1)]
+        , header_additions
+        , output_text[begin_doc:length(output_text)]
+      )
     }
     output_text <- paste(output_text, collapse = "\n")
-
 
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
       , paste0(
         "\\\\abstract{\\1}\n\n"
-        , if(length(lua_addition_start) > 0) paste(gsub("\\", "\\\\", header_additions, useBytes = TRUE, fixed = TRUE), collapse = "\n") else NULL
         , "\n\n\\\\begin\\{document\\}\n\\\\maketitle"
       )
       , output_text
