@@ -31,7 +31,7 @@ abstract: |
   to Word documents currently supports only a limited set of features.
   
 keywords          : "APA style, knitr, R, R markdown, papaja"
-wordcount         : "1,781"
+wordcount         : "1,753"
 
 bibliography      : ["references.bib", "r-references.bib"]
 
@@ -55,7 +55,7 @@ library("papaja")
 
 knitr::opts_chunk$set(echo = TRUE)
 
-load("../tests/testthat/data/mixed_data.rdata")
+load("../../tests/testthat/data/mixed_data.rdata")
 ```
 
 # What is papaja?
@@ -80,13 +80,13 @@ When you click RStudio's *Knit* button (see Figure\ \@ref(fig:knit)), `papaja`, 
 (ref:menu-caption) `papaja`'s APA6 template is available through the RStudio menus.
 
 ```{r menu, fig.cap = "(ref:menu-caption)", fig.align = "center", echo = FALSE}
-knitr::include_graphics("../inst/images/template_selection.png", dpi = 108)
+knitr::include_graphics("../images/template_selection.png", dpi = 108)
 ```
 
 (ref:knit-caption) The Knit button in the RStudio.
 
 ```{r knit, fig.cap = "(ref:knit-caption)", fig.align = "center", echo = FALSE}
-knitr::include_graphics("../inst/images/knitting.png", dpi = 108)
+knitr::include_graphics("../images/knitting.png", dpi = 108)
 ```
 
 
