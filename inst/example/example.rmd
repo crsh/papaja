@@ -8,7 +8,7 @@ author:
     corresponding : yes    # Define only one corresponding author
     address       : "Department Psychology, University of Cologne, Herbert-Lewin-Str. 2, 50931 Köln, Germany"
     email         : "frederik.aust@uni-koeln.de"
-    role:
+    role:   # List CRediT contributorship roles (https://casrai.org/credit/)
       - Conceptualization
       - Project Administration
       - Software
