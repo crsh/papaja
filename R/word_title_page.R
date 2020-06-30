@@ -34,9 +34,10 @@ word_title_page <- function(x) {
 
       author_note <- c(
         author_note
-        , paste(
-          "The authors made the following contributions."
+        , paste0(
+          "The authors made the following contributions. "
           , paste(contributions, collapse = "; ")
+          , "."
         )
       )
     }
