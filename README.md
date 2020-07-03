@@ -9,9 +9,9 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
 [![Build
 status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
 
-`papaja` is a R-package in the making including a [R
+`papaja` is an R package in the making including an [R
 Markdown](http://rmarkdown.rstudio.com/) template that can be used with
-(or without) [RStudio](http://www.rstudio.com/) to produce documents,
+(or without) [RStudio](http://www.rstudio.com/) to produce documents
 which conform to the American Psychological Association (APA) manuscript
 guidelines (6th Edition). The package uses the LaTeX document class
 [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you
@@ -29,9 +29,9 @@ issue](https://github.com/crsh/papaja/issues) on Github.**
 ## Examples
 
 Take a look at the
-[.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd)
+[.Rmd](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd)
 of the example manuscript in the folder `example` and the resulting
-[.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
+[.pdf](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions.
 
 ## Installation
@@ -39,7 +39,7 @@ The example document also contains some basic instructions.
 To use `papaja` you need either an up-to-date version of
 [RStudio](http://www.rstudio.com/) or
 [pandoc](http://johnmacfarlane.net/pandoc/). If you want to create PDF-
-in addition to DOCX-documents you additionally need and a
+in addition to DOCX-documents you additionally need a
 [TeX](http://de.wikipedia.org/wiki/TeX) distribution. If you have no use
 for TeX beyond rendering R Markdown documents, I recommend you use
 [TinyTex](https://yihui.name/tinytex/). TinyTex can be installed from
@@ -109,8 +109,7 @@ apa_lm <- apa_print(my_lm)
 One element of this list is `apa_lm$table` that, in the case of an
 `lm`-object, will contain a complete regression table. Pass
 `apa_lm$table` to `apa_table()` to turn it into a proper table in your
-PDF or Word document (remember to set the chunk option `results =
-"asis"`).
+PDF or Word document.
 
 ``` r
 apa_table(apa_lm$table, caption = "Iris regression table.")
@@ -136,13 +135,13 @@ classes:
 
 | A-B                            | B-L                           | L-S                       | S-Z                           |
 | :----------------------------- | :---------------------------- | :------------------------ | :---------------------------- |
-| afex\_aov                      | BFBayesFactorTop<sup>\*</sup> | lsmobj<sup>\*</sup>       | summary.glm                   |
-| anova                          | emmGrid<sup>\*</sup>          | manova                    | summary.lm                    |
-| Anova.mlm                      | glht<sup>\*</sup>             | summary\_emm<sup>\*</sup> | summary.manova                |
-| aov                            | glm                           | summary.Anova.mlm         | summary.ref.grid<sup>\*</sup> |
-| aovlist                        | htest                         | summary.aov               |                               |
-| BFBayesFactor<sup>\*</sup>     | list                          | summary.aovlist           |                               |
-| BFBayesFactorList<sup>\*</sup> | lm                            | summary.glht<sup>\*</sup> |                               |
+| afex\_aov                      | BFBayesFactorTop<sup>\*</sup> | lm                        | summary.glht<sup>\*</sup>     |
+| anova                          | default                       | lsmobj<sup>\*</sup>       | summary.glm                   |
+| Anova.mlm                      | emmGrid<sup>\*</sup>          | manova                    | summary.lm                    |
+| aov                            | glht<sup>\*</sup>             | summary\_emm<sup>\*</sup> | summary.ref.grid<sup>\*</sup> |
+| aovlist                        | glm                           | summary.Anova.mlm         |                               |
+| BFBayesFactor<sup>\*</sup>     | htest                         | summary.aov               |                               |
+| BFBayesFactorList<sup>\*</sup> | list                          | summary.aovlist           |                               |
 
 \* Not fully tested, don’t trust blindly\!
 
@@ -188,6 +187,15 @@ rmarkdown::draft(
 # Render manuscript
 rmarkdown::render("mymanuscript.Rmd")
 ```
+
+### Using papaja with CodeOcean
+
+Seth Green
+((<span class="citeproc-not-found" data-reference-id="setgree">**???**</span>))
+has kindly prepared a [minimal `papaja` example
+capsule](https://codeocean.com/capsule/8183533/). If you want to use
+`papaja` in your next CodeOcean project you can use this capsule as a
+starting point.
 
 ## Getting help
 
@@ -263,6 +271,14 @@ process-dissociation procedure are violated in implicit sequence
 learning. *Journal of Experimental Psychology: Learning, Memory, and
 Cognition*. <https://doi.org/10/gdxv8m> (R Markdown and data files:
 https://github.com/methexp/pdl2)
+
+</div>
+
+<div id="ref-bartlett_no_2020">
+
+Bartlett, J. E. (2020). No Difference in Trait-Level Attentional Bias
+Between Daily and Non-Daily Smokers. *PsyArXiv*.
+<https://doi.org/10/gg2c8f> (R Markdown and data files: osf.io/am9hd/)
 
 </div>
 
@@ -377,6 +393,16 @@ Matter with Regard to the Mental Simulation of Object Orientation?
 
 </div>
 
+<div id="ref-conigrave2020drinking">
+
+Conigrave, J. H., Lee, K. K., Zheng, C., Wilson, S., Perry, J.,
+Chikritzhs, T., … others. (2020). Drinking risk varies within and
+between Australian Aboriginal and Torres Strait Islander samples: A
+meta-analysis to identify sources of heterogeneity. *Addiction*.
+<https://doi.org/10/ggsk3n>
+
+</div>
+
 <div id="ref-craddock_transcranial_2018">
 
 Craddock, M., Klepousniotou, E., El-Deredy, W., Poliakoff, E., & Lloyd,
@@ -403,6 +429,17 @@ data files: https://github.com/tomfaulkenberry/twodigittaskmanip)
 
 </div>
 
+<div id="ref-field_maternal_2020">
+
+Field, A. P., Lester, K. J., Cartwright-Hatton, S., Harold, G. T., Shaw,
+D. S., Natsuaki, M. N., … Leve, L. D. (2020). Maternal and paternal
+influences on childhood anxiety symptoms: A genetically sensitive
+comparison. *Journal of Applied Developmental Psychology*, *68*, 101123.
+<https://doi.org/10/ggq38c> (R Markdown and data files:
+https://osf.io/zgcg2/)
+
+</div>
+
 <div id="ref-flygare_adapted_2018">
 
 Flygare, O., Andersson, E., Ringberg, H., Hellstadius, A.-C., Edbacken,
@@ -411,6 +448,15 @@ for obsessive compulsive disorder with co-occuring autism spectrum
 disorder: A clinical effectiveness study. *PsyArXiv*.
 <https://doi.org/10/gffjrb> (R Markdown and data files:
 https://osf.io/gj87z/)
+
+</div>
+
+<div id="ref-garrison_familiarity_2020">
+
+Garrison, H., Baudet, G., Breitfeld, E., Aberman, A., & Bergelson, E.
+(2020). Familiarity plays a small role in noun comprehension at 12-18
+months. *Infancy*. <https://doi.org/10/ggsnm2> (R Markdown and data
+files: https://osf.io/pb2g6/)
 
 </div>
 
@@ -476,6 +522,15 @@ of behavior change interventions: A brief introduction and a practical
 example. *Health Psychology and Behavioral Medicine*, *6*(1), 49–78.
 <https://doi.org/10.1080/21642850.2018.1428102> (R Markdown and data
 files: https://github.com/heinonmatti/baseline-visu)
+
+</div>
+
+<div id="ref-henderson_effect_2019">
+
+Henderson, E. L., Vall’ee-Tourangeau, F., & Simons, D. J. (2019). The
+Effect of Concrete Wording on Truth Judgements: A Preregistered
+Replication and Extension of Hansen & Wänke (2010). *Collabra:
+Psychology*, *5*. <https://doi.org/10/gf9h3x>
 
 </div>
 
@@ -626,6 +681,25 @@ https://osf.io/ikvyr/)
 
 </div>
 
+<div id="ref-nalborczyk_introduction_2019">
+
+Nalborczyk, L., Batailler, C., Lœvenbruck, H., Vilain, A., & Bürkner,
+P.-C. (2019). An Introduction to Bayesian Multilevel Models Using brms:
+A Case Study of Gender Effects on Vowel Variability in Standard
+Indonesian. *Journal of Speech, Language, and Hearing Research*,
+*62*(5), 1225–1242. <https://doi.org/10.1044/2018_JSLHR-S-18-0006> (R
+Markdown and data files: https://osf.io/dpzcb/)
+
+</div>
+
+<div id="ref-navarro_if_2020">
+
+Navarro, D. (2020). If mathematical psychology did not exist we might
+need to invent it: A comment on theory building in psychology.
+*PsyArXiv*. <https://doi.org/10.31234/osf.io/ygbjp>
+
+</div>
+
 <div id="ref-papenberg_sequentially_2017">
 
 Papenberg, M., Willing, S., & Musch, J. (2017). Sequentially presented
@@ -708,6 +782,15 @@ Monographs*, *85*(1), 41–56.
 
 </div>
 
+<div id="ref-samaey_individual_2020">
+
+Samaey, C., Wagemans, J., & Moors, P. (2020). Individual differences in
+processing orientation and proximity as emergent features. *Vision
+Research*, *169*, 12–24. <https://doi.org/10/ggnc6w> (R Markdown and
+data files: https://osf.io/vgxja/)
+
+</div>
+
 <div id="ref-sauer_observation_2017">
 
 Sauer, S. (2017). Observation oriented modeling revised from a
@@ -723,6 +806,15 @@ Stahl, C., Barth, M., & Haider, H. (2015). Distorted estimates of
 implicit and explicit learning in applications of the
 process-dissociation procedure to the SRT task. *Consciousness and
 Cognition*, *37*, 27–43. <https://doi.org/10.1016/j.concog.2015.08.003>
+
+</div>
+
+<div id="ref-stahl_evaluative_2020">
+
+Stahl, C., & Corneille, O. (2020). Evaluative conditioning in the
+Surveillance paradigm is moderated by awareness exclusion criteria.
+*PsyArXiv*. <https://doi.org/10.31234/osf.io/3xsbu> (R Markdown and data
+files: https://osf.io/qs35v)
 
 </div>
 
@@ -797,6 +889,14 @@ Research Methods*, 109442811984263. <https://doi.org/10/gf3vbj>
 
 </div>
 
+<div id="ref-zhang_wandering_2020">
+
+Zhang, H., Miller, K. F., Sun, X., & Cortina, K. S. (2020). Wandering
+eyes: Eye movements during mind wandering in video lectures. *Applied
+Cognitive Psychology*, acp.3632. <https://doi.org/10/ggjvfp>
+
+</div>
+
 <div id="ref-zhang_missing_2019">
 
 Zhang, H., Qu, C., Miller, K. F., & Cortina, K. S. (2019). Missing the
@@ -855,6 +955,4 @@ packages and templates may be helpful.
 If you know of other packages and templates, drop us a note, so we can
 add them here.
 
-# Package dependencies
-
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+<!-- # Package dependencies -->

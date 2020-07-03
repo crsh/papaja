@@ -18,7 +18,7 @@ Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
   
 
 ## Examples
-Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
+Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions.
 
 
@@ -209,9 +209,9 @@ If you are looking for other journal article templates, the following list of `r
 If you know of other packages and templates, drop us a note, so we can add them here.
 
 
-# Package dependencies
+<!-- # Package dependencies -->
 
-```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
 source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/f6f0fce38bc274446d205854ea35cfa03b9b1f7a/plot_dependencies.R")
 
 plot_dependencies()

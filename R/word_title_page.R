@@ -24,10 +24,26 @@ word_title_page <- function(x) {
     affiliations <- paste_affiliations(x$affiliation, format = "word")
 
     ## Assemble author note
-    corresponding_author <- x$author[which(unlist(lapply(lapply(x$author, "[[", "corresponding"), isTRUE)))]
-
     if(!is.null(x$author_note)) author_note <- x$author_note
     if(!is.null(x$authornote)) author_note <- x$authornote
+
+    contributors <- x$author[unlist(lapply(x$author, function(y) length(y$role) > 0))]
+
+    if(length(contributors) > 0) {
+      contributions <- unlist(lapply(contributors, function(x) paste0(x$name, ": ", paste(x$role, collapse = ", "))))
+
+      author_note <- c(
+        author_note
+        , paste0(
+          "The authors made the following contributions. "
+          , paste(contributions, collapse = "; ")
+          , "."
+        )
+      )
+    }
+
+    corresponding_author <- x$author[which(unlist(lapply(lapply(x$author, "[[", "corresponding"), isTRUE)))]
+
     if(length(corresponding_author) > 0) author_note <- c(author_note, corresponding_author_line(corresponding_author[[1]]))
 
     if(length(author_note) > 0) {
