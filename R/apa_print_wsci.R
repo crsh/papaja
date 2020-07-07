@@ -1,4 +1,12 @@
-
+#' Format Within-Subjects Confidence Intervals (APA 6th edition)
+#'
+#' This method takes an output object from \code{\link{wsci}} and creates a table
+#' and character strings to report means and within-subjects confidence intervals
+#' in a table or in text.
+#'
+#' @param x An object of class \code{papaja_wsci}.
+#' @param ... Arguments passed on to \code{\link{printnum}}
+#'
 #' @method apa_print papaja_wsci
 #' @export
 
@@ -17,6 +25,7 @@ apa_print.papaja_wsci <- function(x, ...) {
         print_confint(
           x = summary_wsci[, c("lower_limit", "upper_limit")]
           , conf_level = attr(x, "Confidence level")
+          , ...
       )
     )
   )
@@ -34,11 +43,12 @@ apa_print.papaja_wsci <- function(x, ...) {
   # res$full_result <- res$estimate
 
   res$table <- summary_wsci[, factors, drop = FALSE]
-  res$table$estimate <- printnum(summary_wsci$mean)
+  res$table$estimate <- printnum(summary_wsci$mean, ...)
   res$table$conf.int <- unlist(
     print_interval(
       summary_wsci[, c("lower_limit", "upper_limit"), drop = FALSE]
       , interval_type = NA # suppresses leading NA% CI
+      , ...
     )
   )
 
