@@ -9,6 +9,7 @@ Authors@R: c(
     , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("aut"), comment = c(ORCID = "0000-0002-3421-6665"))
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
+    , person("Joseph V.", "Casillas", email = "joseph.casillas@rutgers.edu", role = c("ctb"))
   )
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
