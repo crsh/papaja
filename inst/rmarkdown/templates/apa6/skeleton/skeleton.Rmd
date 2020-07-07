@@ -8,8 +8,14 @@ author:
     corresponding : yes    # Define only one corresponding author
     address       : "Postal address"
     email         : "my@email.com"
+    role:         # Contributorship roles (e.g. CRediT, https://casrai.org/credit/)
+      - Conceptualization
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
   - name          : "Ernst-August Doelle"
     affiliation   : "1,2"
+    role:
+      - Writing - Review & Editing
 
 affiliation:
   - id            : "1"
