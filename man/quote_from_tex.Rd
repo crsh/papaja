@@ -15,5 +15,7 @@ quote_from_tex(x, file)
 Includes a labelled quote from a LaTeX document 'asis'.
 }
 \details{
-
+Searches the LaTeX document for a labelled quotes preceeded and
+  followed by \code{\% <@~{#quote-label}} and \code{\% ~@>} tags in LaTeX
+  comments
 }

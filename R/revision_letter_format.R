@@ -92,7 +92,7 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #' @param file Character. Path to LaTeX file from which to quote.
 #'
 #' @details Searches the LaTeX document for a labelled quotes preceeded and
-#'   followed by \code{% <@~{#quote-label}} and \code{% ~@>} tags in LaTeX
+#'   followed by \code{\% <@~{#quote-label}} and \code{\% ~@>} tags in LaTeX
 #'   comments
 #'
 #' @export
