@@ -62,7 +62,7 @@ Once `papaja` is installed, you can select the APA template when creating a new 
 If you want to add citations specify your BibTeX-file in the YAML front matter of the document (`bibliography: my.bib`) and you can start citing. If necessary, have a look at R Markdown's [overview of the citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html). You may also be interested in [citr](https://github.com/crsh/citr), an R Studio addin to swiftly insert Markdown citations.
 
 ### Helper functions to report analyses
-The functions `apa_print()` and `apa_table()` facilitate reporting results of your analyses. Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
+The functions `apa_print()` and `apa_table()` facilitate reporting results of your analyses. Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 
 Drop a supported analysis result, such as an `htest`- or `lm`-object, into `apa_print()` and receive a list of possible character strings that you can use to report the results of your analysis.
 

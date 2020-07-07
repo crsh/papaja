@@ -93,11 +93,7 @@ Studio addin to swiftly insert Markdown citations.
 
 ### Helper functions to report analyses
 
-The functions `apa_print()` and `apa_table()` facilitate reporting
-results of your analyses. Take a look at the
-[.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd)
-of the example manuscript in the folder `example` and the resulting
-[.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
+The functions `apa_print()` and `apa_table()` facilitate reporting results of your analyses. Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 
 Drop a supported analysis result, such as an `htest`- or `lm`-object,
 into `apa_print()` and receive a list of possible character strings that
