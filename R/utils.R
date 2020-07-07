@@ -214,7 +214,7 @@ print_interval <- function(
   , ...
 ) {
   sapply(x, validate, check_class = "numeric", check_infinite = FALSE)
-  validate(interval_type, check_class = "character", check_length = 1)
+  validate(interval_type, check_class = "character", check_length = 1, check_NA = FALSE)
 
   if(is.data.frame(x)) x <- as.matrix(x)
   ci <- printnum(x, use_math = use_math, ...)
@@ -243,6 +243,7 @@ print_interval <- function(
       conf_level <- 100 - conf_level[1] * 2
       conf_level <- paste0(conf_level, "\\% CI ")
     }
+    if(is.na(interval_type)) conf_level <- NULL
 
     apa_ci <- list()
     for(i in 1:length(terms)) {
