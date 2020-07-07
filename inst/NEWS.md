@@ -1,7 +1,17 @@
-
-# papaja (UPCOMING)
+# papaja 0.1.0.9997
 
 ### Template
+
+- New author metadata field `role` automatically adds contributor ship roles (e.g. CRedit, https://casrai.org/credit/) to the author note. #375
+- `apa6_pdf()`
+    - Now relies on a Lua-filter to process metadata, which should resolve many encoding related problems (e.g., reported by @arcaldwell49, @dcbrh, and @DominiqueMakowski among others; #350, #357, #360)
+    - Numbering of title is now disabled when `numbersections: true`
+- `apa6_docx()`
+    - Minor improvements to typesetting (e.g., capitalize running head)
+    - `docx_fixes.lua` now tolerates missing figure captions (reported by @jvcasillas, #365)
+- `revision_letter_pdf()`
+    - Defaults to APA6 citation style (also see #369 by @jvcasillas)
+    - Adds word count filter
 
 ### Existing functions
 
@@ -29,8 +39,18 @@
 - `summary.papaja_wsci()`
     - Experimental: Returns means and confidence limits calculated from the output
       of `wsci()` (suggested by @jstevens5, #362)
+- `apa_print.papaja_wsci()`
+- `quote_from_tex()`
+- `remove_comments()`
 
 
+### Misc
+
+- `papaja` now depends on
+    - `R` >= 3.6
+    - `pandoc` >= 2.0
+    - `rmdfiltr` (>= 0.1.2) explicitly
+- New `label_quotes.lua` filter to insert excerpts in revision letter; also see `quote_from_tex()`
 
 # papaja 0.1.0.9942
 

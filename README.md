@@ -19,7 +19,8 @@ can create PDF documents, or Word documents if you have to. Moreover,
 `papaja` supplies R-functions that facilitate reporting results of your
 analyses in accordance with APA guidelines.
 
-Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
+If you are looking for an in-depth introduction to `papaja`, check out
+the current draft of the [manual](https://crsh.github.io/papaja_man/).
 
 **`papaja` is in active development and should be considered alpha. If
 you experience any problems, ask a question on Stack Overflow [using the
@@ -28,11 +29,13 @@ issue](https://github.com/crsh/papaja/issues) on Github.**
 
 ## Examples
 
-Take a look at the
-[.Rmd](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd)
+Take a look at the [R
+Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd)
 of the example manuscript in the folder `example` and the resulting
-[.pdf](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
-The example document also contains some basic instructions.
+[PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
+The example document also contains some basic instructions. For an
+in-depth introduction to `papaja`, check out the current draft of the
+[manual](https://crsh.github.io/papaja_man/).
 
 ## Installation
 
@@ -190,16 +193,16 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ### Using papaja with CodeOcean
 
-Seth Green
-((<span class="citeproc-not-found" data-reference-id="setgree">**???**</span>))
-has kindly prepared a [minimal `papaja` example
+Seth Gree has kindly prepared a [minimal `papaja` example
 capsule](https://codeocean.com/capsule/8183533/). If you want to use
 `papaja` in your next CodeOcean project you can use this capsule as a
 starting point.
 
 ## Getting help
 
-If you have questions related to the use of `papaja`
+For an in-depth introduction to `papaja`, check out the current draft of
+the [manual](https://crsh.github.io/papaja_man/). If you have questions
+related to the use of `papaja` that are not answered in the manual,
 [StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a
 [`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is
 a great place to get answers. If you think you have found a bug, please
@@ -751,6 +754,15 @@ Rouder, J., & Haaf, J. M. (2018). A Psychometrics of Individual
 Differences in Experimental Tasks. *PsyArXiv*.
 <https://doi.org/10/gfdbw2> (R Markdown and data files:
 https://github.com/perceptionandcognitionlab/ctx-reliability)
+
+</div>
+
+<div id="ref-rouder_optional_2019">
+
+Rouder, J., & Haaf, J. M. (2019). Optional Stopping and the
+Interpretation of The Bayes Factor. *PsyArXiv*.
+<https://doi.org/10.31234/osf.io/m6dhw> (R Markdown and data files:
+https://osf.io/uv456/)
 
 </div>
 

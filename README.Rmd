@@ -160,7 +160,7 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ### Using papaja with CodeOcean
 
-Seth Green (@setgree) has kindly prepared a [minimal `papaja` example capsule](https://codeocean.com/capsule/8183533/).
+Seth Green has kindly prepared a [minimal `papaja` example capsule](https://codeocean.com/capsule/8183533/).
 If you want to use `papaja` in your next CodeOcean project you can use this capsule as a starting point.
 
 
