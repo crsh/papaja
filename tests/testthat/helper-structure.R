@@ -21,29 +21,17 @@ expect_apa_results <- function(
 
   # estimate ----
   if (!is.null(object$est)) {
-    if(is.list(object$est)) {
-      lapply(X = object$est, FUN = expect_type, "character")
-    } else {
-      expect_type(object$est, "character")
-    }
+    lapply(X = object$est, FUN = expect_type, "character")
   }
 
   # statistic ----
   if (!is.null(object$stat)) {
-    if(is.list(object$stat)) {
-      lapply(X = object$stat, FUN = expect_type, "character")
-    } else {
-      expect_type(object$stat, "character")
-    }
+    lapply(X = object$stat, FUN = expect_type, "character")
   }
 
   # full_result ----
   if (!is.null(object$full)) {
-    if(is.list(object$full)) {
-      lapply(X = object$full, FUN = expect_type, "character")
-    } else {
-      expect_type(object$full, "character")
-    }
+    lapply(X = object$full, FUN = expect_type, "character")
   }
 
   # table ----
