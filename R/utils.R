@@ -217,164 +217,22 @@ canonize <- function(
   # print(conf_label)
   colnames(x) <- make.names(colnames(x))
 
-  # use canonical colnames ----
-  renamers <- c(
-    # nuisance parameters
-    "Sum.Sq"    = "sumsq"
-    , "Mean.Sq" = "meansq"
-    , "logLik"  = "loglik"
-    , "AIC"     = "AIC"
-    , "BIC"     = "BIC"
-    , "npar"    = "n.parameters"
-    # term
-    , "Effect"  = "term"
-    , "Term"    = "term"
-    # estimate
-    , "estimate"                = "estimate"
-    , "mean.of.the.differences" = "estimate"
-    , "cor"                     = "estimate"
-    , "rho"                     = "estimate"
-    , "tau"                     = "estimate"
-    , "mean.of.x"               = "estimate"
-    , "X.pseudo.median"         = "estimate"
-    , "mean.of.the.differences" = "estimate"
-    , "difference.in.location"  = "estimate"
-    , "difference.in.means"     = "estimate"
-    , "coefficients"            = "estimate"
-    # ----
-    , "conf.int" = "conf.int"
-    , "stderr"   = "std.error"
-    , "std.err"  = "std.error"
-    , "sigma"    = "std.error"
-    # multivariate.statistic
-    , "Pillai"    = "multivariate.statistic"
-    , "Wilks"     = "multivariate.statistic"
-    , "Roy"       = "multivariate.statistic"
-    , "Hotelling.Lawley" = "multivariate.statistic"
-    # statistic
-    , "t"         = "statistic"
-    , "tstat"     = "statistic"
-    , "statistic" = "statistic"
-    , "approx.F"  = "statistic"
-    , "F value"   = "statistic"
-    , "F"         = "statistic"
-    , "LRT"       = "statistic"
-    , "Chisq"     = "statistic"
-    , "chisq"     = "statistic"
-    , "X.squared" = "statistic"
-    , "V"         = "statistic"
-    , "W"         = "statistic"
-    , "S"         = "statistic"
-    , "T"         = "statistic"
-    , "z"         = "statistic"
-    , "Bartlett.s.K.2"          = "statistic"
-    , "Bartlett.s.K.squared"    = "statistic"
-    # df, df1, df2
-    , "multivariate.df1" = "multivariate.df1"
-    , "multivariate.df2" = "multivariate.df2"
-    , "parameter"  = "df"
-    , "df"         = "df"
-    , "Df"         = "df"
-    , "Chi.Df"     = "df"
-    , "parameter1" = "df1"
-    , "parameter2" = "df2"
-    , "num.Df"     = "df1"
-    , "den.Df"     = "df2"
-    , "NumDF"      = "df1"
-    , "DenDF"      = "df2"
-    , "parameter.num.df"   = "df1"
-    , "parameter.denom.df" = "df2"
-    # p.value
-    , "p.value"    = "p.value"
-    , "Pr..Chisq." = "p.value"
-    , "Pr..F."     = "p.value"
-    , "Pr..PB."    = "p.value"
-    , "pvalues"    = "p.value"
-  )
-
-
   new_labels <- c(
-    # nuisance parameters
-    "Sum.Sq"    = "$\\mathit{SS}$"
-    , "Mean.Sq" = "$\\mathit{MS}$"
-    , "logLik"  = "$\\ln L$"
-    , "AIC"     = "$\\mathit{AIC}$"
-    , "BIC"     = "$\\mathit{BIC}$"
-    , "npar"    = "$k$"
-    # term
-    , "Effect"   = "Effect"
-    , "Term"     = "Term"
-    # estimate
-    , "estimate"                = est_label
-    , "coefficients"            = est_label
-    , "cor"                     = "$r$"
-    , "rho"                     = "$r_{\\mathrm{s}}$" # capital or small S???
-    , "tau"                     = "$\\uptau$"
-    , "mean.of.x"               = "$M$"
-    , "X.pseudo.median"         = "$\\mathit{Mdn}^*$"
-    , "mean.of.the.differences" = "$M_d$"
-    , "difference.in.location"  = "$\\mathit{Mdn}_d$"
-    , "difference.in.means"     = "$\\Delta M$"
-    # conf.int
-    , conf.int = conf_label
-    # standard error
-    , "stderr"   = "$\\mathit{SE}$"
-    , "std.err"  = "$\\mathit{SE}$"
-    , "sigma"    = "$\\mathit{SE}$"
-    # multivariate.statistic
-    , "Pillai"           = "$V$"
-    , "Wilks"            = "$\\Lambda$"
-    , "Hotelling.Lawley" = "$T$"
-    , "Roy"              = "$\\theta$"
-    # statistic
-    , "statistic" = stat_label
-    , "t"         = "$t$"
-    , "tstat"     = "$t$"
-    , "F.value"   = "$F$"
-    , "F"         = "$F$"
-    , "approx.F"  = "$F$"
-    , "LRT"       = "$\\chi^2$"
-    , "chisq"     = "$\\chi^2$"
-    , "Chisq"     = "$\\chi^2$"
-    , "X.squared" = "$\\chi^2$"
-    , "W"                       = "$W$"
-    , "V"                       = "$V$"
-    , "S"                       = "$S$"
-    , "T"                       = "$T$"
-    , "z"                       = "$z$"
-    , "Bartlett.s.K.2"          = "$K^2$"
-    , "Bartlett.s.K.squared"    = "$K^2$"
-    # df, df1, df2
-    , "multivariate.df1" = "$\\mathit{df}_1$"
-    , "multivariate.df1" = "$\\mathit{df}_1$"
-    , "parameter" = "$\\mathit{df}$"
-    , "df"        = "$\\mathit{df}$"
-    , "Df"        = "$\\mathit{df}$"
-    , "Chi.Df"    = "$\\mathit{df}$"
-    , "num.Df"    = "$\\mathit{df}_1$"
-    , "den.Df"    = "$\\mathit{df}_2$"
-    , "NumDF"     = "$\\mathit{df}_1$"
-    , "DenDF"     = "$\\mathit{df}_2$"
-    , "parameter.num.df"   = "$\\mathit{df}_1$"
-    , "parameter.denom.df" = "$\\mathit{df}_2$"
-    # p.value
-    , "p.value"    = "$p$"
-    , "Pr..Chisq." = "$p$"
-    , "Pr..F."     = "$p$"
-    , "Pr..PB."    = "$p$"
-    , "pvalues"    = "$p$"
+    lookup_labels
+    , "estimate"     = est_label
+    , "coefficients" = est_label
+    , "conf.int"     = conf_label
+    , "statistic"    = stat_label
   )
 
+  names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
-
-  names_in_renamers <- colnames(x) %in% names(renamers)
-
-  if(!all(names_in_renamers)) {
-    warning("Some columns could not be renamed.", colnames(x)[!names_in_renamers])
+  if(!all(names_in_lookup_names)) {
+    warning("Some columns could not be renamed.", colnames(x)[!names_in_lookup_names])
   }
 
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
-  colnames(x)[names_in_renamers] <- renamers[colnames(x)[names_in_renamers]]
+  colnames(x)[names_in_lookup_names] <- lookup_names[colnames(x)[names_in_lookup_names]]
   x
 }
 
