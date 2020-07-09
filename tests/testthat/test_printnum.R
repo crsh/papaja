@@ -267,5 +267,6 @@ test_that(
     expect_error(printp(1, na_string = NA), "The parameter 'na_string' is NA.")
     expect_error(printp(1, na_string = letters[1:2]), "The parameter 'na_string' must be of length 1.")
     expect_error(printp(1, na_string = 3), "The parameter 'na_string' must be of class 'character'.")
+    expect_error(papaja:::print_df(npk$yield, digits = c(3, 2)), "The parameter `digits` must be of length 1 or equal to length of `x`.")
   }
 )

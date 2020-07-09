@@ -396,6 +396,12 @@ print_df <- function(x, digits = 2L) {
   if(is.null(x))    return(NULL)
   if(is.integer(x)) return(printnum(x))
 
+  validate(digits, check_class = "numeric", check_NA = TRUE)
+
+  if(length(digits) != 1L && length(x) != length(digits)) {
+    stop("The parameter `digits` must be of length 1 or equal to length of `x`.")
+  }
+
   x_digits <- ifelse(
     is.finite(x)
     , as.integer(x %% 1 > 0) * digits
