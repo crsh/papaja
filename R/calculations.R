@@ -5,7 +5,7 @@
 # x: apa_model_comp object
 # models: list of lm-objects
 
-delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
+delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...) {
   if(!package_available("boot")) stop("Please install the package 'boot' to calculate bootstrap confidence intervals.")
 
   validate(x, check_class = "data.frame")
@@ -15,6 +15,12 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
   model_summaries <- lapply(models, summary)
   r2s <- sapply(model_summaries, function(x) x$r.squared)
   delta_r2s <- diff(r2s)
+
+  if(progress_bar) {
+    cat("Calculating confidence intervals for differences in R-squared based on", R, "bootstrap samples.\n")
+    pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3)
+    count <- -length(delta_r2s) # seems to be evaluated once more than R
+  }
 
   percent_cis <- lapply(seq_along(delta_r2s), function(y) {
 
@@ -29,12 +35,19 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
         calls[[2]]$data <- bdata
         mod2 <- eval(calls[[2]])
 
+        if(progress_bar) {
+          count <<- count + 1L
+          black_hole <- utils::setTxtProgressBar(pb, value = count)
+          # print(count)
+          # print(i)
+        }
         summary(mod2)$r.squared - summary(mod1)$r.squared
       }
       , calls = list(model_summaries[[y]]$call, model_summaries[[y + 1]]$call)
       , R = R
       , ...
     )
+
 
     boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = ci, type = "perc")
 
@@ -46,6 +59,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 
     boot_r2_ci
   })
+  if(progress_bar) close(pb) # generic is from base R
 
   percent_cis <- t(cbind(sapply(percent_cis, function(x) x$percent))) # Reformat to one CI per line
   percent_cis <- percent_cis[, 4:5, drop = FALSE] # Preserv matrix structure
@@ -250,6 +264,7 @@ summary.papaja_wsci <- function(object, ...) {
   y$lower_limit <- y$mean - y$ci_diff
   y$upper_limit <- y$mean + y$ci_diff
   y$ci_diff <- NULL
+  variable_labels(y) <- unlist(variable_labels(means))
   y
 }
 

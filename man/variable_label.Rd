@@ -36,11 +36,11 @@ label_variables(x, ...)
 \arguments{
 \item{x}{Either a vector or a \code{data.frame}.}
 
-\item{...}{Further arguments that can be passes to methods.}
+\item{...}{Further arguments that can be passed to methods.}
 
 \item{value}{Character. The variable label(s) to be assigned. If \code{variable_label} is applied to a single vector,
 this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector.
-Check the examples for details.}
+Check the examples for details. If value is \code{NULL}, the variable label is removed from the object.}
 }
 \description{
 Assign or extract variable labels of a \code{vector} \emph{or}

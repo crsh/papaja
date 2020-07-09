@@ -5,7 +5,6 @@
 #' @param x Character. Path to R Markdown file
 #' @param file Character. Name of the new R Markdown file without comments.
 #'
-#' @return
 #' @export
 
 remove_comments <- function(x, file) {

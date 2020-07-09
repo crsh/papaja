@@ -16,3 +16,5 @@ Thumbs.db
 example/example_files
 example/example.tex
 inst/doc
+
+.vscode/tasks.json

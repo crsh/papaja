@@ -1,5 +1,5 @@
 ---
-title             : "How to use papaja: An Example Manuscript Including Basic Instructions"
+title             : "How to use `papaja`: An Example Manuscript Including Basic Instructions"
 shorttitle        : "How to use papaja"
 
 author: 
@@ -8,11 +8,20 @@ author:
     corresponding : yes    # Define only one corresponding author
     address       : "Department Psychology, University of Cologne, Herbert-Lewin-Str. 2, 50931 Köln, Germany"
     email         : "frederik.aust@uni-koeln.de"
+    role:   # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
+      - Conceptualization
+      - Project Administration
+      - Software
+      - Supervision
+      - Validation
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
+
 affiliation       :
   - id            : "1"
     institution   : "University of Cologne"
 
-author_note: |
+authornote: |
   `papaja` has not yet been submitted to CRAN; a development version is available at https://github.com/crsh/papaja.
 
 abstract: |
@@ -21,8 +30,8 @@ abstract: |
   uses pandoc to turn Markdown into PDF or Word documents. The conversion
   to Word documents currently supports only a limited set of features.
   
-keywords: "APA style, knitr, R, R markdown, papaja"
-wordcount: "Too lazy to count"
+keywords          : "APA style, knitr, R, R markdown, papaja"
+wordcount         : "1,753"
 
 bibliography      : ["references.bib", "r-references.bib"]
 
@@ -39,15 +48,18 @@ classoption       : "man"
 output            : papaja::apa6_pdf # Use papaja::apa6_docx for Word documents
 ---
 
-```{r message = FALSE, warning = FALSE}
+```{r include = FALSE}
 library("dplyr")
 library("afex")
 library("papaja")
 
-load("../tests/testthat/data/mixed_data.rdata")
+knitr::opts_chunk$set(echo = TRUE)
+
+load("../../tests/testthat/data/mixed_data.rdata")
 ```
 
 # What is papaja?
+
 Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility in science.
 For *R* users, R Markdown has been suggested as one possible framework for reproducible analyses.
 `papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
@@ -61,35 +73,48 @@ I use [RStudio](http://www.rstudio.com/) to create my documents, but the general
 
 
 # How to use papaja
+
 Once you have installed `papaja` and all other [required software](https://github.com/crsh/papaja#requirements), you can select the APA template when creating a new R Markdown file through the RStudio menus, see Figure\ \@ref(fig:menu).
 When you click RStudio's *Knit* button (see Figure\ \@ref(fig:knit)), `papaja`, `bookdown`, `rmarkdown,` and `knitr` work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
 
-```{r menu, fig.cap = "papaja's APA6 template is available through the RStudio menues.", fig.align = "center"}
-knitr::include_graphics("../inst/images/template_selection.png", dpi = 108)
+(ref:menu-caption) `papaja`'s APA6 template is available through the RStudio menus.
+
+```{r menu, fig.cap = "(ref:menu-caption)", fig.align = "center", echo = FALSE}
+knitr::include_graphics("../images/template_selection.png", dpi = 108)
 ```
 
-```{r knit, fig.cap = "The Knit button in the RStudio.", fig.align = "center"}
-knitr::include_graphics("../inst/images/knitting.png", dpi = 108)
+(ref:knit-caption) The Knit button in the RStudio.
+
+```{r knit, fig.cap = "(ref:knit-caption)", fig.align = "center", echo = FALSE}
+knitr::include_graphics("../images/knitting.png", dpi = 108)
 ```
+
 
 ## Printing R output
+
 Any output from R is included as you usually would using R Markdown.
 By default the R code will not be displayed in the final documents.
 If you wish to show off your code you need to set `echo = TRUE` in the chunk options.
 For example, to include summary statistics of your data you could use the following code:
 
-```{r echo = FALSE, results = 'markup'}
+```{r}
 summary(mixed_data[, -1])
 ```
 
 But, surely, this is not what you want your submission to look like.
 
-### Print tables
-For prettier tables, I suggest you try `apa_table()`, which builds on `knitr`'s `kable()`, and `printnum()`, which can be used to properly round and report numbers.
-For the table to display correctly set the chunk option `results = "asis"` in the chunk that produces the table.
 
-```{r results = 'asis', echo = FALSE}
-descriptives <- mixed_data %>% group_by(Dosage) %>%
+### Print tables
+
+For prettier tables, I suggest you try `apa_table()`, which builds on `knitr`'s `kable()`, and `printnum()`, which can be used to properly round and report numbers.
+
+(ref:descriptives-caption) Descriptive statistics of correct recall by dosage.
+
+(ref:descriptives-note) This table was created with `apa_table()`.
+
+```{r descriptives}
+descriptives <- mixed_data %>%
+  group_by(Dosage) %>%
   summarize(
     Mean = mean(Recall)
     , Median = median(Recall)
@@ -101,8 +126,8 @@ descriptives[, -1] <- printnum(descriptives[, -1])
 
 apa_table(
   descriptives
-  , caption = "Descriptive statistics of correct recall by dosage."
-  , note = "This table was created with apa_table()"
+  , caption = "(ref:descriptives-caption)"
+  , note = "(ref:descriptives-note)"
 )
 ```
 
@@ -120,10 +145,14 @@ To place tables and figures in your text instead, set the `figsintext` parameter
 The bottom line is, Word documents will be less polished than PDF.
 The resulting documents should suffice to enable collaboration with Wordy colleagues and prepare a journal submission with limited manual labor.
 
+
 ### Embed plots
+
 As usual in R Markdown, you can embed R-generated plots into your document, see Figure\ \@ref(fig:beeplot).
 
-```{r beeplot, fig.cap = "Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals.", echo = FALSE, dev.args = list(bg = 'white')}
+(ref:beeplot-caption) Bee plot of the example data set. Small points represent individual observations, large points represent means, and error bars represent 95% confidence intervals.
+
+```{r beeplot, fig.cap = "(ref:beeplot-caption)", dev.args = list(bg = 'white')}
 apa_beeplot(
   mixed_data
   , id = "Subject"
@@ -139,7 +168,9 @@ apa_beeplot(
 
 Again, as required by the APA guidelines, figures are deferred to the final pages of the document unless you set `figsintext` to `yes`.
 
+
 ### Referencing figures and tables
+
 `papaja` builds on the `bookdown` package, which provides limited cross-referencing capabilities within documents.
 By default you can insert figure and table numbers into the text using `\@ref(fig:chunk-name)` for figures or `\@ref(tab:chunk-name)` for tables.
 Note that for this syntax to work chunk names cannot include `_`.
@@ -150,10 +181,11 @@ However, as anywhere in R Markdown documents you can use \LaTeX commands if the 
 
 
 ### Report statistical analyses
+
 `apa_print()` will help you report the results of your statistical analyses.
 The function will format the contents of R objects and produce readily reportable text.
 
-```{r echo = FALSE}
+```{r}
 recall_anova <- afex::aov_car(
   Recall ~ (Task * Valence * Dosage) + Error(Subject/(Task * Valence)) + Dosage
   , data = mixed_data
@@ -165,10 +197,11 @@ recall_anova_results_p <- apa_print(recall_anova, es = "pes", in_paren = TRUE)
 
 Now, you can report the results of your analyses like so:
 
-```{r eval = FALSE, echo = FALSE}
-Item valence (`r anova_results_p$full$Valence`) and the task affected recall
-performance, `r anova_results$full$Task`; the dosage, however, had no effect
-on recall, `r anova_results$full$Dosage`. There was no significant interaction.
+```{r eval = FALSE}
+Item valence (`r recall_anova_results_p$full$Valence`) and the task
+affected recall performance, `r recall_anova_results$full$Task`; the dosage,
+however, had no effect on recall, `r recall_anova_results$full$Dosage`.
+There was no significant interaction.
 ```
 
 > Item valence (`r recall_anova_results_p$full$Valence`) and the task affected recall performance, `r recall_anova_results$full$Task`;
@@ -177,18 +210,22 @@ on recall, `r anova_results$full$Dosage`. There was no significant interaction.
 
 What's even more fun, you can easily create a complete ANOVA table using by passing `recall_anova_results$table` to `apa_table()`, see Table\ \@ref(tab:anova).
 
-```{r anova, results = "asis", echo = FALSE}
+(ref:anova-caption) ANOVA table for the analyis of the example data set.
+
+(ref:anova-note) This is a table created using `apa_print()` and `apa_table()`.
+
+```{r anova}
 apa_table(
   recall_anova_results$table
   , align = c("l", "r", "c", "r", "r", "r")
-  , caption = "ANOVA table for the analyis of the example data set."
-  , note = "This is a table created using apa\\_print() and apa\\_table()."
-  , escape = FALSE
+  , caption = "(ref:anova-caption)"
+  , note = "(ref:anova-note)"
 )
 ```
 
 
 ## Citations
+
 No manuscript is complete without citation.
 In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the YAML front matter.
 Once this is done, `[e.g., @james_1890; @bem_2011]` produces a regular citation within parentheses [e.g., @bem_2011; @james_1890].
@@ -209,7 +246,7 @@ As citations are the currency of science, it's easy to compensate volunteers for
 I suspect that, among other things, this is rarely done because it is tedious work.
 That's why papaja makes citing R and its packages easy:
 
-```{r echo = FALSE}
+```{r}
 r_refs(file = "r-references.bib")
 my_citation <- cite_r(file = "r-references.bib")
 ```
@@ -220,6 +257,7 @@ my_citation <- cite_r(file = "r-references.bib")
 
 
 ## Math
+
 If you need to report formulas, you can use the flexible \LaTeX syntax (it will work in Word documents, too).
 Inline math must be enclosed in `$` or `\(` and `\)` and the result will look like this: $d' = z(H) - z(FA)$.
 For larger formulas displayed equations are more appropriate; they are enclosed in `$$` or `\[`and `\]`,
@@ -230,6 +268,7 @@ $$
 
 
 ## Document options
+
 This text is set as manuscript.
 If you want a thesis-like document you can change the `class` in the YAML front matter from `man` to `doc`.
 You can also preview a polished journal typesetting by changing the `class` to `jou`.
@@ -239,12 +278,15 @@ When creating PDF documents, line numbering can be activated by setting the `lin
 Moreover, you can create lists of figure or table captions at the end of the document by setting `figurelist` or `tablelist` to `yes`, respectively.
 These option have no effect on Word documents.
 
+
 ## Last words
+
 That's all I have; enjoy writing your manuscript.
 If you have any trouble or ideas for improvements, open an [issue](https://github.com/crsh/papaja/issues) on GitHub or open a pull request.
 If you want to contribute, take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
 Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support.
 Any new S3/S4-method for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
+
 
 # References
 
