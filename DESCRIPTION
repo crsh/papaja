@@ -1,6 +1,6 @@
 Package: papaja
 Title: Prepare reproducible APA journal articles with R Markdown
-Version: 0.1.0.9942
+Version: 0.1.0.9997
 Description: papaja (Preparing APA Journal Articles) provides document formats
     and helper functions to produce complete APA manuscripts from R Markdown-files
     (PDF and Word documents).
@@ -9,11 +9,12 @@ Authors@R: c(
     , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("aut"), comment = c(ORCID = "0000-0002-3421-6665"))
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
+    , person("Joseph V.", "Casillas", email = "joseph.casillas@rutgers.edu", role = c("ctb"))
   )
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
-  R (>= 2.11.1)
+  R (>= 3.6)
 Imports:
   base64enc,
   bookdown (>= 0.9.1),
@@ -47,7 +48,7 @@ Suggests:
   lmerTest
 Remotes: 
   tidymodels/broom
-SystemRequirements: Rendering the document template requires pandoc (>= 1.12.3; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
+SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8

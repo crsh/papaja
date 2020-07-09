@@ -9,6 +9,7 @@
   anova_fun = stats::anova,
   ci = 0.9,
   boot_samples = 10000,
+  progress_bar = FALSE,
   observed_predictors = TRUE,
   in_paren = FALSE,
   ...
@@ -22,6 +23,8 @@
 \item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.}
+
+\item{progress_bar}{Logical. Determines whether a progress bar is printed while bootstrapping.}
 
 \item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
 
