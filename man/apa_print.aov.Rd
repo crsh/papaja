@@ -10,48 +10,53 @@
 \alias{apa_print.afex_aov}
 \alias{apa_print.anova}
 \alias{apa_print.manova}
-\alias{apa_print.summary.manova}
 \title{Format statistics from ANOVA (APA 6th edition)}
 \usage{
-apa_print.aov(x, ...)
+\method{apa_print}{aov}(x, ...)
 
-apa_print.summary.aov(x, ...)
+\method{apa_print}{summary.aov}(x, ...)
 
-apa_print.aovlist(x, ...)
+\method{apa_print}{aovlist}(x, ...)
 
-apa_print.summary.aovlist(x, ...)
+\method{apa_print}{summary.aovlist}(x, ...)
 
-apa_print.Anova.mlm(x,
+\method{apa_print}{Anova.mlm}(
+  x,
   correction = getOption("papaja.sphericity_correction"),
-  intercept = FALSE, ...)
+  intercept = FALSE,
+  ...
+)
 
-apa_print.summary.Anova.mlm(x,
+\method{apa_print}{summary.Anova.mlm}(
+  x,
   correction = getOption("papaja.sphericity_correction"),
-  intercept = FALSE, ...)
+  intercept = FALSE,
+  ...
+)
 
-apa_print.afex_aov(x,
+\method{apa_print}{afex_aov}(
+  x,
   correction = getOption("papaja.sphericity_correction"),
-  intercept = FALSE, ...)
+  intercept = FALSE,
+  ...
+)
 
-apa_print.anova(x, ...)
+\method{apa_print}{anova}(x, ...)
 
-apa_print.manova(x, test = "Pillai", ...)
-
-apa_print.summary.manova(x, ...)
+\method{apa_print}{manova}(x, test = "Pillai", ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
 
-\item{...}{Arguments passed on to \code{print_anova}
-\describe{
-  \item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
-  \item{intercept}{Logical. Indicates if intercept test should be included in output.}
-  \item{es}{Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
+\item{...}{
+  Arguments passed on to \code{\link[=print_anova]{print_anova}}
+  \describe{
+    \item{\code{es}}{Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
 Note that eta-squared is calculated correctly if and only if the design is balanced.}
-  \item{mse}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
-  \item{observed}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.}
-  \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
-}}
+    \item{\code{mse}}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
+    \item{\code{observed}}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.}
+    \item{\code{in_paren}}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+  }}
 
 \item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.}
 
@@ -93,11 +98,13 @@ Bakeman, R. (2005). Recommended effect size statistics for repeated measures des
 \seealso{
 \code{\link{aov}}, \code{\link[car]{Anova}}, \code{\link{apa_print.list}}
 
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.emmGrid}},
-  \code{\link{apa_print.glht}},
-  \code{\link{apa_print.glm}},
-  \code{\link{apa_print.htest}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print}}
+Other apa_print: 
+\code{\link{apa_print.BFBayesFactor}()},
+\code{\link{apa_print.emmGrid}()},
+\code{\link{apa_print.glht}()},
+\code{\link{apa_print.glm}()},
+\code{\link{apa_print.htest}()},
+\code{\link{apa_print.list}()},
+\code{\link{apa_print}()}
 }
 \concept{apa_print}

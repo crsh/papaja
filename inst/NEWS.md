@@ -1,3 +1,57 @@
+# papaja 0.1.0.9997
+
+### Template
+
+- New author metadata field `role` automatically adds contributor ship roles (e.g. CRedit, https://casrai.org/credit/) to the author note. #375
+- `apa6_pdf()`
+    - Now relies on a Lua-filter to process metadata, which should resolve many encoding related problems (e.g., reported by @arcaldwell49, @dcbrh, and @DominiqueMakowski among others; #350, #357, #360)
+    - Numbering of title is now disabled when `numbersections: true`
+- `apa6_docx()`
+    - Minor improvements to typesetting (e.g., capitalize running head)
+    - `docx_fixes.lua` now tolerates missing figure captions (reported by @jvcasillas, #365)
+- `revision_letter_pdf()`
+    - Defaults to APA6 citation style (also see #369 by @jvcasillas)
+    - Adds word count filter
+
+### Existing functions
+
+- `apa_print()`
+    - Fixed method dispatch that sometimes failed (#361, #250)
+- `apa_print.list()`
+    - Each column of a model comparison table used to have names, these have now been
+      removed to enable unit testing across different R releases and improve consistency
+      across output objects from `apa_print()`.
+- `printnum.integer()`
+    - Now always returns a `character`
+- `printp()`
+    - Fixed examples in documentation
+- `variable_labels.data.frame()`
+    - When trying to assign labels to columns that do not exist, as of now the function
+      not only throws an error, but also returns the names of the missing columns.
+- `wsci()`, `within_subjects_conf_int()`
+    - Experimental: Returned object now has class `c("papaja_wsci", "data.frame")` and returns an
+      attribute `means` for post processing (see new function `summary.papaja_wsci`).
+
+### New functions
+
+- `apa_print.manova()`
+    - Experimental: Added an `apa_print` method for MANOVA models from the `stats` package.
+- `summary.papaja_wsci()`
+    - Experimental: Returns means and confidence limits calculated from the output
+      of `wsci()` (suggested by @jstevens5, #362)
+- `apa_print.papaja_wsci()`
+- `quote_from_tex()`
+- `remove_comments()`
+
+
+### Misc
+
+- `papaja` now depends on
+    - `R` >= 3.6
+    - `pandoc` >= 2.0
+    - `rmdfiltr` (>= 0.1.2) explicitly
+- New `label_quotes.lua` filter to insert excerpts in revision letter; also see `quote_from_tex()`
+
 # papaja 0.1.0.9942
 
 ### Template

@@ -14,3 +14,4 @@
 ^inst/apa_source_files.csl
 ^CODE_OF_CONDUCT\.md$
 ^\.github$
+^\.vscode$

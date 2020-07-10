@@ -4,8 +4,13 @@
 \alias{fetch_zotero_refs}
 \title{Save a collection from a Zotero-Account to a BibTeX-file}
 \usage{
-fetch_zotero_refs(x, bib_name, API_key = NULL, collection = NULL,
-  lib_type = "user")
+fetch_zotero_refs(
+  x,
+  bib_name,
+  API_key = NULL,
+  collection = NULL,
+  lib_type = "user"
+)
 }
 \arguments{
 \item{x}{Character. Zotero user or group ID, see details.}

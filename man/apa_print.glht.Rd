@@ -5,9 +5,9 @@
 \alias{apa_print.summary.glht}
 \title{Format statistics (APA 6th edition)}
 \usage{
-apa_print.glht(x, test = multcomp::adjusted(), ...)
+\method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
 
-apa_print.summary.glht(x, ci = 0.95, in_paren = FALSE, ...)
+\method{apa_print}{summary.glht}(x, ci = 0.95, in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{Object}
@@ -49,11 +49,13 @@ ADJUSTED CONFIDENCE INTERVALS
    NULL
 }
 \seealso{
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.emmGrid}},
-  \code{\link{apa_print.glm}},
-  \code{\link{apa_print.htest}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print}}
+Other apa_print: 
+\code{\link{apa_print.BFBayesFactor}()},
+\code{\link{apa_print.aov}()},
+\code{\link{apa_print.emmGrid}()},
+\code{\link{apa_print.glm}()},
+\code{\link{apa_print.htest}()},
+\code{\link{apa_print.list}()},
+\code{\link{apa_print}()}
 }
 \concept{apa_print}

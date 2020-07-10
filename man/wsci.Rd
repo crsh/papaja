@@ -7,8 +7,7 @@
 \usage{
 wsci(data, id, factors, dv, level = 0.95, method = "Morey")
 
-within_subjects_conf_int(data, id, factors, dv, level = 0.95,
-  method = "Morey")
+within_subjects_conf_int(data, id, factors, dv, level = 0.95, method = "Morey")
 }
 \arguments{
 \item{data}{A \code{data.frame} that contains the data.}
@@ -25,8 +24,13 @@ for 95\% confidence intervals.}
 \item{method}{Character. The method that is used to calculate. Actually,
 "Morey" and "Cousineau" are supported. Defaults to "Morey".}
 }
+\value{
+A \code{data.frame} with addtional class \code{papaja_wsci}.
+  The \code{summary} method for this class returns a \code{data.frame} with
+  means and lower and upper limit for each cell of the design.
+}
 \description{
-Calculate Cousineau-Morey within-subjects confidence intervals
+Calculate Cousineau-Morey within-subjects confidence intervals.
 }
 \examples{
 wsci(
@@ -38,9 +42,9 @@ wsci(
 }
 \references{
 Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
-   \emph{Tutorials in Quantitative Methods for Psychology}, 4(2), 61--64.
+   \emph{Tutorials in Quantitative Methods for Psychology}, \emph{4}(2), 61--64.
 
    Cousineau, D. (2005). Confidence intervals in within-subjects designs:
    A simpler solution to Loftus and Masson's method.
-   \emph{Tutorials in Quantitative Methods for Psychology}, 1(1), 42--45.
+   \emph{Tutorials in Quantitative Methods for Psychology}, \emph{1}(1), 42--45.
 }

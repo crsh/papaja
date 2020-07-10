@@ -35,6 +35,7 @@
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    apa_print(npk_aov)
+#' @method apa_print aov
 #' @export
 
 apa_print.aov <- function(x, ...) {
@@ -45,6 +46,7 @@ apa_print.aov <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
+#' @method apa_print summary.aov
 #' @export
 
 apa_print.summary.aov <- function(x, ...) {
@@ -55,6 +57,7 @@ apa_print.summary.aov <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
+#' @method apa_print aovlist
 #' @export
 
 apa_print.aovlist <- function(x, ...) {
@@ -65,6 +68,7 @@ apa_print.aovlist <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
+#' @method apa_print summary.aovlist
 #' @export
 
 apa_print.summary.aovlist <- function(x, ...) {
@@ -75,6 +79,7 @@ apa_print.summary.aovlist <- function(x, ...) {
 
 
 #' @rdname apa_print.aov
+#' @method apa_print Anova.mlm
 #' @export
 
 apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -89,6 +94,7 @@ apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_cor
 
 
 #' @rdname apa_print.aov
+#' @method apa_print summary.Anova.mlm
 #' @export
 
 apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -99,6 +105,7 @@ apa_print.summary.Anova.mlm <- function(x, correction = getOption("papaja.spheri
 
 
 #' @rdname apa_print.aov
+#' @method apa_print afex_aov
 #' @export
 
 apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
@@ -119,6 +126,7 @@ apa_print.afex_aov <- function(x, correction = getOption("papaja.sphericity_corr
 
 
 #' @rdname apa_print.aov
+#' @method apa_print anova
 #' @export
 
 apa_print.anova <- function(
@@ -133,11 +141,31 @@ apa_print.anova <- function(
   variance_table <- arrange_anova(x)
   object_heading <- attr(x, "heading")
 
+  # Some model objects do not contain the necessary information to calculate
+  # MSEs and effect-size measures. In such cases, print_anova() needs to be called
+  # with arguments es = NULL and mse = FALSE.
+
   if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
     if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
+    # # lmerTest::anova.merModLmerTest ----
+    # if(!is.null(attr(variance_table, "ddf"))) {
+    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    # }
+    # # afex::mixed ----
+    # if(any(grepl("Mixed Model", object_heading))) {
+    #   attr(variance_table, "correction") <- unname(
+    #     c(KR = "KR", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
+    #   )
+    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
+    # }
+    # # lmerTest::ranova ----
+    # if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
+    #   stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
+    # }
+    # anova::lm (single model) ----
     return(print_anova(variance_table, ...))
   } else if("apa_model_comp" %in% class(variance_table)) {
     stop("Model comparison objects of class 'anova' are not supported. See ?apa_print.list to report model comparisons.")

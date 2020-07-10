@@ -60,7 +60,8 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 
 #' Within-subjects confidence intervals
 #'
-#' Calculate Cousineau-Morey within-subjects confidence intervals
+#' Calculate Cousineau-Morey within-subjects confidence intervals.
+#'
 #' @param data A \code{data.frame} that contains the data.
 #' @param id Character. Variable name that identifies subjects.
 #' @param factors Character. A vector of variable names that is used to stratify the data.
@@ -71,11 +72,17 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 #'          "Morey" and "Cousineau" are supported. Defaults to "Morey".
 #' @references
 #'    Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, 4(2), 61--64.
+#'    \emph{Tutorials in Quantitative Methods for Psychology}, \emph{4}(2), 61--64.
 #'
 #'    Cousineau, D. (2005). Confidence intervals in within-subjects designs:
 #'    A simpler solution to Loftus and Masson's method.
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, 1(1), 42--45.
+#'    \emph{Tutorials in Quantitative Methods for Psychology}, \emph{1}(1), 42--45.
+#'
+#' @return
+#'   A \code{data.frame} with addtional class \code{papaja_wsci}.
+#'   The \code{summary} method for this class returns a \code{data.frame} with
+#'   means and lower and upper limit for each cell of the design.
+#'
 #'
 #'
 #'
@@ -86,6 +93,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 #'    , dv = "yield"
 #'    , factors = c("N", "P")
 #' )
+#' @rdname wsci
 #' @export
 
 wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
@@ -201,12 +209,17 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     stop("No within-subjects factors specified.")
   }
   values <- ee
+  means <- stats::aggregate(x = data[[dv]], by = data[, factors, drop = FALSE], FUN = mean)
+  colnames(means)[ncol(means)] <- dv
+
   attr(values, "Between-subjects factors") <- if(is.null(between)){"none"} else {between}
   attr(values, "Within-subjects factors") <- within
   attr(values, "Dependent variable") <- dv
   attr(values, "Subject identifier") <- id
   attr(values, "Confidence level") <- level
   attr(values, "Method") <- method
+  attr(values, "means") <- means
+  class(values) <- c("papaja_wsci", "data.frame")
   return(values)
 }
 
@@ -218,6 +231,27 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 within_subjects_conf_int <- wsci
 
 
+#' Summarize Within-Subjects Confidence Intervals
+#'
+#' Calculate upper and lower limits of within-subjects confidence intervals calculated
+#' with \code{\link{wsci}} and return them along the respective means.
+#'
+#' @param object An object of class \code{papaja_wsci}, generated with function \code{\link{wsci}}.
+#' @param ... Further arguments that may be passed, currently ignored.
+#' @export
+
+summary.papaja_wsci <- function(object, ...) {
+
+  means <- attr(object, "means")
+  colnames(means)[ncol(means)] <- "mean"
+  colnames(object)[ncol(object)] <- "ci_diff"
+
+  y <- merge(x = object, y = means, sort = FALSE)
+  y$lower_limit <- y$mean - y$ci_diff
+  y$upper_limit <- y$mean + y$ci_diff
+  y$ci_diff <- NULL
+  y
+}
 
 #' Between-subjects confidence intervals
 #'

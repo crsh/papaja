@@ -43,7 +43,15 @@ test_that(
 
     # table
     correct_table <- structure(
-      list(Baseline = structure(c("$6.53$ $[5.58$, $7.47]$", "$-0.22$ $[-0.53$, $0.08]$", "", "", "$.01$ $[0.00$, $0.06]$", "2.07", "1", "148", ".152", "371.99", "381.02", "", "", "", "", "", "", ""), .Names = c(NA, NA, NA, NA, "$R^2$ [90\\% CI]", "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")), Length = structure(c("$2.25$ $[1.76$, $2.74]$", "$0.60$ $[0.46$, $0.73]$", "$0.47$ $[0.44$, $0.51]$", "", "$.84$ $[0.79$, $0.87]$", "386.39", "2", "147", "< .001", "101.03", "113.07", "$.83$", "853.31", "1", "148", "< .001", "-270.97", "-267.96"), .Names = c(NA, NA, NA, NA, "$R^2$ [90\\% CI]", "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")), Both = structure(c("$1.86$ $[1.36$, $2.35]$", "$0.65$ $[0.52$, $0.78]$", "$0.71$ $[0.60$, $0.82]$", "$-0.56$ $[-0.81$, $-0.30]$", "$.86$ $[0.82$, $0.89]$", "295.54", "3", "146", "< .001", "84.64", "99.70", "$.02$", "19.04", "1", "148", "< .001", "-16.38", "-13.37"), .Names = c(NA, NA, NA, NA, "$R^2$ [90\\% CI]", "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$"))), .Names = c("Baseline", "Length", "Both"), row.names = c("Intercept", "Sepal Width", "Petal Length", "Petal Width", "$R^2$ [90\\% CI]", "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$"), class = c("apa_results_table", "data.frame"))
+      list(
+        Baseline = c("$6.53$ $[5.58$, $7.47]$", "$-0.22$ $[-0.53$, $0.08]$", "", "", "$.01$ $[0.00$, $0.06]$", "2.07", "1", "148", ".152", "371.99", "381.02", "", "", "", "", "", "", "")
+        , Length = c("$2.25$ $[1.76$, $2.74]$", "$0.60$ $[0.46$, $0.73]$", "$0.47$ $[0.44$, $0.51]$", "", "$.84$ $[0.79$, $0.87]$", "386.39", "2", "147", "< .001", "101.03", "113.07", "$.83$", "853.31", "1", "148", "< .001", "-270.97", "-267.96")
+        , Both = c("$1.86$ $[1.36$, $2.35]$", "$0.65$ $[0.52$, $0.78]$", "$0.71$ $[0.60$, $0.82]$", "$-0.56$ $[-0.81$, $-0.30]$", "$.86$ $[0.82$, $0.89]$", "295.54", "3", "146", "< .001", "84.64", "99.70", "$.02$", "19.04", "1", "148", "< .001", "-16.38", "-13.37")
+      )
+      , .Names = c("Baseline", "Length", "Both")
+      , row.names = c("Intercept", "Sepal Width", "Petal Length", "Petal Width", "$R^2$ [90\\% CI]", "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")
+      , class = c("apa_results_table", "data.frame")
+    )
 
     expect_is(model_comp$table, "data.frame")
     expect_equal(colnames(model_comp$table), c("Baseline", "Length", "Both"))
@@ -77,13 +85,15 @@ test_that(
 
     # Bootstrapped Delta R^2 CI
     skip_on_cran() # The bootstrapping is computationally too expensive
-    set.seed(28247582)
-    model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 2500)
 
-    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.77$, $.87]$")
+    set.seed(1337)
+    model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 1e3)
+
+    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.76$, $.86]$")
+
     expect_equal(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01$, $.04]$")
 
-    model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 2500, ci = 0.5)
+    model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, ci = 0.5)
 
     expect_equal(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80$, $.84]$")
   }

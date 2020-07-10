@@ -441,7 +441,7 @@ test_that(
       , anova_table = list(correction = "none")
     ))
 
-    tw_rm_output <- apa_print(tw_rm)
+    tw_rm_output <- suppressWarnings(apa_print(tw_rm))
 
     tw_rm_emm <- emmeans::emmeans(tw_rm$aov, ~ Task * Valence)
     emm_aov <- emmeans::joint_tests(tw_rm_emm)

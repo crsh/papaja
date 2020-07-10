@@ -10,23 +10,24 @@ output        : github_document
 
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
 
-`papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
+`papaja` is an R package in the making including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
-Read the `papaja` [manual](https://crsh.github.io/papaja_man/).
+If you are looking for an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 
 **`papaja` is in active development and should be considered alpha. If you experience any problems, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa) or [open an issue](https://github.com/crsh/papaja/issues) on Github.**
   
 
 ## Examples
-Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
-The example document also contains some basic instructions.
 
+Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
+The example document also contains some basic instructions.
+For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 
 ## Installation
 
 To use `papaja` you need either an up-to-date version of [RStudio](http://www.rstudio.com/) or [pandoc](http://johnmacfarlane.net/pandoc/).
 If you want to create PDF- in addition to DOCX-documents you additionally need
-and a [TeX](http://de.wikipedia.org/wiki/TeX) distribution.
+a [TeX](http://de.wikipedia.org/wiki/TeX) distribution.
 If you have no use for TeX beyond rendering R Markdown documents, I recommend you use [TinyTex](https://yihui.name/tinytex/).
 TinyTex can be installed from within R as follows.
 
@@ -61,7 +62,7 @@ Once `papaja` is installed, you can select the APA template when creating a new 
 If you want to add citations specify your BibTeX-file in the YAML front matter of the document (`bibliography: my.bib`) and you can start citing. If necessary, have a look at R Markdown's [overview of the citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html). You may also be interested in [citr](https://github.com/crsh/citr), an R Studio addin to swiftly insert Markdown citations.
 
 ### Helper functions to report analyses
-The functions `apa_print()` and `apa_table()` facilitate reporting results of your analyses. Take a look at the [.Rmd](https://github.com/crsh/papaja/blob/master/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [.pdf](https://raw.githubusercontent.com/crsh/papaja/master/example/example.pdf).
+The functions `apa_print()` and `apa_table()` facilitate reporting results of your analyses. Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 
 Drop a supported analysis result, such as an `htest`- or `lm`-object, into `apa_print()` and receive a list of possible character strings that you can use to report the results of your analysis.
 
@@ -74,7 +75,7 @@ my_lm <- lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris
 apa_lm <- apa_print(my_lm)
 ```
 
-One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document (remember to set the chunk option `results = "asis"`).
+One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document.
 
 ```{r eval = FALSE}
 apa_table(apa_lm$table, caption = "Iris regression table.")
@@ -157,8 +158,15 @@ rmarkdown::render("mymanuscript.Rmd")
 ~~~
 
 
+### Using papaja with CodeOcean
+
+Seth Green has kindly prepared a [minimal `papaja` example capsule](https://codeocean.com/capsule/8183533/).
+If you want to use `papaja` in your next CodeOcean project you can use this capsule as a starting point.
+
+
 ## Getting help
-If you have questions related to the use of `papaja` [StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a [`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is a great place to get answers.
+For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
+If you have questions related to the use of `papaja` that are not answered in the manual, [StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a [`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is a great place to get answers.
 If you think you have found a bug, please [open issues](https://github.com/crsh/papaja/issues) and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 
 
@@ -203,9 +211,9 @@ If you are looking for other journal article templates, the following list of `r
 If you know of other packages and templates, drop us a note, so we can add them here.
 
 
-# Package dependencies
+<!-- # Package dependencies -->
 
-```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
 source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/f6f0fce38bc274446d205854ea35cfa03b9b1f7a/plot_dependencies.R")
 
 plot_dependencies()

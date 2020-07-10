@@ -7,14 +7,21 @@
 \alias{apa_print.summary.lm}
 \title{Format statistics (APA 6th edition)}
 \usage{
-apa_print.glm(x, est_name = NULL, ci = 0.95, in_paren = FALSE, ...)
+\method{apa_print}{glm}(x, est_name = NULL, ci = 0.95, in_paren = FALSE, ...)
 
-apa_print.lm(x, est_name = NULL, standardized = FALSE, ci = 0.95,
-  observed_predictors = TRUE, in_paren = FALSE, ...)
+\method{apa_print}{lm}(
+  x,
+  est_name = NULL,
+  standardized = FALSE,
+  ci = 0.95,
+  observed_predictors = TRUE,
+  in_paren = FALSE,
+  ...
+)
 
-apa_print.summary.glm(x, ...)
+\method{apa_print}{summary.glm}(x, ...)
 
-apa_print.summary.lm(x, ...)
+\method{apa_print}{summary.lm}(x, ...)
 }
 \arguments{
 \item{x}{\code{glm} or \code{lm} object.}
@@ -30,10 +37,11 @@ See details.}
 
 \item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
 
-\item{...}{Arguments passed on to \code{printnum}
-\describe{
-  \item{x}{Numeric. Can be either a single value, vector, or matrix.}
-}}
+\item{...}{
+  Arguments passed on to \code{\link[=printnum]{printnum}}
+  \describe{
+    \item{\code{}}{}
+  }}
 
 \item{standardized}{Logical. Indicates if coefficients are standardized or unstandardized and leading
 zeros are omitted if appropriate. See details.}
@@ -118,11 +126,13 @@ Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of
 \seealso{
 \code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
 
-Other apa_print: \code{\link{apa_print.BFBayesFactor}},
-  \code{\link{apa_print.aov}},
-  \code{\link{apa_print.emmGrid}},
-  \code{\link{apa_print.glht}},
-  \code{\link{apa_print.htest}},
-  \code{\link{apa_print.list}}, \code{\link{apa_print}}
+Other apa_print: 
+\code{\link{apa_print.BFBayesFactor}()},
+\code{\link{apa_print.aov}()},
+\code{\link{apa_print.emmGrid}()},
+\code{\link{apa_print.glht}()},
+\code{\link{apa_print.htest}()},
+\code{\link{apa_print.list}()},
+\code{\link{apa_print}()}
 }
 \concept{apa_print}
