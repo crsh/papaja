@@ -43,10 +43,10 @@ Objects of less specific classes, such as `list` or `data.frame` cannot be suppo
 ## Default structure of output
 
 Objects returned by `apa_print()` are of class `apa_results`, a named list with four elements.
-The internal function `apa_print_container()` can be used to generate such a to-be-filled and -returned list:
+The internal function `init_apa_results()` can be used to generate such a to-be-filled and -returned list:
 
 ```{r apa-results}
-papaja:::apa_print_container()
+papaja:::init_apa_results()
 ```
 
 To illustrate how `apa_results` objects are populated, let's look at the output of `apa_print.lm()`.
@@ -209,7 +209,7 @@ tidy_lm_fit$ci <- apply(tidy_lm_fit[, c("conf.low", "conf.high")], 1, papaja:::p
 tidy_lm_fit[, c("estimate", "ci")]
 
 
-results <- papaja:::apa_print_container()
+results <- papaja:::init_apa_results()
 results$estimate <- as.list(apply(tidy_lm_fit, 1, function(x) paste0("b = ", x["estimate"], " ", x["ci"])))
 names(results$estimate) <- papaja:::sanitize_terms(tidy_lm_fit$term)
 

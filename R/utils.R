@@ -88,7 +88,7 @@ validate <- function(
 #'    }
 #' @keywords internal
 
-apa_print_container <- function(){
+init_apa_results <- function(){
   structure(
     list(
       estimate = NULL
@@ -305,7 +305,7 @@ create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL
 
 
   # Build output container ----
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
 
   # estimate ----

@@ -268,7 +268,7 @@ apa_print.summary.lm <- function(x, ...) {
 
 
 apa_glm_res <- function(x, in_paren, conf_level) {
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   apa_res$statistic <- apply(x[, -1], 1, function(y) {
     y["p.value"] <- add_equals(y["p.value"])

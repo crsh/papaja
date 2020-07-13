@@ -14,7 +14,7 @@ apa_print.papaja_wsci <- function(x, ...) {
 
   summary_wsci <- summary(x)
 
-  res <- apa_print_container()
+  res <- init_apa_results()
 
   res$estimate <- as.list(
     paste0(

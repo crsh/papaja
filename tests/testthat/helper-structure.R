@@ -69,7 +69,7 @@ expect_apa_results <- function(
 test_that(
   "expect_apa_results"
   , {
-    test <- papaja:::apa_print_container()
+    test <- papaja:::init_apa_results()
     test$table <- data.frame(a = 1)
     # class(test$table) <- c("apa_results_table", "data.frame")
     # expect_failure(

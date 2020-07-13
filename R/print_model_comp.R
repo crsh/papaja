@@ -53,7 +53,7 @@ print_model_comp <- function(
   } else rownames(x) <- sanitize_terms(x$term)
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   ## est
   if(boot_samples <= 0) { # No CI
