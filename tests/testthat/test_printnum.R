@@ -45,7 +45,7 @@ test_that(
     expect_identical(printnum(to_print, gt1 = c(T, T, F, T, F)), c("12.10", "9.00", ".10", "1.00", ".00"))
 
     to_print[1] <- 0
-    expect_identical(printnum(to_print, zero = c(T, F, F)), c("0.00", "9.00", "0.10", "1.00", "< 0.01"))
+    expect_identical(printnum(to_print, zero = c(T, F, F)), c("0.00", "9.00", "0.10", "1.00", "> -0.01"))
 
     expect_equal(printnum(c(1, 2, NA)), c("1.00", "2.00", "NA"))
   }
@@ -115,69 +115,21 @@ test_that(
     expect_error(printnum(1, digits = NA), "The parameter 'digits' is NA.")
     expect_error(printnum(1, digits = "A"), "The parameter 'digits' must be of class 'numeric'.")
     expect_error(printnum(1, digits = 1.1), "The parameter 'digits' must be an integer.")
-    expect_error(printnum(1, digits = 1:2), "The parameter 'digits' must be of length 1.")
     expect_error(printnum(1, digits = Inf), "The parameter 'digits' must be finite.")
 
     expect_error(printnum(1, gt1 = NULL), "The parameter 'gt1' is NULL.")
     expect_error(printnum(1, gt1 = NA), "The parameter 'gt1' is NA.")
     expect_error(printnum(1, gt1 = 1), "The parameter 'gt1' must be of class 'logical'.")
     expect_error(printnum(1, gt1 = "A"), "The parameter 'gt1' must be of class 'logical'.")
-    expect_error(printnum(1, gt1 = c(TRUE, FALSE)), "The parameter 'gt1' must be of length 1.")
 
     expect_error(printnum(1, zero = NULL), "The parameter 'zero' is NULL.")
     expect_error(printnum(1, zero = NA), "The parameter 'zero' is NA.")
     expect_error(printnum(1, zero = 1), "The parameter 'zero' must be of class 'logical'.")
     expect_error(printnum(1, zero = "A"), "The parameter 'zero' must be of class 'logical'.")
-    expect_error(printnum(1, zero = c(TRUE, FALSE)), "The parameter 'zero' must be of length 1.")
-
-    expect_error(printnum(1, margin = NULL), "The parameter 'margin' is NULL.")
-    expect_error(printnum(1, margin = NA), "The parameter 'margin' is NA.")
-    expect_error(printnum(1, margin = "A"), "The parameter 'margin' must be of class 'numeric'.")
-    expect_error(printnum(1, margin = 1.1), "The parameter 'margin' must be an integer.")
-    expect_error(printnum(1, margin = 1:2), "The parameter 'margin' must be of length 1.")
-    expect_error(printnum(1, margin = 0), "The parameter 'margin' must be between 1 and 2.")
-    expect_error(printnum(1, margin = 3), "The parameter 'margin' must be between 1 and 2.")
 
     expect_error(printnum(1, na_string = NULL), "The parameter 'na_string' is NULL.")
     expect_error(printnum(1, na_string = NA), "The parameter 'na_string' is NA.")
-    expect_error(printnum(1, na_string = letters[1:2]), "The parameter 'na_string' must be of length 1.")
     expect_error(printnum(1, na_string = 3), "The parameter 'na_string' must be of class 'character'.")
-  }
-)
-
-
-context("printnumber()")
-
-test_that(
-  "Input validation"
-  , {
-    expect_equivalent(printnumber(NA), "")
-    expect_equivalent(printnumber(NA, na_string = "foo"), "foo")
-
-    expect_error(printnumber(1, digits = NA), "The parameter 'digits' is NA.")
-    expect_error(printnumber(1, digits = "A"), "The parameter 'digits' must be of class 'numeric'.")
-    expect_error(printnumber(1, digits = 1.1), "The parameter 'digits' must be an integer.")
-    expect_error(printnumber(1, digits = 1:2), "The parameter 'digits' must be of length 1.")
-    expect_error(printnumber(1, digits = Inf), "The parameter 'digits' must be finite.")
-
-    expect_error(printnumber(1, gt1 = NULL), "The parameter 'gt1' is NULL.")
-    expect_error(printnumber(1, gt1 = NA), "The parameter 'gt1' is NA.")
-    expect_error(printnumber(1, gt1 = 1), "The parameter 'gt1' must be of class 'logical'.")
-    expect_error(printnumber(1, gt1 = "A"), "The parameter 'gt1' must be of class 'logical'.")
-    expect_error(printnumber(1, gt1 = c(TRUE, FALSE)), "The parameter 'gt1' must be of length 1.")
-
-    expect_error(printnumber(1, zero = NULL), "The parameter 'zero' is NULL.")
-    expect_error(printnumber(1, zero = NA), "The parameter 'zero' is NA.")
-    expect_error(printnumber(1, zero = 1), "The parameter 'zero' must be of class 'logical'.")
-    expect_error(printnumber(1, zero = "A"), "The parameter 'zero' must be of class 'logical'.")
-    expect_error(printnumber(1, zero = c(TRUE, FALSE)), "The parameter 'zero' must be of length 1.")
-
-    expect_error(printnumber(1, na_string = NULL), "The parameter 'na_string' is NULL.")
-    expect_error(printnumber(1, na_string = NA), "The parameter 'na_string' is NA.")
-    expect_error(printnumber(1, na_string = letters[1:2]), "The parameter 'na_string' must be of length 1.")
-    expect_error(printnumber(1, na_string = 3), "The parameter 'na_string' must be of class 'character'.")
-
-    expect_warning(printnumber(2, gt1 = FALSE))
   }
 )
 

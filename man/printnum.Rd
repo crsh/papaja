@@ -30,7 +30,6 @@ printnum(x, ...)
   x,
   gt1 = TRUE,
   zero = TRUE,
-  margin = 1,
   na_string = getOption("papaja.na_string"),
   use_math = TRUE,
   add_equals = FALSE,
@@ -44,10 +43,10 @@ printnum(x, ...)
 \method{printnum}{papaja_labelled}(x, ...)
 }
 \arguments{
-\item{x}{Numeric. Can be either a single value, vector, or matrix.}
+\item{x}{Can be either a single value, vector, matrix, or data.frame.}
 
 \item{...}{
-  Arguments passed on to \code{\link[base:formatC]{base::formatC}}
+  Arguments passed on to \code{\link[base:formatc]{base::formatC}}
   \describe{
     \item{\code{digits}}{the desired number of digits after the decimal
     point (\code{format = "f"}) or \emph{significant} digits
@@ -161,21 +160,21 @@ printnum(x, ...)
 
 \item{zero}{Logical. Indicates if the statistic can, in principal, be 0.}
 
-\item{margin}{Integer. If \code{x} is a matrix, the function is applied either across rows (\code{margin = 1})
-or columns (\code{margin = 2}).}
-
 \item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 notation is rendered correctly.}
 
 \item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
+
+\item{margin}{Integer. If \code{x} is a matrix or \code{data.frame}, the function
+is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).}
 }
 \description{
 Converts numeric values to character strings for reporting.
 }
 \details{
-If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
-   according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
-   exceeds length of the parameter vectors. If \code{x} is a matrix, the vectors specify the formating
+If \code{x} is a vector, all arguments can be vectors
+   according to which each element of the vector is formatted. Parameters are recycled if length of \code{x}
+   exceeds length of the parameter vectors. If \code{x} is a matrix or data.frame, the vectors specify the formating
    of either rows or columns according to the value of \code{margin}.
 }
 \examples{

@@ -10,7 +10,7 @@ revision_letter_pdf(keep_tex = TRUE, ...)
 \item{keep_tex}{Logical. Logical. Keep the intermediate tex file used in the conversion to PDF.}
 
 \item{...}{
-  Arguments passed on to \code{\link[bookdown:pdf_document2]{bookdown::pdf_document2}}
+  Arguments passed on to \code{\link[bookdown:html_document2]{bookdown::pdf_document2}}
   \describe{
     \item{\code{}}{}
   }}
