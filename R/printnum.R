@@ -263,10 +263,7 @@ printnum.numeric <- function(
     y[is_infinite & use_math] <- paste0("$", y[is_infinite & use_math], "$")
   }
 
-  if(any(is_NA)) {
-    y[is_NA] <- rep(na_string, length.out = length_x)[is_NA]
-  }
-
+  y[is_NA] <- rep(na_string, length.out = sum(is_NA))
   y
 }
 
