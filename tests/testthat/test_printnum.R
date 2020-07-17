@@ -216,8 +216,7 @@ test_that(
     expect_error(printp(-0.01), "The parameter 'x' must be between 0 and 1.")
 
     expect_error(printp(1, na_string = NULL), "The parameter 'na_string' is NULL.")
-    expect_error(printp(1, na_string = NA), "The parameter 'na_string' is NA.")
-    expect_error(printp(1, na_string = letters[1:2]), "The parameter 'na_string' must be of length 1.")
+    # expect_error(printp(1, na_string = NA), "The parameter 'na_string' is NA.")
     expect_error(printp(1, na_string = 3), "The parameter 'na_string' must be of class 'character'.")
   }
 )
