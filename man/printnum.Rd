@@ -43,7 +43,7 @@ printnum(x, ...)
 \method{printnum}{papaja_labelled}(x, ...)
 }
 \arguments{
-\item{x}{Can be either a single value, vector, matrix, or data.frame.}
+\item{x}{Can be either a single value, vector, matrix, or \code{data.frame}.}
 
 \item{...}{
   Arguments passed on to \code{\link[base:formatc]{base::formatC}}
@@ -150,9 +150,9 @@ printnum(x, ...)
 
 \item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
 
-\item{numerals}{Logical. Indicates if integer should be returned as words.}
+\item{numerals}{Logical. Indicates if integers should be returned as words.}
 
-\item{capitalize}{Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.}
+\item{capitalize}{Logical. Indicates if first letter should be capitalized. Ignored if \code{numerals = TURE}.}
 
 \item{zero_string}{Character. Word to print if \code{x} is a zero integer.}
 
@@ -165,7 +165,7 @@ notation is rendered correctly.}
 
 \item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
 
-\item{margin}{Integer. If \code{x} is a matrix or \code{data.frame}, the function
+\item{margin}{Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
 is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).}
 }
 \description{
@@ -173,8 +173,9 @@ Converts numeric values to character strings for reporting.
 }
 \details{
 If \code{x} is a vector, all arguments can be vectors
-   according to which each element of the vector is formatted. Parameters are recycled if length of \code{x}
-   exceeds length of the parameter vectors. If \code{x} is a matrix or data.frame, the vectors specify the formating
+   according to which each element of the vector is formatted.
+   Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
+   If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
    of either rows or columns according to the value of \code{margin}.
 }
 \examples{

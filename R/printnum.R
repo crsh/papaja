@@ -2,23 +2,24 @@
 #'
 #' Converts numeric values to character strings for reporting.
 #'
-#' @param x Can be either a single value, vector, matrix, or data.frame.
+#' @param x Can be either a single value, vector, matrix, or \code{data.frame}.
 #' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
-#' @param margin Integer. If \code{x} is a matrix or \code{data.frame}, the function
+#' @param margin Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
 #'   is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
 #' @param na_string Character. String to print if element of \code{x} is \code{NA}.
 #' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 #'    notation is rendered correctly.
 #' @param add_equals Logical. Indicates if the output string should be prepended with an \emph{equals} sign.
-#' @param numerals Logical. Indicates if integer should be returned as words.
-#' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
+#' @param numerals Logical. Indicates if integers should be returned as words.
+#' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numerals = TURE}.
 #' @param zero_string Character. Word to print if \code{x} is a zero integer.
 #' @inheritDotParams base::formatC -x
 #'
 #' @details If \code{x} is a vector, all arguments can be vectors
-#'    according to which each element of the vector is formatted. Parameters are recycled if length of \code{x}
-#'    exceeds length of the parameter vectors. If \code{x} is a matrix or data.frame, the vectors specify the formating
+#'    according to which each element of the vector is formatted.
+#'    Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
+#'    If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
 #'    of either rows or columns according to the value of \code{margin}.
 #' @examples
 #' printnum(1/3)
@@ -361,12 +362,16 @@ printnum.papaja_labelled <-function(x, ...){
 
 printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
-  validate(na_string, check_class = "character")
   validate(digits, check_class = "numeric")
-  validate(add_equals, check_class = "logical")
 
-  p <- printnum(x, digits = digits, gt1 = FALSE, zero = FALSE, na_string = na_string, add_equals = add_equals)
-  p
+  printnum(
+    x
+    , digits = digits
+    , gt1 = FALSE
+    , zero = FALSE
+    , na_string = na_string
+    , add_equals = add_equals
+  )
 }
 
 
