@@ -101,8 +101,9 @@ assign_label.data.frame <- function(x, value, ...){
 
   if(is.null(value)) {
     for(i in seq_along(ncol(x))) {
-      assign_label(x = x[[i]], value = NULL)
+      x[[i]] <- assign_label(x = x[[i]], value = NULL)
     }
+    return(x)
   }
   # R allows data frames to have duplicate column names.
   # The following code is optimized to work even in this horrible case.

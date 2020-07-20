@@ -7,7 +7,7 @@
 printp(x, digits = 3L, na_string = "", add_equals = FALSE)
 }
 \arguments{
-\item{x}{Numeric. Can be either a single value, vector, or matrix.}
+\item{x}{Numeric. The \emph{p} value(s) to report.}
 
 \item{digits}{Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.}
 
@@ -16,10 +16,11 @@ printp(x, digits = 3L, na_string = "", add_equals = FALSE)
 \item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
 }
 \description{
-Convenience wrapper for \code{printnum.numeric} to print \emph{p} values.
+Convenience wrapper for \code{\link{printnum}} to print \emph{p} values.
 }
 \examples{
 printp(0.05)
 printp(0.0005)
 printp(0.99999999)
+printp(c(.001, 0), add_equals = TRUE)
 }

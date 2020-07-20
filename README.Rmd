@@ -10,11 +10,12 @@ output        : github_document
 
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
 
-`papaja` is an R package in the making including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
+`papaja` is an R package including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R functions that facilitate reporting results of your analyses and creating figures and tables in accordance with APA guidelines.
 
 If you are looking for an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 
-**`papaja` is in active development and should be considered alpha. If you experience any problems, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa) or [open an issue](https://github.com/crsh/papaja/issues) on Github.**
+**`papaja` is currently under active development. If you experience any problems, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa).
+If you believe your problem is related to a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github.**
   
 
 ## Examples
@@ -44,18 +45,18 @@ Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduc
 
 ```{r install_papapja, eval = FALSE}
 # Install devtools package if necessary
-if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
 
 # Install the stable development verions from GitHub
-devtools::install_github("crsh/papaja")
+remotes::install_github("crsh/papaja")
 
 # Install the latest development snapshot from GitHub
-devtools::install_github("crsh/papaja@devel")
+remotes::install_github("crsh/papaja@devel")
 ```
 
 
 ## How to use papaja
-Once `papaja` is installed, you can select the APA template when creating a new Markdown file through the RStudio menus.
+Once `papaja` is installed, you can select the APA template when creating a new R Markdown file through the RStudio menus.
 
 ![APA template selection](inst/images/template_selection.png)
 

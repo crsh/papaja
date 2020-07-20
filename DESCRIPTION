@@ -52,6 +52,6 @@ SystemRequirements: Rendering the document template requires pandoc (>= 2.0; htt
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
-RoxygenNote: 7.1.0.9000
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US
