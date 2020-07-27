@@ -170,6 +170,7 @@ print_interval.matrix <- function(
 }
 
 #' @rdname print_interval
+#' @export
 
 print_confint <- function(
   x
@@ -180,6 +181,7 @@ print_confint <- function(
 }
 
 #' @rdname print_interval
+#' @export
 
 print_hdint <- function(
   x
