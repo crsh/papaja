@@ -255,5 +255,5 @@ svl <- function(x) {
     y <- variable_labels(x)
     if(is.null(y)) y <- x
 
-    gsub(pattern = "\\$", replacement = "", x = y, fixed = TRUE)
+    gsub(pattern = "$", replacement = "", x = y, fixed = TRUE)
 }
