@@ -235,7 +235,7 @@ apa_print.summary_emm <- function(
   }
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   if(ci_supplied) {
     apa_res$estimate <- apply(contrast_table, 1, function(y) {

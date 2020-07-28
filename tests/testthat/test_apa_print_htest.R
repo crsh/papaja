@@ -18,8 +18,8 @@ test_that(
     )
 
     expect_identical(t_test_output$stat, "$t(17.78) = -1.86$, $p = .079$")
-    expect_identical(t_test_output$est, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$")
-    expect_identical(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-3.37$, $0.21]$, $t(17.78) = -1.86$, $p = .079$")
+    expect_identical(t_test_output$est, "$\\Delta M = -1.58$, 95\\% CI $[-3.37, 0.21]$")
+    expect_identical(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-3.37, 0.21]$, $t(17.78) = -1.86$, $p = .079$")
 
 
     t_test <- t.test(extra ~ group, data = sleep, conf.level = .99)
@@ -38,7 +38,7 @@ test_that(
 
     expect_identical(
       object = t_test_output$full_result
-      , expected = "$\\Delta M = -1.58$, 99\\% CI $[-4.03$, $0.87]$, $t(17.78) = -1.86$, $p = .079$"
+      , expected = "$\\Delta M = -1.58$, 99\\% CI $[-4.03, 0.87]$, $t(17.78) = -1.86$, $p = .079$"
     )
 
 #     t_test <- t.test(extra ~ group, data = sleep, var.equal = TRUE)
@@ -60,7 +60,7 @@ test_that(
         , p.value = "$p$"
       )
     )
-    expect_identical(t_test_output$full, "$M_d = -1.58$, 95\\% CI $[-2.46$, $-0.70]$, $t(9) = -4.06$, $p = .003$")
+    expect_identical(t_test_output$full, "$M_d = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
 
     t_test <- t.test(sleep$extra, mu = 0)
     t_test_output <- apa_print(t_test)
@@ -76,7 +76,7 @@ test_that(
     )
     expect_identical(
       t_test_output$full
-      , "$M = 1.54$, 95\\% CI $[0.60$, $2.48]$, $t(19) = 3.41$, $p = .003$"
+      , "$M = 1.54$, 95\\% CI $[0.60, 2.48]$, $t(19) = 3.41$, $p = .003$"
     )
     # Provide a custom ci, check values and labelling
     ci <- structure(c(1.0, 2.0), "conf.level" = .7)
@@ -91,16 +91,16 @@ test_that(
         , p.value = "$p$"
       )
     )
-    expect_identical(t_test_output$est, "$M = 1.54$, 70\\% CI $[1.00$, $2.00]$")
+    expect_identical(t_test_output$est, "$M = 1.54$, 70\\% CI $[1.00, 2.00]$")
 
     t_test_output <- apa_print(t_test, stat_name = "foobar")
     expect_identical(t_test_output$stat, "$foobar(19) = 3.41$, $p = .003$")
 
     t_test_output <- apa_print(t_test, est_name = "foobar")
-    expect_identical(t_test_output$est, "$foobar = 1.54$, 95\\% CI $[0.60$, $2.48]$")
+    expect_identical(t_test_output$est, "$foobar = 1.54$, 95\\% CI $[0.60, 2.48]$")
 
     t_test_output <- apa_print(t_test, digits = 3)
-    expect_identical(t_test_output$est, "$M = 1.540$, 95\\% CI $[0.596$, $2.484]$")
+    expect_identical(t_test_output$est, "$M = 1.540$, 95\\% CI $[0.596, 2.484]$")
   }
 )
 
@@ -132,8 +132,8 @@ test_that(
         , p.value   = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$est,  "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$")
-    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60$, $0.10]$, $W = 25.50$, $p = .069$")
+    expect_identical(wilcox_test_output$est,  "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60, 0.10]$")
+    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
 
 
     wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, exact = FALSE)
@@ -163,7 +163,7 @@ test_that(
         , p.value   = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}^* = 1.60$, 96\\% CI $[0.40$, $2.70]$, $V = 162.50$, $p = .007$")
+    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}^* = 1.60$, 96\\% CI $[0.40, 2.70]$, $V = 162.50$, $p = .007$")
   }
 )
 
@@ -189,8 +189,8 @@ test_that(
     )
 
     expect_identical(cor_test_output$stat, "$t(7) = 1.84$, $p = .108$")
-    expect_identical(cor_test_output$est, "$r = .57$, 95\\% CI $[-.15$, $.90]$")
-    expect_identical(cor_test_output$full, "$r = .57$, 95\\% CI $[-.15$, $.90]$, $t(7) = 1.84$, $p = .108$")
+    expect_identical(cor_test_output$est, "$r = .57$, 95\\% CI $[-.15, .90]$")
+    expect_identical(cor_test_output$full, "$r = .57$, 95\\% CI $[-.15, .90]$, $t(7) = 1.84$, $p = .108$")
 
     # Spearman's rank correlation ----
     cor_test <- cor.test(x, y, method = "spearman")
@@ -348,11 +348,11 @@ test_that(
     # positive infinity ----
     expect_identical(
       object = apa_out$full_result
-      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54$, $\\infty]$, $t(21.88) = -2.46$, $p = .989$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54, \\infty]$, $t(21.88) = -2.46$, $p = .989$"
     )
     expect_identical(
       object = apa_out$estimate
-      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54$, $\\infty]$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-9.54, \\infty]$"
     )
     expect_identical(
       apa_out$table$conf.int
@@ -362,16 +362,16 @@ test_that(
     # negative infinity ----
     expect_identical(
       object = apa2$full_result
-      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty$, $-1.70]$, $t(21.88) = -2.46$, $p = .011$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty, -1.70]$, $t(21.88) = -2.46$, $p = .011$"
     )
     expect_identical(
       object = apa2$estimate
-      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty$, $-1.70]$"
+      , expected = "$\\Delta M = -5.62$, 95\\% CI $[-\\infty, -1.70]$"
     )
     expect_identical(
       apa2$table$conf.int
       , expected = structure(
-        "[$-\\infty$, -1.70]"
+        "[-$\\infty$, -1.70]"
         , label = "95\\% CI"
         , class = c("papaja_labelled", "character")
         , conf.level = .95

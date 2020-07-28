@@ -109,7 +109,7 @@
 #'   class(res_table) <- c("apa_results_table", "data.frame")
 #'
 #'   # prepare final output container ----
-#'   res <- apa_print_container()
+#'   res <- init_apa_results()
 #'   res$table <- res_table
 #'
 #'   res$estimate <- as.list(

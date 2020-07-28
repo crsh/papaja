@@ -75,7 +75,7 @@ apa_print.summary.glht <- function(
   contrast_table$p.value <- printp(contrast_table$p.value)
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   apa_res$estimate <- apply(contrast_table, 1, function(y) {
     paste0("$\\Delta M = ", y["estimate"], "$, ", conf_level, " ", y["confint"])
@@ -171,7 +171,7 @@ apa_print.summary.glht <- function(
 #   colnames(x) <- c("contrast", split_by, "estimate", "std.error", df_colname, ci_colnames, stat_colnames)
 #
 #   # Assamble table
-#   apa_res <- apa_print_container()
+#   apa_res <- init_apa_results()
 #
 #   if(!is.null(split_by)) {
 #     contrast_list <- split(x, x[, split_by])

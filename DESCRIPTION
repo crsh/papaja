@@ -18,7 +18,8 @@ Depends:
 Imports:
   base64enc,
   bookdown (>= 0.9.1),
-  broom (>= 0.5.2.9001),
+  broom (>= 0.7.0),
+  glue (>= 1.4.0),
   knitr (>= 1.26),
   methods,
   rmarkdown (>= 2.0),
@@ -52,6 +53,6 @@ SystemRequirements: Rendering the document template requires pandoc (>= 2.0; htt
 License: MIT + file LICENSE
 LazyData: yes
 Encoding: UTF-8
-RoxygenNote: 7.1.0.9000
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US

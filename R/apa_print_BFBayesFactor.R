@@ -17,7 +17,7 @@
 #' @param min Numeric. Lower limit of the Bayes factor before switching to scientific notation.
 #' @param evidential_boost Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
 #'   corresponding models (see details).
-#' @inheritDotParams printnum.numeric -x -margin
+#' @inheritDotParams printnum.numeric -x
 #'
 #' @details For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
 #'   odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
@@ -80,7 +80,7 @@ apa_print.BFBayesFactor <- function(
     names(bf) <- names(x)$numerator
   } else bf <- apa_print_bf(x, ...)
 
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
   apa_res$statistic <- bf
 
   if(class(x@numerator[[1]]) %in% c("BFoneSample", "BFindepSample")) {
@@ -128,7 +128,7 @@ apa_print.BFBayesFactorTop <- function(x, ...) {
   omitted_terms <- lapply(restricted_terms, function(x) full_terms[!full_terms %in% x])
   names(bf) <- sanitize_terms(omitted_terms)
 
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
   apa_res$statistic <- as.list(rev(bf))
 
   apa_res
@@ -144,7 +144,7 @@ apa_print.BFBayesFactorList <- function(x, ...) {
   bf <- vapply(x, apa_print_bf, as.character(as.vector(x[[1]])), ...)
   names(bf) <- names(x)
 
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
   apa_res$statistic <- as.list(bf)
 
   apa_res

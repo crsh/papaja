@@ -32,10 +32,12 @@ apa_print.summary.manova <- function(x, in_paren = FALSE, ...) {
 
   canonical_table <- canonize(df)
   beautiful_table <- beautify(canonical_table, ...)
-
-  create_container(
+  
+  glue_apa_results(
     beautiful_table
-    , sanitized_terms = sanitize_terms(df$Effect)
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
+    , term_names = sanitize_terms(df$Effect)
     , in_paren = in_paren
   )
 }

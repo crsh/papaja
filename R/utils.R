@@ -88,7 +88,7 @@ validate <- function(
 #'    }
 #' @keywords internal
 
-apa_print_container <- function(){
+init_apa_results <- function(){
   structure(
     list(
       estimate = NULL
@@ -247,7 +247,7 @@ canonize <- function(
 #' @param ... Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).
 #' @keywords internal
 
-beautify <- function(x, standardized = FALSE, ...) {
+beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
   validate(x, check_class = "data.frame")
   validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
@@ -262,7 +262,8 @@ beautify <- function(x, standardized = FALSE, ...) {
       x[[i]] <- print_df(x[[i]])
     } else if(i == "conf.int") {
       tmp <- unlist(lapply(X = x[[i]], FUN = function(x, ...){
-        paste0("[", paste(printnum(x, ...), collapse = ", "), "]")
+        # TODO: Switch to using print_interval here
+        paste0("[", paste(printnum(x, use_math = use_math, ...), collapse = ", "), "]")
       }, ...))
       variable_label(tmp) <- variable_label(x[[i]])
       attr(tmp, "conf.level") <- attr(x[[i]][[1]], "conf.level")
@@ -286,206 +287,6 @@ beautify <- function(x, standardized = FALSE, ...) {
 
   class(x) <- c("apa_results_table", "data.frame")
   x
-}
-
-
-#' Create APA Results List from a Beautified Table
-#'
-#' Internal function that takes a beautified table and constructs an object of class
-#' \code{c("apa_results", "list")}, the canonical output object from \code{\link{apa_print}}.
-
-#' @param in_paren Logical. Indicates if parentheses in the output strings (e.g., thos around degrees of freedom)
-#'   should be replaced with brackets. Useful if the complete output strings are supposed to be reported within parentheses.
-#' @keywords internal
-
-create_container <- function(x, in_paren, add_par = NULL, sanitized_terms = NULL) {
-
-  validate(x, check_class = "apa_results_table")
-  validate(in_paren, check_class = "logical")
-
-
-  # Build output container ----
-  apa_res <- apa_print_container()
-
-
-  # estimate ----
-  estimate_list <- list(sep = ", ")
-
-  if(!is.null(x$estimate)) {
-    estimate_list$estimate <- paste0(
-      gsub(variable_label(x$estimate), pattern = "\\$$", replacement = " ")
-      , add_equals(x$estimate)
-      , "$"
-    )
-  }
-  if(!is.null(x$conf.int)) {
-    estimate_list$conf.int <- paste0(
-      attr(x$conf.int, "conf.level") * 100
-      , "\\% CI "
-      ,
-      gsub(
-        x = gsub(
-          x = gsub(x = gsub(
-            x = x$conf.int, pattern = "\\$", replacement = ""
-          ), pattern = "\\[", replacement = "$[")
-          , pattern = "\\]", replacement = "]$")
-        , pattern = ", ", replacement = "$, $")
-    )
-  }
-  # todo: try to add standard error if conf.int not available
-  if(length(estimate_list) > 1L) {
-    apa_res$estimate <- do.call("paste", estimate_list)
-    if(in_paren) apa_res$estimate <- in_paren(apa_res$estimate)
-  }
-
-
-  # statistic ----
-  dfs <- NULL
-  if(!is.null(x$df)) dfs <- paste0("(", x$df, add_par, ")")
-  if(!is.null(x$df1) && !is.null(x$df2)) dfs <- paste0("(", x$df1, ", ", x$df2, ")")
-
-  stat_list <- list(sep = ", ")
-
-  if(!is.null(x$multivariate.statistic)) {
-    stat_list$multivariate.statistic <- paste0(
-      gsub(x = variable_label(x$multivariate.statistic), pattern = "\\$$", replacement = " ")
-      , add_equals(x$multivariate.statistic)
-      , "$"
-    )
-  }
-  if(!is.null(x$statistic)) {
-    stat_list$statistic <- paste0(
-      gsub(x = variable_label(x$statistic), pattern = "\\$$", replacement = "")
-      , dfs
-      , " "
-      , add_equals(x$statistic)
-      , "$"
-    )
-  }
-  if(!is.null(x$p.value)) {
-    stat_list$p.value <- paste0(
-      "$p "
-      , add_equals(x$p.value)
-      , "$"
-    )
-  }
-
-  if(length(stat_list) > 1L) {
-    apa_res$statistic <- do.call("paste", stat_list)
-    if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
-  }
-
-
-  # full_result ----
-  full_list <- list(sep = ", ")
-  if(!is.null(apa_res$estimate))  full_list$est  <- apa_res$estimate
-  if(!is.null(apa_res$statistic)) full_list$stat <- apa_res$statistic
-
-  apa_res$full_result <- do.call("paste", full_list)
-
-
-  # return as lists if more than one term
-  apa_res[1:3] <- lapply(X = apa_res[1:3], FUN = function(x){
-    if(length(x) > 1L) {
-      y <- as.list(x)
-      if(!is.null(sanitized_terms)) names(y) <- sanitized_terms
-      return(y)
-    }
-
-    if(length(x) == 1L) return(x)
-  })
-
-  apa_res$table <- x
-  apa_res
-}
-
-
-
-#' Create interval estimate string
-#'
-#' Creates a character string to report an interval estimate. \emph{This function is not exported.}
-#'
-#' @param x Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
-#'    and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and coefficient names as row names.
-#' @param conf_level Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
-#'    they cannot be determined from column names or attributes of \code{x}.
-#' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-#' @param interval_type Character. Abbreviation indicating the type of interval
-#'   estimate, e.g. \code{CI}.
-#' @inheritDotParams printnum
-#'
-#' @keywords internal
-#' @seealso \code{\link{printnum}}
-#' @examples
-#' \dontrun{
-#' print_confint(c(1, 2), conf_level = 0.95)
-#' }
-
-print_interval <- function(
-  x
-  , conf_level = NULL
-  , use_math = FALSE
-  , interval_type
-  , ...
-) {
-  sapply(x, validate, check_class = "numeric", check_infinite = FALSE)
-  validate(interval_type, check_class = "character", check_length = 1, check_NA = FALSE)
-
-  if(is.data.frame(x)) x <- as.matrix(x)
-  ci <- printnum(x, use_math = use_math, ...)
-
-  if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
-
-  if(!is.null(conf_level)) {
-    validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
-    if(conf_level < 1) conf_level <- conf_level * 100
-    conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
-  }
-
-  if(!is.matrix(x)) {
-    validate(ci, "x", check_length = 2)
-    apa_ci <- paste0(conf_level, "$[", paste(ci, collapse = "$, $"), "]$")
-    return(apa_ci)
-  } else {
-    if(!is.null(rownames(ci))) {
-      terms <- sanitize_terms(rownames(ci))
-    } else {
-      terms <- 1:nrow(ci)
-    }
-
-    if(!is.null(colnames(ci)) && is.null(conf_level)) {
-      conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
-      conf_level <- 100 - conf_level[1] * 2
-      conf_level <- paste0(conf_level, "\\% CI ")
-    }
-    if(is.na(interval_type)) conf_level <- NULL
-
-    apa_ci <- list()
-    for(i in 1:length(terms)) {
-      apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
-    }
-
-    if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
-    return(apa_ci)
-  }
-}
-
-print_confint <- function(
-  x
-  , conf_level = NULL
-  , interval_type = "CI"
-  , ...
-) {
-  print_interval(x, conf_level = conf_level, interval_type = interval_type, ...)
-}
-
-print_hdint <- function(
-  x
-  , conf_level = NULL
-  , interval_type = "HDI"
-  , ...
-) {
-  print_interval(x, conf_level = conf_level, interval_type = interval_type, ...)
 }
 
 
