@@ -18,7 +18,7 @@ add_glue_to_apa_results(
 )
 }
 \arguments{
-\item{x}{An environment, list or data frame used to lookup values for
+\item{x}{An environment, list or data frame used to look up values for
 substitution.}
 
 \item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
@@ -26,11 +26,11 @@ string(s) to format. Multiple inputs are concatenated together before formatting
 Named arguments are taken to be temporary variables available for substitution.}
 
 \item{est_glue}{Character. (Named vector of) expressions string(s) to
- format. Each string creates a new (named) element in the 
+ format. Each string creates a new (named) element in the
 `estimate`-sublist.}
 
 \item{stat_glue}{Character. (Named vector of) expressions string(s) to
- format. Each string creates a new (named) element in the 
+ format. Each string creates a new (named) element in the
 `statistic`-sublist.}
 
 \item{container}{List of class `apa_results` to add the glued results to.}
@@ -44,8 +44,8 @@ Named arguments are taken to be temporary variables available for substitution.}
 statistics are glued.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
-parentheses. If `TRUE` parentheses in the formatted string (e.g., those
-those enclosing degrees of freedom) are replaced with brackets.}
+parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 }
 \value{
 Returns a list of class `apa_results`
@@ -67,7 +67,7 @@ glance_iris_lm$df.residual <- printnum(as.integer(glance_iris_lm$df.residual))
 
 # Create `apa_results`-list
 lm_results <- glue_apa_results(
-    x = tidy_iris_lm 
+    x = tidy_iris_lm
     , df = glance_iris_lm$df.residual
     , est_glue = "$b = <<estimate>>, 95\% CI $[<<conf.low>>,~<<conf.high>>]$"
     , stat_glue = "$t(<<df>>) = <<statistic>>$, $p <<p.value>>$"
@@ -76,16 +76,16 @@ lm_results <- glue_apa_results(
 
 # Add modelfit information
 add_glue_to_apa_results(
-    .x = glance_iris_lm 
-    , container = lm_results 
-    , sublist = "modelfit" 
-    , est_glue = c( 
-        r2 = "$R^2 = <<r.squared>>$" 
-        , aic = "" 
-    ) 
-    , stat_glue = c( 
-        r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p = #' <<papaja:::add_equals(p.value)>>$" 
-        , aic = "$\\\\mathrm{AIC} = <<AIC>>$" 
+    .x = glance_iris_lm
+    , container = lm_results
+    , sublist = "modelfit"
+    , est_glue = c(
+        r2 = "$R^2 = <<r.squared>>$"
+        , aic = ""
+    )
+    , stat_glue = c(
+        r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<papaja:::add_equals(p.value)>>$"
+        , aic = "$\\\\mathrm{AIC} = <<AIC>>$"
     )
 )
 }

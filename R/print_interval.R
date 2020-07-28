@@ -10,18 +10,18 @@
 #' @param conf_level Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of `x`, see Details.
 #' @param interval_type Character. Abbreviation indicating the type of interval
 #'    estimate, e.g. `CI`.
-#' @param use_math Logical. Indicates whether to insert `$` into the 
+#' @param use_math Logical. Indicates whether to insert `$` into the
 #'    output so that `Inf` or scientific will be rendered correctly.
 #' @inheritDotParams printnum
-#' 
+#'
 #' @details If possible the confidence level of the interval is inferred from
 #'    attributes of `x`. For a vector of length 2, the attribute `conf.level` is
-#'    is consulted; for a `matrix` or `data.frame` the column names are used, 
+#'    is consulted; for a `matrix` or `data.frame` the column names are used,
 #'    if they are of the format "2.5 \%" and "97.5 \%".
-#' 
+#'
 #'    If `x` is a `matrix` or `data.frame` the row names are used as names for
 #'    the returned `list` of intervals.
-#' 
+#'
 #' @return A singel interval is returned as a `character` vector of length 1;
 #'    multiple intervals are returned as a named `list` of `character` vectors
 #'    of length 1.
@@ -55,6 +55,7 @@ print_interval <- function(
 }
 
 #' @method print_interval default
+#' @export
 
 print_interval.default <- function(x, ...) {
     stop("No method for objects of class ", class(x))
@@ -62,6 +63,7 @@ print_interval.default <- function(x, ...) {
 
 #' @rdname print_interval
 #' @method print_interval data.frame
+#' @export
 
 print_interval.data.frame <- function(x, ...) {
     x <- as.matrix(x)
@@ -70,6 +72,7 @@ print_interval.data.frame <- function(x, ...) {
 
 #' @rdname print_interval
 #' @method print_interval numeric
+#' @export
 
 print_interval.numeric <- function(
     x
@@ -106,7 +109,7 @@ print_interval.numeric <- function(
     }
 
     x <- printnum(x, use_math = use_math, ...)
-    
+
     interval <- paste0(
         conf_level
         , "$["
@@ -119,6 +122,7 @@ print_interval.numeric <- function(
 
 #' @rdname print_interval
 #' @method print_interval matrix
+#' @export
 
 print_interval.matrix <- function(
     x

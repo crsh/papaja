@@ -3,13 +3,13 @@
 #' Typeset the contents of an object according to the specified expression
 #' strings and create a new or extend an existing `apa_results` object.
 #'
-#' @param x An environment, list or data frame used to lookup values for
+#' @param x An environment, list or data frame used to look up values for
 #'    substitution.
 #' @param est_glue Character. (Named vector of) expressions string(s) to
-#'     format. Each string creates a new (named) element in the 
+#'     format. Each string creates a new (named) element in the
 #'    `estimate`-sublist.
 #' @param stat_glue Character. (Named vector of) expressions string(s) to
-#'     format. Each string creates a new (named) element in the 
+#'     format. Each string creates a new (named) element in the
 #'    `statistic`-sublist.
 #' @param container List of class `apa_results` to add the glued results to.
 #' @param sublist Character. Name of (new) sublist in `estimate`
@@ -19,8 +19,8 @@
 #'    `statistics`-, and `full_result`-sublists, if multiple estimates or
 #'    statistics are glued.
 #' @param in_paren Logical. Whether the formatted string is to be reported in
-#'    parentheses. If `TRUE` parentheses in the formatted string (e.g., those
-#'    those enclosing degrees of freedom) are replaced with brackets.
+#'    parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
+#'    enclosing degrees of freedom) are replaced with brackets.
 #' @inheritParams glue::glue
 #'
 #' @return Returns a list of class `apa_results`
@@ -31,47 +31,47 @@
 #' iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 #' tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
 #' tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
-#' 
+#'
 #' glance_iris_lm <- broom::glance(iris_lm)
 #' glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
 #' glance_iris_lm$df <- printnum(as.integer(glance_iris_lm$df))
 #' glance_iris_lm$df.residual <- printnum(as.integer(glance_iris_lm$df.residual))
-#' 
+#'
 #' # Create `apa_results`-list
 #' lm_results <- glue_apa_results(
-#'     x = tidy_iris_lm 
+#'     x = tidy_iris_lm
 #'     , df = glance_iris_lm$df.residual
 #'     , est_glue = "$b = <<estimate>>, 95% CI $[<<conf.low>>,~<<conf.high>>]$"
 #'     , stat_glue = "$t(<<df>>) = <<statistic>>$, $p <<p.value>>$"
 #'     , term_names = make.names(names(coef(iris_lm)))
 #' )
-#' 
+#'
 #' # Add modelfit information
 #' add_glue_to_apa_results(
-#'     .x = glance_iris_lm 
-#'     , container = lm_results 
-#'     , sublist = "modelfit" 
-#'     , est_glue = c( 
-#'         r2 = "$R^2 = <<r.squared>>$" 
-#'         , aic = "" 
-#'     ) 
-#'     , stat_glue = c( 
-#'         r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p = #' <<papaja:::add_equals(p.value)>>$" 
-#'         , aic = "$\\mathrm{AIC} = <<AIC>>$" 
+#'     .x = glance_iris_lm
+#'     , container = lm_results
+#'     , sublist = "modelfit"
+#'     , est_glue = c(
+#'         r2 = "$R^2 = <<r.squared>>$"
+#'         , aic = ""
+#'     )
+#'     , stat_glue = c(
+#'         r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<papaja:::add_equals(p.value)>>$"
+#'         , aic = "$\\mathrm{AIC} = <<AIC>>$"
 #'     )
 #' )
 
 glue_apa_results <- function(x = NULL, ...) {
-    if(!is.null(x)) papaja:::validate(x, check_class = "data.frame")
+    if(!is.null(x)) validate(x, check_class = "data.frame")
 
     apa_res <- add_glue_to_apa_results(
         .x = x
         , ...
-        , container = papaja:::init_apa_results()
+        , container = init_apa_results()
     )
 
     if(!is.null(x) && is.data.frame(x)) {
-        if(!is.null(x$term)) x$term <- papaja:::prettify_terms(x$term)
+        if(!is.null(x$term)) x$term <- prettify_terms(x$term)
         if(!is.null(x$conf.int)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
         apa_res$table <- x
     }
@@ -143,13 +143,13 @@ add_glue_to_apa_results <- function(
     })
 
     if(is.null(sublist)) {
-        if(length(res$estimate) > 0) container[["estimate"]] <- res$estimate
-        if(length(res$statistic) > 0) container[["statistic"]] <- res$statistic
-        if(length(res$full_result) > 0) container[["full_result"]] <- res$full_result
+        if(length(res$estimate) > 0L) container[["estimate"]] <- res$estimate
+        if(length(res$statistic) > 0L) container[["statistic"]] <- res$statistic
+        if(length(res$full_result) > 0L) container[["full_result"]] <- res$full_result
     } else {
-        if(length(res$estimate) > 0) container[["estimate"]][[sublist]] <- res$estimate
-        if(length(res$statistic) > 0) container[["statistic"]][[sublist]] <- res$statistic
-        if(length(res$full_result) > 0) container[["full_result"]][[sublist]] <- res$full_result
+        if(length(res$estimate) > 0L) container[["estimate"]][[sublist]] <- res$estimate
+        if(length(res$statistic) > 0L) container[["statistic"]][[sublist]] <- res$statistic
+        if(length(res$full_result) > 0L) container[["full_result"]][[sublist]] <- res$full_result
     }
 
     container
@@ -255,5 +255,5 @@ svl <- function(x) {
     y <- variable_labels(x)
     if(is.null(y)) y <- x
 
-    gsub("\\$", "", y)
+    gsub(pattern = "\\$", replacement = "", x = y, fixed = TRUE)
 }

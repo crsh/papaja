@@ -56,7 +56,7 @@ a two-column `matrix`, or a `data.frame`, which can coerced to a
 \item{interval_type}{Character. Abbreviation indicating the type of interval
 estimate, e.g. `CI`.}
 
-\item{use_math}{Logical. Indicates whether to insert `$` into the 
+\item{use_math}{Logical. Indicates whether to insert `$` into the
 output so that `Inf` or scientific will be rendered correctly.}
 
 \item{y}{Numeric. A vector of the same length as `x`.}
@@ -73,7 +73,7 @@ Creates a character string to report an interval.
 \details{
 If possible the confidence level of the interval is inferred from
    attributes of `x`. For a vector of length 2, the attribute `conf.level` is
-   is consulted; for a `matrix` or `data.frame` the column names are used, 
+   is consulted; for a `matrix` or `data.frame` the column names are used,
    if they are of the format "2.5 \%" and "97.5 \%".
 
    If `x` is a `matrix` or `data.frame` the row names are used as names for
