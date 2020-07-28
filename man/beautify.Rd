@@ -4,7 +4,7 @@
 \alias{beautify}
 \title{Beautify a Canonical Table}
 \usage{
-beautify(x, standardized = FALSE, ...)
+beautify(x, standardized = FALSE, use_math = FALSE, ...)
 }
 \arguments{
 \item{x}{An object created by \code{\link{canonize}}.}
