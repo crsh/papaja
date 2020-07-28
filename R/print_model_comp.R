@@ -10,6 +10,7 @@
 #' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
+#' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
 #' @return
 #'    A named list containing the following components:
 #'
@@ -39,6 +40,7 @@ print_model_comp <- function(
   , models = NULL
   , ci = NULL
   , boot_samples = 1000
+  , progress_bar = FALSE
   , in_paren = FALSE
   , observed_predictors = TRUE
 ) {
@@ -69,7 +71,7 @@ print_model_comp <- function(
       }
     )
   } else { # Bootstrap CI
-    boot_r2_ci <- delta_r2_ci(x, models, ci = ci, R = boot_samples)
+    boot_r2_ci <- delta_r2_ci(x, models, ci = ci, R = boot_samples, progress_bar = progress_bar)
 
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)

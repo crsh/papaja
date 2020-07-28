@@ -8,6 +8,7 @@
 #' @param ci Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.
+#' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param ... Additional arguments passed to \code{anova_fun}
 #'
@@ -75,6 +76,7 @@ apa_print.list <- function(
   , anova_fun = stats::anova
   , ci = 0.90
   , boot_samples = 10000
+  , progress_bar = FALSE
   , observed_predictors = TRUE
   , in_paren = FALSE
   , ...
@@ -85,6 +87,7 @@ apa_print.list <- function(
 
   validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(boot_samples, check_class = "numeric", check_length = 1)
+  validate(progress_bar, check_class = "logical", check_length = 1L)
   validate(in_paren, check_class = "logical", check_length = 1)
 
   model_labels <- names(x)
@@ -102,6 +105,6 @@ apa_print.list <- function(
   }
 
   if("apa_model_comp" %in% class(variance_table)) { # Model comparison object
-    return(print_model_comp(variance_table, models = x, ci = ci, boot_samples = boot_samples, in_paren = in_paren))
+    return(print_model_comp(variance_table, models = x, ci = ci, boot_samples = boot_samples, progress_bar = progress_bar, in_paren = in_paren))
   }
 }

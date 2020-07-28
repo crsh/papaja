@@ -9,6 +9,7 @@ print_model_comp(
   models = NULL,
   ci = NULL,
   boot_samples = 1000,
+  progress_bar = FALSE,
   in_paren = FALSE,
   observed_predictors = TRUE
 )
@@ -21,6 +22,8 @@ print_model_comp(
 \item{ci}{Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.}
+
+\item{progress_bar}{Logical. Determines whether a progress bar is printed while bootstrapping.}
 
 \item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 
