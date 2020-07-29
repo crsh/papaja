@@ -1,4 +1,4 @@
-#' Create interval strings
+#' Create Interval Strings
 #'
 #' Creates a character string to report an interval.
 #' \emph{This function is not exported.}
@@ -10,8 +10,7 @@
 #' @param conf_level Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of `x`, see Details.
 #' @param interval_type Character. Abbreviation indicating the type of interval
 #'    estimate, e.g. `CI`.
-#' @param use_math Logical. Indicates whether to insert `$` into the
-#'    output so that `Inf` or scientific will be rendered correctly.
+#' @param enclose_math Logical. Indicates whether the interval should be enclosed in `$` (i.e., math environment).
 #' @inheritDotParams printnum
 #'
 #' @details If possible the confidence level of the interval is inferred from
@@ -43,10 +42,10 @@ print_interval <- function(
     , ...
     , conf_level = NULL
     , interval_type = NULL
-    , use_math = FALSE
+    , enclose_math = FALSE
 ) {
     sapply(x, validate, name = "x", check_class = "numeric", check_infinite = FALSE)
-    validate(use_math, check_class = "logical", check_length = 1)
+    validate(enclose_math, check_class = "logical", check_length = 1)
     if(!is.null(interval_type)) validate(interval_type, check_class = "character", check_length = 1)
 
     if(!is.null(conf_level)) validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
@@ -79,10 +78,10 @@ print_interval.numeric <- function(
     , y = NULL
     , conf_level = NULL
     , interval_type = NULL
-    , use_math = FALSE
+    , enclose_math = FALSE
     , ...
 ) {
-    # Manualy construct matrix
+    # Manually construct matrix
     if(!is.null(y)) {
         sapply(y, validate, name = "y", check_class = "numeric", check_infinite = FALSE)
         if(!is.vector(x) && !is.vector(y)) stop("When passing 'x' and 'y' both must be vectors.")
@@ -90,14 +89,14 @@ print_interval.numeric <- function(
 
         if(length(x) > 1) {
             x <- matrix(c(x, y), ncol = 2)
-            res <- print_interval(x, conf_level = conf_level, use_math = use_math, interval_type = interval_type, ...)
+            res <- print_interval(x, conf_level = conf_level, enclose_math = enclose_math, interval_type = interval_type, ...)
             return(res)
         } else {
             x <- c(x, y)
         }
     }
 
-    validate(x, check_length = 2)
+    validate(x, check_length = 2, check_infinite = FALSE)
 
     if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
 
@@ -108,14 +107,23 @@ print_interval.numeric <- function(
         conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
     }
 
-    x <- printnum(x, use_math = use_math, ...)
+    x <- printnum(x, ...)
 
-    interval <- paste0(
+    if(enclose_math) {
+      interval <- paste0(
+          conf_level
+          , "$["
+          , paste(gsub(x, pattern = "$", replacement = "", fixed = TRUE), collapse = ", ")
+          , "]$"
+      )
+    } else {
+      interval <- paste0(
         conf_level
-        , "$["
-        , paste(x, collapse = "$, $")
-        , "]$"
-    )
+        , "["
+        , paste(x, collapse = ", ")
+        , "]"
+      )
+    }
 
     interval
 }
@@ -128,7 +136,7 @@ print_interval.matrix <- function(
     x
     , conf_level = NULL
     , interval_type = NULL
-    , use_math = FALSE
+    , enclose_math = FALSE
     , ...
 ) {
     if(!is.null(colnames(x))) {
@@ -150,7 +158,7 @@ print_interval.matrix <- function(
         conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
     }
 
-    x <- printnum(x, use_math = use_math, ...)
+    x <- printnum(x, ...)
 
     if(!is.null(rownames(x))) {
         terms <- sanitize_terms(rownames(x))
@@ -159,13 +167,24 @@ print_interval.matrix <- function(
     }
 
     interval <- list()
-    for(i in 1:length(terms)) {
+    if(enclose_math) {
+      for(i in 1:length(terms)) {
         interval[[terms[i]]] <- paste0(
             conf_level
             , "$["
-            , paste(x[i, ], collapse = "$, $")
+            , paste(gsub(x[i, ], pattern = "$", replacement = "", fixed = TRUE), collapse = ", ")
             , "]$"
         )
+      }
+    } else {
+      for(i in 1:length(terms)) {
+        interval[[terms[i]]] <- paste0(
+          conf_level
+          , "["
+          , paste(x[i, ], collapse = ", ")
+          , "]"
+        )
+      }
     }
 
     if(length(interval) == 1) interval <- unlist(interval)

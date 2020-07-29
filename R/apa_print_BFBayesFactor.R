@@ -298,7 +298,7 @@ bf_estimates_ttest <- function(
   est_mean <- central_tendency(samples)
   est_hdi <- hd_int(samples, level = hdi)
 
-  estimate <- paste0("$", est_name, " = ", printnum(est_mean), "$ ", print_hdint(est_hdi))
+  estimate <- paste0("$", est_name, " = ", printnum(est_mean), "$ ", print_hdint(est_hdi, enclose_math = TRUE))
   estimate
 }
 

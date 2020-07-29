@@ -27,13 +27,13 @@ test_that(
     expect_equal(length(ttest_output$est), 1)
     expect_is(ttest_output$est, "character")
 
-    expect_equal(ttest_output$est, "$M = -1.43$ 95\\% HDI $[-2.33$, $-0.54]$")
+    expect_equal(ttest_output$est, "$M = -1.43$ 95\\% HDI $[-2.33, -0.54]$")
 
     # full
     expect_equal(length(ttest_output$full), 1)
     expect_is(ttest_output$full, "character")
 
-    expect_equal(ttest_output$full, "$M = -1.43$ 95\\% HDI $[-2.33$, $-0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
+    expect_equal(ttest_output$full, "$M = -1.43$ 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
   }
 )
 
@@ -62,13 +62,13 @@ test_that(
     expect_equal(length(ttest_output$est), 1)
     expect_is(ttest_output$est, "character")
 
-    expect_equal(ttest_output$est, "$M = -1.13$ 95\\% HDI $[-2.76$, $0.46]$")
+    expect_equal(ttest_output$est, "$M = -1.13$ 95\\% HDI $[-2.76, 0.46]$")
 
     # full
     expect_equal(length(ttest_output$full), 1)
     expect_is(ttest_output$full, "character")
 
-    expect_equal(ttest_output$full, "$M = -1.13$ 95\\% HDI $[-2.76$, $0.46]$, $\\mathrm{BF}_{\\textrm{10}} = 1.27$")
+    expect_equal(ttest_output$full, "$M = -1.13$ 95\\% HDI $[-2.76, 0.46]$, $\\mathrm{BF}_{\\textrm{10}} = 1.27$")
   }
 )
 

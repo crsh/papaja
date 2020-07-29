@@ -7,14 +7,14 @@
 \alias{print_interval.matrix}
 \alias{print_confint}
 \alias{print_hdint}
-\title{Create interval strings}
+\title{Create Interval Strings}
 \usage{
 print_interval(
   x,
   ...,
   conf_level = NULL,
   interval_type = NULL,
-  use_math = FALSE
+  enclose_math = FALSE
 )
 
 \method{print_interval}{data.frame}(x, ...)
@@ -24,7 +24,7 @@ print_interval(
   y = NULL,
   conf_level = NULL,
   interval_type = NULL,
-  use_math = FALSE,
+  enclose_math = FALSE,
   ...
 )
 
@@ -32,7 +32,7 @@ print_interval(
   x,
   conf_level = NULL,
   interval_type = NULL,
-  use_math = FALSE,
+  enclose_math = FALSE,
   ...
 )
 
@@ -56,8 +56,7 @@ a two-column `matrix`, or a `data.frame`, which can coerced to a
 \item{interval_type}{Character. Abbreviation indicating the type of interval
 estimate, e.g. `CI`.}
 
-\item{use_math}{Logical. Indicates whether to insert `$` into the
-output so that `Inf` or scientific will be rendered correctly.}
+\item{enclose_math}{Logical. Indicates whether the interval should be enclosed in `$` (i.e., math environment).}
 
 \item{y}{Numeric. A vector of the same length as `x`.}
 }

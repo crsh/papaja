@@ -227,7 +227,7 @@ apa_print.lm <- function(
     )
 
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
-      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level, enclose_math = TRUE))
     }
   } else {
     apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
@@ -279,7 +279,7 @@ apa_glm_res <- function(x, in_paren, conf_level) {
   })
 
   apa_res$estimate <- apply(x[, -1], 1, function(y) {
-    paste0("$", gsub("\\$", "", variable_label(x$estimate)), " = ", y["estimate"], "$, ", conf_level, "\\% CI ", y["ci"])
+    paste0("$", gsub("\\$", "", variable_label(x$estimate)), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", gsub(pattern = "$", replacement = "",  x = y["ci"], fixed = TRUE), "$")
   })
 
   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
