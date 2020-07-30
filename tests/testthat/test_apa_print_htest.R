@@ -356,7 +356,7 @@ test_that(
     )
     expect_identical(
       apa_out$table$conf.int
-      , expected = structure("[-9.54, $\\infty$]", label = "95\\% CI", class = c("papaja_labelled", "character"), conf.level = .95)
+      , expected = structure("[-9.54, $\\infty$]", label = "95\\% CI", class = c("papaja_labelled", "character"))
     )
 
     # negative infinity ----
@@ -374,7 +374,6 @@ test_that(
         "[-$\\infty$, -1.70]"
         , label = "95\\% CI"
         , class = c("papaja_labelled", "character")
-        , conf.level = .95
       )
     )
   }

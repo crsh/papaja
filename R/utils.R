@@ -208,27 +208,48 @@ canonize <- function(
 
   conf_level <- attr(x$conf.int, "conf.level")
   if(is.null(conf_level)) {
-    conf_level <- attr(x$conf.int[[1]], "conf.level")
+    conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
   }
   conf_label <- paste0(
     if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
     , "CI"
   )
-  # print(conf_label)
+
+  correction_type <- attr(x, "correction")
+  if(is.null(correction_type)) {
+    label_df1 <- "$\\mathit{df}_1$"
+    label_df2 <- "$\\mathit{df}_2$"
+  } else {
+    label_df1 <- paste0("$\\mathit{df}_1^{", correction_type, "}$")
+    label_df2 <- paste0("$\\mathit{df}_2^{", correction_type, "}$")
+  }
+
   colnames(x) <- make.names(colnames(x))
+
 
   new_labels <- c(
     lookup_labels
     , "estimate"     = est_label
+    , "Estimate"     = est_label
     , "coefficients" = est_label
     , "conf.int"     = conf_label
     , "statistic"    = stat_label
+    , "num.Df"       = label_df1
+    , "den.Df"       = label_df2
+    , "NumDF"        = label_df1
+    , "DenDF"        = label_df2
   )
 
   names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
+
+  warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
+  Therefore, be careful when using its output. Moreover, please visit https://github.com/crsh/papaja/issues and
+  file an issue together with the code that generated the output object. In doing so, you help us to fully
+  support the type of analysis you just conducted and make papaja a lttle bit better."
+
   if(!all(names_in_lookup_names)) {
-    warning("Some columns could not be renamed.", colnames(x)[!names_in_lookup_names])
+    warning("Some columns could not be renamed: '", paste(colnames(x)[!names_in_lookup_names], collapse = "', '"), "'", warning_unexpected)
   }
 
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
@@ -266,7 +287,6 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
         paste0("[", paste(printnum(x, use_math = use_math, ...), collapse = ", "), "]")
       }, ...))
       variable_label(tmp) <- variable_label(x[[i]])
-      attr(tmp, "conf.level") <- attr(x[[i]][[1]], "conf.level")
       x[[i]] <- tmp
     } else if (i == "estimate"){
       args$x <- x[[i]]
@@ -280,7 +300,11 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
   # rearrange ----
   multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+
+  se <- NULL
+  if(!any(colnames(x) == "conf.int")) se <- "std.err"
+
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
   x <- x[, ordered_cols, drop = FALSE]
   if(!is.null(x$term)) x <- sort_terms(x, "term")
   rownames(x) <- NULL
@@ -288,6 +312,8 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   class(x) <- c("apa_results_table", "data.frame")
   x
 }
+
+
 
 
 #' Sanitize term names

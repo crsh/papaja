@@ -21,6 +21,7 @@ lookup_names <- c(
   , "Effect"  = "term"
   , "Term"    = "term"
   # estimate
+  , "Estimate"                = "estimate"
   , "estimate"                = "estimate"
   , "mean.of.the.differences" = "estimate"
   , "cor"                     = "estimate"
@@ -33,10 +34,11 @@ lookup_names <- c(
   , "difference.in.means"     = "estimate"
   , "coefficients"            = "estimate"
   # ----
-  , "conf.int" = "conf.int"
-  , "stderr"   = "std.error"
-  , "std.err"  = "std.error"
-  , "sigma"    = "std.error"
+  , "conf.int"   = "conf.int"
+  , "stderr"     = "std.error"
+  , "std.err"    = "std.error"
+  , "Std..Error" = "std.error"
+  , "sigma"      = "std.error"
   # multivariate.statistic
   , "Pillai"    = "multivariate.statistic"
   , "Wilks"     = "multivariate.statistic"
@@ -44,10 +46,11 @@ lookup_names <- c(
   , "Hotelling.Lawley" = "multivariate.statistic"
   # statistic
   , "t"         = "statistic"
+  , "t.value"   = "statistic"
   , "tstat"     = "statistic"
   , "statistic" = "statistic"
   , "approx.F"  = "statistic"
-  , "F value"   = "statistic"
+  , "F.value"   = "statistic"
   , "F"         = "statistic"
   , "LRT"       = "statistic"
   , "Chisq"     = "statistic"
@@ -58,6 +61,7 @@ lookup_names <- c(
   , "S"         = "statistic"
   , "T"         = "statistic"
   , "z"         = "statistic"
+  , "z.value"   = "statistic"
   , "Bartlett.s.K.2"          = "statistic"
   , "Bartlett.s.K.squared"    = "statistic"
   # df, df1, df2
@@ -80,6 +84,8 @@ lookup_names <- c(
   , "Pr..Chisq." = "p.value"
   , "Pr..F."     = "p.value"
   , "Pr..PB."    = "p.value"
+  , "Pr...t.."   = "p.value"
+  , "Pr...z.."   = "p.value"
   , "pvalues"    = "p.value"
 )
 
@@ -109,9 +115,10 @@ lookup_labels <- c(
   , "difference.in.location"  = "$\\mathit{Mdn}_d$"
   , "difference.in.means"     = "$\\Delta M$"
   # standard error
-  , "stderr"   = "$\\mathit{SE}$"
-  , "std.err"  = "$\\mathit{SE}$"
-  , "sigma"    = "$\\mathit{SE}$"
+  , "stderr"     = "$\\mathit{SE}$"
+  , "std.err"    = "$\\mathit{SE}$"
+  , "Std..Error" = "$\\mathit{SE}$"
+  , "sigma"      = "$\\mathit{SE}$"
   # multivariate.statistic
   , "Pillai"           = "$V$"
   , "Wilks"            = "$\\Lambda$"
@@ -120,6 +127,7 @@ lookup_labels <- c(
   # statistic
   , "t"         = "$t$"
   , "tstat"     = "$t$"
+  , "t.value"   = "$t$"
   , "F.value"   = "$F$"
   , "F"         = "$F$"
   , "approx.F"  = "$F$"
@@ -132,6 +140,7 @@ lookup_labels <- c(
   , "S"                       = "$S$"
   , "T"                       = "$T$"
   , "z"                       = "$z$"
+  , "z.value"                 = "$z$"
   , "Bartlett.s.K.2"          = "$K^2$"
   , "Bartlett.s.K.squared"    = "$K^2$"
   # df, df1, df2
@@ -141,10 +150,6 @@ lookup_labels <- c(
   , "df"        = "$\\mathit{df}$"
   , "Df"        = "$\\mathit{df}$"
   , "Chi.Df"    = "$\\mathit{df}$"
-  , "num.Df"    = "$\\mathit{df}_1$"
-  , "den.Df"    = "$\\mathit{df}_2$"
-  , "NumDF"     = "$\\mathit{df}_1$"
-  , "DenDF"     = "$\\mathit{df}_2$"
   , "parameter.num.df"   = "$\\mathit{df}_1$"
   , "parameter.denom.df" = "$\\mathit{df}_2$"
   # p.value
@@ -152,5 +157,7 @@ lookup_labels <- c(
   , "Pr..Chisq." = "$p$"
   , "Pr..F."     = "$p$"
   , "Pr..PB."    = "$p$"
+  , "Pr...t.."   = "$p$"
+  , "Pr...z.."   = "$p$"
   , "pvalues"    = "$p$"
 )
