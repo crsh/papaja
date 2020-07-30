@@ -63,7 +63,7 @@ The function should work on a wide range of \code{htest} objects. Due to the lar
    a reproducible example in your report!).
 
    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-   \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
+   \pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 
    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
@@ -90,7 +90,7 @@ apa_print(cor_stat)
 smokers  <- c(83, 90, 129, 70)
 patients <- c(86, 93, 136, 82)
 prop_stat <- prop.test(smokers, patients)
-apa_print(prop_stat, n = sum(patients), est_name = "\\\\Delta p")
+apa_print(prop_stat, n = sum(patients))
 }
 \seealso{
 Other apa_print: 

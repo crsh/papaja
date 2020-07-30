@@ -33,8 +33,10 @@ print.apa_results_table <- function(x, ...) {
     x_legend <- x_legend[!is.na(x_legend$label) | !is.na(x_legend$unit), ]
     max_char <- max(nchar(x_legend$column))
 
+    max_shown <- ifelse(nrow(x_legend) == 6L, 6L, 5L)
+
     apply(
-      x_legend[1:min(5, nrow(x_legend)), ]
+      x_legend[seq_len(min(max_shown, nrow(x_legend))), ]
       , 1
       , function(x) {
         cat("\n", format(x["column"], width = max_char), ": ", sep = "")
@@ -43,31 +45,39 @@ print.apa_results_table <- function(x, ...) {
       }
     )
 
-    if(n_labels > 5) cat("\n... (", n_labels - 5, " more label", if(n_labels > 6) "s" else NULL, ")", sep = "")
+    if(n_labels > max_shown) cat("\n... (", n_labels - max_shown, " more label", if(n_labels > (max_shown + 1L)) "s" else NULL, ")", sep = "")
   }
 
   invisible(x)
 }
 
 
+#' #' Extract or Replace Columns of an APA Results Table
+#' #'
+#' #' blabla
+#' #'
+#' #' @rdname extract_apa_results_table
 #' #' @export
 #'
 #' `$.apa_results_table` <- function(x, name) {
 #'
-#'   aliases <- list(
-#'     "F" = "statistic"
-#'     # , "p" = "p.value" # no, because partical matching solves this issue
-#'     , "predictor" = "term"
+#'   aliases <- c(
+#'     "F"         = "statistic"
+#'     , "t"         = "statistic"
+#'     , "p"         = "p.value"
+#'     , "Predictor" = "term"
+#'     , "Effect"    = "term"
+#'     , "term"      = "term"
 #'   )
-#'   pmatch(name, c(names(aliases), colnames(x)))
+#'   name <- c(aliases, colnames(x))[pmatch(name, c(names(aliases), colnames(x)))]
 #'
-#'   if(name %in% names(aliases)) {
+#'   if(names(name) %in% names(aliases)) {
 #'     message("Indexing an apa_results_table with `$"
-#'     , name
-#'     , "` is deprecated. Use `$"
-#'     , aliases[name]
-#'     , "` instead.")
-#'     name <- aliases[name]
+#'             , names(name)
+#'             , "` is deprecated. Use `$"
+#'             , name
+#'             , "` instead.")
 #'   }
-#'   NextMethod("$", object = x, name = name) # dispatch to data.frame method
+#'   x[[name]]
 #' }
+

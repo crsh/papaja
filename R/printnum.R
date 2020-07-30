@@ -264,7 +264,7 @@ printnum.numeric <- function(
     y[is_infinite & use_math] <- paste0("$", y[is_infinite & use_math], "$")
   }
 
-  y[is_NA] <- rep(na_string, length.out = sum(is_NA))
+  y[is_NA] <- rep(na_string, length.out = length_x)[is_NA]
   y
 }
 
@@ -346,7 +346,7 @@ printnum.papaja_labelled <-function(x, ...){
 }
 
 
-#' Prepare numeric values for printing as p value
+#' Prepare Numeric Values for Printing as p value
 #'
 #' Convenience wrapper for \code{\link{printnum}} to print \emph{p} values.
 #'
@@ -375,7 +375,11 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
 }
 
 
-
+#' Print Degrees of Freedom
+#'
+#' This is an internal function for processing degrees of freedom. It takes care
+#' of printing trailing digits only if non-integer values are given.
+#'
 #' @keywords internal
 
 print_df <- function(x, digits = 2L) {
@@ -383,7 +387,19 @@ print_df <- function(x, digits = 2L) {
   if(is.null(x))    return(NULL)
   if(is.integer(x)) return(printnum(x))
 
-  return(printnum(x, digits = as.numeric(x %% 1 != 0) * digits))
+  validate(digits, check_class = "numeric", check_NA = TRUE)
+
+  if(length(digits) != 1L && length(x) != length(digits)) {
+    stop("The parameter `digits` must be of length 1 or equal to length of `x`.")
+  }
+
+  x_digits <- ifelse(
+    is.finite(x)
+    , as.integer(x %% 1 > 0) * digits
+    , 0L
+  )
+
+  return(printnum(x, digits = x_digits))
 }
 
 

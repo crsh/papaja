@@ -16,7 +16,7 @@ revision_letter_pdf(keep_tex = TRUE, ...)
   }}
 }
 \description{
-Template for creating an journal revision letters.
+Template for creating a journal revision letters.
 }
 \examples{
 NULL

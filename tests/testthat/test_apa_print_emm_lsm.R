@@ -77,7 +77,7 @@ test_that(
     expect_identical(
       object = tw_me_lsm_output$table$ci
       , expected = structure(
-        c("$[6.34$, $15.66]$",  "$[7.44$, $16.76]$", "$[7.64$, $16.96]$")
+        c("[6.34, 15.66]",  "[7.44, 16.76]", "[7.64, 16.96]")
         , label = "95\\% CI"
         , class = c("papaja_labelled", "character")
       )
@@ -156,7 +156,7 @@ test_that(
     expect_identical(
       object = tw_int_emm_output$table$ci
       , expected = structure(
-        c("$[7.17$, $16.43]$",  "$[8.37$, $17.63]$", "$[8.97$, $18.23]$", "$[5.57$, $14.83]$", "$[6.57$, $15.83]$", "$[6.37$, $15.63]$")
+        c("[7.17, 16.43]",  "[8.37, 17.63]", "[8.97, 18.23]", "[5.57, 14.83]", "[6.57, 15.83]", "[6.37, 15.63]")
         , label = "95\\% CI"
         , class = c("papaja_labelled", "character")
       )
@@ -351,7 +351,7 @@ test_that(
     expect_identical(
       object = tw_me_pairs_emm_output$table$ci
       , expected = structure(
-        c("$[-3.44$, $1.24]$",  "$[-3.64$, $1.04]$", "$[-2.54$, $2.14]$")
+        c("[-3.44, 1.24]",  "[-3.64, 1.04]", "[-2.54, 2.14]")
         , label = "95\\% CI"
         , class = c("papaja_labelled", "character")
       )

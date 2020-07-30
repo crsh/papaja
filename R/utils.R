@@ -88,17 +88,18 @@ validate <- function(
 #'    }
 #' @keywords internal
 
-apa_print_container <- function() {
-  x <- list(
-    estimate = NULL
-    , statistic = NULL
-    , full_result = NULL
-    , table = NULL
+init_apa_results <- function(){
+  structure(
+    list(
+      estimate = NULL
+      , statistic = NULL
+      , full_result = NULL
+      , table = NULL
+    )
+    , class = c("apa_results", "list")
   )
-
-  class(x) <- c("apa_results", class(x))
-  x
 }
+
 
 
 #' Escape symbols for LaTeX output
@@ -186,91 +187,106 @@ convert_stat_name <- function(x) {
 }
 
 
-#' Create interval estimate string
+
+#' Transform to a Canonical Table
 #'
-#' Creates a character string to report an interval estimate. \emph{This function is not exported.}
+#' Internal function that transforms a \code{data.frame} by renaming and labeling columns.
 #'
-#' @param x Numeric. Either a \code{vector} of length 2 with attribute \code{conf.level} or a two-column \code{matrix}
-#'    and confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and coefficient names as row names.
-#' @param conf_level Numeric. Vector of length 2 giving the lower and upper bounds of the confidence region in case
-#'    they cannot be determined from column names or attributes of \code{x}.
-#' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-#' @param interval_type Character. Abbreviation indicating the type of interval
-#'   estimate, e.g. \code{CI}.
-#' @inheritDotParams printnum
+#' @param x A \code{data.frame}.
+#' @param stat_label Label for column \code{statistic}.
+#' @param est_label  Label for column \code{estimate}.
 #'
 #' @keywords internal
-#' @seealso \code{\link{printnum}}
-#' @examples
-#' \dontrun{
-#' print_confint(c(1, 2), conf_level = 0.95)
-#' }
 
-print_interval <- function(
+canonize <- function(
   x
-  , conf_level = NULL
-  , use_math = FALSE
-  , interval_type
-  , ...
+  , stat_label = NULL
+  , est_label = NULL
 ) {
-  sapply(x, validate, check_class = "numeric", check_infinite = FALSE)
-  validate(interval_type, check_class = "character", check_length = 1, check_NA = FALSE)
 
-  if(is.data.frame(x)) x <- as.matrix(x)
-  ci <- printnum(x, use_math = use_math, ...)
+  # args <- list(...)
 
-  if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
+  conf_level <- attr(x$conf.int, "conf.level")
+  if(is.null(conf_level)) {
+    conf_level <- attr(x$conf.int[[1]], "conf.level")
+  }
+  conf_label <- paste0(
+    if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+    , "CI"
+  )
+  # print(conf_label)
+  colnames(x) <- make.names(colnames(x))
 
-  if(!is.null(conf_level)) {
-    validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
-    if(conf_level < 1) conf_level <- conf_level * 100
-    conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
+  new_labels <- c(
+    lookup_labels
+    , "estimate"     = est_label
+    , "coefficients" = est_label
+    , "conf.int"     = conf_label
+    , "statistic"    = stat_label
+  )
+
+  names_in_lookup_names <- colnames(x) %in% names(lookup_names)
+
+  if(!all(names_in_lookup_names)) {
+    warning("Some columns could not be renamed.", colnames(x)[!names_in_lookup_names])
   }
 
-  if(!is.matrix(x)) {
-    validate(ci, "x", check_length = 2)
-    apa_ci <- paste0(conf_level, "$[", paste(ci, collapse = "$, $"), "]$")
-    return(apa_ci)
-  } else {
-    if(!is.null(rownames(ci))) {
-      terms <- sanitize_terms(rownames(ci))
+  variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
+  colnames(x)[names_in_lookup_names] <- lookup_names[colnames(x)[names_in_lookup_names]]
+  x
+}
+
+#' Beautify a Canonical Table
+#'
+#' Internal function that takes an object created by \code{\link{canonize}} and
+#' applies proper rounding. Term names are beautified by removing parentheses and replacing
+#' colons with \code{$\\times$}. Moreover, both rows and columns are sorted.
+#'
+#' @param x An object created by \code{\link{canonize}}.
+#' @param standardized Logical. If TRUE the name of the function \code{scale} will be removed from term names.
+#' @param ... Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).
+#' @keywords internal
+
+beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
+
+  validate(x, check_class = "data.frame")
+  validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
+
+  args <- list(...)
+
+  # apply printnum ----
+  for (i in colnames(x)) {
+    if(i == "p.value") {
+      x[[i]] <- printp(x[[i]])
+    } else if(i %in% c("df", "df1", "df2", "multivariate.df1", "multivariate.df2")) {
+      x[[i]] <- print_df(x[[i]])
+    } else if(i == "conf.int") {
+      tmp <- unlist(lapply(X = x[[i]], FUN = function(x, ...){
+        # TODO: Switch to using print_interval here
+        paste0("[", paste(printnum(x, use_math = use_math, ...), collapse = ", "), "]")
+      }, ...))
+      variable_label(tmp) <- variable_label(x[[i]])
+      attr(tmp, "conf.level") <- attr(x[[i]][[1]], "conf.level")
+      x[[i]] <- tmp
+    } else if (i == "estimate"){
+      args$x <- x[[i]]
+      x[[i]] <- do.call("printnum", args)
+    } else if (i == "term"){
+      x[[i]] <- prettify_terms(x[[i]], standardized = standardized)  # todo: standardized ???
     } else {
-      terms <- 1:nrow(ci)
+      x[[i]] <- printnum(x[[i]])
     }
-
-    if(!is.null(colnames(ci)) && is.null(conf_level)) {
-      conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
-      conf_level <- 100 - conf_level[1] * 2
-      conf_level <- paste0(conf_level, "\\% CI ")
-    }
-    if(is.na(interval_type)) conf_level <- NULL
-
-    apa_ci <- list()
-    for(i in 1:length(terms)) {
-      apa_ci[[terms[i]]] <- paste0(conf_level, "$[", paste(ci[i, ], collapse = "$, $"), "]$")
-    }
-
-    if(length(apa_ci) == 1) apa_ci <- unlist(apa_ci)
-    return(apa_ci)
   }
-}
 
-print_confint <- function(
-  x
-  , conf_level = NULL
-  , interval_type = "CI"
-  , ...
-) {
-  print_interval(x, conf_level = conf_level, interval_type = interval_type, ...)
-}
+  # rearrange ----
+  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  x <- x[, ordered_cols, drop = FALSE]
+  if(!is.null(x$term)) x <- sort_terms(x, "term")
+  rownames(x) <- NULL
 
-print_hdint <- function(
+  class(x) <- c("apa_results_table", "data.frame")
   x
-  , conf_level = NULL
-  , interval_type = "HDI"
-  , ...
-) {
-  print_interval(x, conf_level = conf_level, interval_type = interval_type, ...)
 }
 
 

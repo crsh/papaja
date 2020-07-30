@@ -13,18 +13,23 @@ test_that(
     x2 <- summary(x1, test = "Wilks") # tidy.summary.manova not yet on cran
 
     out1 <- apa_print(x1) # Pillai
-    # out2 <- apa_print(x2) # Wilks
+    out2 <- apa_print(x2) # Wilks
     out3 <- apa_print(x1, test = "H") # Hotelling-Lawley, pmatch
     out4 <- apa_print(x1, test = "R", in_paren = TRUE) # Roy's root, pmatch
+
+    expect_apa_results(
+      out2
+      , col.names = c("term", "multivariate.statistic", "statistic", "df1", "df2", "p.value")
+    )
 
     expect_identical(
       object = out1$statistic$N
       , expected = "$V = 0.25$, $F(2, 19) = 3.22$, $p = .062$"
     )
-    # expect_identical(
-    #   object = out2$full_result$N_P
-    #   , expected = "$\\Lambda = 0.96$, $F(2, 19) = 0.37$, $p = .697$"
-    # )
+    expect_identical(
+      object = out2$full_result$N_P
+      , expected = "$\\Lambda = 0.96$, $F(2, 19) = 0.37$, $p = .697$"
+    )
     expect_identical(
       object = out3$full_result$P
       , expected = "$T = 0.02$, $F(2, 19) = 0.20$, $p = .821$"
@@ -40,17 +45,13 @@ test_that(
     expect_identical(
       object = variable_labels(out3$table)
       , expected = list(
-        Effect = "Effect"
-        , hl = "$T$"
-        , `F` = "$F$"
+        term = "Effect"
+        , multivariate.statistic = "$T$"
+        , statistic = "$F$"
         , df1 = "$\\mathit{df}_1$"
         , df2 = "$\\mathit{df}_2$"
-        , p = "$p$"
+        , p.value = "$p$"
       )
-    )
-    expect_identical(
-      object = class(out1$table)
-      , expected = c("apa_results_table", "data.frame")
     )
   }
 )

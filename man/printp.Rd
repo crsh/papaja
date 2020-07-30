@@ -2,7 +2,7 @@
 % Please edit documentation in R/printnum.R
 \name{printp}
 \alias{printp}
-\title{Prepare numeric values for printing as p value}
+\title{Prepare Numeric Values for Printing as p value}
 \usage{
 printp(x, digits = 3L, na_string = "", add_equals = FALSE)
 }

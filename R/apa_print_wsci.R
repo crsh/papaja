@@ -14,7 +14,7 @@ apa_print.papaja_wsci <- function(x, ...) {
 
   summary_wsci <- summary(x)
 
-  res <- apa_print_container()
+  res <- init_apa_results()
 
   res$estimate <- as.list(
     paste0(
@@ -47,7 +47,7 @@ apa_print.papaja_wsci <- function(x, ...) {
   res$table$conf.int <- unlist(
     print_interval(
       summary_wsci[, c("lower_limit", "upper_limit"), drop = FALSE]
-      , interval_type = NA # suppresses leading NA% CI
+      , interval_type = NULL # suppresses leading NA% CI
       , ...
     )
   )

@@ -44,27 +44,31 @@ test_that(
     y <- c( 2.6,  3.1,  2.5,  5.0,  3.6,  4.0,  5.2,  2.8,  3.8)
 
     cor_test <- cor.test(x, y)
-    apa_confint <- print_confint(cor_test$conf.int, conf_level = 0.95)
+    apa_confint <- print_confint(cor_test$conf.int, conf_level = 0.95, enclose_math = TRUE)
     expect_is(apa_confint, "character")
-    expect_equal(apa_confint, "95\\% CI $[-0.15$, $0.90]$")
+    expect_equal(apa_confint, "95\\% CI $[-0.15, 0.90]$")
 
-    apa_confint <- print_confint(cor_test$conf.int, gt1 = FALSE)
-    expect_equal(apa_confint, "95\\% CI $[-.15$, $.90]$")
+    apa_confint <- print_confint(cor_test$conf.int, gt1 = FALSE, enclose_math = TRUE)
+    expect_equal(apa_confint, "95\\% CI $[-.15, .90]$")
 
-    apa_confint <- print_confint(cor_test$conf.int)
-    expect_equal(apa_confint, "95\\% CI $[-0.15$, $0.90]$")
+    apa_confint <- print_confint(cor_test$conf.int, enclose_math = TRUE)
+    expect_equal(apa_confint, "95\\% CI $[-0.15, 0.90]$")
 
-    apa_confint <- print_confint(c(1, 2))
-    expect_equal(apa_confint, "$[1.00$, $2.00]$")
+    apa_confint <- print_confint(c(1, 2), enclose_math = TRUE)
+    expect_equal(apa_confint, "$[1.00, 2.00]$")
 
     conf_int <- confint(lm(x ~ y))
-    apa_confint <- print_confint(conf_int)
+    apa_confint <- print_confint(conf_int, enclose_math = TRUE)
 
     expect_is(apa_confint, "list")
     expect_equal(length(apa_confint), nrow(conf_int))
     expect_equal(names(apa_confint), c("Intercept", "y"))
-    expect_equal(apa_confint$Intercept, "95\\% CI $[19.52$, $51.78]$")
-    expect_equal(apa_confint$y, "95\\% CI $[-0.95$, $7.67]$")
+    expect_equal(apa_confint$Intercept, "95\\% CI $[19.52, 51.78]$")
+    expect_equal(apa_confint$y, "95\\% CI $[-0.95, 7.67]$")
+
+    print_confint(c(-Inf, 0), enclose_math = TRUE)
+
+
   }
 )
 
@@ -73,7 +77,7 @@ test_that(
   , {
     expect_equal(in_paren("$t(1) = 1$"), "$t[1] = 1$")
     expect_equal(in_paren("$\\chi^2(1, n = 100) = 1$"), "$\\chi^2[1, n = 100] = 1$")
-    expect_equal(in_paren("95% CI $[123$, $123]$"), "95% CI $[123$, $123]$")
+    expect_equal(in_paren("95% CI $[123, 123]$"), "95% CI $[123, 123]$")
     expect_equal(in_paren("$F(1, 234) = 1$"), "$F[1, 234] = 1$")
   }
 )
