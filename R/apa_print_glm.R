@@ -273,13 +273,13 @@ apa_glm_res <- function(x, in_paren, conf_level) {
   apa_res$statistic <- apply(x[, -1], 1, function(y) {
     y["p.value"] <- add_equals(y["p.value"])
 
-    stat <- paste0("$", gsub("\\$", "", variable_label(x$statistic)), " = ",  y["statistic"], "$, $p ", y["p.value"], "$")
+    stat <- paste0("$", svl(x$statistic), " = ",  y["statistic"], "$, $p ", y["p.value"], "$")
     if(in_paren) stat <- in_paren(stat)
     stat
   })
 
   apa_res$estimate <- apply(x[, -1], 1, function(y) {
-    paste0("$", gsub("\\$", "", variable_label(x$estimate)), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", gsub(pattern = "$", replacement = "",  x = y["ci"], fixed = TRUE), "$")
+    paste0("$", svl(x$estimate), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", strip_math_tags(y["ci"]), "$")
   })
 
   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")

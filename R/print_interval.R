@@ -113,7 +113,7 @@ print_interval.numeric <- function(
       interval <- paste0(
           conf_level
           , "$["
-          , paste(gsub(x, pattern = "$", replacement = "", fixed = TRUE), collapse = ", ")
+          , paste(strip_math_tags(x), collapse = ", ")
           , "]$"
       )
     } else {
@@ -172,7 +172,7 @@ print_interval.matrix <- function(
         interval[[terms[i]]] <- paste0(
             conf_level
             , "$["
-            , paste(gsub(x[i, ], pattern = "$", replacement = "", fixed = TRUE), collapse = ", ")
+            , paste(strip_math_tags(x[i, ]), collapse = ", ")
             , "]$"
         )
       }

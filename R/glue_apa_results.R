@@ -250,10 +250,27 @@ stat_glue <- function(x) {
 }
 
 
-# Strip dollars from strings and variable labels
-svl <- function(x) {
-    y <- variable_labels(x)
-    if(is.null(y)) y <- x
+#' Strip Math Tags from Variable Labels or Strings
+#'
+#' Internal function to strip math tags from variable labels or strings. `svl()`
+#' returns the stripped variable label of `x`, if available. `strip_math_tags` returns
+#' the stripped character `x`.
+#'
+#' @param x A (labelled) character string.
+#'
+#' @rdname strip_math_tags
+#' @keywords internal
 
-    gsub(pattern = "$", replacement = "", x = y, fixed = TRUE)
+svl <- function(x) {
+  y <- variable_labels(x)
+  if(is.null(y)) y <- x
+
+  strip_math_tags(y)
+}
+
+#' @rdname strip_math_tags
+#' @keywords internal
+
+strip_math_tags <- function(x) {
+  gsub(pattern = "$", replacement = "", x = x, fixed = TRUE)
 }
