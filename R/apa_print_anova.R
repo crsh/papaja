@@ -143,29 +143,41 @@ apa_print.anova <- function(
       in_paren = FALSE
     )
   )
-  variance_table <- arrange_anova(x)
+
   object_heading <- attr(x, "heading")
+
+  if (any(object_heading == "Models:")) {
+    # Model comparisons from lmerTest::anova
+    stop("Model-comparison objects of class 'anova' are not supported.")
+  }
+
+  variance_table <- arrange_anova(x)
+
+
+
+
+
 
   # Some model objects do not contain the necessary information to calculate
   # MSEs and effect-size measures. In such cases, print_anova() needs to be called
   # with arguments es = NULL and mse = FALSE.
 
-  if("apa_variance_table" %in% class(variance_table)) { # car::LeveneTest
+  if("apa_variance_table" %in% class(variance_table)) {
+    # car::LeveneTest ----------------------------------------------------------
     if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
       return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
     }
-    # lmerTest::anova.merModLmerTest ----
-    # if(!is.null(attr(variance_table, "ddf"))) {
-    #   return(print_anova(variance_table, mse = FALSE, es = NULL, ...))
-    # }
+
+    # lmerTest::anova.merModLmerTest -------------------------------------------
     if(any(grepl("Satterthwaite|Kenward", object_heading))) {
       # determine correction type
       sub_heading <- object_heading[grepl("Satterthwaite|Kenward", object_heading)][[1]]
       attr(x, "correction") <- c("\\mathit{KR}", "S")[c(grepl("Kenward", sub_heading), grepl("Satterth", sub_heading))]
+
       x$Effect <- rownames(x)
 
-      # Sanitize, prettify, create container ----
+      # Canonize, beautify, and glue container
       canonical_table <- canonize(x)
       beautiful_table <- beautify(canonical_table)
       return(
@@ -179,7 +191,7 @@ apa_print.anova <- function(
       )
     }
 
-    # afex::mixed ----
+    # afex::mixed --------------------------------------------------------------
     if(any(grepl("Mixed Model", object_heading))) {
       correction <- unname(
         c(KR = "\\mathit{KR}", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
@@ -188,19 +200,26 @@ apa_print.anova <- function(
       x$Effect <- rownames(x)
       rownames(x) <- NULL
 
-      # anova_table from mixed(method = "PB") contain two columns with *p* values,
-      # but also df from asymptotic theory
+      # anova_table from mixed(method = "PB") contains
+      # - two columns with *p* values,
+      # - but also df from asymptotic theory.
+      # To avoid ambiguity, we remove asymptotic p value and df:
       col_names <- colnames(x)
-      if("Chi Df" %in% col_names && "Pr(>PB)" %in% col_names) {
+      if (any("Pr(>PB)" == col_names)) {
         x$`Chi Df` <- NULL
         x$`Pr(>Chisq)` <- NULL
       }
-      if("Chi Df" %in% col_names && "Df" %in% col_names) {
+      # anova_table from mixed(method = "LRT") contains
+      # - df of chi-squared test (column 'Chi Df') and
+      # - df of "the model" (column 'Df').
+      # To avoid ambiguity, we remove df of "the model":
+      if(any("Chi Df" == col_names)) {
         x$Df <- NULL
       }
 
       attr(x, "correction") <- correction
-      # Sanitize, prettify, create container ----
+
+      # Canonize, beautify, glue ----
       canonical_table <- canonize(x)
       beautiful_table <- beautify(canonical_table)
       return(
@@ -213,7 +232,7 @@ apa_print.anova <- function(
         )
       )
     }
-    # lmerTest::ranova ----
+    # lmerTest::ranova ---------------------------------------------------------
     if(object_heading[1] == "ANOVA-like table for random-effects: Single term deletions") {
       stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
     }

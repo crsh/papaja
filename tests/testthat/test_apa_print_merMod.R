@@ -149,11 +149,13 @@ test_that(
 )
 
 test_that(
-  "Single-model ANOVA tables from lmerTest::anova()"
+  "ANOVA tables from lmerTest::anova()"
   , {
     fm1 <-lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
     fm2 <-lme4::lmer(Reaction ~ Days + (1|Subject)   , lme4::sleepstudy)
+    fm3 <- lme4::lmer(Reaction ~ 1 + (1|Subject), lme4::sleepstudy)
 
+    # single-model tables
     model_KR <- anova(fm1, type = "III", ddf = "Kenward")
     model_S <- anova(fm1, type = "II")
 
@@ -180,6 +182,15 @@ test_that(
         , p.value   = "$p$"
       )
     )
+
+    # Stop model-comparison tables
+    model_comp <- anova(fm1, fm2, fm3)
+    model_comp2 <- anova(fm2, fm3)
+    expect_error(
+      apa_print(model_comp)
+      , "Model-comparison objects of class 'anova' are not supported."
+    )
+
   }
 )
 

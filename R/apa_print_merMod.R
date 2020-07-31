@@ -33,6 +33,8 @@ apa_print.merMod <- function(
 
   if(!missing(args_confint) && !is.null(args_confint)) {
     validate(args_confint, check_class = "list")
+  } else {
+    args_confint <- list()
   }
 
   # `in_paren` is validated in `glue_apa_results()`
@@ -48,7 +50,7 @@ apa_print.merMod <- function(
   no_profile <- lme4::isGLMM(x) && x@devcomp$dims[["useSc"]]
 
   args_confint <- defaults(
-    if(missing(args_confint)) { list() } else { args_confint }
+    args_confint
     , set = list(
       object = x
       , parm = "beta_"
@@ -85,7 +87,7 @@ apa_print.merMod <- function(
   attr(res_table$conf.int, "conf.level") <- args_confint$level
 
 
-  # sanitize, prettify, create container ----
+  # canonize, beautify, glue ----
   canonical_table <- canonize(res_table, est_label = est_name)
   beautiful_table <- beautify(canonical_table, ...)
 
