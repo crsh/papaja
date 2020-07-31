@@ -31,11 +31,8 @@ apa_print.merMod <- function(
   # Input validation and processing ----
   args <- list(...)
 
-  if(!missing(args_confint) && !is.null(args_confint)) {
-    validate(args_confint, check_class = "list")
-  } else {
-    args_confint <- list()
-  }
+  if(missing(args_confint) || is.null(args_confint)) args_confint <- list()
+  validate(args_confint, check_class = "list")
 
   # `in_paren` is validated in `glue_apa_results()`
 
