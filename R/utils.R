@@ -243,6 +243,8 @@ canonize <- function(
     , "den.Df"       = label_df2
     , "NumDF"        = label_df1
     , "DenDF"        = label_df2
+    , "numDF"        = label_df1
+    , "denDF"        = label_df2
   )
 
   names_in_lookup_names <- colnames(x) %in% names(lookup_names)

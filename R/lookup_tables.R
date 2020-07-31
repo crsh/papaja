@@ -37,6 +37,7 @@ lookup_names <- c(
   , "conf.int"   = "conf.int"
   , "stderr"     = "std.error"
   , "std.err"    = "std.error"
+  , "Std.Error"  = "std.error"
   , "Std..Error" = "std.error"
   , "sigma"      = "std.error"
   # multivariate.statistic
@@ -70,6 +71,7 @@ lookup_names <- c(
   , "parameter"  = "df"
   , "df"         = "df"
   , "Df"         = "df"
+  , "DF"         = "df"
   , "Chi.Df"     = "df"
   , "parameter1" = "df1"
   , "parameter2" = "df2"
@@ -77,6 +79,8 @@ lookup_names <- c(
   , "den.Df"     = "df2"
   , "NumDF"      = "df1"
   , "DenDF"      = "df2"
+  , "numDF"      = "df1"
+  , "denDF"      = "df2"
   , "parameter.num.df"   = "df1"
   , "parameter.denom.df" = "df2"
   # p.value
@@ -117,6 +121,7 @@ lookup_labels <- c(
   # standard error
   , "stderr"     = "$\\mathit{SE}$"
   , "std.err"    = "$\\mathit{SE}$"
+  , "Std.Error"  = "$\\mathit{SE}$"
   , "Std..Error" = "$\\mathit{SE}$"
   , "sigma"      = "$\\mathit{SE}$"
   # multivariate.statistic
@@ -149,6 +154,7 @@ lookup_labels <- c(
   , "parameter" = "$\\mathit{df}$"
   , "df"        = "$\\mathit{df}$"
   , "Df"        = "$\\mathit{df}$"
+  , "DF"        = "$\\mathit{df}$"
   , "Chi.Df"    = "$\\mathit{df}$"
   , "parameter.num.df"   = "$\\mathit{df}_1$"
   , "parameter.denom.df" = "$\\mathit{df}_2$"

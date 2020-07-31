@@ -43,6 +43,7 @@ Other apa_print:
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
+\code{\link{apa_print.lme}()},
 \code{\link{apa_print.merMod}()}
 }
 \concept{apa_print}

@@ -10,8 +10,8 @@
 \method{apa_print}{mixed}(x, ...)
 }
 \arguments{
-\item{x}{A fitted hierarchical linear model, either from \code{\link[lme4:lmer]{lme4::lmer()}},
-\code{\link[lmerTest:lmer]{lmerTest::lmer()}}, or \code{\link[afex:mixed]{afex::mixed()}}.}
+\item{x}{A fitted hierarchical (generalized) linear model, either from \code{\link[lme4:lmer]{lme4::lmer()}},
+\code{\link[lmerTest:lmer]{lmerTest::lmer()}}, \code{\link[afex:mixed]{afex::mixed()}}, or \code{\link[lme4:glmer]{lme4::glmer()}}.}
 
 \item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
 
@@ -27,8 +27,10 @@ hierarchical (generalized) linear models to create formatted character strings
 to report the results in accordance with APA manuscript guidelines.
 }
 \details{
-Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}. For linear models,
-profile confidence intervals
+Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}. By
+default, \emph{profile} confidence intervals are calculated, except for generalized
+linear models with non-fixed scale. In such cases, \emph{bootstrap} confidence intervals
+are calculated by default. See \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}} for details.
 }
 \seealso{
 Other apa_print: 
@@ -39,6 +41,7 @@ Other apa_print:
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
+\code{\link{apa_print.lme}()},
 \code{\link{apa_print}()}
 }
 \concept{apa_print}

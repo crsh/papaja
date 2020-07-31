@@ -183,6 +183,15 @@ test_that(
       )
     )
 
+    expect_identical(
+      apa_KR$full_result
+      , expected = "$F(1, 17.00) = 45.85$, $p < .001$"
+    )
+    expect_identical(
+      apa_S$full_result
+      , apa_KR$full_result
+    )
+
     # Stop model-comparison tables
     model_comp <- anova(fm1, fm2, fm3)
     model_comp2 <- anova(fm2, fm3)

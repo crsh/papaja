@@ -4,15 +4,17 @@
 #' hierarchical (generalized) linear models to create formatted character strings
 #' to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x A fitted hierarchical linear model, either from [lme4::lmer()],
-#'   [lmerTest::lmer()], or [afex::mixed()].
+#' @param x A fitted hierarchical (generalized) linear model, either from [lme4::lmer()],
+#'   [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
 #' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
 #' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
 #' @inheritParams print_anova
 #' @param ... Further arguments that are passed to [printnum()].
 #' @details
-#'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. For linear models,
-#'   profile confidence intervals
+#'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. By
+#'   default, *profile* confidence intervals are calculated, except for generalized
+#'   linear models with non-fixed scale. In such cases, *bootstrap* confidence intervals
+#'   are calculated by default. See [lme4::confint.merMod()] for details.
 #'
 #' @family apa_print
 #' @rdname apa_print.merMod
