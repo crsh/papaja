@@ -221,7 +221,8 @@ apa_print.anova <- function(
 
       # Canonize, beautify, glue ----
       canonical_table <- canonize(x)
-      beautiful_table <- beautify(canonical_table)
+      beautiful_table <- beautify(canonical_table, ...)
+
       return(
         glue_apa_results(
           beautiful_table

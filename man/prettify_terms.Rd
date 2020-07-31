@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{prettify_terms}
 \alias{prettify_terms}
-\title{Prettify term names}
+\title{Prettify Term Names}
 \usage{
 prettify_terms(x, standardized = FALSE)
 }
@@ -14,9 +14,7 @@ removed from term names.}
 }
 \description{
 Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables.
-\emph{This function is not exported.}
 }
 \examples{
 NULL
 }
-\keyword{internal}

@@ -260,6 +260,15 @@ test_that(
       )
     )
 
+    expect_identical(
+      apa_KR$table$term
+      , structure(
+        c("N", "P", "N $\\times$ P")
+        , label = "Effect"
+        , class = c("papaja_labelled", "character")
+      )
+    )
+
 
     expect_identical(
       object = apa_KR$statistic

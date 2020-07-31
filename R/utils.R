@@ -346,10 +346,9 @@ sanitize_terms <- function(x, standardized = FALSE) {
 }
 
 
-#' Prettify term names
+#' Prettify Term Names
 #'
 #' Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables.
-#' \emph{This function is not exported.}
 #'
 #' @param x Character. Vector of term-names to be prettified
 #' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
@@ -357,7 +356,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
 #'
 #' @examples
 #' NULL
-#' @keywords internal
+#' @export
 
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()

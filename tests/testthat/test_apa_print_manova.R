@@ -63,6 +63,15 @@ test_that(
     )
 
     expect_identical(
+      object = manova1$table$term
+      , expected = structure(
+        c("N", "P", "N $\\times$ P")
+        , label = "Effect"
+        , class = c("papaja_labelled", "character")
+      )
+    )
+
+    expect_identical(
       object = manova1$statistic$N
       , expected = "$V = 0.25$, $F(2, 19) = 3.22$, $p = .062$"
     )
