@@ -307,7 +307,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
 
   se <- NULL
-  if(!any(colnames(x) == "conf.int")) se <- "std.err"
+  if(!any(colnames(x) == "conf.int")) se <- "std.error"
 
   ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
   x <- x[, ordered_cols, drop = FALSE]
