@@ -31,6 +31,12 @@ apa_print.merMod <- function(
   # Input validation and processing ----
   args <- list(...)
 
+  if(!missing(args_confint) && !is.null(args_confint)) {
+    validate(args_confint, check_class = "list")
+  }
+
+  # `in_paren` is validated in `glue_apa_results()`
+
   if(missing(est_name) || is.null(est_name)) {
     est_name <- "$\\hat{\\beta}$"
   } else {
@@ -83,12 +89,6 @@ apa_print.merMod <- function(
   canonical_table <- canonize(res_table, est_label = est_name)
   beautiful_table <- beautify(canonical_table, ...)
 
-  # create_container(
-  #   beautiful_table
-  #   , sanitized_terms = sanitize_terms(sanitized_table$term)
-  #   , add_par  = NULL
-  #   , in_paren = in_paren
-  # )
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")

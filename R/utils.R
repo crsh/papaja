@@ -205,6 +205,8 @@ canonize <- function(
 ) {
 
   # args <- list(...)
+  if(!is.null(stat_label)) validate(stat_label, check_class = "character", check_length = 1L)
+  if(!is.null(est_label))  validate(est_label, check_class = "character", check_length = 1L)
 
   conf_level <- attr(x$conf.int, "conf.level")
   if(is.null(conf_level)) {
@@ -215,6 +217,9 @@ canonize <- function(
     , "CI"
   )
 
+  # Corrections of df from
+  # - Hierarchical Linear Models: Kenward-Roger and Satterthwaite
+  # - Repeated-measures ANOVA   : Greenhouse-Geisser and Huyhn-Feldt
   correction_type <- attr(x, "correction")
   if(is.null(correction_type)) {
     label_df1 <- "$\\mathit{df}_1$"
