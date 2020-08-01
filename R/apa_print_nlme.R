@@ -86,7 +86,7 @@ apa_print.lme <- function(
 
   # Canonize, beautify, and glue ----
   canonical_table <- canonize(res_table, est_label = est_name)
-  beautiful_table <- beautify(canonical_table)
+  beautiful_table <- beautify(canonical_table, ...)
 
   glue_apa_results(
     beautiful_table
