@@ -99,6 +99,7 @@ lookup_labels <- c(
   # term
   , "Effect"   = "Effect"
   , "Term"     = "Term"
+  , "contrast" = "Contrast"
   # estimate
   , "cor"                     = "$r$"
   , "rho"                     = "$r_{\\mathrm{s}}$" # capital or small S???
@@ -148,9 +149,10 @@ lookup_labels <- c(
   , "parameter.num.df"   = "$\\mathit{df}_1$"
   , "parameter.denom.df" = "$\\mathit{df}_2$"
   # p.value
-  , "p.value"    = "$p$"
-  , "Pr..Chisq." = "$p$"
-  , "Pr..F."     = "$p$"
-  , "Pr..PB."    = "$p$"
-  , "pvalues"    = "$p$"
+  , "p.value"     = "$p$"
+  , "Pr..Chisq."  = "$p$"
+  , "Pr..F."      = "$p$"
+  , "Pr..PB."     = "$p$"
+  , "pvalues"     = "$p$"
+  , "adj.p.value" = "$p_{adj}$"
 )
