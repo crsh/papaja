@@ -356,7 +356,7 @@ sanitize_terms <- function(x, standardized = FALSE) {
 #'
 #' @examples
 #' NULL
-#' @export
+#' @keywords internal
 
 prettify_terms <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()

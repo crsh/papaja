@@ -31,7 +31,7 @@
 #' iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 #' tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
 #' tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
-#' tidy_iris_lm$term <- prettify_terms(tidy_iris_lm$term)
+#' tidy_iris_lm$term <- tidy_iris_lm$term
 #'
 #' glance_iris_lm <- broom::glance(iris_lm)
 #' glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
@@ -72,7 +72,7 @@ glue_apa_results <- function(x = NULL, ...) {
     )
 
     if(!is.null(x) && is.data.frame(x)) {
-        # if(!is.null(x$term)) x$term <- prettify_terms(x$term) BUGFIX: applied prettify_terms() twice
+        if(!is.null(x$term)) x$term <- prettify_terms(x$term)
         if(!is.null(x$conf.int)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
         apa_res$table <- x
     }
