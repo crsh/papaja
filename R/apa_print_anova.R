@@ -173,7 +173,7 @@ apa_print.anova <- function(
     if(any(grepl("Satterthwaite|Kenward", object_heading))) {
       # determine correction type
       sub_heading <- object_heading[grepl("Satterthwaite|Kenward", object_heading)][[1]]
-      attr(x, "correction") <- c("\\mathit{KR}", "S")[c(grepl("Kenward", sub_heading), grepl("Satterth", sub_heading))]
+      attr(x, "df_correction") <- c("\\mathit{KR}", "S")[c(grepl("Kenward", sub_heading), grepl("Satterth", sub_heading))]
 
       x$Effect <- rownames(x)
 
@@ -193,7 +193,7 @@ apa_print.anova <- function(
 
     # afex::mixed --------------------------------------------------------------
     if(any(grepl("Mixed Model", object_heading))) {
-      correction <- unname(
+      df_correction <- unname(
         c(KR = "\\mathit{KR}", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
       )
       x <- as.data.frame(x, stringsAsFactors = FALSE)
@@ -217,7 +217,7 @@ apa_print.anova <- function(
         x$Df <- NULL
       }
 
-      attr(x, "correction") <- correction
+      attr(x, "df_correction") <- df_correction
 
       # Canonize, beautify, glue ----
       canonical_table <- canonize(x)

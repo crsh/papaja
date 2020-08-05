@@ -24,20 +24,20 @@
 
 apa_print.lme <- function(
   x
-  , args_confint
+  , args_confint = NULL
   , in_paren = FALSE
-  , est_name
+  , est_name = NULL
   , ...
 ) {
 
   # Input validation ----
-  if(missing(args_confint) || is.null(args_confint)) args_confint <- list()
+  if(is.null(args_confint)) args_confint <- list()
   validate(args_confint, check_class = "list")
 
 
   # `in_paren` is validated in `glue_apa_results()`
 
-  if(missing(est_name) || is.null(est_name)) {
+  if(is.null(est_name)) {
     est_name <- "$\\hat{\\beta}$"
   } else {
     validate(est_name, check_class = "character", check_length = 1L)

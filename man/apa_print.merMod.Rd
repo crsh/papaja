@@ -5,7 +5,7 @@
 \alias{apa_print.mixed}
 \title{Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)}
 \usage{
-\method{apa_print}{merMod}(x, args_confint, in_paren = FALSE, est_name, ...)
+\method{apa_print}{merMod}(x, args_confint = NULL, in_paren = FALSE, est_name = NULL, ...)
 
 \method{apa_print}{mixed}(x, ...)
 }

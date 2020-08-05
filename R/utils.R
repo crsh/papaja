@@ -217,20 +217,7 @@ canonize <- function(
     , "CI"
   )
 
-  # Corrections of df from
-  # - Hierarchical Linear Models: Kenward-Roger and Satterthwaite
-  # - Repeated-measures ANOVA   : Greenhouse-Geisser and Huyhn-Feldt
-  correction_type <- attr(x, "correction")
-  if(is.null(correction_type)) {
-    label_df1 <- "$\\mathit{df}_1$"
-    label_df2 <- "$\\mathit{df}_2$"
-  } else {
-    label_df1 <- paste0("$\\mathit{df}_1^{", correction_type, "}$")
-    label_df2 <- paste0("$\\mathit{df}_2^{", correction_type, "}$")
-  }
-
   colnames(x) <- make.names(colnames(x))
-
 
   new_labels <- c(
     lookup_labels
@@ -239,12 +226,6 @@ canonize <- function(
     , "coefficients" = est_label
     , "conf.int"     = conf_label
     , "statistic"    = stat_label
-    , "num.Df"       = label_df1
-    , "den.Df"       = label_df2
-    , "NumDF"        = label_df1
-    , "DenDF"        = label_df2
-    , "numDF"        = label_df1
-    , "denDF"        = label_df2
   )
 
   names_in_lookup_names <- colnames(x) %in% names(lookup_names)
@@ -253,7 +234,7 @@ canonize <- function(
   warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
   Therefore, be careful when using its output. Moreover, please visit https://github.com/crsh/papaja/issues and
   file an issue together with the code that generated the output object. In doing so, you help us to fully
-  support the type of analysis you just conducted and make papaja a lttle bit better."
+  support the type of analysis you just conducted and make papaja a little bit better."
 
   if(!all(names_in_lookup_names)) {
     warning("Some columns could not be renamed: '", paste(colnames(x)[!names_in_lookup_names], collapse = "', '"), "'", warning_unexpected)
@@ -261,6 +242,19 @@ canonize <- function(
 
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
   colnames(x)[names_in_lookup_names] <- lookup_names[colnames(x)[names_in_lookup_names]]
+
+
+  # Adjust labels if dfs were corrected ----
+  # - Hierarchical Linear Models: Kenward-Roger and Satterthwaite
+  # - Repeated-measures ANOVA   : Greenhouse-Geisser and Huyhn-Feldt
+
+  df_correction_type <- attr(x, "df_correction")
+  if(!is.null(df_correction_type) && df_correction_type != "none") {
+    variable_label(x) <- c(
+      df1 = paste0("$\\mathit{df}_1^{", df_correction_type, "}$")
+      , df2 = paste0("$\\mathit{df}_2^{", df_correction_type, "}$")
+    )
+  }
   x
 }
 
@@ -306,13 +300,8 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   }
 
   # rearrange ----
-  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+  x <- sort_columns(x)
 
-  se <- NULL
-  if(!any(colnames(x) == "conf.int")) se <- "std.error"
-
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
-  x <- x[, ordered_cols, drop = FALSE]
   if(!is.null(x$term)) x <- sort_terms(x, "term")
   rownames(x) <- NULL
 
@@ -442,6 +431,26 @@ sort_terms <- function(x, colname) {
 
   x[order(sapply(regmatches(x[[colname]], gregexpr("\\\\times", x[[colname]])), length)), ]
 }
+
+
+#' Sort the Columns of an APA Results Table
+#'
+#' An internal function that sorts the columns of a `data.frame` according to
+#' our standards.
+#'
+#' @param x A \code{data.frame} with standardized column names.
+#' @keywords internal
+
+sort_columns <- function(x) {
+  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+
+  se <- NULL
+  if(!any(colnames(x) == "conf.int")) se <- "std.error"
+
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  x[, ordered_cols, drop = FALSE]
+}
+
 
 #' Corresponding author line
 #'

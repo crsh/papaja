@@ -5,7 +5,7 @@
 \alias{apa_print.anova.lme}
 \title{Format Statistics from Nonlinear Mixed-Effects Models (APA 6th edition)}
 \usage{
-\method{apa_print}{lme}(x, args_confint, in_paren = FALSE, est_name, ...)
+\method{apa_print}{lme}(x, args_confint = NULL, in_paren = FALSE, est_name = NULL, ...)
 
 \method{apa_print}{anova.lme}(x, in_paren = FALSE, ...)
 }

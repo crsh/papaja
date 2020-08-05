@@ -31,7 +31,6 @@
 #' iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 #' tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
 #' tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
-#' tidy_iris_lm$term <- tidy_iris_lm$term
 #'
 #' glance_iris_lm <- broom::glance(iris_lm)
 #' glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
