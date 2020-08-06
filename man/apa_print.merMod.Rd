@@ -28,9 +28,8 @@ to report the results in accordance with APA manuscript guidelines.
 }
 \details{
 Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}. By
-default, \emph{profile} confidence intervals are calculated, except for generalized
-linear models with non-fixed scale. In such cases, \emph{bootstrap} confidence intervals
-are calculated by default. See \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}} for details.
+default, \emph{Wald} confidence intervals are calculated, but this may change in
+the future.
 }
 \seealso{
 Other apa_print: 

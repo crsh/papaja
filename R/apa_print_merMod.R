@@ -12,9 +12,8 @@
 #' @param ... Further arguments that are passed to [printnum()].
 #' @details
 #'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. By
-#'   default, *profile* confidence intervals are calculated, except for generalized
-#'   linear models with non-fixed scale. In such cases, *bootstrap* confidence intervals
-#'   are calculated by default. See [lme4::confint.merMod()] for details.
+#'   default, *Wald* confidence intervals are calculated, but this may change in
+#'   the future.
 #'
 #' @family apa_print
 #' @rdname apa_print.merMod
