@@ -45,9 +45,6 @@ apa_print.merMod <- function(
     est_name <- paste0("$", strip_math_tags(est_name), "$")
   }
 
-  # GLMM with non-fixed scale? (cf. lme4::profile.merMod)
-  no_profile <- lme4::isGLMM(x) && x@devcomp$dims[["useSc"]]
-
   args_confint <- defaults(
     args_confint
     , set = list(
@@ -56,11 +53,14 @@ apa_print.merMod <- function(
     )
     , set.if.null = list(
       level = .95
-      , method = if(no_profile){"boot"} else {"profile"}
+      , method = "Wald"
       , nsim = 2e3L
     )
   )
 
+  # GLMM with non-fixed scale? (cf. lme4::profile.merMod)
+  # no_profile <- lme4::isGLMM(x) && x@devcomp$dims[["useSc"]]
+  # if(args_confint$method == "profile" && no_profile)
 
 
 
