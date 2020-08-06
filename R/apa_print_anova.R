@@ -189,16 +189,13 @@ apa_print.anova <- function(
           , in_paren = ellipsis$in_paren
         )
       )
-    }
-
-    # afex::mixed --------------------------------------------------------------
-    if(any(grepl("Mixed Model", object_heading))) {
+    } else if(any(grepl("Mixed Model", object_heading))) {
+      # afex::mixed --------------------------------------------------------------
       df_correction <- unname(
         c(KR = "\\mathit{KR}", S = "S", PB = "none", LRT = "none")[attr(x, "method")]
       )
       x <- as.data.frame(x, stringsAsFactors = FALSE)
       x$Effect <- rownames(x)
-      rownames(x) <- NULL
 
       # anova_table from mixed(method = "PB") contains
       # - two columns with *p* values,

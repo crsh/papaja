@@ -48,8 +48,8 @@ test_that(
     expect_identical(
       object = apa_lmerTest$estimate
       , expected = list(
-        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.17, 55.97]$"
-        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[1.92, 9.31]$"
+        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.29, 55.84]$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$"
       )
     )
     expect_identical(
@@ -62,8 +62,8 @@ test_that(
     expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
-        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.17, 55.97]$, $t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[1.92, 9.31]$, $t(17.00) = 3.06$, $p = .007$"
+        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.29, 55.84]$, $t(8.17) = 27.06$, $p < .001$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17.00) = 3.06$, $p = .007$"
       )
     )
 
@@ -81,14 +81,14 @@ test_that(
     expect_identical(
       object = apa_lme4$full_result
       , expected = list(
-        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.17, 55.97]$, $t = 27.06$"
-        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[1.92, 9.31]$, $t = 3.06$"
+        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.29, 55.84]$, $t = 27.06$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t = 3.06$"
       )
     )
 
     expect_identical( # in_paren
       object = apa_lmerTest_specialties$full_result$N1
-      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.7269, 9.5064]$, $t[17.00] = 3.06$, $p = .007$"
+      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17.00] = 3.06$, $p = .007$"
     )
 
     # Test reduction of (Days | Subject) to (1 | Subject):
@@ -139,10 +139,10 @@ test_that(
     expect_identical(
       object = apa_gm1$full_result
       , expected = list(
-        Intercept = "$\\hat{\\beta} = -1.40$, 90\\% CI $[-1.81, -1.02]$, $z = -6.05$, $p < .001$"
-        , period2 = "$\\hat{\\beta} = -0.99$, 90\\% CI $[-1.51, -0.50]$, $z = -3.27$, $p = .001$"
-        , period3 = "$\\hat{\\beta} = -1.13$, 90\\% CI $[-1.69, -0.61]$, $z = -3.49$, $p < .001$"
-        , period4 = "$\\hat{\\beta} = -1.58$, 90\\% CI $[-2.34, -0.92]$, $z = -3.74$, $p < .001$"
+        Intercept = "$\\hat{\\beta} = -1.40$, 90\\% CI $[-1.78, -1.02]$, $z = -6.05$, $p < .001$"
+        , period2 = "$\\hat{\\beta} = -0.99$, 90\\% CI $[-1.49, -0.49]$, $z = -3.27$, $p = .001$"
+        , period3 = "$\\hat{\\beta} = -1.13$, 90\\% CI $[-1.66, -0.60]$, $z = -3.49$, $p < .001$"
+        , period4 = "$\\hat{\\beta} = -1.58$, 90\\% CI $[-2.27, -0.89]$, $z = -3.74$, $p < .001$"
       )
     )
   }
