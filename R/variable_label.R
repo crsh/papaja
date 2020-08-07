@@ -250,9 +250,9 @@ print.papaja_labelled <- function(x, ...) {
   unit_defined <- !is.null(attr(x, "unit"))
 
   cat(
-    "Variable label     : ", escape_backslash(attr(x, "label"))
+    "Variable label     : ", encodeString(attr(x, "label"))
     , if(unit_defined) {"\nUnit of measurement: "}
-    , if(unit_defined) {escape_backslash(attr(x, "unit"))}
+    , if(unit_defined) {encodeString(attr(x, "unit"))}
     , "\n"
     , sep = ""
   )
