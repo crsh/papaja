@@ -344,6 +344,14 @@ capitalize <- function(x) {
   x
 }
 
+escape_backslash <- function(x) {
+  gsub(
+    x = x
+    , pattern = "\\"
+    , replacement = "\\\\"
+    , fixed = TRUE
+  )
+}
 
 #' Select parameters
 #'

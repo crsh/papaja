@@ -39,9 +39,9 @@ print.apa_results_table <- function(x, ...) {
       x_legend[seq_len(min(max_shown, nrow(x_legend))), ]
       , 1
       , function(x) {
-        cat("\n", format(x["column"], width = max_char), ": ", sep = "")
-        if(!is.na(x["label"])) cat(x["label"], " ", sep = "")
-        if(!is.na(x["unit"])) cat("[", x["unit"], "]", sep = "")
+        cat("\n", format(escape_backslash(x["column"]), width = max_char), ": ", sep = "")
+        if(!is.na(x["label"])) cat(escape_backslash(x["label"]), " ", sep = "")
+        if(!is.na(x["unit"])) cat("[", escape_backslash(x["unit"]), "]", sep = "")
       }
     )
 
