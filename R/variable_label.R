@@ -86,7 +86,9 @@ assign_label <- function(x, value, ...){
 
 assign_label.default <- function(x, value){
 
-  if(is.null(value)) return(structure(x, class = setdiff(class(x), "papaja_labelled")))
+  if(is.null(value)) {
+    return(structure(x, class = setdiff(class(x), "papaja_labelled"), label = NULL))
+  }
 
   structure(
     x
@@ -291,6 +293,22 @@ rep.papaja_labelled <- function(x, ...){
 relevel.papaja_labelled <- function(x, ref, ...){
   y <- NextMethod()
   variable_label(y) <- variable_label(x)
+  y
+}
+
+#' Conversion of Labelled Vectors
+#'
+#' Functions to convert labelled vectors to other representations.
+#'
+#' @param x          Object to be coerced
+#' @param keep_label Logical indicating whether the variable labels should be kept.
+#' @param ...        Further arguments passed to or from methods
+#' @method as.character papaja_labelled
+#' @export
+
+as.character.papaja_labelled <- function(x, keep_label = TRUE, ...) {
+  y <- NextMethod("as.character", x, ...)
+  if (keep_label) variable_label(y) <- variable_label(x)
   y
 }
 

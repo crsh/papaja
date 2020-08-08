@@ -32,7 +32,7 @@ print.apa_results_table <- function(x, ...) {
     )
     x_legend <- x_legend[!is.na(x_legend$label) | !is.na(x_legend$unit), ]
     max_shown <- ifelse(nrow(x_legend) == 6L, 6L, 5L)
-    x_legend <- x_legend[seq_len(max_shown), , drop = FALSE]
+    x_legend <- x_legend[seq_len(min(max_shown, n_labels)), , drop = FALSE]
 
     x_legend$column <- encodeString(x_legend$column, width = NA)
     x_legend$label <- encodeString(x_legend$label)
