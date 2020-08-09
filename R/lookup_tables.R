@@ -28,7 +28,6 @@ lookup_names <- c(
   , "tau"                     = "estimate"
   , "mean.of.x"               = "estimate"
   , "X.pseudo.median"         = "estimate"
-  , "mean.of.the.differences" = "estimate"
   , "difference.in.location"  = "estimate"
   , "difference.in.means"     = "estimate"
   , "coefficients"            = "estimate"
@@ -136,7 +135,7 @@ lookup_labels <- c(
   , "Bartlett.s.K.squared"    = "$K^2$"
   # df, df1, df2
   , "multivariate.df1" = "$\\mathit{df}_1$"
-  , "multivariate.df1" = "$\\mathit{df}_1$"
+  , "multivariate.df2" = "$\\mathit{df}_2$"
   , "parameter" = "$\\mathit{df}$"
   , "df"        = "$\\mathit{df}$"
   , "Df"        = "$\\mathit{df}$"
