@@ -17,7 +17,7 @@ test_that(
 
     expect_length(estimates, 1)
     expect_is(estimates, "character")
-    expect_equal(estimates, "$M = -1.43$ 95\\% HDI $[-2.33, -0.57]$")
+    expect_identical(estimates, "$M = -1.43$ 95\\% HDI $[-2.33, -0.57]$")
 
     # Custom HDI coverage
     estimates <- bf_estimates(
@@ -26,7 +26,7 @@ test_that(
       , hdi = 0.5
     )
 
-    expect_equal(estimates, "$M = -1.43$ 50\\% HDI $[-1.74, -1.19]$")
+    expect_identical(estimates, "$M = -1.43$ 50\\% HDI $[-1.74, -1.19]$")
 
     # Custom central tendency
     estimates <- bf_estimates(
@@ -35,7 +35,7 @@ test_that(
       , central_tendency = mean
     )
 
-    expect_equal(estimates, "$M = -1.41$ 95\\% HDI $[-2.33, -0.57]$")
+    expect_identical(estimates, "$M = -1.41$ 95\\% HDI $[-2.33, -0.57]$")
 
     # Standardized
     estimates <- bf_estimates(
@@ -44,7 +44,7 @@ test_that(
       , standardized = TRUE
     )
 
-    expect_equal(estimates, "$d = -1.08$ 95\\% HDI $[-1.90, -0.25]$")
+    expect_identical(estimates, "$d = -1.08$ 95\\% HDI $[-1.90, -0.25]$")
   }
 )
 
@@ -63,7 +63,7 @@ test_that(
 
     expect_length(estimates, 1)
     expect_is(estimates, "character")
-    expect_equal(estimates, "$M = -1.13$ 95\\% HDI $[-2.78, 0.50]$")
+    expect_identical(estimates, "$M = -1.13$ 95\\% HDI $[-2.78, 0.50]$")
 
     # Custom HDI coverage
     estimates <- bf_estimates(
@@ -72,7 +72,7 @@ test_that(
       , hdi = 0.5
     )
 
-    expect_equal(estimates, "$M = -1.13$ 50\\% HDI $[-1.56, -0.48]$")
+    expect_identical(estimates, "$M = -1.13$ 50\\% HDI $[-1.56, -0.48]$")
 
     # Custom central tendency
     estimates <- bf_estimates(
@@ -81,7 +81,7 @@ test_that(
       , central_tendency = mean
     )
 
-    expect_equal(estimates, "$M = -1.16$ 95\\% HDI $[-2.78, 0.50]$")
+    expect_identical(estimates, "$M = -1.16$ 95\\% HDI $[-2.78, 0.50]$")
 
     # Standardized
     estimates <- bf_estimates(
@@ -90,7 +90,7 @@ test_that(
       , standardized = TRUE
     )
 
-    expect_equal(estimates, "$d = -0.58$ 95\\% HDI $[-1.47, 0.24]$")
+    expect_identical(estimates, "$d = -0.58$ 95\\% HDI $[-1.47, 0.24]$")
   }
 )
 

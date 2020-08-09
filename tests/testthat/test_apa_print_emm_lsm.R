@@ -238,7 +238,7 @@ test_that(
     expect_identical(fw_mixed_lsm_output, fw_mixed_emm_output2)
 
     # table --------------------------------------------------------------------
-    expect_equal(
+    expect_identical(
       object = fw_mixed_emm_output$table$gender
       , expected = structure(
         c(
@@ -252,7 +252,7 @@ test_that(
       )
     )
 
-    expect_equal(
+    expect_identical(
       object = fw_mixed_emm_output$table$treatment
       , expected = structure(
         rep(
@@ -271,7 +271,7 @@ test_that(
       )
     )
 
-    expect_equal(
+    expect_identical(
       object = fw_mixed_emm_output$table$hour
       , expected = structure(
         rep(
@@ -428,7 +428,7 @@ test_that(
     simple_pairs_output <- apa_print(simple_pairs)
     simple_pairs2_output <- apa_print(simple_pairs2)
 
-    expect_equal(names(simple_pairs_output$estimate), c("control_F_M", "A_F_M", "B_F_M"))
+    expect_identical(names(simple_pairs_output$estimate), c("control_F_M", "A_F_M", "B_F_M"))
     expect_identical(simple_pairs_output, simple_pairs2_output)
 
     simple_contrasts <- emmeans::contrast(tw_between_emm, "consec", simple = "each", combine = TRUE, adjust = "none")
@@ -484,39 +484,39 @@ test_that(
     ))
 
     ow_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
-    expect_equal(est_name_from_call(ow_me_lsm), "M")
+    expect_identical(est_name_from_call(ow_me_lsm), "M")
 
     tw_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence * Task)
-    expect_equal(est_name_from_call(tw_me_lsm), "M")
+    expect_identical(est_name_from_call(tw_me_lsm), "M")
 
     ow_pairs_lsm <- pairs(ow_me_lsm)
-    expect_equal(est_name_from_call(ow_pairs_lsm), "\\Delta M")
+    expect_identical(est_name_from_call(ow_pairs_lsm), "\\Delta M")
 
     afex::afex_options(emmeans_model = "univariate")
 
     uni_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
-    expect_equal(est_name_from_call(uni_tw_me_emm), "M")
+    expect_identical(est_name_from_call(uni_tw_me_emm), "M")
 
     uni_tw_me_consec_emm <- emmeans::emmeans(tw_rm, consec ~ Valence)
-    expect_equal(est_name_from_call(uni_tw_me_consec_emm$emmeans), "M")
-    expect_equal(est_name_from_call(uni_tw_me_consec_emm$contrasts), "\\Delta M")
+    expect_identical(est_name_from_call(uni_tw_me_consec_emm$emmeans), "M")
+    expect_identical(est_name_from_call(uni_tw_me_consec_emm$contrasts), "\\Delta M")
 
     uni_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
-    expect_equal(est_name_from_call(uni_tw_pairs_emm), "\\Delta M")
+    expect_identical(est_name_from_call(uni_tw_pairs_emm), "\\Delta M")
 
     tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence* Task)
     tw_pairs_contrasts_emm <- emmeans::contrast(tw_me_emm, "consec", simple = "each")
-    expect_equal(est_name_from_call(tw_pairs_contrasts_emm$`simple contrasts for Valence`), "\\Delta M")
+    expect_identical(est_name_from_call(tw_pairs_contrasts_emm$`simple contrasts for Valence`), "\\Delta M")
 
     tw_pairs_contrasts_emm2 <- emmeans::contrast(tw_me_emm, "consec", simple = "each", combine= TRUE)
-    expect_equal(est_name_from_call(tw_pairs_contrasts_emm2), "\\Delta M")
+    expect_identical(est_name_from_call(tw_pairs_contrasts_emm2), "\\Delta M")
 
     afex::afex_options(emmeans_model = "multivariate")
 
     mw_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
-    expect_equal(est_name_from_call(uni_tw_me_emm), "M")
+    expect_identical(est_name_from_call(uni_tw_me_emm), "M")
 
     mw_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
-    expect_equal(est_name_from_call(mw_tw_pairs_emm), "\\Delta M")
+    expect_identical(est_name_from_call(mw_tw_pairs_emm), "\\Delta M")
   }
 )

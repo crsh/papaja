@@ -19,7 +19,14 @@ test_that(
 
     expect_apa_results(
       out2
-      , col.names = c("term", "multivariate.statistic", "statistic", "df1", "df2", "p.value")
+      , labels = list(
+        term = "Effect"
+        , multivariate.statistic = "$\\Lambda$"
+        , statistic = "$F$"
+        , df1 = "$\\mathit{df}_1$"
+        , df2 = "$\\mathit{df}_2$"
+        , p.value = "$p$"
+      )
     )
 
     expect_identical(
@@ -39,19 +46,6 @@ test_that(
     expect_identical(
       object = out4$statistic$N
       , expected = "$\\theta = 0.34$, $F[2, 19] = 3.22$, $p = .062$"
-    )
-
-    # apa_results_table
-    expect_identical(
-      object = variable_labels(out3$table)
-      , expected = list(
-        term = "Effect"
-        , multivariate.statistic = "$T$"
-        , statistic = "$F$"
-        , df1 = "$\\mathit{df}_1$"
-        , df2 = "$\\mathit{df}_2$"
-        , p.value = "$p$"
-      )
     )
   }
 )

@@ -15,30 +15,30 @@ test_that(
 
     # stat
     expect_is(model_comp$stat, "list")
-    expect_equal(names(model_comp$stat), c("Length", "Both"))
+    expect_identical(names(model_comp$stat), c("Length", "Both"))
     expect_is(model_comp$stat$Length, "character")
     expect_is(model_comp$stat$Both, "character")
 
-    expect_equal(model_comp$stat$Length, "$F(1, 148) = 853.31$, $p < .001$")
-    expect_equal(model_comp$stat$Both, "$F(1, 148) = 19.04$, $p < .001$")
+    expect_identical(model_comp$stat$Length, "$F(1, 148) = 853.31$, $p < .001$")
+    expect_identical(model_comp$stat$Both, "$F(1, 148) = 19.04$, $p < .001$")
 
     # est
     expect_is(model_comp$est, "list")
-    expect_equal(names(model_comp$est), c("Length", "Both"))
+    expect_identical(names(model_comp$est), c("Length", "Both"))
     expect_is(model_comp$est$Length, "character")
     expect_is(model_comp$est$Both, "character")
 
-    expect_equal(model_comp$est$Length, "$\\Delta R^2 = .83$")
-    expect_equal(model_comp$est$Both, "$\\Delta R^2 = .02$")
+    expect_identical(model_comp$est$Length, "$\\Delta R^2 = .83$")
+    expect_identical(model_comp$est$Both, "$\\Delta R^2 = .02$")
 
     # full
     expect_is(model_comp$full, "list")
-    expect_equal(names(model_comp$full), c("Length", "Both"))
+    expect_identical(names(model_comp$full), c("Length", "Both"))
     expect_is(model_comp$full$Length, "character")
     expect_is(model_comp$full$Both, "character")
 
-    expect_equal(model_comp$full$Length, paste(model_comp$est$Length, model_comp$stat$Length, sep = ", "))
-    expect_equal(model_comp$full$Both, paste(model_comp$est$Both, model_comp$stat$Both, sep = ", "))
+    expect_identical(model_comp$full$Length, paste(model_comp$est$Length, model_comp$stat$Length, sep = ", "))
+    expect_identical(model_comp$full$Both, paste(model_comp$est$Both, model_comp$stat$Both, sep = ", "))
 
     # table
     correct_table <- structure(
@@ -76,18 +76,18 @@ test_that(
 
     ## stat
     expect_is(incomplete_names$stat, "list")
-    expect_equal(names(incomplete_names$stat), c("model2", "model3"))
+    expect_identical(names(incomplete_names$stat), c("model2", "model3"))
 
     ## est
     expect_is(incomplete_names$est, "list")
-    expect_equal(names(incomplete_names$est), c("model2", "model3"))
+    expect_identical(names(incomplete_names$est), c("model2", "model3"))
 
     ## full
     expect_is(incomplete_names$full, "list")
-    expect_equal(names(incomplete_names$full), c("model2", "model3"))
+    expect_identical(names(incomplete_names$full), c("model2", "model3"))
 
     ## table
-    expect_equal(colnames(incomplete_names$table), paste("Model", 1:3))
+    expect_identical(colnames(incomplete_names$table), paste("Model", 1:3))
 
     incomplete_names2 <- apa_print(list(mod1, mod2, mod3), boot_samples = 0)
     expect_apa_results(incomplete_names2)
@@ -101,14 +101,14 @@ test_that(
     model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 1e3)
     expect_apa_results(model_comp_boot)
 
-    expect_equal(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.76, .86]$")
+    expect_identical(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.76, .86]$")
 
-    expect_equal(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01, .04]$")
+    expect_identical(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01, .04]$")
 
     model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, ci = 0.5)
     expect_apa_results(model_comp_boot2)
 
-    expect_equal(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80, .84]$")
+    expect_identical(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80, .84]$")
   }
 )
 
