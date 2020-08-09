@@ -238,55 +238,71 @@ test_that(
     expect_identical(fw_mixed_lsm_output, fw_mixed_emm_output2)
 
     # table --------------------------------------------------------------------
-    expect_identical(
+    expect_equal(
       object = fw_mixed_emm_output$table$gender
-      , expected = c(
-        "F"
-        , rep("", nrow(fw_mixed_emm_output$table) / 2 - 1)
-        , "M"
-        , rep("", nrow(fw_mixed_emm_output$table) / 2 - 1)
+      , expected = structure(
+        c(
+          "F"
+          , rep("", nrow(fw_mixed_emm_output$table) / 2 - 1)
+          , "M"
+          , rep("", nrow(fw_mixed_emm_output$table) / 2 - 1)
+        )
+        , class = c("papaja_labelled", "character")
+        , label = "gender"
       )
     )
 
-    expect_identical(
+    expect_equal(
       object = fw_mixed_emm_output$table$treatment
-      , expected = rep(
-        c(
-          "control"
-          , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
-          , "A"
-          , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
-          , "B"
-          , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+      , expected = structure(
+        rep(
+          c(
+            "control"
+            , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+            , "A"
+            , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+            , "B"
+            , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
+          )
+          , 2
         )
-        , 2
+        , class = c("papaja_labelled", "character")
+        , label = "treatment"
       )
     )
 
-    expect_identical(
+    expect_equal(
       object = fw_mixed_emm_output$table$hour
-      , expected = rep(
-        c(
-          "X1"
-          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
-          , "X2"
-          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
-          , "X3"
-          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
-          , "X4"
-          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
-          , "X5"
-          , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+      , expected = structure(
+        rep(
+          c(
+            "X1"
+            , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+            , "X2"
+            , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+            , "X3"
+            , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+            , "X4"
+            , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+            , "X5"
+            , rep("", nrow(fw_mixed_emm_output$table) / 30 - 1)
+          )
+          , 6
         )
-        , 6
+        , class = c("papaja_labelled", "character")
+        , label = "hour"
       )
     )
 
     expect_identical(
       object = fw_mixed_emm_output$table$phase
-      , expected = rep(
-        c("fup", "post", "pre")
-        , 30
+      , expected = structure(
+        rep(
+          c("fup", "post", "pre")
+          , 30
+        )
+        , class = c("papaja_labelled", "character")
+        , label = "phase"
       )
     )
 
