@@ -17,3 +17,12 @@ function Image (img)
   end
   return img
 end
+
+-- function Table (table)
+--   print(pandoc.utils.stringify(table.caption))
+--   if table.caption[1] ~= nil then
+--     print(pandoc.utils.stringify(table.caption))
+--     table.caption[3] = pandoc.Emph(string.gsub(img.caption[3].c, ":", ""))
+--   end
+--   return table
+-- end

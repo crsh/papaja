@@ -141,7 +141,7 @@ print_anova <- function(
   # Assemble term lists --------------------------------------------------------
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   apa_res$statistic <- paste0(
     c("F" = "$F", "chisq" = "$\\Chi^2")[statistic]

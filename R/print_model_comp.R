@@ -10,6 +10,7 @@
 #' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
+#' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
 #' @return
 #'    A named list containing the following components:
 #'
@@ -39,6 +40,7 @@ print_model_comp <- function(
   , models = NULL
   , ci = NULL
   , boot_samples = 1000
+  , progress_bar = FALSE
   , in_paren = FALSE
   , observed_predictors = TRUE
 ) {
@@ -53,7 +55,7 @@ print_model_comp <- function(
   } else rownames(x) <- sanitize_terms(x$term)
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   ## est
   if(boot_samples <= 0) { # No CI
@@ -69,7 +71,7 @@ print_model_comp <- function(
       }
     )
   } else { # Bootstrap CI
-    boot_r2_ci <- delta_r2_ci(x, models, ci = ci, R = boot_samples)
+    boot_r2_ci <- delta_r2_ci(x, models, ci = ci, R = boot_samples, progress_bar = progress_bar)
 
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
@@ -78,7 +80,7 @@ print_model_comp <- function(
 
     apa_res$estimate <- paste0(
       "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", ci * 100, "\\% CI "
-      , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
+      , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE, enclose_math = TRUE)
     )
   }
 
@@ -102,7 +104,7 @@ print_model_comp <- function(
   # Assemble table
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
       lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c(1:3)]
-      lm_table[, 2] <- apply(cbind(paste0("$", lm_table[, 2], "$"), lm_table[, 3]), 1, paste, collapse = " ")
+      lm_table[, 2] <- apply(lm_table[, 2:3], MARGIN = 1, paste, collapse = " ")
       lm_table[, -3]
     }
   )
@@ -141,10 +143,13 @@ print_model_comp <- function(
     , digits = c(2, 2, 0, 0, 3, 2, 2)
   )
 
+  ## This part is a disaster and needs refactoring
   model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
     r2 <- apa_print(x, ci = ci + (1 - ci) / 2, observed_predictors = observed_predictors)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
-    r2 <- gsub("R\\^2 = ", "", r2)
+    r2 <- gsub("\\$R\\^2 = |\\$", "", r2)
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
+    # restore dollars where necessary
+    r2 <- gsub(pattern = "\\infty", replacement = "$\\infty$", x = r2, fixed = TRUE)
     r2
   })
 
@@ -157,7 +162,7 @@ print_model_comp <- function(
     , gt1 = c(FALSE, TRUE, TRUE)
     , zero = c(FALSE, TRUE, TRUE)
   )
-  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$estimate))) # Replace by previous estimate with CI
+  model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\$\\\\Delta R\\^2 = |\\$$", "", unlist(apa_res$estimate))) # Replace by previous estimate with CI
   model_diffs <- rbind("", model_diffs)
 
   r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]")

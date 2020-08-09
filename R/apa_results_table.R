@@ -31,19 +31,23 @@ print.apa_results_table <- function(x, ...) {
       , stringsAsFactors = FALSE
     )
     x_legend <- x_legend[!is.na(x_legend$label) | !is.na(x_legend$unit), ]
-    max_char <- max(nchar(x_legend$column))
+    max_shown <- ifelse(nrow(x_legend) == 6L, 6L, 5L)
+    x_legend <- x_legend[seq_len(min(max_shown, n_labels)), , drop = FALSE]
+
+    x_legend$column <- encodeString(x_legend$column, width = NA)
+    x_legend$label <- encodeString(x_legend$label)
 
     apply(
-      x_legend[1:min(5, nrow(x_legend)), ]
-      , 1
+      x_legend
+      , MARGIN = 1
       , function(x) {
-        cat("\n", format(x["column"], width = max_char), ": ", sep = "")
+        cat("\n", x["column"], ": ", sep = "")
         if(!is.na(x["label"])) cat(x["label"], " ", sep = "")
-        if(!is.na(x["unit"])) cat("[", x["unit"], "]", sep = "")
+        if(!is.na(x["unit"])) cat("[", encodeString(x["unit"]), "]", sep = "")
       }
     )
 
-    if(n_labels > 5) cat("\n... (", n_labels - 5, " more label", if(n_labels > 6) "s" else NULL, ")", sep = "")
+    if(n_labels > max_shown) cat("\n... (", n_labels - max_shown, " more label", if(n_labels > (max_shown + 1L)) "s" else NULL, ")", sep = "")
   }
 
   invisible(x)

@@ -84,7 +84,6 @@ apa_print.htest <- function(
 
   ellipsis <- list(...)
 
-
   # Arrange table, i.e. coerce htest to a proper data frame ----
 
   if(length(x$estimate) == 2L) {
@@ -122,20 +121,20 @@ apa_print.htest <- function(
   if(!identical(conf_int, list(NULL))) y$conf.int <- conf_int
 
   # sanitize table ----
-  ellipsis$x <- sanitize_table(y)
+  ellipsis$x <- canonize(y)
 
   # Prettify table ----
   if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
-  x <- do.call("print_table", ellipsis)
+  x <- do.call("beautify", ellipsis)
 
 
   # htest-specific modifications ----
   if(is.null(n)) n <- y$sample.size
-  if("$\\chi^2$" %in% unlist(variable_labels(x))){
+  if("$\\chi^2$" %in% unlist(variable_labels(x))) {
     if(is.null(n)) {
       stop("Please provide the sample size to report.")
-    } else {
-      n <- paste0(", n = ", n)
+    # } else {
+    #   n <- paste0(", n = ", n)
     }
   } else {
     n <- NULL
@@ -153,10 +152,12 @@ apa_print.htest <- function(
   }
 
   # Create output object ----
-  create_container(
+  glue_apa_results(
     x
+    , n = as.integer(n)
+    , est_glue = construct_glue(x, "estimate")
+    , stat_glue = construct_glue(x, "statistic")
+    , term_names = sanitize_terms(y$term)
     , in_paren = in_paren
-    , add_par = n
-    , sanitized_terms = sanitize_terms(y$term)
   )
 }

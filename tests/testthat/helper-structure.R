@@ -42,13 +42,13 @@ expect_apa_results <- function(
   )
 
   # estimate ----
-  expect_reporting_string(object$est)
+  expect_reporting_string(object$estimate)
 
   # statistic ----
-  expect_reporting_string(object$stat)
+  expect_reporting_string(object$statistic)
 
   # full_result ----
-  expect_reporting_string(object$full)
+  expect_reporting_string(object$full_result)
 
   # table ----
   if(!is.null(object$table)) { # allow NULL until we can add table everywhere
@@ -88,10 +88,9 @@ expect_apa_results <- function(
 test_that(
   "expect_apa_results"
   , {
-    test <- papaja:::apa_print_container()
-    test$estimate <- NA_character_
-    # test$table <- data.frame(a = 1)
-    # expect_failure(expect_apa_results(test))
+    test <- papaja:::init_apa_results()
+    test$table <- data.frame(a = 1)
+
     # class(test$table) <- c("apa_results_table", "data.frame")
     # expect_failure(
     #   expect_apa_results(test)

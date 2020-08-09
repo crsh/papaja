@@ -17,8 +17,8 @@ test_that(
     expect_apa_results(ttest_output)
 
     expect_equivalent(ttest_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 17.26$")
-    expect_identical(ttest_output$esti, "$M = -1.43$ 95\\% HDI $[-2.33$, $-0.54]$")
-    expect_identical(ttest_output$full, "$M = -1.43$ 95\\% HDI $[-2.33$, $-0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
+    expect_identical(ttest_output$esti, "$M = -1.43$ 95\\% HDI $[-2.33, -0.54]$")
+    expect_identical(ttest_output$full, "$M = -1.43$ 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
   }
 )
 
@@ -36,9 +36,9 @@ test_that(
 
     expect_apa_results(ttest_output)
 
-    expect_equivalent(ttest_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 1.27$", )
-    expect_identical(ttest_output$esti, "$M = -1.13$ 95\\% HDI $[-2.76$, $0.46]$")
-    expect_identical(ttest_output$full, "$M = -1.13$ 95\\% HDI $[-2.76$, $0.46]$, $\\mathrm{BF}_{\\textrm{10}} = 1.27$")
+    expect_equivalent(ttest_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 1.27$")
+    expect_identical(ttest_output$esti, "$M = -1.13$ 95\\% HDI $[-2.76, 0.46]$")
+    expect_identical(ttest_output$full, "$M = -1.13$ 95\\% HDI $[-2.76, 0.46]$, $\\mathrm{BF}_{\\textrm{10}} = 1.27$")
   }
 )
 

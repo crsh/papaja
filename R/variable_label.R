@@ -6,8 +6,8 @@
 #' @param x Either a vector or a \code{data.frame}.
 #' @param value Character. The variable label(s) to be assigned. If \code{variable_label} is applied to a single vector,
 #' this should be a length-one argument. If applied to a \code{data.frame}, \code{value} is required to be a \emph{named} vector.
-#' Check the examples for details.
-#' @param ... Further arguments that can be passes to methods.
+#' Check the examples for details. If value is \code{NULL}, the variable label is removed from the object.
+#' @param ... Further arguments that can be passed to methods.
 #' @rdname variable_label
 #' @export
 
@@ -85,6 +85,11 @@ assign_label <- function(x, value, ...){
 #' @keywords internal
 
 assign_label.default <- function(x, value){
+
+  if(is.null(value)) {
+    return(structure(x, class = setdiff(class(x), "papaja_labelled"), label = NULL))
+  }
+
   structure(
     x
     , label = value
@@ -95,6 +100,13 @@ assign_label.default <- function(x, value){
 #' @keywords internal
 
 assign_label.data.frame <- function(x, value, ...){
+
+  if(is.null(value)) {
+    for(i in seq_along(ncol(x))) {
+      x[[i]] <- assign_label(x = x[[i]], value = NULL)
+    }
+    return(x)
+  }
   # R allows data frames to have duplicate column names.
   # The following code is optimized to work even in this horrible case.
   # This is especially important for default_label and apa_table (e.g., in
@@ -240,9 +252,9 @@ print.papaja_labelled <- function(x, ...) {
   unit_defined <- !is.null(attr(x, "unit"))
 
   cat(
-    "Variable label     : ", attr(x, "label")
+    "Variable label     : ", encodeString(attr(x, "label"))
     , if(unit_defined) {"\nUnit of measurement: "}
-    , if(unit_defined) {attr(x, "unit")}
+    , if(unit_defined) {encodeString(attr(x, "unit"))}
     , "\n"
     , sep = ""
   )
@@ -284,6 +296,22 @@ relevel.papaja_labelled <- function(x, ref, ...){
   y
 }
 
+#' Conversion of Labelled Vectors
+#'
+#' Functions to convert labelled vectors to other representations.
+#'
+#' @param x          Object to be coerced
+#' @param keep_label Logical indicating whether the variable labels should be kept.
+#' @param ...        Further arguments passed to or from methods
+#' @method as.character papaja_labelled
+#' @export
+
+as.character.papaja_labelled <- function(x, keep_label = TRUE, ...) {
+  y <- NextMethod("as.character", x, ...)
+  if (keep_label) variable_label(y) <- variable_label(x)
+  y
+}
+
 
 # ------------------------------------------------------------------------------
 # Functions to generate very simple codebooks
@@ -293,11 +321,11 @@ tidy_variable_lables <- function(x) {
   labels <- unlist(variable_labels(x))
 
 label_range <- function(y) {
-  
+
   if(inherits(y, "numeric")) return(paste0("[", min(y, na.rm = TRUE), ", ", max(y, na.rm = TRUE), "]"))
   if(inherits(y, "factor")) return(nlevels(y))
   if(inherits(y, "character")) return(length(unique(y[!is.na(y)])))
-  
+
   return("")
 }
 

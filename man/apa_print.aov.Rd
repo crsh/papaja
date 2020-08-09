@@ -44,9 +44,9 @@
 
 \method{apa_print}{anova}(x, ...)
 
-\method{apa_print}{manova}(x, test = "Pillai", ...)
+\method{apa_print}{manova}(x, test = "Pillai", in_paren = FALSE, ...)
 
-\method{apa_print}{summary.manova}(x, ...)
+\method{apa_print}{summary.manova}(x, in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
@@ -58,14 +58,15 @@
 Note that eta-squared is calculated correctly if and only if the design is balanced.}
     \item{\code{mse}}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
     \item{\code{observed}}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.}
-    \item{\code{in_paren}}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
   }}
 
 \item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.}
 
 \item{intercept}{Logical. Indicates if intercept test should be included in output.}
 
-\item{test}{For MANOVA, the multivariate test statistic to be reported, see \code{\link{summary.manova}}.}
+\item{test}{For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.}
+
+\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 }
 \value{
 \code{apa_print.aov} and related functions return a named list containing the following components according to the input:

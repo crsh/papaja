@@ -1,9 +1,9 @@
 utils::citEntry(
   "manual"
-  , "Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9942, retrieved from https://github.com/crsh/papaja"
+  , "Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9997, retrieved from https://github.com/crsh/papaja"
   , author = c("Frederik Aust and Marius Barth")
   , title = "{papaja}: {Create} {APA} manuscripts with {R Markdown}"
   , year = "2020"
-  , note = "R package version 0.1.0.9942"
+  , note = "R package version 0.1.0.9997"
   , url = "https://github.com/crsh/papaja"
 )

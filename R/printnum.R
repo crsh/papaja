@@ -2,23 +2,24 @@
 #'
 #' Converts numeric values to character strings for reporting.
 #'
-#' @param x Numeric. Can be either a single value, vector, or matrix.
+#' @param x Can be either a single value, vector, matrix, or \code{data.frame}.
 #' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
-#' @param margin Integer. If \code{x} is a matrix, the function is applied either across rows (\code{margin = 1})
-#'    or columns (\code{margin = 2}).
+#' @param margin Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
+#'   is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
 #' @param na_string Character. String to print if element of \code{x} is \code{NA}.
 #' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
 #'    notation is rendered correctly.
 #' @param add_equals Logical. Indicates if the output string should be prepended with an \emph{equals} sign.
-#' @param numerals Logical. Indicates if integer should be returned as words.
-#' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numberals = TURE}.
+#' @param numerals Logical. Indicates if integers should be returned as words.
+#' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numerals = TURE}.
 #' @param zero_string Character. Word to print if \code{x} is a zero integer.
 #' @inheritDotParams base::formatC -x
 #'
-#' @details If \code{x} is a vector, \code{digits}, \code{gt1}, and \code{zero} can be vectors
-#'    according to which each element of the vector is formated. Parameters are recycled if length of \code{x}
-#'    exceeds length of the parameter vectors. If \code{x} is a matrix, the vectors specify the formating
+#' @details If \code{x} is a vector, all arguments can be vectors
+#'    according to which each element of the vector is formatted.
+#'    Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
+#'    If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
 #'    of either rows or columns according to the value of \code{margin}.
 #' @examples
 #' printnum(1/3)
@@ -29,6 +30,7 @@
 #' printnum(0, zero = FALSE)
 #'
 #' printp(0.0001)
+#' @rdname printnum
 #' @export
 
 printnum <- function(x, ...) {
@@ -164,66 +166,108 @@ printnum.numeric <- function(
   x
   , gt1 = TRUE
   , zero = TRUE
-  , margin = 1
   , na_string = getOption("papaja.na_string")
   , use_math = TRUE
   , add_equals = FALSE
   , ...
 ) {
+
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
-
-  ellipsis <- list(...)
-
   validate(gt1, check_class = "logical")
   validate(zero, check_class = "logical")
-  validate(margin, check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(1, 2))
-  validate(na_string, check_class = "character", check_length = 1)
+  validate(na_string, check_class = "character")
   validate(use_math, check_class = "logical")
   validate(add_equals, check_class = "logical")
 
   ellipsis <- defaults(
-    ellipsis
-    , set = list(
-      x = x
-      , gt1 = gt1
-      , zero = zero
-      , na_string = na_string
-      , use_math = use_math
-    )
+    list(...)
     , set.if.null = list(
-      digits = 2
+      digits = 2L
+      , format = "f"
       , big.mark = ","
     )
   )
+  ellipsis$margin <- NULL # for backwards compatibility
 
-  # if(!is.null(ellipsis$digits)) { # if not necessary because default is set beforehand
-    validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf))
-  #}
+  digits <- ellipsis$digits
+  validate(digits, check_infinite = TRUE, check_class = "numeric", check_integer = TRUE)
 
-  if(length(x) > 1) {
-    # print_args <- list(digits = digits, gt1 = gt1, zero = zero)
-    vprintnumber <- function(i, x){
-      ellipsis.i <- lapply(X = ellipsis, FUN = sel, i)
-      do.call("printnumber", ellipsis.i)
-    }
+  length_x <- length(x)
+
+  digits <- rep(as.integer(ellipsis$digits), length.out = length_x)
+  not_gt1 <- rep(!gt1, length.out = length_x)
+  not_zero <- rep(!zero, length.out = length_x)
+  is_NA <- is.na(x)
+
+  add_equals <- rep(as.integer(add_equals) + 1L, length.out = length_x)
+  prepend <- c("", "= ")[add_equals]
+
+  # unrounded for correct sign if zero = FALSE
+  is_negative <- (x < 0)
+
+  # round with vector-valued digits argument:
+  ten_power_digits <- 10^digits
+  x <- 0 + round(x * ten_power_digits) / ten_power_digits
+
+  if(any(not_zero)) {
+
+    limit <- 1 / ten_power_digits
+    abs_too_small <- !is_NA & not_zero & (abs(x) < limit)
+
+    x[abs_too_small & !is_negative] <-  limit[abs_too_small & !is_negative] # x >= 0
+    x[abs_too_small & is_negative]  <- -limit[abs_too_small & is_negative] # x < 0
+
+    prepend[abs_too_small] <- ifelse(is_negative[abs_too_small], "> ", "< ")
   }
 
-    # not necessary because of.data.frame-method:
-    # if(is.data.frame(x)) x_out <- as.data.frame(x_out)
+  if(any(not_gt1)) {
+    if(any(not_gt1 & abs(x) > 1)) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
 
-  if(is.numeric(x) & length(x) > 1) {
-    # print_args <- lapply(print_args, rep, length = length(x)) # Recycle arguments
-    x_out <- sapply(seq_along(x), vprintnumber, x)
-    names(x_out) <- names(x)
+    limit <- 1 - 1/ten_power_digits
+
+    too_large <- !is_NA & not_gt1 & (x == 1)
+    x[too_large] <- limit[too_large]
+    prepend[too_large] <- "> "
+
+    too_small <- !is_NA & not_gt1 & (x == -1)
+    x[too_small] <- - limit[too_small]
+    prepend[too_small] <- "< "
+  }
+
+
+
+  lengths <- sapply(ellipsis, length)
+
+  if(all(lengths == 1)) {
+    ellipsis$x <- x
+    y <- do.call("formatC", ellipsis)
   } else {
-    x_out <- do.call("printnumber", ellipsis)
+    ellipsis <- lapply(
+      X = ellipsis
+      , FUN = rep
+      , length.out = length_x
+    )
+    ellipsis$x <- x
+    ellipsis$FUN = formatC
+    y <- do.call("mapply", ellipsis)
   }
 
-  if(add_equals) {
-    x_out <- add_equals(x_out)
+
+  y[not_gt1] <- sub(y[not_gt1], pattern = "0.", replacement = ".", fixed = TRUE)
+  y <- paste0(prepend, y)
+
+  # handle infinity
+  is_infinite <- is.infinite(x)
+  if(any(is_infinite)) {
+    use_math <- rep(use_math, length.out = length_x)
+    y[is_infinite] <- sub(y[is_infinite], pattern = "Inf| Inf", replacement = "\\\\infty")
+    y[is_infinite & use_math] <- paste0("$", y[is_infinite & use_math], "$")
   }
-  x_out
+
+  y[is_NA] <- rep(na_string, length.out = length_x)[is_NA]
+  y
 }
+
 
 
 #' @rdname printnum
@@ -302,87 +346,34 @@ printnum.papaja_labelled <-function(x, ...){
 }
 
 
-printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = TRUE, ...) {
-
-  ellipsis <- list(...)
-  validate(x, check_class = "numeric", check_NA = FALSE, check_length = 1, check_infinite = FALSE)
-  if(is.na(x)) return(na_string)
-  if(is.infinite(x)) {
-    x_out <- paste0(ifelse(x < 0, "-", ""), "\\infty")
-    if(use_math) x_out <- paste0("$", x_out, "$")
-    return(x_out)
-  }
-  if(!is.null(ellipsis$digits)) {
-    validate(ellipsis$digits, "digits", check_class = "numeric", check_integer = TRUE, check_length = 1, check_range = c(0, Inf))
-  }
-
-  validate(gt1, check_class = "logical", check_length = 1)
-  validate(zero, check_class = "logical", check_length = 1)
-  validate(na_string, check_class = "character", check_length = 1)
-  if(!gt1 & abs(x) > 1) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
-
-  ellipsis <- defaults(
-    ellipsis
-    , set.if.null = list(
-      digits = 2
-      , format = "f"
-      , flag = "0"
-      , big.mark = ","
-    )
-  )
-
-  x_out <- round(x, ellipsis$digits) + 0 # No sign if x_out == 0
-
-  if(sign(x_out) == -1) {
-    xsign <- "-"
-    lt <- "> "
-    gt <- "< "
-  } else {
-    xsign <- ""
-    lt <- "< "
-    gt <- "> "
-  }
-
-  if(x_out == 0 & !zero) x_out <- paste0(lt, "0.", paste0(rep(0, ellipsis$digits-1), collapse = ""), "1") # Too small to report
-
-  if(!gt1) {
-    if(x_out == 1) {
-      x_out <- paste0(gt, xsign, ".", paste0(rep(9, ellipsis$digits), collapse = "")) # Never report 1
-    } else if(x_out == -1) {
-      x_out <- paste0(lt, xsign, ".", paste0(rep(9, ellipsis$digits), collapse = "")) # Never report 1
-    }
-    ellipsis$x <- x_out
-    x_out <- do.call("formatC", ellipsis)
-    x_out <- gsub("0\\.", "\\.", x_out)
-  } else {
-    ellipsis$x <- x_out
-    x_out <- do.call("formatC", ellipsis)
-  }
-  x_out
-}
-
-
-
-#' Prepare numeric values for printing as p value
+#' Prepare Numeric Values for Printing as p value
 #'
-#' Convenience wrapper for \code{printnum.numeric} to print \emph{p} values.
+#' Convenience wrapper for \code{\link{printnum}} to print \emph{p} values.
 #'
+#' @param x Numeric. The \emph{p} value(s) to report.
 #' @param digits Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.
-#' @inheritParams printnum
+#' @inheritParams printnum.numeric
 #' @examples
 #' printp(0.05)
 #' printp(0.0005)
 #' printp(0.99999999)
+#' printp(c(.001, 0), add_equals = TRUE)
 #' @export
 
 printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
-  validate(na_string, check_class = "character", check_length = 1)
   validate(digits, check_class = "numeric")
 
-  p <- printnum(x, digits = digits, gt1 = FALSE, zero = FALSE, na_string = na_string, add_equals = add_equals)
-  p
+  printnum(
+    x
+    , digits = digits
+    , gt1 = FALSE
+    , zero = FALSE
+    , na_string = na_string
+    , add_equals = add_equals
+  )
 }
+
 
 #' Print Degrees of Freedom
 #'
@@ -396,6 +387,12 @@ print_df <- function(x, digits = 2L) {
   if(is.null(x))    return(NULL)
   if(is.integer(x)) return(printnum(x))
 
+  validate(digits, check_class = "numeric", check_NA = TRUE)
+
+  if(length(digits) != 1L && length(x) != length(digits)) {
+    stop("The parameter `digits` must be of length 1 or equal to length of `x`.")
+  }
+
   x_digits <- ifelse(
     is.finite(x)
     , as.integer(x %% 1 > 0) * digits
@@ -404,4 +401,5 @@ print_df <- function(x, digits = 2L) {
 
   return(printnum(x, digits = x_digits))
 }
+
 

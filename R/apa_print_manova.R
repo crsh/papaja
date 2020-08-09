@@ -1,34 +1,23 @@
 
-#' @param test For MANOVA, the multivariate test statistic to be reported, see \code{\link{summary.manova}}.
+#' @param test For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.
+#' @inheritParams glue_apa_results
 #' @rdname apa_print.aov
 #' @method apa_print manova
 #' @export
 
-apa_print.manova <- function(x, test = "Pillai", ...) {
-
-  ellipsis <- list(...)
-  ellipsis$x <- summary(x, test = test)
-  # tidied_x <- as.data.frame(
-  #   x = broom::tidy(x, test = test, ...)
-  #   , stringsAsFactors = FALSE
-  # )
-  # print_manova(x = tidied_x, ...)
-  do.call("apa_print", ellipsis)
+apa_print.manova <- function(x, test = "Pillai", in_paren = FALSE, ...) {
+  summ_x <- summary(x, test = test)
+  apa_print(summ_x, in_paren = in_paren, ...)
 }
 
-
+#' @inheritParams glue_apa_results
 #' @rdname apa_print.aov
 #' @method apa_print summary.manova
 #' @export
 
-apa_print.summary.manova <- function(x, ...) {
+apa_print.summary.manova <- function(x, in_paren = FALSE, ...) {
 
-  ellipsis <- defaults(
-    list(...)
-    , set.if.null = list(
-      in_paren = FALSE
-    )
-  )
+  validate(in_paren, check_class = "logical", check_length = 1L)
 
   resid_row <- apply(X = x$stats, MARGIN = 1L, anyNA)
 
@@ -41,100 +30,14 @@ apa_print.summary.manova <- function(x, ...) {
   # df$multivariate.df2 <- x$stats[resid_row, "Df"]
   df$Df <- NULL
 
-  sanitized <- sanitize_table(df)
-  prettified <- print_table(sanitized)
-  create_container(
-    prettified
-    , sanitized_terms = sanitize_terms(df$Effect)
-    , in_paren = ellipsis$in_paren
+  canonical_table <- canonize(df)
+  beautiful_table <- beautify(canonical_table, ...)
+
+  glue_apa_results(
+    beautiful_table
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
+    , term_names = sanitize_terms(df$Effect)
+    , in_paren = in_paren
   )
 }
-
-
-
-#' @keywords internal
-
-print_manova <- function(
-  x
-  , in_paren = FALSE
-) {
-
-
-
-  estimate_names <- c(
-    pillai = "V"
-    , wilks = "\\Lambda"
-    , hl = "T"
-    , roy = "\\theta"
-  )
-
-
-  estimate_names_with_dollars <- paste0("$", estimate_names, "$")
-  names(estimate_names_with_dollars) <- names(estimate_names)
-
-  multivariate_stat <- intersect(names(estimate_names), colnames(x))
-
-  if(length(multivariate_stat) == 0L) {
-    stop("No multivariate test statistic found in results object.")
-  } # move this to input validation
-
-  col_names <- c(
-    term = "Effect"
-    , df = "df"
-    , pillai = "pillai"
-    , wilks = "wilks"
-    , hl = "hl"
-    , roy = "roy"
-    , statistic = "F"
-    , num.df ="df1"
-    , den.df = "df2"
-    , p.value ="p"
-  )
-  colnames(x) <- col_names[colnames(x)]
-
-  var_labels <- c(
-    estimate_names_with_dollars
-    , "Effect" = "Effect"
-    , "F" = "$F$"
-    , "df1" = "$\\mathit{df}_1$"
-    , "df2" = "$\\mathit{df}_2$"
-    , "p" = "$p$"
-  )
-
-  x <- x[x$Effect != "Residuals", colnames(x) != "df", drop = FALSE]
-
-  sanitized_terms <- sanitize_terms(x$Effect)
-  x[["Effect"]] <- prettify_terms(x[["Effect"]])
-  x[[multivariate_stat]] <- printnum(x[[multivariate_stat]])
-  x[["F"]] <- printnum(x[["F"]])
-  x[["df1"]] <- print_df(x[["df1"]])
-  x[["df2"]] <- print_df(x[["df2"]])
-  x[["p"]] <- printp(x[["p"]])
-
-  x <- sort_terms(x, "Effect")
-
-  variable_labels(x) <- var_labels[colnames(x)]
-
-  # assemble final output object
-  res <- apa_print_container()
-
-  res$statistic <- as.list(
-    paste0(
-      "$", estimate_names[[multivariate_stat]], " = ", x[[multivariate_stat]], "$, "
-      , "$F(", x[["df1"]], ", ", x[["df2"]], ") = ", x[["F"]], "$, "
-      , "$p ", add_equals(x[["p"]]), "$"
-    )
-  )
-  if(in_paren) res$statistic <- in_paren(res$statistic)
-  names(res$statistic) <- sanitized_terms
-
-  res$full_result <- res$statistic
-
-  res$table <- x
-  class(res$table) <- c("apa_results_table", "data.frame")
-  res
-}
-
-
-
-
