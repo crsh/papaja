@@ -30,6 +30,7 @@ lookup_names <- c(
   , "X.pseudo.median"         = "estimate"
   , "difference.in.location"  = "estimate"
   , "difference.in.means"     = "estimate"
+  , "estimate.difference.in.means" = "estimate"
   , "coefficients"            = "estimate"
   # ----
   , "conf.int" = "conf.int"
