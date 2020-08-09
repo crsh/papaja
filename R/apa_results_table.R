@@ -54,32 +54,108 @@ print.apa_results_table <- function(x, ...) {
 }
 
 
-#' #' Extract or Replace Columns of an APA Results Table
-#' #'
-#' #' blabla
-#' #'
-#' #' @rdname extract_apa_results_table
-#' #' @export
+#' Extract Parts of an APA Results Table
 #'
-#' `$.apa_results_table` <- function(x, name) {
+#' \emph{These methods are only defined for backward compatibility with older
+#' versions of \pkg{papaja}}. In the past, the column names of`apa_results_table`s
+#' were less standardized than they are today. In order to maintain backwards
+#' compatibility, it is still possible to extract columns with the old columns names,
+#' because we here provide *aliased* indexing. Note that aliased indexing will be
+#' defunct in a future release of \pkg{papaja}.
 #'
-#'   aliases <- c(
-#'     "F"         = "statistic"
-#'     , "t"         = "statistic"
-#'     , "p"         = "p.value"
-#'     , "Predictor" = "term"
-#'     , "Effect"    = "term"
-#'     , "term"      = "term"
-#'   )
-#'   name <- c(aliases, colnames(x))[pmatch(name, c(names(aliases), colnames(x)))]
-#'
-#'   if(names(name) %in% names(aliases)) {
-#'     message("Indexing an apa_results_table with `$"
-#'             , names(name)
-#'             , "` is deprecated. Use `$"
-#'             , name
-#'             , "` instead.")
-#'   }
-#'   x[[name]]
-#' }
+#' @inheritParams base::Extract
+#' @rdname extract_apa_results_table
+#' @md
+#' @export
 
+`$.apa_results_table` <- function(x, name) {
+
+  aliases <- c(
+    "F"         = "statistic"
+    , "t"         = "statistic"
+    # , "p"         = "p.value"  # with partial matching, this is okay
+    , "Predictor" = "term"
+    , "Effect"    = "term"
+  )
+  new_name <- aliases[pmatch(name, names(aliases), nomatch = 0L)]
+
+  if(length(new_name) > 0L) {
+    warning(
+      "Indexing an apa_results_table with `$"
+      , name
+      , "` is deprecated. Use `$"
+      , unname(new_name)
+      , "` instead."
+      , call. = FALSE
+    )
+    name <- new_name
+  }
+  NextMethod()
+}
+
+#' @rdname extract_apa_results_table
+#' @export
+
+`[[.apa_results_table` <- function(x, i, exact = TRUE) {
+
+  if(missing(i) || is.null(i) || is.na(i)) NextMethod()
+
+  aliases <- c(
+    "F"         = "statistic"
+    , "t"         = "statistic"
+    , "p"         = "p.value"
+    , "Predictor" = "term"
+    , "Effect"    = "term"
+  )
+  if(!exact) {
+    aliases <- aliases[-3] # okay if exact == FALSE
+    new_name <- aliases[pmatch(i, names(aliases), nomatch = 0L)]
+  } else {
+    new_name <- aliases[intersect(i, names(aliases))]
+  }
+
+  if(length(new_name) > 0L) {
+    warning("Indexing an apa_results_table with '[[\""
+            , i
+            , "\"]]' is deprecated. Use '[[\""
+            , unname(new_name)
+            , "\"]]' instead.", call. = FALSE)
+    return(x[[new_name, exact = exact]])
+  }
+  NextMethod()
+}
+
+#' @rdname extract_apa_results_table
+#' @export
+
+`[.apa_results_table` <- function(x, i, j, ..., drop = TRUE) {
+
+  if(missing(j) || is.null(j) || is.na(j)) {
+    NextMethod()
+  } else {
+
+    aliases <- c(
+      "F"         = "statistic"
+      , "t"         = "statistic"
+      , "p"         = "p.value"
+      , "Predictor" = "term"
+      , "Effect"    = "term"
+    )
+    if(any(j %in% names(aliases))) {
+      j_change <- j %in% names(aliases)
+      prepend <- append <- "\""
+      if(sum(j_change) > 1) {
+        prepend <- "c(\""
+        append <- "\")"
+      }
+      warning("Indexing an apa_results_table with '[..., "
+              ,  paste0(prepend, paste(j[j_change], collapse = "\", \""), append)
+              , "]' is deprecated. Use '[..., "
+              , paste0(prepend, paste(aliases[j[j_change]], collapse = "\", \""), append)
+              , "]' instead.", call. = FALSE)
+
+      j[j_change] <- aliases[j[j_change]]
+    }
+  }
+  NextMethod()
+}
