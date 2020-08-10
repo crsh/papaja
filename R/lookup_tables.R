@@ -73,8 +73,8 @@ lookup_names <- c(
   , "den.Df"     = "df2"
   , "NumDF"      = "df1"
   , "DenDF"      = "df2"
-  , "parameter.num.df"   = "df1"
-  , "parameter.denom.df" = "df2"
+  , "num.df"   = "df1"
+  , "denom.df" = "df2"
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
@@ -145,8 +145,8 @@ lookup_labels <- c(
   , "den.Df"    = "$\\mathit{df}_2$"
   , "NumDF"     = "$\\mathit{df}_1$"
   , "DenDF"     = "$\\mathit{df}_2$"
-  , "parameter.num.df"   = "$\\mathit{df}_1$"
-  , "parameter.denom.df" = "$\\mathit{df}_2$"
+  , "num.df"   = "$\\mathit{df}_1$"
+  , "denom.df" = "$\\mathit{df}_2$"
   # p.value
   , "p.value"    = "$p$"
   , "Pr..Chisq." = "$p$"
