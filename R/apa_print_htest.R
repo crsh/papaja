@@ -88,7 +88,9 @@ apa_print.htest <- function(
 
   if(length(x$estimate) == 2L) {
     x$estimate <- unname(diff(rev(x$estimate)))
-    names(x$estimate) <- names(x$null.value)
+    if(all(grepl("mean", names(x$estimate)))) {
+      names(x$estimate) <- "difference in means"
+    }
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
 
