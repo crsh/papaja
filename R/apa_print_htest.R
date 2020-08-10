@@ -87,9 +87,16 @@ apa_print.htest <- function(
   # Arrange table, i.e. coerce 'htest' to a proper data frame ----
 
   if(length(x$estimate) == 2L) {
-    x$estimate <- unname(diff(rev(x$estimate)))
     if(all(grepl("mean", names(x$estimate)))) {
+      # two-sample t test
+      x$estimate <- unname(diff(rev(x$estimate)))
       names(x$estimate) <- "difference in means"
+    } else if(all(grepl("prop", names(x$estimate))) && is.null(x$null.value)){
+      # 2-sample test for **equality** of proportions
+      x$estimate <- unname(diff(rev(x$estimate)))
+      names(x$estimate) <- "difference in proportions"
+    } else {
+      x$estimate <- NULL
     }
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
