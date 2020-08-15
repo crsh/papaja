@@ -236,7 +236,7 @@ apa_print_bf.numeric <- function(
 
 apa_print_bf.BFBayesFactor <- function(x, ...) {
   validate(as.vector(x), check_NA = TRUE)
-  bf <- apa_print_bf(as.vector(x))
+  bf <- apa_print_bf(as.vector(x), ...)
   bf <- setNames(bf, names(x@numerator))
   bf
 }
