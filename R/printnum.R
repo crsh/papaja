@@ -206,8 +206,12 @@ printnum.numeric <- function(
   is_negative <- (x < 0)
 
   # round with vector-valued digits argument:
+  format_code <- !rep(tolower(ellipsis$format), length.out = length_x) %in% c("e", "g", "fg")
+
   ten_power_digits <- 10^digits
-  x <- 0 + round(x * ten_power_digits) / ten_power_digits
+  x[format_code] <- 0 + round(x[format_code] * ten_power_digits[format_code]) / ten_power_digits[format_code]
+
+
 
   if(any(not_zero)) {
 

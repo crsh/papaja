@@ -221,3 +221,20 @@ test_that(
     expect_error(papaja:::print_df(npk$yield, digits = c(3, 2)), "The parameter `digits` must be of length 1 or equal to length of `x`.")
   }
 )
+
+test_that(
+  "Scientific typesetting"
+  , {
+    scientific_style <- printnum(0.00125, format = "e", digits = 2)
+    nonscientific_style <- printnum(0.00125, format = "f", digits = 2)
+
+    expect_identical(
+      scientific_style
+      , "1.25e-03"
+    )
+    expect_identical(
+      nonscientific_style
+      , "0.00"
+    )
+  }
+)
