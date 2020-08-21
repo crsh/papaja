@@ -206,10 +206,10 @@ printnum.numeric <- function(
   is_negative <- (x < 0)
 
   # round with vector-valued digits argument:
-  format_code <- !rep(tolower(ellipsis$format), length.out = length_x) %in% c("e", "g", "fg")
+  is_scientific <- rep(tolower(ellipsis$format), length.out = length_x) %in% c("e", "g", "fg")
 
   ten_power_digits <- 10^digits
-  x[format_code] <- 0 + round(x[format_code] * ten_power_digits[format_code]) / ten_power_digits[format_code]
+  x[!is_scientific] <- 0 + round(x[!is_scientific] * ten_power_digits[!is_scientific]) / ten_power_digits[!is_scientific]
 
 
 
@@ -260,12 +260,19 @@ printnum.numeric <- function(
   y[not_gt1] <- sub(y[not_gt1], pattern = "0.", replacement = ".", fixed = TRUE)
   y <- paste0(prepend, y)
 
-  # handle infinity
+  # Handle infinity
+  use_math <- rep(use_math, length.out = length_x)
+
   is_infinite <- is.infinite(x)
   if(any(is_infinite)) {
-    use_math <- rep(use_math, length.out = length_x)
     y[is_infinite] <- sub(y[is_infinite], pattern = "Inf| Inf", replacement = "\\\\infty")
     y[is_infinite & use_math] <- paste0("$", y[is_infinite & use_math], "$")
+  }
+
+  # Typeset scientific
+  if(any(is_scientific)) {
+    y[is_scientific] <- typeset_scientific(y[is_scientific])
+    y[is_scientific & use_math] <- paste0("$", y[is_scientific & use_math], "$")
   }
 
   y[is_NA] <- rep(na_string, length.out = length_x)[is_NA]
@@ -407,3 +414,20 @@ print_df <- function(x, digits = 2L) {
 }
 
 
+#' Typset scientific notation
+#'
+#' Typsets scientific notation of numbers into properly typeset math strings.
+#'
+#' @param x Character.
+#'
+#' @return
+#'
+#' @examples
+#' papaja:::typeset_scientific("1.25e+04")
+
+typeset_scientific <- function(x) {
+  x <- gsub("e\\+00$", "", x)
+  x <- gsub("e\\+0?(\\d+)$", " \\\\times 10\\^\\{\\1\\}", x)
+  x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)
+  x
+}

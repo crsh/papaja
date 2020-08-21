@@ -247,13 +247,6 @@ invert_subscript <- function(x) {
   paste0(rev(unlist(strsplit(x, seperator))), collapse = seperator)
 }
 
-typeset_scientific <- function(x) {
-  x <- gsub("e\\+00$", "", x)
-  x <- gsub("e\\+0?(\\d+)$", " \\\\times 10\\^\\{\\1\\}", x)
-  x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)
-  x
-}
-
 bf_term_labels <- function(x) {
   model_formula <- formula(x@identifier$formula)
   attr(terms(model_formula), "term.labels")

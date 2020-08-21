@@ -230,7 +230,7 @@ test_that(
 
     expect_identical(
       scientific_style
-      , "1.25e-03"
+      , "$1.25 \\times 10^{-3}$"
     )
     expect_identical(
       nonscientific_style
