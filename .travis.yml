@@ -25,10 +25,14 @@ r_packages:
   - testthat
   - BayesFactor
   - latex2exp
+  - covr
 
 # Install other dependencies # longtable lscape tabularx
 before_install:
   - tlmgr install apa6 booktabs caption csquotes endfloat environ etoolbox fancyhdr fancyvrb framed lineno microtype mptopdf ms parskip pgf sttools threeparttable threeparttablex trimspaces txfonts upquote url was xcolor
+
+after_success:
+  - Rscript -e 'covr::codecov()'
 
 addons:
   apt:

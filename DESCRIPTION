@@ -46,7 +46,8 @@ Suggests:
   skimr,
   spelling,
   lme4,
-  lmerTest
+  lmerTest,
+  covr
 Remotes: 
   tidymodels/broom
 SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)

@@ -71,9 +71,11 @@ glue_apa_results <- function(x = NULL, ...) {
     )
 
     if(!is.null(x) && is.data.frame(x)) {
+      if(!inherits(x, "apa_results_table")) {
         if("term" %in% names(x)) x$term <- prettify_terms(x$term)
-        if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
-        apa_res$table <- x
+      }
+      if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
+      apa_res$table <- x
     }
 
     apa_res

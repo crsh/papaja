@@ -84,11 +84,20 @@ apa_print.htest <- function(
 
   ellipsis <- list(...)
 
-  # Arrange table, i.e. coerce htest to a proper data frame ----
+  # Arrange table, i.e. coerce 'htest' to a proper data frame ----
 
   if(length(x$estimate) == 2L) {
-    x$estimate <- unname(diff(rev(x$estimate)))
-    names(x$estimate) <- names(x$null.value)
+    if(all(grepl("mean", names(x$estimate)))) {
+      # two-sample t test
+      x$estimate <- unname(diff(rev(x$estimate)))
+      names(x$estimate) <- "difference in means"
+    } else if(all(grepl("prop", names(x$estimate))) && is.null(x$null.value)){
+      # 2-sample test for **equality** of proportions
+      x$estimate <- unname(diff(rev(x$estimate)))
+      names(x$estimate) <- "difference in proportions"
+    } else {
+      x$estimate <- NULL
+    }
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
 
@@ -108,11 +117,15 @@ apa_print.htest <- function(
   x$method      <- NULL
   x$data.name   <- NULL
 
-  x_list <- lapply(x, FUN = function(x) {
-    if(!is.null(x)) {
-      matrix(x, nrow = 1, dimnames = list(NULL, names(x)))
+  x_list <- list()
+
+  for (i in names(x)) {
+    if(is.null(names(x[[i]]))) {
+      x_list[[i]] <- x[[i]]
+    } else {
+      x_list[names(x[[i]])] <- unname(x[[i]])
     }
-  })
+  }
 
   y <- as.data.frame(
     x_list
