@@ -181,6 +181,7 @@ print_model_comp <- function(
   colnames(model_stats_table) <- names(models)
   apa_res$table <- rbind(coef_table, model_stats_table)
   apa_res$table[is.na(apa_res$table)] <- ""
+  apa_res$table <- default_label(apa_res$table)
   class(apa_res$table) <- c("apa_results_table", "data.frame")
 
   apa_res[c("estimate", "statistic", "full_result")] <- lapply(apa_res[c("estimate", "statistic", "full_result")], as.list)
