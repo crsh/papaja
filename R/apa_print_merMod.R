@@ -6,6 +6,8 @@
 #'
 #' @param x A fitted hierarchical (generalized) linear model, either from [lme4::lmer()],
 #'   [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
+#' @param effects      Character. Determines which information is returned. Currently, only fixed-effects terms
+#'   (`"fixed"`) are supported.
 #' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
 #' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
 #' @inheritParams print_anova
@@ -23,6 +25,7 @@
 
 apa_print.merMod <- function(
   x
+  , effects = "fixed"
   , args_confint = NULL
   , in_paren = FALSE
   , est_name = NULL
@@ -34,6 +37,11 @@ apa_print.merMod <- function(
 
   if(is.null(args_confint)) args_confint <- list()
   validate(args_confint, check_class = "list")
+  validate(effects, check_class = "character", check_length = 1L)
+
+  if(!effects %in% c("fixed")) {
+    stop("Currently, only fixed-effects terms are fully supported by apa_print().")
+  }
 
   # `in_paren` is validated in `glue_apa_results()`
 

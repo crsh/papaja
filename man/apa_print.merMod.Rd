@@ -5,13 +5,23 @@
 \alias{apa_print.mixed}
 \title{Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)}
 \usage{
-\method{apa_print}{merMod}(x, args_confint = NULL, in_paren = FALSE, est_name = NULL, ...)
+\method{apa_print}{merMod}(
+  x,
+  effects = "fixed",
+  args_confint = NULL,
+  in_paren = FALSE,
+  est_name = NULL,
+  ...
+)
 
 \method{apa_print}{mixed}(x, ...)
 }
 \arguments{
 \item{x}{A fitted hierarchical (generalized) linear model, either from \code{\link[lme4:lmer]{lme4::lmer()}},
 \code{\link[lmerTest:lmer]{lmerTest::lmer()}}, \code{\link[afex:mixed]{afex::mixed()}}, or \code{\link[lme4:glmer]{lme4::glmer()}}.}
+
+\item{effects}{Character. Determines which information is returned. Currently, only fixed-effects terms
+(\code{"fixed"}) are supported.}
 
 \item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
 
