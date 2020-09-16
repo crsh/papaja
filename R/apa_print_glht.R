@@ -71,7 +71,8 @@ apa_print.summary.glht <- function(
   colnames(tidy_x)[colnames(tidy_x) == "std.error"] <- "conf.int"
 
   ## Typeset columns
-  tidy_x$contrast <- sanitize_terms(tidy_x$contrast)
+  sanitzied_contrasts <- sanitize_terms(tidy_x$contrast)
+  tidy_x$contrast <- prettify_terms(tidy_x$contrast)
   tidy_x$estimate <- printnum(tidy_x$estimate, ...)
   tidy_x$statistic <- printnum(tidy_x$statistic, digits = 2)
   tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
@@ -94,7 +95,7 @@ apa_print.summary.glht <- function(
     tidy_x
     , est_glue = construct_glue(tidy_x, "estimate")
     , stat_glue = construct_glue(tidy_x, "statistic")
-    , term_names = sanitize_terms(tidy_x$contrast)
+    , term_names = sanitzied_contrasts
     , in_paren = in_paren
   )
 }

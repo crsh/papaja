@@ -154,5 +154,5 @@ lookup_labels <- c(
   , "Pr..F."      = "$p$"
   , "Pr..PB."     = "$p$"
   , "pvalues"     = "$p$"
-  , "adj.p.value" = "$p_{adj}$"
+  , "adj.p.value" = "$p_\\mathrm{adj}$"
 )
