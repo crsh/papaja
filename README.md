@@ -30,7 +30,7 @@ issue](https://github.com/crsh/papaja/issues) on Github.**
 ## Examples
 
 Take a look at the [R
-Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.Rmd)
+Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd)
 of the example manuscript in the folder `example` and the resulting
 [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions. For an
