@@ -41,6 +41,15 @@ Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{
 default, \emph{Wald} confidence intervals are calculated, but this may change in
 the future.
 }
+\examples{
+  # Fit a linear mixed model using the lme4 package
+  # or the lmerTest package (for dfs and p values)
+  library(lmerTest)
+  fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+  # Format statistics for fixed-effects terms (the default)
+  apa_print(fm1)
+
+}
 \seealso{
 Other apa_print: 
 \code{\link{apa_print.BFBayesFactor}()},
