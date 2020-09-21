@@ -236,7 +236,7 @@ apa_print_bf.numeric <- function(
 
 apa_print_bf.BFBayesFactor <- function(x, ...) {
   validate(as.vector(x), check_NA = TRUE)
-  bf <- apa_print_bf(as.vector(x))
+  bf <- apa_print_bf(as.vector(x), ...)
   bf <- setNames(bf, names(x@numerator))
   bf
 }
@@ -245,13 +245,6 @@ apa_print_bf.BFBayesFactor <- function(x, ...) {
 invert_subscript <- function(x) {
   seperator <- if(nchar(x) == 2) "" else "/"
   paste0(rev(unlist(strsplit(x, seperator))), collapse = seperator)
-}
-
-typeset_scientific <- function(x) {
-  x <- gsub("e\\+00$", "", x)
-  x <- gsub("e\\+0?(\\d+)$", " \\\\times 10\\^\\{\\1\\}", x)
-  x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)
-  x
 }
 
 bf_term_labels <- function(x) {

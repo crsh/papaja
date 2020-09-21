@@ -400,7 +400,10 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     metadata$classoption <- "man"
   }
 
-  if(isTRUE(metadata$mask)) metadata$classoption <- paste0(metadata$classoption, ",mask")
+  if(isTRUE(metadata$mask)) {
+    metadata$classoption <- paste0(metadata$classoption, ",mask")
+    args <- c(args, "--variable", paste0("author-meta:", ""))
+  }
 
   if(isTRUE(metadata$figsintext) || isTRUE(metadata$floatsintext)) {
     metadata$classoption <- paste0(metadata$classoption, ",floatsintext")

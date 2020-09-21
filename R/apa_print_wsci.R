@@ -43,6 +43,10 @@ apa_print.papaja_wsci <- function(x, ...) {
   # res$full_result <- res$estimate
 
   res$table <- summary_wsci[, factors, drop = FALSE]
+  for(i in factors) {
+    res$table[[i]] <- as.character(res$table[[i]], keep_label = TRUE)
+  }
+
   res$table$estimate <- printnum(summary_wsci$mean, ...)
   res$table$conf.int <- unlist(
     print_interval(
