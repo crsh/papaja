@@ -72,9 +72,9 @@ glue_apa_results <- function(x = NULL, ...) {
 
     if(!is.null(x) && is.data.frame(x)) {
       if(!inherits(x, "apa_results_table")) {
-        if(!is.null(x$term)) x$term <- prettify_terms(x$term)
+        if("term" %in% names(x)) x$term <- prettify_terms(x$term)
       }
-      if(!is.null(x$conf.int)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
+      if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
       apa_res$table <- x
     }
 
@@ -195,6 +195,7 @@ est_glue <- function(x) {
 }
 
 stat_glue <- function(x) {
+  if(is(x, "tbl_df")) x <- as.data.frame(x)
   if(is.null(x$statistic)) return("")
 
   # # Remove degrees of freedom
@@ -236,10 +237,12 @@ stat_glue <- function(x) {
       )
     )
   }
-  if(!is.null(x$p.value)) {
+
+  p_value <- names(x)[grepl("p.value", names(x), fixed = TRUE)]
+  if(length(p_value) > 0) {
     stat_list <- c(
       stat_list
-      , "$p <<add_equals(p.value)>>$"
+      , paste0("$<<svl(", p_value, ")>> <<add_equals(", p_value, ")>>$")
     )
   }
 
