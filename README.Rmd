@@ -176,7 +176,10 @@ Like `papaja` and want to contribute? Take a look at the [open issues](https://g
 
 ## Papers written with papaja
 
-Please cite `papaja` if you use it (`citation('papaja')` will provide the reference). Below are some peer-reviewed publications that used `papaja`. If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
+Please cite `papaja` if you use it.
+You can for example [use `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file.
+Below are some peer-reviewed publications that used `papaja`.
+If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
 
 ```{r include = FALSE}
 papaja_bib <- RefManageR::ReadZotero(group = "2202906", .params = list())
