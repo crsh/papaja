@@ -28,10 +28,9 @@ with APA manuscript guidelines.
 \examples{
   library(nlme)
   fm1 <- lme(distance ~ age, data = Orthodont, method = "ML") # random is ~ age
-  fm2 <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1, method = "ML")
-  fm3 <- lme(distance ~ age, data = Orthodont, random = ~ 1, method = "ML")
-  single_anova <- anova(fm1)
   apa_print(fm1)
+  # ANOVA-like tables
+  single_anova <- anova(fm1)
   apa_print(single_anova)
 
 }

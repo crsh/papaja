@@ -18,7 +18,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 
   if(progress_bar) {
     cat("Calculating confidence intervals for differences in R-squared based on", R, "bootstrap samples.\n")
-    pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3, width = min(getOption("width"), 100L))
+    pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3, width = min(getOption("width") - 10L, 100L))
     count <- -length(delta_r2s) # seems to be evaluated once more than R
   }
 

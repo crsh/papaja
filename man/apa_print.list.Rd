@@ -9,7 +9,7 @@
   anova_fun = stats::anova,
   ci = 0.9,
   boot_samples = 10000,
-  progress_bar = FALSE,
+  progress_bar = interactive(),
   observed_predictors = TRUE,
   in_paren = FALSE,
   ...
