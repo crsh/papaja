@@ -124,7 +124,7 @@ assign_label.data.frame <- function(x, value, ...){
   }
 
   for(i in seq_along(colnames(x))) {
-    if(colnames(x)[i] %in% names(value)) {
+    if(any(colnames(x)[i] == names(value))) {
       x[[i]] <- assign_label(x[[i]], value[[colnames(x)[i]]])
     }
   }

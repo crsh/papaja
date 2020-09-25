@@ -47,6 +47,7 @@ Suggests:
   spelling,
   lme4,
   lmerTest,
+  nlme,
   covr
 Remotes: 
   tidymodels/broom

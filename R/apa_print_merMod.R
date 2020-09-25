@@ -1,144 +1,126 @@
-#' #' Format Statistics from (Generalized) Hierarchical Linear Models (APA 6th edition)
-#' #'
-#' #' These methods take objects from various R functions that calculate
-#' #' hierarchical linear models to create formatted character strings
-#' #' to report the results in accordance with APA manuscript guidelines.
-#' #'
-#' #' @param x A fitted hierarchical linear model, either from [lme4::lmer()],
-#' #'   [lmerTest::lmer()], or [afex::mixed()].
-#' #' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()].
-#' #' @inheritParams print_anova
-#' #' @param ... Further arguments, currently ignored.
-#' #' @family apa_print
-#' #' @rdname apa_print.merMod
-#' #' @method apa_print merMod
-#' #' @export
-#' #' @md
+#' Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)
 #'
-#' apa_print.merMod <- function(
-#'   x
-#'   , args_confint
-#'   , in_paren = FALSE, ...
-#' ) {
+#' These methods take objects from various R functions that calculate
+#' hierarchical (generalized) linear models to create formatted character strings
+#' to report the results in accordance with APA manuscript guidelines.
 #'
-#'   args <- list(...)
+#' @param x A fitted hierarchical (generalized) linear model, either from [lme4::lmer()],
+#'   [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
+#' @param effects      Character. Determines which information is returned. Currently, only fixed-effects terms
+#'   (`"fixed"`) are supported.
+#' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
+#' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
+#' @inheritParams print_anova
+#' @param ... Further arguments that are passed to [printnum()].
+#' @details
+#'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. By
+#'   default, *Wald* confidence intervals are calculated, but this may change in
+#'   the future.
+#' @examples
+#'   # Fit a linear mixed model using the lme4 package
+#'   # or the lmerTest package (for dfs and p values)
+#'   library(lmerTest)
+#'   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+#'   # Format statistics for fixed-effects terms (the default)
+#'   apa_print(fm1)
 #'
-#'   args_confint <- defaults(
-#'     if(missing(args_confint)) { list() } else { args_confint }
-#'     , set = list(
-#'       object = x
-#'       , parm = "beta_"
-#'     )
-#'     , set.if.null = list(
-#'       level = 0.95
-#'       , method = if(methods::is(x, "glmerMod")){"boot"} else {"profile"}
-#'       , nsim = 2e3
-#'     )
-#'   )
-#'
-#'   x_summary <- summary(x)
-#'   confidence_intervals <- as.data.frame(
-#'     do.call("confint", args_confint)
-#'     , stringsAsFactors = FALSE
-#'   )[rownames(x_summary$coefficients), ] # ensure same arrangement as in model object
-#'
-#'   print_cis <- print_confint(confidence_intervals)
-#'
-#'   confidence_col <- paste0(
-#'     "["
-#'     , printnum(confidence_intervals[[1]])
-#'     , ", "
-#'     , printnum(confidence_intervals[[2]])
-#'     , "]"
-#'   )
-#'
-#'   isLmerTest <- methods::is(x, "lmerModLmerTest")
-#'
-#'   term <- prettify_terms(
-#'     rownames(x_summary$coefficients)
-#'   )
-#'
-#'   res_table <- as.data.frame(
-#'     x_summary$coefficients
-#'     , row.names = NULL
-#'   )
-#'   rownames(res_table) <- NULL
-#'
-#'   renamers <- c(
-#'     "Estimate" = "estimate"
-#'     , "Std. Error" = "std.err"
-#'     , "t value" = "statistic"
-#'     , df = "df"
-#'     , "Pr(>|t|)" = "p.value"
-#'     , "Pr(>|z|)" = "p.value"
-#'   )
-#'   colnames(res_table) <- renamers[colnames(res_table)]
-#'   res_table <- cbind(term, res_table)
-#'
-#'
-#'   # prepare pretty table ----
-#'   res_table$estimate <- printnum(res_table$estimate)
-#'   res_table$std.err <- printnum(res_table$std.err)
-#'   res_table$statistic <- printnum(res_table$statistic)
-#'   res_table$conf.int <- confidence_col
-#'
-#'   if(is.null(res_table$conf.int)) {
-#'     est_cols <- c("term", "estimate", "statistic")
-#'   } else {
-#'     est_cols <- c("term", "estimate", "conf.int", "statistic")
-#'   }
-#'
-#'   if(isLmerTest) {
-#'     res_table$df <- print_df(res_table$df)
-#'     res_table$p.value <- printp(res_table$p.value)
-#'     res_table <- res_table[, c(est_cols, "df", "p.value")]
-#'   } else {
-#'     res_table <- res_table[, est_cols]
-#'   }
-#'   # p values for glmms seem to be possible, but are calculated from z values
-#'
-#'   variable_labels(res_table) <- c(
-#'     term = "Term"
-#'     , estimate = "$b$"
-#'     , std.err = "$\\mathit{SE}$"
-#'     , conf.int = paste0(args_confint$level * 100, "% CI")
-#'     , statistic = "$t$"
-#'     , df = "$\\mathit{df}$"
-#'     , p.value = "$p$"
-#'   )[colnames(res_table)]
-#'   class(res_table) <- c("apa_results_table", "data.frame")
-#'
-#'   # prepare final output container ----
-#'   res <- init_apa_results()
-#'   res$table <- res_table
-#'
-#'   res$estimate <- as.list(
-#'     paste0("$b = ", res_table$estimate, "$, ", unlist(print_cis))
-#'   )
-#'   # if(in_paren) res$estimate <- in_paren(res$estimate) # not necessary, yet
-#'
-#'   if(isLmerTest) {
-#'     res$statistic <- as.list(paste0("$t(", res_table$df, ") = ", res_table$statistic, "$, $p ", add_equals(res_table$p.value), "$"))
-#'   } else {
-#'     res$statistic <- as.list(paste0("$t = ", res_table$statistic, "$"))
-#'   }
-#'   if(in_paren) res$statistic <- in_paren(res$statistic)
-#'
-#'   res$full_result <- as.list(paste0(res$estimate, ", ", res$statistic))
-#'
-#'   names(res$full_result) <- names(res$statistic) <- names(res$estimate) <- sanitize_terms(res_table$term)
-#'
-#'   # return
-#'   res
-#' }
-#'
-#' #' @rdname apa_print.merMod
-#' #' @method apa_print mixed
-#' #' @export
-#'
-#' apa_print.mixed <- function(x, ...) {
-#'
-#'   anova_table <- x$anova_table
-#'   attr(anova_table, "method") <- attr(x, "method")
-#'   apa_print(anova_table, ...)
-#' }
+#' @family apa_print
+#' @rdname apa_print.merMod
+#' @method apa_print merMod
+#' @export
+#' @md
+
+apa_print.merMod <- function(
+  x
+  , effects = "fixed"
+  , args_confint = NULL
+  , in_paren = FALSE
+  , est_name = NULL
+  , ...
+) {
+
+  # Input validation and processing ----
+  args <- list(...)
+
+  if(is.null(args_confint)) args_confint <- list()
+  validate(args_confint, check_class = "list")
+  validate(effects, check_class = "character", check_length = 1L)
+
+  if(!effects %in% c("fixed")) {
+    stop("Currently, only fixed-effects terms are fully supported by apa_print().")
+  }
+
+  # `in_paren` is validated in `glue_apa_results()`
+
+  if(is.null(est_name)) {
+    est_name <- "$\\hat{\\beta}$"
+  } else {
+    validate(est_name, check_class = "character", check_length = 1L)
+    est_name <- paste0("$", strip_math_tags(est_name), "$")
+  }
+
+  args_confint <- defaults(
+    args_confint
+    , set = list(
+      object = x
+      , parm = "beta_"
+    )
+    , set.if.null = list(
+      level = .95
+      , method = "Wald"
+      , nsim = 2e3L
+    )
+  )
+
+  # GLMM with non-fixed scale? (cf. lme4::profile.merMod)
+  # no_profile <- lme4::isGLMM(x) && x@devcomp$dims[["useSc"]]
+  # if(args_confint$method == "profile" && no_profile)
+
+
+
+  # Rearrange ----
+  x_summary <- summary(x)
+
+  res_table <- as.data.frame(
+    x_summary$coefficients
+    , row.names = NULL
+  )
+
+  res_table$Term <- rownames(x_summary$coefficients)
+  rownames(res_table) <- NULL
+
+
+  # Add confidence intervals ----
+  confidence_intervals <-
+    do.call("confint", args_confint)[rownames(x_summary$coefficients), ] # ensure same arrangement as in model object
+
+  res_table$conf.int <- apply(X = confidence_intervals, MARGIN = 1, FUN = function(x) {
+    as.list(x)
+  })
+  attr(res_table$conf.int, "conf.level") <- args_confint$level
+
+
+  # canonize, beautify, glue ----
+  canonical_table <- canonize(res_table, est_label = est_name)
+  beautiful_table <- beautify(canonical_table, ...)
+
+  glue_apa_results(
+    beautiful_table
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
+    , term_names = sanitize_terms(res_table$Term)
+    , in_paren = in_paren
+  )
+}
+
+#' @rdname apa_print.merMod
+#' @method apa_print mixed
+#' @export
+
+apa_print.mixed <- function(x, ...) {
+
+  anova_table <- x$anova_table
+  attr(anova_table, "method") <- attr(x, "method")
+  apa_print(anova_table, ...)
+}
+

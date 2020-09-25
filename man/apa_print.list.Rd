@@ -9,7 +9,7 @@
   anova_fun = stats::anova,
   ci = 0.9,
   boot_samples = 10000,
-  progress_bar = FALSE,
+  progress_bar = interactive(),
   observed_predictors = TRUE,
   in_paren = FALSE,
   ...
@@ -103,6 +103,8 @@ Other apa_print:
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
+\code{\link{apa_print.lme}()},
+\code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
 \concept{apa_print}

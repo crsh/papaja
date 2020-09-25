@@ -205,21 +205,24 @@ canonize <- function(
 ) {
 
   # args <- list(...)
+  if(!is.null(stat_label)) validate(stat_label, check_class = "character", check_length = 1L)
+  if(!is.null(est_label))  validate(est_label, check_class = "character", check_length = 1L)
 
   conf_level <- attr(x$conf.int, "conf.level")
   if(is.null(conf_level)) {
-    conf_level <- attr(x$conf.int[[1]], "conf.level")
+    conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
   }
   conf_label <- paste0(
     if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
     , "CI"
   )
-  # print(conf_label)
+
   colnames(x) <- make.names(colnames(x))
 
   new_labels <- c(
     lookup_labels
     , "estimate"     = est_label
+    , "Estimate"     = est_label
     , "coefficients" = est_label
     , "conf.int"     = conf_label
     , "statistic"    = stat_label
@@ -227,12 +230,31 @@ canonize <- function(
 
   names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
+
+  warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
+  Therefore, be careful when using its output. Moreover, please visit https://github.com/crsh/papaja/issues and
+  file an issue together with the code that generated the output object. In doing so, you help us to fully
+  support the type of analysis you just conducted and make papaja a little bit better."
+
   if(!all(names_in_lookup_names)) {
-    warning("Some columns could not be renamed.", colnames(x)[!names_in_lookup_names])
+    warning("Some columns could not be renamed: '", paste(colnames(x)[!names_in_lookup_names], collapse = "', '"), "'", warning_unexpected)
   }
 
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
   colnames(x)[names_in_lookup_names] <- lookup_names[colnames(x)[names_in_lookup_names]]
+
+
+  # Adjust labels if dfs were corrected ----
+  # - Hierarchical Linear Models: Kenward-Roger and Satterthwaite
+  # - Repeated-measures ANOVA   : Greenhouse-Geisser and Huyhn-Feldt
+
+  df_correction_type <- attr(x, "df_correction")
+  if(!is.null(df_correction_type) && df_correction_type != "none") {
+    variable_label(x) <- c(
+      df1 = paste0("$\\mathit{df}_1^{", df_correction_type, "}$")
+      , df2 = paste0("$\\mathit{df}_2^{", df_correction_type, "}$")
+    )
+  }
   x
 }
 
@@ -266,7 +288,6 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
         paste0("[", paste(printnum(x, use_math = use_math, ...), collapse = ", "), "]")
       }, ...))
       variable_label(tmp) <- variable_label(x[[i]])
-      attr(tmp, "conf.level") <- attr(x[[i]][[1]], "conf.level")
       x[[i]] <- tmp
     } else if (i == "estimate"){
       args$x <- x[[i]]
@@ -279,15 +300,16 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   }
 
   # rearrange ----
-  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
-  x <- x[, ordered_cols, drop = FALSE]
+  x <- sort_columns(x)
+
   if(!is.null(x$term)) x <- sort_terms(x, "term")
   rownames(x) <- NULL
 
   class(x) <- c("apa_results_table", "data.frame")
   x
 }
+
+
 
 
 #' Sanitize term names
@@ -313,10 +335,9 @@ sanitize_terms <- function(x, standardized = FALSE) {
 }
 
 
-#' Prettify term names
+#' Prettify Term Names
 #'
 #' Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables.
-#' \emph{This function is not exported.}
 #'
 #' @param x Character. Vector of term-names to be prettified
 #' @param standardized Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
@@ -410,6 +431,26 @@ sort_terms <- function(x, colname) {
 
   x[order(sapply(regmatches(x[[colname]], gregexpr("\\\\times", x[[colname]])), length)), ]
 }
+
+
+#' Sort the Columns of an APA Results Table
+#'
+#' An internal function that sorts the columns of a `data.frame` according to
+#' our standards.
+#'
+#' @param x A \code{data.frame} with standardized column names.
+#' @keywords internal
+
+sort_columns <- function(x) {
+  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+
+  se <- NULL
+  if(!any(colnames(x) == "conf.int")) se <- "std.error"
+
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  x[, ordered_cols, drop = FALSE]
+}
+
 
 #' Corresponding author line
 #'
