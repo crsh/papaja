@@ -420,8 +420,6 @@ print_df <- function(x, digits = 2L) {
 #'
 #' @param x Character.
 #'
-#' @return
-#'
 #' @examples
 #' papaja:::typeset_scientific("1.25e+04")
 

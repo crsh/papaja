@@ -176,6 +176,5 @@ lookup_labels <- c(
   , "Pr..Chisq."  = "$p$"
   , "Pr..F."      = "$p$"
   , "Pr..PB."     = "$p$"
-  , "pvalues"     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"
 )
