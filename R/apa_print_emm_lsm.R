@@ -114,7 +114,7 @@ apa_print.summary_emm <- function(
 
   contrast_table <- rename_column(
     contrast_table
-    , c("lsmean", "emmean", "ratio")
+    , c("lsmean", "emmean", "ratio", "effect.size")
     , "estimate"
   )
   contrast_table <- rename_column(contrast_table, "SE", "std.error")
