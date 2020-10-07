@@ -18,7 +18,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 
   if(progress_bar) {
     cat("Calculating confidence intervals for differences in R-squared based on", R, "bootstrap samples.\n")
-    pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3, width = min(getOption("width"), 100L))
+    pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3, width = min(getOption("width") - 10L, 100L))
     count <- -length(delta_r2s) # seems to be evaluated once more than R
   }
 
@@ -425,7 +425,12 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
   # ----------------------------------------------------------------------------
   # Only calculate MSE if required (otherwise, Levene tests give an error).
   if(mse) {
-    x$mse <- x$sumsq_err / x$df_res
+    df_col <- intersect(c("df2", "df_res"), colnames(x))
+    if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
+      x$mse <- x$sumsq_err / x[[df_col]]
+    } else {
+      warning("Mean-squared errors requested, but necessary information not available.")
+    }
   }
 
   x

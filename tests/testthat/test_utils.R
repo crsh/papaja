@@ -141,3 +141,14 @@ test_that(
     )
   }
 )
+
+test_that(
+  "canonize"
+  , {
+    expect_warning(
+      out <- papaja:::canonize(npk)
+      , regexp = "Some columns could not be renamed: 'block', 'N', 'P', 'K', 'yield'"
+    )
+    expect_identical(object = out, expected = npk)
+  }
+)

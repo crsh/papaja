@@ -100,6 +100,8 @@ Other apa_print:
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.list}()},
+\code{\link{apa_print.lme}()},
+\code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
 \concept{apa_print}

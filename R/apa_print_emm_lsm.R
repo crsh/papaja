@@ -114,7 +114,7 @@ apa_print.summary_emm <- function(
 
   contrast_table <- rename_column(
     contrast_table
-    , c("lsmean", "emmean", "ratio")
+    , c("lsmean", "emmean", "ratio", "effect.size")
     , "estimate"
   )
   contrast_table <- rename_column(contrast_table, "SE", "std.error")
@@ -169,6 +169,8 @@ apa_print.summary_emm <- function(
       , ci = conf_level
     )
   }
+
+  contrast_table <- default_label(contrast_table) # Add default labels for stratifying factors
 
   ## Add contrast names
   # rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
@@ -258,7 +260,7 @@ apa_print.summary_emm <- function(
     names(apa_res$full_result) <- names(apa_res$est)
   }
 
-  apa_res <- lapply(apa_res, as.list)
+  apa_res[] <- lapply(apa_res, as.list) # use [] to preserve class
 
   if(p_supplied) {
     if(!multiple_df) { # Remove df column and put df in column heading

@@ -255,6 +255,21 @@ test_that(
       )
     )
     expect_identical(prop_test_output$stat, "$\\chi^2(3, n = 397) = 12.60$, $p = .006$")
+
+    two_sample_prop_test <- suppressWarnings(prop.test(smokers[3:4], n = patients[3:4]))
+    two_sample_prop_test_output <- apa_print(two_sample_prop_test, n = sum(patients[3:4]))
+
+    expect_apa_results(
+      two_sample_prop_test_output
+      , labels = list(
+        estimate    = "\\Delta p"
+        , conf.int  = "95\\% CI"
+        , statistic = "$\\chi^2$"
+        , df        ="$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+
   }
 )
 
@@ -356,7 +371,7 @@ test_that(
     )
     expect_identical(
       apa_out$table$conf.int
-      , expected = structure("[-9.54, $\\infty$]", label = "95\\% CI", class = c("papaja_labelled", "character"), conf.level = .95)
+      , expected = structure("[-9.54, $\\infty$]", label = "95\\% CI", class = c("papaja_labelled", "character"))
     )
 
     # negative infinity ----
@@ -374,8 +389,18 @@ test_that(
         "[-$\\infty$, -1.70]"
         , label = "95\\% CI"
         , class = c("papaja_labelled", "character")
-        , conf.level = .95
       )
     )
+  }
+)
+
+test_that(
+  "Degenerate htest objects"
+  , {
+    degenerate <- t.test(yield ~ N, npk)
+    degenerate$statistic <- degenerate$estimate <- NULL
+
+    expect_error(apa_print(degenerate, est_name = "M"), "No estimate available in results table.")
+    expect_error(apa_print(degenerate, stat_name = "t"), "No statistic available in results table.")
   }
 )
