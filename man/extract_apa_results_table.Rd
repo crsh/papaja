@@ -24,28 +24,7 @@
     of the object.
   }
 
-\item{i}{
-    indices specifying elements to extract or replace.  Indices are
-    \code{numeric} or \code{character} vectors or empty (missing) or
-    \code{NULL}.  Numeric values are coerced to integer as by
-    \code{\link[base]{as.integer}} (and hence truncated towards zero).
-    Character vectors will be matched to the \code{\link[base]{names}} of the
-    object (or for matrices/arrays, the \code{\link[base]{dimnames}}):
-    see \sQuote{Character indices} below for further details.
-
-    For \code{[}-indexing only: \code{i}, \code{j}, \code{\dots} can be
-    logical vectors, indicating elements/slices to select.  Such vectors
-    are recycled if necessary to match the corresponding extent.
-    \code{i}, \code{j}, \code{\dots} can also be negative integers,
-    indicating elements/slices to leave out of the selection.
-
-    When indexing arrays by \code{[} a single argument \code{i} can be a
-    matrix with as many columns as there are dimensions of \code{x}; the
-    result is then a vector with elements corresponding to the sets of
-    indices in each row of \code{i}.
-
-    An index value of \code{NULL} is treated as if it were \code{integer(0)}.
-  }
+\item{i, j, ...}{Indices specifying elements to extract. See \code{\link[base:Extract]{base::Extract()}} for details.}
 
 \item{exact}{Controls possible partial matching of \code{[[} when
     extracting by a character vector (for most objects, but see under
@@ -53,29 +32,6 @@
     \code{NA} allows partial matching but issues a warning when it
     occurs.  Value \code{FALSE} allows partial matching without any
     warning.}
-
-\item{j}{
-    indices specifying elements to extract or replace.  Indices are
-    \code{numeric} or \code{character} vectors or empty (missing) or
-    \code{NULL}.  Numeric values are coerced to integer as by
-    \code{\link[base]{as.integer}} (and hence truncated towards zero).
-    Character vectors will be matched to the \code{\link[base]{names}} of the
-    object (or for matrices/arrays, the \code{\link[base]{dimnames}}):
-    see \sQuote{Character indices} below for further details.
-
-    For \code{[}-indexing only: \code{i}, \code{j}, \code{\dots} can be
-    logical vectors, indicating elements/slices to select.  Such vectors
-    are recycled if necessary to match the corresponding extent.
-    \code{i}, \code{j}, \code{\dots} can also be negative integers,
-    indicating elements/slices to leave out of the selection.
-
-    When indexing arrays by \code{[} a single argument \code{i} can be a
-    matrix with as many columns as there are dimensions of \code{x}; the
-    result is then a vector with elements corresponding to the sets of
-    indices in each row of \code{i}.
-
-    An index value of \code{NULL} is treated as if it were \code{integer(0)}.
-  }
 
 \item{drop}{For matrices and arrays.  If \code{TRUE} the result is
     coerced to the lowest possible dimension (see the examples).  This

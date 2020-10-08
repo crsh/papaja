@@ -19,7 +19,7 @@ apa_print.papaja_wsci <- function(x, ...) {
   res$estimate <- as.list(
     paste0(
       "$M = "
-      , printnum(summary_wsci$mean)
+      , printnum(summary_wsci$mean, ...)
       , "$, "
       ,
         print_confint(

@@ -12,16 +12,22 @@ test_that(
       , class = c("papaja_labelled", "character")
     )
 
-    # Because of partial matching, this is legal:
     expect_identical(
-      apa_results_table$p
+      expect_warning(
+        apa_results_table$p
+        , regexp = "Indexing an apa_results_table with '$p' is deprecated. Use '$p.value' instead."
+        , fixed = TRUE
+      )
       , p_value
     )
     expect_identical(
-      apa_results_table[["p", exact = FALSE]]
+      expect_warning(
+        apa_results_table[["p", exact = FALSE]]
+        , regexp = "Indexing an apa_results_table with '[[\"p\"]]' is deprecated. Use '[[\"p.value\"]]' instead."
+        , fixed = TRUE
+      )
       , p_value
     )
-    # But these are not:
     expect_warning(
       p.value_by_double_brackets <- apa_results_table[["p", exact = TRUE]]
       , regexp = "Indexing an apa_results_table with '[[\"p\"]]' is deprecated. Use '[[\"p.value\"]]' instead."

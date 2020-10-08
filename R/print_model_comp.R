@@ -103,16 +103,16 @@ print_model_comp <- function(
 
   # Assemble table
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
-      lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c(1:3)]
-      lm_table[, 2] <- apply(lm_table[, 2:3], MARGIN = 1, paste, collapse = " ")
-      lm_table[, -3]
+      lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c("term", "estimate", "conf.int"), drop = FALSE]
+      lm_table[, "estimate"] <- apply(lm_table[, c("estimate", "conf.int"), drop = FALSE], MARGIN = 1, paste, collapse = " ")
+      lm_table[, c("term", "estimate"), drop = FALSE]
     }
   )
 
   ## Merge coefficient tables
-  coef_table <- Reduce(function(...) merge(..., by = "predictor", all = TRUE), model_summaries)
-  rownames(coef_table) <- coef_table$predictor
-  coef_table <- coef_table[, colnames(coef_table) != "predictor"]
+  coef_table <- Reduce(function(...) merge(..., by = "term", all = TRUE), model_summaries)
+  rownames(coef_table) <- coef_table$term
+  coef_table <- coef_table[, colnames(coef_table) != "term"]
   coef_table <- coef_table[names(sort(apply(coef_table, 1, function(x) sum(is.na(x))))), ] # Sort predictors to create steps in table
   coef_table <- coef_table[c("Intercept", rownames(coef_table)[rownames(coef_table) != "Intercept"]), ] # Make Intercept first Predictor
   coef_table[is.na(coef_table)] <- ""

@@ -63,6 +63,8 @@ print.apa_results_table <- function(x, ...) {
 #' because we here provide *aliased* indexing. Note that aliased indexing will be
 #' defunct in a future release of \pkg{papaja}.
 #'
+#' @param i,j,... Indices specifying elements to extract. See [base::Extract()] for details.
+#'
 #' @inheritParams base::Extract
 #' @rdname extract_apa_results_table
 #' @md
@@ -73,19 +75,24 @@ print.apa_results_table <- function(x, ...) {
   aliases <- c(
     "F"         = "statistic"
     , "t"         = "statistic"
-    # , "p"         = "p.value"  # with partial matching, this is okay
+    , "p"         = "p.value"
     , "Predictor" = "term"
     , "Effect"    = "term"
+    , "pes"       = "estimate"
+    , "ges"       = "estimate"
+    , "es"        = "estimate"
+    , "ci"        = "conf.int"
+    , "predictor" = "term"
   )
   new_name <- aliases[pmatch(name, names(aliases), nomatch = 0L)]
 
   if(length(new_name) > 0L) {
     warning(
-      "Indexing an apa_results_table with `$"
+      "Indexing an apa_results_table with '$"
       , name
-      , "` is deprecated. Use `$"
+      , "' is deprecated. Use '$"
       , unname(new_name)
-      , "` instead."
+      , "' instead."
       , call. = FALSE
     )
     name <- new_name
@@ -106,9 +113,14 @@ print.apa_results_table <- function(x, ...) {
     , "p"         = "p.value"
     , "Predictor" = "term"
     , "Effect"    = "term"
+    , "pes"       = "estimate"
+    , "ges"       = "estimate"
+    , "es"        = "estimate"
+    , "ci"        = "conf.int"
+    , "predictor" = "term"
   )
   if(!exact) {
-    aliases <- aliases[-3] # okay if exact == FALSE
+    # aliases <- aliases[-3] # okay if exact == FALSE
     new_name <- aliases[pmatch(i, names(aliases), nomatch = 0L)]
   } else {
     new_name <- aliases[intersect(i, names(aliases))]
@@ -130,7 +142,7 @@ print.apa_results_table <- function(x, ...) {
 
 `[.apa_results_table` <- function(x, i, j, ..., drop = TRUE) {
 
-  if(missing(j) || is.null(j) || is.na(j)) {
+  if(missing(j) || is.null(j) || anyNA(j)) {
     NextMethod()
   } else {
 
@@ -140,6 +152,11 @@ print.apa_results_table <- function(x, ...) {
       , "p"         = "p.value"
       , "Predictor" = "term"
       , "Effect"    = "term"
+      , "pes"       = "estimate"
+      , "ges"       = "estimate"
+      , "es"        = "estimate"
+      , "ci"        = "conf.int"
+      , "predictor" = "term"
     )
     if(any(j %in% names(aliases))) {
       j_change <- j %in% names(aliases)

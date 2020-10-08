@@ -14,29 +14,18 @@ test_that(
     expect_apa_results(model_comp)
 
     # stat
-    expect_is(model_comp$stat, "list")
     expect_identical(names(model_comp$stat), c("Length", "Both"))
-    expect_is(model_comp$stat$Length, "character")
-    expect_is(model_comp$stat$Both, "character")
 
     expect_identical(model_comp$stat$Length, "$F(1, 148) = 853.31$, $p < .001$")
     expect_identical(model_comp$stat$Both, "$F(1, 148) = 19.04$, $p < .001$")
 
     # est
-    expect_is(model_comp$est, "list")
     expect_identical(names(model_comp$est), c("Length", "Both"))
-    expect_is(model_comp$est$Length, "character")
-    expect_is(model_comp$est$Both, "character")
-
     expect_identical(model_comp$est$Length, "$\\Delta R^2 = .83$")
     expect_identical(model_comp$est$Both, "$\\Delta R^2 = .02$")
 
     # full
-    expect_is(model_comp$full, "list")
     expect_identical(names(model_comp$full), c("Length", "Both"))
-    expect_is(model_comp$full$Length, "character")
-    expect_is(model_comp$full$Both, "character")
-
     expect_identical(model_comp$full$Length, paste(model_comp$est$Length, model_comp$stat$Length, sep = ", "))
     expect_identical(model_comp$full$Both, paste(model_comp$est$Both, model_comp$stat$Both, sep = ", "))
 
@@ -75,15 +64,12 @@ test_that(
     expect_apa_results(incomplete_names)
 
     ## stat
-    expect_is(incomplete_names$stat, "list")
     expect_identical(names(incomplete_names$stat), c("model2", "model3"))
 
     ## est
-    expect_is(incomplete_names$est, "list")
     expect_identical(names(incomplete_names$est), c("model2", "model3"))
 
     ## full
-    expect_is(incomplete_names$full, "list")
     expect_identical(names(incomplete_names$full), c("model2", "model3"))
 
     ## table

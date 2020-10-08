@@ -22,5 +22,5 @@ by complexity (i.e., main effects, two-way interactions, three-way interactions,
 ## From Venables and Ripley (2002) p. 165.
 npk_aov <- aov(yield ~ block + N * P * K, npk)
 npk_aov_results <- apa_print(npk_aov)
-sort_terms(npk_aov_results$table, "Effect")
+sort_terms(npk_aov_results$table, "term")
 }
