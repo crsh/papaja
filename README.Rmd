@@ -8,21 +8,19 @@ output        : github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Build status](https://travis-ci.org/crsh/papaja.svg?branch=master)](https://travis-ci.org/crsh/papaja)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last commit&logo=github&logoColor=%23FFF) ![Travis build status](https://img.shields.io/travis/crsh/papaja?label=Build&logo=travis-ci&logoColor=%23FFF) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
 
 `papaja` is an R package including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R functions that facilitate reporting results of your analyses and creating figures and tables in accordance with APA guidelines.
-
-If you are looking for an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
-
-**`papaja` is currently under active development. If you experience any problems, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa).
-If you believe your problem is related to a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github.**
   
 
-## Examples
+## Example
 
 Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions.
 For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
+If the manual does not answer your question, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa).
+If you believe your problem is related to a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github.
+
 
 ## Installation
 
@@ -144,7 +142,7 @@ If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 ### Using papaja without RStudio
 Don't use RStudio? No problem. Use the `rmarkdown::render` function to create articles:
 
-~~~{r}
+~~~r
 # Create new R Markdown file
 rmarkdown::draft(
   "mymanuscript.Rmd"
@@ -166,13 +164,23 @@ If you want to use `papaja` in your next CodeOcean project you can use this caps
 
 
 ## Getting help
+
+![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
+
 For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 If you have questions related to the use of `papaja` that are not answered in the manual, [StackOverflow](https://stackoverflow.com/questions/tagged/papaja) has a [`papaja`-tag](https://stackoverflow.com/questions/tagged/papaja) and is a great place to get answers.
 If you think you have found a bug, please [open issues](https://github.com/crsh/papaja/issues) and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 
 
 ## Contribute
-Like `papaja` and want to contribute? Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration. Other than that, there are many output objects from analysis methods that we would like `apa_print()` to support. Any new S3/S4-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`, `lmer`, or `glmer`).
+
+[![GitHub help wanted issues](https://img.shields.io/github/issues/crsh/papaja/help%20wanted?logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![GitHub documentation issues](https://img.shields.io/github/issues/crsh/papaja/documentation?logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation)
+
+Like `papaja` and want to contribute?
+We highly appreciate any contributions to the R package or its documentation.
+Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
+There are also many additional analyses that we would like `apa_print()` to support.
+Any new S3/S4-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`).
 
 
 ## Papers written with papaja
