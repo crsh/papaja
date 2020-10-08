@@ -54,32 +54,137 @@ print.apa_results_table <- function(x, ...) {
 }
 
 
-#' #' Extract or Replace Columns of an APA Results Table
-#' #'
-#' #' blabla
-#' #'
-#' #' @rdname extract_apa_results_table
-#' #' @export
+#' Extract Parts of an APA Results Table
 #'
-#' `$.apa_results_table` <- function(x, name) {
+#' \emph{These methods are only defined for backward compatibility with older
+#' versions of \pkg{papaja}}. In the past, the column names of`apa_results_table`s
+#' were less standardized than they are today. In order to maintain backwards
+#' compatibility, it is still possible to extract columns with the old columns names,
+#' because we here provide *aliased* indexing. Note that aliased indexing will be
+#' defunct in a future release of \pkg{papaja}.
 #'
-#'   aliases <- c(
-#'     "F"         = "statistic"
-#'     , "t"         = "statistic"
-#'     , "p"         = "p.value"
-#'     , "Predictor" = "term"
-#'     , "Effect"    = "term"
-#'     , "term"      = "term"
-#'   )
-#'   name <- c(aliases, colnames(x))[pmatch(name, c(names(aliases), colnames(x)))]
+#' @param i,j,... Indices specifying elements to extract. See [base::Extract()] for details.
 #'
-#'   if(names(name) %in% names(aliases)) {
-#'     message("Indexing an apa_results_table with `$"
-#'             , names(name)
-#'             , "` is deprecated. Use `$"
-#'             , name
-#'             , "` instead.")
-#'   }
-#'   x[[name]]
-#' }
+#' @inheritParams base::Extract
+#' @rdname extract_apa_results_table
+#' @md
+#' @export
 
+`$.apa_results_table` <- function(x, name) {
+
+  aliases <- c(
+    "F"         = "statistic"
+    , "chisq"     = "statistic"
+    , "t"         = "statistic"
+    , "p"         = "p.value"
+    , "Predictor" = "term"
+    , "Effect"    = "term"
+    , "pes"       = "estimate"
+    , "ges"       = "estimate"
+    , "es"        = "estimate"
+    , "ci"        = "conf.int"
+    , "predictor" = "term"
+  )
+  new_name <- aliases[pmatch(name, names(aliases), nomatch = 0L)]
+
+  if(length(new_name) > 0L) {
+    warning(
+      "To improve consistency of apa_print() output, the column '"
+      , name
+      , "' has been renamed to '"
+      , unname(new_name)
+      , "'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
+      , call. = FALSE
+    )
+    name <- new_name
+  }
+  NextMethod()
+}
+
+#' @rdname extract_apa_results_table
+#' @export
+
+`[[.apa_results_table` <- function(x, i, exact = TRUE) {
+
+  if(missing(i) || is.null(i) || is.na(i)) NextMethod()
+
+  aliases <- c(
+    "F"         = "statistic"
+    , "chisq"     = "statistic"
+    , "t"         = "statistic"
+    , "p"         = "p.value"
+    , "Predictor" = "term"
+    , "Effect"    = "term"
+    , "pes"       = "estimate"
+    , "ges"       = "estimate"
+    , "es"        = "estimate"
+    , "ci"        = "conf.int"
+    , "predictor" = "term"
+  )
+  if(!exact) {
+    # aliases <- aliases[-3] # okay if exact == FALSE
+    new_name <- aliases[pmatch(i, names(aliases), nomatch = 0L)]
+  } else {
+    new_name <- aliases[intersect(i, names(aliases))]
+  }
+
+  if(length(new_name) > 0L) {
+    warning(
+      "To improve consistency of apa_print() output, the column '"
+      , i
+      , "' has been renamed to '"
+      , unname(new_name)
+      , "'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
+      , call. = FALSE
+    )
+    return(x[[new_name, exact = exact]])
+  }
+  NextMethod()
+}
+
+#' @rdname extract_apa_results_table
+#' @export
+
+`[.apa_results_table` <- function(x, i, j, ..., drop = TRUE) {
+
+  if(missing(j) || is.null(j) || anyNA(j)) {
+    NextMethod()
+  } else {
+
+    aliases <- c(
+      "F"         = "statistic"
+      , "chisq"     = "statistic"
+      , "t"         = "statistic"
+      , "p"         = "p.value"
+      , "Predictor" = "term"
+      , "Effect"    = "term"
+      , "pes"       = "estimate"
+      , "ges"       = "estimate"
+      , "es"        = "estimate"
+      , "ci"        = "conf.int"
+      , "predictor" = "term"
+    )
+    if(any(j %in% names(aliases))) {
+      j_change <- j %in% names(aliases)
+      warning(
+        "To improve consistency of apa_print() output, the column(s) '"
+        , paste(j[j_change], collapse = "', '")
+        , "' have been renamed to '"
+        , paste(aliases[j[j_change]], collapse = "', '")
+        , "'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
+        , call. = FALSE
+      )
+
+
+#
+#         "Indexing an apa_results_table with '[..., "
+#               ,  paste0(prepend, paste(j[j_change], collapse = "\", \""), append)
+#               , "]' is deprecated. Use '[..., "
+#               , paste0(prepend, paste(aliases[j[j_change]], collapse = "\", \""), append)
+#               , "]' instead.", call. = FALSE)
+
+      j[j_change] <- aliases[j[j_change]]
+    }
+  }
+  NextMethod()
+}

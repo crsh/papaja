@@ -132,7 +132,7 @@ apa_print.summary_emm <- function(
     contrast_table <- rename_column(contrast_table, c("lower.CL", "asymp.LCL"), "ll")
     contrast_table <- rename_column(contrast_table, c("upper.CL", "asymp.UCL"), "ul")
 
-    ci_table <- data.frame(ci = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
+    ci_table <- data.frame(conf.int = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
     contrast_table$std.error <- NULL
     contrast_table$ll <- NULL
     contrast_table$ul <- NULL
@@ -142,7 +142,7 @@ apa_print.summary_emm <- function(
       , ci_table
       , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
     )
-    contrast_table$ci <- as.character(contrast_table$ci)
+    contrast_table$conf.int <- as.character(contrast_table$conf.int)
     # contrast_table <- rename_column(contrast_table, "confint", "ci")
   } else {
     contrast_table$std.error <- NULL
@@ -155,7 +155,7 @@ apa_print.summary_emm <- function(
       # contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
         estimate = paste0("$", est_name, "$")
-        , ci = conf_level
+        , conf.int = conf_level
         , statistic = "$t$"
         , df = "$df$"
         , p.value = "$p$"
@@ -166,7 +166,7 @@ apa_print.summary_emm <- function(
     # contrast_table$ci <- as.character(contrast_table$ci)
     variable_label(contrast_table) <- c(
       estimate = paste0("$", est_name, "$")
-      , ci = conf_level
+      , conf.int = conf_level
     )
   }
 
@@ -270,7 +270,7 @@ apa_print.summary_emm <- function(
       # contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
         estimate = paste0("$", est_name, "$")
-        , ci = conf_level
+        , conf.int = conf_level
         , statistic = paste0("$t(", df, ")$")
         , p.value = "$p$"
       )

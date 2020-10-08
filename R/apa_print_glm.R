@@ -279,13 +279,13 @@ apa_glm_res <- function(x, in_paren, conf_level) {
   })
 
   apa_res$estimate <- apply(x[, -1], 1, function(y) {
-    paste0("$", svl(x$estimate), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", strip_math_tags(y["ci"]), "$")
+    paste0("$", svl(x$estimate), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", strip_math_tags(y["conf.int"]), "$")
   })
 
   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
   apa_res[] <- lapply(apa_res, as.list) # preserve class by using []
 
-  apa_res$table <- sort_terms(as.data.frame(x), "predictor")
+  apa_res$table <- sort_terms(as.data.frame(x), "term")
   class(apa_res$table) <- c("apa_results_table", "data.frame")
   apa_res
 }
