@@ -89,11 +89,11 @@ print.apa_results_table <- function(x, ...) {
 
   if(length(new_name) > 0L) {
     warning(
-      "Indexing an apa_results_table with '$"
+      "To improve consistency of apa_print() output, the column '"
       , name
-      , "' is deprecated. Use '$"
+      , "' has been renamed to '"
       , unname(new_name)
-      , "' instead."
+      , "'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
       , call. = FALSE
     )
     name <- new_name
@@ -129,11 +129,14 @@ print.apa_results_table <- function(x, ...) {
   }
 
   if(length(new_name) > 0L) {
-    warning("Indexing an apa_results_table with '[[\""
-            , i
-            , "\"]]' is deprecated. Use '[[\""
-            , unname(new_name)
-            , "\"]]' instead.", call. = FALSE)
+    warning(
+      "To improve consistency of apa_print() output, the column '"
+      , i
+      , "' has been renamed to '"
+      , unname(new_name)
+      , "'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
+      , call. = FALSE
+    )
     return(x[[new_name, exact = exact]])
   }
   NextMethod()
@@ -163,16 +166,22 @@ print.apa_results_table <- function(x, ...) {
     )
     if(any(j %in% names(aliases))) {
       j_change <- j %in% names(aliases)
-      prepend <- append <- "\""
-      if(sum(j_change) > 1) {
-        prepend <- "c(\""
-        append <- "\")"
-      }
-      warning("Indexing an apa_results_table with '[..., "
-              ,  paste0(prepend, paste(j[j_change], collapse = "\", \""), append)
-              , "]' is deprecated. Use '[..., "
-              , paste0(prepend, paste(aliases[j[j_change]], collapse = "\", \""), append)
-              , "]' instead.", call. = FALSE)
+      warning(
+        "To improve consistency of apa_print() output, the column(s) '"
+        , paste(j[j_change], collapse = "', '")
+        , "' have been renamed to '"
+        , paste(aliases[j[j_change]], collapse = "', '")
+        , "'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
+        , call. = FALSE
+      )
+
+
+#
+#         "Indexing an apa_results_table with '[..., "
+#               ,  paste0(prepend, paste(j[j_change], collapse = "\", \""), append)
+#               , "]' is deprecated. Use '[..., "
+#               , paste0(prepend, paste(aliases[j[j_change]], collapse = "\", \""), append)
+#               , "]' instead.", call. = FALSE)
 
       j[j_change] <- aliases[j[j_change]]
     }
