@@ -28,14 +28,7 @@ can create PDF documents, or Word documents if you have to. Moreover,
 analyses and creating figures and tables in accordance with APA
 guidelines.
 
-**For an in-depth introduction to `papaja`, check out the current draft
-of the [manual](https://crsh.github.io/papaja_man/). If you experience
-any problems, ask a question on Stack Overflow [using the `papaja`
-tag](https://t.co/Z3auyUrbTa). If you believe your problem is related to
-a bug or you want to request a new feature, [open an
-issue](https://github.com/crsh/papaja/issues) on Github.**
-
-## Examples
+## Example
 
 Take a look at the [R
 Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd)
@@ -43,7 +36,11 @@ of the example manuscript in the folder `example` and the resulting
 [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions. For an
 in-depth introduction to `papaja`, check out the current draft of the
-[manual](https://crsh.github.io/papaja_man/).
+[manual](https://crsh.github.io/papaja_man/). If the manual does not
+answer your question, ask a question on Stack Overflow [using the
+`papaja` tag](https://t.co/Z3auyUrbTa). If you believe your problem is
+related to a bug or you want to request a new feature, [open an
+issue](https://github.com/crsh/papaja/issues) on Github.
 
 ## Installation
 
@@ -197,12 +194,24 @@ rmarkdown::draft(
 rmarkdown::render("mymanuscript.Rmd")
 ```
 
-### Using papaja with CodeOcean
+### Computational reproducibility
 
-Seth Green has kindly prepared a [minimal `papaja` example
-capsule](https://codeocean.com/capsule/8183533/). If you want to use
-`papaja` in your next CodeOcean project you can use this capsule as a
-starting point.
+To ensure mid- to long-term computation reproducibility we highly
+recommend conserving the software environment used to write a manuscript
+(e.g. R and all R packages) either in a software container or a virutal
+machine. This way you can be sure that your R code does not break
+because of updates to R or any R package. For a brief primer on
+containers and virtual machines see [the supplementary
+material](https://psych-transparency-guide.uni-koeln.de/analytic-reproducibility.html#document-hardware-and-software-used-for-analyses)
+by Klein et al. (2018).
+
+[Docker](https://www.docker.com/) is the most widely used
+containerization approach. It is open source and free to use but
+requires some disk space. [CodeOcean](https://codeocean.com/) is a
+commercial service that builds on Docker, facilitates setting up and
+sharing containers and lets you run computations in the cloud. See the
+manual on [how to get started using `papaja` with Docker or
+CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments).
 
 ## Getting help
 
