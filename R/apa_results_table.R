@@ -74,6 +74,7 @@ print.apa_results_table <- function(x, ...) {
 
   aliases <- c(
     "F"         = "statistic"
+    , "chisq"     = "statistic"
     , "t"         = "statistic"
     , "p"         = "p.value"
     , "Predictor" = "term"
@@ -109,6 +110,7 @@ print.apa_results_table <- function(x, ...) {
 
   aliases <- c(
     "F"         = "statistic"
+    , "chisq"     = "statistic"
     , "t"         = "statistic"
     , "p"         = "p.value"
     , "Predictor" = "term"
@@ -148,6 +150,7 @@ print.apa_results_table <- function(x, ...) {
 
     aliases <- c(
       "F"         = "statistic"
+      , "chisq"     = "statistic"
       , "t"         = "statistic"
       , "p"         = "p.value"
       , "Predictor" = "term"
