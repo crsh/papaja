@@ -15,7 +15,7 @@ test_that(
     expect_identical(
       expect_warning(
         apa_results_table$p
-        , regexp = "Indexing an apa_results_table with '$p' is deprecated. Use '$p.value' instead."
+        , regexp = "To improve consistency of apa_print() output, the column 'p' has been renamed to 'p.value'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
         , fixed = TRUE
       )
       , p_value
@@ -23,19 +23,19 @@ test_that(
     expect_identical(
       expect_warning(
         apa_results_table[["p", exact = FALSE]]
-        , regexp = "Indexing an apa_results_table with '[[\"p\"]]' is deprecated. Use '[[\"p.value\"]]' instead."
+        , regexp = "To improve consistency of apa_print() output, the column 'p' has been renamed to 'p.value'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
         , fixed = TRUE
       )
       , p_value
     )
     expect_warning(
       p.value_by_double_brackets <- apa_results_table[["p", exact = TRUE]]
-      , regexp = "Indexing an apa_results_table with '[[\"p\"]]' is deprecated. Use '[[\"p.value\"]]' instead."
+      , regexp = "To improve consistency of apa_print() output, the column 'p' has been renamed to 'p.value'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
       , fixed = TRUE
     )
     expect_warning(
       p.value_by_single_brackets <- apa_results_table[, "p"]
-      , regexp = "Indexing an apa_results_table with '[..., \"p\"]' is deprecated. Use '[..., \"p.value\"]' instead."
+      , regexp = "To improve consistency of apa_print() output, the column(s) 'p' have been renamed to 'p.value'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
       , fixed = TRUE
     )
     expect_identical(
@@ -59,7 +59,7 @@ test_that(
 
     expect_warning(
       extract_three_columns <- apa_results_table[, c("conf.int", "F", "p")]
-      , regexp = "Indexing an apa_results_table with '[..., c(\"F\", \"p\")]' is deprecated. Use '[..., c(\"statistic\", \"p.value\")]' instead."
+      , regexp = "To improve consistency of apa_print() output, the column(s) 'F', 'p' have been renamed to 'statistic', 'p.value'. The desired values were returned, but please update your code accordingly, as we will drop support for the old column names in a future release."
       , fixed = TRUE
     )
     expect_identical(
