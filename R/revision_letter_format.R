@@ -110,6 +110,8 @@ quote_from_tex <- function(x, file) {
     if(length(start) == 0) {
       warning(label_warning)
       return(NULL)
+    } else if(length(start) > 1) {
+      stop(paste0("Each quote label can only be used once. ", paste0("'", x, "'", collapse = ", "), " was found ", length(start), " times."))
     } else {
       end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
 
