@@ -99,22 +99,27 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #' @export
 
 quote_from_tex <- function(x, file) {
+  label_warning <- paste0("Labelled quote(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file)
+
   if(length(x) > 1) {
     quoted_tex <- lapply(x, quote_from_tex, file = file)
-  } else if(length(x) == 0) {
-    warning(paste0("Quote label(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file))
-    quoted_tex <- NULL
   } else {
     tex <- readLines(file)
     start <- which(grepl(paste0("% <@~{#", x, "}"), x = tex, fixed = TRUE))
-    end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
 
-    quoted_tex <- paste(
-      paste("> ", tex[(start + 1)])
-      , paste(tex[(start + 2):(end - 1)], collapse = "\n")
-      , "\n"
-      , sep = "\n"
-    )
+    if(length(start) == 0) {
+      warning(label_warning)
+      return(NULL)
+    } else {
+      end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
+
+      quoted_tex <- paste(
+        paste("> ", tex[(start + 1)])
+        , paste(tex[(start + 2):(end - 1)], collapse = "\n")
+        , "\n"
+        , sep = "\n"
+      )
+    }
   }
   knitr::asis_output(quoted_tex)
 }
