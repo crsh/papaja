@@ -41,19 +41,19 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
 
   ## Assemble regression table
   regression_table <- data.frame(tidy_x[, c("term", "estimate", "statistic", "p.value")], row.names = NULL)
-  regression_table$ci <- apply(
+  regression_table$conf.int <- apply(
     tidy_x[, utils::tail(names(tidy_x), 2)]
     , 1
     , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
-  regression_table <- regression_table[, c("term", "estimate", "ci", "statistic", "p.value")] # Change order of columns
+  regression_table <- regression_table[, c("term", "estimate", "conf.int", "statistic", "p.value")] # Change order of columns
   regression_table$term <- prettify_terms(regression_table$term, standardized = standardized)
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
   regression_table$p.value <- printp(regression_table$p.value)
 
-  colnames(regression_table) <- c("predictor", "estimate", "ci", "statistic", "p.value")
+  colnames(regression_table) <- c("term", "estimate", "conf.int", "statistic", "p.value")
 
   if(stat_name == "z") {
     test_statistic <- paste0("$", stat_name, "$")
@@ -62,11 +62,11 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
   }
 
   variable_label(regression_table) <- c(
-    predictor = "Predictor"
-    , estimate = paste0("$", est_name, "$")
-    , ci = paste0(conf_level, "\\% CI")
+    term        = "Predictor"
+    , estimate  = paste0("$", est_name, "$")
+    , conf.int  = paste0(conf_level, "\\% CI")
     , statistic = test_statistic
-    , p.value = "$p$"
+    , p.value   = "$p$"
   )
 
   class(regression_table) <- c("apa_regression_table", class(regression_table))

@@ -11,30 +11,31 @@ test_that(
 
     lm_fit_output <- apa_print(lm_fit)
 
+    expect_apa_results(
+      lm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$b$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t(18)$"
+        , p.value   = "$p$"
+      )
+    )
+
     # stat
-    expect_is(lm_fit_output$stat, "list")
     expect_identical(length(lm_fit_output$stat), 3L)
     expect_identical(names(lm_fit_output$stat), c("Intercept", "groupTrt", "modelfit"))
-    expect_is(lm_fit_output$stat$Intercept, "character")
-    expect_is(lm_fit_output$stat$groupTrt, "character")
-    expect_is(lm_fit_output$stat$modelfit, "list")
     expect_identical(length(lm_fit_output$stat$modelfit), 1L)
     expect_identical(names(lm_fit_output$stat$modelfit), "r2")
-    expect_is(lm_fit_output$stat$modelfit$r2, "character")
 
     expect_identical(lm_fit_output$stat$Intercept, "$t(18) = 22.85$, $p < .001$")
     expect_identical(lm_fit_output$stat$groupTrt, "$t(18) = -1.19$, $p = .249$")
     expect_identical(lm_fit_output$stat$modelfit$r2, "$F(1, 18) = 1.42$, $p = .249$")
 
     # est
-    expect_is(lm_fit_output$est, "list")
     expect_identical(names(lm_fit_output$est), c("Intercept", "groupTrt", "modelfit"))
-    expect_is(lm_fit_output$est$Intercept, "character")
-    expect_is(lm_fit_output$est$groupTrt, "character")
-    expect_is(lm_fit_output$est$modelfit, "list")
     expect_identical(length(lm_fit_output$est$modelfit), 4L)
     expect_identical(names(lm_fit_output$est$modelfit), c("r2", "r2_adj", "aic", "bic"))
-    expect_true(all(sapply(lm_fit_output$est$modelfit, is.character)))
 
     expect_identical(lm_fit_output$est$Intercept, "$b = 5.03$, 95\\% CI $[4.57, 5.49]$")
     expect_identical(lm_fit_output$est$groupTrt, "$b = -0.37$, 95\\% CI $[-1.03, 0.28]$")
@@ -44,14 +45,10 @@ test_that(
     expect_identical(lm_fit_output$est$modelfit$bic, "$\\mathrm{BIC} = 49.16$")
 
     # full
-    expect_is(lm_fit_output$full, "list")
     expect_identical(names(lm_fit_output$full), c("Intercept", "groupTrt", "modelfit"))
-    expect_is(lm_fit_output$full$Intercept, "character")
-    expect_is(lm_fit_output$full$groupTrt, "character")
-    expect_is(lm_fit_output$full$modelfit, "list")
     expect_identical(length(lm_fit_output$full$modelfit), 1L)
     expect_identical(names(lm_fit_output$full$modelfit), "r2")
-    expect_is(lm_fit_output$full$modelfit$r2, "character")
+
 
     expect_identical(lm_fit_output$full$Intercept, "$b = 5.03$, 95\\% CI $[4.57, 5.49]$, $t(18) = 22.85$, $p < .001$")
     expect_identical(lm_fit_output$full$groupTrt, "$b = -0.37$, 95\\% CI $[-1.03, 0.28]$, $t(18) = -1.19$, $p = .249$")
@@ -59,21 +56,37 @@ test_that(
 
     # table
     expect_identical(nrow(lm_fit_output$table), 2L)
-    expect_identical(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$b$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
-    expect_identical(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
 
     # Manual CI
     lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
     expect_identical(lm_fit_output$full$Intercept, "$b = 5.03$, 95\\% CI $[1.00, 2.00]$, $t(18) = 22.85$, $p < .001$")
     expect_identical(lm_fit_output$full$groupTrt, "$b = -0.37$, 95\\% CI $[1.00, 2.00]$, $t(18) = -1.19$, $p = .249$")
     expect_identical(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00, 0.33]$, $F(1, 18) = 1.42$, $p = .249$")
+    expect_apa_results(
+      lm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$b$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t(18)$"
+        , p.value   = "$p$"
+      )
+    )
 
     # Set name of estimate
     lm_fit_output <- apa_print(lm_fit, est_name = "\\beta")
     expect_identical(lm_fit_output$est$Intercept, "$\\beta = 5.03$, 95\\% CI $[4.57, 5.49]$")
     expect_identical(lm_fit_output$est$groupTrt, "$\\beta = -0.37$, 95\\% CI $[-1.03, 0.28]$")
-    expect_identical(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$\\beta$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
-    expect_identical(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
+    expect_apa_results(
+      lm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$\\beta$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t(18)$"
+        , p.value   = "$p$"
+      )
+    )
 
     # Standardized regression coefficients
     trt <- rep(trt, 2)
@@ -83,8 +96,16 @@ test_that(
 
     expect_identical(lm_fit_output$full$Intercept, "$b^* = .00$, 95\\% CI $[-.43, .43]$, $t(18) = 0.00$, $p > .999$")
     expect_identical(lm_fit_output$full$z_ctl, "$b^* = -.46$, 95\\% CI $[-.90, -.02]$, $t(18) = -2.18$, $p = .042$")
-    expect_identical(variable_label(lm_fit_output$table), list(predictor = "Predictor", estimate = "$b^*$", ci = "95\\% CI", statistic = "$t(18)$", p.value = "$p$"))
-    expect_identical(colnames(lm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
+    expect_apa_results(
+      lm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$b^*$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t(18)$"
+        , p.value   = "$p$"
+      )
+    )
 
     # No CI information
     expect_error(apa_print(lm_fit, ci = NULL), "The parameter 'ci' is NULL.")
@@ -126,30 +147,29 @@ test_that(
 
     glm_fit_output <- apa_print(glm_fit)
 
-    expect_apa_results(glm_fit_output)
+    expect_apa_results(
+      glm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$b$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$z$"
+        , p.value   = "$p$"
+      )
+    )
 
     # stat
-    expect_is(glm_fit_output$stat, "list")
     expect_identical(length(glm_fit_output$stat), 3L)
     expect_identical(names(glm_fit_output$stat), c("Intercept", "outcome2", "outcome3"))
-    expect_is(glm_fit_output$stat$Intercept, "character")
-    expect_is(glm_fit_output$stat$outcome2, "character")
-    expect_is(glm_fit_output$stat$outcome3, "character")
 
     expect_identical(glm_fit_output$stat$Intercept, "$z = 24.17$, $p < .001$")
     expect_identical(glm_fit_output$stat$outcome2, "$z = -2.25$, $p = .025$")
     expect_identical(glm_fit_output$stat$outcome3, "$z = -1.52$, $p = .128$")
 
     # est
-    expect_is(glm_fit_output$est, "list")
     expect_identical(names(glm_fit_output$est), c("Intercept", "outcome2", "outcome3", "modelfit"))
-    expect_is(glm_fit_output$est$Intercept, "character")
-    expect_is(glm_fit_output$est$outcome2, "character")
-    expect_is(glm_fit_output$est$outcome3, "character")
-    expect_is(glm_fit_output$est$modelfit, "list")
     expect_identical(length(glm_fit_output$est$modelfit), 2L)
     expect_identical(names(glm_fit_output$est$modelfit), c("aic", "bic"))
-    expect_true(all(sapply(glm_fit_output$est$modelfit, is.character)))
 
     expect_identical(glm_fit_output$est$Intercept, "$b = 3.04$, 95\\% CI $[2.79, 3.28]$")
     expect_identical(glm_fit_output$est$outcome2, "$b = -0.45$, 95\\% CI $[-0.86, -0.06]$")
@@ -158,11 +178,7 @@ test_that(
     expect_identical(glm_fit_output$est$modelfit$bic, "$\\mathrm{BIC} = 53.35$")
 
     # full
-    expect_is(glm_fit_output$full, "list")
     expect_identical(names(glm_fit_output$full), c("Intercept", "outcome2", "outcome3"))
-    expect_is(glm_fit_output$full$Intercept, "character")
-    expect_is(glm_fit_output$full$outcome2, "character")
-    expect_is(glm_fit_output$full$outcome3, "character")
 
     expect_identical(glm_fit_output$full$Intercept, "$b = 3.04$, 95\\% CI $[2.79, 3.28]$, $z = 24.17$, $p < .001$")
     expect_identical(glm_fit_output$full$outcome2, "$b = -0.45$, 95\\% CI $[-0.86, -0.06]$, $z = -2.25$, $p = .025$")
@@ -170,22 +186,38 @@ test_that(
 
     # table
     expect_identical(nrow(glm_fit_output$table), 3L)
-    expect_identical(variable_label(glm_fit_output$table), list(predictor = "Predictor", estimate = "$b$", ci = "95\\% CI", statistic = "$z$", p.value = "$p$"))
-    expect_identical(colnames(glm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
 
     # Manual CI
     glm_fit_output <- apa_print(glm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 3, byrow = TRUE, dimnames = list(names(glm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
+    expect_apa_results(
+      glm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$b$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$z$"
+        , p.value   = "$p$"
+      )
+    )
     expect_identical(glm_fit_output$full$Intercept, "$b = 3.04$, 95\\% CI $[1.00, 2.00]$, $z = 24.17$, $p < .001$")
     expect_identical(glm_fit_output$full$outcome2, "$b = -0.45$, 95\\% CI $[1.00, 2.00]$, $z = -2.25$, $p = .025$")
     expect_identical(glm_fit_output$full$outcome3, "$b = -0.29$, 95\\% CI $[1.00, 2.00]$, $z = -1.52$, $p = .128$")
 
     # Set name of estimate
     glm_fit_output <- apa_print(glm_fit, est_name = "\\beta")
+    expect_apa_results(
+      glm_fit_output
+      , labels = list(
+        term        = "Predictor"
+        , estimate  = "$\\beta$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$z$"
+        , p.value   = "$p$"
+      )
+    )
     expect_identical(glm_fit_output$est$Intercept, "$\\beta = 3.04$, 95\\% CI $[2.79, 3.28]$")
     expect_identical(glm_fit_output$est$outcome2, "$\\beta = -0.45$, 95\\% CI $[-0.86, -0.06]$")
     expect_identical(glm_fit_output$est$outcome3, "$\\beta = -0.29$, 95\\% CI $[-0.68, 0.08]$")
-    expect_identical(variable_label(glm_fit_output$table), list(predictor = "Predictor", estimate = "$\\beta$", ci = "95\\% CI", statistic = "$z$", p.value = "$p$"))
-    expect_identical(colnames(glm_fit_output$table), c("predictor", "estimate", "ci", "statistic", "p.value"))
   }
 )
 

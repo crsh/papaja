@@ -87,7 +87,9 @@ assign_label <- function(x, value, ...){
 assign_label.default <- function(x, value){
 
   if(is.null(value)) {
-    return(structure(x, class = setdiff(class(x), "papaja_labelled"), label = NULL))
+    x <- structure(x, class = setdiff(class(x), "papaja_labelled"), label = NULL)
+    if(is.atomic(x) && !is.factor(x)) x <- unclass(x)
+    return(x)
   }
 
   structure(
@@ -102,7 +104,7 @@ assign_label.default <- function(x, value){
 assign_label.data.frame <- function(x, value, ...){
 
   if(is.null(value)) {
-    for(i in seq_along(ncol(x))) {
+    for(i in seq_len(ncol(x))) {
       x[[i]] <- assign_label(x = x[[i]], value = NULL)
     }
     return(x)

@@ -8,7 +8,7 @@
 \format{
 An object of class \code{character} of length 73.
 
-An object of class \code{character} of length 68.
+An object of class \code{character} of length 70.
 }
 \usage{
 lookup_names

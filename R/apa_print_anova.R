@@ -166,7 +166,11 @@ apa_print.anova <- function(
     # car::LeveneTest ----------------------------------------------------------
     if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
       if(!is.null(ellipsis$es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
-      return(print_anova(variance_table, es = NULL, mse = FALSE, ...))
+      y <- print_anova(variance_table, es = NULL, mse = FALSE, ...)
+      # Remove extraneous column 'term = "group"', also remove nested structure in 'statistic'
+      y$table$term <- NULL
+      y$statistic <- y$statistic$group
+      return(y)
     }
 
     # lmerTest::anova.merModLmerTest -------------------------------------------
