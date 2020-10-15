@@ -271,10 +271,6 @@ local function make_latex_envir(name, metadata)
   local data = {table.unpack(metadata)}
   local pandoc_type = data[1].t
 
-
-  -- if pandoc_type == "Str" or pandoc_type == "RawInline" then
-  --   return List:new{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
-  -- end
   if pandoc_type == "Para" or pandoc_type == "Plain" or pandoc_type == "RawBlock" then
     local envir = List:new{pandoc.Para(pandoc.RawInline("latex", "\\" .. name .. "{"))}
     envir:extend(data)
@@ -289,23 +285,28 @@ function Pandoc (document)
 
   document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% papaja Lua-filter additions"))})
 
-  if document.meta.note ~= nil then
+  if document.meta.note ~= nil and document.meta.note[1] ~= nil then
     document.blocks:extend(make_latex_envir("note", document.meta.note))
   end
 
-  if document.meta.authornote ~= nil then
-    if document.meta.author ~= nil then
-      local roles = create_roles(document.meta.author)
-      local equal_contributors = create_equal_contributors(document.meta.author)
-      if #roles > 0 or #equal_contributors > 0 then
-        table.insert(document.meta.authornote, pandoc.Para(roles .. equal_contributors))
-      end
+  if document.meta.authornote == nil or document.meta.authornote[1] == nil then
+    document.meta.authornote = List:new{}
+  end
 
-      local correspondence = create_correspondence(document.meta.author)
-      if  #correspondence > 0 then
-        table.insert(document.meta.authornote, pandoc.Para(correspondence))
-      end
+  if document.meta.author ~= nil then
+    local roles = create_roles(document.meta.author)
+    local equal_contributors = create_equal_contributors(document.meta.author)
+    if #roles > 0 or #equal_contributors > 0 then
+      table.insert(document.meta.authornote, pandoc.Para(roles .. equal_contributors))
     end
+
+    local correspondence = create_correspondence(document.meta.author)
+    if #correspondence > 0 then
+      table.insert(document.meta.authornote, pandoc.Para(correspondence))
+    end
+  end
+
+  if document.meta.authornote ~= nil and document.meta.authornote[1] ~= nil then
     document.blocks:extend(make_latex_envir("authornote", document.meta.authornote))
   end
 
