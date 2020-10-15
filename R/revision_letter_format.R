@@ -46,7 +46,18 @@ revision_letter_pdf <- function(keep_tex = TRUE, ...) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
-    revision_letter_preprocessor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+    args <- revision_letter_preprocessor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+
+    # Set citeproc = FALSE by default to invoke ampersand filter
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
+      metadata$citeproc <- FALSE
+      assign("front_matter", metadata, pos = parent.frame())
+    }
+
+    args
   }
 
   revision_letter_format$pre_processor <- pre_processor
