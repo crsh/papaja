@@ -684,7 +684,7 @@ modify_input_file <- function(input, format) {
     hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input))), ".Rmd")
 
     if(!file.copy(input, file.path(dirname(input), hashed_name))) {
-      stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix."))
+      stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix. Most likely you need to restore the temorary backup of '", input, "' that was created during a previous failed knit attempt at '", hashed_name, "'. Once you have restored the backup, remove the backup file and try again."))
     } else {
       # Add render_appendix()-chunk
       for(i in seq_along(yaml_params$appendix)) {
