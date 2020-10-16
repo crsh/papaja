@@ -3,6 +3,7 @@
 \name{apa_table}
 \alias{apa_table}
 \alias{apa_table.apa_results_table}
+\alias{apa_table.apa_results}
 \alias{apa_table.matrix}
 \alias{apa_table.list}
 \alias{apa_table.data.frame}
@@ -11,6 +12,8 @@
 apa_table(x, ...)
 
 \method{apa_table}{apa_results_table}(x, escape = FALSE, ...)
+
+\method{apa_table}{apa_results}(x, ...)
 
 \method{apa_table}{matrix}(
   x,
