@@ -199,7 +199,26 @@ test_that(
   }
 )
 
+test_that(
+  "print.papaja_labelled-method"
+  , {
+    labelled_vector <- 1:4
+    variable_label(labelled_vector) <- "Test label"
+    print_with_label <- capture_output(print(labelled_vector))
+    # + unit
+    attr(labelled_vector, "unit") <- "cm"
+    print_with_unit <- capture_output(print(labelled_vector))
 
+    expect_identical(
+      print_with_label
+      , expected = "Variable label     : Test label\n[1] 1 2 3 4"
+    )
+    expect_identical(
+      print_with_unit
+      , expected = "Variable label     : Test label\nUnit of measurement: cm\n[1] 1 2 3 4"
+    )
+  }
+)
 
 
 

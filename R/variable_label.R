@@ -261,6 +261,7 @@ print.papaja_labelled <- function(x, ...) {
     , sep = ""
   )
   variable_label(x) <- NULL
+  attr(x, "unit") <- NULL
   NextMethod("print")
 }
 
