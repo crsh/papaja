@@ -4,6 +4,7 @@ context("apa_print() for multcomp")
 test_that(
   "glht() for multiple linear model"
   , {
+    skip("Structure of glht output not decided, yet.")
     ### from the examples section
     lmod <- lm(Fertility ~ ., data = swiss)
     ### define coefficients of linear function directly
@@ -31,6 +32,7 @@ test_that(
 test_that(
   "glht() for multiple comparisons procedure"
   , {
+    skip("Structure of glht output not decided, yet.")
     amod <- aov(breaks ~ tension, data = warpbreaks)
 
     ### set up all-pair comparisons for factor `tension'

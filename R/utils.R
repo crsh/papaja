@@ -532,8 +532,13 @@ localize <- function(x) {
 package_available <- function(x) x %in% rownames(utils::installed.packages())
 
 no_method <- function(x) {
-  stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
-              Visit https://github.com/crsh/papaja/issues to request support for this class."))
+  stop(
+    "Objects of class '"
+    , class(x)
+    , "' are currently not supported (no method defined)."
+    , "\nVisit https://github.com/crsh/papaja/issues to request support for this class."
+    , call. = FALSE
+  )
 }
 
 rename_column <- function(x, current_name, new_name) {

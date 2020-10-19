@@ -20,7 +20,7 @@ and increased text padding for better readability.
 }
 \details{
 This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
-   general aspect of the plot such as the color of the background, gridlines, the size and colour
+   general aspect of the plot such as the color of the background, grid lines, the size and color
    of fonts.
 }
 \examples{

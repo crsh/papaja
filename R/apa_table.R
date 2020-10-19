@@ -85,6 +85,12 @@ apa_table.apa_results_table <- function(x, escape = FALSE, ...) {
   NextMethod(x, escape = FALSE, ...)
 }
 
+#' @rdname apa_table
+#' @export
+
+apa_table.apa_results <- function(x, ...) {
+  apa_table(x$table, ...)
+}
 
 #' @rdname apa_table
 #' @export
