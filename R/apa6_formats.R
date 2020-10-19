@@ -332,15 +332,23 @@ inline_numbers <- function (x) {
 # Preprocessor functions are adaptations from the RMarkdown package
 # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
 
-set_default_csl <- function(x) {
+set_default_csl <- function(x, version, metadata) {
   # Use APA6 CSL citations template if no other file is supplied
   has_csl <- function(text) {
     length(grep("^csl\\s*:.*$", text)) > 0
   }
 
+  flavor <- list(NULL, "annotated")[[(!is.null(metadata$annotate_references) && metadata$annotate_references) + 1]]
+  flavor <- c(
+    flavor
+    , list("no-disambiguation", NULL)[[(is.null(metadata$disambiguate_authors) || metadata$disambiguate_authors) + 1]]
+  )
+
+  csl_variant <- paste(c(paste0("apa", version), flavor), collapse = "-")
+
   if (!has_csl(readLines(x, warn = FALSE))) {
     csl_template <- system.file(
-      "rmd", "apa6.csl"
+      "rmd", paste0(csl_variant, ".csl")
       , package = "papaja"
     )
     if(csl_template == "") stop("No CSL template file found.")
@@ -357,7 +365,11 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
      (is.null(metadata$citeproc) || metadata$citeproc)) {
 
     ## Set CSL
-    args <- set_default_csl(input_file)
+    args <- set_default_csl(
+      input_file
+      , version = 6
+      , metadata = metadata
+    )
     csl_specified <- is.null(args)
 
     ## Set ampersand filter
@@ -622,7 +634,11 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
   if(is.null(metadata$citeproc) || metadata$citeproc) {
 
     ## Set CSL
-    args <- set_default_csl(input_file)
+    args <- set_default_csl(
+      input_file
+      , version = 6
+      , metadata = metadata
+    )
     csl_specified <- is.null(args)
 
     ## Set ampersand filter

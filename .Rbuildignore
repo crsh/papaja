@@ -15,3 +15,4 @@
 ^CODE_OF_CONDUCT\.md$
 ^\.github$
 ^\.vscode$
+^update_csl.sh$
