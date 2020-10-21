@@ -4,6 +4,7 @@
 \alias{apa6_pdf}
 \alias{apa6_docx}
 \alias{apa6_word}
+\alias{apa6_doc}
 \title{APA article (6th edition)}
 \usage{
 apa6_pdf(
@@ -16,9 +17,16 @@ apa6_pdf(
   ...
 )
 
-apa6_docx(fig_caption = TRUE, md_extensions = NULL, ...)
+apa6_docx(
+  fig_caption = TRUE,
+  number_sections = FALSE,
+  md_extensions = NULL,
+  ...
+)
 
-apa6_word(fig_caption = TRUE, md_extensions = NULL, ...)
+apa6_word(...)
+
+apa6_doc(...)
 }
 \arguments{
 \item{fig_caption}{\code{TRUE} to render figures with captions}
@@ -54,6 +62,8 @@ When creating PDF documents the YAML option \code{classoption} is passed to the 
 should be considered experimental.}
 
 \item \code{apa6_word}: Format to create .docx-files. Alias of \code{apa6_docx}.
+
+\item \code{apa6_doc}: Format to create .docx-files. Alias of \code{apa6_docx}.
 }}
 
 \examples{

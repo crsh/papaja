@@ -184,9 +184,9 @@ apa6_pdf <- function(
 
 apa6_docx <- function(
   fig_caption = TRUE
+  , number_sections = FALSE
   # , pandoc_args = NULL
   , md_extensions = NULL
-  , number_sections = FALSE
   , ...
 ) {
   validate(fig_caption, check_class = "logical", check_length = 1)
@@ -306,7 +306,17 @@ apa6_docx <- function(
 
 #' @describeIn apa6_pdf Format to create .docx-files. Alias of \code{apa6_docx}.
 #' @export
-apa6_word <- apa6_docx
+
+apa6_word <- function(...) {
+  apa6_docx(...)
+}
+
+#' @describeIn apa6_pdf Format to create .docx-files. Alias of \code{apa6_docx}.
+#' @export
+
+apa6_doc <- function(...) {
+  apa6_docx(...)
+}
 
 
 # Set hook to print default numbers
