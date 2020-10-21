@@ -88,10 +88,10 @@ print_model_comp <- function(
   ### Rounding and filling with zeros
   x$statistic <- printnum(x$statistic)
   x$df <- print_df(x$df)
-  x$df_res <- print_df(x$df_res)
+  x$df.residual <- print_df(x$df.residual)
   x$p.value <- printp(x$p.value, add_equals = TRUE)
 
-  apa_res$statistic <- paste0("$F(", x[["df"]], ", ", x[["df_res"]], ") = ", x[["statistic"]], "$, $p ", x[["p.value"]], "$")
+  apa_res$statistic <- paste0("$F(", x[["df"]], ", ", x[["df.residual"]], ") = ", x[["statistic"]], "$, $p ", x[["p.value"]], "$")
   if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
   names(apa_res$statistic) <- x$term
 
@@ -153,7 +153,7 @@ print_model_comp <- function(
     r2
   })
 
-  colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
+  colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$\\mathit{df}$", "$\\mathit{df}_{\\mathrm{res}}$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
 
   ## Add differences in model fits
   model_diffs <- printnum(
@@ -168,9 +168,9 @@ print_model_comp <- function(
   r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]")
   colnames(model_diffs) <- c(r2_diff_colname, "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")
 
-  diff_stats <- x[, c("statistic", "df", "df_res", "p.value")]
+  diff_stats <- x[, c("statistic", "df", "df.residual", "p.value")]
   diff_stats$p.value <- gsub("= ", "", diff_stats$p.value) # Remove 'equals' for table
-  colnames(diff_stats) <- c("$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ") # Space enable duplicate row names
+  colnames(diff_stats) <- c("$F$ ", "$\\mathit{df}$ ", "$\\mathit{df}_{\\mathrm{res}}$ ", "$p$ ") # Space enable duplicate row names
   diff_stats <- rbind("", diff_stats)
 
   model_stats_table <- as.data.frame(

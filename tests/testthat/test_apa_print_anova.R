@@ -12,13 +12,13 @@ test_that(
     expect_apa_results(
       ow_aov_output
       , labels = list(
-        term        = "Effect"
-        , estimate  = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1$"
-        , df2       = "$\\mathit{df}_2$"
-        , mse       = "$\\mathit{MSE}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -67,13 +67,13 @@ test_that(
     expect_apa_results(
       ow_afex_aov_output
       , labels = list(
-        term = "Effect"
-        , estimate  = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1$"
-        , df2       = "$\\mathit{df}_2$"
-        , mse       = "$\\mathit{MSE}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -129,13 +129,13 @@ test_that(
     expect_apa_results(
       tw_aov_output
       , labels = list(
-        term = "Effect"
-        , estimate  = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1$"
-        , df2       = "$\\mathit{df}_2$"
-        , mse       = "$\\mathit{MSE}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -193,13 +193,13 @@ test_that(
     expect_apa_results(
       tw_afex_aov_output
       , labels = list(
-        term = "Effect"
-        , estimate = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1 = "$\\mathit{df}_1$"
-        , df2 = "$\\mathit{df}_2$"
-        , mse = "$\\mathit{MSE}$"
-        , p.value = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -249,13 +249,13 @@ test_that(
     expect_apa_results(
       rm_aov_output
       , labels = list(
-        term = "Effect"
-        , estimate = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1 = "$\\mathit{df}_1$"
-        , df2 = "$\\mathit{df}_2$"
-        , mse = "$\\mathit{MSE}$"
-        , p.value = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -297,13 +297,13 @@ test_that(
     expect_apa_results(
       rm_afex_anova.mlm_output
       , labels = list(
-        term = "Effect"
-        , estimate = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1 = "$\\mathit{df}_1^{GG}$"
-        , df2 = "$\\mathit{df}_2^{GG}$"
-        , mse = "$\\mathit{MSE}$"
-        , p.value = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}^{\\mathrm{GG}}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{GG}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
     expect_identical(rm_afex_anova.mlm_output$full$Valence, "$F(1.15, 4.60) = 189.11$, $\\mathit{MSE} = 9.34$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
@@ -312,13 +312,13 @@ test_that(
     expect_apa_results(
       rm_afex_anova.mlm_output
       , labels = list(
-        term = "Effect"
-        , estimate = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1 = "$\\mathit{df}_1^{HF}$"
-        , df2 = "$\\mathit{df}_2^{HF}$"
-        , mse = "$\\mathit{MSE}$"
-        , p.value = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}^{\\mathrm{HF}}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{HF}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
     expect_identical(rm_afex_anova.mlm_output$full$Valence, "$F(1.32, 5.26) = 189.11$, $\\mathit{MSE} = 8.16$, $p < .001$, $\\hat{\\eta}^2_G = .932$")
@@ -339,13 +339,13 @@ test_that(
     expect_apa_results(
       tw_rm_aov_output
       , labels = list(
-        term = "Effect"
-        , estimate = "$\\hat{\\eta}^2_G$"
-        , statistic = "$F$"
-        , df1 = "$\\mathit{df}_1$"
-        , df2 = "$\\mathit{df}_2$"
-        , mse = "$\\mathit{MSE}$"
-        , p.value = "$p$"
+        term          = "Effect"
+        , estimate    = "$\\hat{\\eta}^2_G$"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , mse         = "$\\mathit{MSE}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -405,10 +405,10 @@ test_that(
     expect_apa_results(
       levene_test_output
       , labels = list(
-        statistic = "$F$"
-        , df1     = "$\\mathit{df}_1$"
-        , df2     = "$\\mathit{df}_2$"
-        , p.value = "$p$"
+        statistic     = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , p.value     = "$p$"
       )
     )
     expect_identical(levene_test_output$stat, "$F(5, 39) = 1.47$, $p = .222$")
@@ -427,8 +427,8 @@ test_that(
           term = structure("N", label = "Effect", class = c("papaja_labelled", "character"))
           , estimate = structure(".216", label = "$\\hat{\\eta}^2_G$", class = c("papaja_labelled","character"))
           , statistic = structure("6.06", label = "$F$", class = c("papaja_labelled", "character"))
-          , df1 = structure("1", label = "$\\mathit{df}_1$", class = c("papaja_labelled", "character"))
-          , df2 = structure("22", label = "$\\mathit{df}_2$", class = c("papaja_labelled", "character"))
+          , df = structure("1", label = "$\\mathit{df}$", class = c("papaja_labelled", "character"))
+          , df.residual = structure("22", label = "$\\mathit{df}_{\\mathrm{res}}$", class = c("papaja_labelled", "character"))
           , mse = structure("31.23", label = "$\\mathit{MSE}$", class = c("papaja_labelled", "character"))
           , p.value = structure(".022", label = "$p$", class = c("papaja_labelled", "character"))
         )
