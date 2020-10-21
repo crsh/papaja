@@ -186,9 +186,11 @@ apa6_docx <- function(
   fig_caption = TRUE
   # , pandoc_args = NULL
   , md_extensions = NULL
+  , number_sections = FALSE
   , ...
 ) {
   validate(fig_caption, check_class = "logical", check_length = 1)
+  validate(number_sections, check_class = "logical", check_length = 1)
 
   # Get APA6 reference file
   ellipsis <- list(...)
@@ -209,6 +211,7 @@ apa6_docx <- function(
       fig_caption = fig_caption
       # , pandoc_args = pandoc_args
       , md_extensions = md_extensions
+      , number_sections = number_sections
       , ellipsis
     )
   )
@@ -248,6 +251,11 @@ apa6_docx <- function(
     ) {
       metadata$citeproc <- FALSE
       assign("front_matter", metadata, pos = parent.frame())
+    }
+
+    # Support pandoc numbersections option
+    if(!is.null(metadata$numbersections) && isTRUE(metadata$numbersections)) {
+      args <- c(args, "--lua-filter", rmarkdown::pkg_file_lua("number-sections.lua"))
     }
 
     args
