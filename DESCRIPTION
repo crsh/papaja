@@ -22,7 +22,7 @@ Imports:
   glue (>= 1.4.0),
   knitr (>= 1.26),
   methods,
-  rmarkdown (>= 2.0),
+  rmarkdown (>= 2.4),
   rmdfiltr (>= 0.1.2),
   yaml,
   zip
