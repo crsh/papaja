@@ -23,8 +23,8 @@ test_that(
         term                     = "Effect"
         , multivariate.statistic = "$V$"
         , statistic              = "$F$"
-        , df1                    = "$\\mathit{df}_1$"
-        , df2                    = "$\\mathit{df}_2$"
+        , df                     = "$\\mathit{df}$"
+        , df.residual            = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value                = "$p$"
       )
     )
@@ -34,8 +34,8 @@ test_that(
         term                     = "Effect"
         , multivariate.statistic = "$\\Lambda$"
         , statistic              = "$F$"
-        , df1                    = "$\\mathit{df}_1$"
-        , df2                    = "$\\mathit{df}_2$"
+        , df                     = "$\\mathit{df}$"
+        , df.residual            = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value                = "$p$"
       )
     )
@@ -45,8 +45,8 @@ test_that(
         term                     = "Effect"
         , multivariate.statistic = "$T$"
         , statistic              = "$F$"
-        , df1                    = "$\\mathit{df}_1$"
-        , df2                    = "$\\mathit{df}_2$"
+        , df                     = "$\\mathit{df}$"
+        , df.residual            = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value                = "$p$"
       )
     )
@@ -56,8 +56,8 @@ test_that(
         term                     = "Effect"
         , multivariate.statistic = "$\\theta$"
         , statistic              = "$F$"
-        , df1                    = "$\\mathit{df}_1$"
-        , df2                    = "$\\mathit{df}_2$"
+        , df                     = "$\\mathit{df}$"
+        , df.residual            = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value                = "$p$"
       )
     )

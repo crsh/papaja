@@ -425,7 +425,7 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
   # ----------------------------------------------------------------------------
   # Only calculate MSE if required (otherwise, Levene tests give an error).
   if(mse) {
-    df_col <- intersect(c("df2", "df_res"), colnames(x))
+    df_col <- intersect("df.residual", colnames(x))
     if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
       x$mse <- x$sumsq_err / x[[df_col]]
     } else {

@@ -336,10 +336,10 @@ test_that(
     expect_apa_results(
       oneway_output
       , labels = list(
-        statistic = "$F$"
-        , df1     = "$\\mathit{df}_1$"
-        , df2     = "$\\mathit{df}_2$"
-        , p.value = "$p$"
+        statistic     = "$F$"
+        , df          = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , p.value     = "$p$"
       )
     )
     expect_identical(oneway_output$stat, "$F(1, 17.78) = 3.46$, $p = .079$")

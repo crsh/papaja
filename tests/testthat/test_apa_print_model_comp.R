@@ -49,7 +49,7 @@ test_that(
         )
       )
       , .Names = c("Baseline", "Length", "Both")
-      , row.names = c("Intercept", "Sepal Width", "Petal Length", "Petal Width", "$R^2$ [90\\% CI]", "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$df_1$ ", "$df_2$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")
+      , row.names = c("Intercept", "Sepal Width", "Petal Length", "Petal Width", "$R^2$ [90\\% CI]", "$F$", "$\\mathit{df}$", "$\\mathit{df}_{\\mathrm{res}}$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$", "$\\Delta R^2$", "$F$ ", "$\\mathit{df}$ ", "$\\mathit{df}_{\\mathrm{res}}$ ", "$p$ ", "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")
       , class = c("apa_results_table", "data.frame")
     )
 

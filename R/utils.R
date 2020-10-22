@@ -251,8 +251,8 @@ canonize <- function(
   df_correction_type <- attr(x, "df_correction")
   if(!is.null(df_correction_type) && df_correction_type != "none") {
     variable_label(x) <- c(
-      df1 = paste0("$\\mathit{df}_1^{", df_correction_type, "}$")
-      , df2 = paste0("$\\mathit{df}_2^{", df_correction_type, "}$")
+      df = paste0("$\\mathit{df}^{\\mathrm{", df_correction_type, "}}$")
+      , df.residual = paste0("$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{", df_correction_type, "}}$")
     )
   }
   x
@@ -280,7 +280,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   for (i in colnames(x)) {
     if(i == "p.value") {
       x[[i]] <- printp(x[[i]])
-    } else if(i %in% c("df", "df1", "df2", "multivariate.df1", "multivariate.df2")) {
+    } else if(i %in% c("df", "df.residual", "multivariate.df", "multivariate.df.residual")) {
       x[[i]] <- print_df(x[[i]])
     } else if(i == "conf.int") {
       tmp <- unlist(lapply(X = x[[i]], FUN = function(x, ...){
@@ -442,12 +442,12 @@ sort_terms <- function(x, colname) {
 #' @keywords internal
 
 sort_columns <- function(x) {
-  multivariate <- paste0("multivariate.", c("statistic", "df1", "df2"))
+  multivariate <- paste0("multivariate.", c("statistic", "df", "df.residual"))
 
   se <- NULL
   if(!any(colnames(x) == "conf.int")) se <- "std.error"
 
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df1", "df2", "p.value"), colnames(x))
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "p.value"), colnames(x))
   x[, ordered_cols, drop = FALSE]
 }
 

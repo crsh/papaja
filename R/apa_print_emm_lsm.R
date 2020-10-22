@@ -157,7 +157,7 @@ apa_print.summary_emm <- function(
         estimate = paste0("$", est_name, "$")
         , conf.int = conf_level
         , statistic = "$t$"
-        , df = "$df$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
     }

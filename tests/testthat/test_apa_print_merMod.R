@@ -151,7 +151,7 @@ test_that(
 test_that(
   "ANOVA tables from lmerTest::anova()"
   , {
-    fm1 <-lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
+    fm1 <- lmerTest::lmer(Reaction ~ Days + (Days|Subject), lme4::sleepstudy)
     fm2 <-lme4::lmer(Reaction ~ Days + (1|Subject)   , lme4::sleepstudy)
     fm3 <- lme4::lmer(Reaction ~ 1 + (1|Subject), lme4::sleepstudy)
 
@@ -165,21 +165,21 @@ test_that(
     expect_apa_results(
       apa_KR
       , labels = list(
-        term        = "Effect"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1^{\\mathit{KR}}$"
-        , df2       = "$\\mathit{df}_2^{\\mathit{KR}}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}^{\\mathrm{KR}}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{KR}}$"
+        , p.value     = "$p$"
       )
     )
     expect_apa_results(
       apa_S
       , labels = list(
-        term        = "Effect"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1^{S}$"
-        , df2       = "$\\mathit{df}_2^{S}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}^{\\mathrm{S}}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{S}}$"
+        , p.value     = "$p$"
       )
     )
 
@@ -222,22 +222,22 @@ test_that(
     expect_apa_results(
       apa_KR
       , labels = list(
-        term        = "Effect"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1^{\\mathit{KR}}$"
-        , df2       = "$\\mathit{df}_2^{\\mathit{KR}}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}^{\\mathrm{KR}}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{KR}}$"
+        , p.value     = "$p$"
       )
     )
 
     expect_apa_results(
       apa_S
       , labels = list(
-        term        = "Effect"
-        , statistic = "$F$"
-        , df1       = "$\\mathit{df}_1^{S}$"
-        , df2       = "$\\mathit{df}_2^{S}$"
-        , p.value   = "$p$"
+        term          = "Effect"
+        , statistic   = "$F$"
+        , df          = "$\\mathit{df}^{\\mathrm{S}}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{S}}$"
+        , p.value     = "$p$"
       )
     )
 

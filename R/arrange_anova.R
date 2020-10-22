@@ -48,7 +48,7 @@ arrange_anova.anova <- function(x) {
   object <- as.data.frame(x)
   resid_row <- apply(object, 1, function(x) any(is.na(x)))
   x <- data.frame(array(NA, dim = c(nrow(object) - sum(resid_row), 7)), row.names = NULL) # Create empty object
-  colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+  colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df.residual", "statistic", "p.value")
 
   # Model comparisons (lm()) ----
   if(any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading")))) {
@@ -56,7 +56,7 @@ arrange_anova.anova <- function(x) {
     x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum of Sq", "Df", "F", "Pr(>F)")]
     x$df <- abs(x$df) # Objects give difference in Df
     x$sumsq_err <- object[!resid_row, "RSS"]
-    x$df_res <- object[resid_row, "Res.Df"]
+    x$df.residual <- object[resid_row, "Res.Df"]
     x$term <- paste0("model", 2:nrow(object))
 
     class(x) <- c("apa_model_comp", class(x))
@@ -68,7 +68,7 @@ arrange_anova.anova <- function(x) {
     # - lme4::summary.merMod()
     # - lmerTest::summary.lmerModLmerTest()
 
-    # c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+    # c("term", "sumsq", "df", "sumsq_err", "df.residual", "statistic", "p.value")
 
 
 
@@ -81,7 +81,7 @@ arrange_anova.anova <- function(x) {
       , "Mean Sq" = "meansq"
       # fixed-effects tables from lmerModlmerTest
       , "NumDF"     = "df"
-      , "DenDF"     = "df_res"
+      , "DenDF"     = "df.residual"
       # model comparisons from lme4 and lmerTest
       , "logLik" = "logLik"
       , "AIC"    = "AIC"
@@ -93,7 +93,7 @@ arrange_anova.anova <- function(x) {
       , "Effect"  = "term"
       , "Chi Df"  = "df"
       , "num Df"  = "df"
-      , "den Df"  = "df_res"
+      , "den Df"  = "df.residual"
       , "F"       = "statistic"
       , "Pr(>F)"  = "p.value"
       , "Pr(>PB)" = "p.value"
@@ -111,7 +111,7 @@ arrange_anova.anova <- function(x) {
 
     if(any(resid_row)) {
       stopifnot(sum(resid_row) == 1)
-      x$df_res <- object$df[resid_row]
+      x$df.residual <- object$df[resid_row]
       x$sumsq_err <- object$sumsq[resid_row]
     }
 
@@ -145,13 +145,13 @@ arrange_anova.summary.aov <- function(x) {
   if(nrow(variance_table) == 1 && variance_table$term == "Residuals") {
     variance_table$sumsq_err <- variance_table$sumsq
     variance_table$sumsq <- NA
-    variance_table$df_res <- variance_table$df
+    variance_table$df.residual <- variance_table$df
     variance_table$df <- NA
     variance_table$meansq <- NA
     variance_table$term <- "(Intercept)"
   } else {
     variance_table$sumsq_err <- variance_table$sumsq[nrow(variance_table)]
-    variance_table$df_res <- variance_table$df[nrow(variance_table)]
+    variance_table$df.residual <- variance_table$df[nrow(variance_table)]
     variance_table <- variance_table[-nrow(variance_table), ]
   }
 
@@ -214,7 +214,7 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
     , "Sum Sq" = "sumsq"
     , "num Df" = "df"
     , "Error SS" = "sumsq_err"
-    , "den Df" = "df_res"
+    , "den Df" = "df.residual"
     , "F" = "statistic"
     , "F value" = "statistic"
     , "Pr(>F)" = "p.value"
@@ -222,7 +222,7 @@ arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
 
   colnames(variance_table) <- renamers[colnames(variance_table)]
 
-  broom_names <- c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+  broom_names <- c("sumsq", "df", "sumsq_err", "df.residual", "statistic", "p.value")
   variance_table <- variance_table[, broom_names]
 
 

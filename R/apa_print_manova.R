@@ -26,8 +26,8 @@ apa_print.summary.manova <- function(x, in_paren = FALSE, ...) {
     , stringsAsFactors = FALSE
   )
   df$Effect <- rownames(df)
-  # df$multivariate.df1 <- df$Df
-  # df$multivariate.df2 <- x$stats[resid_row, "Df"]
+  # df$multivariate.df <- df$Df
+  # df$multivariate.df.residual <- x$stats[resid_row, "Df"]
   df$Df <- NULL
 
   canonical_table <- canonize(df)

@@ -213,13 +213,17 @@ stat_glue <- function(x) {
 
   df <- NULL
   if(!is.null(x$df)) {
-    if(exists("n", where = parent.frame(2)) && !is.null(get("n", envir = parent.frame(2)))) { # Chi^2-Test
+    if(!is.null(x$df.residual)) {
+      df <- "(<<df>>, <<df.residual>>)"
+    } else if( # Chi^2-Test
+      exists("n", where = parent.frame(2)) &&
+      !is.null(get("n", envir = parent.frame(2)))
+    ) {
       df <- "(<<df>>, n = <<n>>)"
     } else {
       df <- "(<<df>>)"
     }
   }
-  if(!is.null(x$df1) && !is.null(x$df2)) df <- "(<<df1>>, <<df2>>)"
 
   stat_list <- c()
 
