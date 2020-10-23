@@ -84,6 +84,8 @@ print.apa_results_table <- function(x, ...) {
     , "es"        = "estimate"
     , "ci"        = "conf.int"
     , "predictor" = "term"
+    , "df1"       = "df"
+    , "df2"       = "df.residual"
   )
   new_name <- aliases[pmatch(name, names(aliases), nomatch = 0L)]
 
@@ -120,6 +122,8 @@ print.apa_results_table <- function(x, ...) {
     , "es"        = "estimate"
     , "ci"        = "conf.int"
     , "predictor" = "term"
+    , "df1"       = "df"
+    , "df2"       = "df.residual"
   )
   if(!exact) {
     # aliases <- aliases[-3] # okay if exact == FALSE
@@ -163,6 +167,8 @@ print.apa_results_table <- function(x, ...) {
       , "es"        = "estimate"
       , "ci"        = "conf.int"
       , "predictor" = "term"
+      , "df1"       = "df"
+      , "df2"       = "df.residual"
     )
     if(any(j %in% names(aliases))) {
       j_change <- j %in% names(aliases)

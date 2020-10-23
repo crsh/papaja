@@ -81,6 +81,20 @@ test_that(
       apa_results_table[, c(F, T, T, F, T)]
       , extract_three_columns
     )
+
+    apa_results_table2 <- apa_print(afex::aov_4(yield ~ (N + P|block), npk))$table
+    expect_warning(
+      expect_identical(
+        apa_results_table2$df1
+        , apa_results_table2$df
+      )
+    )
+    expect_warning(
+      expect_identical(
+        apa_results_table2[["df2"]]
+        , apa_results_table2$df.residual
+      )
+    )
   }
 )
 
