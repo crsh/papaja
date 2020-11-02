@@ -48,6 +48,20 @@ test_that(
     expect_identical(printnum(to_print, zero = c(T, F, F)), c("0.00", "9.00", "0.10", "1.00", "> -0.01"))
 
     expect_equal(printnum(c(1, 2, NA)), c("1.00", "2.00", "NA"))
+
+    to_print <- c(1, 3)
+    variable_label(to_print) <- "pretty label"
+    apa_num <- printnum(to_print)
+
+    expect_identical(
+      apa_num
+      , expected = structure(
+        c("1.00", "3.00")
+        , label = "pretty label"
+        , class = c("tiny_labelled", "character")
+      )
+    )
+
   }
 )
 
