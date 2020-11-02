@@ -350,7 +350,7 @@ printnum.matrix <- function(
 #' @rdname printnum
 #' @export
 
-printnum.papaja_labelled <-function(x, ...){
+printnum.tiny_labelled <-function(x, ...){
   x_out <- NextMethod("printnum")
   variable_label(x_out) <- variable_label(x)
   x_out
