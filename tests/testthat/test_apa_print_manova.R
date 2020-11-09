@@ -67,7 +67,7 @@ test_that(
       , expected = structure(
         c("N", "P", "N $\\times$ P")
         , label = "Effect"
-        , class = c("papaja_labelled", "character")
+        , class = c("tiny_labelled", "character")
       )
     )
 

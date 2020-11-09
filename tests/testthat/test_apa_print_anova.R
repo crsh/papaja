@@ -100,7 +100,7 @@ test_that(
       ow_afex_aov_output$table$term
       , structure(
         c("Intercept", "Dosage")
-        , class = c("papaja_labelled", "character")
+        , class = c("tiny_labelled", "character")
         , label = "Effect"
       )
     )
@@ -164,7 +164,7 @@ test_that(
       , expected = structure(
         c("Gender", "Dosage", "Gender $\\times$ Dosage")
         , label = "Effect"
-        , class = c("papaja_labelled", "character")
+        , class = c("tiny_labelled", "character")
       )
     )
 
@@ -222,7 +222,7 @@ test_that(
       , expected = structure(
         c("Intercept", "Gender", "Dosage", "Gender $\\times$ Dosage")
         , label = "Effect"
-        , class = c("papaja_labelled", "character")
+        , class = c("tiny_labelled", "character")
       )
     )
 
@@ -424,13 +424,13 @@ test_that(
       apa_out$table
       , expected = structure(
         list(
-          term = structure("N", label = "Effect", class = c("papaja_labelled", "character"))
-          , estimate = structure(".216", label = "$\\hat{\\eta}^2_G$", class = c("papaja_labelled","character"))
-          , statistic = structure("6.06", label = "$F$", class = c("papaja_labelled", "character"))
-          , df = structure("1", label = "$\\mathit{df}$", class = c("papaja_labelled", "character"))
-          , df.residual = structure("22", label = "$\\mathit{df}_{\\mathrm{res}}$", class = c("papaja_labelled", "character"))
-          , mse = structure("31.23", label = "$\\mathit{MSE}$", class = c("papaja_labelled", "character"))
-          , p.value = structure(".022", label = "$p$", class = c("papaja_labelled", "character"))
+          term = structure("N", label = "Effect", class = c("tiny_labelled", "character"))
+          , estimate = structure(".216", label = "$\\hat{\\eta}^2_G$", class = c("tiny_labelled","character"))
+          , statistic = structure("6.06", label = "$F$", class = c("tiny_labelled", "character"))
+          , df = structure("1", label = "$\\mathit{df}$", class = c("tiny_labelled", "character"))
+          , df.residual = structure("22", label = "$\\mathit{df}_{\\mathrm{res}}$", class = c("tiny_labelled", "character"))
+          , mse = structure("31.23", label = "$\\mathit{MSE}$", class = c("tiny_labelled", "character"))
+          , p.value = structure(".022", label = "$p$", class = c("tiny_labelled", "character"))
         )
         , row.names = 1L
         , class = c("apa_results_table", "data.frame")

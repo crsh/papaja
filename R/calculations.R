@@ -264,7 +264,7 @@ summary.papaja_wsci <- function(object, ...) {
   y$lower_limit <- y$mean - y$ci_diff
   y$upper_limit <- y$mean + y$ci_diff
   y$ci_diff <- NULL
-  variable_labels(y) <- unlist(variable_labels(means))
+  variable_labels(y) <- Filter(Negate(is.null), variable_labels(means))
   y
 }
 

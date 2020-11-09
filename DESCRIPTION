@@ -14,7 +14,8 @@ Authors@R: c(
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
-  R (>= 3.6)
+  R (>= 3.6),
+  tinylabels (>= 0.1.0)
 Imports:
   base64enc,
   bookdown (>= 0.9.1),

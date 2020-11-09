@@ -6,7 +6,7 @@ container_names <- c("estimate", "statistic", "full_result", "table")
 # 3. anyNA?
 # 4. reporting strings either character or list or NULL
 # 5. table class: apa_results_table/data.frame or NULL
-# 6. table columns: each column of class papaja_labelled/character
+# 6. table columns: each column of class tiny_labelled/character
 # 7. Optional: Test specific col.names
 # 8. Optional: Test variable labels (and col.names)
 
@@ -63,12 +63,12 @@ expect_apa_results <- function(
 
 
     for (i in colnames(object$table)) {
-      # All columns should be of class papaja_labelled/character
+      # All columns should be of class tiny_labelled/character
       actual_class <- class(object$table[[i]])
       expect(
-        identical(actual_class, c("papaja_labelled", "character"))#
+        identical(actual_class, c("tiny_labelled", "character"))#
         , sprintf("Column `%s` in table element of `%s` has class `%s`, not `%s`.",
-                  i, act$lab, paste(actual_class, collapse = "/"), "papaja_labelled/character")
+                  i, act$lab, paste(actual_class, collapse = "/"), "tiny_labelled/character")
       )
     }
     if(!is.null(col.names)) {
