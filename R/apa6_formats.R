@@ -751,13 +751,15 @@ revert_original_input_file <- function(x = 1) {
   input_file <- get("original_input", envir = parent.frame(x))
   input_file <- tools::file_path_as_absolute(input_file)
 
-  if(!is.null(rmarkdown::metadata$appendix)) {
-    hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input_file))), ".Rmd")
+  hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input_file))), ".Rmd")
+  hashed_path <- file.path(dirname(input_file), hashed_name)
 
-    if(!file.copy(file.path(dirname(input_file), hashed_name), input_file, overwrite = TRUE)) {
-      stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", dirname(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
+  if(file.exists(hashed_path)) {
+
+    if(!file.copy(hashed_path, input_file, overwrite = TRUE)) {
+      stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", basename(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
     } else {
-      unlink(file.path(dirname(input_file), hashed_name))
+      unlink(hashed_path)
     }
   }
 
