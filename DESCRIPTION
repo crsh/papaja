@@ -1,5 +1,5 @@
 Package: papaja
-Title: Prepare reproducible APA journal articles with R Markdown
+Title: Prepare Reproducible APA Journal Articles with R Markdown
 Version: 0.1.0.9997
 Description: papaja (Preparing APA Journal Articles) provides document formats
     and helper functions to produce complete APA manuscripts from R Markdown-files
@@ -11,6 +11,7 @@ Authors@R: c(
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
     , person("Joseph V.", "Casillas", email = "joseph.casillas@rutgers.edu", role = c("ctb"))
   )
+Date: 2020-11-22
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
