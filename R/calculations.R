@@ -381,10 +381,10 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       if(!is.null(observed)) {
         obs <- rep(FALSE, nrow(x))
         for(i in observed) {
-          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
+          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), x$term))) {
             stop(paste0("Observed variable not in data: ", i, collapse = " "))
           }
-          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), x$term)
         }
         obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
         obs_SSn2 <- x$sumsq*obs
@@ -392,7 +392,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
         obs_SSn1 <- 0
         obs_SSn2 <- 0
       }
-      x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+      x$estimate <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_G$"
     }
 
     # --------------------------------------------------------------------------
@@ -409,7 +410,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       if(!intercept){
         index <- x$term!="(Intercept)"
       }
-      x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      x$estimate <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2$"
       message("Note that eta-squared is calculated correctly if and only if the design is balanced.")
     }
 
@@ -418,7 +420,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
     #
     # This one should be unproblematic and work in all cases.
     if("pes" %in% es) {
-      x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+      x$estimate <- x$sumsq / (x$sumsq + x$sumsq_err)
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_p$"
     }
   }
 
@@ -428,6 +431,7 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
     df_col <- intersect("df.residual", colnames(x))
     if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
       x$mse <- x$sumsq_err / x[[df_col]]
+      tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
     } else {
       warning("Mean-squared errors requested, but necessary information not available.")
     }

@@ -92,8 +92,11 @@ add_glue_to_apa_results <- function(
     , sublist = NULL
     , term_names = NULL
     , in_paren = FALSE
+    , est_first = TRUE
 ) {
     validate(container, check_class = "apa_results")
+
+  in_paren <- isTRUE(in_paren)
 
     est_list <- unlist(lapply(
         est_glue
@@ -115,6 +118,7 @@ add_glue_to_apa_results <- function(
     paste_pars <- list(sep = ", ")
     paste_pars$est  <- est_list
     paste_pars$stat <- stat_list
+    if(!est_first) paste_pars <- paste_pars[c("sep", "stat", "est")]
 
     full_list <- do.call("paste", paste_pars)
     names(full_list) <- names(est_list)
@@ -241,6 +245,13 @@ stat_glue <- function(x) {
       )
     )
   }
+  if(!is.null(x$mse)) {
+    stat_list <- c(
+      stat_list
+      , "$<<svl(mse)>> <<add_equals(mse)>>$"
+    )
+  }
+
 
   p_value <- names(x)[grepl("p.value", names(x), fixed = TRUE)]
   if(length(p_value) > 0) {

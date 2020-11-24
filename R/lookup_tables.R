@@ -12,6 +12,7 @@
 lookup_names <- c(
   # nuisance parameters
   "Sum.Sq"    = "sumsq"
+  , "Error.SS" = "sumsq_err"
   , "Mean.Sq" = "meansq"
   , "logLik"  = "loglik"
   , "AIC"     = "AIC"
@@ -33,6 +34,10 @@ lookup_names <- c(
   , "difference.in.means"       = "estimate"
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
+  # estimate from effectsize package
+  , "Eta2"             = "estimate"
+  , "Eta2_partial"     = "estimate"
+  , "Eta2_generalized" = "estimate"
   # ----
   , "conf.int"   = "conf.int"
   , "stderr"     = "std.error"
@@ -120,6 +125,10 @@ lookup_labels <- c(
   , "difference.in.location"    = "$\\mathit{Mdn}_d$"
   , "difference.in.means"       = "$\\Delta M$"
   , "difference.in.proportions" = "\\Delta p"
+  # estimate from effectsize package
+  , "Eta2"             = "$\\hat{\\eta}^2$"
+  , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
+  , "Eta2_generalized" = "$\\hat{\\eta}^2_G$"
   # standard error
   , "stderr"     = "$\\mathit{SE}$"
   , "std.err"    = "$\\mathit{SE}$"
