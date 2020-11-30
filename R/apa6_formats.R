@@ -304,7 +304,7 @@ apa6_word <- apa6_docx
 # Set hook to print default numbers
 inline_numbers <- function (x) {
 
-  if("difftime" %in% class(x)) x <- as.numeric(x)
+  if(inherits(x, "difftime")) x <- as.numeric(x)
   if(is.numeric(x)) {
     printed_number <- ifelse(
       x == round(x)
