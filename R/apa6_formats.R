@@ -714,7 +714,9 @@ revert_original_input_file <- function(x = 1) {
   input_file <- get("original_input", envir = parent.frame(x))
   input_file <- tools::file_path_as_absolute(input_file)
 
-  if(!is.null(rmarkdown::metadata$appendix)) {
+  yaml_params <- get_yaml_params(readLines(input_file))
+
+  if(!is.null(yaml_params$appendix)) {
     hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input_file))), ".Rmd")
 
     if(!file.copy(file.path(dirname(input_file), hashed_name), input_file, overwrite = TRUE)) {
