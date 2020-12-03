@@ -28,6 +28,7 @@ apa_factorial_plot(data, ...)
   args_points = NULL,
   args_lines = NULL,
   args_swarm = NULL,
+  args_violins = NULL,
   args_error_bars = NULL,
   args_legend = NULL,
   plot = NULL,
@@ -101,6 +102,8 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 \item{args_lines}{An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.}
 
 \item{args_swarm}{An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.}
+
+\item{args_violins}{An optional \code{list} that contains further arguments to customize the \code{\link{density}} estimation used for violins.}
 
 \item{args_error_bars}{An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.}
 
