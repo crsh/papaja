@@ -1,9 +1,24 @@
-utils::citEntry(
-  "manual"
-  , "Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9997, retrieved from https://github.com/crsh/papaja"
-  , author = c("Frederik Aust and Marius Barth")
-  , title = "{papaja}: {Create} {APA} manuscripts with {R Markdown}"
-  , year = "2020"
-  , note = "R package version 0.1.0.9997"
-  , url = "https://github.com/crsh/papaja"
+
+year <- sub("-.*", "", meta$Date)
+note <- paste0("R package version ", meta$Version)
+
+
+bibentry(
+  bibtype = "Manual"
+  , textVersion = paste0(
+    "Aust, F., Barth, M. ("
+    , year
+    , "). papaja: Prepare reproducible APA journal articles with R Markdown. "
+    , note
+    , ". Retrieved from "
+    , meta$URL
+  )
+  , title = "{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}"
+  , author = c(
+    person("Frederik", "Aust")
+    , person("Marius", "Barth")
+  )
+  , year = year
+  , note = note
+  , url = meta$URL
 )

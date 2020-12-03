@@ -9,7 +9,7 @@ test_that(
     p_value <- structure(
       ".022"
       , label = "$p$"
-      , class = c("papaja_labelled", "character")
+      , class = c("tiny_labelled", "character")
     )
 
     expect_identical(
