@@ -56,7 +56,7 @@ arrange_anova.anova <- function(x) {
     x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum of Sq", "Df", "F", "Pr(>F)")]
     x$df <- abs(x$df) # Objects give difference in Df
     x$sumsq_err <- object[!resid_row, "RSS"]
-    x$df_res <- object[resid_row, "Res.Df"]
+    x$df_res <- pmin(object[resid_row, "Res.Df"], object[!resid_row, "Res.Df"])
     x$term <- paste0("model", 2:nrow(object))
 
     class(x) <- c("apa_model_comp", class(x))
