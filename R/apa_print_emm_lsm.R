@@ -71,8 +71,10 @@ apa_print.summary_emm <- function(
   #   return(apa_res)
   # }
 
-  ci <- get_emm_conf_level(x)
-  ci_supplied <- !length(ci) == 0
+  tidy_x <- data.frame(broom::tidy(x))
+
+  conf_level <- get_emm_conf_level(x)
+  ci_supplied <- !length(conf_level) == 0
   p_supplied <- "p.value" %in% colnames(x)
   if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?lsmeans::summary' for details.")
 
@@ -81,8 +83,8 @@ apa_print.summary_emm <- function(
 
     conf_level <- NULL
   } else {
-    if(ci < 1) ci <- ci * 100
-    conf_level <- paste0(ci, "\\% CI")
+    if(conf_level < 1) conf_level <- conf_level * 100
+    conf_level <- paste0(conf_level, "\\% CI")
   }
 
   if(!p_supplied) {
@@ -91,98 +93,90 @@ apa_print.summary_emm <- function(
     df_colname <- NULL
     stat_colnames <- NULL
   } else {
-    dfdigits <- as.numeric(x$df %%1 > 0) * 2
+    df_colname <- names(tidy_x)[grepl("df\\.*", names(tidy_x))]
+    dfdigits <- as.numeric(x[[df_colname]] %%1 > 0) * 2
     dfdigits <- ifelse(is.na(dfdigits), 0, dfdigits) # In case df are Inf
-    multiple_df <- !isTRUE(all.equal(max(x$df), min(x$df)))
-    df_colname <- "df"
-    stat_colnames <- c("statistic", "p.value")
+    multiple_df <- !isTRUE(all.equal(max(x[[df_colname]]), min(x[[df_colname]])))
+    p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
+    stat_colnames <- c("statistic", df_colname, p_value)
   }
 
+
+  # Assamble table
+
+  ## Add split variables
   split_by <- attr(x, "by.vars") # lsmeans
   if(is.null(split_by)) split_by <- unlist(attr(x, "misc")[c("by.vars", "pri.vars")]) # emmeans
   pri_vars <- attr(x, "pri.vars")
   factors <- c(pri_vars, split_by)
 
 
-  # Assamble table
-  contrast_table <- data.frame(x, check.names = FALSE)
-  contrast_table[, factors] <- printnum(contrast_table[, factors])
+  ## Typeset columns
+  sanitzied_contrasts <- sanitize_terms(tidy_x[, factors])
+  tidy_x[, factors] <- prettify_terms(tidy_x[, factors])
 
-  if("null" %in% colnames(contrast_table)) { # This could go in a table note
-    contrast_table$null <- NULL
+  tidy_x$estimate <- printnum(tidy_x$estimate, ...)
+
+  if(ci_supplied) {
+    tidy_x$conf.int <- unlist(print_confint(tidy_x[, c("conf.low", "conf.high")]), ...)
+  } else {
+    tidy_x$std.error <- NULL
   }
 
-  contrast_table <- rename_column(
-    contrast_table
-    , c("lsmean", "emmean", "ratio", "effect.size")
-    , "estimate"
-  )
-  contrast_table <- rename_column(contrast_table, "SE", "std.error")
-
-  contrast_table$estimate <- printnum(contrast_table$estimate, ...)
-
   if(p_supplied) {
-    contrast_table <- rename_column(contrast_table, c("t.ratio", "z.ratio"), "statistic")
-    contrast_table$statistic <- printnum(contrast_table$statistic)
-    contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
-    contrast_table$p.value <- printp(contrast_table$p.value)
+    if(all(tidy_x$null.value == 0)) tidy_x$null.value <- NULL
+
+    tidy_x$statistic <- printnum(tidy_x$statistic)
+    tidy_x$df <- printnum(tidy_x$df, digits = dfdigits)
+    tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
+  }
+
+  ## Reorder columns
+  tidy_x <- cbind(
+    tidy_x[, 1:which(colnames(tidy_x) == "estimate")]
+    , tidy_x[which(colnames(tidy_x) == "conf.int")]
+    , tidy_x[which(colnames(tidy_x) == "null.value")]
+    , tidy_x[, stat_colnames] # Will be NULL if not supplied
+  )
+
+  ## Add variable labels
+  variable_labels(tidy_x) <- c(estimate = paste0("$", est_name, "$"))
+
+  if("contrast" %in% factors) {
+    variable_label(tidy_x) <- c(contrast = "Contrast")
   }
 
   if(ci_supplied) {
-    contrast_table <- rename_column(contrast_table, c("lower.CL", "asymp.LCL"), "ll")
-    contrast_table <- rename_column(contrast_table, c("upper.CL", "asymp.UCL"), "ul")
-
-    ci_table <- data.frame(conf.int = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
-    contrast_table$std.error <- NULL
-    contrast_table$ll <- NULL
-    contrast_table$ul <- NULL
-
-    contrast_table <- cbind(
-      contrast_table[, 1:which(colnames(contrast_table) == "estimate")]
-      , ci_table
-      , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
-    )
-    contrast_table$conf.int <- as.character(contrast_table$conf.int)
-    # contrast_table <- rename_column(contrast_table, "confint", "ci")
-  } else {
-    contrast_table$std.error <- NULL
+    variable_labels(tidy_x$conf.int) <- conf_level
   }
 
-  ## Set variable labels
   if(p_supplied) {
-    if(multiple_df) { # Put df in column heading
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "df", "p.value")
-      # contrast_table$ci <- as.character(contrast_table$ci)
-      variable_label(contrast_table) <- c(
-        estimate = paste0("$", est_name, "$")
-        , conf.int = conf_level
-        , statistic = "$t$"
-        , df = "$\\mathit{df}$"
-        , p.value = "$p$"
-      )
+    test_stat <- if(all(tidy_x$df == Inf)) "z" else if(!multiple_df) paste0("t(", unique(tidy_x$df), ")") else paste0("t")
+    variable_labels(tidy_x) <- c(statistic = paste0("$", test_stat, "$"))
+    variable_labels(tidy_x[[p_value]]) <- if(p_value == "p.value") "$p$" else if(p_value == "adj.p.value") "$p_{adj}$"
+
+    if("null.value" %in% names(tidy_x)) {
+      variable_labels(tidy_x) <- c(null.value = "$\\mu_0$")
     }
-  } else {
-    # colnames(contrast_table) <- c("estimate", "ci")
-    # contrast_table$ci <- as.character(contrast_table$ci)
-    variable_label(contrast_table) <- c(
-      estimate = paste0("$", est_name, "$")
-      , conf.int = conf_level
-    )
+
+    if(multiple_df) { # Put df in column heading
+      variable_label(tidy_x) <- c(, df = "$\\mathit{df}$")
+    }
   }
 
-  contrast_table <- default_label(contrast_table) # Add default labels for stratifying factors
+  tidy_xs <- default_label(tidy_x) # Add default labels for stratifying factors
 
   ## Add contrast names
-  # rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
-  # contrast_table <- contrast_table[, which(colnames(contrast_table) != "contrast")]
-  if(!is.null(contrast_names)) contrast_table$contrast <- contrast_names
+  # rownames(tidy_x) <- if(!is.null(contrast_names)) contrast_names else tidy_x$contrast
+  # tidy_x <- tidy_x[, which(colnames(tidy_x) != "contrast")]
+  if(!is.null(contrast_names)) tidy_x$contrast <- contrast_names
   if(length(factors) > 1) {
-    contrast_row_names <- apply(contrast_table[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])], 1, paste, collapse = "_")
+    contrast_row_names <- apply(tidy_x[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])], 1, paste, collapse = "_")
   } else {
-    contrast_row_names <- contrast_table[, factors]
+    contrast_row_names <- tidy_x[, factors]
   }
 
-  rownames(contrast_table) <- sanitize_terms(
+  rownames(tidy_x) <- sanitize_terms(
     gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
       "^\\_|\\_(\\_)", "\\1"
       , gsub(" |\\.", "", contrast_row_names)
@@ -190,24 +184,24 @@ apa_print.summary_emm <- function(
   )
 
   ## Add structuring columns
-  if(length(factors) > 1 && !any(contrast_table[, factors] == ".")) {
+  if(length(factors) > 1 && !any(tidy_x[, factors] == ".")) {
 
     factors[-which(factors == "contrast")] <- rev(factors[-which(factors == "contrast")])
     str_factors <- rev(c(pri_vars[-1], split_by))
-    str_cols <- contrast_table[, str_factors, drop = FALSE]
+    str_cols <- tidy_x[, str_factors, drop = FALSE]
     for(i in seq_along(str_factors)) {
       if(i > 1) {
-        tmp <- apply(contrast_table[, str_factors[1:i]], 1, paste, collapse = "_")
+        tmp <- apply(tidy_x[, str_factors[1:i]], 1, paste, collapse = "_")
       } else {
-        tmp <- contrast_table[, str_factors[i]]
+        tmp <- tidy_x[, str_factors[i]]
       }
-      str_cols[, str_factors[i]] <- as.character(contrast_table[, str_factors[i]])
+      str_cols[, str_factors[i]] <- as.character(tidy_x[, str_factors[i]])
       str_cols[duplicated(tmp), str_factors[i]] <- ""
     }
-    contrast_table[, str_factors] <- str_cols[, str_factors]
-    str_col_order <- c(str_factors, colnames(contrast_table)[!colnames(contrast_table) %in% str_factors])
-    contrast_table <- contrast_table[, str_col_order]
-    contrast_table[, pri_vars[1]] <- as.character(contrast_table[, pri_vars[1]])
+    tidy_x[, str_factors] <- str_cols[, str_factors]
+    str_col_order <- c(str_factors, colnames(tidy_x)[!colnames(tidy_x) %in% str_factors])
+    tidy_x <- tidy_x[, str_col_order]
+    tidy_x[, pri_vars[1]] <- as.character(tidy_x[, pri_vars[1]])
 
     # contrast_list <- split(x, x[, factors])
     # contrast_list <- lapply(contrast_list, str_column, i)
@@ -221,40 +215,38 @@ apa_print.summary_emm <- function(
     #   x[, split_by] <- x[1, split_by]
     #   x
     # })
-    # contrast_table <- do.call(rbind, prep_table)
-    # contrast_table <- droplevels(contrast_table)
+    # tidy_x <- do.call(rbind, prep_table)
+    # tidy_x <- droplevels(tidy_x)
   # } else {
-  #   contrast_table <- x
+  #   tidy_x <- x
   # }
   }
 
-  if("contrast" %in% factors) {
-    variable_label(contrast_table) <- c(contrast = "Contrast")
-  }
 
-  if(any(contrast_table[, factors] == ".")) {
-    contrast_table[, factors] <- apply(contrast_table[, factors], 2, gsub, pattern = "\\.", replacement = "")
+
+  if(any(tidy_x[, factors] == ".")) {
+    tidy_x[, factors] <- apply(tidy_x[, factors], 2, gsub, pattern = "\\.", replacement = "")
   }
 
   # Concatenate character strings and return as named list
   apa_res <- init_apa_results()
 
   if(ci_supplied) {
-    apa_res$estimate <- apply(contrast_table, 1, function(y) {
+    apa_res$estimate <- apply(tidy_x, 1, function(y) {
       paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " ", y["ci"])
     })
   } else {
-    apa_res$estimate <- apply(contrast_table, 1, function(y) {
+    apa_res$estimate <- apply(tidy_x, 1, function(y) {
       paste0("$", est_name, " = ", y["estimate"], "$")
     })
   }
 
   if(p_supplied) {
-    apa_res$statistic <- apply(contrast_table, 1, function(y) {
+    apa_res$statistic <- apply(tidy_x, 1, function(y) {
       paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", add_equals(y["p.value"]), "$")
     })
 
-    # contrast_table[, df_colname] <- NULL
+    # tidy_x[, df_colname] <- NULL
 
     apa_res$full_result <- paste(apa_res$est, apa_res$stat, sep = ", ")
     names(apa_res$full_result) <- names(apa_res$est)
@@ -264,11 +256,11 @@ apa_print.summary_emm <- function(
 
   if(p_supplied) {
     if(!multiple_df) { # Remove df column and put df in column heading
-      df <- contrast_table$df[1]
-      contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
-      # contrast_table$ci <- as.character(contrast_table$ci)
-      variable_label(contrast_table) <- c(
+      df <- tidy_x$df[1]
+      tidy_x <- tidy_x[, which(colnames(tidy_x) != "df")]
+      # colnames(tidy_x) <- c("estimate", "ci", "statistic", "p.value")
+      # tidy_x$ci <- as.character(tidy_x$ci)
+      variable_label(tidy_x) <- c(
         estimate = paste0("$", est_name, "$")
         , conf.int = conf_level
         , statistic = paste0("$t(", df, ")$")
@@ -277,7 +269,7 @@ apa_print.summary_emm <- function(
     }
   }
 
-  apa_res$table <- contrast_table
+  apa_res$table <- tidy_x
   attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
 
   apa_res
