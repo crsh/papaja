@@ -93,7 +93,7 @@ test_that(
     model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, ci = 0.5)
     expect_apa_results(model_comp_boot2)
 
-    expect_equal(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80$, $.84]$")
+    expect_identical(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80, .84]$")
 
     # Correct df for model comparisons (issue #433)
     comp1 <- apa_print(list(a = mod3, b = mod2, c = mod1), boot_samples = 0)
