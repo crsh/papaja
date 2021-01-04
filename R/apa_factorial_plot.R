@@ -388,7 +388,7 @@ apa_factorial_plot.default <- function(
     tmp_main <- ellipsis$main
 
     # by default, only plot legend in topright plot:
-    tmp_plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
+    tmp_plot <- seq_len(nlevels(data[[factors[3]]]))==nlevels(data[[factors[3]]])
     names(tmp_plot) <- levels(data[[factors[3]]])
 
     ellipsis$args_legend <- defaults(
@@ -402,7 +402,7 @@ apa_factorial_plot.default <- function(
     )
 
     if(is.null(ellipsis$args_legend$plot)) {
-      ellipsis$args_legend$plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
+      ellipsis$args_legend$plot <- seq_len(nlevels(data[[factors[3]]]))==nlevels(data[[factors[3]]])
     }
 
     if(length(ellipsis$args_legend$plot)!=nlevels(data[[factors[3]]])) {
@@ -576,7 +576,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       side = 1
     )
     , set.if.null = list(
-      at = 1:nlevels(y.values[[factors[1]]]) - .5
+      at = seq_len(nlevels(y.values[[factors[1]]])) - .5
       , labels = levels(y.values[[factors[1]]])
       , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
     )
@@ -706,7 +706,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       side = 1
     )
     , set.if.null = list(
-      at = 1:nlevels(y.values[[factors[1]]])-.5
+      at = seq_len(nlevels(y.values[[factors[1]]])) - .5
       , labels = levels(y.values[[factors[1]]])
     )
   )
@@ -813,7 +813,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , set.if.null = list(
         x = "topright"
         , legend = levels(y.values[[factors[2]]])
-        , pch = args_points$pch[1:nlevels(y.values[[factors[2]]])]
+        , pch = args_points$pch[seq_len(nlevels(y.values[[factors[2]]]))]
         , lty = args_lines$lty
         , bty = "n"
         , pt.bg = args_points$bg
@@ -842,15 +842,15 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
     if(is.matrix(intercept)) {
       diff <- (args_plot_window$xlim[2] - args_plot_window$xlim[1])/(ncol(intercept)-1)
       x.vector <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff)
-      for(i in 1:nrow(intercept)) {
-        for (j in 1:ncol(intercept)) {
+      for(i in seq_len(nrow(intercept))) {
+        for (j in seq_len(ncol(intercept))) {
           lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i, j], 2))
         }
       }
     } else {
       n_lines <- length(intercept)
       x_coordinates <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff(args_plot_window$xlim)/n_lines)
-      for (i in 1:n_lines){
+      for (i in seq_len(n_lines)){
         y_coordinates <- rep(intercept[i], 2)
         lines(x = x_coordinates[(0:1) + i], y = y_coordinates)
       }
