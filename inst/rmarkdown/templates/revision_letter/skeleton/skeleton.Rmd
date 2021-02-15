@@ -56,13 +56,8 @@ This is our response
 
 # References
 
-\noindent
-\vspace{-0.5cm}
-
 \begingroup
-\setlength{\parindent}{-0.5in}
-\setlength{\leftskip}{0.5in}
 
-<div id = "refs"></div>
+<div id="refs" custom-style="Bibliography"></div>
 
 \endgroup
