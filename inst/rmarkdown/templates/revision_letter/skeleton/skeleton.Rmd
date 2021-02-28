@@ -58,6 +58,6 @@ This is our response
 
 \begingroup
 
-<div id="refs" custom-style="Bibliography"></div>
+<div id="refs"></div>
 
 \endgroup
