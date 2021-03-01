@@ -471,9 +471,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
 
   # Add necessary includes
-  header_includes <- c()
-  after_body_includes <- c()
-  before_body_includes <- c()
+  header_includes <- NULL
+  after_body_includes <- NULL
+  before_body_includes <- NULL
 
 
   ## Essential manuscript parts

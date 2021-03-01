@@ -352,7 +352,7 @@ prettify_terms <- function(x, standardized = FALSE) {
   x <- gsub(pattern = "\\(|\\)|`|.+\\$", replacement = "", x = x)                 # Remove parentheses and backticks
   x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
   x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
-  for (i in 1:length(x)) {
+  for (i in seq_along(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
     x2 <- capitalize(x2)
     x[i] <- paste(x2, collapse = " $\\times$ ")
@@ -557,8 +557,8 @@ determine_within_between <- function(data, id, factors) {
     length(unique(x))
   }
 
-  within <- c()
-  between <- c()
+  within <- NULL
+  between <- NULL
 
   for (i in factors) {
     n_levels <- stats::aggregate(x = data[[i]], by = list(data[[id]]), FUN = number_of_levels)
