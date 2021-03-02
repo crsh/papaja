@@ -322,7 +322,7 @@ apa6_doc <- function(...) {
 # Set hook to print default numbers
 inline_numbers <- function (x) {
 
-  if(class(x) %in% c("difftime")) x <- as.numeric(x)
+  if(inherits(x, "difftime")) x <- as.numeric(x)
   if(is.numeric(x)) {
     printed_number <- ifelse(
       x == round(x)
@@ -471,9 +471,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
 
   # Add necessary includes
-  header_includes <- c()
-  after_body_includes <- c()
-  before_body_includes <- c()
+  header_includes <- NULL
+  after_body_includes <- NULL
+  before_body_includes <- NULL
 
 
   ## Essential manuscript parts
@@ -755,7 +755,6 @@ revert_original_input_file <- function(x = 1) {
   hashed_path <- file.path(dirname(input_file), hashed_name)
 
   if(file.exists(hashed_path)) {
-
     if(!file.copy(hashed_path, input_file, overwrite = TRUE)) {
       stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", basename(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
     } else {

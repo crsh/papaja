@@ -225,7 +225,7 @@ printnum.numeric <- function(
   }
 
   if(any(not_gt1)) {
-    if(any(not_gt1 & abs(x) > 1)) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
+    if(any(not_gt1 & abs(x) > 1, na.rm = TRUE)) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
 
     limit <- 1 - 1/ten_power_digits
 

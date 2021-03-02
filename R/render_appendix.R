@@ -93,10 +93,10 @@ render_appendix <- function(
     # Create TeX-file
     md_file <- paste0(tools::file_path_sans_ext(tools::file_path_as_absolute(x)), ".md")
     md_connection <- file(md_file, encoding = "UTF-8")
-    on.exit(closeAllConnections())
+    on.exit(close(md_connection))
 
     writeLines(md_fragment, con = md_connection, sep = "\n", useBytes = TRUE)
-    on.exit(file.remove(md_file))
+    on.exit(file.remove(md_file), add=TRUE)
 
     new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
 
@@ -108,6 +108,7 @@ render_appendix <- function(
 
     # Add appendix environment
     tex_connection <- file(new_name, encoding = "UTF-8")
+    on.exit(close(tex_connection), add=TRUE)
     tex <- readLines(con = tex_connection)
     tex <- enc2native(tex)
 
