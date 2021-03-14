@@ -6,8 +6,7 @@
 #' @param x Output object. See details.
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{"GG"} for Greenhouse-Geisser or \code{"HF"} for Huyn-Feldt methods or \code{"none"}). Default is \code{"GG"}.
 #' @param intercept Logical. Indicates if the intercept term should be included in output.
-#' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
-#'   Note that eta-squared is calculated correctly if and only if the design is balanced.
+#' @param es Character, function, or data frame. Determines which measures of effect size is to be used. See details.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
 #' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
@@ -17,6 +16,16 @@
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
+#'
+#'    Argument `es` determines which measure of effect size is to be used: It is currently possible to provide
+#'    a character, where `"ges"` calculates generalized eta squared,`"pes"` calculates partial eta squared, and `"es"`
+#'    calculates eta squared. Note that eta squared is calculated correctly if and only if the design is balanced.
+#'
+#'    It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf high`, which allows
+#'    for including custom effect-size measures.
+#'
+#'    A third option is to provide a function that will be used to calculate effect-size measures from `x`. See the
+#'    examples section for an example using the \pkg{effectsize} package.
 #'
 #' @return
 #'    \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
@@ -38,6 +47,10 @@
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
 #'    apa_print(npk_aov)
+#'
+#'    # Use the effectsize package to calculate partial eta-squared with
+#'    # confidence intervals
+#'    apa_print(npk_aov, es = effectsize::eta_squared)
 #' @method apa_print aov
 #' @export
 
