@@ -52,7 +52,9 @@ Suggests:
   lmerTest,
   nlme,
   covr,
-  effectsize
+  effectsize (>= 0.4.3-1)
+Remotes:
+  easystats/effectsize
 SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 LazyData: yes
