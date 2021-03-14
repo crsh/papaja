@@ -3,7 +3,7 @@
 \name{glue_apa_results}
 \alias{glue_apa_results}
 \alias{add_glue_to_apa_results}
-\title{Create a new `apa_results` object}
+\title{Create a New `apa_results` Object}
 \usage{
 glue_apa_results(x = NULL, ...)
 
@@ -14,7 +14,9 @@ add_glue_to_apa_results(
   container,
   sublist = NULL,
   term_names = NULL,
-  in_paren = FALSE
+  in_paren = FALSE,
+  est_first = TRUE,
+  simplify = TRUE
 )
 }
 \arguments{
@@ -27,25 +29,32 @@ Named arguments are taken to be temporary variables available for substitution.}
 
 \item{est_glue}{Character. (Named vector of) expressions string(s) to
  format. Each string creates a new (named) element in the
-`estimate`-sublist.}
+`estimate` sub-list.}
 
 \item{stat_glue}{Character. (Named vector of) expressions string(s) to
  format. Each string creates a new (named) element in the
-`statistic`-sublist.}
+`statistic` sub-list.}
 
 \item{container}{List of class `apa_results` to add the glued results to.}
 
-\item{sublist}{Character. Name of (new) sublist in `estimate`
+\item{sublist}{Character. Name of (new) sub-list in `estimate`
 `statistics`, and `full_result` to append glued results to (e.g.,
 `modelfit`).}
 
 \item{term_names}{Character. Used as names for the `estimate`-,
-`statistics`-, and `full_result`-sublists, if multiple estimates or
+`statistics`-, and `full_result` sub-lists, if multiple estimates or
 statistics are glued.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
+
+\item{est_first}{Logical. Determines in which order `estimate` and `statistic`
+are glued together to `full_result`.}
+
+\item{simplify}{Logical. Determines whether the `estimate`, `statistic`, and
+`full_result` sub-lists should be simplified if only one term is available
+from the model object.}
 }
 \value{
 Returns a list of class `apa_results`

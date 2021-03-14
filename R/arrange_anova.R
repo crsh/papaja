@@ -46,7 +46,7 @@ arrange_anova.default <- function(x, ...) {
 
 arrange_anova.anova <- function(x) {
 
-  .Deprecated("arrange_anova.anova() is deprecated")
+  # .Deprecated("arrange_anova.anova() is deprecated")
 
 
   object <- as.data.frame(
@@ -100,6 +100,7 @@ arrange_anova.anova <- function(x) {
 #' @method arrange_anova summary.aov
 
 arrange_anova.summary.aov <- function(x) {
+
   variance_table <- broom::tidy(x[[1]])
   variance_table <- as.data.frame(variance_table)
 

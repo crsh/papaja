@@ -4,8 +4,8 @@
 #' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
 #' @param x Output object. See details.
-#' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.
-#' @param intercept Logical. Indicates if intercept test should be included in output.
+#' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{"GG"} for Greenhouse-Geisser or \code{"HF"} for Huyn-Feldt methods or \code{"none"}). Default is \code{"GG"}.
+#' @param intercept Logical. Indicates if the intercept term should be included in output.
 #' @param es Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
 #'   Note that eta-squared is calculated correctly if and only if the design is balanced.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
@@ -42,7 +42,7 @@
 #' @export
 
 apa_print.aov <- function(x, ...) {
-  apa_print(summary(x)[[1]], ...) # apa_print.anova
+  apa_print(summary(x)[[1]], .x = x, ...) # apa_print.anova
 }
 
 
@@ -60,7 +60,7 @@ apa_print.summary.aov <- function(x, ...) {
 #' @export
 
 apa_print.aovlist <- function(x, ...) {
-  apa_print(summary(x), ...) # apa_print.summary.aovlist
+  apa_print(summary(x), .x = x, ...) # apa_print.summary.aovlist
 }
 
 
@@ -78,8 +78,16 @@ apa_print.summary.aovlist <- function(
   , ...
 ) {
 
-  variance_table <- arrange_anova(x)
-  tinylabels::variable_labels(variance_table) <- c(
+  ellipsis <- list(...)
+  .x <- ellipsis$.x
+  ellipsis$.x <- NULL
+
+  intercept <- isTRUE(intercept)
+
+
+  canonical_table <- arrange_anova(x)
+
+  tinylabels::variable_labels(canonical_table) <- c(
     term = "Effect"
     , df = "$\\mathit{df}$"
     , statistic = "$F$"
@@ -87,26 +95,36 @@ apa_print.summary.aovlist <- function(
     , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
   )
 
-  variance_table <- add_effect_sizes(variance_table, es = es, mse = mse, observed = observed, intercept = intercept)
+  canonical_table <- add_custom_effect_sizes(
+    canonical_table = canonical_table
+    , .x = .x
+    , es = es
+    , mse = mse
+    , observed = observed
+    , intercept = intercept
+  )
 
-  variance_table <- subset(variance_table, term != "(Intercept)")
+  if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
+
 
   ellipsis <- defaults(
-    list(...)
+    ellipsis
     , set.if.null = list(
       digits = 3L
       , gt1 = FALSE
     )
   )
-  ellipsis$x <- variance_table
-  beautiful_table <- do.call(beautify, ellipsis)
+  ellipsis$x <- canonical_table
+  beautiful_table <- do.call("beautify", ellipsis)
+
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(unlabel(variance_table$term))
+    , term_names = sanitize_terms(unlabel(canonical_table$term))
     , in_paren = in_paren
     , est_first = FALSE
+    , simplify = FALSE
   )
 }
 
@@ -115,14 +133,20 @@ apa_print.summary.aovlist <- function(
 #' @method apa_print Anova.mlm
 #' @export
 
-apa_print.Anova.mlm <- function(x, correction = getOption("papaja.sphericity_correction"), intercept = FALSE, ...) {
+apa_print.Anova.mlm <- function(
+  x
+  , correction = getOption("papaja.sphericity_correction")
+  , intercept = FALSE
+  , ...
+) {
+
   if(correction != "none") {
     summary_x <- summary(x, multivariate = FALSE) # car:::summary.Anova.mlm
   } else { # Corrections are always calculated and can throw warnings; hope I don't regret this
     summary_x <- suppressWarnings(summary(x, multivariate = FALSE)) # car:::summary.Anova.mlm
   }
 
-  apa_print(summary_x, correction = correction, intercept = intercept, ...)
+  apa_print(summary_x, correction = correction, intercept = intercept, .x = x, ...)
 }
 
 
@@ -140,26 +164,39 @@ apa_print.summary.Anova.mlm <- function(
   , in_paren = FALSE
   , ...
 ) {
+
+  intercept <- isTRUE(intercept)
+  in_paren  <- isTRUE(in_paren)
+
   arranged_table <- arrange_anova(x, correction) # arrange_anova.summary.Anova.mlm
 
+  ellipsis <- list(...)
+  .x <- ellipsis$.x
+  ellipsis$.x <- NULL
+
   canonical_table <- canonize(arranged_table)
-  # effectsize package has no methods for summary.Anova.mlm
-  canonical_table <- add_effect_sizes(canonical_table, es = es, mse = mse, observed = observed, intercept = intercept)
+  canonical_table <- add_custom_effect_sizes(
+    canonical_table
+    , es = es
+    , mse = mse
+    , observed = observed
+    , intercept = intercept
+    , .x = .x
+  )
 
   # Remove intercept if the user doesn't want it:
-  if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", ]
+  if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 
   ellipsis <- defaults(
-    list(...)
+    ellipsis
     , set.if.null = list(
       digits = 3L
       , gt1 = FALSE
     )
   )
   ellipsis$x <- canonical_table
+  beautiful_table <- do.call("beautify", ellipsis)
 
-  beautiful_table <- do.call(beautify, ellipsis)
-  # beautiful_table
 
   glue_apa_results(
     beautiful_table
@@ -168,10 +205,11 @@ apa_print.summary.Anova.mlm <- function(
     , term_names = sanitize_terms(unlabel(canonical_table$term))
     , in_paren = in_paren
     , est_first = FALSE
+    , simplify = FALSE
   )
-
-  # print_anova(variance_table, intercept = intercept, ...)
 }
+
+
 
 
 #' @rdname apa_print.aov
@@ -182,8 +220,6 @@ apa_print.afex_aov <- function(
   x
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , es = effectsize::eta_squared(x, generalized = TRUE)
-  , in_paren = FALSE
   , ...
 ) {
   validate(intercept, check_class = "logical", check_length = 1)
@@ -193,44 +229,11 @@ apa_print.afex_aov <- function(
     warning("In your call of afex::aov_car() you requested the intercept term, but now you did not (in apa_print 'intercept = FALSE' is the default). Thus, the intercept term will be omitted; make sure this is what you want.")
   }
 
-
-
-  if("Anova.mlm" %in% class(x$Anova)) {
+  if(inherits(x$Anova, "Anova.mlm")) {
     summary_x <- summary(x$Anova)
-    apa_print(summary_x, correction = correction, intercept = intercept, ...)
+    apa_print(summary_x, correction = correction, intercept = intercept, .x = x, ...) # apa_print.summary.Anova.mlm
   } else {
-    xz <- as.data.frame(x$Anova, stringsAsFactors = FALSE)
-    xz$Effect <- rownames(xz)
-    without_es <- canonize(xz)
-    without_es <- remove_residuals_row(without_es)
-    # Remove intercept if the user doesn't want it:
-    # if(!intercept) without_es <- without_es[without_es$term != "(Intercept)", ]
-
-    # effect sizes for interceps are not created with effectsize package, intercept is
-    # silently deleted by merge()
-    x_es <- tidy_es(es)
-
-    without_es <- merge(without_es, x_es)
-
-    ellipsis <- defaults(
-      list(...)
-      , set = list(
-        x = without_es
-      )
-      , set.if.null = list(
-        digits = 3L
-        , gt1 = FALSE
-      )
-    )
-    y <- do.call(beautify, ellipsis)
-    glue_apa_results(
-      y
-      , est_glue = construct_glue(y, "estimate")
-      , stat_glue = construct_glue(y, "statistic")
-      , term_names = sanitize_terms(tinylabels::unlabel(unname(without_es$term)))
-      , in_paren = in_paren
-      , est_first = FALSE
-    )
+    apa_print(x$Anova, intercept = intercept, ...) # apa_print.anova
   }
 }
 
@@ -251,6 +254,13 @@ apa_print.anova <- function(
 ) {
   # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
+  ellipsis <- list(...)
+
+  .x <- ellipsis$.x
+  ellipsis$.x <- NULL
+  if(is.function(es) && is.null(.x)) .x <- x
+
+  intercept <- isTRUE(intercept)
 
   object_heading <- attr(x, "heading")
 
@@ -258,8 +268,6 @@ apa_print.anova <- function(
     # Model comparisons from lmerTest::anova
     stop("Model-comparison objects of class 'anova' are not supported.")
   }
-
-  # variance_table <- arrange_anova(x)
 
   # car::LeveneTest ----------------------------------------------------------
   if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
@@ -273,8 +281,8 @@ apa_print.anova <- function(
         y
         , est_glue = construct_glue(y, "estimate")
         , stat_glue = construct_glue(y, "statistic")
-        , term_names = character(1L)
         , in_paren = in_paren
+        , simplify = TRUE
       )
     )
   } else if(any(grepl("Satterthwaite|Kenward", object_heading))) {
@@ -289,13 +297,15 @@ apa_print.anova <- function(
     # Canonize, beautify, and glue container
     canonical_table <- canonize(x)
     beautiful_table <- beautify(canonical_table, ...)
+
     return(
       glue_apa_results(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = sanitize_terms(tinylabels::unlabel(x$Effect))
+        , term_names = sanitize_terms(x$Effect)
         , in_paren = in_paren
+        , simplify = FALSE
       )
     )
   } else if(any(grepl("Mixed Model", object_heading))) {
@@ -336,6 +346,7 @@ apa_print.anova <- function(
         , stat_glue = construct_glue(beautiful_table, "statistic")
         , term_names = sanitize_terms(tinylabels::unlabel(x$Effect))
         , in_paren = in_paren
+        , simplify = FALSE
       )
     )
     # lmerTest::ranova ---------------------------------------------------------
@@ -344,14 +355,26 @@ apa_print.anova <- function(
   }
   # anova::lm (single model) ----
   # Canonize, beautify, glue ----
-  x$Effect <- trimws(rownames(x))
-  canonical_table <- canonize(x)
+  y <- as.data.frame(x, stringsAsFactors = FALSE)
+  y$Effect <- trimws(rownames(y))
 
+  canonical_table <- canonize(y)
   canonical_table <- remove_residuals_row(canonical_table)
-  canonical_table <- add_effect_sizes(canonical_table, es = es, mse = mse, observed = observed, intercept = intercept)
+
+  canonical_table <- add_custom_effect_sizes(
+    es = es
+    , canonical_table = canonical_table
+    , mse = mse
+    , observed = observed
+    , intercept = intercept
+    , .x = .x
+  )
+
+  if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
+
 
   ellipsis <- defaults(
-    list(...)
+    ellipsis
     , set.if.null = list(
       digits = 3L
       , gt1 = FALSE
@@ -359,7 +382,7 @@ apa_print.anova <- function(
   )
   ellipsis$x <- canonical_table
 
-  beautiful_table <- do.call(beautify, ellipsis)
+  beautiful_table <- do.call("beautify", ellipsis)
 
   return(
     glue_apa_results(
@@ -369,6 +392,7 @@ apa_print.anova <- function(
       , term_names = sanitize_terms(tinylabels::unlabel(canonical_table$term))
       , in_paren = in_paren
       , est_first = FALSE
+      , simplify = FALSE
     )
   )
 }

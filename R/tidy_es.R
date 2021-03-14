@@ -31,8 +31,7 @@ tidy_es.effectsize_table <- function(x) {
   x$conf.int <- lapply(X = x$conf.int, unlist)
   attr(x$conf.int, "conf.level") <- unique(x$CI)
   x$Effect <- x$Parameter
-  x$CI_low <- x$CI_high <- x$CI <- x$Parameter <- NULL
-
+  x$CI_low <- x$CI_high <- x$CI <- x$Parameter <- x$Group <- NULL
   canonize(x)
 }
 
