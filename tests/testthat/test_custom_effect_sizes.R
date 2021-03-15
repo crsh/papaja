@@ -5,6 +5,7 @@ test_that(
 
     # Treat as between-subjects design, use Type-2 sums of squares
     aov_out <- aov(yield ~ N * P, npk)
+    summary_aov <- summary(aov_out)
 
     ges <- function(x, generalized = TRUE, include_intercept = TRUE, ...) {
       effectsize::eta_squared(x, generalized = generalized, include_intercept = include_intercept, ...)
@@ -13,6 +14,7 @@ test_that(
     # 'aov/lm' class
     apa_with_function <- apa_print(aov_out, es = ges)
     apa_with_df <- apa_print(aov_out, es = ges(aov_out, generalized = TRUE, include_intercept = FALSE))
+    apa_summary_aov <- apa_print(summary_aov, es = ges)
 
     expect_apa_results(
       apa_with_function
@@ -28,7 +30,7 @@ test_that(
     )
 
     expect_identical(
-      apa_with_df$estimate
+      object = apa_with_df$estimate
       , expected = list(
         N = "$\\hat{\\eta}^2_G = .224$, 90\\% CI $[.017, .460]$"
         , P = "$\\hat{\\eta}^2_G = .013$, 90\\% CI $[.000, .181]$"
@@ -39,6 +41,11 @@ test_that(
     expect_identical(
       apa_with_function
       , apa_with_df
+    )
+
+    expect_identical(
+      object = apa_summary_aov
+      , expected = apa_with_df
     )
 
 
@@ -85,5 +92,13 @@ test_that(
       apa_print(stats_anova_lm, es = ges)
       , apa_with_function
     )
+
+    # Non-supported output from summary()
+    # summary.Anova.mlm
+    expect_error(
+      apa_print(summary(afex_out$Anova), es = ges)
+      , regexp = "Cannot apply custom effect-size function to this class of object."
+    )
+
   }
 )
