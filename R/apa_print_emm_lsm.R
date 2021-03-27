@@ -143,7 +143,7 @@ apa_print.summary_emm <- function(
       , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
     )
     contrast_table$conf.int <- as.character(contrast_table$conf.int)
-    # contrast_table <- rename_column(contrast_table, "confint", "ci")
+    # contrast_table <- rename_column(contrast_table, "confint", "conf.int")
   } else {
     contrast_table$std.error <- NULL
   }
@@ -151,7 +151,7 @@ apa_print.summary_emm <- function(
   ## Set variable labels
   if(p_supplied) {
     if(multiple_df) { # Put df in column heading
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "df", "p.value")
+      # colnames(contrast_table) <- c("estimate", "conf.int", "statistic", "df", "p.value")
       # contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
         estimate = paste0("$", est_name, "$")
@@ -162,7 +162,7 @@ apa_print.summary_emm <- function(
       )
     }
   } else {
-    # colnames(contrast_table) <- c("estimate", "ci")
+    # colnames(contrast_table) <- c("estimate", "conf.int")
     # contrast_table$ci <- as.character(contrast_table$ci)
     variable_label(contrast_table) <- c(
       estimate = paste0("$", est_name, "$")
@@ -241,7 +241,7 @@ apa_print.summary_emm <- function(
 
   if(ci_supplied) {
     apa_res$estimate <- apply(contrast_table, 1, function(y) {
-      paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " ", y["ci"])
+      paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " $", gsub(" ", "~", y["conf.int"]), "$")
     })
   } else {
     apa_res$estimate <- apply(contrast_table, 1, function(y) {
@@ -266,7 +266,7 @@ apa_print.summary_emm <- function(
     if(!multiple_df) { # Remove df column and put df in column heading
       df <- contrast_table$df[1]
       contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
+      # colnames(contrast_table) <- c("estimate", "conf.int", "statistic", "p.value")
       # contrast_table$ci <- as.character(contrast_table$ci)
       variable_label(contrast_table) <- c(
         estimate = paste0("$", est_name, "$")

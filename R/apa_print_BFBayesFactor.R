@@ -54,21 +54,22 @@ apa_print.BFBayesFactor <- function(
   , hdi = 0.95
   , standardized = FALSE
   , ratio_subscript = "10"
-  , auto_invert = TRUE
+  , auto_invert = FALSE
   , scientific = TRUE
   , max = 1000
   , min = 1 / max
   , evidential_boost = NULL
   , ...
 ) {
-  if(length(x) > 1) {
-    ellipsis <- list(...)
-    ellipsis$ratio_subscript <- ratio_subscript
-    ellipsis$auto_invert <- auto_invert
-    ellipsis$scientific <- scientific
-    ellipsis$max <- max
-    ellipsis$min <- min
+  ellipsis <- list(...)
+  ellipsis$x <- x
+  ellipsis$ratio_subscript <- ratio_subscript
+  ellipsis$auto_invert <- auto_invert
+  ellipsis$scientific <- scientific
+  ellipsis$max <- max
+  ellipsis$min <- min
 
+  if(length(x) > 1) {
     bf <- c()
     for(i in seq_along(x)) {
       ellipsis$x <- x[i]
@@ -78,7 +79,9 @@ apa_print.BFBayesFactor <- function(
     }
     bf <- as.list(bf)
     names(bf) <- names(x)$numerator
-  } else bf <- apa_print_bf(x, ...)
+  } else {
+    bf <- do.call("apa_print_bf", ellipsis)
+  }
 
   apa_res <- init_apa_results()
   apa_res$statistic <- bf
@@ -93,7 +96,6 @@ apa_print.BFBayesFactor <- function(
       , standardized = standardized
     )
   }
-
 
   apa_res$full_result <- paste0(apa_res$estimate, ", ", apa_res$statistic)
 
@@ -177,7 +179,7 @@ apa_print_bf.default <- function(x, ...) no_method(x)
 apa_print_bf.numeric <- function(
   x
   , ratio_subscript = "10"
-  , auto_invert = TRUE
+  , auto_invert = FALSE
   , escape = TRUE
   , scientific = TRUE
   , max = 1000
