@@ -10,12 +10,17 @@ output        : github_document
 
 [![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last commit&logo=github&logoColor=%23FFF) ![Travis build status](https://img.shields.io/travis/crsh/papaja?label=Build&logo=travis-ci&logoColor=%23FFF) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
 
-`papaja` is an R package including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R functions that facilitate reporting results of your analyses and creating figures and tables in accordance with APA guidelines.
+`papaja` is an R package that facilitates creating reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). `papaja` provides
+
+- an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to create PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
+- Functions to **typeset** the results from **statistical analyses**,
+- functions to create **tables**, and
+- functions to create **figures** in accordance with APA guidelines.
   
 
 ## Example
 
-Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
+Take a look at the [R Markdown file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions.
 For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 If the manual does not answer your question, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa).
@@ -65,7 +70,7 @@ The functions `apa_print()` and `apa_table()` facilitate reporting results of yo
 
 Drop a supported analysis result, such as an `htest`- or `lm`-object, into `apa_print()` and receive a list of possible character strings that you can use to report the results of your analysis.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 library("papaja")
 ```
 
@@ -122,17 +127,19 @@ knitr::kable(print_classes)
 
 Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`) if you work with factorial designs:
 
-```{r}
+```{r eval = FALSE, echo = FALSE}
+par(las = 1)
+
 apa_factorial_plot(
   data = npk
   , id = "block"
   , dv = "yield"
   , factors = c("N", "P", "K")
   , ylim = c(0, 80)
-  , level = .34
-  , las = 1
+  , level = .68
   , ylab = "Yield"
   , plot = c("swarms", "lines", "error_bars", "points")
+  , jit = .06
 )
 ```
 
