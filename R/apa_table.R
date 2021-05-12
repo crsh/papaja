@@ -1,45 +1,64 @@
 #' Prepare table for printing
 #'
-#' Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
-#' (6th edition).
+#' Formats \code{matrices} and \code{data.frames} to report them as tables
+#' according to APA guidelines.
 #'
-#' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
+#' @param x Object to print, can be \code{matrix}, \code{data.frame}, or
+#'   \code{list}. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
-#' @param added_stub_head Character. Used as stub head (name of first column) if \code{row.names = TRUE}
-#'    is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.
-#' @param col_spanners List. A named list of vectors of length 2 that contain the first and last column to
-#'    span. The name of each list element containing the vector is used as grouping column name. Ignored
-#'    in MS Word documents.
-#' @param stub_indents List. A named list of vectors that contain indeces of the rows to indent. The name
-#'    of each list element containing the vector is used as title for indented sections.
-#' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
-#'    followed by a horizontal rule; ignored in MS Word documents.
-#' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
-#'    at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
-#'    to indicate order of preference (\code{htb}); ignored when \code{longtable = TRUE}, \code{landscape = TRUE},
-#'    and in MS Word documents.
-#' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
-#'    documents.
-#' @param font_size Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.
-#' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
-#'    column names, row names, caption, note and table contents are escaped.
-#' @param span_text_columns Logical. If \code{TRUE} tables span across text columns
-#'    in two-column PDF documents (e.g. when setting \code{classoption: jou}).
-#'    Ignored in other documents.
-#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
-#' @param merge_method Character. Determines how to merge tables if \code{x} is a \code{list}. Can be either
-#'   \code{indent} or \code{table_spanner}.
+#' @param added_stub_head Character. Used as stub head (name of first column) if
+#'   \code{row.names = TRUE} is passed to \code{\link[knitr]{kable}}; ignored if
+#'   row names are omitted from the table.
+#' @param col_spanners List. A named list of vectors of length 2 that contain
+#'   the first and last column to span. The name of each list element containing
+#'   the vector is used as grouping column name. Ignored in MS Word documents.
+#' @param stub_indents List. A named list of vectors that contain indeces of the
+#'   rows to indent. The name of each list element containing the vector is used
+#'   as title for indented sections.
+#' @param midrules Numeric. Vector of line numbers in table (not counting column
+#'   headings) that should be followed by a horizontal rule; ignored in MS Word
+#'   documents.
+#' @param placement Character. Indicates whether table should be placed, for
+#'   example, at the exact location (\code{h}), at the top (\code{t}), bottom
+#'   (\code{b}), or on a separate page (\code{p}). Arguments can be combined to
+#'   indicate order of preference (\code{htb}); ignored when
+#'   \code{longtable = TRUE}, \code{landscape = TRUE}, and in MS Word documents.
+#' @param landscape Logical. If \code{TRUE} the table is printed in landscape
+#'   format; ignored in MS Word documents.
+#' @param font_size Character. Font size to use for table contents (can be
+#'   \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small},
+#'   \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE},
+#'   \code{huge}, \code{Huge}). Ignored in MS Word documents.
+#' @param escape Logical. If \code{TRUE} special LaTeX characters, such as
+#'   \code{\%} or \code{_}, in column names, row names, caption, note and table
+#'   contents are escaped.
+#' @param span_text_columns Logical. If \code{TRUE} tables span across text
+#'   columns in two-column PDF documents (e.g. when setting
+#'   \code{classoption: jou}). Ignored in other documents.
+#' @param format.args List. A named list of arguments to be passed to
+#'   \code{\link{printnum}} to format numeric values.
+#' @param merge_method Character. Determines how to merge tables if \code{x} is
+#'   a \code{list}. Can be either \code{indent} or \code{table_spanner}.
 #' @inheritDotParams knitr::kable
 #'
 #' @details
-#'    When using \code{apa_table}, the type of the output (LaTeX or MS Word) is determined automatically
-#'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
-#'    The chunk option of the enveloping chunk has to be set to \code{results = "asis"} to ensure the table
-#'    is rendered, otherwise the table-generating markup is printed.
+#'   When using \code{apa_table}, the type of the output (LaTeX or MS Word) is
+#'   determined automatically by the rendered document type. In interactive R
+#'   session (unless a document is being rendered) the output defaults to LaTeX.
 #'
-#'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-#'    the first column giving the names of the list elements elements.
+#'   If \code{x} is a \code{list}, all list elements are merged by columns into
+#'   a single table and the names of list elements are added according to the
+#'   setting of \code{merge_method}.
+#'
+#'   By default, the width of the table is set to accommodate its contents. In
+#'   some cases, this may cause the table to exceed the page width. To address
+#'   this, tables can be rotated 90 degrees by setting \code{langscape = TRUE}
+#'   or, by explicitly specifying paragraph columns with fixed column widths,
+#'   such that the contents automatically is broken into multiple lines. For
+#'   example, set \code{align = "lm{5cm}l"} to limit the third column to a width
+#'   of 5 cm. Similarly, to space columns equally use
+#'   \code{align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")}
 #'
 #'
 #' @seealso \code{\link[knitr]{kable}}, \code{\link{printnum}}
