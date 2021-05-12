@@ -1,25 +1,25 @@
 
 
-add_custom_effect_sizes <- function(es, ...) {
-  UseMethod("add_custom_effect_sizes", es)
+add_custom_effect_sizes <- function(estimate, ...) {
+  UseMethod("add_custom_effect_sizes", estimate)
 }
 
 
-add_custom_effect_sizes.character <- function(es, canonical_table, .x = NULL, ...) {
+add_custom_effect_sizes.character <- function(estimate, canonical_table, .x = NULL, ...) {
 
-  if(length(es) > 1L) warning("Calculating more than one effect-size measure is now deprecated.")
-  es <- es[[1L]]
+  if(length(estimate) > 1L) warning("Calculating more than one effect-size measure is now deprecated.")
+  estimate <- estimate[[1L]]
 
-  add_effect_sizes(x = canonical_table, es = es, ...)
+  add_effect_sizes(x = canonical_table, es = estimate, ...)
 }
 
 
-add_custom_effect_sizes.data.frame <- function(es, canonical_table, intercept = FALSE, ...) {
+add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, intercept = FALSE, ...) {
 
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 
   y <- merge(canonical_table,
-             tidy_es(es)
+             tidy_es(estimate)
              , sort = FALSE
              , all.x = TRUE # Do not drop
   )
@@ -31,9 +31,9 @@ add_custom_effect_sizes.data.frame <- function(es, canonical_table, intercept = 
 }
 
 
-add_custom_effect_sizes.function <- function(es, .x = NULL, ...) {
+add_custom_effect_sizes.function <- function(estimate, .x = NULL, ...) {
 
   if(is.null(.x)) stop("Cannot apply custom effect-size function to this class of object.", call. = FALSE)
 
-  add_custom_effect_sizes(es = es(.x), .x = .x, ...)
+  add_custom_effect_sizes(estimate = estimate(.x), .x = .x, ...)
 }

@@ -6,10 +6,10 @@
 #' @param x Output object. See details.
 #' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{"GG"} for Greenhouse-Geisser or \code{"HF"} for Huyn-Feldt methods or \code{"none"}). Default is \code{"GG"}.
 #' @param intercept Logical. Indicates if the intercept term should be included in output.
-#' @param es Character, function, or data frame. Determines which measures of effect size is to be used. See details.
+#' @param estimate Character, function, or data frame. Determines which estimate of effect size is to be used. See details.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 #' @details
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
@@ -17,11 +17,11 @@
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
 #'    of freedom, are replaced with brackets.
 #'
-#'    Argument `es` determines which measure of effect size is to be used: It is currently possible to provide
+#'    Argument `estimate` determines which measure of effect size is to be used: It is currently possible to provide
 #'    a character, where `"ges"` calculates generalized eta squared,`"pes"` calculates partial eta squared, and `"es"`
 #'    calculates eta squared. Note that eta squared is calculated correctly if and only if the design is balanced.
 #'
-#'    It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf high`, which allows
+#'    It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf.high`, which allows
 #'    for including custom effect-size measures.
 #'
 #'    A third option is to provide a function that will be used to calculate effect-size measures from `x`. See the
@@ -50,7 +50,7 @@
 #'
 #'    # Use the effectsize package to calculate partial eta-squared with
 #'    # confidence intervals
-#'    apa_print(npk_aov, es = effectsize::eta_squared)
+#'    apa_print(npk_aov, estimate = effectsize::eta_squared)
 #' @method apa_print aov
 #' @export
 
@@ -83,7 +83,7 @@ apa_print.aovlist <- function(x, ...) {
 
 apa_print.summary.aovlist <- function(
   x
-  , es = "ges"
+  , estimate = "ges"
   , mse = TRUE
   , observed = NULL
   , intercept = FALSE
@@ -111,7 +111,7 @@ apa_print.summary.aovlist <- function(
   canonical_table <- add_custom_effect_sizes(
     canonical_table = canonical_table
     , .x = .x
-    , es = es
+    , estimate = estimate
     , mse = mse
     , observed = observed
     , intercept = intercept
@@ -171,7 +171,7 @@ apa_print.summary.Anova.mlm <- function(
   x
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , es = "ges"
+  , estimate = "ges"
   , mse = getOption("papaja.mse")
   , observed = NULL
   , in_paren = FALSE
@@ -190,7 +190,7 @@ apa_print.summary.Anova.mlm <- function(
   canonical_table <- canonize(arranged_table)
   canonical_table <- add_custom_effect_sizes(
     canonical_table
-    , es = es
+    , estimate = estimate
     , mse = mse
     , observed = observed
     , intercept = intercept
@@ -258,7 +258,7 @@ apa_print.afex_aov <- function(
 apa_print.anova <- function(
   x
   , intercept = FALSE
-  , es = "ges"
+  , estimate = "ges"
   , mse = TRUE
   , observed = NULL
   , in_paren = FALSE
@@ -271,7 +271,7 @@ apa_print.anova <- function(
 
   .x <- ellipsis$.x
   ellipsis$.x <- NULL
-  if(is.function(es) && is.null(.x)) .x <- x
+  if(is.function(estimate) && is.null(.x)) .x <- x
 
   intercept <- isTRUE(intercept)
 
@@ -284,7 +284,7 @@ apa_print.anova <- function(
 
   # car::LeveneTest ----------------------------------------------------------
   if(length(object_heading) == 1 && grepl("Levene", object_heading)) {
-    # if(!is.null(es)) stop("Effect sizes are not available for car::LeveneTest-objects.")
+    # if(!is.null(estimate)) stop("Effect sizes are not available for car::LeveneTest-objects.")
 
     y <- canonize(x)
     y <- remove_residuals_row(y)
@@ -375,7 +375,7 @@ apa_print.anova <- function(
   canonical_table <- remove_residuals_row(canonical_table)
 
   canonical_table <- add_custom_effect_sizes(
-    es = es
+    estimate = estimate
     , canonical_table = canonical_table
     , mse = mse
     , observed = observed
