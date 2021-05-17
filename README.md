@@ -175,7 +175,7 @@ apa_beeplot(
 ![Response times from a simulated Stroop experiment. Large dots
 represent condition means, small dots represent individual participants’
 mean response time. Error bars represent 99% within-subjects confidence
-intervals.](README_files/figure-gfm/unnamed-chunk-7-1.png)
+intervals.](README_files/figure-gfm/stroop-plot-1.png)
 
 If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 

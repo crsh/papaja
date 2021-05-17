@@ -149,7 +149,7 @@ variable_labels(x) <- list(
 stroop_data <- x
 ```
 
-```{r fig.cap = "Response times from a simulated Stroop experiment. Large dots represent condition means, small dots represent individual participants' mean response time. Error bars represent 99% within-subjects confidence intervals."}
+```{r stroop-plot, fig.cap = "Response times from a simulated Stroop experiment. Large dots represent condition means, small dots represent individual participants' mean response time. Error bars represent 99% within-subjects confidence intervals."}
 par(las = 1)
 
 apa_beeplot(
