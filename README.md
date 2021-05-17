@@ -25,8 +25,7 @@ Association (APA) manuscript guidelines (6th Edition). `papaja` provides
     used with (or without) [RStudio](http://www.rstudio.com/) to create
     PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX
     class) or Word documents (using a .docx-reference file).
--   Functions to format and **typeset** the results from **statistical
-    analyses**,
+-   Functions to **typeset** the results from **statistical analyses**,
 -   functions to create **tables**, and
 -   functions to create **figures** in accordance with APA guidelines.
 
@@ -72,7 +71,7 @@ for detailed installation instructions.
 repository:
 
 ``` r
-# Install devtools package if necessary
+# Install remotes package if necessary
 if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
 
 # Install the stable development verions from GitHub
@@ -158,6 +157,25 @@ Table. *Iris regression table.*
 Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and
 `apa_beeplot()` (or the general function `apa_factorial_plot()`) if you
 work with factorial designs:
+
+``` r
+par(las = 1)
+
+apa_beeplot(
+  data = stroop_data
+  , dv = "response_time"
+  , id = "id"
+  , factors = c("congruency", "load")
+  , ylim = c(0, 800)
+  , dispersion = wsci # within-subjects confidence intervals
+  , conf.level = .99
+)
+```
+
+![Response times from a simulated Stroop experiment. Large dots
+represent condition means, small dots represent individual participants’
+mean response time. Error bars represent 99% within-subjects confidence
+intervals.](README_files/figure-gfm/unnamed-chunk-7-1.png)
 
 If you prefer creating your plots with `ggplot2` try `theme_apa()`.
 
@@ -946,8 +964,8 @@ https://osf.io/tr868/)
 
 Urry, H. L., Sifre, E., Song, J., Steinberg, H., Bornstein, M., Kim, J.,
 … Andrews, M. (2018). Effect of Disgust on Judgments of Moral Wrongness:
-A Replication of Eskine, Kacinik, and Prinz (2011) at Tufts University - Spring, 2017.
-Retrieved from <https://osf.io/fu384/> (R Markdown and
+A Replication of Eskine, Kacinik, and Prinz (2011). *At Tufts University
+- Spring, 2017*. Retrieved from <https://osf.io/fu384/> (R Markdown and
 data files: https://osf.io/ddmkm)
 
 </div>

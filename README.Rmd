@@ -47,7 +47,7 @@ Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduc
 `papaja` is not yet available on CRAN but you can install it from this repository:
 
 ```{r install_papapja, eval = FALSE}
-# Install devtools package if necessary
+# Install remotes package if necessary
 if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
 
 # Install the stable development verions from GitHub
@@ -127,19 +127,39 @@ knitr::kable(print_classes)
 
 Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`) if you work with factorial designs:
 
-```{r eval = FALSE, echo = FALSE}
+```{r include = FALSE}
+set.seed(42L)
+x <- expand.grid(
+  id = seq_len(80L)
+  , congruency = c("Congruent", "Incongruent")
+  , load       = c("High", "Low")
+)
+
+x[["response_time"]] <- rt(nrow(x), df = 20) * 80 + 
+  (x$congruency == "Congruent") * - 80 + 
+  (x$load == "High") * 40 + 
+  500
+
+
+variable_labels(x) <- list(
+  congruency = "Congruency"
+  , load = "Cognitive load"
+  , response_time = "Response time"
+)
+stroop_data <- x
+```
+
+```{r fig.cap = "Response times from a simulated Stroop experiment. Large dots represent condition means, small dots represent individual participants' mean response time. Error bars represent 99% within-subjects confidence intervals."}
 par(las = 1)
 
-apa_factorial_plot(
-  data = npk
-  , id = "block"
-  , dv = "yield"
-  , factors = c("N", "P", "K")
-  , ylim = c(0, 80)
-  , level = .68
-  , ylab = "Yield"
-  , plot = c("swarms", "lines", "error_bars", "points")
-  , jit = .06
+apa_beeplot(
+  data = stroop_data
+  , dv = "response_time"
+  , id = "id"
+  , factors = c("congruency", "load")
+  , ylim = c(0, 800)
+  , dispersion = wsci # within-subjects confidence intervals
+  , conf.level = .99
 )
 ```
 
