@@ -360,7 +360,7 @@ hd_int <- function(x, level = 0.95) {
 add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
   # ----------------------------------------------------------------------------
   # We don't validate here because this function is intended to be used
-  # internally, validation, should have happened earlier in the processing chain.
+  # internally, validation should have happened earlier in the processing chain.
 
   # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   # validate(es, check_class = "character", check_NA = FALSE)

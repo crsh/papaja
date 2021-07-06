@@ -7,7 +7,7 @@ add_custom_effect_sizes <- function(estimate, ...) {
 
 add_custom_effect_sizes.character <- function(estimate, canonical_table, .x = NULL, ...) {
 
-  if(length(estimate) > 1L) warning("Calculating more than one effect-size measure is now deprecated.")
+  if(length(estimate) > 1L) warning("Calculating more than one effect-size measure is now deprecated. Only the first one will be calculated.")
   estimate <- estimate[[1L]]
 
   add_effect_sizes(x = canonical_table, es = estimate, ...)
@@ -18,15 +18,14 @@ add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, interc
 
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 
-  y <- merge(canonical_table,
-             tidy_es(estimate)
-             , sort = FALSE
-             , all.x = TRUE # Do not drop
+  y <- merge(
+    x = canonical_table
+    , y = tidy_es(estimate)
+    , sort = FALSE
+    , all.x = TRUE # Do not drop terms from main results object
   )
-  if(anyNA(y)) {
-    warning("Custom effect sizes were not available for some model terms. These have been dropped from the output object.", call. = FALSE)
-    y <- stats::na.omit(y)
-  }
+
+  if(anyNA(y)) warning("Custom effect sizes were not available for some model terms.", call. = FALSE)
   y
 }
 

@@ -267,7 +267,7 @@ remove_residuals_row <- function(x) {
     x$sumsq_err <- x$sumsq[resid_row]
     x$df.residual <- x$df[resid_row]
     tinylabels::variable_label(x) <- c(df.residual = "$\\mathit{df}_{\\mathrm{res}}$")
-    x[!resid_row, ]
+    x[!resid_row, , drop = FALSE]
   } else {
     x
   }
@@ -287,7 +287,7 @@ remove_residuals_row <- function(x) {
 
 beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
-  validate(x, check_class = "data.frame")
+  validate(x, check_class = "data.frame", check_NA = FALSE, check_infinite = FALSE)
   validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
 
   args <- list(...)
