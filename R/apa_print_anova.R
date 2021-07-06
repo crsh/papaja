@@ -83,7 +83,7 @@ apa_print.aovlist <- function(x, ...) {
 
 apa_print.summary.aovlist <- function(
   x
-  , estimate = "ges"
+  , estimate = getOption("papaja.estimate_anova", "ges")
   , mse = TRUE
   , observed = NULL
   , intercept = FALSE
@@ -171,7 +171,7 @@ apa_print.summary.Anova.mlm <- function(
   x
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , estimate = "ges"
+  , estimate = getOption("papaja.estimate_anova", "ges")
   , mse = getOption("papaja.mse")
   , observed = NULL
   , in_paren = FALSE
@@ -258,7 +258,7 @@ apa_print.afex_aov <- function(
 apa_print.anova <- function(
   x
   , intercept = FALSE
-  , estimate = "ges"
+  , estimate = getOption("papaja.estimate_anova", "ges")
   , mse = TRUE
   , observed = NULL
   , in_paren = FALSE

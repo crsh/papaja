@@ -5,6 +5,9 @@ context("apa_print() for ANOVA")
 test_that(
   "One-way between ANOVA"
   , {
+    # Use our own effect-size function for these tests
+    # Custom effect sizes via the 'effectsize' package are tested elsewhere
+    options(papaja.estimate_anova = "ges")
     load("data/ow_data.rdata")
     ow_aov <- aov(Alertness ~ Dosage, data = ow_data)
     ow_aov_output <- apa_print(ow_aov)
