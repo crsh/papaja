@@ -25,7 +25,10 @@ add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, interc
     , all.x = TRUE # Do not drop terms from main results object
   )
 
-  if(anyNA(y)) warning("Custom effect sizes were not available for some model terms. These have been dropped from the output object.", call. = FALSE)
+  if(anyNA(y)) {
+    warning("Custom effect sizes were not available for some model terms. These have been dropped from the output object.", call. = FALSE)
+    y <- stats::na.omit(y)
+  }
   y
 }
 
