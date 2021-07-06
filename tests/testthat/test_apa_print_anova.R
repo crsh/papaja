@@ -245,6 +245,7 @@ test_that(
 test_that(
   "One-way repeated-measures ANOVA"
   , {
+    options(papaja.estimate_anova = "ges")
     load("data/rm_data.rdata")
     rm_aov <- aov(Recall ~ Valence + Error(Subject/Valence), rm_data)
     rm_aov_output <- apa_print(rm_aov)

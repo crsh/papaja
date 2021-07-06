@@ -287,7 +287,7 @@ remove_residuals_row <- function(x) {
 
 beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
-  validate(x, check_class = "data.frame", check_NA = FALSE, check_infinite = FALSE)
+  validate(x, check_class = "data.frame", check_infinite = FALSE)
   validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
 
   args <- list(...)
