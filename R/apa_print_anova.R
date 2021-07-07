@@ -24,8 +24,9 @@
 #'    It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf.high`, which allows
 #'    for including custom effect-size measures.
 #'
-#'    A third option is to provide a function that will be used to calculate effect-size measures from `x`. See the
-#'    examples section for an example using the \pkg{effectsize} package.
+#'    A third option is to provide a function from the \pkg{effectsize} package
+#'    that will be used to calculate effect-size measures from `x`. See the
+#'    examples section for an example.
 #'
 #' @return
 #'    \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
