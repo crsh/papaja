@@ -442,3 +442,15 @@ test_that(
     )
   }
 )
+
+
+test_that(
+  "Warn if observed factors do not match"
+  , {
+    expect_warning(
+      apa_print(afex::aov_4(yield~(N*P|block), data = npk, observed = "N"), observed = "P")
+      , regexp = "In your call to apa_print(), you specified the model terms \"P\" as observed, whereas in your call to afex::aov_car(), you specified the model terms \"N\" as observed. Make sure that this is what you want."
+      , fixed = TRUE
+    )
+  }
+)
