@@ -263,15 +263,15 @@ apa_print.afex_aov <- function(
 
     warning(
       "In your call to apa_print(), you specified "
-      , if(length(ellipsis$observed) == 0L) "no "
+      , if(length(ellipsis$observed) == 0L) "no " else {"the "}
       , "model terms "
       , print_terms(ellipsis$observed)
-      , "as being observed. "
-      , "This is inconsistent with what you specified in your call to afex::aov_car(), where you specified "
-      , if(length(attr(x$anova_table, "observed")) == 0L) "no "
+      , "as observed, "
+      , "whereas in your call to afex::aov_car(), you specified "
+      , if(length(attr(x$anova_table, "observed")) == 0L) "no " else "the "
       , "model terms "
       , print_terms(attr(x$anova_table, "observed"))
-      , "as being observed."
+      , "as observed. Make sure that this is what you want."
     )
   }
 
