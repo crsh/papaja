@@ -243,12 +243,47 @@ apa_print.afex_aov <- function(
     warning("In your call of afex::aov_car() you requested the intercept term, but now you did not (in apa_print 'intercept = FALSE' is the default). Thus, the intercept term will be omitted; make sure this is what you want.")
   }
 
-  if(inherits(x$Anova, "Anova.mlm")) {
-    summary_x <- summary(x$Anova)
-    apa_print(summary_x, correction = correction, intercept = intercept, .x = x, ...) # apa_print.summary.Anova.mlm
-  } else {
-    apa_print(x$Anova, intercept = intercept, ...) # apa_print.anova
+  ellipsis <- list(...)
+  ellipsis$intercept = intercept
+
+  if(is.null(ellipsis$observed)) {
+    # If 'observed' is not specified, obtain information from afex_aov object
+    ellipsis$observed <- attr(x$anova_table, "observed")
+  } else if(!setequal(ellipsis$observed, attr(x$anova_table, "observed"))){
+    # If it is specified, warn if the sets of observed factors are unequal
+    print_terms <- function(x) { # This helper function could be moved to utils.R
+      n_terms <- length(x)
+      y <- encodeString(x, quote = "\"")
+      del <- rep(", ", length.out = n_terms)
+      del[n_terms] <- " "
+      if(n_terms == 2L) del[n_terms - 1L] <- " and "
+      if(n_terms > 2L) del[n_terms - 1L] <- ", and "
+      paste0(y, del)
+    }
+
+    warning(
+      "In your call to apa_print(), you specified "
+      , if(length(ellipsis$observed) == 0L) "no "
+      , "model terms "
+      , print_terms(ellipsis$observed)
+      , "as being observed. "
+      , "This is inconsistent with what you specified in your call to afex::aov_car(), where you specified "
+      , if(length(attr(x$anova_table, "observed")) == 0L) "no "
+      , "model terms "
+      , print_terms(attr(x$anova_table, "observed"))
+      , "as being observed."
+    )
   }
+
+
+  if(inherits(x$Anova, "Anova.mlm")) {
+    ellipsis$x <- summary(x$Anova)
+    ellipsis$.x = x
+    ellipsis$correction <- correction
+  } else {
+    ellipsis$x <- x$Anova
+  }
+  do.call("apa_print", ellipsis)
 }
 
 

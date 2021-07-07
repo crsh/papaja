@@ -102,3 +102,32 @@ test_that(
 
   }
 )
+
+test_that(
+  "Calculation of generalized eta squared"
+  , {
+    library("afex")
+    library("effectsize")
+
+    suppressMessages(set_sum_contrasts())
+    data(obk.long)
+
+    afex_aov_between <- aov_ez(
+      "id"
+      , "value"
+      , obk.long
+      , between = c("treatment", "gender")
+      , observed = "gender"
+      , fun_aggregate = mean
+    )
+    apa_afex <- apa_print(afex_aov_between)
+    expect_identical(
+      apa_afex$table$estimate
+      , structure(
+        c(".289", ".189", ".295")
+        , label = "$\\hat{\\eta}^2_G$"
+        , class = c("tiny_labelled", "character")
+      )
+    )
+  }
+)
