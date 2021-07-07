@@ -33,9 +33,9 @@ add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, interc
 }
 
 
-add_custom_effect_sizes.function <- function(estimate, .x = NULL, ...) {
+add_custom_effect_sizes.function <- function(estimate, .x = NULL, observed = NULL, ...) {
 
   if(is.null(.x)) stop("Cannot apply custom effect-size function to this class of object.", call. = FALSE)
 
-  add_custom_effect_sizes(estimate = estimate(.x), .x = .x, ...)
+  add_custom_effect_sizes(estimate = estimate(.x, observed = observed), .x = .x, ...)
 }

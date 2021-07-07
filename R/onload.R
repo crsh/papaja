@@ -14,7 +14,14 @@
   )
 
   if(package_available("effectsize")) {
-    op_papaja$papaja.estimate_anova <- function(x, generalized = TRUE, include_intercept = TRUE, ...) {
+    op_papaja$papaja.estimate_anova <- function(x, observed = NULL, include_intercept = TRUE, ...) {
+
+      if(is.null(observed)) {
+        generalized <- character(0L)
+      } else {
+        generalized <- observed
+      }
+
       effectsize::eta_squared(
         x
         , generalized = generalized
