@@ -738,8 +738,9 @@ modify_input_file <- function(input, format) {
           , ""
         )
       }
-
-      writeLines(input_text, input_connection, useBytes = TRUE)
+      # useBytes set to FALSE due to issue #446, but this might cause trouble with
+      # CJK characters
+      writeLines(input_text, input_connection, useBytes = FALSE)
     }
   }
 
