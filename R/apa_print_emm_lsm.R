@@ -317,7 +317,7 @@ get_emm_conf_level <- function(x) {
 
 est_name_from_call <- function(x) {
   # analysis_function <- as.character(attr(x, "model.info")$call[[1]])
-  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("paris", "contrast")
+  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("pairs", "contrast", "rbind")
 
   # roles <- attr(x, "roles")
   # is_multivariate <- all(roles$predictors %in% roles$multresp) ||
