@@ -258,6 +258,22 @@ canonize <- function(
   x
 }
 
+remove_residuals_row <- function(x) {
+
+  resid_row <- apply(X = x, MARGIN = 1L, FUN = anyNA)
+
+  if(any(resid_row)) {
+    stopifnot(sum(resid_row) == 1)
+    x$sumsq_err <- x$sumsq[resid_row]
+    x$df.residual <- x$df[resid_row]
+    tinylabels::variable_label(x) <- c(df.residual = "$\\mathit{df}_{\\mathrm{res}}$")
+    x[!resid_row, , drop = FALSE]
+  } else {
+    x
+  }
+}
+
+
 #' Beautify a Canonical Table
 #'
 #' Internal function that takes an object created by \code{\link{canonize}} and
@@ -271,7 +287,7 @@ canonize <- function(
 
 beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
-  validate(x, check_class = "data.frame")
+  validate(x, check_class = "data.frame", check_infinite = FALSE)
   validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
 
   args <- list(...)
@@ -447,7 +463,7 @@ sort_columns <- function(x) {
   se <- NULL
   if(!any(colnames(x) == "conf.int")) se <- "std.error"
 
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "p.value"), colnames(x))
+  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "mse", "p.value"), colnames(x))
   x[, ordered_cols, drop = FALSE]
 }
 

@@ -5,6 +5,9 @@ context("apa_print() for ANOVA")
 test_that(
   "One-way between ANOVA"
   , {
+    # Use our own effect-size function for these tests
+    # Custom effect sizes via the 'effectsize' package are tested elsewhere
+    options(papaja.estimate_anova = "ges")
     load("data/ow_data.rdata")
     ow_aov <- aov(Alertness ~ Dosage, data = ow_data)
     ow_aov_output <- apa_print(ow_aov)
@@ -242,6 +245,7 @@ test_that(
 test_that(
   "One-way repeated-measures ANOVA"
   , {
+    options(papaja.estimate_anova = "ges")
     load("data/rm_data.rdata")
     rm_aov <- aov(Recall ~ Valence + Error(Subject/Valence), rm_data)
     rm_aov_output <- apa_print(rm_aov)
@@ -435,6 +439,18 @@ test_that(
         , row.names = 1L
         , class = c("apa_results_table", "data.frame")
       )
+    )
+  }
+)
+
+
+test_that(
+  "Warn if observed factors do not match"
+  , {
+    expect_warning(
+      apa_print(afex::aov_4(yield~(N*P|block), data = npk, observed = "N"), observed = "P")
+      , regexp = "In your call to apa_print(), you specified the model terms \"P\" as observed, whereas in your call to afex::aov_car(), you specified the model terms \"N\" as observed. Make sure that this is what you want."
+      , fixed = TRUE
     )
   }
 )

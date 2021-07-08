@@ -102,7 +102,7 @@ test_that(
     data$Days2 <- rnorm(nrow(data))
     data$Reaction2 <- data$Reaction + data$Days2*(as.integer(data$Subject)-mean(as.integer(data$Subject)))
     fm2 <- lmerTest::lmer(Reaction2 ~ Days + (Days + Days2|Subject), data)
-    lmerTest::ranova(fm2)
+    # lmerTest::ranova(fm2)
 
     expect_error(
       apa_print(ranova_out)
@@ -184,12 +184,12 @@ test_that(
     )
 
     expect_identical(
-      apa_KR$full_result
+      apa_KR$full_result$Days
       , expected = "$F(1, 17.00) = 45.85$, $p < .001$"
     )
     expect_identical(
-      apa_S$full_result
-      , apa_KR$full_result
+      apa_S$full_result$Days
+      , apa_KR$full_result$Days
     )
 
     # Stop model-comparison tables

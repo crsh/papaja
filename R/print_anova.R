@@ -43,6 +43,8 @@ print_anova <- function(
   , in_paren = FALSE
 ) {
 
+  .Deprecated("print_anova() is deprecated")
+
   # When processing aovlist objects, the `(Intercept)` is kept to preserve the
   # SS_error of the intercept   # term to calculate generalized eta squared
   # correctly. This term contains NAs.

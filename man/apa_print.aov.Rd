@@ -19,7 +19,15 @@
 
 \method{apa_print}{aovlist}(x, ...)
 
-\method{apa_print}{summary.aovlist}(x, ...)
+\method{apa_print}{summary.aovlist}(
+  x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  mse = TRUE,
+  observed = NULL,
+  intercept = FALSE,
+  in_paren = FALSE,
+  ...
+)
 
 \method{apa_print}{Anova.mlm}(
   x,
@@ -32,6 +40,10 @@
   x,
   correction = getOption("papaja.sphericity_correction"),
   intercept = FALSE,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  mse = getOption("papaja.mse"),
+  observed = NULL,
+  in_paren = FALSE,
   ...
 )
 
@@ -42,7 +54,15 @@
   ...
 )
 
-\method{apa_print}{anova}(x, ...)
+\method{apa_print}{anova}(
+  x,
+  intercept = FALSE,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  mse = TRUE,
+  observed = NULL,
+  in_paren = FALSE,
+  ...
+)
 
 \method{apa_print}{manova}(x, test = "Pillai", in_paren = FALSE, ...)
 
@@ -51,22 +71,23 @@
 \arguments{
 \item{x}{Output object. See details.}
 
-\item{...}{
-  Arguments passed on to \code{\link[=print_anova]{print_anova}}
-  \describe{
-    \item{\code{es}}{Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
-Note that eta-squared is calculated correctly if and only if the design is balanced.}
-    \item{\code{mse}}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
-    \item{\code{observed}}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.}
-  }}
+\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
+string(s) to format. Multiple inputs are concatenated together before formatting.
+Named arguments are taken to be temporary variables available for substitution.}
 
-\item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.}
+\item{estimate}{Character, function, or data frame. Determines which estimate of effect size is to be used. See details.}
 
-\item{intercept}{Logical. Indicates if intercept test should be included in output.}
+\item{mse}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
+
+\item{observed}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.}
+
+\item{intercept}{Logical. Indicates if the intercept term should be included in output.}
+
+\item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
+
+\item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{"GG"} for Greenhouse-Geisser or \code{"HF"} for Huyn-Feldt methods or \code{"none"}). Default is \code{"GG"}.}
 
 \item{test}{For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.}
-
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
 }
 \value{
 \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
@@ -89,11 +110,26 @@ The factor names are sanitized to facilitate their use as list names (see Value 
 
    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
    of freedom, are replaced with brackets.
+
+   Argument `estimate` determines which measure of effect size is to be used: It is currently possible to provide
+   a character, where `"ges"` calculates generalized eta squared,`"pes"` calculates partial eta squared, and `"es"`
+   calculates eta squared. Note that eta squared is calculated correctly if and only if the design is balanced.
+
+   It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf.high`, which allows
+   for including custom effect-size measures.
+
+   A third option is to provide a function from the \pkg{effectsize} package
+   that will be used to calculate effect-size measures from `x`. See the
+   examples section for an example.
 }
 \examples{
    ## From Venables and Ripley (2002) p. 165.
    npk_aov <- aov(yield ~ block + N * P * K, npk)
    apa_print(npk_aov)
+
+   # Use the effectsize package to calculate partial eta-squared with
+   # confidence intervals
+   apa_print(npk_aov, estimate = effectsize::eta_squared)
 }
 \references{
 Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}

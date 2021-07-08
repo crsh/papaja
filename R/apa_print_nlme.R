@@ -93,6 +93,7 @@ apa_print.lme <- function(
     , stat_glue = construct_glue(beautiful_table, "statistic")
     , term_names = sanitize_terms(res_table$Term)
     , in_paren = in_paren
+    , simplify = FALSE
   )
 }
 
@@ -127,6 +128,7 @@ apa_print.anova.lme <- function(
     , stat_glue = construct_glue(beautiful_table, "statistic")
     , term_names = sanitize_terms(res_table$Term)
     , in_paren = in_paren
+    , simplify = FALSE
   )
 
 }
