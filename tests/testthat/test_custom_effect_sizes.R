@@ -120,7 +120,9 @@ test_that(
       , observed = "gender"
       , fun_aggregate = mean
     )
+
     apa_afex <- apa_print(afex_aov_between)
+    
     expect_identical(
       apa_afex$table$estimate
       , structure(
@@ -129,5 +131,19 @@ test_that(
         , class = c("tiny_labelled", "character")
       )
     )
+
+    afex_aov_between2 <- aov_ez(
+      "id"
+      , "value"
+      , obk.long
+      , between = c("treatment", "gender")
+      , observed = "treatment"
+      , fun_aggregate = mean
+    )
+
+    expect_warning(
+      apa_afex2 <- apa_print(afex_aov_between, observed = "treatment")
+    )
+    expect_identical(apa_print(afex_aov_between2), apa_afex2)
   }
 )
