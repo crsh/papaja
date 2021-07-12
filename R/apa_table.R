@@ -465,11 +465,31 @@ apa_table.latex <- function(
   # Fix table spanners
   table_lines <- remove_excess_table_spanner_columns(table_lines)
 
+  has_column_names <- any(grepl("\\midrule", table_lines, fixed = TRUE))
+  has_col_spanners <- !is.null(col_spanners)
+
   # Add column spanners
-  if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
+  if(has_col_spanners) table_lines <- add_col_spanners(
+    table_lines
+    , col_spanners
+    , n_cols
+    # suppress group midrules if no column names are present
+    , add_group_midrules = TRUE # has_column_names
+  )
 
   # Add repeating table caption (and column names) for longtables
-  table_content_start <- grep("\\\\midrule", table_lines)
+
+  # related to a bug reported in #452: If col.names = NULL, no midrules are added by knitr::kable
+  if(has_column_names) {
+    # standard case with column names
+    table_content_start <- grep("\\midrule", table_lines, fixed = TRUE)
+  } else if(has_col_spanners){
+    # special case without column names, but with column spanners
+    table_content_start <- rev(grep("\\\\multicolumn|\\\\cmidrule", table_lines))[[1L]]
+  } else {
+    # neither column names nor column spanners are present
+    table_content_start <- grep("\\toprule", table_lines, fixed = TRUE)
+  }
 
   if((longtable || landscape) & !is.null(caption)) {
     table_lines <- c(
@@ -741,13 +761,14 @@ indent_stubs <- function(x, lines, filler = "\ \ \ ") {
 #' @param table_lines Character. Vector of characters containing one line of a LaTeX table each.
 #' @param col_spanners List. A named list containing the indices of the first and last columns to group, where the names are the headings.
 #' @param n_cols Numeric. Number of columns of the table.
+#' @param add_group_midrules Logical.Determines whether group midrules are added.
 #' @keywords internal
 #' @seealso \code{\link{apa_table}}
 #'
 #' @examples
 #' NULL
 
-add_col_spanners <- function(table_lines, col_spanners, n_cols) {
+add_col_spanners <- function(table_lines, col_spanners, n_cols, add_group_midrules = TRUE) {
 
   # Grouping column names
   multicols <- sapply(
@@ -783,14 +804,18 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
   }
   group_headings <- paste(leading_amps, group_headings, trailing_amps, "\\\\", sep = "")
 
-  # Grouping midrules
-  group_midrules <- sapply(
-    seq_along(col_spanners)
-    , function(i) {
-      paste0("\\cmidrule(r){", min(col_spanners[[i]]), "-", max(col_spanners[[i]]), "}")
-    }
-  )
-  group_midrules <- paste(group_midrules, collapse = " ")
+  # Grouping midrules, only add them if required
+  if(add_group_midrules) {
+    group_midrules <- sapply(
+      seq_along(col_spanners)
+      , function(i) {
+        paste0("\\cmidrule(r){", min(col_spanners[[i]]), "-", max(col_spanners[[i]]), "}")
+      }
+    )
+    group_midrules <- paste(group_midrules, collapse = " ")
+  } else {
+    group_midrules <- NULL
+  }
 
 
   table_environment <- which(grepl("\\\\toprule", table_lines))

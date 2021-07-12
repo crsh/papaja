@@ -165,8 +165,8 @@ When using \code{apa_table}, the type of the output (LaTeX or MS Word) is
   this, tables can be rotated 90 degrees by setting \code{langscape = TRUE}
   or, by explicitly specifying paragraph columns with fixed column widths,
   such that the contents automatically is broken into multiple lines. For
-  example, set \code{align = "lm{5cm}l"} to limit the third column to a width
-  of 5 cm. Similarly, to space columns equally use
+  example, set \code{align = "lm{5cm}l"} to limit the second column to a
+  width of 5 cm. Similarly, to space columns equally use
   \code{align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")}
 }
 \examples{
