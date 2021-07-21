@@ -9,8 +9,7 @@ has not yet been a stable, usable release suitable for the
 public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 ![GitHub last commit
 (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github&logoColor=%23FFF)
-![Travis build
-status](https://img.shields.io/travis/crsh/papaja?label=Build&logo=travis-ci&logoColor=%23FFF)
+[![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
 [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja)
 [![GitHub bug
 issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
@@ -464,6 +463,16 @@ modulates response bias in the Somatic Signal Detection Task. *bioRxiv*.
 
 </div>
 
+<div id="ref-debruine_understanding_2021" class="csl-entry">
+
+DeBruine, L. M., & Barr, D. J. (2021). Understanding Mixed-Effects
+Models Through Data Simulation. *Advances in Methods and Practices in
+Psychological Science*, *4*(1), 251524592096511.
+<https://doi.org/gjh9p5> (R Markdown and data files:
+https://osf.io/3cz2e/)
+
+</div>
+
 <div id="ref-derringer_simple_2018" class="csl-entry">
 
 Derringer, J. (2018). A simple correction for non-independent tests.
@@ -587,6 +596,17 @@ files: https://github.com/heinonmatti/baseline-visu)
 
 </div>
 
+<div id="ref-heirene_preregistration_2021" class="csl-entry">
+
+Heirene, R., LaPlante, D., Louderback, E. R., Keen, B., Bakker, M.,
+Serafimovska, A., & Gainsbury, S. M. (2021). Preregistration specificity
+&amp; adherence: A review of preregistered gambling studies &amp;
+cross-disciplinary comparison. *PsyArXiv*. <https://doi.org/gk7tcs> (R
+Markdown and data files: citations (crossref) \[2021-07-16\]
+https://osf.io/n8rw3/)
+
+</div>
+
 <div id="ref-henderson_effect_2019" class="csl-entry">
 
 Henderson, E. L., Vall’ee-Tourangeau, F., & Simons, D. J. (2019). The
@@ -657,12 +677,73 @@ https://osf.io/r8qp2/)
 
 </div>
 
+<div id="ref-karch_improving_2019" class="csl-entry">
+
+Karch, J. (2019). Improving on Adjusted R-Squared. *Collabra:
+Psychology*, *6*(45). <https://doi.org/gkgk2v>
+
+</div>
+
+<div id="ref-karch_psychologists_2021" class="csl-entry">
+
+Karch, J. D. (2021). Psychologists should use Brunner-Munzel’s instead
+of Mann-Whitney’s U test as the default nonparametric procedure.
+*Advances in Methods and Practices in Psychological Science*, *4*(2).
+<https://doi.org/gjtx8h> (R Markdown and data files: publisher: sage
+publications inc)
+
+</div>
+
+<div id="ref-kay_actors_2021" class="csl-entry">
+
+Kay, C. S. (2021a). Actors of the most fiendish character: Explaining
+the associations between the Dark Tetrad and conspiracist ideation.
+*Personality and Individual Differences*, *171*.
+<https://doi.org/gj99xv>
+
+</div>
+
+<div id="ref-kay_negative_2021" class="csl-entry">
+
+Kay, C. S. (2021b). Negative traits, positive assortment: Revisiting the
+Dark Triad and a preference for similar others. *Journal of Social and
+Personal Relationships*. <https://doi.org/gj99xt>
+
+</div>
+
+<div id="ref-kay_deviating_2020" class="csl-entry">
+
+Kay, C. S., & Saucier, G. (2020a). Deviating from the social consensus:
+Relations among the Dark Triad, moral normativity, and general social
+normativity. *Personality and Individual Differences*, (159). Retrieved
+from <https://doi.org/10.1016/j.paid.2020.109889>
+
+</div>
+
+<div id="ref-kay_insert_2020" class="csl-entry">
+
+Kay, C. S., & Saucier, G. (2020b). Insert a joke about lawyers:
+Evaluating preferences for the Dark Triad traits in six occupations.
+*Personality and Individual Differences*, *159*.
+<https://doi.org/gj99xw>
+
+</div>
+
 <div id="ref-kothe_retention_2019" class="csl-entry">
 
 Kothe, E. J., & Ling, M. (2019). Retention of participants recruited to
 a one-year longitudinal study via Prolific. *PsyArXiv*.
 <https://doi.org/10.31234/osf.io/5yv2u> (R Markdown and data files:
 https://osf.io/yjstk/)
+
+</div>
+
+<div id="ref-lai_adjusting_2021" class="csl-entry">
+
+Lai, M. H. C. (2021). Adjusting for Measurement Noninvariance with
+Alignment in Growth Modeling. *Multivariate Behavioral Research*, 1–18.
+<https://doi.org/gk5v2p> (R Markdown and data files: citations
+(crossref) \[2021-07-11\])
 
 </div>
 
