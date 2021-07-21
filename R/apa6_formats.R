@@ -763,14 +763,18 @@ revert_original_input_file <- function(x = 1) {
   return(NULL)
 }
 
+
+
 #' @keywords internal
 
 readLines_utf8 <- function(con) {
   if(is.character(con)) {
     con <- file(con, encoding = "utf8")
     on.exit(close(con))
+  } else if(inherits(con, "connection")) {
+    stop("If you want to use an already existing connection, you should use readLines(), directly.")
   }
   y <- try(readLines(con, encoding = "bytes"))
-  if(inherits(y, "try-error")) stop("File ", summary(con)$description, " seems to be missing.")
+  if(inherits(y, "try-error")) stop("Reading from file ", encodeString(summary(con)$description, quote = "'"), " failed.")
   y
 }
