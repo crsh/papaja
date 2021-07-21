@@ -2,11 +2,7 @@
 test_that(
   "Custom effect sizes for ANOVA"
   , {
-
-    # Treat as between-subjects design, use Type-2 sums of squares
-    aov_out <- aov(yield ~ N * P, npk)
-    summary_aov <- summary(aov_out)
-
+    # from .onLoad()
     ges <- function(x, observed = NULL, include_intercept = TRUE, ...) {
 
       if(is.null(observed)) {
@@ -22,6 +18,15 @@ test_that(
         , ...
       )
     }
+
+    options(papaja.estimate_anova = ges)
+
+
+    # Treat as between-subjects design, use Type-2 sums of squares
+    aov_out <- aov(yield ~ N * P, npk)
+    summary_aov <- summary(aov_out)
+
+
 
     # 'aov/lm' class
     apa_with_function <- apa_print(aov_out)
