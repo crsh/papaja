@@ -7,13 +7,11 @@ test_that(
     aov_out <- aov(yield ~ N * P, npk)
     summary_aov <- summary(aov_out)
 
-    ges <- function(x, generalized = TRUE, include_intercept = TRUE, ...) {
-      effectsize::eta_squared(x, generalized = generalized, include_intercept = include_intercept, ...)
-    }
+    ges <- getOption("papaja.estimate_anova")
 
     # 'aov/lm' class
-    apa_with_function <- apa_print(aov_out, es = ges)
-    apa_with_df <- apa_print(aov_out, es = ges(aov_out, generalized = TRUE, include_intercept = FALSE))
+    apa_with_function <- apa_print(aov_out)
+    apa_with_df <- apa_print(aov_out, es = ges(aov_out))
     apa_summary_aov <- apa_print(summary_aov, es = ges)
 
     expect_apa_results(
@@ -122,7 +120,7 @@ test_that(
     )
 
     apa_afex <- apa_print(afex_aov_between)
-    
+
     expect_identical(
       apa_afex$table$estimate
       , structure(
