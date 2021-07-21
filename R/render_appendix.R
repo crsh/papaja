@@ -80,41 +80,39 @@ render_appendix <- function(
   validate(quiet, check_class = "logical", check_length = 1)
 
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-  if(length(target_format) == 0) stop("render_appendix() can only be used within an R Markdown document; please include the function call in a code chunk.")
+  if(length(target_format) == 0L) stop("render_appendix() can only be used within an R Markdown document; please include the function call in a code chunk.")
 
-  if(target_format %in% c("latex", "word", "docx")) {
-    # Render Markdown fragment
-    md_fragment <- knitr::knit_child(input = x, quiet = quiet)
-  } else {
+
+  if(!target_format %in% c("latex", "word", "docx")) {
     warning(target_format, " documents currently do not support appendices via includes.")
   }
 
+  # Render Markdown file ----
+  md_file <- tempfile(fileext = ".md")
+  res <- knitr::knit(input = x, output = md_file, quiet = quiet)
+  md_fragment <- readLines_utf8(md_file)
+
   if(target_format == "latex") {
-    # Create TeX-file
-    md_file <- paste0(tools::file_path_sans_ext(tools::file_path_as_absolute(x)), ".md")
-    md_connection <- file(md_file, encoding = "UTF-8")
-    on.exit(close(md_connection))
 
-    writeLines(md_fragment, con = md_connection, sep = "\n", useBytes = TRUE)
-    on.exit(file.remove(md_file), add=TRUE)
 
-    new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
+    # Create TeX-file ----
+    tex_file <- paste0(tools::file_path_sans_ext(normalizePath(x)), ".tex")
 
-    ellipsis$input <- md_file
-    ellipsis$output <- basename(new_name)
+    ellipsis$input    <- md_file
+    ellipsis$output   <- tex_file
     ellipsis$citeproc <- is.null(citation_package_call)
 
     status <- do.call(rmarkdown::pandoc_convert, ellipsis)
 
-    # Add appendix environment
-    tex_connection <- file(new_name, encoding = "UTF-8")
-    on.exit(close(tex_connection), add=TRUE)
-    tex <- readLines(con = tex_connection)
-    tex <- enc2native(tex)
+
+
+    # Add appendix environment ----
+    tex <- readLines_utf8(con = tex_file)
+
 
     # Check whether Rmd starts with heading, otherwise add empty section ----
     # when checking, ignore rows with latex newlines or html comments
-    md_fragment <- unlist(strsplit(md_fragment, split = "\n"))
+
 
     if(!grepl(pattern = "^#(\\b|\\s)", x = md_fragment[!grepl("^\\\\|^<!--", md_fragment) & md_fragment != ""][1])) {
       tex <- c("\\section{}", tex)
@@ -127,11 +125,11 @@ render_appendix <- function(
     )
     tex <- c("\\clearpage", appendix_endfloat_fix, "\n\n\\begin{appendix}", tex, "\\end{appendix}")
 
-    writeLines(tex, con = tex_connection, useBytes = TRUE)
+    writeLines(tex, con = tex_file, useBytes = TRUE)
 
     if(!is.null(status)) return(status)
   } else if(target_format %in% c("word", "docx")) {
-    cat(md_fragment)
+    cat(c("", md_fragment), sep = "\n")
   }
 
   return(invisible(0))

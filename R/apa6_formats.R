@@ -708,9 +708,7 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
 
 
 modify_input_file <- function(input, format) {
-  input_connection <- file(input, encoding = "UTF-8")
-  on.exit(close.connection(input_connection))
-  input_text <- readLines(con = input_connection)
+  input_text <- readLines_utf8(con = basename(input))
 
   yaml_params <- get_yaml_params(input_text)
 
@@ -738,9 +736,8 @@ modify_input_file <- function(input, format) {
           , ""
         )
       }
-      # useBytes set to FALSE due to issue #446, but this might cause trouble with
-      # CJK characters
-      writeLines(input_text, input_connection, useBytes = FALSE)
+      # latest changes due to issue #446
+      writeLines(input_text, con = input, useBytes = TRUE)
     }
   }
 
@@ -764,4 +761,16 @@ revert_original_input_file <- function(x = 1) {
   }
 
   return(NULL)
+}
+
+#' @keywords internal
+
+readLines_utf8 <- function(con) {
+  if(is.character(con)) {
+    con <- file(con, encoding = "utf8")
+    on.exit(close(con))
+  }
+  y <- try(readLines(con, encoding = "bytes"))
+  if(inherits(y, "try-error")) stop("File ", summary(con)$description, " seems to be missing.")
+  y
 }
