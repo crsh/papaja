@@ -7,7 +7,21 @@ test_that(
     aov_out <- aov(yield ~ N * P, npk)
     summary_aov <- summary(aov_out)
 
-    ges <- getOption("papaja.estimate_anova")
+    ges <- function(x, observed = NULL, include_intercept = TRUE, ...) {
+
+      if(is.null(observed)) {
+        generalized <- character(0L)
+      } else {
+        generalized <- observed
+      }
+
+      effectsize::eta_squared(
+        x
+        , generalized = generalized
+        , include_intercept = include_intercept
+        , ...
+      )
+    }
 
     # 'aov/lm' class
     apa_with_function <- apa_print(aov_out)
