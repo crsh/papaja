@@ -2,6 +2,7 @@
 test_that(
   "Custom effect sizes for ANOVA"
   , {
+    set.seed(42L)
     # from .onLoad()
     ges <- function(x, observed = NULL, include_intercept = TRUE, ...) {
 
