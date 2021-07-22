@@ -27,6 +27,7 @@
     only the point estimate will be calculated via papaja's internal effect-size function.)
 - Added progress bars for bootstrapped model comparisons (`apa_print.list()`).
 - Fixed a bug in `apa_print()` for interaction contrasts from {emmeans} that resulted in wrong estimate labels (#456).
+- Functions `variable_label()`, `variable_labels()`, and  `label_variables()` now reside in CRAN package [{tinylabels}](https://CRAN.r-project.org/package=tinylabels). {tinylabels} is automatically loaded when {papaja} is loaded.
 
 # papaja 0.1.0.9997
 
@@ -94,7 +95,7 @@
     - Fixed bug that caused problems with special characters in appendices (reported by @AlexChristensen, #283)
     - In `jou` mode, tables now span both columns unless requested otherwise (reported by @saladspices, #52, also see #298 by @jstbcs)
     - Level 4 and 5 headings are now properly runin (reported by @jamesrrae, #292)
-    - Abstarct heading is no longer numbered, when setting `number_sections: true` (reported by @tcgriffith, #332)
+    - Abstract heading is no longer numbered, when setting `number_sections: true` (reported by @tcgriffith, #332)
     - Fixed LaTeX warning `Command \@parboxrestore  has changed.` (fix suggested by @CrumpLab, #336)
 - Word
     - Overall improved template styles to reduce the need for manual fixes ()
@@ -163,7 +164,7 @@
     - Preparations for `pandoc` 2.0 support (reported by @dhagmann, #204)
     - Reenables placement options for figures and tables in appendices (reported by @TobiasKoeln, #172)
     - Enabled rendering appendices in subdirectories (reported by @jvcasillas, #168)
-    - Adds support for mulitple bibliography files (reported by @jvcasillas, #168)
+    - Adds support for multiple bibliography files (reported by @jvcasillas, #168)
     - No longer fails when bibliography file specified in the YAML front matter is not found (#189)
     - Enforces UTF-8 encoding
 - `apa6_docx()`/`apa6_word()`
@@ -171,9 +172,9 @@
 - `apa6_pdf()`
     - Utilizes `raw_attributes` extension in `pandoc` > 2.0 (reported by @mischavk, #227)
 - `cite_r()`
-    - Omitts version numbers if package is not installed
+    - Omits version numbers if package is not installed
 - `wsci()`
-    - Prevents incorrect calculation of confidence intervals in the presence of implicitly or explictly missing data (#191)
+    - Prevents incorrect calculation of confidence intervals in the presence of implicitly or explicitly missing data (#191)
 
 ### New functions
 
@@ -208,9 +209,9 @@ Experimental:
 
 ### Existing functions
 
-- Switched implementation of `variable_labels()` and related functions from S4 to S3 class. The transition was necessary because the S4 class was incompatible with at least one primitve function (#176). This change may unfortunately break backward compatibility with the previous release.
+- Switched implementation of `variable_labels()` and related functions from S4 to S3 class. The transition was necessary because the S4 class was incompatible with at least one primitive function (#176). This change may unfortunately break backward compatibility with the previous release.
 - `apa_table()`
-    - Now supports for column spanners that spann only one column
+    - Now supports for column spanners that span only one column
 - `render_appendix()`
     - Now supports for the application of `pandoc-citeproc`
 
@@ -253,7 +254,7 @@ Experimental:
 - `within_subjects_conf_int()`
     - Calculates confidence intervals in presence of `NA`s (reported by @TobiasKoeln, #137)
 - `apa_print()`
-    - Returned tables are of class `apa_results_table`, column names are easy to address, and each column is labeld for pretty printing.
+    - Returned tables are of class `apa_results_table`, column names are easy to address, and each column is labelled for pretty printing.
 - `apa_table()`
     - Takes into account additional options passed to `format.args` parameter (reported by @lnalborczyk, #131)
 - `apa_print.htest()`
@@ -282,7 +283,7 @@ Experimental:
 
 ### Template
 - The ampersand filter is applied with `--vanilla` to avoid problems with customized `.Rprofile`s (reported by @awellis, #96)
-- Fixed bug in `ampersand_filter()` regex, which caused some citations to be missed depending on preceeding citations (reported by @awellis, #96, and @m-Py, #100)
+- Fixed bug in `ampersand_filter()` regex, which caused some citations to be missed depending on preceding citations (reported by @awellis, #96, and @m-Py, #100)
 - On windows the Batch file to apply the ampersand filter is now created at the current location and deleted on exit to avoid permission problems (reported by @stahl-c)
 - Changed default graphics devices to `pdf` and `png` to improve compatibility and rendering speed; `postscript` and `tiff` are no longer used be default
 - Author note is omitted if no corresponding author is defined and no author note text is provided (reported by @jacob-long, #108; fixed by @jacob-long, #109)
@@ -292,7 +293,7 @@ Experimental:
     - Fixed bug that caused incorrect calculation of eta squared
     - MSE is now typeset in regular font rather than italic as per APA guidelines
 - `apa_table()`
-    - Added proper support for automated bookdown cross-referencing of tables: Chunk label is now automatically added als `\label{}` tag.
+    - Added proper support for automated bookdown cross-referencing of tables: Chunk label is now automatically added as `\label{}` tag.
     - Now supports `na_string` and `digits` options
 - `theme_apa()`
     - Now uses `ggplot::margin()` to set margins because `ggplot::unit()` is now deprecated.
