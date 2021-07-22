@@ -1,5 +1,17 @@
-# papaja (upcoming release)
+# papaja (upcoming)
 
+### Template
+
+- Fixed bugs that occurred when using unicode characters in an appendix file (reported by @mschrein, #446 and @kalenkovich, #353).
+
+
+### Existing functions
+
+- Output from `apa_print()` now always contains a `$table` element (as suggested in #324 by @Kalif-Vaughn)
+  with standardized column names (e.g., `term`, `estimate`, `conf.int`, `statistic`, `df`, `df.residual`, `p.value`).
+  - To maintain backwards compatibility, it is possible to access columns with aliases (for instance,
+    it is possible to write `output$table$F` and obtain `output$table$statistic`, see #364).
+  - Table columns are labelled (e.g., `"\\hat{\\eta}^2_G"`, `"$F$", "$p$`, ...) for creating tables via `apa_table()`.
 - `apa_print()` for ANOVA gained a new argument `estimate`: It is possible to
   specify a character string, a data frame, or a function to determine which measure 
   of effect size is to be reported.
@@ -13,7 +25,8 @@
     is supported. This is also the new default: If {effectsize} is installed, generalized eta-squared
     (point estimate and confidence interval) will be calculated. (If {effectsize} is not installed,
     only the point estimate will be calculated via papaja's internal effect-size function.)
-
+- Added progress bars for bootstrapped model comparisons (`apa_print.list()`).
+- Fixed a bug in `apa_print()` for interaction contrasts from {emmeans} that resulted in wrong estimate labels (#456).
 
 # papaja 0.1.0.9997
 
@@ -279,10 +292,10 @@ Experimental:
     - Fixed bug that caused incorrect calculation of eta squared
     - MSE is now typeset in regular font rather than italic as per APA guidelines
 - `apa_table()`
-    - Added proper support for automated bookdown cross-referecing of tables: Chunk label is now automatically added als `\label{}` tag.
+    - Added proper support for automated bookdown cross-referencing of tables: Chunk label is now automatically added als `\label{}` tag.
     - Now supports `na_string` and `digits` options
 - `theme_apa()`
-    - Now uses `ggplot::margin()` to set margins because `ggplot::unit()` is now depricated.
+    - Now uses `ggplot::margin()` to set margins because `ggplot::unit()` is now deprecated.
     - Changed base size default from 14 to 12 and adjusted some margin and spacing defaults
 - `r_refs()`
     - Fixed bug that caused some existing references to be added to the bib-file (#102)
