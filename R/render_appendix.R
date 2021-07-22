@@ -89,7 +89,7 @@ render_appendix <- function(
 
   # Render Markdown file ----
   md_file <- tempfile(fileext = ".md")
-  res <- knitr::knit(input = x, output = md_file, quiet = quiet)
+  res <- knitr::knit_child(input = x, output = md_file, quiet = quiet)
   md_fragment <- readLines_utf8(md_file)
 
   if(target_format == "latex") {
