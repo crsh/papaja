@@ -9,7 +9,7 @@
     code using `es = "ges"`, `es = "pes"` or `es = "es"` will still work and yield the same results.
     - If a data frame is supplied, it must contain columns `estimate`, `conf.low`, and `conf.high`.
     - If a function is supplied, it is used to calculate a measure of effect size. Currently,
-    output from the [{effectsize}](https:cran.r-project.org/package=effectsize) package
+    output from the [{effectsize}](https://CRAN.r-project.org/package=effectsize) package
     is supported. This is also the new default: If {effectsize} is installed, generalized eta-squared
     (point estimate and confidence interval) will be calculated. (If {effectsize} is not installed,
     only the point estimate will be calculated via papaja's internal effect-size function.)

@@ -2,29 +2,15 @@
 test_that(
   "Custom effect sizes for ANOVA"
   , {
-    set.seed(42L)
-    # from .onLoad()
-    ges <- function(x, observed = NULL, include_intercept = TRUE, ...) {
+    ges <- getOption("papaja.estimate_anova")
 
-      if(is.null(observed)) {
-        generalized <- character(0L)
-      } else {
-        generalized <- observed
-      }
-
-      effectsize::eta_squared(
-        x
-        , generalized = generalized
-        , include_intercept = include_intercept
-        , ...
-      )
-    }
-
-    options(papaja.estimate_anova = ges)
-
-
-    # Treat as between-subjects design, use Type-2 sums of squares
-    aov_out <- aov(yield ~ N * P, npk)
+    # Treat as between-subjects design, use Type-1 sums of squares
+    npk$id <- seq_len(nrow(npk))
+    aov_out <- afex::aov_4(
+      formula = yield ~ N * P + (1|id)
+      , data = npk
+      , include_aov = TRUE
+    )$aov
     summary_aov <- summary(aov_out)
 
 
@@ -69,7 +55,7 @@ test_that(
 
     # Treat as within-subjects design, use Type-3 sums of squares
     # 'afex_aov' class
-    afex_out <- afex::aov_4(yield ~ (N * P | block), data = npk)
+    afex_out <- afex::aov_4(yield ~ (N * P | block), data = npk, include_aov = TRUE)
 
     afex_with_intercept <- apa_print(afex_out, es = ges, intercept = TRUE)
     afex_without_intercept <- expect_warning(
@@ -77,7 +63,7 @@ test_that(
       , regexp = "Custom effect sizes were not available for some model terms. These have been dropped from the output object."
     )
 
-    # aovlist/listof (be careful: within subjects, Type-2 sums of squares)
+    # aovlist/listof (be careful: within subjects, Type-1 sums of squares)
     aovlist_out    <- apa_print(afex_out$aov, es = ges)
     aovlist_out_df <- apa_print(afex_out$aov, es = ges(afex_out$aov))
 
@@ -87,7 +73,7 @@ test_that(
     )
 
     # Anova.mlm (Type-3 again, but only partial eta-squared available)
-    Anova.mlm_out    <- expect_warning(apa_print(afex_out$Anova, es = ges))
+    Anova.mlm_out    <- expect_warning(apa_print(afex_out$Anova))
     Anova.mlm_out_df <- expect_warning(apa_print(afex_out$Anova, es = ges(afex_out$Anova)))
 
     expect_identical(
@@ -95,19 +81,20 @@ test_that(
       , Anova.mlm_out_df
     )
 
-    # anova from car::Anova
-    car_Anova_lm <- car::Anova(lm(yield ~ N * P, npk), type = "II")
+    # anova from car::Anova, between Ss
+    afex_between <- afex::aov_4(formula = yield ~ N*P + (1|id), data = npk)
 
     expect_identical(
-      apa_print(car_Anova_lm, es = ges)
-      , apa_with_function
+      apa_print(afex_between$Anova)
+      , apa_print(afex_between)
     )
 
     # anova from anova.lm()
-    stats_anova_lm <- anova(lm(yield ~ N * P, npk))
+    # between Ss, Type-1 SSs
+    stats_anova_lm <- anova(afex_between$lm)
 
     expect_identical(
-      apa_print(stats_anova_lm, es = ges)
+      apa_print(stats_anova_lm)
       , apa_with_function
     )
 
