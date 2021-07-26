@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils_for_plots.R
 \name{combine_plotmath}
 \alias{combine_plotmath}
-\title{Combine to expression}
+\title{Combine to Expression}
 \usage{
 combine_plotmath(x)
 }
@@ -14,6 +14,7 @@ An expression
 }
 \description{
 We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
-currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
+currently supported elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
+\emph{This function is not exported.}
 }
 \keyword{internal}
