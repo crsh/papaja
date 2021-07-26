@@ -50,7 +50,7 @@ Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduc
 # Install remotes package if necessary
 if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
 
-# Install the stable development verions from GitHub
+# Install the stable development version from GitHub
 remotes::install_github("crsh/papaja")
 
 # Install the latest development snapshot from GitHub
@@ -79,27 +79,6 @@ my_lm <- lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris
 apa_lm <- apa_print(my_lm)
 ```
 
-One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document.
-
-```{r eval = FALSE}
-apa_table(apa_lm$table, caption = "Iris regression table.")
-```
-
-<!-- GitHub markdown doesn't support MathJax -->
-
----
-
-Table. *Iris regression table.*
-
-| Predictor     | *b*   | 95% CI          | *t(146)*   | *p*       |
-|:--------------|------:|:---------------:|-----------:|----------:|
-| Intercept     | 1.04  |  [0.51, 1.58]   | 3.85       | &lt; .001 |
-| Sepal Length  | 0.61  |  [0.48, 0.73]   | 9.77       | &lt; .001 |
-| Petal Width   | 0.56  |  [0.32, 0.80]   | 4.55       | &lt; .001 |
-| Petal Length  | -0.59 |  [-0.71, -0.46] | -9.43      | &lt; .001 |
-
----
-
 `papaja` currently provides methods for the following object classes:
 
 ```{r echo = FALSE, results = "asis"}
@@ -123,9 +102,61 @@ knitr::kable(print_classes)
 \* Not fully tested, don't trust blindly!
 
 
-### Plot functions
+### Tables
 
-Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`) if you work with factorial designs:
+Function `apa_table()` may be used to include publication-ready tables in your manuscript.
+For instance, you might want to report some condition means (with standard errors).
+
+```{r message = FALSE, eval = FALSE}
+library(dplyr)
+npk %>%
+  group_by(N, P) %>%
+  summarise(mean = mean(yield), se = se(yield), .groups = "drop") %>%
+  label_variables(N = "Nitrogen", P = "Phosphate", mean = "*M*", se = "*SE*") %>%
+  apa_table(caption = "Mean pea yield (with standard errors)")
+```
+
+```{r echo = FALSE, message = FALSE}
+library(dplyr)
+out <- npk %>%
+  group_by(N, P) %>%
+  summarise(mean = mean(yield), se = se(yield), .groups = "drop")
+colnames(out) <- c("Nitrogen", "Phosphate", "*M*", "*SE*")
+knitr::kable(out, caption ="Table 1. *Mean pea yield (with standard errors)*", align = "c", digits = 2)
+```
+
+This is a fairly simple example, but `apa_table()` may be used to generate massive tables.
+
+`apa_table()` is also able to include the output from `apa_print()` into the manuscript. Thus, it is possible to
+conveniently include complete regression tables, ANOVA tables, or the output from mixed-effects models.
+
+
+```{r eval = FALSE}
+lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris) |>
+  apa_print() |>
+  apa_table(caption = "Iris regression table.")
+```
+
+<!-- GitHub markdown doesn't support MathJax -->
+
+---
+
+Table. *Iris regression table.*
+
+| Predictor     | *b*   | 95% CI          | *t(146)*   | *p*       |
+|:--------------|------:|:---------------:|-----------:|----------:|
+| Intercept     | 1.04  |  [0.51, 1.58]   | 3.85       | &lt; .001 |
+| Sepal Length  | 0.61  |  [0.48, 0.73]   | 9.77       | &lt; .001 |
+| Petal Width   | 0.56  |  [0.32, 0.80]   | 4.55       | &lt; .001 |
+| Petal Length  | -0.59 |  [-0.71, -0.46] | -9.43      | &lt; .001 |
+
+---
+
+
+### Figures
+
+Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`)
+if you work with factorial designs:
 
 ```{r include = FALSE}
 set.seed(42L)
@@ -163,7 +194,7 @@ apa_beeplot(
 )
 ```
 
-If you prefer creating your plots with `ggplot2` try `theme_apa()`.
+If you prefer creating your plots with `ggplot2`, try `theme_apa()`.
 
 
 ### Using papaja without RStudio
@@ -186,7 +217,7 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ### Computational reproducibility
 
-To ensure mid- to long-term computation reproducibility we highly recommend conserving the software environment used to write a manuscript (e.g. R and all R packages) either in a software container or a virutal machine.
+To ensure mid- to long-term computational reproducibility we highly recommend conserving the software environment used to write a manuscript (e.g. R and all R packages) either in a software container or a virtual machine.
 This way you can be sure that your R code does not break because of updates to R or any R package.
 For a brief primer on containers and virtual machines see [the supplementary material](https://psych-transparency-guide.uni-koeln.de/analytic-reproducibility.html#document-hardware-and-software-used-for-analyses) by Klein et al. (2018).
 
@@ -218,11 +249,6 @@ Any new S3/S4-methods for this function are always appreciated (e.g., `factanal`
 
 ## Papers written with papaja
 
-Please cite `papaja` if you use it.
-You can for example [use `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file.
-Below are some peer-reviewed publications that used `papaja`.
-If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
-
 ```{r include = FALSE}
 papaja_bib <- RefManageR::ReadZotero(group = "2202906", .params = list())
 
@@ -230,8 +256,14 @@ for(i in 1:length(papaja_bib)) {
   papaja_bib[[i]]$note <- gsub("^\\d+\\s*", "", papaja_bib[[i]]$note)
 }
 
-RefManageR::WriteBib(papaja_bib, "inst/papaja_manuscripts.bib")
+RefManageR::WriteBib(papaja_bib[sample(seq_along(papaja_bib), size = 6L)], "inst/papaja_manuscripts.bib")
 ```
+
+Please cite `papaja` if you use it.
+You can for example [use `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file.
+Below are some (randomly selected) peer-reviewed publications that used `papaja`.
+If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
+
 
 <div id = "refs"></div>
 
