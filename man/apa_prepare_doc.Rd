@@ -12,13 +12,13 @@ documents. \emph{This function is no longer needed and thus has been deprecated.
 }
 \details{
 The function creates and locks a non-exported object \code{apa_lang} that is used by other
-   \pkg{papaja}-functions. \code{apa_lang} is a \code{list} containing localizations for document
-   elements such as abstract and title. The selected language is defined by the \code{lang}-parameter
-   in the documents yaml-header. Currently, English (default) and German ("german") are supported.
+\pkg{papaja}-functions. \code{apa_lang} is a \code{list} containing localizations for document
+elements such as abstract and title. The selected language is defined by the \code{lang}-parameter
+in the documents yaml-header. Currently, English (default) and German ("german") are supported.
 
-   If the output document is MS Word (\code{output: \link{apa6_word}}) the function additionally creates
-   a title page and adds the abstract. You should, therefore, always call \code{apa_prepare_doc} at the
-   very beginning of the R Markdown document.
+If the output document is MS Word (\code{output: \link{apa6_word}}) the function additionally creates
+a title page and adds the abstract. You should, therefore, always call \code{apa_prepare_doc} at the
+very beginning of the R Markdown document.
 }
 \seealso{
 \code{\link{apa6_word}}

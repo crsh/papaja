@@ -1,11 +1,11 @@
 #' Aggregate data much faster using dplyr
 #'
 #' This is a convenience wrapper for aggregating your data using \pkg{dplyr} functions that tend to be much faster than the
-#' usual \code{aggregate} command. It is also easy to call from within a function. \emph{This function is not exported.}
+#' usual [stats::aggregate()] command. It is also easy to call from within a function. *This function is not exported.*
 #'
-#' @param data A \code{data.frame} that contains the data.
+#' @param data A `data.frame` that contains the data.
 #' @param factors Character. A vector of factor names to aggregate data by.
-#' @param dv Character. The dependent variable to aggregate. All variables in \code{data} that contain this substring
+#' @param dv Character. The dependent variable to aggregate. All variables in `data` that contain this character string
 #'    will be aggregated separately.
 #' @param fun Closure. The function used for aggregation.
 #' @keywords internal

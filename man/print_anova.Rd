@@ -30,18 +30,18 @@ Note that eta-squared is calculated correctly if and only if the design is balan
 \value{
 A named list containing the following components:
 
-   \describe{
-     \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-         value for each factor.}
-     \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
-     \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
-   }
+\describe{
+\item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
+value for each factor.}
+\item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} \% , either in units of the analyzed scale or as standardized effect size.
+\item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
+\item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
+}
 }
 \description{
-This function is the internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
+This function is the former internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
 of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
-guidelines. It is not ment to be called by the user. \emph{This function is not exported.}
+guidelines. It is already deprecated and will soon be defunct. \emph{This function is not exported.}
 }
 \examples{
  \dontrun{

@@ -26,7 +26,7 @@
 \item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
-parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
 \item{est_name}{An optional character. The label to be used for fixed-effects coefficients.}

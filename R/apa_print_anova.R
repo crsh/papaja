@@ -4,12 +4,14 @@
 #' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
 #' @param x Output object. See details.
-#' @param correction Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{"GG"} for Greenhouse-Geisser or \code{"HF"} for Huyn-Feldt methods or \code{"none"}). Default is \code{"GG"}.
+#' @param correction Character. For repeated-measures ANOVA, the type of sphericity correction to be used.
+#'   Possible values are `"GG"` for Greenhouse-Geisser method (the default), `"HF"` for Huyn-Feldt method, or `"none"` for no correction.
 #' @param intercept Logical. Indicates if the intercept term should be included in output.
 #' @param estimate Character, function, or data frame. Determines which estimate of effect size is to be used. See details.
-#' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
-#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
+#' @param mse Logical. Indicates if mean squared errors should be included in output. The default is \code{TRUE}, but this can be changed by setting
+#'   `options(papaja.mse = FALSE)`.
+#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored. If `x` is of class `afex_aov`, `observed` is deduced from `x`.
+#' @inheritParams glue_apa_results
 #' @details
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
@@ -25,8 +27,9 @@
 #'    for including custom effect-size measures.
 #'
 #'    A third option is to provide a function from the \pkg{effectsize} package
-#'    that will be used to calculate effect-size measures from `x`. See the
-#'    examples section for an example.
+#'    that will be used to calculate effect-size measures from `x`. If the
+#'    \pkg{effectsize} package is installed (and \pkg{papaja} is loaded), this is the new default. The default
+#'    can be changed via `options(papaja.estimate_anova = ...)`.
 #'
 #' @return
 #'    \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
@@ -34,7 +37,7 @@
 #'    \describe{
 #'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
 #'          value for each factor.}
-#'      \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
+#'      \item{\code{estimate}}{A named list of character strings giving the effect-size estimates for each factor, either in units of the analyzed scale or as standardized effect size.
 #'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
 #'      \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
 #'    }
@@ -51,7 +54,7 @@
 #'
 #'    # Use the effectsize package to calculate partial eta-squared with
 #'    # confidence intervals
-#'    apa_print(npk_aov, estimate = effectsize::eta_squared)
+#'    apa_print(npk_aov, estimate = effectsize::omega_squared)
 #' @method apa_print aov
 #' @export
 

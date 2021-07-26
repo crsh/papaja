@@ -153,21 +153,21 @@ according to APA guidelines.
 }
 \details{
 When using \code{apa_table}, the type of the output (LaTeX or MS Word) is
-  determined automatically by the rendered document type. In interactive R
-  session (unless a document is being rendered) the output defaults to LaTeX.
+determined automatically by the rendered document type. In interactive R
+session (unless a document is being rendered) the output defaults to LaTeX.
 
-  If \code{x} is a \code{list}, all list elements are merged by columns into
-  a single table and the names of list elements are added according to the
-  setting of \code{merge_method}.
+If \code{x} is a \code{list}, all list elements are merged by columns into
+a single table and the names of list elements are added according to the
+setting of \code{merge_method}.
 
-  By default, the width of the table is set to accommodate its contents. In
-  some cases, this may cause the table to exceed the page width. To address
-  this, tables can be rotated 90 degrees by setting \code{langscape = TRUE}
-  or, by explicitly specifying paragraph columns with fixed column widths,
-  such that the contents automatically is broken into multiple lines. For
-  example, set \code{align = "lm{5cm}l"} to limit the second column to a
-  width of 5 cm. Similarly, to space columns equally use
-  \code{align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")}
+By default, the width of the table is set to accommodate its contents. In
+some cases, this may cause the table to exceed the page width. To address
+this, tables can be rotated 90 degrees by setting \code{langscape = TRUE}
+or, by explicitly specifying paragraph columns with fixed column widths,
+such that the contents automatically is broken into multiple lines. For
+example, set \code{align = "lm{5cm}l"} to limit the second column to a
+width of 5 cm. Similarly, to space columns equally use
+\code{align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")}
 }
 \examples{
 

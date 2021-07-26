@@ -6,7 +6,6 @@
 #' here.
 #'
 #' @rdname lookup_tables
-#' @md
 #' @keywords internal
 
 lookup_names <- c(

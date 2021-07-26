@@ -13,7 +13,7 @@ apa_print(x, ...)
 }
 \value{
 The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the
-   documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
+documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
 }
 \description{
 A generic function that takes objects from various statistical methods to create formatted character
@@ -23,12 +23,12 @@ methods, which depend on the \code{\link{class}} of the first argument.
 \details{
 Currently the following output objects are supported:
 
-   \itemize{
-     \item \code{htest}
-     \item \code{lm} and \code{summary.lm}
-     \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
-     \item \code{anova} and \code{Anova.mlm}
-   }
+\itemize{
+\item \code{htest}
+\item \code{lm} and \code{summary.lm}
+\item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
+\item \code{anova} and \code{Anova.mlm}
+}
 }
 \examples{
 # List methods for apa_print()

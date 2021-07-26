@@ -173,10 +173,10 @@ Converts numeric values to character strings for reporting.
 }
 \details{
 If \code{x} is a vector, all arguments can be vectors
-   according to which each element of the vector is formatted.
-   Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
-   If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
-   of either rows or columns according to the value of \code{margin}.
+according to which each element of the vector is formatted.
+Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
+If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
+of either rows or columns according to the value of \code{margin}.
 }
 \examples{
 printnum(1/3)

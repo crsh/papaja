@@ -21,13 +21,13 @@ within_subjects_conf_int(data, id, factors, dv, level = 0.95, method = "Morey")
 \item{level}{Numeric. Defines the width of the interval. Defaults to 0.95
 for 95\% confidence intervals.}
 
-\item{method}{Character. The method that is used to calculate. Actually,
+\item{method}{Character. The method that is used to calculate CIs. Currently,
 "Morey" and "Cousineau" are supported. Defaults to "Morey".}
 }
 \value{
-A \code{data.frame} with addtional class \code{papaja_wsci}.
-  The \code{summary} method for this class returns a \code{data.frame} with
-  means and lower and upper limit for each cell of the design.
+A \code{data.frame} with additional class \code{papaja_wsci}.
+The \code{summary()} method for this class returns a \code{data.frame} with
+means along lower and upper limit for each cell of the design.
 }
 \description{
 Calculate Cousineau-Morey within-subjects confidence intervals.
@@ -42,9 +42,9 @@ wsci(
 }
 \references{
 Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
-   \emph{Tutorials in Quantitative Methods for Psychology}, \emph{4}(2), 61--64.
+\emph{Tutorials in Quantitative Methods for Psychology}, \emph{4}(2), 61--64.
 
-   Cousineau, D. (2005). Confidence intervals in within-subjects designs:
-   A simpler solution to Loftus and Masson's method.
-   \emph{Tutorials in Quantitative Methods for Psychology}, \emph{1}(1), 42--45.
+Cousineau, D. (2005). Confidence intervals in within-subjects designs:
+A simpler solution to Loftus and Masson's method.
+\emph{Tutorials in Quantitative Methods for Psychology}, \emph{1}(1), 42--45.
 }

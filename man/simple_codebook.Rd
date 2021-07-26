@@ -56,7 +56,7 @@ Generate a simple codebook in CSV-format
 }
 \details{
 If the \pkg{skimr} package is installed, an inline histogram is added
-  for all numeric variables.
+for all numeric variables.
 }
 \examples{
 \dontrun{

@@ -15,7 +15,7 @@
 \item{args_confint}{Named list. Arguments that are passed to \code{\link[nlme:intervals.lme]{nlme::intervals.lme()}}.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
-parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
 \item{est_name}{An optional character. The label to be used for fixed-effects coefficients.}

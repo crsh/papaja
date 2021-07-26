@@ -28,7 +28,6 @@
 #' @rdname apa_print.merMod
 #' @method apa_print merMod
 #' @export
-#' @md
 
 apa_print.merMod <- function(
   x

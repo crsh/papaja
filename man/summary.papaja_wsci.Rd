@@ -7,11 +7,11 @@
 \method{summary}{papaja_wsci}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{papaja_wsci}, generated with function \code{\link{wsci}}.}
+\item{object}{An object of class \code{papaja_wsci}, generated with function \code{\link[=wsci]{wsci()}}.}
 
 \item{...}{Further arguments that may be passed, currently ignored.}
 }
 \description{
 Calculate upper and lower limits of within-subjects confidence intervals calculated
-with \code{\link{wsci}} and return them along the respective means.
+with \code{\link[=wsci]{wsci()}} and return them along their respective means.
 }

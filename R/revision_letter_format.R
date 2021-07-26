@@ -108,7 +108,6 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #'   followed by `% <@~{#quote-label}` and `% ~@>}` tags in LaTeX
 #'   comments.
 #'
-#' @md
 #' @export
 
 quote_from_tex <- function(x, file) {

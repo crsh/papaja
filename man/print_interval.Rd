@@ -41,9 +41,9 @@ print_confint(x, ..., interval_type = "CI")
 print_hdint(x, ..., interval_type = "HDI")
 }
 \arguments{
-\item{x}{Numeric. A vector (of length 2, unless `y` is also specified) with,
-a two-column `matrix`, or a `data.frame`, which can coerced to a
-`matrix`.}
+\item{x}{Numeric. A vector (of length 2, unless \code{y} is also specified) with,
+a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a
+\code{matrix}.}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum]{printnum}}
@@ -51,19 +51,19 @@ a two-column `matrix`, or a `data.frame`, which can coerced to a
     \item{\code{}}{}
   }}
 
-\item{conf_level}{Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of `x`, see Details.}
+\item{conf_level}{Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of \code{x}, see Details.}
 
 \item{interval_type}{Character. Abbreviation indicating the type of interval
-estimate, e.g. `CI`.}
+estimate, e.g. \code{CI}.}
 
-\item{enclose_math}{Logical. Indicates whether the interval should be enclosed in `$` (i.e., math environment).}
+\item{enclose_math}{Logical. Indicates whether the interval should be enclosed in \code{$} (i.e., math environment).}
 
-\item{y}{Numeric. A vector of the same length as `x`.}
+\item{y}{Numeric. A vector of the same length as \code{x}.}
 }
 \value{
-A singel interval is returned as a `character` vector of length 1;
-   multiple intervals are returned as a named `list` of `character` vectors
-   of length 1.
+A singel interval is returned as a \code{character} vector of length 1;
+multiple intervals are returned as a named \code{list} of \code{character} vectors
+of length 1.
 }
 \description{
 Creates a character string to report an interval.
@@ -71,12 +71,12 @@ Creates a character string to report an interval.
 }
 \details{
 If possible the confidence level of the interval is inferred from
-   attributes of `x`. For a vector of length 2, the attribute `conf.level` is
-   is consulted; for a `matrix` or `data.frame` the column names are used,
-   if they are of the format "2.5 \%" and "97.5 \%".
+attributes of \code{x}. For a vector of length 2, the attribute \code{conf.level} is
+is consulted; for a \code{matrix} or \code{data.frame} the column names are used,
+if they are of the format "2.5 \\%" and "97.5 \\%".
 
-   If `x` is a `matrix` or `data.frame` the row names are used as names for
-   the returned `list` of intervals.
+If \code{x} is a \code{matrix} or \code{data.frame} the row names are used as names for
+the returned \code{list} of intervals.
 }
 \examples{
 \dontrun{

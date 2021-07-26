@@ -1,7 +1,8 @@
-#' Create variance table from various ANOVA objects
+#' Create Variance Table from Various ANOVA bjects
 #'
 #' These methods take objects from various R functions that calculate ANOVA to create
-#' a \code{data.frame} containing a variance table. \emph{This function is not exported.}
+#' a \code{data.frame} containing a variance table. \emph{This function is not exported
+#' and will most likely be deprecated, soon.}
 #'
 #' @param x Output object. See details.
 #' @param correction Character. For \code{summary.Anova.mlm} objects, specifies the type of
@@ -9,20 +10,19 @@
 #'    for Huyn-Feldt methods or \code{none} is also possible. Ignored for other objects.
 #' @param ... Further arguments to pass to methods.
 #' @details
-#'    The returned \code{data.frame} can be passed to functions such as \code{\link{print_anova}}.
+#'    The returned \code{data.frame} can be passed to functions such as [print_anova()].
 #'
 #'    Currently, methods for the following objects are available:
-#'    \itemize{
-#'      \item{\code{summary.aov}}
-#'      \item{\code{summary.aovlist}}
-#'      \item{\code{Anova.mlm}}
-#'    }
+#'
+#'    - summary.aov
+#'    - summary.aovlist
+#'    - Anova.mlm
 #'
 #' @return
 #'    \code{data.frame} of class \code{apa_variance_table} or \code{apa_model_comp}.
 #'
 #' @keywords internal
-#' @seealso \code{\link{print_anova}}, \code{\link{print_model_comp}}
+#' @seealso [print_anova()], [print_model_comp()]
 #' @examples
 #'  \dontrun{
 #'    ## From Venables and Ripley (2002) p. 165.

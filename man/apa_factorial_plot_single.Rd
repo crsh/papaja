@@ -15,19 +15,15 @@ apa_factorial_plot_single(
 )
 }
 \arguments{
-\item{aggregated}{A \code{data.frame}, the \emph{aggregated} data.}
-
-\item{y.values}{A \code{data.frame} containing the measures of central tendency and of dispersion per cell of the design.}
-
 \item{id}{Character. Variable name that identifies subjects.}
 
 \item{dv}{Character. The name of the dependent variable.}
 
 \item{factors}{Character. A vector of up to four variable names that is used to stratify the data.}
 
-\item{intercept}{Numeric. See details in \code{\link{apa_factorial_plot}}}
+\item{intercept}{Numeric. See details in \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}}
 }
 \description{
-Internal function that is called (possibly multiple times) by \code{\link{apa_factorial_plot}}.
+Internal function that is called (possibly multiple times) by \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}.
 }
 \keyword{internal}

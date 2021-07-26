@@ -16,7 +16,7 @@ ci(x, level = 0.95, na.rm = TRUE)
 \item{x}{Numeric. A vector of observations from your dependent variable.}
 
 \item{level}{Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-for 95\% confidence intervals.}
+for 95\\% confidence intervals.}
 
 \item{na.rm}{Logical. Specifies if missing values are removed.}
 }

@@ -13,8 +13,8 @@ strip_math_tags(x)
 \item{x}{A (labelled) character string.}
 }
 \description{
-Internal function to strip math tags from variable labels or strings. `svl()`
-returns the stripped variable label of `x`, if available. `strip_math_tags` returns
-the stripped character `x`.
+Internal function to strip math tags from variable labels or strings. \code{svl()}
+returns the stripped variable label of \code{x}, if available. \code{strip_math_tags} returns
+the stripped character \code{x}.
 }
 \keyword{internal}

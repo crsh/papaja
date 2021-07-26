@@ -9,7 +9,7 @@ hd_int(x, level = 0.95)
 \arguments{
 \item{x}{Numeric. A vector of observations.}
 
-\item{level}{Numeric. Defines the width of the interval. Defaults to 95\% highest density intervals.}
+\item{level}{Numeric. Defines the width of the interval. Defaults to 95\\% highest density intervals.}
 }
 \description{
 Calculates the highest density interval of a vector of values

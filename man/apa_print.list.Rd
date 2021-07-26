@@ -20,7 +20,7 @@
 
 \item{anova_fun}{Function. Function to compare model-objects contained in \code{x}.}
 
-\item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
+\item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range \link{0, 1}); ignored if \code{boot_samples = 0}.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.}
 
@@ -35,13 +35,13 @@
 \value{
 \code{apa_print.list} returns a named list containing the following components according to the input:
 
-   \describe{
-     \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-         value for each non-baseline model.}
-     \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each non-baseline model}
-     \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model}
-     \item{\code{table}}{A data.frame containing the complete model comparison table including regression coefficients, which can be passed to \code{\link{apa_table}}.}
-   }
+\describe{
+\item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
+value for each non-baseline model.}
+\item{\code{estimate}}{A named list of character strings giving the effect size estimates for each non-baseline model}
+\item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model}
+\item{\code{table}}{A data.frame containing the complete model comparison table including regression coefficients, which can be passed to \code{\link{apa_table}}.}
+}
 }
 \description{
 This methods performs comparisons of \code{lm}-objects and creates formatted character
@@ -49,26 +49,26 @@ strings and a model comparison table to report the results in accordance with AP
 }
 \details{
 As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\Delta R^2}
-   are often unreliable. Confidence intervals for model comparisons of \code{lm}-objects are, therefore, estimated
-   using their modified percentile bootstrap method. Note that the accuracy of the confidence intervals depends on
-   the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
+are often unreliable. Confidence intervals for model comparisons of \code{lm}-objects are, therefore, estimated
+using their modified percentile bootstrap method. Note that the accuracy of the confidence intervals depends on
+the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
 
-   \emph{"When the predictor distribution is multivariate normal, one can obtain accurate CIs for \eqn{\rho^2} with
-   \eqn{n \geq~50} when \eqn{p = 3}. For \eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq~100} is advisable. When the
-   predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
-   Algina, Keselman & Penfield, 2010)}
+\emph{"When the predictor distribution is multivariate normal, one can obtain accurate CIs for \eqn{\rho^2} with
+\eqn{n \geq~50} when \eqn{p = 3}. For \eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq~100} is advisable. When the
+predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
+Algina, Keselman & Penfield, 2010)}
 
-   If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
-   obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
-   Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
-   "the values of the [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
-   put differently, it is assumed that predictors are not random. The confidence intervals for the regression
-   coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
-   \eqn{\Delta R^2} (e.g., 90\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\% CI for
-   regression coefficients, Steiger, 2004).
+If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
+obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\\% CI (see
+Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
+"the values of the \link{predictors} were selected a priori as part of the research design" (p. 15, Kelly, 2007);
+put differently, it is assumed that predictors are not random. The confidence intervals for the regression
+coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
+\eqn{\Delta R^2} (e.g., 90\\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\\% CI for
+regression coefficients, Steiger, 2004).
 
-   If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-   of freedom, are replaced with brackets.
+If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
+of freedom, are replaced with brackets.
 }
 \examples{
    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
@@ -80,18 +80,18 @@ As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence int
 }
 \references{
 Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for an Effect Size Measure in Multiple Linear Regression.
-   \emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
+\emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
 
-   Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
-   \emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
+Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
+\emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
 
-   Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-   Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-   doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
+Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
+doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 
-   Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
-   implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
-   doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
+implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
+doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
 \code{\link[stats]{anova}}

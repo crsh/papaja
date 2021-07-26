@@ -15,7 +15,6 @@
 #'   single_anova <- anova(fm1)
 #'   apa_print(single_anova)
 #'
-#' @md
 #' @family apa_print
 #' @rdname apa_print.lme
 #' @method apa_print lme

@@ -49,12 +49,12 @@ Template for creating an article according to APA guidelines (6th edition) in PD
 }
 \details{
 When creating PDF documents the YAML option \code{classoption} is passed to the class options of the LaTeX apa6 document class.
-   In this case, additional options are available. Refer to the apa6 document class
-   \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
-   such as paper size or draft watermarks.
+In this case, additional options are available. Refer to the apa6 document class
+\href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
+such as paper size or draft watermarks.
 
-   When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
-   so that each figure is saved in all four formats at a resolution of 300 dpi.
+When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
+so that each figure is saved in all four formats at a resolution of 300 dpi.
 }
 \section{Functions}{
 \itemize{

@@ -1,8 +1,8 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' This function is the internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
+#' This function is the former internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
 #' of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
-#' guidelines. It is not ment to be called by the user. \emph{This function is not exported.}
+#' guidelines. It is already deprecated and will soon be defunct. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
