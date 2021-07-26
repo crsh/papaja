@@ -100,8 +100,8 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
 }
 \description{
-Wrapper function that creates one or more beeswarm plots from a \code{data.frame} containing data from
-a factorial design and sets APA-friendly defaults.
+Create one or more beeswarm plots from a \code{data.frame} containing data from
+a factorial design and set APA-friendly defaults.
 }
 \details{
 The measure of dispersion can be either \code{\link[=conf_int]{conf_int()}} for between-subjects confidence intervals, \code{\link[=se]{se()}} for standard errors,
