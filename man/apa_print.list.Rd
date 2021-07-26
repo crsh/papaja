@@ -20,7 +20,7 @@
 
 \item{anova_fun}{Function. Function to compare model-objects contained in \code{x}.}
 
-\item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range \link{0, 1}); ignored if \code{boot_samples = 0}.}
+\item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.}
 
@@ -61,7 +61,7 @@ Algina, Keselman & Penfield, 2010)}
 If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
 obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\\% CI (see
 Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
-"the values of the \link{predictors} were selected a priori as part of the research design" (p. 15, Kelly, 2007);
+"the values of the [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
 put differently, it is assumed that predictors are not random. The confidence intervals for the regression
 coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
 \eqn{\Delta R^2} (e.g., 90\\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\\% CI for

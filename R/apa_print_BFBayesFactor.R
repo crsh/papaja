@@ -8,7 +8,7 @@
 #' @param iterations Numeric. Number of iterations of the MCMC sampler to estimate HDIs from the posterior.
 #' @param central_tendency Function to calculate central tendency of MCMC samples to obtain a point estimate from
 #'   the posterior.
-#' @param hdi Numeric. A single value (range [0, 1]) giving the credibility level of the HDI.
+#' @param hdi Numeric. A single value (range \[0, 1\]) giving the credibility level of the HDI.
 #' @param standardized Logical. Indicates whether to return standardized or unstandardized effect size estimates.
 #' @param ratio_subscript Character. A brief description of the model comparison in the form of \code{"M1/M2"}.
 #' @param auto_invert Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.

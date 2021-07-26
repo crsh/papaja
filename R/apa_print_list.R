@@ -5,7 +5,7 @@
 #'
 #' @param x List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the output object.
 #' @param anova_fun Function. Function to compare model-objects contained in \code{x}.
-#' @param ci Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.
+#' @param ci Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range \[0, 1\]); ignored if \code{boot_samples = 0}.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
@@ -15,7 +15,7 @@
 #' @details
 #'
 #'    As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\Delta R^2}
-#'    are often unreliable. Confidence intervals for model comparisons of \code{lm}-objects are, therefore, estimated
+#'    are often unreliable. Confidence intervals for model comparisons of \code{lm} objects are, therefore, estimated
 #'    using their modified percentile bootstrap method. Note that the accuracy of the confidence intervals depends on
 #'    the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
 #'
@@ -25,12 +25,12 @@
 #'    Algina, Keselman & Penfield, 2010)}
 #'
 #'    If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
-#'    obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
+#'    obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90% CI (see
 #'    Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
-#'    "the values of the [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
+#'    "the values of the \[predictors\] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
 #'    put differently, it is assumed that predictors are not random. The confidence intervals for the regression
 #'    coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
-#'    \eqn{\Delta R^2} (e.g., 90\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\% CI for
+#'    \eqn{\Delta R^2} (e.g., 90% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95% CI for
 #'    regression coefficients, Steiger, 2004).
 #'
 #'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees

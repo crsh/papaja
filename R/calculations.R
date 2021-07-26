@@ -274,7 +274,7 @@ summary.papaja_wsci <- function(object, ...) {
 #'
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals.
+#'    for 95% confidence intervals.
 #' @param na.rm Logical. Specifies if missing values are removed.
 #' @export
 
@@ -325,7 +325,7 @@ se <- function(x, na.rm = TRUE) {
 #' Calculates the highest density interval of a vector of values
 #'
 #' @param x Numeric. A vector of observations.
-#' @param level Numeric. Defines the width of the interval. Defaults to 95\% highest density intervals.
+#' @param level Numeric. Defines the width of the interval. Defaults to 95% highest-density intervals.
 
 hd_int <- function(x, level = 0.95) {
   validate(x, check_class = "numeric")

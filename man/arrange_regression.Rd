@@ -16,8 +16,8 @@ otherwise the supplied name is used. See details.}
 \item{standardized}{Logical. Indicates if coefficients are standardized or unstandardized and leading
 zeros are omitted if appropriate. See details.}
 
-\item{ci}{Numeric. Either a single value (range \link{0, 1}) giving the confidence level or a two-column
-\code{matrix} with confidence region bounds as column names (e.g. "2.5 \\%" and "97.5 \\%") and
+\item{ci}{Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
+\code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 }

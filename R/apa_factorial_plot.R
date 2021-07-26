@@ -498,8 +498,8 @@ apa_factorial_plot.default <- function(
 #'
 #' Internal function that is called (possibly multiple times) by [apa_factorial_plot()].
 #'
-#' @param aggregated A `data.frame}, the \emph{aggregated} data.
-#' @param y.values   A `data.frame} containing the measures of central tendency and of dispersion per cell of the design.
+#' @param aggregated A `data.frame`, the *aggregated* data.
+#' @param y.values   A `data.frame` containing the measures of central tendency and of dispersion per cell of the design.
 #' @param id Character. Variable name that identifies subjects.
 #' @param dv Character. The name of the dependent variable.
 #' @param factors Character. A vector of up to four variable names that is used to stratify the data.

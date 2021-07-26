@@ -30,8 +30,8 @@
 adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
 otherwise the supplied name is used. See details.}
 
-\item{ci}{Numeric. Either a single value (range \link{0, 1}) giving the confidence level or a two-column
-\code{matrix} with confidence region bounds as column names (e.g. "2.5 \\%" and "97.5 \\%") and
+\item{ci}{Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
+\code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 
@@ -55,7 +55,7 @@ zeros are omitted if appropriate. See details.}
 \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
 value for each term.}
 \item{\code{estimate}}{A named list of character strings giving the descriptive estimates and confidence intervals
-for each term.} \% , either in units of the analyzed scale or as standardized effect size.
+for each term, either in units of the analysed scale or as standardized effect size.}
 \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each term.}
 \item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
 }
@@ -82,10 +82,10 @@ If \code{ci} is a single value, confidence intervals are calculated using \code{
 
 If \code{x} is an \code{lm}-object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
 are computed using \code{\link[MBESS]{ci.R2}} to obtain a confidence region that corresponds to the
-\eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95\\% CI or
-\eqn{\alpha = 0.05} for regression coefficients yields a 90\\% CI for \eqn{R^2}, see Steiger, 2004). If
+\eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95\% CI or
+\eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004). If
 \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e., "the values of the
-\link{predictors} were selected a priori as part of the research design" (p. 15, Kelly, 2007); put differently, it
+[predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007); put differently, it
 is assumed that predictors are not random.
 }
 \examples{
@@ -124,7 +124,7 @@ implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
 doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
-\code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
+\code{\link[stats:confint]{stats::confint()}}, \code{\link[MBESS:ci.pvaf]{MBESS::ci.pvaf()}}
 
 Other apa_print: 
 \code{\link{apa_print.BFBayesFactor}()},

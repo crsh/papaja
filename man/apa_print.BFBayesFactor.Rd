@@ -55,7 +55,7 @@
 \item{central_tendency}{Function to calculate central tendency of MCMC samples to obtain a point estimate from
 the posterior.}
 
-\item{hdi}{Numeric. A single value (range \link{0, 1}) giving the credibility level of the HDI.}
+\item{hdi}{Numeric. A single value (range [0, 1]) giving the credibility level of the HDI.}
 
 \item{standardized}{Logical. Indicates whether to return standardized or unstandardized effect size estimates.}
 

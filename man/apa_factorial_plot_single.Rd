@@ -15,6 +15,10 @@ apa_factorial_plot_single(
 )
 }
 \arguments{
+\item{aggregated}{A \code{data.frame}, the \emph{aggregated} data.}
+
+\item{y.values}{A \code{data.frame} containing the measures of central tendency and of dispersion per cell of the design.}
+
 \item{id}{Character. Variable name that identifies subjects.}
 
 \item{dv}{Character. The name of the dependent variable.}

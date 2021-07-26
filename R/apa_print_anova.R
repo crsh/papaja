@@ -32,21 +32,19 @@
 #'    can be changed via `options(papaja.estimate_anova = ...)`.
 #'
 #' @return
-#'    \code{apa_print.aov} and related functions return a named list containing the following components according to the input:
+#' `apa_print.aov()` and related functions return a named list containing the following components according to the input:
 #'
-#'    \describe{
-#'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-#'          value for each factor.}
-#'      \item{\code{estimate}}{A named list of character strings giving the effect-size estimates for each factor, either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
-#'      \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
-#'    }
+#' - `estimate` A named list of character strings giving the effect-size estimates for each factor, either in units of the analysed scale or as standardized effect size.
+#' - `statistic` A named list of character strings giving the test statistic, parameters, and *p* value for each factor.
+#' - `full_result` A named list of character strings combining `estimate` and `statistic` for each factor.
+#' - `table` A data.frame containing the complete ANOVA table, which can be passed to [apa_table()].
+#'
 #' @references
 #'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
 #'    , 37 (3), 379--384. doi:\href{https://doi.org/10.3758/BF03192707}{10.3758/BF03192707}
 #'
 #' @family apa_print
-#' @seealso \code{\link{aov}}, \code{\link[car]{Anova}}, \code{\link{apa_print.list}}
+#' @seealso [aov()], [car::Anova()], [apa_print.list()]
 #' @examples
 #'    ## From Venables and Ripley (2002) p. 165.
 #'    npk_aov <- aov(yield ~ block + N * P * K, npk)

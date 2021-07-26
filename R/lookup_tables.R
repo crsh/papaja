@@ -6,6 +6,9 @@
 #' here.
 #'
 #' @rdname lookup_tables
+#' @examples
+#'   papaja:::lookup_names[["mean.of.x"]]
+#'   papaja:::lookup_labels[["mean.of.x"]]
 #' @keywords internal
 
 lookup_names <- c(
