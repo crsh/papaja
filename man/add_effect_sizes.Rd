@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{add_effect_sizes}
 \alias{add_effect_sizes}
-\title{Effect sizes for Analysis of Variance}
+\title{Effect Sizes for Analysis of Variance}
 \usage{
 add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
 }

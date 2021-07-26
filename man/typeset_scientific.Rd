@@ -2,7 +2,7 @@
 % Please edit documentation in R/printnum.R
 \name{typeset_scientific}
 \alias{typeset_scientific}
-\title{Typset scientific notation}
+\title{Typeset scientific notation}
 \usage{
 typeset_scientific(x)
 }
@@ -10,7 +10,7 @@ typeset_scientific(x)
 \item{x}{Character.}
 }
 \description{
-Typsets scientific notation of numbers into properly typeset math strings.
+Typesets scientific notation of numbers into properly typeset math strings.
 }
 \examples{
 papaja:::typeset_scientific("1.25e+04")

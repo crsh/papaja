@@ -3,7 +3,7 @@
 \name{wsci}
 \alias{wsci}
 \alias{within_subjects_conf_int}
-\title{Within-subjects confidence intervals}
+\title{Within-Subjects Confidence Intervals}
 \usage{
 wsci(data, id, factors, dv, level = 0.95, method = "Morey")
 

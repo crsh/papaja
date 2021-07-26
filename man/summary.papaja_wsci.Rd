@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{summary.papaja_wsci}
 \alias{summary.papaja_wsci}
-\title{Summarize Within-Subjects Confidence Intervals}
+\title{Summarise Within-Subjects Confidence Intervals}
 \usage{
 \method{summary}{papaja_wsci}(object, ...)
 }

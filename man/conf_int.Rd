@@ -4,7 +4,7 @@
 \alias{conf_int}
 \alias{conf.int}
 \alias{ci}
-\title{Between-subjects confidence intervals}
+\title{Between-Subjects Confidence Intervals}
 \usage{
 conf_int(x, level = 0.95, na.rm = TRUE)
 

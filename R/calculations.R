@@ -72,7 +72,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 
 
 
-#' Within-subjects confidence intervals
+#' Within-Subjects Confidence Intervals
 #'
 #' Calculate Cousineau-Morey within-subjects confidence intervals.
 #'
@@ -86,7 +86,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 #'          "Morey" and "Cousineau" are supported. Defaults to "Morey".
 #' @references
 #'    Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, *4*(2), 61--64.
+#'    *Tutorials in Quantitative Methods for Psychology*, *4*(2), 61--64.
 #'
 #'    Cousineau, D. (2005). Confidence intervals in within-subjects designs:
 #'    A simpler solution to Loftus and Masson's method.
@@ -245,7 +245,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 within_subjects_conf_int <- wsci
 
 
-#' Summarize Within-Subjects Confidence Intervals
+#' Summarise Within-Subjects Confidence Intervals
 #'
 #' Calculate upper and lower limits of within-subjects confidence intervals calculated
 #' with [wsci()] and return them along their respective means.
@@ -268,7 +268,7 @@ summary.papaja_wsci <- function(object, ...) {
   y
 }
 
-#' Between-subjects confidence intervals
+#' Between-Subjects Confidence Intervals
 #'
 #' Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 #'
@@ -305,9 +305,9 @@ conf.int <- conf_int
 ci <- conf_int
 
 
-#' Standard errors
+#' Standard Errors
 #'
-#' Calculates the standard error of the mean
+#' Calculates the standard error of the mean.
 #'
 #' @param x Numeric. A vector of observations.
 #' @param na.rm Logical. Specifies if missing values should be removed.
@@ -315,14 +315,13 @@ ci <- conf_int
 
 se <- function(x, na.rm = TRUE) {
   n <- sum(!is.na(x))
-  ee <- stats::sd(x, na.rm = na.rm) / sqrt(n)
-  return(ee)
+  stats::sd(x, na.rm = na.rm) / sqrt(n)
 }
 
 
-#' Highest density interval
+#' Highest-Density Interval
 #'
-#' Calculates the highest density interval of a vector of values
+#' Calculates the highest-density interval of a vector of values.
 #'
 #' @param x Numeric. A vector of observations.
 #' @param level Numeric. Defines the width of the interval. Defaults to 95% highest-density intervals.
@@ -343,7 +342,7 @@ hd_int <- function(x, level = 0.95) {
 }
 
 
-#' Effect sizes for Analysis of Variance
+#' Effect Sizes for Analysis of Variance
 #'
 #' Calculates effect-size measures for Analysis of Variance output objects.
 #'

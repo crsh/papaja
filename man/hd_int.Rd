@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{hd_int}
 \alias{hd_int}
-\title{Highest density interval}
+\title{Highest-Density Interval}
 \usage{
 hd_int(x, level = 0.95)
 }
@@ -12,5 +12,5 @@ hd_int(x, level = 0.95)
 \item{level}{Numeric. Defines the width of the interval. Defaults to 95\% highest-density intervals.}
 }
 \description{
-Calculates the highest density interval of a vector of values
+Calculates the highest-density interval of a vector of values.
 }

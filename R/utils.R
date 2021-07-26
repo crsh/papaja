@@ -401,7 +401,7 @@ sel <- function(x, i){
 }
 
 
-#' Set defaults
+#' Set Defaults
 #'
 #' A helper function that is intended for internal use. A list \code{ellipsis} may be manipulated by overwriting (via \code{set}) or adding (via \code{set.if.null}) list elements.
 #'
@@ -537,7 +537,7 @@ localize <- function(x) {
   )
 }
 
-#' Package available
+#' Package Available
 #'
 #' Internal function to check if a specified package is installed.
 
