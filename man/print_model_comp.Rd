@@ -25,7 +25,9 @@ print_model_comp(
 
 \item{progress_bar}{Logical. Determines whether a progress bar is printed while bootstrapping.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 
 \item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
 }

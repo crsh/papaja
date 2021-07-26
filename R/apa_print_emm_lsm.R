@@ -10,14 +10,11 @@
 # #'    supplied name is used.
 #' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
 #' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
+#' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
 #' @details
 #'
 #'    ADJUSTED CONFIDENCE INTERVALS
-#'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
 #'
 #' @return \code{apa_print()} returns a list containing the following components according to the input:
 #'

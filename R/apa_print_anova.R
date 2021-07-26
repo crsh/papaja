@@ -16,9 +16,6 @@
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
 #'    are omitted and other non-word characters are replaced by \code{_}.
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
-#'
 #'    Argument `estimate` determines which measure of effect size is to be used: It is currently possible to provide
 #'    a character, where `"ges"` calculates generalized eta squared,`"pes"` calculates partial eta squared, and `"es"`
 #'    calculates eta squared. Note that eta squared is calculated correctly if and only if the design is balanced.

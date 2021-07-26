@@ -9,8 +9,8 @@
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param ... Additional arguments passed to \code{anova_fun}
+#' @inheritParams glue_apa_results
 #'
 #' @details
 #'
@@ -33,8 +33,6 @@
 #'    \eqn{\Delta R^2} (e.g., 90% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95% CI for
 #'    regression coefficients, Steiger, 2004).
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
 #' @return
 #'    \code{apa_print.list} returns a named list containing the following components according to the input:
 #'

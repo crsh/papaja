@@ -35,7 +35,9 @@ otherwise the supplied name is used. See details.}
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 
-\item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum]{printnum}}
@@ -57,20 +59,17 @@ value for each term.}
 \item{\code{estimate}}{A named list of character strings giving the descriptive estimates and confidence intervals
 for each term, either in units of the analysed scale or as standardized effect size.}
 \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each term.}
-\item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
+\item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link[=apa_table]{apa_table()}}.}
 }
 }
 \description{
-These methods take \code{glm} and \code{lm} objects to create formatted character
+These methods take \link[=glm]{glm} and \link[=lm]{lm} objects to create formatted character
 strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
 The coefficients names are sanitized to facilitate their use as list names. Parentheses
 are omitted and other non-word characters are replaced by \code{_} (see \code{\link{sanitize_terms}}).
-
-If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-of freedom, are replaced with brackets.
-
+#'
 \code{est_name} is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
 Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
 text (e.g., \code{\\\\beta} yields \eqn{\beta}).
@@ -78,7 +77,7 @@ text (e.g., \code{\\\\beta} yields \eqn{\beta}).
 If \code{standardized} is \code{TRUE} "scale()" is removed from coefficients names (see examples).
 Currently, this option is ignored for \code{glm}-objects.
 
-If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
+If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats:confint]{stats::confint()}}.
 
 If \code{x} is an \code{lm}-object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
 are computed using \code{\link[MBESS]{ci.R2}} to obtain a confidence region that corresponds to the
@@ -116,12 +115,12 @@ apa_print(glm.D93)
 }
 \references{
 Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+Variance and Contrast Analysis. \emph{Psychological Methods}, \emph{9}(2), 164-182.
+doi: \href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 
 Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
-implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
-doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+implementation. \emph{Journal of Statistical Software}, \emph{20}(8), 1-24.
+doi: \href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
 \code{\link[stats:confint]{stats::confint()}}, \code{\link[MBESS:ci.pvaf]{MBESS::ci.pvaf()}}

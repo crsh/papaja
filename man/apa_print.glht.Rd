@@ -20,7 +20,9 @@
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 }
 \value{
 \code{apa_print()} returns a list containing the following components according to the input:
@@ -41,9 +43,6 @@ considered experimental.}
 }
 \details{
 ADJUSTED CONFIDENCE INTERVALS
-
-If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
-of freedom, are replaced with brackets.
 }
 \examples{
    NULL

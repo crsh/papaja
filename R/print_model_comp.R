@@ -5,12 +5,12 @@
 #' guidelines. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
 #' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the output object.
 #' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
+#' @inheritParams glue_apa_results
 #' @return
 #'    A named list containing the following components:
 #'

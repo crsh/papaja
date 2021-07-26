@@ -20,6 +20,10 @@ zeros are omitted if appropriate. See details.}
 \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
+
+\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
+string(s) to format. Multiple inputs are concatenated together before formatting.
+Named arguments are taken to be temporary variables available for substitution.}
 }
 \value{
 \code{data.frame} of class \code{apa_regression_table}.
