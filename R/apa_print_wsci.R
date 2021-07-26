@@ -12,6 +12,8 @@
 
 apa_print.papaja_wsci <- function(x, ...) {
 
+  # Note: Parameter 'in_paren' is not necessary (estimate only contains brackets, these are not changed when placed in parentheses)
+
   summary_wsci <- summary(x)
 
   res <- init_apa_results()
