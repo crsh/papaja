@@ -3,38 +3,43 @@
 #' These methods take objects from various R functions that calculate ANOVA to create formatted character
 #' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
 #'
-#' @param x Output object. See details.
+#' @param x          An object containing the results from an analysis of variance ANOVA
 #' @param correction Character. For repeated-measures ANOVA, the type of sphericity correction to be used.
-#'   Possible values are `"GG"` for Greenhouse-Geisser method (the default), `"HF"` for Huyn-Feldt method, or `"none"` for no correction.
+#'   Possible values are `"GG"` for the Greenhouse-Geisser method (the default), `"HF"` for the Huyn-Feldt method, or `"none"` for no correction.
 #' @param intercept Logical. Indicates if the intercept term should be included in output.
 #' @param estimate Character, function, or data frame. Determines which estimate of effect size is to be used. See details.
-#' @param mse Logical. Indicates if mean squared errors should be included in output. The default is \code{TRUE}, but this can be changed by setting
-#'   `options(papaja.mse = FALSE)`.
-#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored. If `x` is of class `afex_aov`, `observed` is deduced from `x`.
+#' @param mse Logical. Indicates if mean squared errors should be included in output. The default is \code{TRUE}, but this can be changed
+#'   either by supplying a different value in the function call or by changing the global default via `options(papaja.mse = FALSE)`.
+#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated).
+#'   Necessary only for calculating *generalized* eta squared; otherwise ignored.
+#'   If `x` is of class `afex_aov`, `observed` is automatically deduced from `x`.
 #' @inheritParams glue_apa_results
 #' @details
 #'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
-#'    are omitted and other non-word characters are replaced by \code{_}.
+#'    are omitted and other non-word characters are replaced by `_`.
 #'
-#'    Argument `estimate` determines which measure of effect size is to be used: It is currently possible to provide
-#'    a character, where `"ges"` calculates generalized eta squared,`"pes"` calculates partial eta squared, and `"es"`
-#'    calculates eta squared. Note that eta squared is calculated correctly if and only if the design is balanced.
+#'    Argument `estimate` determines which measure of effect size is to be used:
+#'    It is currently possible to provide a character, where
+#'    `"ges"` calculates generalized eta squared,
+#'    `"pes"` calculates partial eta squared, and
+#'    `"es"` calculates eta squared.
+#'    Note that eta squared is calculated correctly if and only if the design is balanced.
 #'
 #'    It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf.high`, which allows
 #'    for including custom effect-size measures.
 #'
 #'    A third option is to provide a function from the \pkg{effectsize} package
 #'    that will be used to calculate effect-size measures from `x`. If the
-#'    \pkg{effectsize} package is installed (and \pkg{papaja} is loaded), this is the new default. The default
+#'    \pkg{effectsize} package is installed (and \pkg{papaja} is loaded), this is the new default. This default
 #'    can be changed via `options(papaja.estimate_anova = ...)`.
 #'
 #' @return
-#' `apa_print.aov()` and related functions return a named list containing the following components according to the input:
+#' `apa_print.aov()` and related functions return a named list containing the following components:
 #'
 #' - `estimate` A named list of character strings giving the effect-size estimates for each factor, either in units of the analysed scale or as standardized effect size.
 #' - `statistic` A named list of character strings giving the test statistic, parameters, and *p* value for each factor.
 #' - `full_result` A named list of character strings combining `estimate` and `statistic` for each factor.
-#' - `table` A data.frame containing the complete ANOVA table, which can be passed to [apa_table()].
+#' - `table` A data frame containing the complete ANOVA table, which can be passed to [apa_table()].
 #'
 #' @references
 #'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}

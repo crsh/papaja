@@ -1,4 +1,4 @@
-#' APA article (6th edition)
+#' APA Article (6th edition)
 #'
 #' Template for creating an article according to APA guidelines (6th edition) in PDF format.
 #'

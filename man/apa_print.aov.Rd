@@ -69,7 +69,7 @@
 \method{apa_print}{summary.manova}(x, in_paren = FALSE, ...)
 }
 \arguments{
-\item{x}{Output object. See details.}
+\item{x}{An object containing the results from an analysis of variance ANOVA}
 
 \item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
 string(s) to format. Multiple inputs are concatenated together before formatting.
@@ -77,10 +77,12 @@ Named arguments are taken to be temporary variables available for substitution.}
 
 \item{estimate}{Character, function, or data frame. Determines which estimate of effect size is to be used. See details.}
 
-\item{mse}{Logical. Indicates if mean squared errors should be included in output. The default is \code{TRUE}, but this can be changed by setting
-\code{options(papaja.mse = FALSE)}.}
+\item{mse}{Logical. Indicates if mean squared errors should be included in output. The default is \code{TRUE}, but this can be changed
+either by supplying a different value in the function call or by changing the global default via \code{options(papaja.mse = FALSE)}.}
 
-\item{observed}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored. If \code{x} is of class \code{afex_aov}, \code{observed} is deduced from \code{x}.}
+\item{observed}{Character. The names of the factors that are observed, (i.e., not manipulated).
+Necessary only for calculating \emph{generalized} eta squared; otherwise ignored.
+If \code{x} is of class \code{afex_aov}, \code{observed} is automatically deduced from \code{x}.}
 
 \item{intercept}{Logical. Indicates if the intercept term should be included in output.}
 
@@ -89,17 +91,17 @@ parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
 \item{correction}{Character. For repeated-measures ANOVA, the type of sphericity correction to be used.
-Possible values are \code{"GG"} for Greenhouse-Geisser method (the default), \code{"HF"} for Huyn-Feldt method, or \code{"none"} for no correction.}
+Possible values are \code{"GG"} for the Greenhouse-Geisser method (the default), \code{"HF"} for the Huyn-Feldt method, or \code{"none"} for no correction.}
 
 \item{test}{For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.}
 }
 \value{
-\code{apa_print.aov()} and related functions return a named list containing the following components according to the input:
+\code{apa_print.aov()} and related functions return a named list containing the following components:
 \itemize{
 \item \code{estimate} A named list of character strings giving the effect-size estimates for each factor, either in units of the analysed scale or as standardized effect size.
 \item \code{statistic} A named list of character strings giving the test statistic, parameters, and \emph{p} value for each factor.
 \item \code{full_result} A named list of character strings combining \code{estimate} and \code{statistic} for each factor.
-\item \code{table} A data.frame containing the complete ANOVA table, which can be passed to \code{\link[=apa_table]{apa_table()}}.
+\item \code{table} A data frame containing the complete ANOVA table, which can be passed to \code{\link[=apa_table]{apa_table()}}.
 }
 }
 \description{
@@ -108,18 +110,21 @@ strings to report the results in accordance with APA manuscript guidelines. For 
 }
 \details{
 The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
-are omitted and other non-word characters are replaced by \code{_}.
+are omitted and other non-word characters are replaced by \verb{_}.
 
-Argument \code{estimate} determines which measure of effect size is to be used: It is currently possible to provide
-a character, where \code{"ges"} calculates generalized eta squared,\code{"pes"} calculates partial eta squared, and \code{"es"}
-calculates eta squared. Note that eta squared is calculated correctly if and only if the design is balanced.
+Argument \code{estimate} determines which measure of effect size is to be used:
+It is currently possible to provide a character, where
+\code{"ges"} calculates generalized eta squared,
+\code{"pes"} calculates partial eta squared, and
+\code{"es"} calculates eta squared.
+Note that eta squared is calculated correctly if and only if the design is balanced.
 
 It is also possible to provide a \verb{data frame} with columns \code{estimate}, \code{conf.low}, and \code{conf.high}, which allows
 for including custom effect-size measures.
 
 A third option is to provide a function from the \pkg{effectsize} package
 that will be used to calculate effect-size measures from \code{x}. If the
-\pkg{effectsize} package is installed (and \pkg{papaja} is loaded), this is the new default. The default
+\pkg{effectsize} package is installed (and \pkg{papaja} is loaded), this is the new default. This default
 can be changed via \code{options(papaja.estimate_anova = ...)}.
 }
 \examples{

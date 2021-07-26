@@ -5,7 +5,7 @@
 \alias{apa6_docx}
 \alias{apa6_word}
 \alias{apa6_doc}
-\title{APA article (6th edition)}
+\title{APA Article (6th edition)}
 \usage{
 apa6_pdf(
   fig_caption = TRUE,
