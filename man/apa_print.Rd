@@ -2,33 +2,35 @@
 % Please edit documentation in R/apa_print.R
 \name{apa_print}
 \alias{apa_print}
-\title{Format statistics (APA 6th edition)}
+\title{Format Statistics (APA 6th edition)}
 \usage{
 apa_print(x, ...)
 }
 \arguments{
-\item{x}{Output object. See details.}
+\item{x}{A model object.}
 
-\item{...}{Additional arguments passed to other methods. See details.}
+\item{...}{Additional arguments passed to methods.}
 }
 \value{
-The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the
-documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
+All methods return a named list of four elements (with additional class \code{apa_results}).
+
+The first three elements (\verb{$estimate}, \verb{$statistic}, and \verb{$full_result}) contain character strings that
+may be used to include the results of a statistical analysis into the text
+body of an R Markdown document using an in-line code chunk.
+
+By contrast, \verb{$table} may be used to include a complete results table
+into the document with the help of \code{\link[=apa_table]{apa_table()}}.
+\itemize{
+\item \verb{$estimate} contains (sometimes standardized) estimates of effect sizes,
+\item \verb{$statistic} contains the results from a corresponding statistical test,
+\item \verb{$full_result} combines \code{estimate} and \code{statistic}, and
+\item \verb{$table} contains a tabular summary of the analysis.
+}
 }
 \description{
 A generic function that takes objects from various statistical methods to create formatted character
 strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
 methods, which depend on the \code{\link{class}} of the first argument.
-}
-\details{
-Currently the following output objects are supported:
-
-\itemize{
-\item \code{htest}
-\item \code{lm} and \code{summary.lm}
-\item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
-\item \code{anova} and \code{Anova.mlm}
-}
 }
 \examples{
 # List methods for apa_print()
