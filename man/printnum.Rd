@@ -9,7 +9,7 @@
 \alias{printnum.data.frame}
 \alias{printnum.matrix}
 \alias{printnum.tiny_labelled}
-\title{Prepare numeric values for printing}
+\title{Prepare Numerical Values for Printing}
 \usage{
 printnum(x, ...)
 
@@ -156,7 +156,7 @@ printnum(x, ...)
 
 \item{zero_string}{Character. Word to print if \code{x} is a zero integer.}
 
-\item{gt1}{Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.}
+\item{gt1}{Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.}
 
 \item{zero}{Logical. Indicates if the statistic can, in principal, be 0.}
 
@@ -169,7 +169,7 @@ notation is rendered correctly.}
 is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).}
 }
 \description{
-Converts numeric values to character strings for reporting.
+Converts numerical values to character strings for reporting.
 }
 \details{
 If \code{x} is a vector, all arguments can be vectors

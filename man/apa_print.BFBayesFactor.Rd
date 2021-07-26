@@ -75,7 +75,7 @@ corresponding models (see details).}
 \item{...}{
   Arguments passed on to \code{\link[=printnum.numeric]{printnum.numeric}}
   \describe{
-    \item{\code{gt1}}{Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.}
+    \item{\code{gt1}}{Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.}
     \item{\code{zero}}{Logical. Indicates if the statistic can, in principal, be 0.}
     \item{\code{na_string}}{Character. String to print if element of \code{x} is \code{NA}.}
     \item{\code{use_math}}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
