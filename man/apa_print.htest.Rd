@@ -62,7 +62,7 @@ A data frame, which can be passed to \code{\link[=apa_table]{apa_table()}}.
 }
 }
 \description{
-Takes \code{htest} objects from various statistical methods (e.g., \code{\link[=t.test]{t.test()}}, \code{\link[=wilcox.text]{wilcox.text()}}, \code{\link[=cor.test]{cor.test()}}) to create
+Takes \code{htest} objects from various statistical methods (e.g., \code{\link[=t.test]{t.test()}}, \code{\link[=wilcox.test]{wilcox.test()}}, \code{\link[=cor.test]{cor.test()}}) to create
 formatted character strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{

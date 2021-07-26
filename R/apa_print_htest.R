@@ -1,6 +1,6 @@
 #' Format Statistics (APA 6th edition)
 #'
-#' Takes `htest` objects from various statistical methods (e.g., [t.test()], [wilcox.text()], [cor.test()]) to create
+#' Takes `htest` objects from various statistical methods (e.g., [t.test()], [wilcox.test()], [cor.test()]) to create
 #' formatted character strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x An `htest` object. See details.
