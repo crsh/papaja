@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{se}
 \alias{se}
-\title{Standard Errors}
+\title{Standard Error of the Mean}
 \usage{
 se(x, na.rm = TRUE)
 }

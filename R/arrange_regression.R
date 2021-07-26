@@ -1,7 +1,7 @@
-#' Create regression table
+#' Create a Regression Table
 #'
 #' These methods take \code{glm} or \code{lm} objects to create
-#' a \code{data.frame} containing a regression table. \emph{This function is not exported.}
+#' a data frame containing a regression table. \emph{This function is not exported.}
 #'
 #' @param x \code{glm} or \code{lm} object. See details.
 #' @inheritParams apa_print.glm

@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{sanitize_terms}
 \alias{sanitize_terms}
-\title{Sanitize term names}
+\title{Sanitize Term Names}
 \usage{
 sanitize_terms(x, standardized = FALSE)
 }
 \arguments{
-\item{x}{Character. Vector of term-names to be sanitized.}
+\item{x}{Character. Vector of term names to be sanitized.}
 
-\item{standardized}{Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
+\item{standardized}{Logical. If \code{TRUE}, the name of the function [\code{\link[=scale]{scale()}}] will be
 removed from term names.}
 }
 \description{
-Remove characters from term names that will be difficult to address using the \code{$}-operator. \emph{This function is
-not exported.}
+Remove characters from term names that will be difficult to address using the \code{$}-operator.
+\emph{This function is not exported.}
 }
 \examples{
 \dontrun{

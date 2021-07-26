@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{hd_int}
 \alias{hd_int}
-\title{Highest-Density Interval}
+\title{Highest-Density Intervals}
 \usage{
 hd_int(x, level = 0.95)
 }

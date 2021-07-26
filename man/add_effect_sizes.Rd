@@ -23,4 +23,6 @@ deviation of the grand mean from 0) be included in the calculation of eta-square
 }
 \description{
 Calculates effect-size measures for Analysis of Variance output objects.
+\emph{This function is not exported and will soon be deprecated.}
 }
+\keyword{internal}

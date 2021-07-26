@@ -1,15 +1,16 @@
-#' Format statistics from ANOVA (APA 6th edition)
+#' Format Statistics from Linear-Model Comparisons (APA 6th edition)
 #'
-#'  This methods performs comparisons of \code{lm}-objects and creates formatted character
+#' This method performs comparisons of [lm][lm()]-objects and creates formatted character
 #' strings and a model comparison table to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the output object.
-#' @param anova_fun Function. Function to compare model-objects contained in \code{x}.
+#' @param x List. A `list` containing to-be-compared [lm][lm()] objects.
+#'   If the list is completely named, element names are used as model names in the output object.
+#' @param anova_fun Function. Function to compare model-objects contained in `x`.
 #' @param ci Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range \[0, 1\]); ignored if \code{boot_samples = 0}.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
-#' @param ... Additional arguments passed to \code{anova_fun}
+#' @param ... Additional arguments passed to the function specified as `anova_fun`.
 #' @inheritParams glue_apa_results
 #'
 #' @details
@@ -24,9 +25,9 @@
 #'    predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
 #'    Algina, Keselman & Penfield, 2010)}
 #'
-#'    If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
-#'    obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90% CI (see
-#'    Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
+#'    If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using [MBESS::ci.R2()] to
+#'    obtain a confidence region that corresponds to the confidence level `ci`, the default being a 90% CI (see
+#'    Steiger, 2004). If `observed_predictors = FALSE`, it is assumed that predictors are fixed variables, i.e.,
 #'    "the values of the \[predictors\] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
 #'    put differently, it is assumed that predictors are not random. The confidence intervals for the regression
 #'    coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
@@ -34,31 +35,47 @@
 #'    regression coefficients, Steiger, 2004).
 #'
 #' @return
-#'    \code{apa_print.list} returns a named list containing the following components according to the input:
+#'    A named list (with additional class `apa_results`) containing the following components is returned:
 #'
 #'    \describe{
-#'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-#'          value for each non-baseline model.}
-#'      \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each non-baseline model}
-#'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model}
-#'      \item{\code{table}}{A data.frame containing the complete model comparison table including regression coefficients, which can be passed to \code{\link{apa_table}}.}
+#'      \item{`statistic`}{
+#'        A named list of character strings giving the test statistic, parameters, and *p* value for each non-baseline model.
+#'      }
+#'      \item{`estimate`}{
+#'        A named list of character strings giving the effect-size estimates for each non-baseline model.
+#'      }
+#'      \item{`full_result`}{
+#'        A named list of character strings comprised of `estimate` and `statistic` for each non-baseline model.
+#'      }
+#'      \item{`table`}{
+#'        A data frame containing the complete model-comparison table including regression coefficients, which can be passed to [apa_table()]].
+#'      }
 #'    }
+#'
+#'
 #' @references
-#'    Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for an Effect Size Measure in Multiple Linear Regression.
-#'    \emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
+#'    Algina, J., Keselman, H. J., & Penfield, R. D. (2007).
+#'    Confidence intervals for an effect size measure in multiple linear regression.
+#'    *Educational and Psychological Measurement*, *67*(2), 207--218.
+#'    doi:[10.1177/0013164406292030](https://doi.org/10.1177/0013164406292030)
 #'
-#'    Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
-#'    \emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
+#'    Algina, J., Keselman, H. J., & Penfield, R. D. (2010).
+#'    Confidence intervals for squared semipartial correlation coefficients: The effect of nonnormality.
+#'    *Educational and Psychological Measurement*, *70*(6), 926--940.
+#'    doi:[10.1177/0013164410379335](https://doi.org/10.1177/0013164410379335)
 #'
-#'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-#'    Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-#'    doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+#'    Steiger (2004).
+#'    Beyond the F test: Effect size confidence intervals and tests of close fit in the analysis of variance and contrast analysis.
+#'    *Psychological Methods*, *9*(2), 164--182.
+#'    doi:[10.1037/1082-989X.9.2.164](https://doi.org/10.1037/1082-989X.9.2.164)
 #'
-#'    Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
-#'    implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
-#'    doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+#'    Kelley, K. (2007).
+#'    Confidence intervals for standardized effect sizes: Theory, application, and  implementation.
+#'    *Journal of Statistical Software*, *20*(8), 1--24.
+#'    doi:[10.18637/jss.v020.i08](https://doi.org/10.18637/jss.v020.i08)
+#'
 #' @family apa_print
-#' @seealso \code{\link[stats]{anova}}
+#' @seealso [stats::anova()]
 #' @examples
 #'    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #'    mod2 <- update(mod1, formula = . ~ . + Petal.Length)

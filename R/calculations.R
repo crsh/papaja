@@ -5,6 +5,8 @@
 # x: apa_model_comp object
 # models: list of lm-objects
 
+#' @keywords internal
+
 delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...) {
   if(!package_available("boot")) stop("Please install the package 'boot' to calculate bootstrap confidence intervals.")
 
@@ -275,7 +277,7 @@ summary.papaja_wsci <- function(object, ...) {
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
 #'    for 95% confidence intervals.
-#' @param na.rm Logical. Specifies if missing values are removed.
+#' @param na.rm Logical. Specifies if missing values should be removed.
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
@@ -305,7 +307,7 @@ conf.int <- conf_int
 ci <- conf_int
 
 
-#' Standard Errors
+#' Standard Error of the Mean
 #'
 #' Calculates the standard error of the mean.
 #'
@@ -319,7 +321,7 @@ se <- function(x, na.rm = TRUE) {
 }
 
 
-#' Highest-Density Interval
+#' Highest-Density Intervals
 #'
 #' Calculates the highest-density interval of a vector of values.
 #'
@@ -345,6 +347,7 @@ hd_int <- function(x, level = 0.95) {
 #' Effect Sizes for Analysis of Variance
 #'
 #' Calculates effect-size measures for Analysis of Variance output objects.
+#' *This function is not exported and will soon be deprecated.*
 #'
 #' @param x An object of class \code{apa_variance_table}.
 #' @param es Character. A vector naming all to-be-computed effect-size measures.
@@ -355,6 +358,8 @@ hd_int <- function(x, level = 0.95) {
 #' @param mse Logical. Should means-squared errors be computed?
 #' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
 #'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
+#'
+#' @keywords internal
 
 add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
   # ----------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print_list.R
 \name{apa_print.list}
 \alias{apa_print.list}
-\title{Format statistics from ANOVA (APA 6th edition)}
+\title{Format Statistics from Linear-Model Comparisons (APA 6th edition)}
 \usage{
 \method{apa_print}{list}(
   x,
@@ -16,7 +16,8 @@
 )
 }
 \arguments{
-\item{x}{List. List containing to be compared \code{lm}-objects. If the list is completely named, element names are used as model names in the output object.}
+\item{x}{List. A \code{list} containing to-be-compared \link[=lm]{lm} objects.
+If the list is completely named, element names are used as model names in the output object.}
 
 \item{anova_fun}{Function. Function to compare model-objects contained in \code{x}.}
 
@@ -32,21 +33,28 @@
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{...}{Additional arguments passed to \code{anova_fun}}
+\item{...}{Additional arguments passed to the function specified as \code{anova_fun}.}
 }
 \value{
-\code{apa_print.list} returns a named list containing the following components according to the input:
+A named list (with additional class \code{apa_results}) containing the following components is returned:
 
 \describe{
-\item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-value for each non-baseline model.}
-\item{\code{estimate}}{A named list of character strings giving the effect size estimates for each non-baseline model}
-\item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model}
-\item{\code{table}}{A data.frame containing the complete model comparison table including regression coefficients, which can be passed to \code{\link{apa_table}}.}
+\item{\code{statistic}}{
+A named list of character strings giving the test statistic, parameters, and \emph{p} value for each non-baseline model.
+}
+\item{\code{estimate}}{
+A named list of character strings giving the effect-size estimates for each non-baseline model.
+}
+\item{\code{full_result}}{
+A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model.
+}
+\item{\code{table}}{
+A data frame containing the complete model-comparison table including regression coefficients, which can be passed to \code{\link[=apa_table]{apa_table()}}].
+}
 }
 }
 \description{
-This methods performs comparisons of \code{lm}-objects and creates formatted character
+This method performs comparisons of \link[=lm]{lm}-objects and creates formatted character
 strings and a model comparison table to report the results in accordance with APA manuscript guidelines.
 }
 \details{
@@ -60,7 +68,7 @@ the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n
 predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
 Algina, Keselman & Penfield, 2010)}
 
-If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS]{ci.R2}} to
+If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS:ci.R2]{MBESS::ci.R2()}} to
 obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
 Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
 "the values of the [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
@@ -78,22 +86,28 @@ regression coefficients, Steiger, 2004).
    apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
 }
 \references{
-Algina, J., Keselman, H. J., & Penfield, R. D. (2007). Confidence Intervals for an Effect Size Measure in Multiple Linear Regression.
-\emph{Educational and Psychological Measurement}, 67(2), 207--218. doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
+Algina, J., Keselman, H. J., & Penfield, R. D. (2007).
+Confidence intervals for an effect size measure in multiple linear regression.
+\emph{Educational and Psychological Measurement}, \emph{67}(2), 207--218.
+doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
 
-Algina, J., Keselman, H. J., & Penfield, R. D. (2010). Confidence Intervals for Squared Semipartial Correlation Coefficients: The Effect of Nonnormality.
-\emph{Educational and Psychological Measurement}, 70(6), 926--940. doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
+Algina, J., Keselman, H. J., & Penfield, R. D. (2010).
+Confidence intervals for squared semipartial correlation coefficients: The effect of nonnormality.
+\emph{Educational and Psychological Measurement}, \emph{70}(6), 926--940.
+doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
 
-Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
+Steiger (2004).
+Beyond the F test: Effect size confidence intervals and tests of close fit in the analysis of variance and contrast analysis.
+\emph{Psychological Methods}, \emph{9}(2), 164--182.
 doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 
-Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
-implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
+Kelley, K. (2007).
+Confidence intervals for standardized effect sizes: Theory, application, and  implementation.
+\emph{Journal of Statistical Software}, \emph{20}(8), 1--24.
 doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
-\code{\link[stats]{anova}}
+\code{\link[stats:anova]{stats::anova()}}
 
 Other apa_print: 
 \code{\link{apa_print.BFBayesFactor}()},

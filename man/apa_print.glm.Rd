@@ -26,12 +26,12 @@
 \arguments{
 \item{x}{\code{glm} or \code{lm} object.}
 
-\item{est_name}{Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+\item{est_name}{Character. If \code{NULL} (the default) the name given in \code{x} (or a formally correct
 adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
 otherwise the supplied name is used. See details.}
 
 \item{ci}{Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
-\code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
+\code{matrix} with confidence region bounds as column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and
 coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 
@@ -45,21 +45,28 @@ enclosing degrees of freedom) are replaced with brackets.}
     \item{\code{}}{}
   }}
 
-\item{standardized}{Logical. Indicates if coefficients are standardized or unstandardized and leading
-zeros are omitted if appropriate. See details.}
+\item{standardized}{Logical. Indicates if coefficients were standardized using \code{\link[=scale]{scale()}}, and leading
+zeros should be omitted if appropriate. See details.}
 
 \item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
 }
 \value{
-\code{apa_print.lm} returns a list containing the following components according to the input:
+A list (with additional class \code{apa_results}) containing the following components is returned:
 
 \describe{
-\item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-value for each term.}
-\item{\code{estimate}}{A named list of character strings giving the descriptive estimates and confidence intervals
-for each term, either in units of the analysed scale or as standardized effect size.}
-\item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each term.}
-\item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link[=apa_table]{apa_table()}}.}
+\item{\code{statistic}}{
+A named list of character strings giving the test statistic, parameters, and \emph{p} value for each model term.
+}
+\item{\code{estimate}}{
+A named list of character strings giving the descriptive estimates and confidence intervals for each term,
+either in units of the analysed scale or as standardized effect size.
+}
+\item{\code{full_result}}{
+A named list of character strings combining \code{estimate} and \code{statistic} for each term.
+}
+\item{\code{table}}{
+A data frame containing the complete regression table, which can be passed to \code{\link[=apa_table]{apa_table()}}.
+}
 }
 }
 \description{
@@ -67,20 +74,20 @@ These methods take \link[=glm]{glm} and \link[=lm]{lm} objects to create formatt
 strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
-The coefficients names are sanitized to facilitate their use as list names. Parentheses
-are omitted and other non-word characters are replaced by \code{_} (see \code{\link{sanitize_terms}}).
-#'
+The coefficient names are sanitized to facilitate their use as list names. Parentheses
+are omitted and other non-word characters are replaced by \verb{_} (see \code{\link[=sanitize_terms]{sanitize_terms()}}).
+
 \code{est_name} is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
 Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
-text (e.g., \code{\\\\beta} yields \eqn{\beta}).
+text (e.g., \code{"\\\\\\\\beta"} yields \eqn{\beta}).
 
-If \code{standardized} is \code{TRUE} "scale()" is removed from coefficients names (see examples).
-Currently, this option is ignored for \code{glm}-objects.
+If \code{standardized = TRUE}, \code{scale()} is removed from coefficient names (see examples).
+This option is currently ignored for \code{glm}-objects.
 
 If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats:confint]{stats::confint()}}.
 
-If \code{x} is an \code{lm}-object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
-are computed using \code{\link[MBESS]{ci.R2}} to obtain a confidence region that corresponds to the
+If \code{x} is an \code{lm} object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
+are computed using \code{\link[MBESS:ci.R2]{MBESS::ci.R2()}} to obtain a confidence region that corresponds to the
 \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95\% CI or
 \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004). If
 \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e., "the values of the

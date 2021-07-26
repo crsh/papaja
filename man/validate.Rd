@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{validate}
 \alias{validate}
-\title{Validate function input}
+\title{Validate Function Input}
 \usage{
 validate(
   x,
@@ -42,7 +42,8 @@ validate(
 \item{check_cols}{Character. Vector of columns that are intended to be in a \code{data.frame}.}
 }
 \description{
-This function can be used to validate the input to functions. \emph{This function is not exported.}
+This function can be used to validate the input to functions.
+\emph{This function is not exported.}
 }
 \examples{
 \dontrun{
