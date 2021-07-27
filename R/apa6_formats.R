@@ -163,6 +163,7 @@ apa6_pdf <- function(
     pp_env <- environment(bookdown_post_processor)
     assign("post", NULL, envir = pp_env) # Postprocessor is not self-contained
     assign("config", config, envir = pp_env) # Postprocessor is not self-contained
+    assign("number_sections", number_sections, envir = pp_env)
     bookdown_post_processor(metadata = metadata, input = input_file, output = output_file, clean = clean, verbose = verbose)
   }
 
