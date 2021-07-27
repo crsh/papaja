@@ -1,29 +1,39 @@
-#' Format statistics model comparisons (APA 6th edition)
+#' Format Statistics for Model Comparisons (APA 6th edition)
 #'
-#' This function is the workhorse of the \code{apa_print.anova} for model comparisons. It takes a \code{data.frame}
-#' of class \code{apa_model_comp} and produces strings to report the results in accordance with APA manuscript
-#' guidelines. \emph{This function is not exported.}
+#' This function is the workhorse of the [apa_print()][apa_print.list()] method
+#' for model comparisons. It takes a data frame of class `apa_model_comp` and
+#' produces strings to report the results in accordance with APA manuscript
+#' guidelines.
+#' *This function is not exported.*
 #'
-#' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
-#' @param models List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the output object.
-#' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.
-#' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
-#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.
+#' @param x A data frame of class `apa_variance_table` as returned by [arrange_anova()].
+#' @param models List. List containing fitted `lm` objects that were compared using [anova()]. If the list is named, element names are used as model names in the output object.
+#' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`. If `ci = NULL` no confidence intervals are estimated.
+#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`; ignored if `ci = NULL`.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
+#' @param observed_predictors Logical. Indicates whether predictor variables were observed.
 #' @inheritParams glue_apa_results
 #' @return
-#'    A named list containing the following components:
+#'    A named list (with additional class `apa_results`) containing the following components:
 #'
 #'    \describe{
-#'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-#'          value for each factor.}
-#'      \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
-#'      \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
+#'      \item{`statistic`}{
+#'        A named list of character strings giving the test statistic, parameters, and *p* value for each factor.
+#'      }
+#'      \item{`estimate`}{
+#'        A named list of character strings giving the effect size estimates for each factor,
+#'        either in units of the analysed scale or as standardized effect size.
+#'      }
+#'      \item{`full_result`}{
+#'        A named list of character strings comprised of `estimate` and `statistic` for each factor.
+#'      }
+#'      \item{`table`}{
+#'        A data.frame containing the complete comparison table, which can be passed to [apa_table()].
+#'      }
 #'    }
 #'
 #' @keywords internal
-#' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
+#' @seealso [arrange_anova()], [apa_print.aov()]
 #' @examples
 #'  \dontrun{
 #'    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)

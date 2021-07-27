@@ -1,8 +1,8 @@
-#' Cite R and R-packages
+#' Cite R and R packages
 #'
-#' Creates a character string to cite R and R-packages.
+#' Creates a character string to cite R and R packages.
 #'
-#' @param file Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL} only R
+#' @param file Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL}, only R
 #'    is cited.
 #' @param prefix Character. The prefix used for all R-package reference handles.
 #' @param footnote Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
@@ -11,7 +11,7 @@
 #' @param withhold Logical. If \code{TRUE}, \code{pkgs} constitutes a list of packages \emph{not} to cite (a blacklist).
 #'    If \code{FALSE}, \code{pkgs} constitutes a list of packages to cite (a whitelist).
 #' @details
-#'    If \code{footnote = FALSE} a character string citing R and R-packages including version
+#'    If \code{footnote = FALSE}, a character string citing R and R packages including version
 #'    numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
 #'    former element holds a character string citing R and a reference to a footnote; the latter element contains
 #'    a character string for the footnote citing R-packages. For correct rendering, the footnote string needs

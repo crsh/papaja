@@ -2,7 +2,7 @@
 % Please edit documentation in R/render_appendix.R
 \name{render_appendix}
 \alias{render_appendix}
-\title{Render appendix}
+\title{Render Appendix}
 \usage{
 render_appendix(
   x,
@@ -42,11 +42,16 @@ supplied, defaults to the common base directory of \code{input}.}
   }}
 }
 \description{
-This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
-an \code{appendix} environment.
+This function renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
+an \code{appendix} environment, or to a markdown fragment (for Word output).
 }
 \details{
-By default \code{x} is converted to a TeX file which can be included in an R Markdown document
+\emph{This function is only exported for backwards compatibility.}
+It is now recommended \emph{not} to call \code{render_appendix()} directly.
+Instead, to add appendices to your manuscript, add R Markdown file
+to the YAML front matter with an additional tag such as \code{appendix: "appendix.Rmd"}.
+
+By default, \code{x} is converted to a TeX file which can be included in an R Markdown document
 as \code{include}:
 
 \preformatted{
@@ -57,10 +62,9 @@ as \code{include}:
    }
 
 If \code{render_appendix} is called form an R Markdown document with a target document type other
-than a PDF file a Markdown document is created and a warning returned (includes are only supported
-in PDF documents).
+than a PDF file, a markdown fragment is included.
 
 Default chunk options and hooks are set to those used in the R Markdown document from
 which \code{render_appendix} is called; otherwise defaults of \code{\link[rmarkdown]{md_document}} are
-used. It is, therefore, recommended to include \code{render_appendix} in your parent document.
+used. If It is, therefore, recommended to include \code{render_appendix} in your parent document.
 }

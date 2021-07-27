@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_model_comp.R
 \name{print_model_comp}
 \alias{print_model_comp}
-\title{Format statistics model comparisons (APA 6th edition)}
+\title{Format Statistics for Model Comparisons (APA 6th edition)}
 \usage{
 print_model_comp(
   x,
@@ -15,9 +15,9 @@ print_model_comp(
 )
 }
 \arguments{
-\item{x}{Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.}
+\item{x}{A data frame of class \code{apa_variance_table} as returned by \code{\link[=arrange_anova]{arrange_anova()}}.}
 
-\item{models}{List. List containing fitted \code{lm}- objects that were compared using \code{anova()}. If the list is named, element names are used as model names in the output object.}
+\item{models}{List. List containing fitted \code{lm} objects that were compared using \code{\link[=anova]{anova()}}. If the list is named, element names are used as model names in the output object.}
 
 \item{ci}{Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.}
 
@@ -29,23 +29,33 @@ print_model_comp(
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
+\item{observed_predictors}{Logical. Indicates whether predictor variables were observed.}
 }
 \value{
-A named list containing the following components:
+A named list (with additional class \code{apa_results}) containing the following components:
 
 \describe{
-\item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-value for each factor.}
-\item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} \% , either in units of the analyzed scale or as standardized effect size.
-\item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
-\item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
+\item{\code{statistic}}{
+A named list of character strings giving the test statistic, parameters, and \emph{p} value for each factor.
+}
+\item{\code{estimate}}{
+A named list of character strings giving the effect size estimates for each factor,
+either in units of the analysed scale or as standardized effect size.
+}
+\item{\code{full_result}}{
+A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.
+}
+\item{\code{table}}{
+A data.frame containing the complete comparison table, which can be passed to \code{\link[=apa_table]{apa_table()}}.
+}
 }
 }
 \description{
-This function is the workhorse of the \code{apa_print.anova} for model comparisons. It takes a \code{data.frame}
-of class \code{apa_model_comp} and produces strings to report the results in accordance with APA manuscript
-guidelines. \emph{This function is not exported.}
+This function is the workhorse of the \link[=apa_print.list]{apa_print()} method
+for model comparisons. It takes a data frame of class \code{apa_model_comp} and
+produces strings to report the results in accordance with APA manuscript
+guidelines.
+\emph{This function is not exported.}
 }
 \examples{
  \dontrun{
@@ -58,6 +68,6 @@ guidelines. \emph{This function is not exported.}
  }
 }
 \seealso{
-\code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
+\code{\link[=arrange_anova]{arrange_anova()}}, \code{\link[=apa_print.aov]{apa_print.aov()}}
 }
 \keyword{internal}
