@@ -3,7 +3,7 @@
 #' Template for creating an article according to APA guidelines (6th edition) in PDF format.
 #'
 #' @inheritParams rmarkdown::pdf_document
-#' @param md_extensions Markdown extensions to be added or removed from the default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
+#' @param md_extensions Markdown extensions to be added or removed from the default definition of R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
 #' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
 #' @details
 #'    When creating PDF documents the YAML option \code{classoption} is passed to the class options of the LaTeX apa6 document class.
@@ -144,10 +144,10 @@ apa6_pdf <- function(
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoffigures", "", output_text, useBytes = TRUE) # Replace first occurance
+      output_text <- sub("\\\\listoffigures", "", output_text, useBytes = TRUE) # Replace first occurrence
     }
     if(sum(gregexpr("\\listoftables", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoftables", "", output_text, useBytes = TRUE) # Replace first occurance
+      output_text <- sub("\\\\listoftables", "", output_text, useBytes = TRUE) # Replace first occurrence
     }
 
     # Prevent (re-)loading of geometry package
