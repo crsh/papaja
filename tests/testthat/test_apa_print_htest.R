@@ -272,7 +272,7 @@ test_that(
 
     expect_identical(
       attr(two_sample_prop_test_output$table$statistic, "n")
-      , as.integer(sum(patients[3:4]))
+      , printnum(as.integer(sum(patients[3:4])))
     )
   }
 )

@@ -154,7 +154,7 @@ apa_print.htest <- function(
     # } else {
     #   n <- paste0(", n = ", n)
     } else {
-      attr(x$statistic, "n") <- as.integer(n)
+      attr(x$statistic, "n") <- printnum(as.integer(n))
     }
   } else {
     n <- NULL
