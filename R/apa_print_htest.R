@@ -153,6 +153,8 @@ apa_print.htest <- function(
       stop("Please provide the sample size to report.")
     # } else {
     #   n <- paste0(", n = ", n)
+    } else {
+      attr(x$statistic, "n") <- as.integer(n)
     }
   } else {
     n <- NULL

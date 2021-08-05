@@ -224,8 +224,8 @@ stat_glue <- function(x) {
       df <- "(<<df>>, <<df.residual>>)"
     } else if( # Chi^2-Test
       identical(variable_label(x$statistic), "$\\chi^2$") &&
-      exists("n", where = parent.frame(2), mode = "numeric") &&
-      !is.null(get("n", envir = parent.frame(2), mode = "numeric"))
+      !is.null(attr(x$statistic, "n")) &&
+      is.integer(attr(x$statistic, "n"))
     ) {
       df <- "(<<df>>, n = <<n>>)"
     } else {

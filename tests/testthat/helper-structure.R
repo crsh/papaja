@@ -93,16 +93,16 @@ expect_apa_results <- function(
 # Test the test, work in progress ----
 # expect_failure() somehow doesn't detect failure
 
-test_that(
-  "expect_apa_results"
-  , {
-    test <- papaja:::init_apa_results()
-    test$table <- data.frame(a = 1)
-
-    # class(test$table) <- c("apa_results_table", "data.frame")
-    # expect_failure(
-    #   expect_apa_results(test)
-    #   , "has class"
-    # )
-  }
-)
+# test_that(
+#   "expect_apa_results"
+#   , {
+#     test <- papaja:::init_apa_results()
+#     test$table <- data.frame(a = 1)
+#
+#     class(test$table) <- c("apa_results_table", "data.frame")
+#     expect_failure(
+#       expect_apa_results(test)
+#       , "has class"
+#     )
+#   }
+# )
