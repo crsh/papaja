@@ -298,5 +298,46 @@ test_that(
         , N_P = "$\\chi^2(1) = 1.18$, $p = .277$"
       )
     )
+
+    # https://github.com/crsh/papaja/issues/154#issuecomment-892189864
+    participant<-c("vp1","vp2","vp3","vp4","vp5")
+    group<-c("intervention", "control","control","intervention","control")
+
+    library("dplyr")
+    df<-data.frame(participant,group) %>%
+      group_by(participant,group) %>%
+      summarise(session=c("t1","t2","t3","t4")) %>%
+      group_by(participant, group, session) %>%
+      summarise(task=c("a","b")) %>%
+      ungroup() %>%
+      mutate(errors=floor(runif(n=40,min=0,max=30)))
+
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df)
+    apa_t <- apa_print(glmm$full_model)
+
+    expect_apa_results(
+      apa_t
+      , labels = list(
+        term        = "Term"
+        , estimate  = "$\\hat{\\beta}$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT")
+    apa_LRT <- apa_print(glmm)
+
+    expect_apa_results(
+      apa_LRT
+      , labels = list(
+        term        = "Effect"
+        , statistic = "$\\chi^2$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
   }
 )
