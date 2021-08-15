@@ -317,7 +317,6 @@ apa_table.data.frame <- function(
   validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
-
   # Set defaults and rename ellipsis arguments
   ellipsis <- list(...)
 
@@ -421,7 +420,7 @@ apa_table.latex <- function(
 ) {
   if(!is.null(font_size)) validate(font_size, check_class = "character", check_length = 1)
 
-  apa_terms <- options()$papaja.terms
+  apa_terms <- getOption("papaja.terms")
 
   # Parse ellipsis
   ellipsis <- list(...)

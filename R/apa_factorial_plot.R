@@ -347,26 +347,21 @@ apa_factorial_plot.default <- function(
   output$args <- list()
 
 
-  ## Adjust ylim to height of error bars and ensure that all points of the swarm are plotted
-  ellipsis <- defaults(
-    ellipsis
-    , set.if.null = list(
-      ylim = c(
-        min(
-          0
-          , y.values[["lower_limit"]]
-          , aggregated[[dv]]
-          , na.rm = TRUE
-        )
-        , max(
-          y.values[["upper_limit"]]
-          , aggregated[[dv]]
-          , na.rm = TRUE
-        )
-      )
-    )
+  # Default for ylim: Cover all (potentially) plotted shapes ---
+  default_ylim <- range(
+    0
+    , y.values[["lower_limit"]]
+    , y.values[["upper_limit"]]
+    , aggregated[[dv]]
+    , na.rm = TRUE
   )
 
+  # allow to partially define via, e.g. `ylim = c(20, NA)`
+  if(is.null(ellipsis$ylim)) {
+    ellipsis$ylim <- default_ylim
+  } else if (anyNA(ellipsis$ylim)){
+    ellipsis$ylim[is.na(ellipsis$ylim)] <- default_ylim[is.na(ellipsis$ylim)]
+  }
 
   ## zero to two factors
   if(length(factors) < 3){
