@@ -139,7 +139,8 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 #     ifelse(all(rowSums(table(data[[id]], data[[x]]))==1), "between", "within")
 #   }))
 
-  test <- tapply(data[[dv]], as.list(data[, c(id, within)]), FUN = function(x){sum(!is.na(x))})
+  # test <- tapply(data[[dv]], data[, c(id, within), drop = FALSE], FUN = function(x){sum(!is.na(x))})
+  test <- table(data[, c(dv, id, within), drop = FALSE], useNA = "always")
 
   if(any(test > 1, na.rm = TRUE)){
     stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination.")
@@ -149,6 +150,12 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # Handling of missing values
 
   data <- complete_observations(data = data, id = id, dv = dv, within = within)
+  if(nrow(data) == 0L) stop(
+    "An error occurred while calculating within-subjects confidence intervals:\n"
+    , "There seem to be empty cells in your design (i.e., the design is not fully crossed).\n"
+    , "One possible reason is that conditions were dropped due to missing (i.e., implicit or explicit NA) values."
+    , call. = FALSE
+  )
 
   # print warnings ----
   if("removed_cases_explicit_NA" %in% names(attributes(data))) {
@@ -157,6 +164,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
       , id
       , ": "
       , paste(attr(data, "removed_cases_explicit_NA"), collapse = ", ")
+      , call. = FALSE
     )
   }
   if("removed_cases_implicit_NA" %in% names(attributes(data))) {
@@ -165,8 +173,10 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
       , id
       , ": "
       , paste(attr(data, "removed_cases_implicit_NA"), collapse = ", ")
+      , call. = FALSE
     )
   }
+
 
 
   # split by between-subjects factors ----

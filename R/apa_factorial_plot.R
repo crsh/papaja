@@ -129,9 +129,9 @@ apa_factorial_plot.default <- function(
   validate(fun_aggregate, check_class = "function", check_length = 1, check_NA = FALSE)
   validate(na.rm, check_class = "logical", check_length = 1)
   validate(use, check_class = "character", check_length = 1)
-  if(!use%in%c("all.obs", "complete.obs")) {
-    stop('Parameter `use` must be either "all.obs" or "complete.obs".')
-  }
+
+  use <- match.arg(arg = use, choices = c("all.obs", "complete.obs"))
+
   validate(data, check_class = "data.frame", check_cols = c(id, dv, factors), check_NA = FALSE)
   if(!is.null(intercept)) validate(intercept, check_mode = "numeric", check_NA = FALSE)
   if(!is.null(args_x_axis)) validate(args_x_axis, check_class = "list")
@@ -144,95 +144,39 @@ apa_factorial_plot.default <- function(
   if(!is.null(args_error_bars)) validate(args_error_bars, check_class = "list")
   if(!is.null(args_legend)) validate(args_legend, check_class = "list")
   if(!is.null(plot)) validate(plot, check_class = "character")
-  if(!is.null(jit)) validate(jit, check_class = "numeric")
   if(!is.null(xlab)) if(!is.expression(xlab)) validate(xlab, check_class = "character")
   if(!is.null(ylab)) if(!is.expression(ylab)) validate(ylab, check_class = "character")
   if(!is.null(main)) if(!is.expression(main)) if(!is.matrix(main)) validate(main, check_class = "character")
 
-  # remove extraneous columns from dataset
-  data <- data[, c(id, factors, dv)]
 
-  # Add missing variable labels
-  data <- default_label(data)
-  # original_labels <- variable_label(data)
-
-  factors <- gsub(pattern = " ", replacement = "_", factors)
-  id <- gsub(pattern = " ", replacement = "_", id)
-  dv <- gsub(pattern = " ", replacement = "_", dv)
-  colnames(data) <- gsub(pattern = " ", replacement = "_", colnames(data))
-  original_labels <- variable_label(data)
-
-  # Handling of factors:
-  # a) convert to factor
-  for (i in c(id, factors)){
-    data[[i]] <- as.factor(data[[i]])
-  }
-  # b) drop factor levels
-  data <- droplevels(data)
-  # Handling of dependent variable:
-  data[[dv]] <- as.numeric(data[[dv]])
-
-  # Check if specified factors contain more than one level after applying `droplevels`
-  for (i in c(factors)) {
-    nl <- nlevels(data[[i]])
-    if(nl < 2) {
-      warning(paste0("Factor \"", i, "\" contains only ", nl, " level" , ifelse(nl==1, "", "s"), " and is thus ignored."))
-      factors <- setdiff(factors, i)
-    }
-  }
-
-
-  variable_label(data) <- original_labels
-
-  ellipsis <- list(...)
-  output <- list()
-
-  # If no factors were specified, use an arbitrary one -------------------------
-  if(is.null(factors)||length(factors)==0){
-    factors <- "arbitraryFactorName"
-    data[[factors]] <- 1
-    data[[factors]] <- as.factor(data[[factors]])
-    args_x_axis<- defaults(args_x_axis, set = list(tick = FALSE, labels = ""))
-    # Create an empty label so that xlab won't be plotted automatically
-    variable_label(data[[factors]]) <- ""
-  }
-
-  # Set defaults
+  # Set defaults ---------------------------------------------------------------
   ellipsis <- defaults(
-    ellipsis
+    list(...)
     , set = list(
-       id = id
+      data = data
+       , id = id
        , dv = dv
        , factors = factors
        , intercept = intercept
      )
      , set.if.null = list(
-       args_x_axis = args_x_axis
-       , args_y_axis = args_y_axis
-       , args_rect = args_rect
-       , args_points = args_points
-       , args_swarm = args_swarm
-       , args_lines = args_lines
-       , args_error_bars = args_error_bars
-       , args_legend = args_legend
-       , jit = jit
-       , xlab = if(!is.null(xlab)){xlab}else{combine_plotmath(list(variable_label(data[[factors[1]]]), ""))}
-       , ylab = if(!is.null(ylab)){ylab}else{combine_plotmath(list(variable_label(data[[dv]]), ""))}
-       , frame.plot = FALSE
+       frame.plot = FALSE
+       # pass on arguments from function call
+       , tendency = substitute(tendency)
+       , dispersion = substitute(dispersion)
+       , level = level
+       , fun_aggregate = substitute(fun_aggregate)
+       , na.rm = na.rm
+       , use = use
        , reference = reference
+       , intercept = intercept
+       , jit = jit
+       , xlab = xlab
+       , ylab = ylab
        , main = main
-       , plot = plot
      )
   )
 
-  # Only use a legend title if more than one factor is specified, allow suppressing the legend title
-  if(length(factors)>1){
-    if(length(ellipsis$args_legend$title) == 0) {
-      ellipsis$args_legend$title <- variable_label(data[[factors[2]]])
-    } else if(!is.expression(ellipsis$args_legend$title) && ellipsis$args_legend$title == "") {
-      ellipsis$args_legend$title <- NULL # Save space
-    }
-  }
 
   # warning if "beside = FALSE" is specified
   if(is.null(ellipsis$beside) || !(ellipsis$beside)) {
@@ -261,230 +205,49 @@ apa_factorial_plot.default <- function(
   ellipsis$args_axis <- NULL
 
 
-  # Bar colors
-  if(is.null(ellipsis$col)) {
-    if(length(factors) < 2){
-      ellipsis$col <- "white"
-    } else {
-      nc <- nlevels(data[[factors[2]]])
-      colors <- (nc:1/(nc)) ^ 0.6
-      ellipsis$col <- grey(colors)
-    }
-  }
-
   ellipsis$intercept <- intercept
 
-  # is dplyr available?
-  use_dplyr <- package_available("dplyr")
-
-  # Aggregate subject data -----------------------------------------------------
-  # Check if aggregation is necessary
-  # this is a sub-optimal solution: if we had information about which factors are
-  # within, this would be faster; for this purpose, we could use the code-bit
-  # from `papaja::wsci`
-  # `base::table` is a bit faster than `stats::xtabs`
-  if(any(table(data[, c(id, factors)]) > 1)){
-    if(use_dplyr) {
-      aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
+  # jittering of x coordinates
+  if(is.null(ellipsis$jit)){
+    if("bars" %in% plot){
+      ellipsis$jit <- .4
     } else {
-      aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
-    }
-  } else {
-    aggregated <- data
-  }
-
-  # ----------------------------------------------------------------------------
-  # Check if there are incomplete observations and eventually remove them
-  if(use=="complete.obs") {
-    # excluded_id <- sort(unique(aggregated[[id]][is.na(aggregated[[dv]])]))
-    #
-    # data <- data[!data[[id]]%in%excluded_id, ]
-    # aggregated <- aggregated[!aggregated[[id]]%in%excluded_id, ]
-    tmp <- determine_within_between(data = aggregated, id = id, factors = factors)
-    aggregated <- complete_observations(data = aggregated, id = id, within = tmp$within, dv = dv)
-    removed_cases <- unlist(attributes(aggregated)[c("removed_cases_implicit_NA", "removed_cases_explicit_NA")])
-    if(!is.null(removed_cases)) {
-      excluded_id <- sort(unique(removed_cases))
-      data <- data[!data[[id]] %in% excluded_id, ]
+      ellipsis$jit <- .3
     }
   }
 
-  ## Calculate central tendencies ----------------------------------------------
-  if(use_dplyr) {
-    yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
-  } else {
-    yy <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
+  args_title$main <- main
+
+  args_x_axis$x <- do.call("apa_plot.data.frame", ellipsis)
+  args_y_axis$x <- do.call("x_axis", args_x_axis)
+  args_title$x <- do.call("y_axis", args_y_axis)
+  x <- do.call("annotation", args_title)
+
+  if(any(plot == "bars")) {
+    x <- do.call("bars", c(list(x = x), as.list(args_rect)))
+  }
+  if(any(plot == "swarms")) {
+    x <- do.call("swarms", c(list(x = x), as.list(args_swarm)))
+  }
+  if(any(plot == "lines")) {
+    x <- do.call("lines", c(list(x = x), as.list(args_lines)))
+  }
+  if(any(plot == "error_bars")) {
+    x <- do.call("error_bars", c(list(x = x), as.list(args_error_bars)))
+  }
+  if(any(plot == "points")) {
+    x <- do.call("points", c(list(x = x), as.list(args_points)))
   }
 
-  ## Calculate dispersions -----------------------------------------------------
-  fun_dispersion <- deparse(substitute(dispersion))
+  x <- do.call("legends", c(list(.x = x), as.list(args_legend)))
 
-  if(fun_dispersion == "within_subjects_conf_int" || fun_dispersion == "wsci") {
-    ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
-  } else {
-    if(fun_dispersion == "conf_int") {
-      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
-    } else {
-      if(use_dplyr) {
-        ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
-      } else {
-        ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
-      }
-    }
+
+
+  for (i in seq_along(x$plots)) {
+    x$plots[[i]]$.state <- "modify"
   }
 
-  colnames(yy)[which(colnames(yy)==dv)] <- "tendency"
-  colnames(ee)[which(colnames(ee)==dv)] <- "dispersion"
-
-  y.values <- merge(yy, ee, by = factors)
-  y.values$lower_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = function(x){sum(x[1], -x[2], na.rm = TRUE)})
-  y.values$upper_limit <- apply(X = y.values[, c("tendency", "dispersion")], MARGIN = 1, FUN = sum, na.rm = TRUE)
-
-  output$y <- y.values
-
-  output$data <- aggregated
-
-  output$args <- list()
-
-
-  # Default for ylim: Cover all (potentially) plotted shapes ---
-  default_ylim <- range(
-    0
-    , y.values[["lower_limit"]]
-    , y.values[["upper_limit"]]
-    , aggregated[[dv]]
-    , na.rm = TRUE
-  )
-
-  # allow to partially define via, e.g. `ylim = c(20, NA)`
-  if(is.null(ellipsis$ylim)) {
-    ellipsis$ylim <- default_ylim
-  } else if (anyNA(ellipsis$ylim)){
-    ellipsis$ylim[is.na(ellipsis$ylim)] <- default_ylim[is.na(ellipsis$ylim)]
-  }
-
-  ## zero to two factors
-  if(length(factors) < 3){
-
-    ellipsis <- defaults(
-      ellipsis
-      , set = list(
-        y.values = y.values
-        , aggregated = aggregated
-      )
-      , set.if.null = list(
-
-      ))
-
-    output$args <- do.call("apa_factorial_plot_single", ellipsis)
-  }
-
-  old.mfrow <- par("mfrow") # Save original plot architecture
-  ## Three factors
-
-
-  if(length(factors) == 3) {
-    par(mfrow = c(1, nlevels(data[[factors[3]]])))
-    tmp_main <- ellipsis$main
-
-    # by default, only plot legend in topright plot:
-    tmp_plot <- seq_len(nlevels(data[[factors[3]]]))==nlevels(data[[factors[3]]])
-    names(tmp_plot) <- levels(data[[factors[3]]])
-
-    ellipsis$args_legend <- defaults(
-      ellipsis$args_legend
-      , set = list(
-        # nothing
-      )
-      , set.if.null = list(
-        plot = tmp_plot
-      )
-    )
-
-    if(is.null(ellipsis$args_legend$plot)) {
-      ellipsis$args_legend$plot <- seq_len(nlevels(data[[factors[3]]]))==nlevels(data[[factors[3]]])
-    }
-
-    if(length(ellipsis$args_legend$plot)!=nlevels(data[[factors[3]]])) {
-      rec <- length(ellipsis$args_legend$plot) / nlevels(data[[factors[3]]])
-      ellipsis$args_legend$plot <- rep(ellipsis$args_legend$plot, round(rec+1))
-    }
-
-    names(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
-
-    for (i in levels(y.values[[factors[3]]])) {
-
-      ellipsis.i <- defaults(ellipsis, set = list(
-        y.values = y.values[y.values[[factors[3]]]==i, ]
-        , aggregated = aggregated[aggregated[[factors[3]]]==i, ]
-        , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i))
-      ), set.if.null = list(
-
-      ))
-      if(length(ellipsis$main)==nlevels(aggregated[[factors[3]]])){
-        names(ellipsis$main) <- levels(y.values[[factors[3]]])
-        ellipsis.i$main <- ellipsis$main[i]
-      }
-
-      # by default, only draw legend in very right plot
-      ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i]))
-
-      # suppresses ylab
-      if(i!=levels(y.values[[factors[3]]])[1]){
-        ellipsis.i$ylab <- ""
-      }
-
-      output$args[[paste0("plot", i)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
-    }
-    par(mfrow=old.mfrow)
-  }
-
-  ## Four factors
-  if(length(factors)==4){
-    par(mfrow=c(nlevels(data[[factors[3]]]),nlevels(data[[factors[4]]])))
-    tmp_main <- ellipsis$main
-
-    legend.plot <- array(FALSE, dim=c(nlevels(data[[factors[3]]]), nlevels(data[[factors[4]]])))
-    legend.plot[1,nlevels(data[[factors[4]]])] <- TRUE
-
-    ellipsis$args_legend <- defaults(ellipsis$args_legend
-                                     , set = list(
-
-                                     )
-                                     , set.if.null = list(
-                                       plot = legend.plot
-                                     )
-    )
-    rownames(ellipsis$args_legend$plot) <- levels(data[[factors[3]]])
-    colnames(ellipsis$args_legend$plot) <- levels(data[[factors[4]]])
-
-
-    for (i in levels(y.values[[factors[3]]])){
-      for (j in levels(y.values[[factors[4]]])) {
-        ellipsis.i <- defaults(ellipsis, set = list(
-          y.values = y.values[y.values[[factors[3]]]==i&y.values[[factors[4]]]==j, ]
-          , aggregated = aggregated[aggregated[[factors[3]]]==i&aggregated[[factors[4]]]==j, ]
-          , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
-        ), set.if.null = list(
-        ))
-        if(is.matrix(main)){
-          rownames(ellipsis$main) <- levels(y.values[[factors[3]]])
-          colnames(ellipsis$main) <- levels(y.values[[factors[4]]])
-          ellipsis.i$main <- ellipsis$main[i, j]
-        }
-        # by default, only draw legend in topright plot
-        ellipsis.i$args_legend <- defaults(ellipsis.i$args_legend, set = list(plot = ellipsis$args_legend$plot[i, j]))
-
-        # suppresses ylab
-        if(j!=levels(y.values[[factors[4]]])[1]){
-          ellipsis.i$ylab <- ""
-        }
-        output$args[[paste0("plot", i, j)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
-      }
-    }
-    par(mfrow=old.mfrow)
-  }
-  invisible(output)
+  x
 }
 
 
@@ -503,339 +266,6 @@ apa_factorial_plot.default <- function(
 #' @keywords internal
 
 apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
-
-  ellipsis <- list(...)
-
-  # jittering of x coordinates
-  if(is.null(ellipsis$jit)){
-    ellipsis$jit <- .3
-    if("bars" %in% ellipsis$plot){
-      ellipsis$jit <- .4
-    }
-  }
-
-
-  if(length(factors) > 1){
-    l2 <- levels(y.values[[factors[2]]])
-    onedim <- FALSE
-  } else {
-    l2 <- 1
-    factors[2] <- "f2"
-    y.values[["f2"]] <- as.factor(1)
-    aggregated$f2 <- as.factor(1)
-    onedim <- TRUE
-  }
-
-  space <- (1 - ellipsis$jit)
-
-
-  y.values$x <- as.integer(y.values[[factors[1]]]) - .5
-  aggregated$x <- as.integer(aggregated[[factors[1]]]) - .5
-
-  if(onedim==FALSE){
-    y.values$x <- y.values$x - .5  + space/2 + (1-space)/(nlevels(y.values[[factors[[2]]]])-1) * (as.integer(y.values[[factors[2]]])-1)
-    aggregated$x <- aggregated$x - .5 + space/2 + (1-space)/(nlevels(aggregated[[factors[[2]]]])-1) * (as.integer(aggregated[[factors[2]]])-1)
-  }
-
-  # save parameters for multiple plot functions
-  args_legend <- ellipsis$args_legend
-  args_points <- ellipsis$args_points
-  args_swarm <- ellipsis$args_swarm
-  args_lines <- ellipsis$args_lines
-  args_x_axis <- ellipsis$args_x_axis
-  args_y_axis <- ellipsis$args_y_axis
-  args_error_bars <- ellipsis$args_error_bars
-  args_title <- ellipsis$args_title
-
-  # move all arguments that are white-listed
-  args_plot_window <- list()
-  whitelist <- c("xlim", "ylim", "log", "asp", "xaxs", "yaxs", "len")
-  for(i in whitelist)
-    args_plot_window[[i]] <- ellipsis[[i]]
-
-  # new plot area
-  plot.new()
-
-  # plot.window
-  args_plot_window <- defaults(
-    args_plot_window
-    , set.if.null = list(
-      xlim = c(0, max(as.integer(y.values[[factors[1]]])))
-      , ylim = ellipsis$ylim
-    )
-    , set = list(
-    )
-  )
-
-  do.call("plot.window", args_plot_window)
-
-  # prepare defaults for x-axis
-  args_x_axis <- defaults(
-    args_x_axis
-    , set = list(
-      side = 1
-    )
-    , set.if.null = list(
-      at = seq_len(nlevels(y.values[[factors[1]]])) - .5
-      , labels = levels(y.values[[factors[1]]])
-      , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
-    )
-  )
-
-  # Some modifications are in order if a barplot starts at reference point
-  # However, save `lwd`
-  tmp_lwd <- ifelse(is.null(args_x_axis$lwd), 1, args_x_axis$lwd)
-  if("bars" %in% ellipsis$plot && ellipsis$ylim[1]==ellipsis$reference){
-
-    args_x_axis <- defaults(
-      args_x_axis
-      , set = list(
-        lwd = 0
-      )
-      , set.if.null = list(
-        lwd.tick = 1
-        , pos = ellipsis$ylim[1]
-      )
-    )
-  }
-
-  # prepare defaults for y-axis
-  args_y_axis <- defaults(
-    args_y_axis
-    , set = list(
-      side = 2
-    )
-    , set.if.null = list(
-      labels = TRUE
-      , las = ellipsis$las
-    )
-  )
-
-  do.call("axis", args_y_axis)
-
-  args_rect <- ellipsis$args_rect
-  if("bars" %in% ellipsis$plot){
-
-    space <- .2
-
-    x0 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]])-1)
-    x1 <- as.integer(y.values[[factors[1]]]) - 1 + space/2 + (1-space)/nlevels(y.values[[factors[[2]]]]) * (as.integer(y.values[[factors[2]]]))
-
-    y.values$x <- (x0 + x1)/2
-    l2 <- levels(y.values[[factors[2]]])
-
-    y.values[["col"]] <- ellipsis$col[as.integer(y.values[[factors[2]]])]
-    assigned_colors <- y.values[["col"]]
-    names(assigned_colors) <- as.character(y.values[[factors[2]]])
-
-    args_rect <- defaults(
-      args_rect
-      , set.if.null = list(
-
-        xleft = x0
-        , xright = x1
-        , ytop = y.values[["tendency"]]
-        , ybottom = ifelse(
-          ellipsis$ylim[1] < ellipsis$ylim[2] # Is ylab increasing?
-          , ifelse(ellipsis$ylim[1] >= ellipsis$reference, ellipsis$ylim[1], ellipsis$reference) # for increasing ylab
-          , ifelse(ellipsis$ylim[1] <= ellipsis$reference, ellipsis$ylim[1], ellipsis$reference) # for decreasing ylab
-        )
-        , col = assigned_colors
-      )
-      , set = list(
-
-        xpd = FALSE
-      )
-    )
-    do.call("rect", args_rect)
-    abline(h = ellipsis$reference, lwd = tmp_lwd)
-  }
-
-  # only draw axis if axis type is not specified or not specified as "n"
-  if(is.null(args_x_axis$xaxt)||args_x_axis$xaxt!="n") {
-    do.call("axis", args_x_axis)
-  }
-
-  # prepare defaults for title and labels
-  args_title <- defaults(
-    args_title
-    , set = list(
-
-    )
-    , set.if.null = list(
-      main = ellipsis$main
-      ,  xlab = ellipsis$xlab
-      , ylab = ellipsis$ylab
-    )
-  )
-
-  do.call("title", args_title)
-
-  if("swarms" %in% ellipsis$plot) {
-    if(!package_available("beeswarm")) stop("Please install the package 'beeswarm' to plot beeswarms.")
-
-    args_swarm <- defaults(
-      args_swarm
-      , set.if.null = list(
-        cex = .5
-        , alpha = .3
-        , priority = c("ascending", "descending", "density", "random", "none")
-      )
-    )
-
-    for (i in levels(aggregated[[factors[1]]])) {
-      for (j in levels(aggregated[[factors[2]]])) {
-        coord <- beeswarm::swarmx(x = aggregated[["x"]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
-                                  , y = aggregated[[dv]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j]
-                                  , cex = args_swarm$cex
-                                  , priority = args_swarm$priority
-                  )
-        aggregated[["swarmx"]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- coord[["x"]]
-        aggregated[["swarmy"]][aggregated[[factors[1]]]==i&aggregated[[factors[2]]]==j] <- coord[["y"]]
-      }
-    }
-
-    args_swarm$priority <- NULL
-  }
-
-
-  # prepare x axis
-  args_x_axis <- defaults(
-    args_x_axis
-    , set = list(
-      side = 1
-    )
-    , set.if.null = list(
-      at = seq_len(nlevels(y.values[[factors[1]]])) - .5
-      , labels = levels(y.values[[factors[1]]])
-    )
-  )
-
-  # convert to matrices
-  x <- tapply(y.values[, "x"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
-  y <- tapply(y.values[, "tendency"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
-  e <- tapply(y.values[, "dispersion"],list(y.values[[factors[1]]], y.values[[factors[2]]]), as.numeric)
-
-  if("swarms" %in% ellipsis$plot){
-    agg.x <- tapply(aggregated[["swarmx"]], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
-    agg.y <- tapply(aggregated[["swarmy"]], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
-  }
-
-  ## default colors for tendency points (which are inherited by swarm points)
-  nc <- nlevels(aggregated[[factors[2]]])-1
-  if(nc==0) nc <- 1
-  bg.colors <- grey((0:nc/(nc)) ^ 0.6)
-
-  # prepare (tendency) points
-  args_points <- defaults(
-    args_points
-    , set = list(
-      x = x
-      , y = y
-    )
-    , set.if.null = list(
-      pch = c(21:25, 1:20)
-      , col = rep("black", length(l2))
-      , bg = bg.colors
-      , cex = rep(1.0, length(l2))
-    )
-  )
-
-
-  if("swarms" %in% ellipsis$plot){
-    args_swarm <- defaults(
-      args_swarm
-      , set = list(
-        # nothing yet
-      )
-      , set.if.null = list(
-        x = agg.x
-        , y = agg.y
-        , col = brighten(args_points$col, factor = .9)
-        , bg = brighten(args_points$bg, factor = .9)
-        , pch = args_points$pch
-      )
-    )
-
-    args_swarm$alpha <- NULL
-
-    do.call("points.matrix", args_swarm)
-  }
-
-
-  # prepare and draw (central tendency) lines
-  if("lines" %in% ellipsis$plot){
-    args_lines <- defaults(
-      args_lines
-      , set = list(
-        x = x
-        , y = y
-      )
-      , set.if.null = list(
-        lty = 1:6
-        , col = rep("black", length(l2))
-      )
-    )
-
-    do.call("lines", args_lines)
-  }
-
-  # prepare and draw error bars
-  if("error_bars" %in% ellipsis$plot){
-    args_error_bars <- defaults(
-      args_error_bars
-      , set = list(
-        x0 = t(x)
-        , x1 = t(x)
-        , y0 = t(y-e)
-        , y1 = t(y+e)
-      )
-      , set.if.null = list(
-        angle = 90
-        , code = 3
-        , length = .06
-      )
-    )
-
-    do.call("arrows", args_error_bars)
-  }
-
-  if("points" %in% ellipsis$plot){
-    # draw points (central tendency)
-    do.call("points.matrix", args_points)
-  }
-
-  # prepare and draw legend
-  if(onedim==FALSE) { # only draw legend if a second factor is present
-
-    args_legend <- defaults(
-      args_legend
-      , set.if.null = list(
-        x = "topright"
-        , legend = levels(y.values[[factors[2]]])
-        , pch = args_points$pch[seq_len(nlevels(y.values[[factors[2]]]))]
-        , lty = args_lines$lty
-        , bty = "n"
-        , pt.bg = args_points$bg
-        , col = args_points$col
-        , pt.cex = args_points$cex
-      )
-    )
-    if("bars" %in% ellipsis$plot){
-      args_legend <- defaults(
-        args_legend
-        , set = list(
-          pch = NULL
-          , lty = NULL
-        )
-        , set.if.null = list(
-          fill = ellipsis$col
-        )
-      )
-    }
-    do.call("legend", args_legend)
-  }
-
 
   # Draw intercept
   if(!is.null(intercept)){
@@ -856,23 +286,6 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       }
     }
   }
-
-  # Invisibly return arguments that were used for plotting
-  invisible(
-    list(
-      args_x_axis = args_x_axis
-      , args_y_axis = args_y_axis
-      , args_title = args_title
-      , args_rect = args_rect
-      , args_points = args_points
-      , args_swarm = args_swarm
-      , args_lines = args_lines
-      , args_error_bars = args_error_bars
-      , args_legend = args_legend
-      , args_plot_window =args_plot_window
-    )
-  )
-
 }
 
 

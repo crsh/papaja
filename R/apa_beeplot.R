@@ -37,15 +37,20 @@
 #' @rdname apa_beeplot
 #' @export
 
-apa_beeplot <- function(data, ...) {
-  UseMethod("apa_beeplot", data)
+apa_beeplot <- function(x, ...) {
+  UseMethod("apa_beeplot")
+}
+
+#' @export
+apa_beeplot.formula <- function(formula, data, ...) {
+  formula_processor(formula = formula, data = data, .fun = apa_beeplot, ...)
 }
 
 
 #' @rdname apa_beeplot
 #' @export
 
-apa_beeplot.default <- function(
+apa_beeplot.data.frame <- function(
   data
   , id
   , factors = NULL

@@ -634,7 +634,7 @@ complete_observations <- function(data, id, within, dv) {
     if(any(obs_per_person != within_combinations)) {
       excluded_id <- names(obs_per_person[obs_per_person != within_combinations])
 
-      data <- data[!data[[id]] %in% excluded_id, ]
+      data <- data[!data[[id]] %in% excluded_id, , drop = FALSE]
       data[[id]] <- droplevels(data[[id]])
       implicit_NA <- excluded_id
     }

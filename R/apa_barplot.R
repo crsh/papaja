@@ -38,8 +38,13 @@
 #' @rdname apa_barplot
 #' @export
 
-apa_barplot <- function(data, ...){
-  UseMethod("apa_barplot", data)
+apa_barplot <- function(x, ...){
+  UseMethod("apa_barplot")
+}
+
+#' @export
+apa_barplot.formula <- function(formula, data, ...) {
+  formula_processor(formula = formula, data = data, .fun = apa_barplot, ...)
 }
 
 #' @rdname apa_barplot
