@@ -1,5 +1,13 @@
 container_names <- c("estimate", "statistic", "full_result", "table")
 
+# Some defaults changed w/ afex 1.0.0, here we restore the behaviour of version 0.28.x
+if(packageVersion("afex") >= '1.0.0') {
+  afex::afex_options(
+    emmeans_model = "univariate"
+    , include_aov = TRUE
+  )
+}
+
 # Test the general structure of apa_results ----
 # 1. class apa_results/list
 # 2. names container_names
@@ -85,16 +93,16 @@ expect_apa_results <- function(
 # Test the test, work in progress ----
 # expect_failure() somehow doesn't detect failure
 
-test_that(
-  "expect_apa_results"
-  , {
-    test <- papaja:::init_apa_results()
-    test$table <- data.frame(a = 1)
-
-    # class(test$table) <- c("apa_results_table", "data.frame")
-    # expect_failure(
-    #   expect_apa_results(test)
-    #   , "has class"
-    # )
-  }
-)
+# test_that(
+#   "expect_apa_results"
+#   , {
+#     test <- papaja:::init_apa_results()
+#     test$table <- data.frame(a = 1)
+#
+#     class(test$table) <- c("apa_results_table", "data.frame")
+#     expect_failure(
+#       expect_apa_results(test)
+#       , "has class"
+#     )
+#   }
+# )

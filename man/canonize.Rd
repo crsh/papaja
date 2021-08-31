@@ -7,13 +7,13 @@
 canonize(x, stat_label = NULL, est_label = NULL)
 }
 \arguments{
-\item{x}{A \code{data.frame}.}
+\item{x}{A data frame.}
 
-\item{stat_label}{Label for column \code{statistic}.}
+\item{stat_label}{Character. Label for column \code{statistic}.}
 
-\item{est_label}{Label for column \code{estimate}.}
+\item{est_label}{Character. Label for column \code{estimate}.}
 }
 \description{
-Internal function that transforms a \code{data.frame} by renaming and labeling columns.
+Internal function that transforms a data frame by renaming and labelling columns.
 }
 \keyword{internal}

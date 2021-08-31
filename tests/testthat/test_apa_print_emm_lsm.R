@@ -520,3 +520,27 @@ test_that(
     expect_identical(est_name_from_call(mw_tw_pairs_emm), "\\Delta M")
   }
 )
+
+test_that(
+  "Bug reported by shirdekel, #456"
+  , {
+    model <- lm(mpg ~ vs * am, data = mtcars)
+
+    emm <- emmeans::emmeans(model, ~ vs * am)
+
+    emm_contrast_1 <- emmeans::contrast(emm, "pairwise")
+    emm_contrast_2 <- emmeans::contrast(emm, interaction = "pairwise")
+
+    apa_1 <- apa_print(emm_contrast_1)
+    apa_2 <- apa_print(emm_contrast_2)
+
+    expect_identical(
+      variable_labels(apa_1$table)$estimate
+      , expected = "$\\Delta M$"
+    )
+    expect_identical(
+      variable_labels(apa_2$table)$estimate
+      , expected = "$\\Delta M$"
+    )
+  }
+)

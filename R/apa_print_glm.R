@@ -1,68 +1,72 @@
 #' Format statistics (APA 6th edition)
 #'
-#' These methods take \code{glm} and \code{lm} objects to create formatted character
+#' These methods take [glm][glm()] and [lm][lm()] objects to create formatted character
 #' strings to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x \code{glm} or \code{lm} object.
-#' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+#' @param x `glm` or `lm` object.
+#' @param est_name Character. If `NULL` (the default) the name given in `x` (or a formally correct
 #'    adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
 #'    otherwise the supplied name is used. See details.
-#' @param standardized Logical. Indicates if coefficients are standardized or unstandardized and leading
-#'    zeros are omitted if appropriate. See details.
-#' @param ci Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
-#'    \code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
-#'    coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
+#' @param standardized Logical. Indicates if coefficients were standardized using [scale()], and leading
+#'    zeros should be omitted if appropriate. See details.
+#' @param ci Numeric. Either a single value (range \[0, 1\]) giving the confidence level or a two-column
+#'    `matrix` with confidence region bounds as column names (e.g. `"2.5 %"` and `"97.5 %"`) and
+#'    coefficient names as row names (in the same order as they appear in `summary(x)$coefficients`.
 #'    See details.
 #' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
-#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
+#' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
 #' @details
-#'    The coefficients names are sanitized to facilitate their use as list names. Parentheses
-#'    are omitted and other non-word characters are replaced by \code{_} (see \code{\link{sanitize_terms}}).
+#'    The coefficient names are sanitized to facilitate their use as list names. Parentheses
+#'    are omitted and other non-word characters are replaced by `_` (see [sanitize_terms()]).
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
-#'
-#'    \code{est_name} is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
+#'    `est_name` is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
 #'    Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
-#'    text (e.g., \code{\\\\beta} yields \eqn{\beta}).
+#'    text (e.g., `"\\\\beta"` yields \eqn{\beta}).
 #'
-#'    If \code{standardized} is \code{TRUE} "scale()" is removed from coefficients names (see examples).
-#'    Currently, this option is ignored for \code{glm}-objects.
+#'    If `standardized = TRUE`, `scale()` is removed from coefficient names (see examples).
+#'    This option is currently ignored for `glm`-objects.
 #'
-#'    If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
+#'    If `ci` is a single value, confidence intervals are calculated using [stats::confint()].
 #'
-#'    If \code{x} is an \code{lm}-object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
-#'    are computed using \code{\link[MBESS]{ci.R2}} to obtain a confidence region that corresponds to the
-#'    \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95\% CI or
-#'    \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004). If
-#'    \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e., "the values of the
-#'    [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007); put differently, it
+#'    If `x` is an `lm` object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
+#'    are computed using [MBESS::ci.R2()] to obtain a confidence region that corresponds to the
+#'    \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95% CI or
+#'    \eqn{\alpha = 0.05} for regression coefficients yields a 90% CI for \eqn{R^2}, see Steiger, 2004). If
+#'    `observed_predictors = FALSE`, it is assumed that predictors are fixed variables, i.e., "the values of the
+#'    \[predictors\] were selected a priori as part of the research design" (p. 15, Kelly, 2007); put differently, it
 #'    is assumed that predictors are not random.
 #'
 #' @return
-#'    \code{apa_print.lm} returns a list containing the following components according to the input:
+#'    A list (with additional class `apa_results`) containing the following components is returned:
 #'
 #'    \describe{
-#'      \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-#'          value for each term.}
-#'      \item{\code{estimate}}{A named list of character strings giving the descriptive estimates and confidence intervals
-#'          for each term.} % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each term.}
-#'      \item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
+#'      \item{`statistic`}{
+#'        A named list of character strings giving the test statistic, parameters, and *p* value for each model term.
+#'      }
+#'      \item{`estimate`}{
+#'        A named list of character strings giving the descriptive estimates and confidence intervals for each term,
+#'        either in units of the analysed scale or as standardized effect size.
+#'      }
+#'      \item{`full_result`}{
+#'        A named list of character strings combining `estimate` and `statistic` for each term.
+#'      }
+#'      \item{`table`}{
+#'        A data frame containing the complete regression table, which can be passed to [apa_table()].
+#'      }
 #'    }
 #'
 #' @references
 #'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-#'    Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-#'    doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+#'    Variance and Contrast Analysis. *Psychological Methods*, *9*(2), 164-182.
+#'    doi: [10.1037/1082-989X.9.2.164](https://doi.org/10.1037/1082-989X.9.2.164)
 #'
 #'    Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
-#'    implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
-#'    doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+#'    implementation. *Journal of Statistical Software*, *20*(8), 1-24.
+#'    doi: [10.18637/jss.v020.i08](https://doi.org/10.18637/jss.v020.i08)
 #'
 #' @family apa_print
-#' @seealso \code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
+#' @seealso [stats::confint()], [MBESS::ci.pvaf()]
 #' @examples
 #' # Data from Dobson (1990), p. 9.
 #' ctl <- c(4.17, 5.58, 5.18, 6.11, 4.50, 4.61, 5.17, 4.53, 5.33, 5.14)

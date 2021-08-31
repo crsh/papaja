@@ -1,10 +1,11 @@
-#' Brighten up a colour
+#' Brighten up a Colour
 #'
-#' We use this internal utility function to brighten up a specified colour (e.g., the swarm colour in \code{\link{apa_beeplot}}).
+#' Brighten up a specified colour (e.g., the swarm colour in [apa_beeplot()]).
+#' *This function is not exported.*
 #'
-#' @param col Colour to be brightened up. Can be anything that is digestible by \code{\link{col2rgb}}.
-#' @param factor Numeric The rate with which the color channel should be boosted. Must be in the range between 0 and 1.
-#' @return A character vector as returned by \code{\link{rgb}}.
+#' @param col Colour to be brightened up. Can be anything that is digestible by [col2rgb()].
+#' @param factor Numeric. The rate with which the colour channel should be boosted. Must be in the range between 0 and 1.
+#' @return A character vector as returned by [rgb()].
 #' @keywords internal
 
 brighten <- function(col, factor){
@@ -20,9 +21,10 @@ brighten <- function(col, factor){
   return(new_color)
 }
 
-#' Matrix method for lines
+#' Matrix Method for lines()
 #'
 #' Internal function for convenient plotting of multiple lines.
+#' *This function is not exported.*
 #'
 #' @keywords internal
 
@@ -39,9 +41,10 @@ lines.matrix <- function(x, y, type = "l", ...) {
   }
 }
 
-#' Matrix method for points
+#' Matrix Method for points()
 #'
 #' Internal function for convenient plotting of multiple points.
+#' *This function is not exported.*
 #'
 #' @keywords internal
 
@@ -58,32 +61,15 @@ points.matrix <- function(x, y, type = "p", ...) {
   }
 }
 
-#  Matrix method for arrows
-#
-# Internal function for convenient plotting of multiple arrows.
-#
-# @keywords internal
 
-# arrows.matrix <- function(x0, x1, y0, y1, ...) {
-#
-#   args <- list(...)
-#
-#   for (i in 1:ncol(x0)){
-#     args.i <- lapply(X = args, FUN = sel, i)
-#     args.i$x0 <- x0[, i]
-#     args.i$x1 <- x1[, i]
-#     args.i$y0 <- y0[, i]
-#     args.i$y1 <- y1[, i]
-#     do.call("arrows", args.i)
-#   }
-# }
 
-#' Combine to expression
+#' Combine to Expression
 #'
 #' We use this internal function to generate expressions that can be used for plotting. Accepts a list of elements that are coerced,
-#' currently supperted elements are \code{character}, \code{expression}, and \code{character} that contain \code{latex} elements.
+#' currently supported elements are `character`, `expression`, and `character` that contain \code{latex} elements.
+#' *This function is not exported.*
 #'
-#' @param x A \code{list} that contains all elements that are intended to be coerced into one expression.
+#' @param x A `list` that contains all elements that are intended to be coerced into one expression.
 #' @return An expression
 #' @keywords internal
 

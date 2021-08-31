@@ -18,7 +18,7 @@ in a Markdown-document using pandoc or LaTeX. \emph{This function has been defun
 }
 \details{
 If the function is called in an RMarkdown-document the file name specified as \code{bib_name}
-   can be used in the YAML header as \code{bibliography}
+can be used in the YAML header as \code{bibliography}
 }
 \examples{
 NULL

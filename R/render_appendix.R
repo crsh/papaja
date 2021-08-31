@@ -1,7 +1,7 @@
-#' Render appendix
+#' Render Appendix
 #'
-#' This functions renders an R Markdown document \emph{without} YAML header to a TeX fragment inside
-#' an \code{appendix} environment.
+#' This function renders an R Markdown document *without* YAML header to a TeX fragment inside
+#' an `appendix` environment, or to a markdown fragment (for Word output).
 #'
 #' @param x Character. Input file name.
 #' @param bibliography Character. Location of bibliography file(s) to use.
@@ -10,7 +10,12 @@
 #'    If \code{FALSE} output will be included in the document.
 #' @inheritDotParams rmarkdown::pandoc_convert
 #' @details
-#'    By default \code{x} is converted to a TeX file which can be included in an R Markdown document
+#'    *This function is only exported for backwards compatibility.*
+#'    It is now recommended *not* to call `render_appendix()` directly.
+#'    Instead, to add appendices to your manuscript, add R Markdown file
+#'    to the YAML front matter with an additional tag such as `appendix: "appendix.Rmd"`.
+#'
+#'    By default, \code{x} is converted to a TeX file which can be included in an R Markdown document
 #'    as \code{include}:
 #'
 #'    \preformatted{
@@ -21,12 +26,11 @@
 #'    }
 #'
 #'    If \code{render_appendix} is called form an R Markdown document with a target document type other
-#'    than a PDF file a Markdown document is created and a warning returned (includes are only supported
-#'    in PDF documents).
+#'    than a PDF file, a markdown fragment is included.
 #'
 #'    Default chunk options and hooks are set to those used in the R Markdown document from
 #'    which \code{render_appendix} is called; otherwise defaults of \code{\link[rmarkdown]{md_document}} are
-#'    used. It is, therefore, recommended to include \code{render_appendix} in your parent document.
+#'    used. If It is, therefore, recommended to include \code{render_appendix} in your parent document.
 #' @export
 
 render_appendix <- function(
@@ -80,40 +84,39 @@ render_appendix <- function(
   validate(quiet, check_class = "logical", check_length = 1)
 
   target_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
-  if(length(target_format) == 0) stop("render_appendix() can only be used within an R Markdown document; please include the function call in a code chunk.")
+  if(length(target_format) == 0L) stop("render_appendix() can only be used within an R Markdown document; please include the function call in a code chunk.")
 
-  if(target_format %in% c("latex", "word", "docx")) {
-    # Render Markdown fragment
-    md_fragment <- knitr::knit_child(input = x, quiet = quiet)
-  } else {
+
+  if(!target_format %in% c("latex", "word", "docx")) {
     warning(target_format, " documents currently do not support appendices via includes.")
   }
 
+  # Render Markdown file ----
+  md_file <- tempfile(fileext = ".md")
+  res <- knitr::knit_child(input = x, output = md_file, quiet = quiet)
+  md_fragment <- readLines_utf8(md_file)
+
   if(target_format == "latex") {
-    # Create TeX-file
-    md_file <- paste0(tools::file_path_sans_ext(tools::file_path_as_absolute(x)), ".md")
-    md_connection <- file(md_file, encoding = "UTF-8")
-    on.exit(closeAllConnections())
 
-    writeLines(md_fragment, con = md_connection, sep = "\n", useBytes = TRUE)
-    on.exit(file.remove(md_file))
 
-    new_name <- paste0(tools::file_path_sans_ext(x), ".tex")
+    # Create TeX-file ----
+    tex_file <- paste0(tools::file_path_sans_ext(normalizePath(x)), ".tex")
 
-    ellipsis$input <- md_file
-    ellipsis$output <- basename(new_name)
+    ellipsis$input    <- md_file
+    ellipsis$output   <- tex_file
     ellipsis$citeproc <- is.null(citation_package_call)
 
     status <- do.call(rmarkdown::pandoc_convert, ellipsis)
 
-    # Add appendix environment
-    tex_connection <- file(new_name, encoding = "UTF-8")
-    tex <- readLines(con = tex_connection)
-    tex <- enc2native(tex)
+
+
+    # Add appendix environment ----
+    tex <- readLines_utf8(con = tex_file)
+
 
     # Check whether Rmd starts with heading, otherwise add empty section ----
     # when checking, ignore rows with latex newlines or html comments
-    md_fragment <- unlist(strsplit(md_fragment, split = "\n"))
+
 
     if(!grepl(pattern = "^#(\\b|\\s)", x = md_fragment[!grepl("^\\\\|^<!--", md_fragment) & md_fragment != ""][1])) {
       tex <- c("\\section{}", tex)
@@ -126,11 +129,11 @@ render_appendix <- function(
     )
     tex <- c("\\clearpage", appendix_endfloat_fix, "\n\n\\begin{appendix}", tex, "\\end{appendix}")
 
-    writeLines(tex, con = tex_connection, useBytes = TRUE)
+    writeLines(tex, con = tex_file, useBytes = TRUE)
 
     if(!is.null(status)) return(status)
   } else if(target_format %in% c("word", "docx")) {
-    cat(md_fragment)
+    cat(c("", md_fragment), sep = "\n")
   }
 
   return(invisible(0))

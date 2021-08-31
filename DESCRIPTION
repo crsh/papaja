@@ -2,7 +2,7 @@ Package: papaja
 Title: Prepare Reproducible APA Journal Articles with R Markdown
 Version: 0.1.0.9997
 Description: papaja (Preparing APA Journal Articles) provides document formats
-    and helper functions to produce complete APA manuscripts from R Markdown-files
+    and helper functions to produce complete APA manuscripts from R Markdown files
     (PDF and Word documents).
 Authors@R: c(
     person("Frederik", "Aust", email = "frederik.aust@uni-koeln.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4900-788X"))
@@ -10,6 +10,7 @@ Authors@R: c(
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
     , person("Joseph V.", "Casillas", email = "joseph.casillas@rutgers.edu", role = c("ctb"))
+    , person("Rudolf", "Siegel", email = "rudolf.siegel@uni-saarland.de", role = c("ctb"))
   )
 Date: 2020-11-22
 URL: https://github.com/crsh/papaja
@@ -25,7 +26,7 @@ Imports:
   knitr (>= 1.26),
   methods,
   rmarkdown (>= 2.4),
-  rmdfiltr (>= 0.1.2),
+  rmdfiltr (>= 0.1.3),
   yaml,
   zip
 Suggests:
@@ -50,13 +51,12 @@ Suggests:
   lme4,
   lmerTest,
   nlme,
-  covr
-Remotes: 
-  tidymodels/broom
+  covr,
+  effectsize (>= 0.4.4)
 SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
-LazyData: yes
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US
+Roxygen: list(markdown = TRUE)

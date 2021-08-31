@@ -1,4 +1,4 @@
-#' Create a new `apa_results` object
+#' Create a New `apa_results` Object
 #'
 #' Typeset the contents of an object according to the specified expression
 #' strings and create a new or extend an existing `apa_results` object.
@@ -7,20 +7,25 @@
 #'    substitution.
 #' @param est_glue Character. (Named vector of) expressions string(s) to
 #'     format. Each string creates a new (named) element in the
-#'    `estimate`-sublist.
+#'    `estimate` sub-list.
 #' @param stat_glue Character. (Named vector of) expressions string(s) to
 #'     format. Each string creates a new (named) element in the
-#'    `statistic`-sublist.
+#'    `statistic` sub-list.
 #' @param container List of class `apa_results` to add the glued results to.
-#' @param sublist Character. Name of (new) sublist in `estimate`
+#' @param sublist Character. Name of (new) sub-list in `estimate`
 #'    `statistics`, and `full_result` to append glued results to (e.g.,
 #'    `modelfit`).
 #' @param term_names Character. Used as names for the `estimate`-,
-#'    `statistics`-, and `full_result`-sublists, if multiple estimates or
+#'    `statistics`-, and `full_result` sub-lists, if multiple estimates or
 #'    statistics are glued.
 #' @param in_paren Logical. Whether the formatted string is to be reported in
 #'    parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
 #'    enclosing degrees of freedom) are replaced with brackets.
+#' @param est_first Logical. Determines in which order `estimate` and `statistic`
+#'    are glued together to `full_result`.
+#' @param simplify Logical. Determines whether the `estimate`, `statistic`, and
+#'    `full_result` sub-lists should be simplified if only one term is available
+#'    from the model object.
 #' @inheritParams glue::glue
 #'
 #' @return Returns a list of class `apa_results`
@@ -92,8 +97,14 @@ add_glue_to_apa_results <- function(
     , sublist = NULL
     , term_names = NULL
     , in_paren = FALSE
+    , est_first = TRUE
+    , simplify = TRUE
 ) {
-    validate(container, check_class = "apa_results")
+  validate(container, check_class = "apa_results")
+
+  in_paren <- isTRUE(in_paren)
+  simplify <- isTRUE(simplify)
+
 
     est_list <- unlist(lapply(
         est_glue
@@ -115,6 +126,7 @@ add_glue_to_apa_results <- function(
     paste_pars <- list(sep = ", ")
     paste_pars$est  <- est_list
     paste_pars$stat <- stat_list
+    if(!est_first) paste_pars <- paste_pars[c("sep", "stat", "est")]
 
     full_list <- do.call("paste", paste_pars)
     names(full_list) <- names(est_list)
@@ -130,18 +142,13 @@ add_glue_to_apa_results <- function(
 
         # Remove empty elements (e.g., only estimate or statistic defined)
         x <- gsub(x, pattern = "^, |, $", replacement = "")
+        x <- x[x != ""]
 
-        if(length(x) > 1L) {
-            x <- x[!x == ""]
-
-            y <- as.list(x)
-            if(!is.null(term_names)) names(y) <- term_names
-            return(y)
+        if(!simplify | length(x) > 1L) {
+          x <- as.list(x)
+          if(!is.null(term_names) & length(x) > 0L) names(x) <- term_names
         }
-
-        if(length(x) == 1L) {
-            if(x == "") return(list()) else return(x)
-        }
+        return(x)
     })
 
     if(is.null(sublist)) {
@@ -215,9 +222,9 @@ stat_glue <- function(x) {
   if(!is.null(x$df)) {
     if(!is.null(x$df.residual)) {
       df <- "(<<df>>, <<df.residual>>)"
-    } else if( # Chi^2-Test
-      exists("n", where = parent.frame(2)) &&
-      !is.null(get("n", envir = parent.frame(2)))
+    } else if(
+      identical(variable_label(x$statistic), "$\\chi^2$") &&
+      !is.null(attr(x$statistic, "n"))
     ) {
       df <- "(<<df>>, n = <<n>>)"
     } else {
@@ -241,6 +248,13 @@ stat_glue <- function(x) {
       )
     )
   }
+  if(!is.null(x$mse)) {
+    stat_list <- c(
+      stat_list
+      , "$<<svl(mse)>> <<add_equals(mse)>>$"
+    )
+  }
+
 
   p_value <- names(x)[grepl("p.value", names(x), fixed = TRUE)]
   if(length(p_value) > 0) {

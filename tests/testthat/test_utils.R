@@ -79,6 +79,11 @@ test_that(
     expect_equal(in_paren("$\\chi^2(1, n = 100) = 1$"), "$\\chi^2[1, n = 100] = 1$")
     expect_equal(in_paren("95% CI $[123, 123]$"), "95% CI $[123, 123]$")
     expect_equal(in_paren("$F(1, 234) = 1$"), "$F[1, 234] = 1$")
+
+    expect_identical(
+      in_paren(list(estimate = "$t(1) = 1$"))
+      , expected = list(estimate = "$t[1] = 1$")
+    )
   }
 )
 

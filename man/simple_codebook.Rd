@@ -2,7 +2,7 @@
 % Please edit documentation in R/variable_label.R
 \name{simple_codebook}
 \alias{simple_codebook}
-\title{Simple codebook}
+\title{Simple Codebook}
 \usage{
 simple_codebook(x, ...)
 }
@@ -55,8 +55,8 @@ simple_codebook(x, ...)
 Generate a simple codebook in CSV-format
 }
 \details{
-If the \pkg{skimr} package is installed, an inline histogram is added
-  for all numeric variables.
+If the \pkg{skimr} package is installed, an in-line histogram is added
+for all numeric variables.
 }
 \examples{
 \dontrun{
@@ -65,5 +65,5 @@ simple_codebook(cars, file = "cars_codebook.csv")
 }
 }
 \seealso{
-\code{\link[utils]{write.csv}}
+\code{\link[utils:write.table]{utils::write.csv()}}
 }

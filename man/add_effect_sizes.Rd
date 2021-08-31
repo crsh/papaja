@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{add_effect_sizes}
 \alias{add_effect_sizes}
-\title{Effect sizes for Analysis of Variance}
+\title{Effect Sizes for Analysis of Variance}
 \usage{
 add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
 }
@@ -23,4 +23,6 @@ deviation of the grand mean from 0) be included in the calculation of eta-square
 }
 \description{
 Calculates effect-size measures for Analysis of Variance output objects.
+\emph{This function is not exported and will soon be deprecated.}
 }
+\keyword{internal}

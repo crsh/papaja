@@ -29,19 +29,21 @@ adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{t
 
 \item{est_name}{Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 }
 \value{
 \code{apa_print()} returns a list containing the following components according to the input:
 
-   \describe{
-     \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-         and \emph{p} value.}
-     \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-         % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
-     \item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
-   }
+\describe{
+\item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
+and \emph{p} value.}
+\item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
+\% , either in units of the analyzed scale or as standardized effect size.
+\item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
+\item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
+}
 }
 \description{
 Takes various \code{lsmeans} and \code{emmeans} objects to create formatted character strings to report the results in
@@ -50,9 +52,6 @@ considered experimental.}
 }
 \details{
 ADJUSTED CONFIDENCE INTERVALS
-
-   If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
-   of freedom, are replaced with brackets.
 }
 \examples{
    NULL

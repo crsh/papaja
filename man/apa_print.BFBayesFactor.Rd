@@ -16,7 +16,7 @@
   hdi = 0.95,
   standardized = FALSE,
   ratio_subscript = "10",
-  auto_invert = TRUE,
+  auto_invert = FALSE,
   scientific = TRUE,
   max = 1000,
   min = 1/max,
@@ -35,7 +35,7 @@
   hdi = 0.95,
   standardized = FALSE,
   ratio_subscript = "10",
-  auto_invert = TRUE,
+  auto_invert = FALSE,
   scientific = TRUE,
   max = 1000,
   min = 1/max,
@@ -75,7 +75,7 @@ corresponding models (see details).}
 \item{...}{
   Arguments passed on to \code{\link[=printnum.numeric]{printnum.numeric}}
   \describe{
-    \item{\code{gt1}}{Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.}
+    \item{\code{gt1}}{Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.}
     \item{\code{zero}}{Logical. Indicates if the statistic can, in principal, be 0.}
     \item{\code{na_string}}{Character. String to print if element of \code{x} is \code{NA}.}
     \item{\code{use_math}}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
@@ -88,13 +88,13 @@ notation is rendered correctly.}
 }
 \description{
 These methods take result objects from the \pkg{BayesFactor} package to create
- formatted character strings to report the results in accordance with APA manuscript
- guidelines. \emph{These methods are not properly tested and should be considered experimental.}
+formatted character strings to report the results in accordance with APA manuscript
+guidelines. \emph{These methods are not properly tested and should be considered experimental.}
 }
 \details{
 For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
-  odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
-  \code{evidential_boost} they are multiplied with the corresponding Bayes factor before the results are formatted.
+odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
+\code{evidential_boost} they are multiplied with the corresponding Bayes factor before the results are formatted.
 }
 \examples{
 \dontrun{
@@ -111,8 +111,8 @@ apa_print(bayesian_anova)
 }
 \references{
 Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian order-restricted and point-null
-  hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
-  \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
+hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
+\href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
 }
 \seealso{
 Other apa_print: 

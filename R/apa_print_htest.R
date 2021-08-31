@@ -1,48 +1,53 @@
-#' Format statistics (APA 6th edition)
+#' Format Statistics (APA 6th edition)
 #'
-#' Takes \code{htest} objects from various statistical methods to create
+#' Takes `htest` objects from various statistical methods (e.g., [t.test()], [wilcox.test()], [cor.test()]) to create
 #' formatted character strings to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x \code{htest} object. See details.
-#' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
+#' @param x An `htest` object. See details.
+#' @param stat_name Character. If `NULL` (the default), the name given in `x` (or a formally correct
+#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the *test statistic*, otherwise the
 #'    supplied name is used. See details.
-#' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the supplied name is
-#'    used. See details.
-#' @param n Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
+#' @param est_name Character. If `NULL` (the default), the name given in `x` (or a formally correct
+#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the *estimate*, otherwise the
+#'    supplied name is used. See details.
+#' @param n Numeric. Sample size; required when reporting chi-squared tests, otherwise this parameter
 #'    is ignored.
-#' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
-#'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
-#'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
-#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
+#' @param ci Numeric. If \code{NULL} (the default), the function tries to obtain confidence intervals from `x`.
+#'    Other confidence intervals can be supplied as a `vector` of length 2 (lower and upper boundary, respectively)
+#'    with attribute `conf.level` set, e.g., when calculating bootstrapped confidence intervals.
+#' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
-#' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
+#' @details The function should work on a wide range of `htest` objects. Due to the large number of functions
 #'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-#'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
-#'    a reproducible example in your report!).
+#'    experience inaccuracies you may report these [here]{https://github.com/crsh/papaja/issues} (please include
+#'    a reproducible example in your report).
 #'
 #'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
 #'    \pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
 #'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
-#'
-#' @return \code{apa_print()} returns a list containing the following components according to the input:
+#' @return
+#'   A list (of additional class `apa_results`) containing the following components is returned:
 #'
 #'    \describe{
-#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-#'          and \emph{p} value.}
-#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-#'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A joint character string comprised of \code{estimate} and \code{statistic}.}
-#'      \item{\code{table}}{A data.frame, which can be passed to \code{\link{apa_table}}.}
+#'      \item{`statistic`}{
+#'        A character string giving the test statistic, parameters (e.g., degrees of freedom), and *p* value.
+#'      }
+#'      \item{`estimate`}{
+#'        A character string giving the descriptive estimates and confidence intervals if possible,
+#'        either in units of the analysed scale or as standardized effect size.
+#'      }
+#'      \item{`full_result`}{
+#'        A joint character string combining `estimate` and `statistic`.
+#'      }
+#'      \item{`table`}{
+#'        A data frame, which can be passed to [apa_table()].
+#'      }
 #'    }
 #'
 #' @family apa_print
 #' @examples
-#' # Comparisions of central tendencies
+#' # Comparisons of central tendencies
 #' t_stat <- t.test(extra ~ group, data = sleep)
 #' apa_print(t_stat)
 #' apa_print(t_stat, stat_name = "tee")
@@ -148,6 +153,8 @@ apa_print.htest <- function(
       stop("Please provide the sample size to report.")
     # } else {
     #   n <- paste0(", n = ", n)
+    } else {
+      attr(x$statistic, "n") <- printnum(as.integer(n))
     }
   } else {
     n <- NULL

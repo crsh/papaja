@@ -89,17 +89,17 @@ label_range <- function(y) {
 }
 
 
-#' Simple codebook
+#' Simple Codebook
 #'
 #' Generate a simple codebook in CSV-format
 #'
 #' @param x data.frame. Data to be written.
 #' @inheritDotParams utils::write.table -x
 #'
-#' @details If the \pkg{skimr} package is installed, an inline histogram is added
+#' @details If the \pkg{skimr} package is installed, an in-line histogram is added
 #'   for all numeric variables.
 #'
-#' @seealso \code{\link[utils]{write.csv}}
+#' @seealso [utils::write.csv()]
 #' @export
 #'
 #' @examples

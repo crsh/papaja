@@ -7,13 +7,14 @@
 prettify_terms(x, standardized = FALSE)
 }
 \arguments{
-\item{x}{Character. Vector of term-names to be prettified}
+\item{x}{Character. Vector of term names to be prettified.}
 
-\item{standardized}{Logical. If \code{TRUE} the name of the function \code{\link{scale}} will be
+\item{standardized}{Logical. If \code{TRUE}, the name of the function \code{\link[=scale]{scale()}} will be
 removed from term names.}
 }
 \description{
-Remove parentheses, replace colons with \code{$\\times$}. Useful to prettify term names in \code{apa_print()} tables.
+Remove parentheses, replace colons with \code{$\\times$}.
+Useful to prettify term names in \code{\link[=apa_print]{apa_print()}} tables.
 }
 \examples{
 NULL

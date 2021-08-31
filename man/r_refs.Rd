@@ -44,26 +44,26 @@ in a Markdown-document using pandoc or LaTeX.
 }
 \details{
 \code{r_refs} is a wrapper for \code{\link{create_bib}} to create a bibliography for R and all attached or
-   cached packages.
+cached packages.
 
-   By default, if a file exists at the specified location, \code{r_refs} reads the file and
-   appends missing citation information to the end of the file (\code{\link{create_bib}} always overwrites
-   existing files). This behavior may result in redundant package references in your \code{.bib}-file,
-   which will be cited when using \code{\link{cite_r}}. It is recommended to use a \code{.bib}-file
-   dedicated to R-references, setting \code{append = FALSE}, and adding the file to the
-   \code{bibliography} parameter in the document's yaml-header.
+By default, if a file exists at the specified location, \code{r_refs} reads the file and
+appends missing citation information to the end of the file (\code{\link{create_bib}} always overwrites
+existing files). This behavior may result in redundant package references in your \code{.bib}-file,
+which will be cited when using \code{\link{cite_r}}. It is recommended to use a \code{.bib}-file
+dedicated to R-references, setting \code{append = FALSE}, and adding the file to the
+\code{bibliography} parameter in the document's yaml-header.
 
-   Beware that chunks loading packages should \emph{not} be cached. \code{r_refs} will make all packages
-   loaded in cached chunks citable, but it won't know when you remove a package from a cached chunk. This
-   can result in unused package references in your \code{.bib}-file that will be cited when using
-   \code{\link{cite_r}}.
+Beware that chunks loading packages should \emph{not} be cached. \code{r_refs} will make all packages
+loaded in cached chunks citable, but it won't know when you remove a package from a cached chunk. This
+can result in unused package references in your \code{.bib}-file that will be cited when using
+\code{\link{cite_r}}.
 
-   If a package provides citation information in a CITATION file, a reference is selected based on the
-   preferred order of reference types specified in \code{type_pref}. By default, articles are cited if
-   available rather than books. If no reference of the specified types is available, the first reference
-   is used. If multiple references of the prefered type are given in the CITATION file all are cited.
-   Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
-   \code{\link[utils]{citation}}.
+If a package provides citation information in a CITATION file, a reference is selected based on the
+preferred order of reference types specified in \code{type_pref}. By default, articles are cited if
+available rather than books. If no reference of the specified types is available, the first reference
+is used. If multiple references of the prefered type are given in the CITATION file all are cited.
+Finally, if no CITATION file exists a reference is generated from the DESCRIPTION file by
+\code{\link[utils]{citation}}.
 }
 \examples{
 NULL

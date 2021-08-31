@@ -74,7 +74,9 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
      (is.null(metadata$citeproc) || metadata$citeproc)) {
 
     ## Set CSL
-    args <- set_default_csl(input_file)
+    args <- set_default_csl(input_file
+                            , version = 6
+                            , metadata = metadata)
     csl_specified <- is.null(args)
 
     ## Set ampersand filter
@@ -106,7 +108,6 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #'   followed by `% <@~{#quote-label}` and `% ~@>}` tags in LaTeX
 #'   comments.
 #'
-#' @md
 #' @export
 
 quote_from_tex <- function(x, file) {

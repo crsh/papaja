@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{corresponding_author_line}
 \alias{corresponding_author_line}
-\title{Corresponding author line}
+\title{Corresponding-Author Line}
 \usage{
 corresponding_author_line(x)
 }
 \arguments{
-\item{x}{List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.}
+\item{x}{List. Meta data of the document as a result from \code{\link[yaml:yaml.load]{yaml::yaml.load()}}.}
 }
 \description{
 Internal function. Construct corresponding-author line.

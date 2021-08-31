@@ -1,9 +1,9 @@
-#' Prepare numeric values for printing
+#' Prepare Numerical Values for Printing
 #'
-#' Converts numeric values to character strings for reporting.
+#' Converts numerical values to character strings for reporting.
 #'
 #' @param x Can be either a single value, vector, matrix, or \code{data.frame}.
-#' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, greater than 1.
+#' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.
 #' @param zero Logical. Indicates if the statistic can, in principal, be 0.
 #' @param margin Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
 #'   is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
@@ -225,7 +225,7 @@ printnum.numeric <- function(
   }
 
   if(any(not_gt1)) {
-    if(any(not_gt1 & abs(x) > 1)) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
+    if(any(not_gt1 & abs(x) > 1, na.rm = TRUE)) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
 
     limit <- 1 - 1/ten_power_digits
 
@@ -389,7 +389,7 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
 #' Print Degrees of Freedom
 #'
 #' This is an internal function for processing degrees of freedom. It takes care
-#' of printing trailing digits only if non-integer values are given.
+#' that trailing digits are only printed if non-integer values are given.
 #'
 #' @keywords internal
 
@@ -414,9 +414,9 @@ print_df <- function(x, digits = 2L) {
 }
 
 
-#' Typset scientific notation
+#' Typeset scientific notation
 #'
-#' Typsets scientific notation of numbers into properly typeset math strings.
+#' Typesets scientific notation of numbers into properly typeset math strings.
 #'
 #' @param x Character.
 #'

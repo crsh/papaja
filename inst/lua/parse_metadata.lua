@@ -210,13 +210,18 @@ local function create_correspondence(authors)
   local corresponding_authors = List:new{}
 
   for i, author in ipairs(authors) do
-    if author.corresponding and author.address and author.email then
-      contact_info = List:new(
-        author.name .. List:new{pandoc.Str ",", pandoc.Space()} ..
-        author.address ..
-        List:new{pandoc.Str ".", pandoc.Space(), pandoc.Str "E-mail:", pandoc.Space()} ..
-        author.email
-      )
+    if author.corresponding and (author.address or author.email) then
+      local address = List:new{pandoc.Str ""}
+      if author.address ~= nil then
+        address = List:new{pandoc.Str ",", pandoc.Space()} ..
+          author.address
+      end
+      local email = List:new{pandoc.Str ""}
+      if author.email ~= nil then
+        email = List:new{pandoc.Space(), pandoc.Str "E-mail:", pandoc.Space()} ..
+          author.email
+      end
+      contact_info = List:new(author.name .. address .. List:new{pandoc.Str "."} .. email)
       table.insert(corresponding_authors, {pandoc.Str(contact_info)})
     end
   end

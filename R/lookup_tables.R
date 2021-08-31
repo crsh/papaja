@@ -6,12 +6,15 @@
 #' here.
 #'
 #' @rdname lookup_tables
-#' @md
+#' @examples
+#'   papaja:::lookup_names[["mean.of.x"]]
+#'   papaja:::lookup_labels[["mean.of.x"]]
 #' @keywords internal
 
 lookup_names <- c(
   # nuisance parameters
   "Sum.Sq"    = "sumsq"
+  , "Error.SS" = "sumsq_err"
   , "Mean.Sq" = "meansq"
   , "logLik"  = "loglik"
   , "AIC"     = "AIC"
@@ -33,6 +36,16 @@ lookup_names <- c(
   , "difference.in.means"       = "estimate"
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
+  # estimate from effectsize package
+  , "Eta2"             = "estimate"
+  , "Eta2_partial"     = "estimate"
+  , "Eta2_generalized" = "estimate"
+  , "Omega2"             = "estimate"
+  , "Omega2_partial"     = "estimate"
+  , "Omega2_generalized" = "estimate"
+  , "Epsilon2"             = "estimate"
+  , "Epsilon2_partial"     = "estimate"
+  , "Epsilon2_generalized" = "estimate"
   # ----
   , "conf.int"   = "conf.int"
   , "stderr"     = "std.error"
@@ -120,6 +133,16 @@ lookup_labels <- c(
   , "difference.in.location"    = "$\\mathit{Mdn}_d$"
   , "difference.in.means"       = "$\\Delta M$"
   , "difference.in.proportions" = "\\Delta p"
+  # estimate from effectsize package
+  , "Eta2"             = "$\\hat{\\eta}^2$"
+  , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
+  , "Eta2_generalized" = "$\\hat{\\eta}^2_G$"
+  , "Omega2"             = "$\\hat{\\omega}^2$"
+  , "Omega2_partial"     = "$\\hat{\\omega}^2_p$"
+  , "Omega2_generalized" = "$\\hat{\\omega}^2_G$"
+  , "Epsilon2"             = "$\\hat{\\epsilon}^2$"
+  , "Epsilon2_partial"     = "$\\hat{\\epsilon}^2_p$"
+  , "Epsilon2_generalized" = "$\\hat{\\epsilon}^2_G$"
   # standard error
   , "stderr"     = "$\\mathit{SE}$"
   , "std.err"    = "$\\mathit{SE}$"

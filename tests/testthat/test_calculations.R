@@ -136,40 +136,60 @@ test_that(
       , correction = "none"
     )
 
-    with_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
-    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
 
     # SS from car output:
     SS_car <- c(3164.0625, 76.5625, 5.0625, 0.0625, 311.25)
+    tinylabels::variable_label(SS_car) <- "$\\hat{\\eta}^2$"
+    es_car <- SS_car / sum(SS_car)
 
-    expect_equal(
-      object = with_intercept$es
+    pes_afex <- c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
+    tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
+
+    ges_afex <- pes_afex
+    tinylabels::variable_label(ges_afex) <- "$\\hat{\\eta}^2_G$"
+
+
+
+    # Eta-squared
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = TRUE)
+    expect_identical(
+      object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
       , expected = SS_car[1:4] / sum(SS_car)
     )
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
-      # Expectation calculated with afex
-      object = with_intercept$pes
-      , expected = c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
-    )
-    expect_equal(
-      object = with_intercept$ges
-      # Expectation calculated with afex
-      , expected = c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
-    )
-
-    expect_equal(
-      object = without_intercept$es
+      object = without_intercept$estimate
       # Expectation calculated via sums of squares from car
       , expected = SS_car[2:4]/sum(SS_car[2:5])
     )
+
+
+    # Partial eta-squared
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "pes", intercept = TRUE)
     expect_equal(
-      object = without_intercept$ges
-      , expected = with_intercept$ges[2:4]
+      object = with_intercept$estimate
+      , expected = pes_afex
     )
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "pes", intercept = FALSE)[2:4, ]
     expect_equal(
-      object = without_intercept$pes
-      , expected = with_intercept$pes[2:4]
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
+    )
+
+
+    # generalized eta-squared
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "ges", intercept = TRUE)
+    expect_equal(
+      object = with_intercept$estimate
+      , expected = ges_afex
+    )
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "ges", intercept = FALSE)[2:4, ]
+    expect_equal(
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
     )
   }
 )
@@ -193,43 +213,56 @@ test_that(
       , class = c("apa_variance_table", "data.frame")
       , correction = "GG"
     )
-    with_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
-    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
+
+
 
     # SS from car output:
     SS_car <- c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
     SS_err <- c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
+    tinylabels::variable_label(SS_car) <- "$\\hat{\\eta}^2$"
+    pes_afex <- c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
+    ges_afex <- c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
+    tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
+    tinylabels::variable_label(ges_afex) <- "$\\hat{\\eta}^2_G$"
 
-    # Output with intercept ----
+    # Eta-squared ----
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = TRUE)
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
-      object = with_intercept$es
+      object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
       , expected = SS_car/sum(c(SS_car, SS_err))
     )
     expect_equal(
-      object = with_intercept$ges
-      # Expectation calculated with afex
-      , expected = c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
-    )
-    expect_equal(
-      object = with_intercept$pes
-      # Expectation calculated with afex
-      , expected = c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
-    )
-
-    # Output without intercept ----
-    expect_equal(
-      object = without_intercept$es
+      object = without_intercept$estimate
       # Expectation calculated via sums of squares from car
       , expected = SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
     )
+
+    # Partial eta-squared ----
+    with_intercept <- add_effect_sizes(apa_variance_table, es = "pes", intercept = TRUE)
+    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes"), intercept = FALSE)[2:4, ]
+
     expect_equal(
-      object = without_intercept$ges
-      , expected = with_intercept$ges[2:4]
+      object = with_intercept$estimate
+      , expected = pes_afex
+    )
+
+    expect_equal(
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
+    )
+
+    # Generalized eta-squared ----
+    with_intercept <- add_effect_sizes(apa_variance_table, es = "ges", intercept = TRUE)
+    without_intercept <- add_effect_sizes(apa_variance_table, es = "ges", intercept = TRUE)[2:4, ]
+    expect_equal(
+      object = with_intercept$estimate
+      , expected = ges_afex
     )
     expect_equal(
-      object = without_intercept$pes
-      , expected = with_intercept$pes[2:4]
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
     )
   }
 )

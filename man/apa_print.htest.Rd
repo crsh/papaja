@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print_htest.R
 \name{apa_print.htest}
 \alias{apa_print.htest}
-\title{Format statistics (APA 6th edition)}
+\title{Format Statistics (APA 6th edition)}
 \usage{
 \method{apa_print}{htest}(
   x,
@@ -15,24 +15,26 @@
 )
 }
 \arguments{
-\item{x}{\code{htest} object. See details.}
+\item{x}{An \code{htest} object. See details.}
 
-\item{stat_name}{Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
+\item{stat_name}{Character. If \code{NULL} (the default), the name given in \code{x} (or a formally correct
 adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
 supplied name is used. See details.}
 
-\item{est_name}{Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the supplied name is
-used. See details.}
+\item{est_name}{Character. If \code{NULL} (the default), the name given in \code{x} (or a formally correct
+adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the
+supplied name is used. See details.}
 
-\item{n}{Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
+\item{n}{Numeric. Sample size; required when reporting chi-squared tests, otherwise this parameter
 is ignored.}
 
-\item{ci}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
+\item{ci}{Numeric. If \code{NULL} (the default), the function tries to obtain confidence intervals from \code{x}.
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
-with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.}
+with attribute \code{conf.level} set, e.g., when calculating bootstrapped confidence intervals.}
 
-\item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum]{printnum}}
@@ -41,36 +43,40 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
   }}
 }
 \value{
-\code{apa_print()} returns a list containing the following components according to the input:
+A list (of additional class \code{apa_results}) containing the following components is returned:
 
-   \describe{
-     \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-         and \emph{p} value.}
-     \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-         % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full_result}}{A joint character string comprised of \code{estimate} and \code{statistic}.}
-     \item{\code{table}}{A data.frame, which can be passed to \code{\link{apa_table}}.}
-   }
+\describe{
+\item{\code{statistic}}{
+A character string giving the test statistic, parameters (e.g., degrees of freedom), and \emph{p} value.
+}
+\item{\code{estimate}}{
+A character string giving the descriptive estimates and confidence intervals if possible,
+either in units of the analysed scale or as standardized effect size.
+}
+\item{\code{full_result}}{
+A joint character string combining \code{estimate} and \code{statistic}.
+}
+\item{\code{table}}{
+A data frame, which can be passed to \code{\link[=apa_table]{apa_table()}}.
+}
+}
 }
 \description{
-Takes \code{htest} objects from various statistical methods to create
+Takes \code{htest} objects from various statistical methods (e.g., \code{\link[=t.test]{t.test()}}, \code{\link[=wilcox.test]{wilcox.test()}}, \code{\link[=cor.test]{cor.test()}}) to create
 formatted character strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
 The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-   that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-   experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
-   a reproducible example in your report!).
+that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
+experience inaccuracies you may report these [here]{https://github.com/crsh/papaja/issues} (please include
+a reproducible example in your report).
 
-   \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-   \pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
-   final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
-
-   If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-   of freedom, are replaced with brackets.
+\code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
+\pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
+final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 }
 \examples{
-# Comparisions of central tendencies
+# Comparisons of central tendencies
 t_stat <- t.test(extra ~ group, data = sleep)
 apa_print(t_stat)
 apa_print(t_stat, stat_name = "tee")

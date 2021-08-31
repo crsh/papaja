@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{localize}
 \alias{localize}
-\title{Define phrases according to locale}
+\title{Define Phrases According to Locale}
 \usage{
 localize(x)
 }

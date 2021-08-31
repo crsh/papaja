@@ -10,7 +10,7 @@
 #'   (`"fixed"`) are supported.
 #' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
 #' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
-#' @inheritParams print_anova
+#' @inheritParams glue_apa_results
 #' @param ... Further arguments that are passed to [printnum()].
 #' @details
 #'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. By
@@ -18,7 +18,7 @@
 #'   the future.
 #' @examples
 #'   # Fit a linear mixed model using the lme4 package
-#'   # or the lmerTest package (for dfs and p values)
+#'   # or the lmerTest package (if dfs and p values are desired)
 #'   library(lmerTest)
 #'   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 #'   # Format statistics for fixed-effects terms (the default)
@@ -28,7 +28,6 @@
 #' @rdname apa_print.merMod
 #' @method apa_print merMod
 #' @export
-#' @md
 
 apa_print.merMod <- function(
   x
@@ -110,6 +109,7 @@ apa_print.merMod <- function(
     , stat_glue = construct_glue(beautiful_table, "statistic")
     , term_names = sanitize_terms(res_table$Term)
     , in_paren = in_paren
+    , simplify = FALSE
   )
 }
 

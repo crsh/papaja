@@ -10,14 +10,11 @@
 # #'    supplied name is used.
 #' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
 #' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
+#' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
 #' @details
 #'
 #'    ADJUSTED CONFIDENCE INTERVALS
-#'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
 #'
 #' @return \code{apa_print()} returns a list containing the following components according to the input:
 #'
@@ -148,6 +145,24 @@ apa_print.summary_emm <- function(
 
   if(ci_supplied) {
     variable_labels(tidy_x$conf.int) <- conf_level
+
+    contrast_table <- rename_column(contrast_table, c("lower.CL", "asymp.LCL"), "ll")
+    contrast_table <- rename_column(contrast_table, c("upper.CL", "asymp.UCL"), "ul")
+
+    ci_table <- data.frame(conf.int = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
+    contrast_table$std.error <- NULL
+    contrast_table$ll <- NULL
+    contrast_table$ul <- NULL
+
+    contrast_table <- cbind(
+      contrast_table[, 1:which(colnames(contrast_table) == "estimate")]
+      , ci_table
+      , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
+    )
+    contrast_table$conf.int <- as.character(contrast_table$conf.int)
+    # contrast_table <- rename_column(contrast_table, "confint", "conf.int")
+  } else {
+    contrast_table$std.error <- NULL
   }
 
   if(p_supplied) {
@@ -161,7 +176,24 @@ apa_print.summary_emm <- function(
 
     if(multiple_df) { # Put df in column heading
       variable_label(tidy_x) <- c(, df = "$\\mathit{df}$")
+
+      # colnames(contrast_table) <- c("estimate", "conf.int", "statistic", "df", "p.value")
+      # contrast_table$ci <- as.character(contrast_table$ci)
+      variable_label(contrast_table) <- c(
+        estimate = paste0("$", est_name, "$")
+        , conf.int = conf_level
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
     }
+  } else {
+    # colnames(contrast_table) <- c("estimate", "conf.int")
+    # contrast_table$ci <- as.character(contrast_table$ci)
+    variable_label(contrast_table) <- c(
+      estimate = paste0("$", est_name, "$")
+      , conf.int = conf_level
+    )
   }
 
   tidy_xs <- default_label(tidy_x) # Add default labels for stratifying factors
@@ -233,7 +265,7 @@ apa_print.summary_emm <- function(
 
   if(ci_supplied) {
     apa_res$estimate <- apply(tidy_x, 1, function(y) {
-      paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " ", y["ci"])
+      paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " $", gsub(" ", "~", y["conf.int"]), "$")
     })
   } else {
     apa_res$estimate <- apply(tidy_x, 1, function(y) {
@@ -256,6 +288,7 @@ apa_print.summary_emm <- function(
 
   if(p_supplied) {
     if(!multiple_df) { # Remove df column and put df in column heading
+<<<<<<< HEAD
       df <- tidy_x$df[1]
       tidy_x <- tidy_x[, which(colnames(tidy_x) != "df")]
       # colnames(tidy_x) <- c("estimate", "ci", "statistic", "p.value")
@@ -309,7 +342,7 @@ get_emm_conf_level <- function(x) {
 
 est_name_from_call <- function(x) {
   # analysis_function <- as.character(attr(x, "model.info")$call[[1]])
-  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("paris", "contrast")
+  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("pairs", "contrast", "rbind")
 
   # roles <- attr(x, "roles")
   # is_multivariate <- all(roles$predictors %in% roles$multresp) ||

@@ -2,6 +2,10 @@ context("apa_print() for ANOVA")
 
 # Data and examples from http://personality-project.org/r/r.guide.html#anova
 
+# Use our own effect-size function for these tests
+# Custom effect sizes via the 'effectsize' package are tested elsewhere
+op <- options(papaja.estimate_anova = "ges")
+
 test_that(
   "One-way between ANOVA"
   , {
@@ -242,6 +246,7 @@ test_that(
 test_that(
   "One-way repeated-measures ANOVA"
   , {
+    options(papaja.estimate_anova = "ges")
     load("data/rm_data.rdata")
     rm_aov <- aov(Recall ~ Valence + Error(Subject/Valence), rm_data)
     rm_aov_output <- apa_print(rm_aov)
@@ -438,3 +443,18 @@ test_that(
     )
   }
 )
+
+
+test_that(
+  "Warn if observed factors do not match"
+  , {
+    expect_warning(
+      apa_print(afex::aov_4(yield~(N*P|block), data = npk, observed = "N"), observed = "P")
+      , regexp = "In your call to apa_print(), you specified the model terms \"P\" as observed, whereas in your call to afex::aov_car(), you specified the model terms \"N\" as observed. Make sure that this is what you want."
+      , fixed = TRUE
+    )
+  }
+)
+
+# restore previous options
+ options(op)

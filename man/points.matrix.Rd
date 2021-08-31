@@ -2,11 +2,12 @@
 % Please edit documentation in R/utils_for_plots.R
 \name{points.matrix}
 \alias{points.matrix}
-\title{Matrix method for points}
+\title{Matrix Method for points()}
 \usage{
 \method{points}{matrix}(x, y, type = "p", ...)
 }
 \description{
 Internal function for convenient plotting of multiple points.
+\emph{This function is not exported.}
 }
 \keyword{internal}

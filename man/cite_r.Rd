@@ -2,7 +2,7 @@
 % Please edit documentation in R/cite_r.R
 \name{cite_r}
 \alias{cite_r}
-\title{Cite R and R-packages}
+\title{Cite R and R packages}
 \usage{
 cite_r(
   file = NULL,
@@ -13,7 +13,7 @@ cite_r(
 )
 }
 \arguments{
-\item{file}{Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL} only R
+\item{file}{Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL}, only R
 is cited.}
 
 \item{prefix}{Character. The prefix used for all R-package reference handles.}
@@ -28,17 +28,17 @@ If \code{FALSE}, \code{pkgs} constitutes a list of packages to cite (a whitelist
 }
 \value{
 If \code{footnote = FALSE} a character string is returned, otherwise a named list with the elements \code{r}
-   and \code{pkgs}.
+and \code{pkgs}.
 }
 \description{
-Creates a character string to cite R and R-packages.
+Creates a character string to cite R and R packages.
 }
 \details{
-If \code{footnote = FALSE} a character string citing R and R-packages including version
-   numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
-   former element holds a character string citing R and a reference to a footnote; the latter element contains
-   a character string for the footnote citing R-packages. For correct rendering, the footnote string needs
-   to be a separate paragraph in the Markdown document.
+If \code{footnote = FALSE}, a character string citing R and R packages including version
+numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
+former element holds a character string citing R and a reference to a footnote; the latter element contains
+a character string for the footnote citing R-packages. For correct rendering, the footnote string needs
+to be a separate paragraph in the Markdown document.
 }
 \examples{
 cite_r()

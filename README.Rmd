@@ -8,14 +8,19 @@ output        : github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last commit&logo=github&logoColor=%23FFF) ![Travis build status](https://img.shields.io/travis/crsh/papaja?label=Build&logo=travis-ci&logoColor=%23FFF) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last commit&logo=github&logoColor=%23FFF) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
 
-`papaja` is an R package including an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). The package uses the LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to. Moreover, `papaja` supplies R functions that facilitate reporting results of your analyses and creating figures and tables in accordance with APA guidelines.
+`papaja` is an R package that facilitates creating reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition). `papaja` provides
+
+- an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to create PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
+- Functions to **typeset** the results from **statistical analyses**,
+- functions to create **tables**, and
+- functions to create **figures** in accordance with APA guidelines.
   
 
 ## Example
 
-Take a look at the [R Markdown-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
+Take a look at the [R Markdown file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd) of the example manuscript in the folder `example` and the resulting [PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
 The example document also contains some basic instructions.
 For an in-depth introduction to `papaja`, check out the current draft of the [manual](https://crsh.github.io/papaja_man/).
 If the manual does not answer your question, ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa).
@@ -42,10 +47,10 @@ Please refer to the [`papaja` manual](https://crsh.github.io/papaja_man/introduc
 `papaja` is not yet available on CRAN but you can install it from this repository:
 
 ```{r install_papapja, eval = FALSE}
-# Install devtools package if necessary
+# Install remotes package if necessary
 if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
 
-# Install the stable development verions from GitHub
+# Install the stable development version from GitHub
 remotes::install_github("crsh/papaja")
 
 # Install the latest development snapshot from GitHub
@@ -65,7 +70,7 @@ The functions `apa_print()` and `apa_table()` facilitate reporting results of yo
 
 Drop a supported analysis result, such as an `htest`- or `lm`-object, into `apa_print()` and receive a list of possible character strings that you can use to report the results of your analysis.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 library("papaja")
 ```
 
@@ -73,27 +78,6 @@ library("papaja")
 my_lm <- lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris)
 apa_lm <- apa_print(my_lm)
 ```
-
-One element of this list is `apa_lm$table` that, in the case of an `lm`-object, will contain a complete regression table. Pass `apa_lm$table` to `apa_table()` to turn it into a proper table in your PDF or Word document.
-
-```{r eval = FALSE}
-apa_table(apa_lm$table, caption = "Iris regression table.")
-```
-
-<!-- GitHub markdown doesn't support MathJax -->
-
----
-
-Table. *Iris regression table.*
-
-| Predictor     | *b*   | 95% CI          | *t(146)*   | *p*       |
-|:--------------|------:|:---------------:|-----------:|----------:|
-| Intercept     | 1.04  |  [0.51, 1.58]   | 3.85       | &lt; .001 |
-| Sepal Length  | 0.61  |  [0.48, 0.73]   | 9.77       | &lt; .001 |
-| Petal Width   | 0.56  |  [0.32, 0.80]   | 4.55       | &lt; .001 |
-| Petal Length  | -0.59 |  [-0.71, -0.46] | -9.43      | &lt; .001 |
-
----
 
 `papaja` currently provides methods for the following object classes:
 
@@ -118,25 +102,99 @@ knitr::kable(print_classes)
 \* Not fully tested, don't trust blindly!
 
 
-### Plot functions
+### Tables
 
-Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`) if you work with factorial designs:
+Function `apa_table()` may be used to include publication-ready tables in your manuscript.
+For instance, you might want to report some condition means (with standard errors).
 
-```{r}
-apa_factorial_plot(
-  data = npk
-  , id = "block"
-  , dv = "yield"
-  , factors = c("N", "P", "K")
-  , ylim = c(0, 80)
-  , level = .34
-  , las = 1
-  , ylab = "Yield"
-  , plot = c("swarms", "lines", "error_bars", "points")
+```{r message = FALSE, eval = FALSE}
+library(dplyr)
+npk %>%
+  group_by(N, P) %>%
+  summarise(mean = mean(yield), se = se(yield), .groups = "drop") %>%
+  label_variables(N = "Nitrogen", P = "Phosphate", mean = "*M*", se = "*SE*") %>%
+  apa_table(caption = "Mean pea yield (with standard errors)")
+```
+
+```{r echo = FALSE, message = FALSE}
+library(dplyr)
+out <- npk %>%
+  group_by(N, P) %>%
+  summarise(mean = mean(yield), se = se(yield), .groups = "drop")
+colnames(out) <- c("Nitrogen", "Phosphate", "*M*", "*SE*")
+knitr::kable(out, caption ="Table 1. *Mean pea yield (with standard errors)*", align = "c", digits = 2)
+```
+
+This is a fairly simple example, but `apa_table()` may be used to generate massive tables.
+
+`apa_table()` is also able to include the output from `apa_print()` into the manuscript. Thus, it is possible to
+conveniently include complete regression tables, ANOVA tables, or the output from mixed-effects models.
+
+
+```{r eval = FALSE}
+lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris) |>
+  apa_print() |>
+  apa_table(caption = "Iris regression table.")
+```
+
+<!-- GitHub markdown doesn't support MathJax -->
+
+---
+
+Table. *Iris regression table.*
+
+| Predictor     | *b*   | 95% CI          | *t(146)*   | *p*       |
+|:--------------|------:|:---------------:|-----------:|----------:|
+| Intercept     | 1.04  |  [0.51, 1.58]   | 3.85       | &lt; .001 |
+| Sepal Length  | 0.61  |  [0.48, 0.73]   | 9.77       | &lt; .001 |
+| Petal Width   | 0.56  |  [0.32, 0.80]   | 4.55       | &lt; .001 |
+| Petal Length  | -0.59 |  [-0.71, -0.46] | -9.43      | &lt; .001 |
+
+---
+
+
+### Figures
+
+Be sure to also check out `apa_barplot()`, `apa_lineplot()`, and `apa_beeplot()` (or the general function `apa_factorial_plot()`)
+if you work with factorial designs:
+
+```{r include = FALSE}
+set.seed(42L)
+x <- expand.grid(
+  id = seq_len(80L)
+  , congruency = c("Congruent", "Incongruent")
+  , load       = c("High", "Low")
+)
+
+x[["response_time"]] <- rt(nrow(x), df = 20) * 80 + 
+  (x$congruency == "Congruent") * - 80 + 
+  (x$load == "High") * 40 + 
+  500
+
+
+variable_labels(x) <- list(
+  congruency = "Congruency"
+  , load = "Cognitive load"
+  , response_time = "Response time"
+)
+stroop_data <- x
+```
+
+```{r stroop-plot, fig.cap = "Response times from a simulated Stroop experiment. Large dots represent condition means, small dots represent individual participants' mean response time. Error bars represent 99% within-subjects confidence intervals."}
+par(las = 1)
+
+apa_beeplot(
+  data = stroop_data
+  , dv = "response_time"
+  , id = "id"
+  , factors = c("congruency", "load")
+  , ylim = c(0, 800)
+  , dispersion = wsci # within-subjects confidence intervals
+  , conf.level = .99
 )
 ```
 
-If you prefer creating your plots with `ggplot2` try `theme_apa()`.
+If you prefer creating your plots with `ggplot2`, try `theme_apa()`.
 
 
 ### Using papaja without RStudio
@@ -159,7 +217,7 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ### Computational reproducibility
 
-To ensure mid- to long-term computation reproducibility we highly recommend conserving the software environment used to write a manuscript (e.g. R and all R packages) either in a software container or a virutal machine.
+To ensure mid- to long-term computational reproducibility we highly recommend conserving the software environment used to write a manuscript (e.g. R and all R packages) either in a software container or a virtual machine.
 This way you can be sure that your R code does not break because of updates to R or any R package.
 For a brief primer on containers and virtual machines see [the supplementary material](https://psych-transparency-guide.uni-koeln.de/analytic-reproducibility.html#document-hardware-and-software-used-for-analyses) by Klein et al. (2018).
 
@@ -191,8 +249,6 @@ Any new S3/S4-methods for this function are always appreciated (e.g., `factanal`
 
 ## Papers written with papaja
 
-Please cite `papaja` if you use it (`citation('papaja')` will provide the reference). Below are some peer-reviewed publications that used `papaja`. If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
-
 ```{r include = FALSE}
 papaja_bib <- RefManageR::ReadZotero(group = "2202906", .params = list())
 
@@ -200,8 +256,14 @@ for(i in 1:length(papaja_bib)) {
   papaja_bib[[i]]$note <- gsub("^\\d+\\s*", "", papaja_bib[[i]]$note)
 }
 
-RefManageR::WriteBib(papaja_bib, "inst/papaja_manuscripts.bib")
+RefManageR::WriteBib(papaja_bib[sample(seq_along(papaja_bib), size = 6L)], "inst/papaja_manuscripts.bib")
 ```
+
+Please cite `papaja` if you use it.
+You can for example [use `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file.
+Below are some (randomly selected) peer-reviewed publications that used `papaja`.
+If you have published a paper that was written with `papaja`, you can add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send it to me.
+
 
 <div id = "refs"></div>
 

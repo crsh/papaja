@@ -6,9 +6,9 @@
 \alias{lookup_labels}
 \title{Lookup Tables for Column Names and Variable Labels}
 \format{
-An object of class \code{character} of length 73.
+An object of class \code{character} of length 83.
 
-An object of class \code{character} of length 70.
+An object of class \code{character} of length 79.
 }
 \usage{
 lookup_names
@@ -20,5 +20,9 @@ lookup_labels
 contain an \code{apa_results_table/data.frame} with standardized column names and
 variable labels. For this purpose, it relies on the lookup tables provided
 here.
+}
+\examples{
+  papaja:::lookup_names[["mean.of.x"]]
+  papaja:::lookup_labels[["mean.of.x"]]
 }
 \keyword{internal}

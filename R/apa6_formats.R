@@ -1,9 +1,9 @@
-#' APA article (6th edition)
+#' APA Article (6th edition)
 #'
 #' Template for creating an article according to APA guidelines (6th edition) in PDF format.
 #'
 #' @inheritParams rmarkdown::pdf_document
-#' @param md_extensions Markdown extensions to be added or removed from the default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
+#' @param md_extensions Markdown extensions to be added or removed from the default definition of R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
 #' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
 #' @details
 #'    When creating PDF documents the YAML option \code{classoption} is passed to the class options of the LaTeX apa6 document class.
@@ -144,10 +144,10 @@ apa6_pdf <- function(
 
     # Remove pandoc listof...s
     if(sum(gregexpr("\\listoffigures", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoffigures", "", output_text, useBytes = TRUE) # Replace first occurance
+      output_text <- sub("\\\\listoffigures", "", output_text, useBytes = TRUE) # Replace first occurrence
     }
     if(sum(gregexpr("\\listoftables", output_text, fixed = TRUE)[[1]] > 0)) {
-      output_text <- sub("\\\\listoftables", "", output_text, useBytes = TRUE) # Replace first occurance
+      output_text <- sub("\\\\listoftables", "", output_text, useBytes = TRUE) # Replace first occurrence
     }
 
     # Prevent (re-)loading of geometry package
@@ -163,6 +163,7 @@ apa6_pdf <- function(
     pp_env <- environment(bookdown_post_processor)
     assign("post", NULL, envir = pp_env) # Postprocessor is not self-contained
     assign("config", config, envir = pp_env) # Postprocessor is not self-contained
+    assign("number_sections", number_sections, envir = pp_env)
     bookdown_post_processor(metadata = metadata, input = input_file, output = output_file, clean = clean, verbose = verbose)
   }
 
@@ -322,7 +323,7 @@ apa6_doc <- function(...) {
 # Set hook to print default numbers
 inline_numbers <- function (x) {
 
-  if(class(x) %in% c("difftime")) x <- as.numeric(x)
+  if(inherits(x, "difftime")) x <- as.numeric(x)
   if(is.numeric(x)) {
     printed_number <- ifelse(
       x == round(x)
@@ -471,9 +472,9 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
 
   # Add necessary includes
-  header_includes <- c()
-  after_body_includes <- c()
-  before_body_includes <- c()
+  header_includes <- NULL
+  after_body_includes <- NULL
+  before_body_includes <- NULL
 
 
   ## Essential manuscript parts
@@ -708,9 +709,7 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
 
 
 modify_input_file <- function(input, format) {
-  input_connection <- file(input, encoding = "UTF-8")
-  on.exit(close.connection(input_connection))
-  input_text <- readLines(con = input_connection)
+  input_text <- readLines_utf8(con = basename(input))
 
   yaml_params <- get_yaml_params(input_text)
 
@@ -738,8 +737,8 @@ modify_input_file <- function(input, format) {
           , ""
         )
       }
-
-      writeLines(input_text, input_connection, useBytes = TRUE)
+      # latest changes due to issue #446
+      writeLines(input_text, con = input, useBytes = TRUE)
     }
   }
 
@@ -755,7 +754,6 @@ revert_original_input_file <- function(x = 1) {
   hashed_path <- file.path(dirname(input_file), hashed_name)
 
   if(file.exists(hashed_path)) {
-
     if(!file.copy(hashed_path, input_file, overwrite = TRUE)) {
       stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", basename(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
     } else {
@@ -764,4 +762,20 @@ revert_original_input_file <- function(x = 1) {
   }
 
   return(NULL)
+}
+
+
+
+#' @keywords internal
+
+readLines_utf8 <- function(con) {
+  if(is.character(con)) {
+    con <- file(con, encoding = "utf8")
+    on.exit(close(con))
+  } else if(inherits(con, "connection")) {
+    stop("If you want to use an already existing connection, you should use readLines(), directly.")
+  }
+  y <- try(readLines(con, encoding = "bytes"))
+  if(inherits(y, "try-error")) stop("Reading from file ", encodeString(summary(con)$description, quote = "'"), " failed.")
+  y
 }

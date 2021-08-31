@@ -2,11 +2,12 @@
 % Please edit documentation in R/utils_for_plots.R
 \name{lines.matrix}
 \alias{lines.matrix}
-\title{Matrix method for lines}
+\title{Matrix Method for lines()}
 \usage{
 \method{lines}{matrix}(x, y, type = "l", ...)
 }
 \description{
 Internal function for convenient plotting of multiple lines.
+\emph{This function is not exported.}
 }
 \keyword{internal}

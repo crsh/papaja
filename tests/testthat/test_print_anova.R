@@ -13,7 +13,7 @@ test_that(
     tw_aov1 <- apa_print(aov(yield ~ N * P, npk), es = c("ges"), observed = "N")
     tw_aov2 <- apa_print(aov(yield ~ N * P, npk), es = c("pes"), observed = "N")
     tw_aov3 <- apa_print(aov(yield ~ N * P, npk), es = c("es"), observed = "N")
-    expect_equal(tw_aov1$estimate$N, "$\\hat{\\eta}^2_G = .224$")
+    expect_equal(tw_aov1$estimate$N, "$\\hat{\\eta}^2_G = .218$")
     expect_equal(tw_aov1$estimate$P, "$\\hat{\\eta}^2_G = .010$")
     expect_equal(tw_aov1$estimate$N_P, "$\\hat{\\eta}^2_G = .025$")
 

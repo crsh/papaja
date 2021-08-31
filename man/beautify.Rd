@@ -14,8 +14,8 @@ beautify(x, standardized = FALSE, use_math = FALSE, ...)
 \item{...}{Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 }
 \description{
-Internal function that takes an object created by \code{\link{canonize}} and
+Internal function that takes an object created by \code{\link[=canonize]{canonize()}} and
 applies proper rounding. Term names are beautified by removing parentheses and replacing
-colons with \code{$\\times$}. Moreover, both rows and columns are sorted.
+colons with \code{"$\\\\times$"}. Moreover, both rows and columns are sorted.
 }
 \keyword{internal}

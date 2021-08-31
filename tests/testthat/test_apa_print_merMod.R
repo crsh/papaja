@@ -102,7 +102,7 @@ test_that(
     data$Days2 <- rnorm(nrow(data))
     data$Reaction2 <- data$Reaction + data$Days2*(as.integer(data$Subject)-mean(as.integer(data$Subject)))
     fm2 <- lmerTest::lmer(Reaction2 ~ Days + (Days + Days2|Subject), data)
-    lmerTest::ranova(fm2)
+    # lmerTest::ranova(fm2)
 
     expect_error(
       apa_print(ranova_out)
@@ -184,12 +184,12 @@ test_that(
     )
 
     expect_identical(
-      apa_KR$full_result
+      apa_KR$full_result$Days
       , expected = "$F(1, 17.00) = 45.85$, $p < .001$"
     )
     expect_identical(
-      apa_S$full_result
-      , apa_KR$full_result
+      apa_S$full_result$Days
+      , apa_KR$full_result$Days
     )
 
     # Stop model-comparison tables
@@ -296,6 +296,47 @@ test_that(
         N = "$\\chi^2(1) = 8.49$, $p = .004$"
         , P = "$\\chi^2(1) = 0.48$, $p = .491$"
         , N_P = "$\\chi^2(1) = 1.18$, $p = .277$"
+      )
+    )
+
+    # https://github.com/crsh/papaja/issues/154#issuecomment-892189864
+    participant<-c("vp1","vp2","vp3","vp4","vp5")
+    group<-c("intervention", "control","control","intervention","control")
+
+    library("dplyr")
+    df<-data.frame(participant,group) %>%
+      group_by(participant,group) %>%
+      summarise(session=c("t1","t2","t3","t4")) %>%
+      group_by(participant, group, session) %>%
+      summarise(task=c("a","b")) %>%
+      ungroup() %>%
+      mutate(errors=floor(runif(n=40,min=0,max=30)))
+
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df)
+    apa_t <- apa_print(glmm$full_model)
+
+    expect_apa_results(
+      apa_t
+      , labels = list(
+        term        = "Term"
+        , estimate  = "$\\hat{\\beta}$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT")
+    apa_LRT <- apa_print(glmm)
+
+    expect_apa_results(
+      apa_LRT
+      , labels = list(
+        term        = "Effect"
+        , statistic = "$\\chi^2$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
       )
     )
   }

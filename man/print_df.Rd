@@ -8,6 +8,6 @@ print_df(x, digits = 2L)
 }
 \description{
 This is an internal function for processing degrees of freedom. It takes care
-of printing trailing digits only if non-integer values are given.
+that trailing digits are only printed if non-integer values are given.
 }
 \keyword{internal}

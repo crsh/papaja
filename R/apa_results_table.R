@@ -67,7 +67,6 @@ print.apa_results_table <- function(x, ...) {
 #'
 #' @inheritParams base::Extract
 #' @rdname extract_apa_results_table
-#' @md
 #' @export
 
 `$.apa_results_table` <- function(x, name) {

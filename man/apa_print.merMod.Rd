@@ -25,7 +25,9 @@
 
 \item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 
 \item{est_name}{An optional character. The label to be used for fixed-effects coefficients.}
 
@@ -43,7 +45,7 @@ the future.
 }
 \examples{
   # Fit a linear mixed model using the lme4 package
-  # or the lmerTest package (for dfs and p values)
+  # or the lmerTest package (if dfs and p values are desired)
   library(lmerTest)
   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
   # Format statistics for fixed-effects terms (the default)

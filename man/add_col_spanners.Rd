@@ -4,7 +4,7 @@
 \alias{add_col_spanners}
 \title{Add table headings to group columns}
 \usage{
-add_col_spanners(table_lines, col_spanners, n_cols)
+add_col_spanners(table_lines, col_spanners, n_cols, add_group_midrules = TRUE)
 }
 \arguments{
 \item{table_lines}{Character. Vector of characters containing one line of a LaTeX table each.}
@@ -12,6 +12,8 @@ add_col_spanners(table_lines, col_spanners, n_cols)
 \item{col_spanners}{List. A named list containing the indices of the first and last columns to group, where the names are the headings.}
 
 \item{n_cols}{Numeric. Number of columns of the table.}
+
+\item{add_group_midrules}{Logical.Determines whether group midrules are added.}
 }
 \description{
 Takes a named list of containing column numbers to group with a heading

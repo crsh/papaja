@@ -5,6 +5,8 @@
 # x: apa_model_comp object
 # models: list of lm-objects
 
+#' @keywords internal
+
 delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...) {
   if(!package_available("boot")) stop("Please install the package 'boot' to calculate bootstrap confidence intervals.")
 
@@ -72,7 +74,7 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 
 
 
-#' Within-subjects confidence intervals
+#' Within-Subjects Confidence Intervals
 #'
 #' Calculate Cousineau-Morey within-subjects confidence intervals.
 #'
@@ -81,21 +83,21 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 #' @param factors Character. A vector of variable names that is used to stratify the data.
 #' @param dv Character. The name of the dependent variable.
 #' @param level Numeric. Defines the width of the interval. Defaults to 0.95
-#'    for 95\% confidence intervals.
-#' @param method Character. The method that is used to calculate. Actually,
+#'    for 95% confidence intervals.
+#' @param method Character. The method that is used to calculate CIs. Currently,
 #'          "Morey" and "Cousineau" are supported. Defaults to "Morey".
 #' @references
 #'    Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, \emph{4}(2), 61--64.
+#'    *Tutorials in Quantitative Methods for Psychology*, *4*(2), 61--64.
 #'
 #'    Cousineau, D. (2005). Confidence intervals in within-subjects designs:
 #'    A simpler solution to Loftus and Masson's method.
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, \emph{1}(1), 42--45.
+#'    *Tutorials in Quantitative Methods for Psychology*, *1*(1), 42--45.
 #'
 #' @return
-#'   A \code{data.frame} with addtional class \code{papaja_wsci}.
-#'   The \code{summary} method for this class returns a \code{data.frame} with
-#'   means and lower and upper limit for each cell of the design.
+#'   A `data.frame` with additional class `papaja_wsci`.
+#'   The `summary()` method for this class returns a `data.frame` with
+#'   means along lower and upper limit for each cell of the design.
 #'
 #'
 #'
@@ -245,12 +247,12 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 within_subjects_conf_int <- wsci
 
 
-#' Summarize Within-Subjects Confidence Intervals
+#' Summarise Within-Subjects Confidence Intervals
 #'
 #' Calculate upper and lower limits of within-subjects confidence intervals calculated
-#' with \code{\link{wsci}} and return them along the respective means.
+#' with [wsci()] and return them along their respective means.
 #'
-#' @param object An object of class \code{papaja_wsci}, generated with function \code{\link{wsci}}.
+#' @param object An object of class `papaja_wsci`, generated with function [wsci()].
 #' @param ... Further arguments that may be passed, currently ignored.
 #' @export
 
@@ -268,14 +270,14 @@ summary.papaja_wsci <- function(object, ...) {
   y
 }
 
-#' Between-subjects confidence intervals
+#' Between-Subjects Confidence Intervals
 #'
 #' Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 #'
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals.
-#' @param na.rm Logical. Specifies if missing values are removed.
+#'    for 95% confidence intervals.
+#' @param na.rm Logical. Specifies if missing values should be removed.
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
@@ -305,9 +307,9 @@ conf.int <- conf_int
 ci <- conf_int
 
 
-#' Standard errors
+#' Standard Error of the Mean
 #'
-#' Calculates the standard error of the mean
+#' Calculates the standard error of the mean.
 #'
 #' @param x Numeric. A vector of observations.
 #' @param na.rm Logical. Specifies if missing values should be removed.
@@ -315,17 +317,16 @@ ci <- conf_int
 
 se <- function(x, na.rm = TRUE) {
   n <- sum(!is.na(x))
-  ee <- stats::sd(x, na.rm = na.rm) / sqrt(n)
-  return(ee)
+  stats::sd(x, na.rm = na.rm) / sqrt(n)
 }
 
 
-#' Highest density interval
+#' Highest-Density Intervals
 #'
-#' Calculates the highest density interval of a vector of values
+#' Calculates the highest-density interval of a vector of values.
 #'
 #' @param x Numeric. A vector of observations.
-#' @param level Numeric. Defines the width of the interval. Defaults to 95\% highest density intervals.
+#' @param level Numeric. Defines the width of the interval. Defaults to 95% highest-density intervals.
 
 hd_int <- function(x, level = 0.95) {
   validate(x, check_class = "numeric")
@@ -343,9 +344,10 @@ hd_int <- function(x, level = 0.95) {
 }
 
 
-#' Effect sizes for Analysis of Variance
+#' Effect Sizes for Analysis of Variance
 #'
 #' Calculates effect-size measures for Analysis of Variance output objects.
+#' *This function is not exported and will soon be deprecated.*
 #'
 #' @param x An object of class \code{apa_variance_table}.
 #' @param es Character. A vector naming all to-be-computed effect-size measures.
@@ -356,11 +358,13 @@ hd_int <- function(x, level = 0.95) {
 #' @param mse Logical. Should means-squared errors be computed?
 #' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
 #'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
+#'
+#' @keywords internal
 
 add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
   # ----------------------------------------------------------------------------
   # We don't validate here because this function is intended to be used
-  # internally, validation, should have happened earlier in the processing chain.
+  # internally, validation should have happened earlier in the processing chain.
 
   # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   # validate(es, check_class = "character", check_NA = FALSE)
@@ -381,10 +385,10 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       if(!is.null(observed)) {
         obs <- rep(FALSE, nrow(x))
         for(i in observed) {
-          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
+          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), x$term))) {
             stop(paste0("Observed variable not in data: ", i, collapse = " "))
           }
-          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), x$term)
         }
         obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
         obs_SSn2 <- x$sumsq*obs
@@ -392,7 +396,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
         obs_SSn1 <- 0
         obs_SSn2 <- 0
       }
-      x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+      x$estimate <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_G$"
     }
 
     # --------------------------------------------------------------------------
@@ -409,7 +414,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       if(!intercept){
         index <- x$term!="(Intercept)"
       }
-      x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      x$estimate <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2$"
       message("Note that eta-squared is calculated correctly if and only if the design is balanced.")
     }
 
@@ -418,7 +424,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
     #
     # This one should be unproblematic and work in all cases.
     if("pes" %in% es) {
-      x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+      x$estimate <- x$sumsq / (x$sumsq + x$sumsq_err)
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_p$"
     }
   }
 
@@ -428,6 +435,7 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
     df_col <- intersect("df.residual", colnames(x))
     if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
       x$mse <- x$sumsq_err / x[[df_col]]
+      tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
     } else {
       warning("Mean-squared errors requested, but necessary information not available.")
     }

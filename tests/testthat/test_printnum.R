@@ -252,3 +252,19 @@ test_that(
     )
   }
 )
+
+test_that(
+  "NA handling"
+  , {
+
+    expect_identical(
+      printnum(c(NA, 1), gt1 = FALSE)
+      , c("NA", "> .99")
+    )
+    expect_warning(
+      printnum(c(NA, 1.5), gt1 = FALSE)
+      , regexp = "You specified gt1 = FALSE, but passed absolute value(s) that exceed 1."
+      , fixed = TRUE
+    )
+  }
+)
