@@ -17,12 +17,14 @@ if(packageVersion("afex") >= '1.0.0') {
 # 6. table columns: each column of class tiny_labelled/character
 # 7. Optional: Test specific col.names
 # 8. Optional: Test variable labels (and col.names)
+# 9. Optional: Test names of terms in results
 
 
 expect_apa_results <- function(
   object
   , col.names = NULL
   , labels = NULL
+  , term_names = NULL
   , ...
 ) {
 
@@ -85,7 +87,32 @@ expect_apa_results <- function(
     if(!is.null(labels)) {
       expect_identical(variable_labels(object$table), labels)
     }
+    if(!is.null(term_names)) {
+      expect_identical(names(object$estimate), term_names)
+      expect_identical(names(object$statistic), term_names)
+      expect_identical(names(object$full_result), term_names)
+
+      expect_identical(nrow(object$table), length(term_names))
+    }
   }
+
+  # Invisibly return the value
+  invisible(act$val)
+}
+
+
+expect_apa_term <- function(object, term, estimate = NULL, statistic = NULL) {
+  act <- list(
+    value = object
+    , label = deparse(substitute(object))
+  )
+
+  full_result <- paste(estimate, statistic, sep = ", ")
+
+  expect_identical(object$estimate[[term]], estimate)
+  expect_identical(object$statistic[[term]], statistic)
+  expect_identical(object$full_result[[term]], full_result)
+
   # Invisibly return the value
   invisible(act$val)
 }
