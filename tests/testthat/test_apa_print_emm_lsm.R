@@ -50,8 +50,6 @@ test_that(
     tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
     tw_me_emm_output <- apa_print(tw_me_emm)
 
-    res_names <-
-
     expect_apa_results(
       tw_me_emm_output
       , labels = list(
@@ -67,7 +65,7 @@ test_that(
     expect_apa_term(
       tw_me_emm_output
       , term = "Neg"
-      , estimate = "$M = 11.00$, 95\\% CI $[6.34,~15.66]$"
+      , estimate = "$M = 11.00$, 95\\% CI $[6.34, 15.66]$"
       , statistic = "$t(4.63) = 6.21$, $p = .002$"
     )
 
@@ -99,19 +97,31 @@ test_that(
       , tw_me_emm_p_output$table
     )
 
-    expect_warning(
-      tw_me_emm_ci_output <- apa_print(
-        summary(tw_me_emm, infer = c(TRUE, FALSE))
-        , est_name = "M"
-      )
+    tw_me_emm_ci_output <- apa_print(
+      summary(tw_me_emm, infer = c(TRUE, FALSE))
+      , est_name = "M"
     )
+
+    expect_apa_term(
+      tw_me_emm_ci_output
+      , term = "Neg"
+      , estimate = "$M = 11.00$, 95\\% CI $[6.34, 15.66]$"
+      , statistic = NULL
+    )
+
     expect_identical(
       tw_me_lsm_output$table[, c("Valence", "estimate", "conf.int")]
       , tw_me_emm_ci_output$table
     )
 
-    expect_error(apa_print(summary(tw_me_lsm, infer = c(FALSE, FALSE))))
-
+    expect_apa_results(
+      apa_print(summary(tw_me_lsm, infer = c(FALSE, FALSE)))
+      , labels = list(
+        Valence = "Valence"
+        , estimate = "$\\widehat{\\theta}$"
+      )
+      , term_names = levels(tw_rm_data$Valence)
+    )
 
 
     # Interaction ------------------------------------------------------
@@ -135,8 +145,8 @@ test_that(
 
     expect_apa_term(
       tw_int_emm_output
-      , term = "Neg"
-      , estimate = "$M = 11.80$, 95\\% CI $[7.17,~16.43]$"
+      , term = "Neg_Cued"
+      , estimate = "$M = 11.80$, 95\\% CI $[7.17, 16.43]$"
       , statistic = "$t(5.52) = 6.37$, $p = .001$"
     )
 
@@ -204,10 +214,10 @@ test_that(
     expect_apa_results(
       fw_mixed_emm_output
       , labels = list(
-        gender = "Gender"
-        , treatment = "Treatment"
-        , hour = "Hour"
-        , phase = "Phase"
+        gender = "gender"
+        , treatment = "treatment"
+        , hour = "hour"
+        , phase = "phase"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
         , statistic = "$t$"
@@ -236,7 +246,7 @@ test_that(
       , expected = structure(
         rep(
           c(
-            "control"
+            "Control"
             , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
             , "A"
             , rep("", nrow(fw_mixed_emm_output$table) / 6 - 1)
@@ -277,7 +287,7 @@ test_that(
       object = fw_mixed_emm_output$table$phase
       , expected = structure(
         rep(
-          c("fup", "post", "pre")
+          c("Fup", "Post", "Pre")
           , 30
         )
         , class = c("tiny_labelled", "character")
@@ -314,7 +324,7 @@ test_that(
         , estimate = "$\\Delta M$"
         , conf.int = "95\\% CI"
         , statistic = "$t(8)$"
-        , p.value = "$p$"
+        , adj.p.value = "$p_{adj}$"
       )
       , term_names = c("Neg_Neu", "Neg_Pos", "Neu_Pos")
     )
@@ -322,8 +332,8 @@ test_that(
     expect_apa_term(
       tw_me_pairs_emm_output
       , term = "Neg_Neu"
-      , estimate = "$\\Delta M = -1.10$, 95\\% CI $[-3.44,~1.24]$"
-      , statistic = "$t(8) = -1.34$, $p = .413$"
+      , estimate = "$\\Delta M = -1.10$, 95\\% CI $[-3.44, 1.24]$"
+      , statistic = "$t(8) = -1.34$, $p_{adj} = .413$"
     )
 
     ## Custom contrast names
@@ -375,7 +385,7 @@ test_that(
 
     expect_apa_results(
       simple_pairs_output
-      , term_names = c("control_F_M", "A_F_M", "B_F_M")
+      , term_names = c("Control_F_M", "A_F_M", "B_F_M")
     )
 
     expect_identical(simple_pairs_output, simple_pairs2_output)
@@ -463,7 +473,7 @@ test_that(
     )
 
     expect_apa_term(
-      tw_me_pairs_emm_output
+      emm_aov_output
       , term = "Valence_Cued"
       , estimate = NULL
       , statistic = "$F(2, 15.58) = 1.46$, $p = .263$"
@@ -503,6 +513,8 @@ test_that(
 
     tw_pairs_lsm_2 <- emmeans::contrast(tw_int_lsm, interaction = "pairwise")
     expect_identical(est_name_from_call(tw_pairs_lsm_2), "\\Delta M")
+
+    tw_int_emm <- emmeans::emmeans(tw_rm, ~ Valence * Task)
 
     tw_pairs_emm <- pairs(tw_int_emm)
     expect_identical(est_name_from_call(tw_pairs_emm), "\\Delta M")

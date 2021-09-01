@@ -89,7 +89,9 @@ expect_apa_results <- function(
     }
     if(!is.null(term_names)) {
       expect_identical(names(object$estimate), term_names)
-      expect_identical(names(object$statistic), term_names)
+      if(!is.null(object$statistic)) {
+        expect_identical(names(object$statistic), term_names)
+      }
       expect_identical(names(object$full_result), term_names)
 
       expect_identical(nrow(object$table), length(term_names))
@@ -107,7 +109,7 @@ expect_apa_term <- function(object, term, estimate = NULL, statistic = NULL) {
     , label = deparse(substitute(object))
   )
 
-  full_result <- paste(estimate, statistic, sep = ", ")
+  full_result <- paste(c(estimate, statistic), collapse = ", ")
 
   expect_identical(object$estimate[[term]], estimate)
   expect_identical(object$statistic[[term]], statistic)

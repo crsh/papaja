@@ -113,7 +113,7 @@ print_interval.numeric <- function(
       interval <- paste0(
           conf_level
           , "$["
-          , paste(strip_math_tags(x), collapse = ", ")
+          , paste(strip_math_tags(x), collapse = ",~")
           , "]$"
       )
     } else {
@@ -140,9 +140,13 @@ print_interval.matrix <- function(
     , ...
 ) {
     if(!is.null(colnames(x))) {
-        col_conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(x), perl = TRUE))
-        col_conf_level <- if(anyNA(col_conf_level)) NULL else col_conf_level
-        if(!is.null(col_conf_level)) conf_level <- 100 - col_conf_level[1] * 2
+      suppressWarnings(
+        col_conf_level <- as.numeric(
+          gsub("[^.|\\d]", "", colnames(x), perl = TRUE)
+        )
+      )
+      col_conf_level <- if(anyNA(col_conf_level)) NULL else col_conf_level
+      if(!is.null(col_conf_level)) conf_level <- 100 - col_conf_level[1] * 2
     }
 
     # if(nrow(x) == 1) {

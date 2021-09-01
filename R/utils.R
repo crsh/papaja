@@ -342,11 +342,19 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 #' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 #' }
 
-sanitize_terms <- function(x, standardized = FALSE) {
+sanitize_terms <- function(x, ...) {
+  UseMethod("sanitize_terms", x)
+}
+
+sanitize_terms.character <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
   x
+}
+
+sanitize_terms.data.frame <- function(x, ...) {
+  as.data.frame(lapply(x, sanitize_terms.character, ...))
 }
 
 
@@ -363,7 +371,12 @@ sanitize_terms <- function(x, standardized = FALSE) {
 #' NULL
 #' @keywords internal
 
-prettify_terms <- function(x, standardized = FALSE) {
+
+prettify_terms <- function(x, ...) {
+  UseMethod("prettify_terms", x)
+}
+
+prettify_terms.character <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
   x <- gsub(pattern = "\\(|\\)|`|.+\\$", replacement = "", x = x)                 # Remove parentheses and backticks
   x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
@@ -375,6 +388,12 @@ prettify_terms <- function(x, standardized = FALSE) {
   }
   x
 }
+
+prettify_terms.data.frame <- function(x, ...) {
+  as.data.frame(lapply(x, prettify_terms.character, ...))
+}
+
+
 
 capitalize <- function(x) {
   substring(x, first = 1, last = 1) <- toupper(substring(x, first = 1, last = 1))
