@@ -123,6 +123,18 @@ test_that(
       , term_names = levels(tw_rm_data$Valence)
     )
 
+    tw_me_emm_output3 <- apa_print(
+      summary(tw_me_emm, infer = TRUE, side = ">")
+    )
+
+    # https://github.com/crsh/papaja/issues/456#issuecomment-901653372
+    expect_apa_term(
+      tw_me_emm_output3
+      , term = "Neg"
+      , estimate = "$\\widehat{\\theta} = 11.00$, 95\\% CI $[7.37, \\infty]$"
+      , statistic = "$t(4.63) = 6.21$, $p = .001$"
+    )
+
 
     # Interaction ------------------------------------------------------
     tw_int_emm <- emmeans::emmeans(tw_rm, ~ Valence * Task)

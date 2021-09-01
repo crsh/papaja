@@ -126,7 +126,13 @@ apa_print.summary_emm <- function(
   tidy_x$estimate <- printnum(tidy_x$estimate, ...)
 
   if(ci_supplied) {
-    tidy_x$conf.int <- unlist(print_confint(tidy_x[, c("conf.low", "conf.high")]), ...)
+    tidy_x$conf.int <- unlist(
+      print_confint(
+        tidy_x[, c("conf.low", "conf.high")]
+        , use_math = FALSE
+      )
+      , ...
+    )
   }
 
   if(p_supplied) {
