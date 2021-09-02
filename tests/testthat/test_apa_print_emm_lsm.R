@@ -1,36 +1,5 @@
 context("apa_print() for emmeans/lsmeans")
 
-# test_that(
-#   "Regression"
-#   , {
-#     pigs_lm <- lm(log(conc) ~ source * percent, data = emmeans::pigs)
-#
-#     pigs_lm_emm <- emmeans::emmeans(pigs_lm, ~ source)
-#     pigs_pairs_emm_output <- apa_print(pairs(pigs_lm_emm, type = "response"))
-#
-#     # table --------------------------------------------------------------------
-#     expect_identical(
-#       object = pigs_pairs_emm_output$table$estimate
-#       , expected = structure(
-#         c("0.77", "0.66", "0.86")
-#         , label = "Ratio"
-#         , class = c("tiny_labelled", "character")
-#       )
-#     )
-#
-#
-#     noise.lm <- lm(noise ~ size * type * side, data = emmeans::auto.noise)
-#     noise.emm <- emmeans::emmeans(noise.lm, ~ size * side * type)
-#     apa_print(emmeans::contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")) # Table order is fucked up
-#
-#
-#     org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = emmeans::oranges)
-#     emmeans::emtrends(org.int, ~ variety, var = "price1", mult.name = "variety")
-#     emmeans::emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
-#
-#   }
-# )
-
 test_that(
   "ANOVA"
   , {
@@ -444,6 +413,7 @@ test_that(
 
     tw_rm_emm <- emmeans::emmeans(tw_rm$aov, ~ Task * Valence)
 
+    skip("Joint tests are not yet supported.")
     ## All terms
     emm_aov <- emmeans::joint_tests(tw_rm_emm)
     emm_aov_output <- apa_print(emm_aov)
@@ -496,6 +466,8 @@ test_that(
 test_that(
   "Estimate name guessing"
   , {
+    # ANOVA
+    library("emmeans")
     emm_basis.afex_aov <- afex:::emm_basis.afex_aov
 
     load("data/tw_rm_data.rdata")
@@ -506,63 +478,253 @@ test_that(
       , within = c("Task", "Valence")
     ))
 
-    ow_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
+    ow_me_lsm <- lsmeans(tw_rm, ~ Valence)
     expect_identical(est_name_from_call(ow_me_lsm), "M")
 
-    tw_int_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence * Task)
+    tw_int_lsm <- lsmeans(tw_rm, ~ Valence * Task)
     expect_identical(est_name_from_call(tw_int_lsm), "M")
 
     ow_pairs_lsm <- pairs(ow_me_lsm)
     expect_identical(est_name_from_call(ow_pairs_lsm), "\\Delta M")
 
-    ow_pairs_lsm_2 <- emmeans::contrast(ow_me_lsm, interaction = "pairwise")
+    ow_pairs_lsm_2 <- contrast(ow_me_lsm, interaction = "pairwise")
     expect_identical(est_name_from_call(ow_pairs_lsm_2), "\\Delta M")
 
 
-    # Bug reported by shirdekel, #456
+    ## Bug reported by shirdekel, #456
     tw_pairs_lsm <- pairs(tw_int_lsm)
     expect_identical(est_name_from_call(tw_pairs_lsm), "\\Delta M")
 
-    tw_pairs_lsm_2 <- emmeans::contrast(tw_int_lsm, interaction = "pairwise")
+    tw_pairs_lsm_2 <- contrast(tw_int_lsm, interaction = "pairwise")
     expect_identical(est_name_from_call(tw_pairs_lsm_2), "\\Delta M")
 
-    tw_int_emm <- emmeans::emmeans(tw_rm, ~ Valence * Task)
+    tw_int_emm <- emmeans(tw_rm, ~ Valence * Task)
 
     tw_pairs_emm <- pairs(tw_int_emm)
     expect_identical(est_name_from_call(tw_pairs_emm), "\\Delta M")
 
-    tw_pairs_emm_2 <- emmeans::contrast(tw_int_emm, interaction = "pairwise")
+    tw_pairs_emm_2 <- contrast(tw_int_emm, interaction = "pairwise")
     expect_identical(est_name_from_call(tw_pairs_emm_2), "\\Delta M")
 
 
-    # Univeriate EMM
+    ## Univeriate EMM
     afex::afex_options(emmeans_model = "univariate")
 
-    uni_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
+    uni_tw_me_emm <- emmeans(tw_rm, ~ Valence)
     expect_identical(est_name_from_call(uni_tw_me_emm), "M")
 
-    uni_tw_me_consec_emm <- emmeans::emmeans(tw_rm, consec ~ Valence)
+    uni_tw_me_consec_emm <- emmeans(tw_rm, consec ~ Valence)
     expect_identical(est_name_from_call(uni_tw_me_consec_emm$emmeans), "M")
     expect_identical(est_name_from_call(uni_tw_me_consec_emm$contrasts), "\\Delta M")
 
-    uni_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
+    uni_tw_pairs_emm <- pairs(emmeans(tw_rm, ~ Valence))
     expect_identical(est_name_from_call(uni_tw_pairs_emm), "\\Delta M")
 
-    tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence* Task)
-    tw_pairs_contrasts_emm <- emmeans::contrast(tw_me_emm, "consec", simple = "each")
+    tw_me_emm <- emmeans(tw_rm, ~ Valence* Task)
+    tw_pairs_contrasts_emm <- contrast(tw_me_emm, "consec", simple = "each")
     expect_identical(est_name_from_call(tw_pairs_contrasts_emm$`simple contrasts for Valence`), "\\Delta M")
 
-    tw_pairs_contrasts_emm2 <- emmeans::contrast(tw_me_emm, "consec", simple = "each", combine = TRUE)
+    tw_pairs_contrasts_emm2 <- contrast(tw_me_emm, "consec", simple = "each", combine = TRUE)
     expect_identical(est_name_from_call(tw_pairs_contrasts_emm2), "\\Delta M")
 
 
-    # Multivariate EMM
+    ## Multivariate EMM
     afex::afex_options(emmeans_model = "multivariate")
 
-    mw_tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
+    mw_tw_me_emm <- emmeans(tw_rm, ~ Valence)
     expect_identical(est_name_from_call(uni_tw_me_emm), "M")
 
-    mw_tw_pairs_emm <- pairs(emmeans::emmeans(tw_rm, ~ Valence))
+    mw_tw_pairs_emm <- pairs(emmeans(tw_rm, ~ Valence))
     expect_identical(est_name_from_call(mw_tw_pairs_emm), "\\Delta M")
+
+    # GLM(M)
+    ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
+    trt <- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
+    group <- gl(2, 10, 20, labels = c("Ctl","Trt"))
+    weight <- c(ctl, trt)
+    lm.D9 <- lm(weight ~ group)
+
+    lm_emm <- emmeans(lm.D9, pairwise~group)
+    expect_identical(est_name_from_call(lm_emm$emmeans), "M")
+    expect_identical(est_name_from_call(lm_emm$contrasts), "\\Delta M")
+
+
+    glmm <- lme4::glmer(
+      cbind(incidence, size - incidence) ~ period + (1 | herd)
+      , data = lme4::cbpp
+      , family = binomial(link = "logit")
+    )
+
+    glmm_emm_link <- emmeans(glmm, ~ period, type = "link")
+    expect_identical(est_name_from_call(glmm_emm_link), "\\mathrm{logit}(p)")
+    glmm_pairs_link <- pairs(glmm_emm_link)
+    expect_identical(est_name_from_call(glmm_pairs_link), "\\log(\\mathit{OR})")
+
+    glmm_emm_resp <- emmeans(glmm, ~ period, type = "response")
+    expect_identical(est_name_from_call(glmm_emm_resp), "p")
+
+    glmm_pairs_resp <- pairs(glmm_emm_resp)
+    expect_identical(est_name_from_call(glmm_pairs_resp), "\\mathit{OR}")
+    glmm_pairs_resp2 <- pairs(glmm_emm_resp, ratios = FALSE)
+    expect_identical(est_name_from_call(glmm_pairs_resp2), "\\Delta \\mathrm{logit}(p)")
+
+
+    glmm2 <- lme4::glmer(
+      cbind(incidence, size - incidence) ~ period + (1 | herd)
+      , data = lme4::cbpp
+      , family = binomial(link = "probit")
+    )
+
+    glmm2_emm_link <- emmeans(glmm2, ~ period, type = "link")
+    expect_identical(est_name_from_call(glmm2_emm_link), "\\Phi^{-1}(p)")
+    glmm2_pairs_link <- pairs(glmm2_emm_link)
+    expect_identical(est_name_from_call(glmm2_pairs_link), "\\Delta \\Phi^{-1}(p)")
+
+    glmm2_emm_resp <- emmeans(glmm2, ~ period, type = "response")
+    expect_identical(est_name_from_call(glmm2_emm_resp), "p")
+
+    glmm2_pairs_resp <- pairs(glmm2_emm_resp)
+    expect_identical(est_name_from_call(glmm2_pairs_resp), "\\Delta \\Phi^{-1}(p)")
+
+
+    ## Dobson (1990) Page 93: Randomized Controlled Trial :
+    counts <- c(18,17,15,20,10,20,25,13,12)
+    outcome <- gl(3,1,9)
+    treatment <- gl(3,3)
+    glm_mod <- glm(counts ~ outcome + treatment, family = poisson())
+
+    glm_emm_link <- emmeans(glm_mod, ~ treatment, type = "link")
+    expect_identical(est_name_from_call(glm_emm_link), "\\log(M)")
+
+    glm_pairs_link <- pairs(glm_emm_link)
+    expect_identical(est_name_from_call(glm_pairs_link), "\\Delta \\log(M)")
+
+    glm_emm_resp <- emmeans(glm_mod, ~ treatment, type = "response")
+    expect_identical(est_name_from_call(glm_emm_resp), "M")
+
+    glm_pairs_resp <- pairs(glm_emm_resp)
+    expect_identical(est_name_from_call(glm_pairs_resp), "M_{i}/M_{j}")
+
+    glm_pairs_resp2 <- pairs(glm_emm_resp, ratio = FALSE)
+    expect_identical(est_name_from_call(glm_pairs_link), "\\Delta \\log(M)")
+  }
+)
+
+
+
+test_that(
+  "Regression"
+  , {
+    # Typesetting of numeric predictor values
+    # https://github.com/crsh/papaja/issues/445
+    iris$Sepal.Length <- iris$Sepal.Length * 1000
+    my_lm <- lm(
+      Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length
+      , data = iris
+    )
+    ats <- c(1000, 2000, 3000)
+    my_lm_emm <- emmeans::emmeans(
+      my_lm
+      , ~Sepal.Length
+      , at = list(Sepal.Length = ats)
+    )
+
+    my_lm_emm_output <- apa_print(my_lm_emm)
+
+    expect_apa_results(
+      my_lm_emm_output
+      , labels = list(
+        Sepal.Length = "Sepal.Length"
+        , estimate = "$M$"
+        , conf.int = "95\\% CI"
+        , statistic = "$t(146)$"
+        , p.value = "$p$"
+      )
+      , term_names = c("X1000", "X2000", "X3000")
+    )
+
+    expect_apa_term(
+      my_lm_emm_output
+      , term = "X1000"
+      , estimate = "$M = 0.12$, 95\\% CI $[-0.48, 0.71]$"
+      , statistic = "$t(146) = 0.39$, $p = .699$"
+    )
+
+    expect_true(
+      all(my_lm_emm_output$table$Sepal.Length == printnum(ats))
+    )
+
+
+    # https://github.com/crsh/papaja/issues/200
+    counts <- c(18,17,15,20,10,20,25,13,12)
+    outcome <- gl(3,1,9)
+    treatment <- gl(3,3)
+    glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+
+    emm_glm <- emmeans::emmeans(glm.D93, pairwise~treatment)
+    emm_glm_output <- apa_print(emm_glm$emmeans)
+
+    expect_apa_results(
+      emm_glm_output
+      , labels = list(
+        treatment = "treatment"
+        , estimate = "$\\log(M)$"
+        , conf.int = "95\\% CI"
+        , statistic = "$z$"
+        , p.value = "$p$"
+      )
+      , term_names = c("X1", "X2", "X3")
+    )
+
+    expect_apa_term(
+      emm_glm_output
+      , term = "X1"
+      , estimate = "$\\log(M) = 2.80$, 95\\% CI $[2.52, 3.07]$"
+      , statistic = "$z = 19.65$, $p < .001$"
+    )
+
+#     pigs_lm <- lm(log(conc) ~ source * percent, data = emmeans::pigs)
+#
+#     pigs_lm_emm <- emmeans::emmeans(pigs_lm, ~ source)
+#     pigs_pairs_emm_output <- apa_print(pairs(pigs_lm_emm, type = "response"))
+#
+#     # table --------------------------------------------------------------------
+#     expect_identical(
+#       object = pigs_pairs_emm_output$table$estimate
+#       , expected = structure(
+#         c("0.77", "0.66", "0.86")
+#         , label = "Ratio"
+#         , class = c("tiny_labelled", "character")
+#       )
+#     )
+#
+#
+#     noise.lm <- lm(noise ~ size * type * side, data = emmeans::auto.noise)
+#     noise.emm <- emmeans::emmeans(noise.lm, ~ size * side * type)
+#     apa_print(emmeans::contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")) # Table order is fucked up
+#
+#
+#     org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = emmeans::oranges)
+#     emmeans::emtrends(org.int, ~ variety, var = "price1", mult.name = "variety")
+#     emmeans::emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
+#
+  }
+)
+
+
+test_that(
+  "emtrends"
+  , {
+    skip("emtrends() is not yet supported.")
+    # cars_lm <- lm(mpg ~ qsec, data = mtcars)
+    # summary(cars_lm)
+    #
+    # cars_em <- emtrends(cars_lm, ~ 1, var = "qsec")
+    # onesided <- summary(cars_em, infer = TRUE, side = ">")
+    #
+    # apa_print(onesided)
+    #
+    #
+    # broom::tidy(summary(cars_em, infer = TRUE, side = ">"))
   }
 )

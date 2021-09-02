@@ -78,6 +78,13 @@ apa_print.summary_emm <- function(
 
   tidy_x <- data.frame(broom::tidy(x, null.value = null.value))
 
+  # Hot fix while we wait on a merge of this PR: https://github.com/tidymodels/broom/pull/1047
+  tidy_x <- rename_column(
+    tidy_x
+    , c("prob", "rate", "ratio", "odds.ratio", "asymp.LCL", "asymp.UCL", "z.ratio")
+    , c("estimate", "estimate", "estimate", "estimate", "conf.low", "conf.high", "statistic")
+  )
+
   conf_level <- get_emm_conf_level(x)
   ci_supplied <- !length(conf_level) == 0
   p_supplied <- "p.value" %in% colnames(x)
@@ -119,9 +126,11 @@ apa_print.summary_emm <- function(
   pri_vars <- attr(x, "pri.vars")
   factors <- c(pri_vars, split_by)
 
+  # One-sided regression coefficient test via emtrends(. ~ 1, var = ...)
+  # factors <- gsub("^1$", "X1", factors)
 
   ## Typeset columns
-  tidy_x[, factors] <- prettify_terms(tidy_x[, factors])
+  tidy_x[, factors] <- prettify_terms(tidy_x[, factors], ...)
 
   tidy_x$estimate <- printnum(tidy_x$estimate, ...)
 
@@ -165,8 +174,9 @@ apa_print.summary_emm <- function(
   }
 
   if(p_supplied) {
-    if(all(tidy_x$df == Inf)) {
+    if(all(tidy_x$df == "$\\infty$")) {
       test_stat <- "z"
+      tidy_x$df <- NULL
     } else if(!multiple_df) {
       test_stat <- paste0("t(", unique(tidy_x$df), ")")
       tidy_x$df <- NULL
@@ -213,7 +223,10 @@ apa_print.summary_emm <- function(
   rownames(tidy_x) <- sanitize_terms(
     gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
       "^\\_|\\_(\\_)", "\\1"
-      , gsub(" |\\.", "", contrast_row_names)
+      , gsub(
+        " |\\.", ""
+        , gsub("\\.0+$", "",contrast_row_names) # Removes trailing zero-digits for numeric predictors
+      )
     )
   )
 
@@ -266,6 +279,9 @@ apa_print.summary_emm <- function(
     )
   }
 
+  # One-sided regression coefficient test via emtrends(. ~ 1, var = ...)
+  # tidy_x["X1"] <- NULL
+
   # Concatenate character strings and return as named list
   class(tidy_x) <- c("apa_results_table", "data.frame")
 
@@ -311,18 +327,44 @@ get_emm_conf_level <- function(x) {
 
 est_name_from_call <- function(x) {
   # analysis_function <- as.character(attr(x, "model.info")$call[[1]])
-  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("pairs", "contrast", "rbind")
 
-  # roles <- attr(x, "roles")
-  # is_multivariate <- all(roles$predictors %in% roles$multresp) ||
-  #   (roles$predictors == "contrast" & length(roles$multresp) > 0)
-  # contains_responses <- attr(x, "misc")$estType == "response"
+  misc <- x@misc
 
-  if(x@misc$inv.lbl == "ratio" && !is.null(x@misc$predict.type) && x@misc$predict.type == "response") {
-    est_name <- "Ratio" # This could certainly be refined (e.g., OR, ratio of geometric means etc.)
+  contains_contrasts <- misc$pri.vars[1] == "contrast" || misc$estType %in% c("pairs", "contrast", "rbind")
+
+  type <- misc$predict.type
+  if (is.null(type)) type <- "link"
+  inv <- (type %in% c("response", "mu", "unlink"))
+
+  link <- NULL
+  if(is.character(misc$tran) && (misc$tran != "none")) {
+    link <- misc$tran
+  } else if(is.character(misc$orig.tran) && (misc$orig.tran != "none")) {
+    link <- misc$orig.tran
+  }
+
+  # TODO: Review estimate names!
+  if ((!inv || is.null(misc$tran)) && !is.null(link)) {
+    # See https://github.com/rvlenth/emmeans/blob/be94689c22df5fae23287ce2b7ed7a21232fb32b/R/transformations.R
+    est_name <- switch(
+      link
+      , "logit" = "\\mathrm{logit}(p)"
+      , "probit" = "\\Phi^{-1}(p)"
+      , "cauchit" = "\\mathrm{cauchit}(p)"
+      , "cloglog" = "\\mathrm{cloglog}(p)"
+      , "log" = "\\log(M)"
+      , "sqrt" = "\\sqrt{M}"
+      , "log.o.r." = "\\log(\\mathit{OR})"
+      , "exp" = "\\exp(M)"
+      , "inverse" = "1/M"
+      , "M"
+    )
   } else {
-    est_name <- "M"
-    # est_name <- switch(
+    est_name <- switch(
+      c(misc$inv.lbl, "NULL")[1] # In case it's NULL return default
+      , "prob" = "p"
+      , "odds.ratio" = "\\mathit{OR}"
+      , "M"
     #   analysis_function
     #   , aov = { "M" }
     #   , lm = ifelse(is_multivariate, "M", "b")
@@ -330,10 +372,23 @@ est_name_from_call <- function(x) {
     #   # , lmer = "b"
     #   # , mixed = "M"
     #   , { warning("apa_print() support for this model class is untested. Proceed with caution! Visit https://github.com/crsh/papaja/issues to request support for this model class."); "Estimate" }
-    # )
+    )
+  }
 
-    if(est_name != "Estimate") {
-      if(contains_contrasts) est_name <- paste("\\Delta", est_name)
+  if(contains_contrasts) {
+    if(!is.null(misc$inv.lbl) && (inv & !is.null(misc$tran))) {
+      est_name <- switch(
+        misc$inv.lbl
+        , "ratio" = "M_{i}/M_{j}"
+        , "odds.ratio" = "\\mathit{OR}"
+        , est_name
+      )
+    } else {
+      est_name <- switch(
+        c(link, "NULL")[1] # In case it's NULL return default
+        , "log.o.r." = est_name
+        , est_name <- paste("\\Delta", est_name)
+      )
     }
   }
 

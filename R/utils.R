@@ -346,15 +346,24 @@ sanitize_terms <- function(x, ...) {
   UseMethod("sanitize_terms", x)
 }
 
+#' @rdname sanitize_terms
+#' @method sanitize_terms character
+
 sanitize_terms.character <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
+  x <- gsub("\\.0+$", "", x)                        # Remove trailing 0-digits
+  x <- gsub(",", "", x)                             # Remove big mark
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
   x
 }
 
+
+#' @rdname sanitize_terms
+#' @method sanitize_terms data.frame
+
 sanitize_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, sanitize_terms.character, ...))
+  as.data.frame(lapply(x, sanitize_terms, ...))
 }
 
 
@@ -370,17 +379,24 @@ sanitize_terms.data.frame <- function(x, ...) {
 #' @examples
 #' NULL
 #' @keywords internal
-
+#' @export
 
 prettify_terms <- function(x, ...) {
   UseMethod("prettify_terms", x)
 }
 
-prettify_terms.character <- function(x, standardized = FALSE) {
+#' @rdname prettify_terms
+#' @method prettify_terms character
+#' @export
+
+prettify_terms.character <- function(x, standardized = FALSE, retain_period = FALSE, ...) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
   x <- gsub(pattern = "\\(|\\)|`|.+\\$", replacement = "", x = x)                 # Remove parentheses and backticks
   x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
-  x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
+  x <- gsub("\\_", " ", x)                        # Remove underscores
+  if(!retain_period) {
+    x <- gsub("\\.", " ", x)
+  }
   for (i in seq_along(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
     x2 <- capitalize(x2)
@@ -389,10 +405,25 @@ prettify_terms.character <- function(x, standardized = FALSE) {
   x
 }
 
+#' @rdname prettify_terms
+#' @method prettify_terms data.frame
+#' @export
+
 prettify_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, prettify_terms.character, ...))
+  as.data.frame(lapply(x, prettify_terms, ...))
 }
 
+#' @rdname prettify_terms
+#' @method prettify_terms numeric
+#' @export
+
+prettify_terms.numeric <- function(x, standardized = FALSE, ...) {
+  prettify_terms(
+    printnum(x, ...)
+    , standardized = standardized
+    , retain_period = TRUE
+  )
+}
 
 
 capitalize <- function(x) {
@@ -577,7 +608,7 @@ no_method <- function(x) {
 }
 
 rename_column <- function(x, current_name, new_name) {
-  colnames(x)[colnames(x) %in% current_name] <- new_name
+  colnames(x)[colnames(x) %in% current_name] <- new_name[current_name %in% colnames(x)]
   x
 }
 
