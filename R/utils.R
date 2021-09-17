@@ -337,6 +337,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 #'    removed from term names.
 #'
 #' @keywords internal
+#' @export
 #' @examples
 #' \dontrun{
 #' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
@@ -348,6 +349,7 @@ sanitize_terms <- function(x, ...) {
 
 #' @rdname sanitize_terms
 #' @method sanitize_terms character
+#' @export
 
 sanitize_terms.character <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
@@ -361,9 +363,18 @@ sanitize_terms.character <- function(x, standardized = FALSE) {
 
 #' @rdname sanitize_terms
 #' @method sanitize_terms data.frame
+#' @export
 
 sanitize_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, sanitize_terms, ...))
+  as.data.frame(lapply(x, sanitize_terms, ...), stringsAsFactors = FALSE)
+}
+
+#' @rdname sanitize_terms
+#' @method sanitize_terms list
+#' @export
+
+sanitize_terms.list <- function(x, ...) {
+  lapply(x, sanitize_terms, ...)
 }
 
 
@@ -410,7 +421,7 @@ prettify_terms.character <- function(x, standardized = FALSE, retain_period = FA
 #' @export
 
 prettify_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, prettify_terms, ...))
+  as.data.frame(lapply(x, prettify_terms, ...), stringsAsFactors = FALSE)
 }
 
 #' @rdname prettify_terms

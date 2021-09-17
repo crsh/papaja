@@ -53,7 +53,7 @@ apa_print.summary_emm <- function(
   x
   , contrast_names = NULL
   # , stat_name = NULL
-  , est_name = "\\widehat{\\theta}"
+  , est_name = "\\hat{\\theta}"
   , in_paren = FALSE
   , ...
 ) {
@@ -110,7 +110,7 @@ apa_print.summary_emm <- function(
     df_colname <- names(tidy_x)[grepl("df\\.*", names(tidy_x))]
     dfdigits <- as.numeric(x[[df_colname]] %%1 > 0) * 2
     dfdigits <- ifelse(is.na(dfdigits), 0, dfdigits) # In case df are Inf
-    multiple_df <- !isTRUE(all.equal(max(x[[df_colname]]), min(x[[df_colname]])))
+    multiple_df <- !isTRUE(all.equal(range(x[[df_colname]])))
     p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
     stat_colnames <- c("statistic", df_colname, p_value)
   }
@@ -274,8 +274,9 @@ apa_print.summary_emm <- function(
       tidy_x[, factors]
       , 2
       , gsub
-      , pattern = "\\."
+      , pattern = "."
       , replacement = ""
+      , fixed = TRUE
     )
   }
 

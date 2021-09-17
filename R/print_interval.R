@@ -113,7 +113,7 @@ print_interval.numeric <- function(
       interval <- paste0(
           conf_level
           , "$["
-          , paste(strip_math_tags(x), collapse = ",~")
+          , paste(strip_math_tags(x), collapse = ",\ ")
           , "]$"
       )
     } else {
