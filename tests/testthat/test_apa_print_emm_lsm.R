@@ -674,6 +674,67 @@ test_that(
         , adj.p.value = "$p_\\mathrm{\\scriptsize Dunnett(3)}$"
       )
     )
+
+
+    family_mark_reference <- letters[
+      rep(1:nlevels(tw_rm_data$Task), each = nlevels(tw_rm_data$Valence))
+    ]
+
+    family_marks <- stringr::str_extract(
+      stringr::str_extract(
+        ow_me_emm_bonf_res$table$conf.int
+        , "[a-z](\\$$)"
+      )
+      , "[a-z]"
+    )
+
+    expect_equal(
+      family_marks
+      , family_mark_reference
+    )
+
+    expect_equal(
+      stringr::str_extract(
+        stringr::str_extract(
+          ow_me_emm_bonf_res$table$adj.p.value
+          , "[a-z](\\$$)"
+        )
+        , "[a-z]"
+      )
+      , family_marks
+    )
+
+    ow_me_emm <- emmeans(tw_rm, ~ Task | Valence)
+    ow_me_emm_bonf <- summary(ow_me_emm, infer = TRUE, adjust = "bonferroni")
+    ow_me_emm_bonf_res <- apa_print(ow_me_emm_bonf)
+
+    family_mark_reference <- letters[
+      rep(1:nlevels(tw_rm_data$Valence), each = nlevels(tw_rm_data$Task))
+    ]
+
+    family_marks <- stringr::str_extract(
+      stringr::str_extract(
+        ow_me_emm_bonf_res$table$conf.int
+        , "[a-z](\\$$)"
+      )
+      , "[a-z]"
+    )
+
+    expect_equal(
+      family_marks
+      , family_mark_reference
+    )
+
+    expect_equal(
+      stringr::str_extract(
+        stringr::str_extract(
+          ow_me_emm_bonf_res$table$adj.p.value
+          , "[a-z](\\$$)"
+        )
+        , "[a-z]"
+      )
+      , family_marks
+    )
   }
 )
 

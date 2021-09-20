@@ -139,23 +139,24 @@ apa_print.summary_emm <- function(
     stat_colnames <- NULL
   } else {
     df_colname <- names(tidy_x)[grepl("df\\.*", names(tidy_x))]
-    dfdigits <- as.numeric(x[[df_colname]] %%1 > 0) * 2
-    dfdigits <- ifelse(is.na(dfdigits), 0, dfdigits) # In case df are Inf
-    multiple_df <- !isTRUE(all.equal(min(x[[df_colname]]), max(x[[df_colname]])))
+    multiple_df <- !isTRUE(all.equal(min(tidy_x[[df_colname]]), max(tidy_x[[df_colname]])))
     p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
     stat_colnames <- c("statistic", df_colname, p_value)
   }
 
-
+print_df
   # Assamble table
 
   ## Add split variables
   split_by <- attr(x, "by.vars") # lsmeans
-  if(is.null(split_by)) { # emmeans
-    split_by <- unlist(attr(x, "misc")[c("by.vars", "pri.vars")])
-  }
   pri_vars <- attr(x, "pri.vars")
-  factors <- c(pri_vars, split_by)
+  if(is.null(split_by)) { # emmeans
+    split_by <- unlist(attr(x, "misc")[c("by.vars")])
+  }
+  if(is.null(split_by)) {
+    pri_vars <- unlist(attr(x, "misc")[c("pri.vars")])
+  }
+  factors <- unique(c(pri_vars, split_by))
 
   # One-sided regression coefficient test via emtrends(. ~ 1, var = ...)
   # factors <- gsub("^1$", "X1", factors)
@@ -179,7 +180,7 @@ apa_print.summary_emm <- function(
     if(all(tidy_x$null.value == 0)) tidy_x$null.value <- NULL
 
     tidy_x$statistic <- printnum(tidy_x$statistic)
-    tidy_x$df <- printnum(tidy_x$df, digits = dfdigits)
+    tidy_x$df <- print_df(tidy_x$df)
     tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
   }
 
@@ -261,6 +262,11 @@ apa_print.summary_emm <- function(
     )
   )
 
+  ## Mark test families (see below)
+  if(!is.null(attr(x, "famSize"))) {
+    family_mark <- letters[as.numeric(interaction(tidy_x[, split_by]))]
+  }
+
   ## Add structuring columns
   if(length(factors) > 1 && !any(tidy_x[, factors] == ".")) {
 
@@ -324,6 +330,20 @@ apa_print.summary_emm <- function(
     , in_paren = in_paren
     , term_names = make.names(rownames(tidy_x))
   )
+
+  ## Mark test families
+  if(!is.null(attr(x, "famSize"))) {
+    if(ci_supplied) {
+      ci_label <- variable_label(apa_res$table$conf.int)
+      apa_res$table$conf.int <- paste0(apa_res$table$conf.int, "${}^", family_mark, "$")
+      variable_label(apa_res$table$conf.int) <- ci_label
+    }
+    if(p_supplied) {
+      p_label <- variable_label(apa_res$table[[p_value]])
+      apa_res$table[[p_value]] <- paste0(apa_res$table[[p_value]], "${}^", family_mark, "$")
+      variable_label(apa_res$table[[p_value]]) <- p_label
+    }
+  }
 
   apa_res
 }
