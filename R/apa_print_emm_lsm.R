@@ -41,6 +41,11 @@ apa_print.emmGrid <- function(x, infer = TRUE, conf.level = 0.95, ...) {
   }
 
   ellipsis$x <- summary(x, infer = infer, level = conf.level)
+
+  # Add family size, because it gets lost otherwise
+  famSize <- attr(x, "misc")$famSize
+  if(!is.null(famSize)) attr(ellipsis$x, "famSize") <- famSize
+
   do.call("apa_print", ellipsis)
 }
 
@@ -76,6 +81,28 @@ apa_print.summary_emm <- function(
   # delta <- attr(x, "delta")
   # one.sided <- attr(x, "side")
 
+
+  # Attempt to extract family size from messages for summary-objects
+  if(is.null(attr(x, "famSize"))) {
+    object_messages <- attr(x, "mesg")
+    family_size_mesg <- na.omit(
+      stringr::str_extract(
+        object_messages
+        , "for (\\d+) (estimates|tests)"
+      )
+    )
+
+    if(length(family_size_mesg) > 0) {
+      fam_size <- as.numeric(stringr::str_extract(family_size_mesg, "\\d+"))
+      attr(x, "famSize") <- unique(fam_size)
+    }
+  }
+
+  adjust <- parse_adjust_name(
+    attr(x, "adjust")
+    , attr(x, "famSize")
+  )
+
   tidy_x <- data.frame(broom::tidy(x, null.value = null.value))
 
   # Hot fix while we wait on a merge of this PR: https://github.com/tidymodels/broom/pull/1047
@@ -98,7 +125,11 @@ apa_print.summary_emm <- function(
     conf_level <- NULL
   } else {
     if(conf_level < 1) conf_level <- conf_level * 100
-    conf_level <- paste0(conf_level, "\\% CI")
+    if(is.null(adjust)) {
+      conf_level <- paste0(conf_level, "\\% CI")
+    } else {
+      conf_level <- paste0("$", conf_level, "\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize ", adjust["conf.int"], "}$")
+    }
   }
 
   if(!p_supplied) {
@@ -110,7 +141,7 @@ apa_print.summary_emm <- function(
     df_colname <- names(tidy_x)[grepl("df\\.*", names(tidy_x))]
     dfdigits <- as.numeric(x[[df_colname]] %%1 > 0) * 2
     dfdigits <- ifelse(is.na(dfdigits), 0, dfdigits) # In case df are Inf
-    multiple_df <- !isTRUE(all.equal(range(x[[df_colname]])))
+    multiple_df <- !isTRUE(all.equal(min(x[[df_colname]]), max(x[[df_colname]])))
     p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
     stat_colnames <- c("statistic", df_colname, p_value)
   }
@@ -197,7 +228,7 @@ apa_print.summary_emm <- function(
     variable_labels(tidy_x[[p_value]]) <- switch(
       p_value
       , "p.value" = "$p$"
-      , "adj.p.value" = "$p_{adj}$"
+      , "adj.p.value" = paste0("$p_\\mathrm{\\scriptsize ", adjust["p.value"], "}$")
     )
   }
 
@@ -394,4 +425,32 @@ est_name_from_call <- function(x) {
   }
 
   est_name
+}
+
+parse_adjust_name <- function(x, n = NULL) {
+  if(is.null(x)) return(NULL)
+
+  res <- switch(
+    x
+    , holm       = c(p.value = "Holm"            , conf.int = "Bonferroni")
+    , hochberg   = c(p.value = "Hochberg"        , conf.int = "Bonferroni")
+    , hommel     = c(p.value = "Hommel"          , conf.int = "Bonferroni")
+    , bonferroni = c(p.value = "Bonferroni"      , conf.int = "Bonferroni")
+    , BH         = c(p.value = "BH"              , conf.int = "Bonferroni")
+    , BY         = c(p.value = "BY"              , conf.int = "Bonferroni")
+    , fdr        = c(p.value = "FDR"             , conf.int = "Bonferroni")
+    , tukey      = c(p.value = "Tukey"           , conf.int = "Tukey")
+    , scheffe    = c(p.value = "Scheff\\'e"      , conf.int = "Scheff\\'e")
+    , sidak      = c(p.value = "Sidak"           , conf.int = "Sidak")
+    , dunnettx   = c(p.value = "Dunnett"         , conf.int = "Dunnett")
+    , mvt        = c(p.value = "MV \\mathit{t}"  , conf.int = "MV \\mathit{t}")
+    , "adj"
+  )
+
+  if(is.null(n)) {
+    message("The size of the family of tests could not be determined and will be omitted from the output. Consider passing the output of `contrast()` rather than `summary()`.")
+    return(res)
+  } else {
+    setNames(paste0(res, paste0("(", n, ")")), names(res))
+  }
 }

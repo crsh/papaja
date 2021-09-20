@@ -303,9 +303,9 @@ test_that(
       , labels = list(
         contrast = "Contrast"
         , estimate = "$\\Delta M$"
-        , conf.int = "95\\% CI"
+        , conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$"
         , statistic = "$t(8)$"
-        , adj.p.value = "$p_{adj}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize Tukey(3)}$"
       )
       , term_names = c("Neg_Neu", "Neg_Pos", "Neu_Pos")
     )
@@ -313,8 +313,8 @@ test_that(
     expect_apa_term(
       tw_me_pairs_emm_output
       , term = "Neg_Neu"
-      , estimate = "$\\Delta M = -1.10$, 95\\% CI $[-3.44, 1.24]$"
-      , statistic = "$t(8) = -1.34$, $p_{adj} = .413$"
+      , estimate = "$\\Delta M = -1.10$, $95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}\ [-3.44, 1.24]$"
+      , statistic = "$t(8) = -1.34$, $p_\\mathrm{\\scriptsize Tukey(3)} = .413$"
     )
 
     ## Custom contrast names
@@ -610,7 +610,72 @@ test_that(
   }
 )
 
+test_that(
+  "Multiplicity adjustment notes"
+  , {
+    emm_basis.afex_aov <- afex:::emm_basis.afex_aov
 
+    load("data/tw_rm_data.rdata")
+    tw_rm <- suppressWarnings(afex::aov_ez(
+      data = tw_rm_data
+      , id = "Subject"
+      , dv = "Recall"
+      , within = c("Task", "Valence")
+    ))
+
+    ow_me_emm <- emmeans(tw_rm, ~ Valence | Task)
+
+    ow_me_emm_bonf <- summary(ow_me_emm, infer = TRUE, adjust = "bonferroni")
+    ow_me_emm_bonf_res <- apa_print(ow_me_emm_bonf)
+    expect_equal(
+      variable_label(ow_me_emm_bonf_res$table[, c("conf.int", "adj.p.value")])
+      , list(
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Bonferroni(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize Bonferroni(3)}$"
+      )
+    )
+
+    ow_me_emm_tukey <- pairs(ow_me_emm, infer = TRUE)
+    ow_me_emm_tukey_res <- apa_print(ow_me_emm_tukey)
+    expect_equal(
+      variable_label(ow_me_emm_tukey_res$table[, c("conf.int", "adj.p.value")])
+      , list(
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize Tukey(3)}$"
+      )
+    )
+
+    ow_me_emm_holm <- contrast(ow_me_emm, infer = TRUE, adjust = "holm")
+    ow_me_emm_holm_res <- apa_print(ow_me_emm_holm)
+    expect_equal(
+      variable_label(ow_me_emm_holm_res$table[, c("conf.int", "adj.p.value")])
+      , list(
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Bonferroni(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize Holm(3)}$"
+      )
+    )
+
+    ow_me_emm_fdr <- contrast(ow_me_emm, infer = TRUE, adjust = "fdr")
+    ow_me_emm_fdr_res <- apa_print(ow_me_emm_fdr)
+    expect_equal(
+      variable_label(ow_me_emm_fdr_res$table[, c("conf.int", "adj.p.value")])
+      , list(
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Bonferroni(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize FDR(3)}$"
+      )
+    )
+
+    ow_me_emm_dun <- contrast(ow_me_emm, infer = TRUE, adjust = "dunnettx")
+    ow_me_emm_dun_res <- apa_print(ow_me_emm_dun)
+    expect_equal(
+      variable_label(ow_me_emm_dun_res$table[, c("conf.int", "adj.p.value")])
+      , list(
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Dunnett(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize Dunnett(3)}$"
+      )
+    )
+  }
+)
 
 test_that(
   "Regression"
