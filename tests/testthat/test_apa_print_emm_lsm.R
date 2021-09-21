@@ -399,6 +399,15 @@ test_that(
       simple_contrasts_output$full_result[grepl("^(F|M)_", names(simple_contrasts_output$full_result))]
       , simple_contrasts2_output2$full_result
     )
+  }
+)
+
+test_that(
+  "Joint tests"
+  , {
+    emm_basis.afex_aov <- afex:::emm_basis.afex_aov
+
+    load("data/tw_rm_data.rdata")
 
     # Joint tests
     tw_rm <- suppressWarnings(afex::aov_ez(
@@ -413,7 +422,6 @@ test_that(
 
     tw_rm_emm <- emmeans::emmeans(tw_rm$aov, ~ Task * Valence)
 
-    skip("Joint tests are not yet supported.")
     ## All terms
     emm_aov <- emmeans::joint_tests(tw_rm_emm)
     emm_aov_output <- apa_print(emm_aov)
@@ -842,15 +850,17 @@ test_that(
   "emtrends"
   , {
     skip("emtrends() is not yet supported.")
-    # cars_lm <- lm(mpg ~ qsec, data = mtcars)
-    # summary(cars_lm)
-    #
-    # cars_em <- emtrends(cars_lm, ~ 1, var = "qsec")
-    # onesided <- summary(cars_em, infer = TRUE, side = ">")
-    #
-    # apa_print(onesided)
-    #
-    #
+
+    library("emmeans")
+
+    cars_lm <- lm(mpg ~ qsec, data = mtcars)
+    summary(cars_lm)
+
+    cars_em <- emtrends(cars_lm, ~ 1, var = "qsec")
+    onesided <- summary(cars_em, infer = TRUE, side = ">")
+
+    apa_print(onesided)
+
     # broom::tidy(summary(cars_em, infer = TRUE, side = ">"))
   }
 )

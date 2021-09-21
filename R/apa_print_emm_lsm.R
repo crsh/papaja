@@ -337,7 +337,7 @@ apa_print.summary_emm <- function(
   )
 
   ## Mark test families
-  if(!is.null(attr(x, "famSize"))) {
+  if(!is.null(adjust)) {
     if(ci_supplied) {
       ci_label <- variable_label(apa_res$table$conf.int)
       apa_res$table$conf.int <- paste0(apa_res$table$conf.int, "${}^", family_mark, "$")
@@ -522,7 +522,7 @@ est_name_from_call <- function(x) {
 }
 
 parse_adjust_name <- function(x, n = NULL) {
-  if(is.null(x)) return(NULL)
+  if(is.null(x) || x == "none") return(NULL)
 
   res <- switch(
     x
