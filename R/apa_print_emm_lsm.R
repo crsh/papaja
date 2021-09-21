@@ -267,8 +267,10 @@ apa_print.summary_emm <- function(
   if(!is.null(attr(x, "famSize"))) {
     if(!is.null(split_by)) {
       family_mark <- letters[as.numeric(interaction(tidy_x[, split_by]))]
-    } else {
+    } else if(!attr(x, "famSize") < nrow(tidy_x)) {
       family_mark <- letters[1:nrow(tidy_x)]
+    } else {
+      adjust <- NULL # No marks
     }
   }
 

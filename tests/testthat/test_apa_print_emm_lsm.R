@@ -743,6 +743,25 @@ test_that(
       )
       , family_marks
     )
+
+
+    participant<-c(1:40)
+    group<-c("intervention", "control","control","intervention","control")
+
+    df<-data.frame(participant,group) %>%
+      group_by(participant,group) %>%
+      summarise(session=c("t1","t2","t3","t4")) %>%
+      group_by(participant, group, session) %>%
+      summarise(task=c("a","b")) %>%
+      ungroup() %>%
+      mutate(errors=floor(runif(n=320,min=0,max=30)))
+
+    glmm <- glm(errors~group*session*task, df, family='poisson')
+    glmm_pairs <- emmeans(glmm, pairwise~session, type="response")
+    glmm_pairs_res <- apa_print(glmm_pairs$contrasts)
+
+    expect_false(any(grepl("[a-z]", glmm_pairs_res$table$conf.int)))
+    expect_false(any(grepl("[a-z]", glmm_pairs_res$table$p.value)))
   }
 )
 
