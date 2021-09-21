@@ -10,6 +10,7 @@
 # #'    supplied name is used.
 #' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
 #' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
+#' @param conf.level Numeric. Confidence level for confidence intervals.
 #' @inheritParams emmeans::summary.emmGrid
 #' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
@@ -85,12 +86,11 @@ apa_print.summary_emm <- function(
   # Attempt to extract family size from messages for summary-objects
   if(is.null(attr(x, "famSize"))) {
     object_messages <- attr(x, "mesg")
-    family_size_mesg <- na.omit(
-      stringr::str_extract(
-        object_messages
-        , "for (\\d+) (estimates|tests)"
-      )
+    family_size_mesg <- stringr::str_extract(
+      object_messages
+      , "for (\\d+) (estimates|tests)"
     )
+    family_size_mesg <- family_size_mesg[!is.na(family_size_mesg)]
 
     if(length(family_size_mesg) > 0) {
       fam_size <- as.numeric(stringr::str_extract(family_size_mesg, "\\d+"))

@@ -7,9 +7,15 @@
 \alias{apa_print.summary.ref.grid}
 \title{Format statistics (APA 6th edition)}
 \usage{
-\method{apa_print}{emmGrid}(x, ...)
+\method{apa_print}{emmGrid}(x, infer = TRUE, conf.level = 0.95, ...)
 
-\method{apa_print}{summary_emm}(x, contrast_names = NULL, est_name = NULL, in_paren = FALSE, ...)
+\method{apa_print}{summary_emm}(
+  x,
+  contrast_names = NULL,
+  est_name = "\\\\hat{\\\\theta}",
+  in_paren = FALSE,
+  ...
+)
 
 \method{apa_print}{lsmobj}(x, ...)
 
@@ -18,6 +24,13 @@
 \arguments{
 \item{x}{Object
 adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the}
+
+\item{infer}{A vector of one or two logical values. The first determines
+whether confidence intervals are displayed, and the second determines
+whether \emph{t} tests and \emph{P} values are displayed. If only one value
+is provided, it is used for both.}
+
+\item{conf.level}{Numeric. Confidence level for confidence intervals.}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum]{printnum}}

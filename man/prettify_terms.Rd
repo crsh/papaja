@@ -2,9 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{prettify_terms}
 \alias{prettify_terms}
+\alias{prettify_terms.character}
+\alias{prettify_terms.data.frame}
+\alias{prettify_terms.numeric}
 \title{Prettify Term Names}
 \usage{
-prettify_terms(x, standardized = FALSE)
+prettify_terms(x, ...)
+
+\method{prettify_terms}{character}(x, standardized = FALSE, retain_period = FALSE, ...)
+
+\method{prettify_terms}{data.frame}(x, ...)
+
+\method{prettify_terms}{numeric}(x, standardized = FALSE, ...)
 }
 \arguments{
 \item{x}{Character. Vector of term names to be prettified.}

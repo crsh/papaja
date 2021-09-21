@@ -355,7 +355,7 @@ sanitize_terms <- function(x, ...) {
 #' @method sanitize_terms character
 #' @export
 
-sanitize_terms.character <- function(x, standardized = FALSE) {
+sanitize_terms.character <- function(x, standardized = FALSE, ...) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
   x <- gsub("\\.0+$", "", x)                        # Remove trailing 0-digits

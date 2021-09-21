@@ -2,9 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{sanitize_terms}
 \alias{sanitize_terms}
+\alias{sanitize_terms.character}
+\alias{sanitize_terms.data.frame}
+\alias{sanitize_terms.list}
 \title{Sanitize Term Names}
 \usage{
-sanitize_terms(x, standardized = FALSE)
+sanitize_terms(x, ...)
+
+\method{sanitize_terms}{character}(x, standardized = FALSE, ...)
+
+\method{sanitize_terms}{data.frame}(x, ...)
+
+\method{sanitize_terms}{list}(x, ...)
 }
 \arguments{
 \item{x}{Character. Vector of term names to be sanitized.}
