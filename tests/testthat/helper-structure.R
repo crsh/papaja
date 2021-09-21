@@ -88,7 +88,9 @@ expect_apa_results <- function(
       expect_identical(variable_labels(object$table), labels)
     }
     if(!is.null(term_names)) {
-      expect_identical(names(object$estimate), term_names)
+      if(!is.null(object$estimate)) {
+        expect_identical(names(object$estimate), term_names)
+      }
       if(!is.null(object$statistic)) {
         expect_identical(names(object$statistic), term_names)
       }

@@ -68,11 +68,11 @@ apa_print.summary_emm <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
-  # # Indentify joint_tests() output
-  # if(attr(x, "estName") == "F.ratio") {
-  #   apa_res <- apa_print_summary_emm_joint_tests(x, ...)
-  #   return(apa_res)
-  # }
+  # Indentify joint_tests() output
+  if(is_joint_test(x)) {
+    apa_res <- apa_print_summary_emm_joint_tests(x, in_paren = in_paren, ...)
+    return(apa_res)
+  }
 
   null.value <- x$null.value
   if(is.null(null.value)) {
@@ -144,7 +144,6 @@ apa_print.summary_emm <- function(
     stat_colnames <- c("statistic", df_colname, p_value)
   }
 
-print_df
   # Assamble table
 
   ## Add split variables
@@ -153,7 +152,7 @@ print_df
   if(is.null(split_by)) { # emmeans
     split_by <- unlist(attr(x, "misc")[c("by.vars")])
   }
-  if(is.null(split_by)) {
+  if(is.null(pri_vars)) {
     pri_vars <- unlist(attr(x, "misc")[c("pri.vars")])
   }
   factors <- unique(c(pri_vars, split_by))
@@ -248,8 +247,10 @@ print_df
       , paste
       , collapse = "_"
     )
-  } else {
+  } else if(length(factors) == 1) {
     contrast_row_names <- tidy_x[, factors]
+  } else {
+    stop("Could not determine names to address each result by.")
   }
 
   rownames(tidy_x) <- sanitize_terms(
@@ -257,14 +258,18 @@ print_df
       "^\\_|\\_(\\_)", "\\1"
       , gsub(
         " |\\.", ""
-        , gsub("\\.0+$", "",contrast_row_names) # Removes trailing zero-digits for numeric predictors
+        , gsub("\\.0+$", "", contrast_row_names) # Removes trailing zero-digits for numeric predictors
       )
     )
   )
 
   ## Mark test families (see below)
   if(!is.null(attr(x, "famSize"))) {
-    family_mark <- letters[as.numeric(interaction(tidy_x[, split_by]))]
+    if(!is.null(split_by)) {
+      family_mark <- letters[as.numeric(interaction(tidy_x[, split_by]))]
+    } else {
+      family_mark <- letters[1:nrow(tidy_x)]
+    }
   }
 
   ## Add structuring columns
@@ -365,9 +370,78 @@ apa_print.summary.ref.grid <- function(x, ...) {
   apa_print.summary_emm(x, ...)
 }
 
-# apa_print_summary_emm_joint_tests <- function(x, ...) {
-#
-# }
+
+apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
+
+  # Retain structuring variables
+  by_vars <- attr(x, "by.vars")
+  if(!is.null(by_vars)) {
+    canonical_table <- canonize(x[, -which(names(x) == by_vars)])
+    by_vars <- default_label(
+      as.data.frame(
+        lapply(x[by_vars], as.character)
+        , stringsAsFactors = FALSE
+        , check.names = FALSE
+      )
+    )
+  } else {
+    canonical_table <- canonize(x)
+    term_names <- sanitize_terms(unlabel(canonical_table$term))
+  }
+
+  tinylabels::variable_labels(canonical_table) <- c(
+    term = "Effect"
+    , df = "$\\mathit{df}$"
+    , statistic = "$F$"
+    , p.value = "$p$"
+    , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+  )
+
+  ellipsis <- list(...)
+  ellipsis <- defaults(
+    ellipsis
+    , set.if.null = list(
+      digits = 3L
+      , gt1 = FALSE
+    )
+  )
+  ellipsis$x <- canonical_table
+  beautiful_table <- do.call("beautify", ellipsis)
+
+  if(!is.null(by_vars)) {
+    beautiful_table <- as.data.frame(
+      c(by_vars, beautiful_table)
+      , stringsAsFactors = FALSE
+      , check.names = FALSE
+    )
+
+    class(beautiful_table) <- c("apa_results_table", "data.frame")
+
+    term_names <- sanitize_terms(
+      as.character(interaction(c(canonical_table["term"], by_vars), sep = "_"))
+    )
+  }
+
+  # Glue results
+  glue_apa_results(
+    beautiful_table
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
+    , term_names = term_names
+    , in_paren = in_paren
+    , est_first = FALSE
+    , simplify = FALSE
+  )
+}
+
+is_joint_test <- function(x) {
+  est_name <- attr(x, "estName")
+  if(is.null(est_name)) {
+    return(FALSE)
+  } else {
+    est_name == "F.ratio"
+  }
+}
 
 
 get_emm_conf_level <- function(x) {

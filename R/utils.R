@@ -205,28 +205,32 @@ canonize <- function(
   if(!is.null(stat_label)) validate(stat_label, check_class = "character", check_length = 1L)
   if(!is.null(est_label))  validate(est_label, check_class = "character", check_length = 1L)
 
-  conf_level <- attr(x$conf.int, "conf.level")
-  if(is.null(conf_level)) {
-    conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
-  }
-  conf_label <- paste0(
-    if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
-    , "CI"
-  )
-
-  colnames(x) <- make.names(colnames(x))
 
   new_labels <- c(
     lookup_labels
     , "estimate"     = est_label
     , "Estimate"     = est_label
     , "coefficients" = est_label
-    , "conf.int"     = conf_label
     , "statistic"    = stat_label
   )
 
-  names_in_lookup_names <- colnames(x) %in% names(lookup_names)
+  if(!is.null(x$conf.int)) {
+    conf_level <- attr(x$conf.int, "conf.level")
+    if(is.null(conf_level)) {
+      conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
+    }
 
+    conf_label <- paste0(
+      if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+      , "CI"
+    )
+
+    new_labels <- c(new_labels, "conf.int" = conf_label)
+  }
+
+  colnames(x) <- make.names(colnames(x))
+
+  names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
   warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
   Therefore, be careful when using its output. Moreover, please visit https://github.com/crsh/papaja/issues and

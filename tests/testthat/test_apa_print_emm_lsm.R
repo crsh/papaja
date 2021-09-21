@@ -87,7 +87,7 @@ test_that(
       apa_print(summary(tw_me_lsm, infer = c(FALSE, FALSE)))
       , labels = list(
         Valence = "Valence"
-        , estimate = "$\\widehat{\\theta}$"
+        , estimate = "$\\hat{\\theta}$"
       )
       , term_names = levels(tw_rm_data$Valence)
     )
@@ -100,7 +100,7 @@ test_that(
     expect_apa_term(
       tw_me_emm_output3
       , term = "Neg"
-      , estimate = "$\\widehat{\\theta} = 11.00$, 95\\% CI $[7.37, \\infty]$"
+      , estimate = "$\\hat{\\theta} = 11.00$, 95\\% CI $[7.37, \\infty]$"
       , statistic = "$t(4.63) = 6.21$, $p = .001$"
     )
 
@@ -313,7 +313,7 @@ test_that(
     expect_apa_term(
       tw_me_pairs_emm_output
       , term = "Neg_Neu"
-      , estimate = "$\\Delta M = -1.10$, $95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}\ [-3.44, 1.24]$"
+      , estimate = "$\\Delta M = -1.10$, $95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$ $[-3.44, 1.24]$"
       , statistic = "$t(8) = -1.34$, $p_\\mathrm{\\scriptsize Tukey(3)} = .413$"
     )
 
@@ -422,16 +422,16 @@ test_that(
       emm_aov_output
       , labels = list(
         term = "Effect"
-        , statistic = "$\\mathit{F}$"
-        , df.num = "$\\mathit{df}$"
-        , df.den = "$\\mathit{df}_{\\mathrm{res}}$"
+        , statistic = "$F$"
+        , df = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value = "$p$"
       )
       , term_names = names(tw_rm_output$estimate)
     )
 
     expect_apa_term(
-      tw_me_pairs_emm_output
+      emm_aov_output
       , term = "Task"
       , estimate = NULL
       , statistic = tw_rm_output$statistic$Task
@@ -442,20 +442,20 @@ test_that(
     emm_split_aov_output <- apa_print(emm_split_aov)
 
     expect_apa_results(
-      emm_aov_output
+      emm_split_aov_output
       , labels = list(
         Task = "Task"
         , term = "Effect"
-        , statistic = "$\\mathit{F}$"
-        , df.num = "$\\mathit{df}$"
-        , df.den = "$\\mathit{df}_{\\mathrm{res}}$"
+        , statistic = "$F$"
+        , df = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value = "$p$"
       )
-      , term_names = paste("Valence", levels(tw_rm_data$Task))
+      , term_names = paste("Valence", levels(tw_rm_data$Task), sep = "_")
     )
 
     expect_apa_term(
-      emm_aov_output
+      emm_split_aov_output
       , term = "Valence_Cued"
       , estimate = NULL
       , statistic = "$F(2, 15.58) = 1.46$, $p = .263$"
