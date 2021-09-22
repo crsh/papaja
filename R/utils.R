@@ -510,7 +510,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 sort_terms <- function(x, colname) {
   validate(x, check_class = "data.frame", check_cols = colname)
 
-  x[order(sapply(regmatches(x[[colname]], gregexpr("\\\\times", x[[colname]])), length)), ]
+  x[order(sapply(.str_extract_all(x[[colname]], "\\\\times"), length)), ]
 }
 
 
@@ -733,4 +733,19 @@ add_equals <-function(x) {
     x[to_add] <- paste0("= ", x[to_add])
   }
   x
+}
+
+
+.str_extract_first <- function(x, pattern, useBytes = TRUE, ...) {
+  regmatches(
+    x
+    , regexpr(pattern, text = x, useBytes = useBytes, ...)
+  )
+}
+
+.str_extract_all <- function(x, pattern, useBytes = TRUE, ...) {
+  regmatches(
+    x
+    , gregexpr(pattern, text = x, useBytes = useBytes, ...)
+  )
 }

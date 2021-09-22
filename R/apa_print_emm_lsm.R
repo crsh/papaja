@@ -70,7 +70,7 @@ apa_print.summary_emm <- function(
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
   # Indentify joint_tests() output
-  if(is_joint_test(x)) {
+  if(isTRUE(attr(x, "estName") == "F.ratio")) {
     apa_res <- apa_print_summary_emm_joint_tests(x, in_paren = in_paren, ...)
     return(apa_res)
   }
@@ -86,14 +86,14 @@ apa_print.summary_emm <- function(
   # Attempt to extract family size from messages for summary-objects
   if(is.null(attr(x, "famSize"))) {
     object_messages <- attr(x, "mesg")
-    family_size_mesg <- stringr::str_extract(
+    family_size_mesg <- .str_extract_first(
       object_messages
       , "for (\\d+) (estimates|tests)"
     )
-    family_size_mesg <- family_size_mesg[!is.na(family_size_mesg)]
+    family_size_mesg <- family_size_mesg[!length(family_size_mesg) == 0]
 
     if(length(family_size_mesg) > 0) {
-      fam_size <- as.numeric(stringr::str_extract(family_size_mesg, "\\d+"))
+      fam_size <- as.numeric(.str_extract_first(family_size_mesg, "\\d+"))
       attr(x, "famSize") <- unique(fam_size)
     }
   }
@@ -378,7 +378,7 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
   # Retain structuring variables
   by_vars <- attr(x, "by.vars")
   if(!is.null(by_vars)) {
-    canonical_table <- canonize(x[, -which(names(x) == by_vars)])
+    canonical_table <- canonize(x[, -which(names(x) %in% by_vars)])
     by_vars <- default_label(
       as.data.frame(
         lapply(x[by_vars], as.character)
@@ -391,13 +391,7 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
     term_names <- sanitize_terms(unlabel(canonical_table$term))
   }
 
-  tinylabels::variable_labels(canonical_table) <- c(
-    term = "Effect"
-    , df = "$\\mathit{df}$"
-    , statistic = "$F$"
-    , p.value = "$p$"
-    , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
-  )
+  tinylabels::variable_labels(canonical_table) <- c(term = "Effect")
 
   ellipsis <- list(...)
   ellipsis <- defaults(
@@ -436,21 +430,11 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
   )
 }
 
-is_joint_test <- function(x) {
-  est_name <- attr(x, "estName")
-  if(is.null(est_name)) {
-    return(FALSE)
-  } else {
-    est_name == "F.ratio"
-  }
-}
-
-
 get_emm_conf_level <- function(x) {
   lsm_messages <- attr(x, "mesg")
   conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
-  ci <- unlist(regmatches(conf_level_message, gregexpr("0\\.\\d+", conf_level_message, useBytes = TRUE)))
-  as.numeric(ci)
+  conf_level <- .str_extract_first(conf_level_message, "0\\.\\d+")
+  as.numeric(conf_level)
 }
 
 est_name_from_call <- function(x) {

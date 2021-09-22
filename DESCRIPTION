@@ -27,7 +27,6 @@ Imports:
   methods,
   rmarkdown (>= 2.4),
   rmdfiltr (>= 0.1.3),
-  stringr,
   yaml,
   zip
 Suggests:

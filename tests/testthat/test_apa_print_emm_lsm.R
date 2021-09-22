@@ -688,28 +688,32 @@ test_that(
       rep(1:nlevels(tw_rm_data$Task), each = nlevels(tw_rm_data$Valence))
     ]
 
-    family_marks <- stringr::str_extract(
-      stringr::str_extract(
+    family_marks <- .str_extract_first(
+      .str_extract_first(
         ow_me_emm_bonf_res$table$conf.int
-        , "[a-z](\\$$)"
+        , "[a-z]\\$$"
       )
       , "[a-z]"
     )
+    family_marks <- unlabel(family_marks)
 
     expect_equal(
       family_marks
       , family_mark_reference
     )
 
-    expect_equal(
-      stringr::str_extract(
-        stringr::str_extract(
-          ow_me_emm_bonf_res$table$adj.p.value
-          , "[a-z](\\$$)"
-        )
-        , "[a-z]"
+    family_marks <- .str_extract_first(
+      .str_extract_first(
+        ow_me_emm_bonf_res$table$adj.p.value
+        , "[a-z]\\$$"
       )
-      , family_marks
+      , "[a-z]"
+    )
+    family_marks <- unlabel(family_marks)
+
+    expect_equal(
+      family_marks
+      , family_mark_reference
     )
 
     ow_me_emm <- emmeans(tw_rm, ~ Task | Valence)
@@ -720,28 +724,32 @@ test_that(
       rep(1:nlevels(tw_rm_data$Valence), each = nlevels(tw_rm_data$Task))
     ]
 
-    family_marks <- stringr::str_extract(
-      stringr::str_extract(
+    family_marks <- .str_extract_first(
+      .str_extract_first(
         ow_me_emm_bonf_res$table$conf.int
-        , "[a-z](\\$$)"
+        , "[a-z]\\$$"
       )
       , "[a-z]"
     )
+    family_marks <- unlabel(family_marks)
 
     expect_equal(
       family_marks
       , family_mark_reference
     )
 
-    expect_equal(
-      stringr::str_extract(
-        stringr::str_extract(
-          ow_me_emm_bonf_res$table$adj.p.value
-          , "[a-z](\\$$)"
-        )
-        , "[a-z]"
+    family_marks <- .str_extract_first(
+      .str_extract_first(
+        ow_me_emm_bonf_res$table$adj.p.value
+        , "[a-z]\\$$"
       )
-      , family_marks
+      , "[a-z]"
+    )
+    family_marks <- unlabel(family_marks)
+
+    expect_equal(
+      family_marks
+      , family_mark_reference
     )
 
 
