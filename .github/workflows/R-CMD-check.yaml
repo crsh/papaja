@@ -54,9 +54,6 @@ jobs:
       - run: tlmgr --version
       - run: tlmgr install apa6 threeparttable caption fancyhdr endfloat was multirow threeparttablex environ trimspaces lineno csquotes babel-english grfext
 
-      - name: Install system dependencies
-        run: sudo apt-get -y install libgsl-dev
-
       - name: Install pak and query dependencies
         run: |
           install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
@@ -78,6 +75,7 @@ jobs:
           pak::local_system_requirements(execute = TRUE)
           pak::pkg_system_requirements("rcmdcheck", execute = TRUE)
         shell: Rscript {0}
+      - run: sudo apt-get -y remove libgsl0-dev
 
       - name: Install dependencies
         run: |
