@@ -11,7 +11,7 @@ beautify(x, standardized = FALSE, use_math = FALSE, ...)
 
 \item{standardized}{Logical. If TRUE the name of the function \code{scale} will be removed from term names.}
 
-\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).}
+\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 }
 \description{
 Internal function that takes an object created by \code{\link[=canonize]{canonize()}} and

@@ -290,8 +290,6 @@ If you know of other packages and templates, drop us a note, so we can add them 
 
 <!-- # Package dependencies -->
 
-```{r eval = FALSE, echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
-source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/f6f0fce38bc274446d205854ea35cfa03b9b1f7a/plot_dependencies.R")
-
-plot_dependencies()
+```{r echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
+depgraph::plot_dependency_graph()
 ```

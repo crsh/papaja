@@ -281,7 +281,7 @@ remove_residuals_row <- function(x) {
 #'
 #' @param x An object created by \code{\link{canonize}}.
 #' @param standardized Logical. If TRUE the name of the function \code{scale} will be removed from term names.
-#' @param ... Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).
+#' @param ... Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).
 #' @keywords internal
 
 beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
