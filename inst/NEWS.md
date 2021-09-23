@@ -7,27 +7,20 @@
 
 ### Existing functions
 
-- Output from `apa_print()` now always contains a `$table` element (as suggested in #324 by @Kalif-Vaughn)
-  with standardized column names (e.g., `term`, `estimate`, `conf.int`, `statistic`, `df`, `df.residual`, `p.value`).
-  - To maintain backwards compatibility, it is possible to access columns with aliases (for instance,
-    it is possible to write `output$table$F` and obtain `output$table$statistic`, see #364).
-  - Table columns are labelled (e.g., `"\\hat{\\eta}^2_G"`, `"$F$", "$p$`, ...) for creating tables via `apa_table()`.
-- `apa_print()` for ANOVA gained a new argument `estimate`: It is possible to
-  specify a character string, a data frame, or a function to determine which measure 
-  of effect size is to be reported.
-    - Supported character strings are `"ges"`, `"pes"`, and `"es"`. These options
-    ensure backwards compatibility with older code that specified argument `es`.
-    - Argument `es` is now deprecated, but because it is a partial match with `estimate`, old
-    code using `es = "ges"`, `es = "pes"` or `es = "es"` will still work and yield the same results.
-    - If a data frame is supplied, it must contain columns `estimate`, `conf.low`, and `conf.high`.
-    - If a function is supplied, it is used to calculate a measure of effect size. Currently,
-    output from the [{effectsize}](https://CRAN.r-project.org/package=effectsize) package
-    is supported. This is also the new default: If {effectsize} is installed, generalized eta-squared
-    (point estimate and confidence interval) will be calculated. (If {effectsize} is not installed,
-    only the point estimate will be calculated via papaja's internal effect-size function.)
-- Added progress bars for bootstrapped model comparisons (`apa_print.list()`).
-- Fixed a bug in `apa_print()` for interaction contrasts from {emmeans} that resulted in wrong estimate labels (#456).
-- Functions `variable_label()`, `variable_labels()`, and  `label_variables()` now reside in CRAN package [{tinylabels}](https://CRAN.r-project.org/package=tinylabels). {tinylabels} is automatically loaded when {papaja} is loaded.
+- `apa_print()`
+    - Output now always contains a `$table` element (as suggested in #324 by @Kalif-Vaughn)
+    - Column names of `$table` element are now standardized following the `broom` glossary (e.g., `term`, `estimate`, `conf.int`, `statistic`, `df`, `df.residual`, `p.value`, see https://www.tidymodels.org/learn/develop/broom/#glossary).
+        - To maintain backwards compatibility, it is possible to access columns with aliases (for instance, it is possible to write `output$table$F` and obtain `output$table$statistic`, see #364).
+        - Table columns are labelled (e.g., `"\\hat{\\eta}^2_G"`, `"$F$", "$p$`, ...) for creating tables via `apa_table()`.
+    - Added a new argument `estimate` to ANOVA-methods, which accepts a character string (`"ges"`, `"pes"`, and `"es"`; primarily for backward compatibility), a data frame (with columns `estimate`, `conf.low`, and `conf.high`), or a function to determine which measure of effect size is to be reported. If a function is supplied, it should take the ANOVA-object as input and return a data frame with columns `estimate`, `conf.low`, and `conf.high`. Currently, output from the [`{effectsize}`](https://CRAN.r-project.org/package=effectsize) package is supported. By default, if `{effectsize}` is installed, generalized eta-squared (point estimate and confidence interval) will be calculated. Otherwise, only the point estimate will be calculated as before.
+    - Argument `es` is now deprecated, but because it is a partial match with `estimate`, old code using `es = "ges"`, `es = "pes"` or `es = "es"` will still work and yield the same results.
+    - `apa_print.list()`: Added progress bars for bootstrapped model comparisons.
+    - `apa_print.emmGrid()` and friends
+        - Extended support for additional link functions and output, e.g. (`emmeans::joint_tests()`, #200, PR #476)
+        - Adjusted p-values, confidence intervals, and families of tests are now marked as such (see `?apa_print.emmGrid`; #200, PR #476)
+        - Fixed wrong estimate labels for interaction contrasts (reported by @shirdekel, #456).
+    - `variable_label()`, `variable_labels()`, and  `label_variables()` now reside in CRAN package [`{tinylabels}`](https://CRAN.r-project.org/package=tinylabels), which is automatically loaded when `{papaja}` is loaded.
+
 
 # papaja 0.1.0.9997
 

@@ -196,7 +196,7 @@ est_glue <- function(x) {
   if(is.null(x$estimate)) return("")
   est_glue <- "$<<svl(estimate)>> = <<estimate>>$"
   if(!is.null(x$conf.int)) {
-      est_glue <- paste0(est_glue, ", <<svl(conf.int)>> $<<conf.int>>$")
+      est_glue <- paste0(est_glue, ", <<svl(conf.int, use_math = TRUE)>> $<<conf.int>>$")
   }
   est_glue
 }
@@ -284,11 +284,15 @@ stat_glue <- function(x) {
 #' @rdname strip_math_tags
 #' @keywords internal
 
-svl <- function(x) {
+svl <- function(x, use_math = FALSE) {
   y <- variable_labels(x)
   if(is.null(y)) y <- x
 
-  strip_math_tags(y)
+  if(!use_math) {
+    return(strip_math_tags(y))
+  } else {
+    y
+  }
 }
 
 #' @rdname strip_math_tags

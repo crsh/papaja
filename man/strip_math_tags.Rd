@@ -5,7 +5,7 @@
 \alias{strip_math_tags}
 \title{Strip Math Tags from Variable Labels or Strings}
 \usage{
-svl(x)
+svl(x, use_math = FALSE)
 
 strip_math_tags(x)
 }

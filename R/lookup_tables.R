@@ -23,6 +23,7 @@ lookup_names <- c(
   # term
   , "Effect"  = "term"
   , "Term"    = "term"
+  , "model.term" = "term"
   # estimate
   , "Estimate"                = "estimate"
   , "estimate"                  = "estimate"
@@ -66,6 +67,7 @@ lookup_names <- c(
   , "approx.F"  = "statistic"
   , "F.value"   = "statistic"
   , "F"         = "statistic"
+  , "F.ratio"   = "statistic"
   , "LRT"       = "statistic"
   , "Chisq"     = "statistic"
   , "chisq"     = "statistic"
@@ -88,6 +90,8 @@ lookup_names <- c(
   , "Chi.Df"     = "df"
   , "parameter1" = "df"
   , "parameter2" = "df.residual"
+  , "df1" = "df"
+  , "df2" = "df.residual"
   , "num.Df"     = "df"
   , "den.Df"     = "df.residual"
   , "NumDF"      = "df"
@@ -96,6 +100,7 @@ lookup_names <- c(
   , "denDF"      = "df.residual"
   , "num.df"     = "df"
   , "denom.df"   = "df.residual"
+  , "den.df"     = "df.residual"
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
@@ -120,9 +125,10 @@ lookup_labels <- c(
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
   # term
-  , "Effect"   = "Effect"
-  , "Term"     = "Term"
-  , "contrast" = "Contrast"
+  , "Effect"     = "Effect"
+  , "Term"       = "Term"
+  , "model.term" = "Term"
+  , "contrast"   = "Contrast"
   # estimate
   , "cor"                       = "$r$"
   , "rho"                       = "$r_{\\mathrm{s}}$" # capital or small S???
@@ -160,6 +166,7 @@ lookup_labels <- c(
   , "t.value"   = "$t$"
   , "F.value"   = "$F$"
   , "F"         = "$F$"
+  , "F.ratio"   = "$F$"
   , "approx.F"  = "$F$"
   , "LRT"       = "$\\chi^2$"
   , "chisq"     = "$\\chi^2$"
@@ -183,6 +190,8 @@ lookup_labels <- c(
   , "Chi.Df"     = "$\\mathit{df}$"
   , "parameter1" = "$\\mathit{df}$"
   , "parameter2" = "$\\mathit{df}_{\\mathrm{res}}$"
+  , "df1"        = "$\\mathit{df}$"
+  , "df2"        = "$\\mathit{df}_{\\mathrm{res}}$"
   , "num.Df"     = "$\\mathit{df}$"
   , "den.Df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   , "NumDF"      = "$\\mathit{df}$"
@@ -191,6 +200,7 @@ lookup_labels <- c(
   , "denDF"      = "$\\mathit{df}_{\\mathrm{res}}$"
   , "num.df"     = "$\\mathit{df}$"
   , "denom.df"   = "$\\mathit{df}_{\\mathrm{res}}$"
+  , "den.df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   # p.value
   , "p.value"     = "$p$"
   , "Pr...t.."    = "$p$"

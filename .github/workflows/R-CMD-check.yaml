@@ -53,49 +53,10 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v1
       - run: tlmgr --version
       - run: tlmgr install apa6 threeparttable caption fancyhdr endfloat was multirow threeparttablex environ trimspaces lineno csquotes babel-english grfext
-
-      - name: Install pak and query dependencies
-        run: |
-          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
-          saveRDS(pak::pkg_deps("local::.", dependencies = TRUE), ".github/r-depends.rds")
-        shell: Rscript {0}
-
-      - name: Restore R package cache
-        uses: actions/cache@v2
+      - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          path: |
-            ${{ env.R_LIBS_USER }}/*
-            !${{ env.R_LIBS_USER }}/pak
-          key: ${{ matrix.config.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
-          restore-keys: ${{ matrix.config.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-
-
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        run: |
-          pak::local_system_requirements(execute = TRUE)
-          pak::pkg_system_requirements("rcmdcheck", execute = TRUE)
-        shell: Rscript {0}
-
-      - name: Install dependencies
-        run: |
-          pak::local_install_dev_deps(upgrade = TRUE)
-          pak::pkg_install("rcmdcheck")
-        shell: Rscript {0}
-
-      - name: Session info
-        run: |
-          options(width = 100)
-          pkgs <- installed.packages()[, "Package"]
-          sessioninfo::session_info(pkgs, include_base = TRUE)
-        shell: Rscript {0}
-
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
-        run: |
-          options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
+          extra-packages: rcmdcheck
+      - uses: r-lib/actions/check-r-package@v1
 
       - name: Show testthat output
         if: always()
