@@ -1,22 +1,35 @@
 #' Format statistics (APA 6th edition)
 #'
-#' Takes various \code{lsmeans} and \code{emmeans} objects to create formatted character strings to report the results in
-#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
-#' considered experimental.}
+#' Takes various \pkg{emmeans} objects to create formatted character strings to
+#' report the results in accordance with APA manuscript guidelines.
+#' \emph{\pkg{emmeans} supports a wide range of analysis, not all
+#' of which are currently (fully) supported. Proceed with caution.}
 #'
 #' @param x Object
-# #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
-# #'    supplied name is used.
-#' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
-#' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
+#' @param est_name Character. If `NULL` (default) the name of the estimate
+#' is inferred from the function call of the model object supplied to
+#' \pkg{emmeans}.
+#' @param contrast_names Character. An optional vector of names to label the
+#' calculated contrasts.
 #' @param conf.level Numeric. Confidence level for confidence intervals.
 #' @inheritParams emmeans::summary.emmGrid
 #' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
 #' @details
 #'
-#'    ADJUSTED CONFIDENCE INTERVALS
+#' When p-values and confidence intervals are adjusted for multiple testing,
+#' the correction method is added as an index to the output (e.g.
+#' `p_{Tukey(3)}`). Values in parenthesis indicate the size of the family of
+#' tests or the rank of the set of linear functions (for the Scheffé method).
+#'
+#' If possible, each family of tests is additionally marked in the returned
+#' table by alphabetic superscripts.
+#'
+#' Generally, the `summary_emm` objects returned by `emmeans::summary_emm` omit
+#' information that may be needed to add some of the information on the
+#' adjustments made to p-values and confidence intervals. It is therefore
+#' preferable to pass `emmGrid`-objects if possible. For example, by using
+#' `emmeans(object, 1 ~ x1, adjust = "scheffe")`.
 #'
 #' @return \code{apa_print()} returns a list containing the following components according to the input:
 #'
@@ -297,24 +310,6 @@ apa_print.summary_emm <- function(
     str_col_order <- c(str_factors, colnames(tidy_x)[!colnames(tidy_x) %in% str_factors])
     tidy_x <- tidy_x[, str_col_order]
     tidy_x[, pri_vars[1]] <- as.character(tidy_x[, pri_vars[1]])
-
-    # contrast_list <- split(x, x[, factors])
-    # contrast_list <- lapply(contrast_list, str_column, i)
-    # test <- do.call(rbind, contrast_list[grep(paste(levels(unlist(x[, factors[2]])), collapse = "|"), names(contrast_list))])
-    # prep_table <- merge_tables(
-    #   contrast_list
-    #   , row_names = rep(FALSE, length(contrast_list))
-    #   , added_stub_head = paste(split_by, collapse = "_")
-    # )
-    # prep_table <- lapply(prep_table, function(x) {
-    #   x[, split_by] <- x[1, split_by]
-    #   x
-    # })
-    # tidy_x <- do.call(rbind, prep_table)
-    # tidy_x <- droplevels(tidy_x)
-  # } else {
-  #   tidy_x <- x
-  # }
   }
 
   if(any(tidy_x[, factors] == ".")) {

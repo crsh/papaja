@@ -693,6 +693,16 @@ test_that(
       )
     )
 
+    ow_me_emm_scheffe <- emmeans(ow_me_emm, 1 ~ Valence | Task, adjust = "scheffe")
+    ow_me_emm_scheffe_res <- apa_print(ow_me_emm_scheffe)
+    expect_equal(
+      variable_label(ow_me_emm_scheffe_res$table[, c("conf.int", "adj.p.value")])
+      , list(
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Scheff\\'e(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptsize Scheff\\'e(3)}$"
+      )
+    )
+
     ow_me_emm_scheffe <- pairs(ow_me_emm, infer = TRUE, adjust = "scheffe")
     ow_me_emm_scheffe_res <- apa_print(ow_me_emm_scheffe)
     expect_equal(

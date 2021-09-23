@@ -3,6 +3,7 @@
 \name{sanitize_terms}
 \alias{sanitize_terms}
 \alias{sanitize_terms.character}
+\alias{sanitize_terms.factor}
 \alias{sanitize_terms.data.frame}
 \alias{sanitize_terms.list}
 \title{Sanitize Term Names}
@@ -10,6 +11,8 @@
 sanitize_terms(x, ...)
 
 \method{sanitize_terms}{character}(x, standardized = FALSE, ...)
+
+\method{sanitize_terms}{factor}(x, ...)
 
 \method{sanitize_terms}{data.frame}(x, ...)
 

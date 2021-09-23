@@ -22,8 +22,7 @@
 \method{apa_print}{summary.ref.grid}(x, ...)
 }
 \arguments{
-\item{x}{Object
-adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the}
+\item{x}{Object}
 
 \item{infer}{A vector of one or two logical values. The first determines
 whether confidence intervals are displayed, and the second determines
@@ -38,9 +37,12 @@ is provided, it is used for both.}
     \item{\code{}}{}
   }}
 
-\item{contrast_names}{Character. An optional vector of names to identify calculated contrasts.}
+\item{contrast_names}{Character. An optional vector of names to label the
+calculated contrasts.}
 
-\item{est_name}{Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.}
+\item{est_name}{Character. If \code{NULL} (default) the name of the estimate
+is inferred from the function call of the model object supplied to
+\pkg{emmeans}.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
@@ -59,12 +61,25 @@ and \emph{p} value.}
 }
 }
 \description{
-Takes various \code{lsmeans} and \code{emmeans} objects to create formatted character strings to report the results in
-accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
-considered experimental.}
+Takes various \pkg{emmeans} objects to create formatted character strings to
+report the results in accordance with APA manuscript guidelines.
+\emph{\pkg{emmeans} supports a wide range of analysis, not all
+of which are currently (fully) supported. Proceed with caution.}
 }
 \details{
-ADJUSTED CONFIDENCE INTERVALS
+When p-values and confidence intervals are adjusted for multiple testing,
+the correction method is added as an index to the output (e.g.
+\verb{p_\{Tukey(3)\}}). Values in parenthesis indicate the size of the family of
+tests or the rank of the set of linear functions (for the Scheffé method).
+
+If possible, each family of tests is additionally marked in the returned
+table by alphabetic superscripts.
+
+Generally, the \code{summary_emm} objects returned by \code{emmeans::summary_emm} omit
+information that may be needed to add some of the information on the
+adjustments made to p-values and confidence intervals. It is therefore
+preferable to pass \code{emmGrid}-objects if possible. For example, by using
+\code{emmeans(object, 1 ~ x1, adjust = "scheffe")}.
 }
 \examples{
    NULL
