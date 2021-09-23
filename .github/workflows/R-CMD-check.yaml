@@ -49,10 +49,14 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
 
-      - uses: r-lib/actions/setup-pandoc@v1
-      - uses: r-lib/actions/setup-tinytex@v1
-      - run: tlmgr --version
-      - run: tlmgr install apa6 threeparttable caption fancyhdr endfloat was multirow threeparttablex environ trimspaces lineno csquotes babel-english grfext
+      - name: Setup pandoc and LaTeX
+        uses: r-lib/actions/setup-pandoc@v1
+        uses: r-lib/actions/setup-tinytex@v1
+        run: tlmgr --version
+        run: tlmgr install apa6 threeparttable caption fancyhdr endfloat was multirow threeparttablex environ trimspaces lineno csquotes babel-english grfext
+
+      - name: Install system dependencies
+        run: sudo apt-get -y install libgsl-dev
 
       - name: Install pak and query dependencies
         run: |

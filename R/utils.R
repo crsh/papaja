@@ -364,6 +364,14 @@ sanitize_terms.character <- function(x, standardized = FALSE, ...) {
   x
 }
 
+#' @rdname sanitize_terms
+#' @method sanitize_terms factor
+#' @export
+
+sanitize_terms.factor <- function(x, ...) {
+  factor(sanitize_terms(as.character(x)))
+}
+
 
 #' @rdname sanitize_terms
 #' @method sanitize_terms data.frame
