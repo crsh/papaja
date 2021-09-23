@@ -84,8 +84,9 @@ apa_print.summary_emm <- function(
 
 
   # Attempt to extract family size from messages for summary-objects
+  object_messages <- attr(x, "mesg")
+
   if(is.null(attr(x, "famSize"))) {
-    object_messages <- attr(x, "mesg")
     family_size_mesg <- .str_extract_first(
       object_messages
       , "for (\\d+) (estimates|tests)"
@@ -101,6 +102,7 @@ apa_print.summary_emm <- function(
   adjust <- parse_adjust_name(
     attr(x, "adjust")
     , attr(x, "famSize")
+    , object_messages
   )
 
   tidy_x <- data.frame(broom::tidy(x, null.value = null.value))
@@ -272,6 +274,8 @@ apa_print.summary_emm <- function(
     } else {
       adjust <- NULL # No marks
     }
+  } else {
+    adjust <- NULL # No marks
   }
 
   ## Add structuring columns
@@ -507,7 +511,7 @@ est_name_from_call <- function(x) {
   est_name
 }
 
-parse_adjust_name <- function(x, n = NULL) {
+parse_adjust_name <- function(x, n = NULL, mesg = NULL) {
   if(is.null(x) || x == "none") return(NULL)
 
   res <- switch(
@@ -526,6 +530,21 @@ parse_adjust_name <- function(x, n = NULL) {
     , mvt        = c(p.value = "MV \\mathit{t}"  , conf.int = "MV \\mathit{t}")
     , "adj"
   )
+
+  # Attempt to use rank instead of family size
+  if(x == "scheffe") {
+    n <- NULL
+
+    rank_mesg <- .str_extract_first(
+      mesg
+      , "rank (\\d+)$"
+    )
+    rank_mesg <- rank_mesg[!length(rank_mesg) == 0]
+
+    if(length(rank_mesg) > 0) {
+      n <- as.numeric(.str_extract_first(rank_mesg, "\\d+"))
+    }
+  }
 
   if(is.null(n)) {
     message("The size of the family of tests could not be determined and will be omitted from the output. Consider passing the output of `contrast()` rather than `summary()`.")
