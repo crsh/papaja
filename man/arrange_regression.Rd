@@ -9,16 +9,19 @@ arrange_regression(x, est_name, standardized, ci, ...)
 \arguments{
 \item{x}{\code{glm} or \code{lm} object. See details.}
 
-\item{est_name}{Character. If \code{NULL} (the default) the name given in \code{x} (or a formally correct
-adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
-otherwise the supplied name is used. See details.}
+\item{est_name}{Character. If \code{NULL} (the default) the name given in \code{x}
+(or a formally correct adaptation, such as "\eqn{b^*}" instead of "b" for
+standardized regression coefficients) is used. Otherwise the supplied name
+is used. See details.}
 
-\item{standardized}{Logical. Indicates if coefficients were standardized using \code{\link[=scale]{scale()}}, and leading
-zeros should be omitted if appropriate. See details.}
+\item{standardized}{Logical. Indicates if coefficients were standardized
+(e.g., using \code{scale()}), and leading zeros should be omitted if
+appropriate. See details.}
 
-\item{ci}{Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
-\code{matrix} with confidence region bounds as column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and
-coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
+\item{ci}{Numeric. Either a single value (range [0, 1]) giving the
+confidence level or a two-column \code{matrix} with confidence region bounds as
+column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and coefficient names as row
+names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 
 \item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions

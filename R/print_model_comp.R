@@ -11,8 +11,8 @@
 #' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`. If `ci = NULL` no confidence intervals are estimated.
 #' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`; ignored if `ci = NULL`.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
-#' @param observed_predictors Logical. Indicates whether predictor variables were observed.
 #' @inheritParams glue_apa_results
+#' @inheritParams apa_print.glm
 #' @return
 #'    A named list (with additional class `apa_results`) containing the following components:
 #'
@@ -52,7 +52,7 @@ print_model_comp <- function(
   , boot_samples = 1000
   , progress_bar = FALSE
   , in_paren = FALSE
-  , observed_predictors = TRUE
+  , observed = TRUE
 ) {
   validate(x, check_class = "data.frame")
   validate(x, check_class = "apa_model_comp")
@@ -155,7 +155,7 @@ print_model_comp <- function(
 
   ## This part is a disaster and needs refactoring
   model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
-    r2 <- apa_print(x, ci = ci + (1 - ci) / 2, observed_predictors = observed_predictors)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
+    r2 <- apa_print(x, ci = ci + (1 - ci) / 2, observed = observed)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
     r2 <- gsub("\\$R\\^2 = |\\$", "", r2)
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
     # restore dollars where necessary

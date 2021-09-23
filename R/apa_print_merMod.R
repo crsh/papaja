@@ -1,21 +1,26 @@
-#' Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)
+#' Typeset statistics from hierarchical (generalized) linear models
 #'
 #' These methods take objects from various R functions that calculate
-#' hierarchical (generalized) linear models to create formatted character strings
-#' to report the results in accordance with APA manuscript guidelines.
+#' hierarchical (generalized) linear models to create formatted character
+#' strings to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x A fitted hierarchical (generalized) linear model, either from [lme4::lmer()],
-#'   [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
-#' @param effects      Character. Determines which information is returned. Currently, only fixed-effects terms
-#'   (`"fixed"`) are supported.
-#' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
-#' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
+#' @param x A fitted hierarchical (generalized) linear model, either from
+#'   [lme4::lmer()], [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
+#' @param effects Character. Determines which information is returned.
+#'   Currently, only fixed-effects terms (`"fixed"`) are supported.
+#' @param args_confint Named list. Additional arguments that are passed to
+#'   [lme4::confint.merMod()], see details.
+#' @param est_name An optional character. The label to be used for
+#'   fixed-effects coefficients.
+#' @inheritParams beautify
 #' @inheritParams glue_apa_results
-#' @param ... Further arguments that are passed to [printnum()].
 #' @details
-#'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. By
-#'   default, *Wald* confidence intervals are calculated, but this may change in
-#'   the future.
+#'   Confidence intervals are calculated by calling [lme4::confint.merMod()].
+#'   By default, *Wald* confidence intervals are calculated, but this may
+#'   change in the future.
+#'
+#' @evalRd apa_resutls_return_value()
+#'
 #' @examples
 #'   # Fit a linear mixed model using the lme4 package
 #'   # or the lmerTest package (if dfs and p values are desired)

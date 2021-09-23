@@ -1,60 +1,54 @@
-#' Format statistics (APA 6th edition)
+#' Typeset statistics from GLM
 #'
-#' These methods take [glm][glm()] and [lm][lm()] objects to create formatted character
-#' strings to report the results in accordance with APA manuscript guidelines.
+#' These methods take (general) linear model objects to create formatted
+#' character strings to report the results in accordance with APA manuscript
+#' guidelines.
 #'
 #' @param x `glm` or `lm` object.
-#' @param est_name Character. If `NULL` (the default) the name given in `x` (or a formally correct
-#'    adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
-#'    otherwise the supplied name is used. See details.
-#' @param standardized Logical. Indicates if coefficients were standardized using [scale()], and leading
-#'    zeros should be omitted if appropriate. See details.
-#' @param ci Numeric. Either a single value (range \[0, 1\]) giving the confidence level or a two-column
-#'    `matrix` with confidence region bounds as column names (e.g. `"2.5 %"` and `"97.5 %"`) and
-#'    coefficient names as row names (in the same order as they appear in `summary(x)$coefficients`.
-#'    See details.
-#' @param observed_predictors Logical. Indicates whether predictor variables were observed. See details.
+#' @param est_name Character. If `NULL` (the default) the name given in `x`
+#'   (or a formally correct adaptation, such as "\eqn{b^*}" instead of "b" for
+#'   standardized regression coefficients) is used. Otherwise the supplied name
+#'   is used. See details.
+#' @param standardized Logical. Indicates if coefficients were standardized
+#'   (e.g., using \code{scale()}), and leading zeros should be omitted if
+#'   appropriate. See details.
+#' @param ci Numeric. Either a single value (range \[0, 1\]) giving the
+#'   confidence level or a two-column `matrix` with confidence region bounds as
+#'   column names (e.g. `"2.5 %"` and `"97.5 %"`) and coefficient names as row
+#'   names (in the same order as they appear in `summary(x)$coefficients`.
+#'   See details.
+#' @param observed Logical. Indicates whether predictor variables were
+#'   observed. See details.
 #' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
 #' @details
-#'    The coefficient names are sanitized to facilitate their use as list names. Parentheses
-#'    are omitted and other non-word characters are replaced by `_` (see [sanitize_terms()]).
+#'   The coefficient names are sanitized to facilitate their use as list names.
+#'   Parentheses are omitted and other non-word characters are replaced by `_`
+#'   (see [sanitize_terms()]).
 #'
-#'    `est_name` is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
-#'    Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
-#'    text (e.g., `"\\\\beta"` yields \eqn{\beta}).
+#'   `est_name` is placed in the output string and is then passed to pandoc or
+#'   LaTeX through \pkg{knitr}. Thus, to the extent it is supported by the
+#'   final document type, you can pass LaTeX-markup to format the final text
+#'   (e.g., `"\\\\beta"` yields \eqn{\beta}).
 #'
-#'    If `standardized = TRUE`, `scale()` is removed from coefficient names (see examples).
-#'    This option is currently ignored for `glm`-objects.
+#'   If `standardized = TRUE`, `scale()` is removed from coefficient names
+#'   (see examples). This option is currently ignored for `glm`-objects.
 #'
-#'    If `ci` is a single value, confidence intervals are calculated using [stats::confint()].
+#'   If `ci` is a single value, confidence intervals are calculated using
+#'   [stats::confint()].
 #'
-#'    If `x` is an `lm` object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
-#'    are computed using [MBESS::ci.R2()] to obtain a confidence region that corresponds to the
-#'    \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95% CI or
-#'    \eqn{\alpha = 0.05} for regression coefficients yields a 90% CI for \eqn{R^2}, see Steiger, 2004). If
-#'    `observed_predictors = FALSE`, it is assumed that predictors are fixed variables, i.e., "the values of the
-#'    \[predictors\] were selected a priori as part of the research design" (p. 15, Kelly, 2007); put differently, it
-#'    is assumed that predictors are not random.
+#'   If `x` is an `lm` object and the \pkg{MBESS} package is available,
+#'   confidence intervals for \eqn{R^2} are computed using [MBESS::ci.R2()] to
+#'   obtain a confidence region that corresponds to the \eqn{\alpha}-level
+#'   chosen for the confidence intervals of regression coefficients (e.g.,
+#'   95% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90% CI
+#'   for \eqn{R^2}, see Steiger, 2004). If `observed = FALSE`, it is assumed
+#'   that predictors are fixed variables, i.e., "the values of the
+#'   \[predictors\] were selected a priori as part of the research design"
+#'   (p. 15, Kelly, 2007); put differently, it is assumed that predictors are
+#'   not random.
 #'
-#' @return
-#'    A list (with additional class `apa_results`) containing the following components is returned:
-#'
-#'    \describe{
-#'      \item{`statistic`}{
-#'        A named list of character strings giving the test statistic, parameters, and *p* value for each model term.
-#'      }
-#'      \item{`estimate`}{
-#'        A named list of character strings giving the descriptive estimates and confidence intervals for each term,
-#'        either in units of the analysed scale or as standardized effect size.
-#'      }
-#'      \item{`full_result`}{
-#'        A named list of character strings combining `estimate` and `statistic` for each term.
-#'      }
-#'      \item{`table`}{
-#'        A data frame containing the complete regression table, which can be passed to [apa_table()].
-#'      }
-#'    }
+#' @evalRd apa_resutls_return_value()
 #'
 #' @references
 #'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
@@ -161,7 +155,7 @@ apa_print.lm <- function(
   , est_name = NULL
   , standardized = FALSE
   , ci = 0.95
-  , observed_predictors = TRUE
+  , observed = TRUE
   , in_paren = FALSE
   , ...
 ) {
@@ -227,7 +221,7 @@ apa_print.lm <- function(
       , df.1 = summary_x$fstatistic[2] # glance_x$df
       , df.2 = summary_x$fstatistic[3]
       , conf.level = ci_conf_level / 100
-      , Random.Predictors = observed_predictors
+      , Random.Predictors = observed
     )
 
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small

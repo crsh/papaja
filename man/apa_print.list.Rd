@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print_list.R
 \name{apa_print.list}
 \alias{apa_print.list}
-\title{Format Statistics from Linear-Model Comparisons (APA 6th edition)}
+\title{Typeset statistics from Linear-Model Comparisons}
 \usage{
 \method{apa_print}{list}(
   x,
@@ -10,80 +10,77 @@
   ci = 0.9,
   boot_samples = 10000,
   progress_bar = interactive(),
-  observed_predictors = TRUE,
+  observed = TRUE,
   in_paren = FALSE,
   ...
 )
 }
 \arguments{
 \item{x}{List. A \code{list} containing to-be-compared \link[=lm]{lm} objects.
-If the list is completely named, element names are used as model names in the output object.}
+If the list is completely named, element names are used as model names in
+the output object.}
 
-\item{anova_fun}{Function. Function to compare model-objects contained in \code{x}.}
+\item{anova_fun}{Function. Function to compare model-objects contained in
+\code{x}.}
 
-\item{ci}{Numeric. Confidence level for the bootstrap confidence interval for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
+\item{ci}{Numeric. Confidence level for the bootstrap confidence interval
+for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
 
-\item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2}.}
+\item{boot_samples}{Numeric. Number of bootstrap samples to estimate
+confidence intervals for \eqn{\Delta R^2}.}
 
-\item{progress_bar}{Logical. Determines whether a progress bar is printed while bootstrapping.}
+\item{progress_bar}{Logical. Determines whether a progress bar is printed
+while bootstrapping.}
 
-\item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
+\item{observed}{Logical. Indicates whether predictor variables were
+observed. See details.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{...}{Additional arguments passed to the function specified as \code{anova_fun}.}
-}
-\value{
-A named list (with additional class \code{apa_results}) containing the following components is returned:
-
-\describe{
-\item{\code{statistic}}{
-A named list of character strings giving the test statistic, parameters, and \emph{p} value for each non-baseline model.
-}
-\item{\code{estimate}}{
-A named list of character strings giving the effect-size estimates for each non-baseline model.
-}
-\item{\code{full_result}}{
-A named list of character strings comprised of \code{estimate} and \code{statistic} for each non-baseline model.
-}
-\item{\code{table}}{
-A data frame containing the complete model-comparison table including regression coefficients, which can be passed to \code{\link[=apa_table]{apa_table()}}].
-}
-}
+\item{...}{Additional arguments passed to the function specified as
+\code{anova_fun}.}
 }
 \description{
-This method performs comparisons of \link[=lm]{lm}-objects and creates formatted character
-strings and a model comparison table to report the results in accordance with APA manuscript guidelines.
+This method performs comparisons of \link[=lm]{lm}-objects and creates formatted
+character strings and a model comparison table to report the results in
+accordance with APA manuscript guidelines.
 }
 \details{
-As demonstrated by Algina, Keselman & Penfield (2007), asymptotic confidence intervals for \eqn{\Delta R^2}
-are often unreliable. Confidence intervals for model comparisons of \code{lm} objects are, therefore, estimated
-using their modified percentile bootstrap method. Note that the accuracy of the confidence intervals depends on
-the number of predictors \eqn{p}, their distribution, and the sample size \eqn{n}:
+As demonstrated by Algina, Keselman & Penfield (2007), asymptotic
+confidence intervals for \eqn{\Delta R^2} are often unreliable. Confidence
+intervals for model comparisons of \code{lm} objects are, therefore,
+estimated using their modified percentile bootstrap method. Note that the
+accuracy of the confidence intervals depends on the number of predictors
+\eqn{p}, their distribution, and the sample size \eqn{n}:
 
-\emph{"When the predictor distribution is multivariate normal, one can obtain accurate CIs for \eqn{\rho^2} with
-\eqn{n \geq~50} when \eqn{p = 3}. For \eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq~100} is advisable. When the
-predictor distribution is nonnormal in form, sample size requirements vary with type of nonnormality." (p. 939,
-Algina, Keselman & Penfield, 2010)}
+\emph{"When the predictor distribution is multivariate normal, one can obtain
+accurate CIs for \eqn{\rho^2} with \eqn{n \geq~50} when \eqn{p = 3}. For
+\eqn{p = 6} and for \eqn{p = 9}, \eqn{n \geq~100} is advisable. When the
+predictor distribution is nonnormal in form, sample size requirements vary
+with type of nonnormality." (p. 939, Algina, Keselman & Penfield, 2010)}
 
-If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS:ci.R2]{MBESS::ci.R2()}} to
-obtain a confidence region that corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
-Steiger, 2004). If \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e.,
-"the values of the [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007);
-put differently, it is assumed that predictors are not random. The confidence intervals for the regression
-coefficients in the model comparison table correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
-\eqn{\Delta R^2} (e.g., 90\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and \eqn{\Delta R^2} yields a 95\% CI for
-regression coefficients, Steiger, 2004).
+If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are
+computed using \code{\link[MBESS:ci.R2]{MBESS::ci.R2()}} to obtain a confidence region that
+corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
+Steiger, 2004). If \code{observed = FALSE}, it is assumed that predictors are
+fixed variables, i.e., "the values of the [predictors] were selected a
+priori as part of the research design" (p. 15, Kelly, 2007); put
+differently, it is assumed that predictors are not random. The confidence
+intervals for the regression coefficients in the model comparison table
+correspond to the \eqn{\alpha}-level chosen for \eqn{R^2} and
+\eqn{\Delta R^2} (e.g., 90\% CI or \eqn{\alpha = 0.10} for \eqn{R^2} and
+\eqn{\Delta R^2} yields a 95\% CI for regression coefficients,
+Steiger, 2004).
 }
 \examples{
-   mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-   mod2 <- update(mod1, formula = . ~ . + Petal.Length)
-   mod3 <- update(mod2, formula = . ~ . + Petal.Width)
+  mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+  mod2 <- update(mod1, formula = . ~ . + Petal.Length)
+  mod3 <- update(mod2, formula = . ~ . + Petal.Width)
 
-   # No bootstrapped Delta R^2 CI
-   apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
+  # No bootstrapped Delta R^2 CI
+  apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
 }
 \references{
 Algina, J., Keselman, H. J., & Penfield, R. D. (2007).
@@ -121,3 +118,14 @@ Other apa_print:
 \code{\link{apa_print}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

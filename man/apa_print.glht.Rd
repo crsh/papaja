@@ -3,7 +3,7 @@
 \name{apa_print.glht}
 \alias{apa_print.glht}
 \alias{apa_print.summary.glht}
-\title{Format statistics (APA 6th edition)}
+\title{Typeset statistics}
 \usage{
 \method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
 
@@ -24,25 +24,9 @@ with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 }
-\value{
-\code{apa_print()} returns a list containing the following components according to the input:
-
-\describe{
-\item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-and \emph{p} value.}
-\item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-\% , either in units of the analyzed scale or as standardized effect size.
-\item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
-\item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
-}
-}
 \description{
-Takes various \code{lsmeans} and \code{emmeans} objects methods to create formatted character strings to report the results in
-accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+\emph{These methods are not properly tested and should be
 considered experimental.}
-}
-\details{
-ADJUSTED CONFIDENCE INTERVALS
 }
 \examples{
    NULL
@@ -60,3 +44,14 @@ Other apa_print:
 \code{\link{apa_print}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

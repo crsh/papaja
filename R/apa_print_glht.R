@@ -1,7 +1,6 @@
-#' Format statistics (APA 6th edition)
+#' Typeset statistics
 #'
-#' Takes various \code{lsmeans} and \code{emmeans} objects methods to create formatted character strings to report the results in
-#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+#' \emph{These methods are not properly tested and should be
 #' considered experimental.}
 #'
 #' @param x Object
@@ -12,20 +11,8 @@
 # #' @param contrast_names Character. A vector of names to identify calculated contrasts.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @inheritParams glue_apa_results
-#' @details
 #'
-#'    ADJUSTED CONFIDENCE INTERVALS
-#'
-#' @return \code{apa_print()} returns a list containing the following components according to the input:
-#'
-#'    \describe{
-#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-#'          and \emph{p} value.}
-#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-#'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
-#'      \item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
-#'    }
+#' @evalRd apa_resutls_return_value()
 #'
 #' @family apa_print
 #' @examples

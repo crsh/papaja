@@ -1,12 +1,17 @@
-#' Format Statistics from Nonlinear Mixed-Effects Models (APA 6th edition)
+#' Typeset statistics from nonlinear mixed-effects models
 #'
 #' These methods take mixed-effects models fitted with the \pkg{nlme} package
 #' and create formatted character strings report the results in accordance
 #' with APA manuscript guidelines.
 #'
-#' @param x A (non-)linear mixed-effects model fitted with [nlme::lme()] or [nlme::nlme()]
-#' @param args_confint Named list. Arguments that are passed to [nlme::intervals.lme()].
+#' @param x A (non-)linear mixed-effects model fitted with [nlme::lme()] or
+#'   [nlme::nlme()]
+#' @param args_confint Named list. Arguments that are passed to
+#'   [nlme::intervals.lme()].
 #' @inheritParams apa_print.merMod
+#'
+#' @evalRd apa_resutls_return_value()
+#'
 #' @examples
 #'   library(nlme)
 #'   fm1 <- lme(distance ~ age, data = Orthodont, method = "ML") # random is ~ age

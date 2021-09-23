@@ -11,7 +11,7 @@ print_model_comp(
   boot_samples = 1000,
   progress_bar = FALSE,
   in_paren = FALSE,
-  observed_predictors = TRUE
+  observed = TRUE
 )
 }
 \arguments{
@@ -29,7 +29,8 @@ print_model_comp(
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{observed_predictors}{Logical. Indicates whether predictor variables were observed.}
+\item{observed}{Logical. Indicates whether predictor variables were
+observed. See details.}
 }
 \value{
 A named list (with additional class \code{apa_results}) containing the following components:

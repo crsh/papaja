@@ -1,5 +1,6 @@
 
-#' @param test For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.
+#' @param test Character. For MANOVA, the multivariate test statistic to be
+#'   reported, see \code{\link[stats]{summary.manova}}.
 #' @inheritParams glue_apa_results
 #' @rdname apa_print.aov
 #' @method apa_print manova

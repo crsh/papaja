@@ -1,7 +1,9 @@
-#' Format statistics from ANOVA (APA 6th edition)
+#' Typeset statistics from ANOVA
 #'
-#' These methods take objects from various R functions that calculate ANOVA to create formatted character
-#' strings to report the results in accordance with APA manuscript guidelines. For `anova`-objects from model comparisons see \code{\link{apa_print.list}}.
+#' These methods take objects from various R functions that calculate ANOVA to
+#' create formatted character strings to report the results in accordance with
+#' APA manuscript guidelines. For `anova`-objects from model comparisons see
+#' \code{\link{apa_print.list}}.
 #'
 #' @param x An object containing the results from an analysis of variance ANOVA
 #' @param correction Character. For repeated-measures ANOVA, the type of
@@ -28,15 +30,9 @@
 #'
 #'   Argument `estimate` determines which measure of effect size is to be used:
 #'   It is currently possible to provide one of three characters to specify the
-#'   to-be-calculated effect size:
-#'
-#'   \describe{
-#'     \item{\code{"ges"}}{Generalized \eqn{eta^2}}
-#'     \item{\code{"pes"}}{Partial \eqn{eta^2}}
-#'     \item{\code{"es"}}{\eqn{eta^2}}
-#'   }
-#'
-#'   Note that eta squared is calculated correctly if and only if the design is
+#'   to-be-calculated effect size: \code{"ges"} for generalized \eqn{eta^2},
+#'   \code{"pes"} for partial \eqn{eta^2}, and \code{"es"} for \eqn{eta^2}.
+#'   Note that \eqn{eta^2} is calculated correctly if and only if the design is
 #'   balanced.
 #'
 #'   It is also possible to provide a `data.frame` with columns `estimate`,

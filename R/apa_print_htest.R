@@ -1,49 +1,40 @@
-#' Format Statistics (APA 6th edition)
+#' Typeset hypothesis test statistics
 #'
-#' Takes `htest` objects from various statistical methods (e.g., [t.test()], [wilcox.test()], [cor.test()]) to create
-#' formatted character strings to report the results in accordance with APA manuscript guidelines.
+#' Takes `htest` objects from various statistical methods (e.g., [t.test()],
+#' [wilcox.test()], [cor.test()]) to create formatted character strings to
+#' report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x An `htest` object. See details.
-#' @param stat_name Character. If `NULL` (the default), the name given in `x` (or a formally correct
-#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the *test statistic*, otherwise the
-#'    supplied name is used. See details.
-#' @param est_name Character. If `NULL` (the default), the name given in `x` (or a formally correct
-#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the *estimate*, otherwise the
-#'    supplied name is used. See details.
-#' @param n Numeric. Sample size; required when reporting chi-squared tests, otherwise this parameter
-#'    is ignored.
-#' @param ci Numeric. If \code{NULL} (the default), the function tries to obtain confidence intervals from `x`.
-#'    Other confidence intervals can be supplied as a `vector` of length 2 (lower and upper boundary, respectively)
-#'    with attribute `conf.level` set, e.g., when calculating bootstrapped confidence intervals.
+#' @param stat_name Character. If `NULL` (the default), the name given in `x`
+#'   (or a formally correct adaptation, such as \eqn{\chi^2} instead of
+#'   "x-squared") is used for the *test statistic*, otherwise the supplied name
+#'   is used. See details.
+#' @param est_name Character. If `NULL` (the default), the name given in `x`
+#'   (or a formally correct adaptation, such as \eqn{r_S} instead of "rho") is
+#'   used for the *estimate*, otherwise the supplied name is used. See details.
+#' @param n Numeric. Sample size; required when reporting \eqn{\chi^2} tests,
+#'   otherwise this parameter is ignored.
+#' @param ci Numeric. If \code{NULL} (the default), the function tries to
+#'   obtain confidence intervals from `x`. Other confidence intervals can be
+#'   supplied as a `vector` of length 2 (lower and upper boundary,
+#'   respectively) with attribute `conf.level` set, e.g., when calculating
+#'   bootstrapped confidence intervals.
 #' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
-#' @details The function should work on a wide range of `htest` objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-#'    experience inaccuracies you may report these [here]{https://github.com/crsh/papaja/issues} (please include
-#'    a reproducible example in your report).
+#' @details
+#'   The function should work on a wide range of `htest` objects. Due to the
+#'   large number of functions that produce these objects and their
+#'   idiosyncrasies, the returned strings should be compared to the original
+#'   object. If you experience inaccuracies you may report these
+#'   [here]{https://github.com/crsh/papaja/issues} (please include
+#'   a reproducible example in your report).
 #'
-#'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-#'    \pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
-#'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
+#'   `stat_name` and `est_name` are placed in the output string and are thus
+#'   passed to pandoc or LaTeX through \pkg{knitr}. Thus, to the extent it is
+#'   supported by the final document type, you can pass LaTeX-markup to format
+#'   the final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
-#' @return
-#'   A list (of additional class `apa_results`) containing the following components is returned:
-#'
-#'    \describe{
-#'      \item{`statistic`}{
-#'        A character string giving the test statistic, parameters (e.g., degrees of freedom), and *p* value.
-#'      }
-#'      \item{`estimate`}{
-#'        A character string giving the descriptive estimates and confidence intervals if possible,
-#'        either in units of the analysed scale or as standardized effect size.
-#'      }
-#'      \item{`full_result`}{
-#'        A joint character string combining `estimate` and `statistic`.
-#'      }
-#'      \item{`table`}{
-#'        A data frame, which can be passed to [apa_table()].
-#'      }
-#'    }
+#' @evalRd apa_resutls_return_value()
 #'
 #' @family apa_print
 #' @examples

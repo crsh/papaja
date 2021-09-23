@@ -11,7 +11,7 @@
 \alias{apa_print.anova}
 \alias{apa_print.manova}
 \alias{apa_print.summary.manova}
-\title{Format statistics from ANOVA (APA 6th edition)}
+\title{Typeset statistics from ANOVA}
 \usage{
 \method{apa_print}{aov}(
   x,
@@ -130,11 +130,14 @@ sphericity correction to be used. Possible values are \code{"GG"} for the
 Greenhouse-Geisser method (the default), \code{"HF"} for the Huyn-Feldt method,
 or \code{"none"} for no correction.}
 
-\item{test}{For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.}
+\item{test}{Character. For MANOVA, the multivariate test statistic to be
+reported, see \code{\link[stats]{summary.manova}}.}
 }
 \description{
-These methods take objects from various R functions that calculate ANOVA to create formatted character
-strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
+These methods take objects from various R functions that calculate ANOVA to
+create formatted character strings to report the results in accordance with
+APA manuscript guidelines. For \code{anova}-objects from model comparisons see
+\code{\link{apa_print.list}}.
 }
 \details{
 The factor names are sanitized to facilitate their use as list names (see
@@ -143,15 +146,9 @@ replaced by \verb{_}.
 
 Argument \code{estimate} determines which measure of effect size is to be used:
 It is currently possible to provide one of three characters to specify the
-to-be-calculated effect size:
-
-\describe{
-\item{\code{"ges"}}{Generalized \eqn{eta^2}}
-\item{\code{"pes"}}{Partial \eqn{eta^2}}
-\item{\code{"es"}}{\eqn{eta^2}}
-}
-
-Note that eta squared is calculated correctly if and only if the design is
+to-be-calculated effect size: \code{"ges"} for generalized \eqn{eta^2},
+\code{"pes"} for partial \eqn{eta^2}, and \code{"es"} for \eqn{eta^2}.
+Note that \eqn{eta^2} is calculated correctly if and only if the design is
 balanced.
 
 It is also possible to provide a \code{data.frame} with columns \code{estimate},
@@ -200,6 +197,6 @@ Other apa_print:
 \item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
 \item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
 
-Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\hat{\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
 
 }
