@@ -50,7 +50,6 @@ Suggests:
   lme4,
   lmerTest,
   nlme,
-  covr,
   effectsize (>= 0.4.4)
 SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE

@@ -37,9 +37,7 @@ apa6_doc(...)
 
 \item{keep_tex}{Keep the intermediate tex file used in the conversion to PDF}
 
-\item{md_extensions}{Markdown extensions to be added or removed from the
-default definition of R Markdown. See the
-\code{\link[rmarkdown]{rmarkdown_format}} for additional details.}
+\item{md_extensions}{Markdown extensions to be added or removed from the default definition of R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.}
 
 \item{includes}{Named list of additional content to include within the
 document (typically created using the \code{\link[rmarkdown]{includes}} function).}

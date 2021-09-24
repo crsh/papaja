@@ -205,28 +205,32 @@ canonize <- function(
   if(!is.null(stat_label)) validate(stat_label, check_class = "character", check_length = 1L)
   if(!is.null(est_label))  validate(est_label, check_class = "character", check_length = 1L)
 
-  conf_level <- attr(x$conf.int, "conf.level")
-  if(is.null(conf_level)) {
-    conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
-  }
-  conf_label <- paste0(
-    if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
-    , "CI"
-  )
-
-  colnames(x) <- make.names(colnames(x))
 
   new_labels <- c(
     lookup_labels
     , "estimate"     = est_label
     , "Estimate"     = est_label
     , "coefficients" = est_label
-    , "conf.int"     = conf_label
     , "statistic"    = stat_label
   )
 
-  names_in_lookup_names <- colnames(x) %in% names(lookup_names)
+  if(!is.null(x$conf.int)) {
+    conf_level <- attr(x$conf.int, "conf.level")
+    if(is.null(conf_level)) {
+      conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
+    }
 
+    conf_label <- paste0(
+      if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+      , "CI"
+    )
+
+    new_labels <- c(new_labels, "conf.int" = conf_label)
+  }
+
+  colnames(x) <- make.names(colnames(x))
+
+  names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
   warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
   Therefore, be careful when using its output. Moreover, please visit https://github.com/crsh/papaja/issues and
@@ -337,16 +341,52 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 #'    removed from term names.
 #'
 #' @keywords internal
+#' @export
 #' @examples
 #' \dontrun{
 #' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 #' }
 
-sanitize_terms <- function(x, standardized = FALSE) {
+sanitize_terms <- function(x, ...) {
+  UseMethod("sanitize_terms", x)
+}
+
+#' @rdname sanitize_terms
+#' @method sanitize_terms character
+#' @export
+
+sanitize_terms.character <- function(x, standardized = FALSE, ...) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
+  x <- gsub("\\.0+$", "", x)                        # Remove trailing 0-digits
+  x <- gsub(",", "", x)                             # Remove big mark
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
   x
+}
+
+#' @rdname sanitize_terms
+#' @method sanitize_terms factor
+#' @export
+
+sanitize_terms.factor <- function(x, ...) {
+  factor(sanitize_terms(as.character(x)))
+}
+
+
+#' @rdname sanitize_terms
+#' @method sanitize_terms data.frame
+#' @export
+
+sanitize_terms.data.frame <- function(x, ...) {
+  as.data.frame(lapply(x, sanitize_terms, ...), stringsAsFactors = FALSE)
+}
+
+#' @rdname sanitize_terms
+#' @method sanitize_terms list
+#' @export
+
+sanitize_terms.list <- function(x, ...) {
+  lapply(x, sanitize_terms, ...)
 }
 
 
@@ -362,12 +402,24 @@ sanitize_terms <- function(x, standardized = FALSE) {
 #' @examples
 #' NULL
 #' @keywords internal
+#' @export
 
-prettify_terms <- function(x, standardized = FALSE) {
+prettify_terms <- function(x, ...) {
+  UseMethod("prettify_terms", x)
+}
+
+#' @rdname prettify_terms
+#' @method prettify_terms character
+#' @export
+
+prettify_terms.character <- function(x, standardized = FALSE, retain_period = FALSE, ...) {
   if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
   x <- gsub(pattern = "\\(|\\)|`|.+\\$", replacement = "", x = x)                 # Remove parentheses and backticks
   x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
-  x <- gsub("\\_|\\.", " ", x)                        # Remove underscores
+  x <- gsub("\\_", " ", x)                        # Remove underscores
+  if(!retain_period) {
+    x <- gsub("\\.", " ", x)
+  }
   for (i in seq_along(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
     x2 <- capitalize(x2)
@@ -375,6 +427,27 @@ prettify_terms <- function(x, standardized = FALSE) {
   }
   x
 }
+
+#' @rdname prettify_terms
+#' @method prettify_terms data.frame
+#' @export
+
+prettify_terms.data.frame <- function(x, ...) {
+  as.data.frame(lapply(x, prettify_terms, ...), stringsAsFactors = FALSE)
+}
+
+#' @rdname prettify_terms
+#' @method prettify_terms numeric
+#' @export
+
+prettify_terms.numeric <- function(x, standardized = FALSE, ...) {
+  prettify_terms(
+    printnum(x, ...)
+    , standardized = standardized
+    , retain_period = TRUE
+  )
+}
+
 
 capitalize <- function(x) {
   substring(x, first = 1, last = 1) <- toupper(substring(x, first = 1, last = 1))
@@ -446,7 +519,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 sort_terms <- function(x, colname) {
   validate(x, check_class = "data.frame", check_cols = colname)
 
-  x[order(sapply(regmatches(x[[colname]], gregexpr("\\\\times", x[[colname]])), length)), ]
+  x[order(sapply(.str_extract_all(x[[colname]], "\\\\times"), length)), ]
 }
 
 
@@ -559,7 +632,7 @@ no_method <- function(x) {
 }
 
 rename_column <- function(x, current_name, new_name) {
-  colnames(x)[colnames(x) %in% current_name] <- new_name
+  colnames(x)[colnames(x) %in% current_name] <- new_name[current_name %in% colnames(x)]
   x
 }
 
@@ -669,4 +742,19 @@ add_equals <-function(x) {
     x[to_add] <- paste0("= ", x[to_add])
   }
   x
+}
+
+
+.str_extract_first <- function(x, pattern, useBytes = TRUE, ...) {
+  regmatches(
+    x
+    , regexpr(pattern, text = x, useBytes = useBytes, ...)
+  )
+}
+
+.str_extract_all <- function(x, pattern, useBytes = TRUE, ...) {
+  regmatches(
+    x
+    , gregexpr(pattern, text = x, useBytes = useBytes, ...)
+  )
 }
