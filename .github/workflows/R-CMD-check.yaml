@@ -55,8 +55,16 @@ jobs:
       - run: tlmgr install apa6 threeparttable caption fancyhdr endfloat was multirow threeparttablex environ trimspaces lineno csquotes babel-english grfext
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          extra-packages: rcmdcheck
+          extra-packages: |
+            rcmdcheck
+            covr
       - uses: r-lib/actions/check-r-package@v1
+
+      - name: Code Coverage
+        env:
+          _R_CHECK_CRAN_INCOMING_: false
+        run: covr::codecov()
+        shell: Rscript {0}
 
       - name: Show testthat output
         if: always()
