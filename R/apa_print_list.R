@@ -47,7 +47,7 @@
 #'  \eqn{\Delta R^2} yields a 95% CI for regression coefficients,
 #'  Steiger, 2004).
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @references
 #'    Algina, J., Keselman, H. J., & Penfield, R. D. (2007).

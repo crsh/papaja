@@ -55,7 +55,7 @@ appropriate. See details.}
 observed. See details.}
 }
 \description{
-These methods take (general) linear model objects to create formatted
+These methods take (generalized) linear model objects to create formatted
 character strings to report the results in accordance with APA manuscript
 guidelines.
 }

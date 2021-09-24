@@ -8,7 +8,7 @@
 #' @param x A model object.
 #' @param ... Additional arguments passed to methods.
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples

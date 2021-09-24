@@ -12,7 +12,7 @@
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @inheritParams glue_apa_results
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples

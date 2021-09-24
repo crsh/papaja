@@ -10,7 +10,7 @@
 #'   [nlme::intervals.lme()].
 #' @inheritParams apa_print.merMod
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @examples
 #'   library(nlme)

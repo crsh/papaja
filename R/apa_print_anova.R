@@ -45,7 +45,7 @@
 #'   new default. This default can be changed via
 #'   `options(papaja.estimate_anova = ...)`.
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @references
 #'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}

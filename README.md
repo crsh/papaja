@@ -1,4 +1,4 @@
-<img src='tools/images/papaja_hex.png' align='right' height='135' />papaja:
+<img src='tools/images/papaja_hex.png' align='right' height='150' />papaja:
 Prepare APA Journal Articles<br />with R Markdown
 ================
 

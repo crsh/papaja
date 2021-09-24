@@ -1,6 +1,6 @@
 #' Typeset Statistical Results from GLM
 #'
-#' These methods take (general) linear model objects to create formatted
+#' These methods take (generalized) linear model objects to create formatted
 #' character strings to report the results in accordance with APA manuscript
 #' guidelines.
 #'
@@ -48,7 +48,7 @@
 #'   (p. 15, Kelly, 2007); put differently, it is assumed that predictors are
 #'   not random.
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @references
 #'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of

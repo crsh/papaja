@@ -1,4 +1,4 @@
-apa_resutls_return_value <- function() {
+apa_results_return_value <- function() {
 
   prefix <- "\\code{apa_print()}-methods return a named list of class \\code{apa_results} containing the following elements:\n"
 

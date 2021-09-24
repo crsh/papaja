@@ -19,7 +19,7 @@
 #'   By default, *Wald* confidence intervals are calculated, but this may
 #'   change in the future.
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @examples
 #'   # Fit a linear mixed model using the lme4 package

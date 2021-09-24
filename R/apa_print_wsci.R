@@ -7,7 +7,7 @@
 #' @param x An object of class \code{papaja_wsci}.
 #' @inheritDotParams printnum
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @method apa_print papaja_wsci
 #' @export

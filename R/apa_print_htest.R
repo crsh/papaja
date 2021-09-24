@@ -34,7 +34,7 @@
 #'   supported by the final document type, you can pass LaTeX-markup to format
 #'   the final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples

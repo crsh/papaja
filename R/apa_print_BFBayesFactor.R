@@ -35,7 +35,7 @@
 #'   to `evidential_boost` they are multiplied with the corresponding Bayes
 #'   factor before the results are formatted.
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @references
 #' Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian

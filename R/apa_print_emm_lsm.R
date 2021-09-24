@@ -31,7 +31,7 @@
 #' preferable to pass `emmGrid`-objects if possible. For example, by using
 #' `emmeans(object, 1 ~ x1, adjust = "scheffe")`.
 #'
-#' @evalRd apa_resutls_return_value()
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples
