@@ -1,4 +1,4 @@
-#' Typeset statistics from hierarchical (generalized) linear models
+#' Typeset Statistical Results from Hierarchical GLM
 #'
 #' These methods take objects from various R functions that calculate
 #' hierarchical (generalized) linear models to create formatted character

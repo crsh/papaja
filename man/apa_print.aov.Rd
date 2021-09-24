@@ -11,7 +11,7 @@
 \alias{apa_print.anova}
 \alias{apa_print.manova}
 \alias{apa_print.summary.manova}
-\title{Typeset statistics from ANOVA}
+\title{Typeset Statistical Results from ANOVA}
 \usage{
 \method{apa_print}{aov}(
   x,

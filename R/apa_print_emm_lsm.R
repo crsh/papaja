@@ -1,4 +1,4 @@
-#' Typeset statistics from estimated marginal means
+#' Typeset Statistical Results from Estimated Marginal Means
 #'
 #' Takes various \code{lsmeans} and \code{emmeans} objects to create formatted character strings to report the results in
 #' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be

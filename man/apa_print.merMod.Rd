@@ -3,7 +3,7 @@
 \name{apa_print.merMod}
 \alias{apa_print.merMod}
 \alias{apa_print.mixed}
-\title{Typeset statistics from hierarchical (generalized) linear models}
+\title{Typeset Statistical Results from Hierarchical GLM}
 \usage{
 \method{apa_print}{merMod}(
   x,

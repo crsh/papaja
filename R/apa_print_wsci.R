@@ -1,4 +1,4 @@
-#' Typeset within-subjects confidence intervals
+#' Typeset Within-Subjects Confidence Intervals
 #'
 #' This method takes an output object from \code{\link{wsci}} and creates a
 #' table and character strings to report means and within-subjects confidence

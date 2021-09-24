@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print.R
 \name{apa_print}
 \alias{apa_print}
-\title{Typeset statistics}
+\title{Typeset Statistical Results}
 \usage{
 apa_print(x, ...)
 }

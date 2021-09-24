@@ -21,11 +21,11 @@
 #' @param in_paren Logical. Whether the formatted string is to be reported in
 #'    parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
 #'    enclosing degrees of freedom) are replaced with brackets.
-#' @param est_first Logical. Determines in which order `estimate` and `statistic`
-#'    are glued together to `full_result`.
+#' @param est_first Logical. Determines in which order `estimate` and
+#'    `statistic` are glued together to `full_result`.
 #' @param simplify Logical. Determines whether the `estimate`, `statistic`, and
-#'    `full_result` sub-lists should be simplified if only one term is available
-#'    from the model object.
+#'    `full_result` sub-lists should be simplified if only one term is
+#'    available from the model object.
 #' @inheritParams glue::glue
 #'
 #' @return Returns a list of class `apa_results`

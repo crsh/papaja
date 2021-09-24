@@ -24,3 +24,4 @@ npk_aov <- aov(yield ~ block + N * P * K, npk)
 npk_aov_results <- apa_print(npk_aov)
 sort_terms(npk_aov_results$table, "term")
 }
+\keyword{internal}

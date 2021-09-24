@@ -3,7 +3,7 @@
 \name{apa_print.glht}
 \alias{apa_print.glht}
 \alias{apa_print.summary.glht}
-\title{Typeset statistics}
+\title{Typeset Statistical Results from General Linear Hypothesis Tests}
 \usage{
 \method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
 

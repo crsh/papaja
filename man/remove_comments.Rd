@@ -2,7 +2,7 @@
 % Please edit documentation in R/remove_comments.R
 \name{remove_comments}
 \alias{remove_comments}
-\title{Remove Comments from R Markdown}
+\title{Remove Comments}
 \usage{
 remove_comments(x, file)
 }

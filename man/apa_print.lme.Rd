@@ -3,7 +3,7 @@
 \name{apa_print.lme}
 \alias{apa_print.lme}
 \alias{apa_print.anova.lme}
-\title{Typeset statistics from nonlinear mixed-effects models}
+\title{Typeset Statistical Results from Nonlinear Hierarchical Models}
 \usage{
 \method{apa_print}{lme}(x, args_confint = NULL, in_paren = FALSE, est_name = NULL, ...)
 

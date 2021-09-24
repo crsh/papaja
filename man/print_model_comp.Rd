@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_model_comp.R
 \name{print_model_comp}
 \alias{print_model_comp}
-\title{Format Statistics for Model Comparisons (APA 6th edition)}
+\title{Typset Statistical Results from Model Comparisons}
 \usage{
 print_model_comp(
   x,

@@ -5,7 +5,7 @@
 \alias{apa_print.lm}
 \alias{apa_print.summary.glm}
 \alias{apa_print.summary.lm}
-\title{Typeset statistics from GLM}
+\title{Typeset Statistical Results from GLM}
 \usage{
 \method{apa_print}{glm}(x, est_name = NULL, ci = 0.95, in_paren = FALSE, ...)
 

@@ -4,7 +4,8 @@ NULL
 
 #' Set Default Variable Labels from Column Names
 #'
-#' This internal function creates variable labels from the column names of a data frame
+#' This internal function creates variable labels from the column names of a1
+#' data frame.
 #'
 #' @param x A \code{data.frame}
 #' @return Returns a \code{data.frame} with labelled columns. Labels are preserved (if already specified), otherwise generated from column names.
@@ -91,13 +92,14 @@ label_range <- function(y) {
 
 #' Simple Codebook
 #'
-#' Generate a simple codebook in CSV-format
+#' Generate a simple codebook in CSV-format from a (labelled) `data.frame`.
 #'
-#' @param x data.frame. Data to be written.
+#' @param x data.frame. Data to be documented.
 #' @inheritDotParams utils::write.table -x
 #'
-#' @details If the \pkg{skimr} package is installed, an in-line histogram is added
-#'   for all numeric variables.
+#' @details If the \pkg{skimr} package is installed, an in-line histogram is
+#'   added for all numeric variables. If columns are labelled, the labelles
+#'   are included in the codebook.
 #'
 #' @seealso [utils::write.csv()]
 #' @export

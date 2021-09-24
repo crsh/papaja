@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print_list.R
 \name{apa_print.list}
 \alias{apa_print.list}
-\title{Typeset statistics from Linear-Model Comparisons}
+\title{Typeset Statistical Results from Linear-Model Comparisons}
 \usage{
 \method{apa_print}{list}(
   x,

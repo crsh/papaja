@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print_htest.R
 \name{apa_print.htest}
 \alias{apa_print.htest}
-\title{Typeset hypothesis test statistics}
+\title{Typeset Statistical Results from Hypothesis Tests}
 \usage{
 \method{apa_print}{htest}(
   x,

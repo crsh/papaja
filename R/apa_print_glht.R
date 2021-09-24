@@ -1,4 +1,4 @@
-#' Typeset statistics
+#' Typeset Statistical Results from General Linear Hypothesis Tests
 #'
 #' \emph{These methods are not properly tested and should be
 #' considered experimental.}

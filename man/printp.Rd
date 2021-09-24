@@ -11,9 +11,10 @@ printp(x, digits = 3L, na_string = "", add_equals = FALSE)
 
 \item{digits}{Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.}
 
-\item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
+\item{na_string}{Character. String to print if any element of \code{x} is \code{NA}.}
 
-\item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
+\item{add_equals}{Logical. Indicates if the output string should be
+prepended with an \code{=}.}
 }
 \description{
 Convenience wrapper for \code{\link{printnum}} to print \emph{p} values.

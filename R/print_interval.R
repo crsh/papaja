@@ -1,29 +1,30 @@
-#' Create Interval Strings
+#' Typeset Interval Estimate
 #'
-#' Creates a character string to report an interval.
-#' \emph{This function is not exported.}
+#' Creates a character string to report interval estimates, such as frequentist
+#' confidence or Bayesian credible intervals.
 #'
 #' @param x Numeric. A vector (of length 2, unless `y` is also specified) with,
-#'    a two-column `matrix`, or a `data.frame`, which can coerced to a
-#'    `matrix`.
-#' @param y Numeric. A vector of the same length as `x`.
-#' @param conf_level Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of `x`, see Details.
+#'   a two-column `matrix`, or a `data.frame`, which can coerced to a `matrix`.
+#' @param y Numeric. An optional vector of the same length as `x`.
+#' @param conf_level Numeric. Confidence level of the interval. Ignored if
+#'   level can be infered from attributes of `x`, see Details.
 #' @param interval_type Character. Abbreviation indicating the type of interval
-#'    estimate, e.g. `CI`.
-#' @param enclose_math Logical. Indicates whether the interval should be enclosed in `$` (i.e., math environment).
+#'   estimate, e.g. `CI`.
+#' @param enclose_math Logical. Indicates whether the interval should be
+#'   enclosed in `$` (i.e., a math environment).
 #' @inheritDotParams printnum
 #'
 #' @details If possible the confidence level of the interval is inferred from
-#'    attributes of `x`. For a vector of length 2, the attribute `conf.level` is
-#'    is consulted; for a `matrix` or `data.frame` the column names are used,
-#'    if they are of the format "2.5 \%" and "97.5 \%".
+#'   attributes of `x`. For a vector of length 2, the attribute `conf.level` is
+#'   is consulted; for a `matrix` or `data.frame` the column names are used,
+#'   if they are of the format "2.5 \%" and "97.5 \%".
 #'
-#'    If `x` is a `matrix` or `data.frame` the row names are used as names for
-#'    the returned `list` of intervals.
+#'   If `x` is a `matrix` or `data.frame` the row names are used as names for
+#'   the returned `list` of intervals.
 #'
 #' @return A singel interval is returned as a `character` vector of length 1;
-#'    multiple intervals are returned as a named `list` of `character` vectors
-#'    of length 1.
+#'   multiple intervals are returned as a named `list` of `character` vectors
+#'   of length 1.
 #'
 #' @keywords internal
 #' @seealso \code{\link{printnum}}

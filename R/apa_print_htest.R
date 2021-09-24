@@ -1,4 +1,4 @@
-#' Typeset hypothesis test statistics
+#' Typeset Statistical Results from Hypothesis Tests
 #'
 #' Takes `htest` objects from various statistical methods (e.g., [t.test()],
 #' [wilcox.test()], [cor.test()]) to create formatted character strings to

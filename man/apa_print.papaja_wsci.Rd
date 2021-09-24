@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa_print_wsci.R
 \name{apa_print.papaja_wsci}
 \alias{apa_print.papaja_wsci}
-\title{Typeset within-subjects confidence intervals}
+\title{Typeset Within-Subjects Confidence Intervals}
 \usage{
 \method{apa_print}{papaja_wsci}(x, ...)
 }

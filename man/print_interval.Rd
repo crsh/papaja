@@ -7,7 +7,7 @@
 \alias{print_interval.matrix}
 \alias{print_confint}
 \alias{print_hdint}
-\title{Create Interval Strings}
+\title{Typeset Interval Estimate}
 \usage{
 print_interval(
   x,
@@ -42,8 +42,7 @@ print_hdint(x, ..., interval_type = "HDI")
 }
 \arguments{
 \item{x}{Numeric. A vector (of length 2, unless \code{y} is also specified) with,
-a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a
-\code{matrix}.}
+a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a \code{matrix}.}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum]{printnum}}
@@ -51,14 +50,16 @@ a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a
     \item{\code{}}{}
   }}
 
-\item{conf_level}{Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of \code{x}, see Details.}
+\item{conf_level}{Numeric. Confidence level of the interval. Ignored if
+level can be infered from attributes of \code{x}, see Details.}
 
 \item{interval_type}{Character. Abbreviation indicating the type of interval
 estimate, e.g. \code{CI}.}
 
-\item{enclose_math}{Logical. Indicates whether the interval should be enclosed in \code{$} (i.e., math environment).}
+\item{enclose_math}{Logical. Indicates whether the interval should be
+enclosed in \code{$} (i.e., a math environment).}
 
-\item{y}{Numeric. A vector of the same length as \code{x}.}
+\item{y}{Numeric. An optional vector of the same length as \code{x}.}
 }
 \value{
 A singel interval is returned as a \code{character} vector of length 1;
@@ -66,8 +67,8 @@ multiple intervals are returned as a named \code{list} of \code{character} vecto
 of length 1.
 }
 \description{
-Creates a character string to report an interval.
-\emph{This function is not exported.}
+Creates a character string to report interval estimates, such as frequentist
+confidence or Bayesian credible intervals.
 }
 \details{
 If possible the confidence level of the interval is inferred from

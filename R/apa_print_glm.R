@@ -1,4 +1,4 @@
-#' Typeset statistics from GLM
+#' Typeset Statistical Results from GLM
 #'
 #' These methods take (general) linear model objects to create formatted
 #' character strings to report the results in accordance with APA manuscript

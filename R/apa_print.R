@@ -1,4 +1,4 @@
-#' Typeset statistics
+#' Typeset Statistical Results
 #'
 #' A generic function that takes objects from various statistical methods to
 #' create formatted character strings to report the results in accordance with

@@ -1,32 +1,50 @@
-#' APA compatible ggplot2 theme
+#' APA-style `ggplot2` Theme
 #'
-#' A ggplot2 theme with a white panel background, no grid lines, large axis and legend titles,
-#' and increased text padding for better readability.
+#' \pkg{ggplot2} theme with a white panel background, no grid lines, large axis
+#' and legend titles, and increased text padding for better readability.
 #'
-#' @param base_size Numeric. Base font size; other font sizes and margins are adjusted relative
-#'    to this.
+#' @param base_size Numeric. Base font size; other font sizes and margins are
+#'   adjusted relative to this.
 #' @param base_family Character. Base font family.
-#' @param box Logical. Indicates whether to draw a box around the plot.
+#' @param box Logical. Indicates whether to draw a black panel border.
 #'
-#' @details This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
-#'    general aspect of the plot such as the color of the background, grid lines, the size and color
-#'    of fonts.
+#' @section Visual example:
+#'
+#' \figure{theme_apa.png}
+#'
+#' @seealso [ggplot2::theme_bw()], [ggplot2::theme()]
 #'
 #' @export
 #'
 #' @examples
 #'  \dontrun{
 #'    # Copied from ?ggtheme
-#'    p <- ggplot(mtcars) + geom_point(aes(x = wt, y = mpg,
-#'      colour = factor(gear))) + facet_wrap(~ am)
-#'    p
-#'    p + theme_apa()
+#'    mtcars2 <- within(mtcars, {
+#'    vs <- factor(vs, labels = c("V-shaped", "Straight"))
+#'    am <- factor(am, labels = c("Automatic", "Manual"))
+#'    cyl  <- factor(cyl)
+#'    gear <- factor(gear)
+#'    })
+#'
+#'    p1 <- ggplot(mtcars2) +
+#'      geom_point(aes(x = wt, y = mpg, colour = gear)) +
+#'      labs(
+#'        title = "Fuel economy declines as weight increases",
+#'        subtitle = "(1973-1974)",
+#'        x = "Weight (1000 lbs)",
+#'        y = "Fuel economy (mpg)",
+#'        colour = "Gears"
+#'      )
+#'
+#'    p1
+#'    p1 + theme_apa()
 #'  }
 
 theme_apa <- function(base_size = 12, base_family = "", box = FALSE) {
   adapted_theme <- ggplot2::theme_bw(base_size, base_family) +
     ggplot2::theme(
-      plot.title = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, ggplot2::rel(14), 0))
+      plot.title = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(0, 0, ggplot2::rel(14), 0), hjust = 0.5)
+      , plot.subtitle = ggplot2::element_text(size = ggplot2::rel(0.8), margin = ggplot2::margin(ggplot2::rel(-7), 0, ggplot2::rel(14), 0), hjust = 0.5)
 
       # , axis.title = ggplot2::element_text(size = ggplot2::rel(1.1))
       , axis.title.x = ggplot2::element_text(size = ggplot2::rel(1), lineheight = ggplot2::rel(1.1), margin = ggplot2::margin(ggplot2::rel(12), 0, 0, 0))

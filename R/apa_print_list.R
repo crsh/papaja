@@ -1,4 +1,4 @@
-#' Typeset statistics from Linear-Model Comparisons
+#' Typeset Statistical Results from Linear-Model Comparisons
 #'
 #' This method performs comparisons of [lm][lm()]-objects and creates formatted
 #' character strings and a model comparison table to report the results in

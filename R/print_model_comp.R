@@ -1,4 +1,4 @@
-#' Format Statistics for Model Comparisons (APA 6th edition)
+#' Typset Statistical Results from Model Comparisons
 #'
 #' This function is the workhorse of the [apa_print()][apa_print.list()] method
 #' for model comparisons. It takes a data frame of class `apa_model_comp` and

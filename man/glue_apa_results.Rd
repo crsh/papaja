@@ -49,12 +49,12 @@ statistics are glued.}
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{est_first}{Logical. Determines in which order \code{estimate} and \code{statistic}
-are glued together to \code{full_result}.}
+\item{est_first}{Logical. Determines in which order \code{estimate} and
+\code{statistic} are glued together to \code{full_result}.}
 
 \item{simplify}{Logical. Determines whether the \code{estimate}, \code{statistic}, and
-\code{full_result} sub-lists should be simplified if only one term is available
-from the model object.}
+\code{full_result} sub-lists should be simplified if only one term is
+available from the model object.}
 }
 \value{
 Returns a list of class \code{apa_results}

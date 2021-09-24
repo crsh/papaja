@@ -9,7 +9,7 @@
 \alias{printnum.data.frame}
 \alias{printnum.matrix}
 \alias{printnum.tiny_labelled}
-\title{Prepare Numerical Values for Printing}
+\title{Typeset Numerical Values for Printing and Reporting}
 \usage{
 printnum(x, ...)
 
@@ -43,7 +43,7 @@ printnum(x, ...)
 \method{printnum}{tiny_labelled}(x, ...)
 }
 \arguments{
-\item{x}{Can be either a single value, vector, matrix, or \code{data.frame}.}
+\item{x}{Can be either a single value, vector, \code{matrix}, \code{data.frame}.}
 
 \item{...}{
   Arguments passed on to \code{\link[base:formatc]{base::formatC}}
@@ -148,35 +148,41 @@ printnum(x, ...)
     to \code{prettyNum()}, see the \sQuote{Details}.}
   }}
 
-\item{na_string}{Character. String to print if element of \code{x} is \code{NA}.}
+\item{na_string}{Character. String to print if any element of \code{x} is \code{NA}.}
 
-\item{numerals}{Logical. Indicates if integers should be returned as words.}
+\item{numerals}{Logical. Indicates if integers should be coverted to words.}
 
-\item{capitalize}{Logical. Indicates if first letter should be capitalized. Ignored if \code{numerals = TURE}.}
+\item{capitalize}{Logical. Indicates if first letter should be capitalized.
+Ignored if \code{numerals = TURE}.}
 
 \item{zero_string}{Character. Word to print if \code{x} is a zero integer.}
 
-\item{gt1}{Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.}
+\item{gt1}{Logical. Indicates if the absolute value of the statistic can,
+in principal, exceed the interval \link{-1, 1}. If \code{FALSE}, leading zeros are
+omitted.}
 
-\item{zero}{Logical. Indicates if the statistic can, in principal, be 0.}
+\item{zero}{Logical. Indicates if the statistic can, in principal, be 0. If
+\code{FALSE}, a string of the form \verb{< 0.001} is returned instead of 0.}
 
-\item{use_math}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-notation is rendered correctly.}
+\item{use_math}{Logical. Indicates whether to use \code{$} in the output so that
+\code{Inf} or scientific notation is rendered correctly.}
 
-\item{add_equals}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
+\item{add_equals}{Logical. Indicates if the output string should be
+prepended with an \code{=}.}
 
 \item{margin}{Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
-is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).}
+is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
+See \link{\code{apply}}.}
 }
 \description{
-Converts numerical values to character strings for reporting.
+Converts numerical values to character strings for printing and reporting.
 }
 \details{
-If \code{x} is a vector, all arguments can be vectors
-according to which each element of the vector is formatted.
-Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
-If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
-of either rows or columns according to the value of \code{margin}.
+If \code{x} is a vector, all arguments can be vectors according to which each
+element of the vector is formatted. Parameters are recycled if length of
+\code{x} exceeds the length of the parameter vectors. If \code{x} is a \code{matrix} or
+\code{data.frame}, the vectors specify the formatting of either rows or columns
+according to the value of \code{margin}.
 }
 \examples{
 printnum(1/3)

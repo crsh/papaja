@@ -434,6 +434,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 #' @param colname Character. Column name of the \code{data.frame} containing the terms to sort.
 #'
 #' @return Returns the same data.frame with reordered rows.
+#' @keywords internal
 #' @export
 #'
 #' @examples

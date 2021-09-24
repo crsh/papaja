@@ -1,26 +1,33 @@
-#' Prepare Numerical Values for Printing
+#' Typeset Numerical Values for Printing and Reporting
 #'
-#' Converts numerical values to character strings for reporting.
+#' Converts numerical values to character strings for printing and reporting.
 #'
-#' @param x Can be either a single value, vector, matrix, or \code{data.frame}.
-#' @param gt1 Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.
-#' @param zero Logical. Indicates if the statistic can, in principal, be 0.
-#' @param margin Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
-#'   is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
-#' @param na_string Character. String to print if element of \code{x} is \code{NA}.
-#' @param use_math Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-#'    notation is rendered correctly.
-#' @param add_equals Logical. Indicates if the output string should be prepended with an \emph{equals} sign.
-#' @param numerals Logical. Indicates if integers should be returned as words.
-#' @param capitalize Logical. Indicates if first letter should be capitalized. Ignored if \code{numerals = TURE}.
-#' @param zero_string Character. Word to print if \code{x} is a zero integer.
+#' @param x Can be either a single value, vector, `matrix`, `data.frame`.
+#' @param gt1 Logical. Indicates if the absolute value of the statistic can,
+#'   in principal, exceed the interval [-1, 1]. If `FALSE`, leading zeros are
+#'   omitted.
+#' @param zero Logical. Indicates if the statistic can, in principal, be 0. If
+#'  `FALSE`, a string of the form `< 0.001` is returned instead of 0.
+#' @param margin Integer. If `x` is a `matrix` or `data.frame`, the function
+#'   is applied either across rows (`margin = 1`) or columns (`margin = 2`).
+#'   See \link{\code{apply}}.
+#' @param na_string Character. String to print if any element of `x` is `NA`.
+#' @param use_math Logical. Indicates whether to use `$` in the output so that
+#'   `Inf` or scientific notation is rendered correctly.
+#' @param add_equals Logical. Indicates if the output string should be
+#'   prepended with an `=`.
+#' @param numerals Logical. Indicates if integers should be coverted to words.
+#' @param capitalize Logical. Indicates if first letter should be capitalized.
+#'   Ignored if `numerals = TURE`.
+#' @param zero_string Character. Word to print if `x` is a zero integer.
 #' @inheritDotParams base::formatC -x
 #'
-#' @details If \code{x} is a vector, all arguments can be vectors
-#'    according to which each element of the vector is formatted.
-#'    Parameters are recycled if length of \code{x} exceeds the length of the parameter vectors.
-#'    If \code{x} is a \code{matrix} or \code{data.frame}, the vectors specify the formatting
-#'    of either rows or columns according to the value of \code{margin}.
+#' @details
+#'   If `x` is a vector, all arguments can be vectors according to which each
+#'   element of the vector is formatted. Parameters are recycled if length of
+#'   `x` exceeds the length of the parameter vectors. If `x` is a `matrix` or
+#'   `data.frame`, the vectors specify the formatting of either rows or columns
+#'   according to the value of `margin`.
 #' @examples
 #' printnum(1/3)
 #' printnum(1/3, gt1 = FALSE)

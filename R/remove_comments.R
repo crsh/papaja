@@ -1,4 +1,4 @@
-#' Remove Comments from R Markdown
+#' Remove Comments
 #'
 #' Removes markdown comments from an R Markdown file.
 #'

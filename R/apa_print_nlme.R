@@ -1,4 +1,4 @@
-#' Typeset statistics from nonlinear mixed-effects models
+#' Typeset Statistical Results from Nonlinear Hierarchical Models
 #'
 #' These methods take mixed-effects models fitted with the \pkg{nlme} package
 #' and create formatted character strings report the results in accordance

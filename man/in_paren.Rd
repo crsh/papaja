@@ -13,8 +13,9 @@ in_paren(x)
 An object of the same type as \code{x}.
 }
 \description{
-Takes a single character or a list of characters and replaces parentheses with brackets. Can be used to
-prepare a string of statistics (e.g. containing degrees of freedom) for reporting within parentheses.
+Takes a single character or a list of characters and replaces parentheses
+with brackets. Can be used to prepare a string of statistics (e.g. containing
+degrees of freedom) for reporting within parentheses.
 }
 \examples{
 t_stat <- t.test(extra ~ group, data = sleep)

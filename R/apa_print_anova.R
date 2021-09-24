@@ -1,4 +1,4 @@
-#' Typeset statistics from ANOVA
+#' Typeset Statistical Results from ANOVA
 #'
 #' These methods take objects from various R functions that calculate ANOVA to
 #' create formatted character strings to report the results in accordance with

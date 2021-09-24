@@ -37,7 +37,6 @@ Suggests:
   boot,
   car,
   carData,
-  downloader,
   dplyr,
   emmeans,
   ggplot2,
