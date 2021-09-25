@@ -188,7 +188,7 @@ Table 2. *Iris regression table.*
 
 ### Create figures
 
-`papaja` further provides functions to create publication ready plots.
+`papaja` further provides functions to create publication-ready plots.
 For example, you can use `apa_barplot()`, `apa_lineplot()`, and
 `apa_beeplot()` (or the general function `apa_factorial_plot()`) to
 visualize the results of factorial study designs:
