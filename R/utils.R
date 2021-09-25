@@ -312,7 +312,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
       args$x <- x[[i]]
       x[[i]] <- do.call("printnum", args)
     } else if (i == "term"){
-      x[[i]] <- prettify_terms(x[[i]], standardized = standardized)  # todo: standardized ???
+      x[[i]] <- prettify_terms(as.character(x[[i]]), standardized = standardized)  # todo: standardized ???
     } else {
       x[[i]] <- printnum(x[[i]])
     }
