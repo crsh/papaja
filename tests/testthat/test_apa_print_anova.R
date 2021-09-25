@@ -404,7 +404,9 @@ test_that(
 test_that(
   "Levene test"
   , {
-    levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = carData::Moore)
+    load("data/ow_data.rdata")
+
+    levene_test <- car::leveneTest(Alertness ~ Dosage, data = ow_data)
     levene_test_output <- apa_print(levene_test)
 
     expect_apa_results(
@@ -416,7 +418,7 @@ test_that(
         , p.value     = "$p$"
       )
     )
-    expect_identical(levene_test_output$stat, "$F(5, 39) = 1.47$, $p = .222$")
+    expect_identical(levene_test_output$stat, "$F(2, 15) = 4.17$, $p = .036$")
   }
 )
 

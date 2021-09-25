@@ -36,7 +36,6 @@ Suggests:
   beeswarm,
   boot,
   car,
-  carData,
   dplyr,
   emmeans,
   ggplot2,
@@ -54,7 +53,7 @@ Suggests:
 SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Language: en-US
 Roxygen: list(markdown = TRUE)

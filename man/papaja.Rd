@@ -11,9 +11,9 @@
 \code{papaja} provides
 \itemize{
 \item an \href{http://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{http://www.rstudio.com/}{RStudio} to create PDF documents (using the \href{http://www.ctan.org/pkg/apa6}{apa6} LaTeX class) or Word documents (using a .docx-reference file).
-\item Functions to \emph{typeset} the results from \emph{statistical analyses} (e.g., \code{\link{apa_print()}}),
-\item functions to create \emph{tables} (\code{\link{apa_table()}}), and
-\item functions to create \emph{figures} in accordance with APA guidelines (e.g., \code{\link{apa_factorial_plot()}}).
+\item Functions to \emph{typeset} the results from \emph{statistical analyses} (e.g., \code{\link[=apa_print]{apa_print()}}),
+\item functions to create \emph{tables} (\code{\link[=apa_table]{apa_table()}}), and
+\item functions to create \emph{figures} in accordance with APA guidelines (e.g., \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}).
 }
 }
 \section{System requirements}{

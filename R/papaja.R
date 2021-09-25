@@ -7,9 +7,9 @@
 #' `papaja` provides
 #'
 #' - an [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to create PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
-#' - Functions to *typeset* the results from *statistical analyses* (e.g., \code{\link{apa_print()}}),
-#' - functions to create *tables* (\code{\link{apa_table()}}), and
-#' - functions to create *figures* in accordance with APA guidelines (e.g., \code{\link{apa_factorial_plot()}}).
+#' - Functions to *typeset* the results from *statistical analyses* (e.g., [apa_print()]),
+#' - functions to create *tables* ([apa_table()]), and
+#' - functions to create *figures* in accordance with APA guidelines (e.g., [apa_factorial_plot()]).
 #'
 #' @section System requirements:
 #'   To use `papaja` you need either an up-to-date version of

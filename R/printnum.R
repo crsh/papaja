@@ -3,14 +3,14 @@
 #' Converts numerical values to character strings for printing and reporting.
 #'
 #' @param x Can be either a single value, vector, `matrix`, `data.frame`.
-#' @param gt1 Logical. Indicates if the absolute value of the statistic can,
-#'   in principal, exceed the interval [-1, 1]. If `FALSE`, leading zeros are
+#' @param gt1 Logical. Indicates if the statistic can, in principle, have an
+#'   absolute value greater than 1. If `FALSE`, leading zeros are
 #'   omitted.
-#' @param zero Logical. Indicates if the statistic can, in principal, be 0. If
+#' @param zero Logical. Indicates if the statistic can, in principle, be 0. If
 #'  `FALSE`, a string of the form `< 0.001` is returned instead of 0.
 #' @param margin Integer. If `x` is a `matrix` or `data.frame`, the function
 #'   is applied either across rows (`margin = 1`) or columns (`margin = 2`).
-#'   See \link{\code{apply}}.
+#'   See [apply()].
 #' @param na_string Character. String to print if any element of `x` is `NA`.
 #' @param use_math Logical. Indicates whether to use `$` in the output so that
 #'   `Inf` or scientific notation is rendered correctly.
@@ -18,7 +18,7 @@
 #'   prepended with an `=`.
 #' @param numerals Logical. Indicates if integers should be coverted to words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized.
-#'   Ignored if `numerals = TURE`.
+#'   Ignored if `numerals = TRUE`.
 #' @param zero_string Character. Word to print if `x` is a zero integer.
 #' @inheritDotParams base::formatC -x
 #'

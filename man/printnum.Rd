@@ -153,15 +153,15 @@ printnum(x, ...)
 \item{numerals}{Logical. Indicates if integers should be coverted to words.}
 
 \item{capitalize}{Logical. Indicates if first letter should be capitalized.
-Ignored if \code{numerals = TURE}.}
+Ignored if \code{numerals = TRUE}.}
 
 \item{zero_string}{Character. Word to print if \code{x} is a zero integer.}
 
-\item{gt1}{Logical. Indicates if the absolute value of the statistic can,
-in principal, exceed the interval \link{-1, 1}. If \code{FALSE}, leading zeros are
+\item{gt1}{Logical. Indicates if the statistic can, in principle, have an
+absolute value greater than 1. If \code{FALSE}, leading zeros are
 omitted.}
 
-\item{zero}{Logical. Indicates if the statistic can, in principal, be 0. If
+\item{zero}{Logical. Indicates if the statistic can, in principle, be 0. If
 \code{FALSE}, a string of the form \verb{< 0.001} is returned instead of 0.}
 
 \item{use_math}{Logical. Indicates whether to use \code{$} in the output so that
@@ -172,7 +172,7 @@ prepended with an \code{=}.}
 
 \item{margin}{Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
 is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
-See \link{\code{apply}}.}
+See \code{\link[=apply]{apply()}}.}
 }
 \description{
 Converts numerical values to character strings for printing and reporting.
