@@ -30,7 +30,6 @@ Imports:
   yaml,
   zip
 Suggests:
-  tinytex,
   afex,
   BayesFactor,
   beeswarm,
@@ -40,7 +39,6 @@ Suggests:
   emmeans,
   ggplot2,
   latex2exp,
-  lsmeans,
   MBESS,
   multcomp,
   testthat,

@@ -39,7 +39,7 @@ test_that(
     )
 
     # Alternative calls
-    tw_me_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence)
+    tw_me_lsm <- emmeans::lsmeans(tw_rm, ~ Valence)
     tw_me_lsm_output <- apa_print(tw_me_lsm)
     tw_me_lsm_output2 <- apa_print(
       summary(tw_me_lsm, infer = TRUE)
@@ -132,7 +132,7 @@ test_that(
     )
 
     # Alternative calls
-    tw_int_lsm <- lsmeans::lsmeans(tw_rm, ~ Valence * Task)
+    tw_int_lsm <- emmeans::lsmeans(tw_rm, ~ Valence * Task)
     tw_int_lsm_output <- apa_print(tw_int_lsm)
     tw_int_lsm_output2 <- apa_print(
       summary(tw_int_lsm, infer = TRUE)
@@ -277,7 +277,7 @@ test_that(
     )
 
     # Alternative calls
-    fw_mixed_lsm <- lsmeans::lsmeans(fw_mixed, ~ phase * hour | treatment * gender)
+    fw_mixed_lsm <- emmeans::lsmeans(fw_mixed, ~ phase * hour | treatment * gender)
     fw_mixed_lsm_output <- apa_print(fw_mixed_lsm)
     fw_mixed_lsm_output2 <- apa_print(
       summary(fw_mixed_lsm, infer = TRUE)
