@@ -36,7 +36,7 @@ apa_prepare_doc <- function() {
 #' @param bib_name Character. The path and name of the file to be created.
 #' @details
 #'   If the function is called in an RMarkdown-document the file name
-#'   specified as \code{bib_name} mcan be used in the YAML header as
+#'   specified as \code{bib_name} can be used in the YAML header as
 #'   \code{bibliography}.
 #' @seealso \code{\link{cite_r}}, \code{\link{r_refs}},
 #'   \code{\link[knitr]{write_bib}}

@@ -24,8 +24,8 @@
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
 #'  `c("points", "error_bars", "bars", "swarms", "lines")`.
 #' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to `0.3`, defaults to `0.4` if `plot = "bars"`.
-#' @param args_x_axis An optional `list` that contains further arguments that may be passed to [axis()] for customising the *x* axis.
-#' @param args_y_axis An optional `list` that contains further arguments that may be passed to [axis()] for customising the *y* axis.
+#' @param args_x_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *x* axis.
+#' @param args_y_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *y* axis.
 #' @param args_title  An optional `list` that contains further arguments that may be passed to [title()].
 #' @param args_rect An optional `list` that contains further arguments that may be passed to [rect()].
 #' @param args_points An optional `list` that contains further arguments that may be passed to [points()].
@@ -63,7 +63,7 @@
 #' - [legend()] for a legend, and
 #' - [lines()] for intercepts.
 #'
-#' These calls can be customised by setting the respective parameters `args_*** = list(...)`.
+#' These calls can be customized by setting the respective parameters `args_*** = list(...)`.
 #'
 #' @family plots for factorial designs
 #' @examples

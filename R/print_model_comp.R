@@ -1,4 +1,4 @@
-#' Typset Statistical Results from Model Comparisons
+#' Typeset Statistical Results from Model Comparisons
 #'
 #' This function is the workhorse of the [apa_print()][apa_print.list()] method
 #' for model comparisons. It takes a data frame of class `apa_model_comp` and
@@ -22,7 +22,7 @@
 #'      }
 #'      \item{`estimate`}{
 #'        A named list of character strings giving the effect size estimates for each factor,
-#'        either in units of the analysed scale or as standardized effect size.
+#'        either in units of the analyzed scale or as standardized effect size.
 #'      }
 #'      \item{`full_result`}{
 #'        A named list of character strings comprised of `estimate` and `statistic` for each factor.

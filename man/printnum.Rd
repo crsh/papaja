@@ -150,7 +150,7 @@ printnum(x, ...)
 
 \item{na_string}{Character. String to print if any element of \code{x} is \code{NA}.}
 
-\item{numerals}{Logical. Indicates if integers should be coverted to words.}
+\item{numerals}{Logical. Indicates if integers should be converted to words.}
 
 \item{capitalize}{Logical. Indicates if first letter should be capitalized.
 Ignored if \code{numerals = TRUE}.}

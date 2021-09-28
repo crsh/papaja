@@ -247,7 +247,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 within_subjects_conf_int <- wsci
 
 
-#' Summarise Within-Subjects Confidence Intervals
+#' Summarize Within-Subjects Confidence Intervals
 #'
 #' Calculate upper and lower limits of within-subjects confidence intervals calculated
 #' with [wsci()] and return them along their respective means.
@@ -351,7 +351,7 @@ hd_int <- function(x, level = 0.95) {
 #'
 #' @param x An object of class \code{apa_variance_table}.
 #' @param es Character. A vector naming all to-be-computed effect-size measures.
-#'   Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+#'   Currently, partial eta-squared (\code{"pes"}), generalized eta-squared
 #'   (\code{"ges"}), and eta-squared (\code{"es"}) are supported.
 #' @param observed Character. A vector naming all factors that are observed
 #'   (i.e., \emph{not} manipulated).

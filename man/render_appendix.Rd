@@ -17,7 +17,7 @@ render_appendix(
 
 \item{bibliography}{Character. Paths to relevant bibliography file(s).}
 
-\item{csl}{Character. Pathto CSL file to use. Defaults to APA-style.}
+\item{csl}{Character. Path to CSL file to use. Defaults to APA-style.}
 
 \item{quiet}{Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
 If \code{FALSE} output will be included in the document.}

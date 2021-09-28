@@ -121,7 +121,7 @@ apa_print.summary_emm <- function(
   conf_level <- get_emm_conf_level(x)
   ci_supplied <- !length(conf_level) == 0
   p_supplied <- "p.value" %in% colnames(x)
-  # if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?lsmeans::summary' for details.")
+  # if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?emmeans::summary' for details.")
 
   if(!ci_supplied) {
     if(p_supplied) {

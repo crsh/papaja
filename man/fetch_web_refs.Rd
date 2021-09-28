@@ -19,7 +19,7 @@ used to cite references in a Markdown-document using pandoc or LaTeX.
 }
 \details{
 If the function is called in an RMarkdown-document the file name
-specified as \code{bib_name} mcan be used in the YAML header as
+specified as \code{bib_name} can be used in the YAML header as
 \code{bibliography}.
 }
 \examples{

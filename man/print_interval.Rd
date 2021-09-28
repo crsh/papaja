@@ -51,7 +51,7 @@ a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a \code
   }}
 
 \item{conf_level}{Numeric. Confidence level of the interval. Ignored if
-level can be infered from attributes of \code{x}, see Details.}
+level can be inferred from attributes of \code{x}, see Details.}
 
 \item{interval_type}{Character. Abbreviation indicating the type of interval
 estimate, e.g. \code{CI}.}
@@ -62,7 +62,7 @@ enclosed in \code{$} (i.e., a math environment).}
 \item{y}{Numeric. An optional vector of the same length as \code{x}.}
 }
 \value{
-A singel interval is returned as a \code{character} vector of length 1;
+A single interval is returned as a \code{character} vector of length 1;
 multiple intervals are returned as a named \code{list} of \code{character} vectors
 of length 1.
 }

@@ -25,7 +25,7 @@ Note that eta-squared is calculated correctly if and only if the design is balan
 
 \item{mse}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
 }
 \value{
 A named list containing the following components:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_model_comp.R
 \name{print_model_comp}
 \alias{print_model_comp}
-\title{Typset Statistical Results from Model Comparisons}
+\title{Typeset Statistical Results from Model Comparisons}
 \usage{
 print_model_comp(
   x,
@@ -41,7 +41,7 @@ A named list of character strings giving the test statistic, parameters, and \em
 }
 \item{\code{estimate}}{
 A named list of character strings giving the effect size estimates for each factor,
-either in units of the analysed scale or as standardized effect size.
+either in units of the analyzed scale or as standardized effect size.
 }
 \item{\code{full_result}}{
 A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.

@@ -6,7 +6,7 @@
 #'
 #' @param x Character. Path to R Markdown file.
 #' @param bibliography Character. Paths to relevant bibliography file(s).
-#' @param csl Character. Pathto CSL file to use. Defaults to APA-style.
+#' @param csl Character. Path to CSL file to use. Defaults to APA-style.
 #' @param quiet Logical. Suppresses pandoc command line output; see \code{\link[rmarkdown]{render}}.
 #'    If `FALSE` output will be included in the document.
 #' @inheritDotParams rmarkdown::pandoc_convert

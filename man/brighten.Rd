@@ -2,20 +2,20 @@
 % Please edit documentation in R/utils_for_plots.R
 \name{brighten}
 \alias{brighten}
-\title{Brighten up a Colour}
+\title{Brighten up a Color}
 \usage{
 brighten(col, factor)
 }
 \arguments{
 \item{col}{Colour to be brightened up. Can be anything that is digestible by \code{\link[=col2rgb]{col2rgb()}}.}
 
-\item{factor}{Numeric. The rate with which the colour channel should be boosted. Must be in the range between 0 and 1.}
+\item{factor}{Numeric. The rate with which the color channel should be boosted. Must be in the range between 0 and 1.}
 }
 \value{
 A character vector as returned by \code{\link[=rgb]{rgb()}}.
 }
 \description{
-Brighten up a specified colour (e.g., the swarm colour in \code{\link[=apa_beeplot]{apa_beeplot()}}).
+Brighten up a specified color (e.g., the swarm color in \code{\link[=apa_beeplot]{apa_beeplot()}}).
 \emph{This function is not exported.}
 }
 \keyword{internal}

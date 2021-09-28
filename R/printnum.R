@@ -16,7 +16,7 @@
 #'   `Inf` or scientific notation is rendered correctly.
 #' @param add_equals Logical. Indicates if the output string should be
 #'   prepended with an `=`.
-#' @param numerals Logical. Indicates if integers should be coverted to words.
+#' @param numerals Logical. Indicates if integers should be converted to words.
 #' @param capitalize Logical. Indicates if first letter should be capitalized.
 #'   Ignored if `numerals = TRUE`.
 #' @param zero_string Character. Word to print if `x` is a zero integer.

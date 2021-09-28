@@ -11,10 +11,10 @@
 #'   if `row.names = TRUE` is passed to \code{\link[knitr]{kable}}; ignored if
 #'   row names are omitted from the table.
 #' @param col_spanners List. A named list of vectors of length 2 that contain
-#'   the indeces of the first and last column to span. The name of each list
+#'   the indices of the first and last column to span. The name of each list
 #'   element is used as grouping column name. Currently ignored in Word
 #'   documents.
-#' @param stub_indents List. A named list of vectors that contain indeces of
+#' @param stub_indents List. A named list of vectors that contain indices of
 #'   rows to indent. The name of each list element containing the vector is
 #'   used as title for indented sections.
 #' @param midrules Numeric. Vector of line numbers in table (not counting

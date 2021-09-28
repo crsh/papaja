@@ -10,7 +10,7 @@
 #'   Note that eta-squared is calculated correctly if and only if the design is balanced.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 
 #' @return
 #'    A named list containing the following components:
