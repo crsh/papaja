@@ -321,9 +321,19 @@ issues](https://img.shields.io/github/issues/crsh/papaja/documentation?logo=gith
 Like **papaja** and want to contribute? We highly appreciate any
 contributions to the R package or its documentation. Take a look at the
 [open issues](https://github.com/crsh/papaja/issues) if you need
-inspiration. There are also many additional analyses that we would like
+inspiration. There are many additional analyses that we would like
 `apa_print()` to support. Any new S3/S4-methods for this function are
-always appreciated (e.g., `factanal`, `fa`, `lavaan`).
+always appreciated (e.g., `factanal`, `fa`, `lavaan`). For a primer on
+adding new `apa_print()`-methods, see the Getting-started-vignette:
+
+``` r
+`vignette("add_apa_print_methods", package = "papaja")`
+```
+
+Before working on a contribution, please review our brief [contributing
+guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md)
+and [code of
+conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
 
 ## Related R packages
 
