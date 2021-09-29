@@ -97,7 +97,7 @@ jobs:
           needs <- sprintf("Config/Needs/%s", strsplit("${{ inputs.needs }}", "[[:space:],]+")[[1]])
           needs_deps <- pak::local_dev_deps(dependencies = needs)[["ref"]]
           needs_only_deps <- setdiff(needs_deps, local_deps)
-          extra_deps <- c("rmdcheck", "covr")
+          extra_deps <- c("rcmdcheck", "covr")
           if (Sys.info()[["sysname"]] == "Linux") {
             pak::local_system_requirements(execute = TRUE)
             for (dep in c(needs_only_deps, extra_deps)) {
