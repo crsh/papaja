@@ -2,7 +2,7 @@
 title: "Getting started on developing new `apa_print()` methods"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting started on new `apa_print()` methods}
+  %\VignetteIndexEntry{Developing new apa_print() methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -62,7 +62,6 @@ lm_fit <- lm(weight ~ group)
 lm_fit_apa <- apa_print(lm_fit)
 ```
 
-
 The `estimate` element of the returned `apa_results`-list itself contains a named list with estimated parameters---in this case regression coefficients---and corresponding confidence intervals for the model.
 The names of the list correspond to the names of the predictors.
 
@@ -116,7 +115,6 @@ str(letters)
 lm_fit_apa$table$statistic
 ```
 
-
 Variable labels are automatically used by `apa_table()` and plotting functions from the `apa_factorial_plot()`-family to create sensible default labels.
 If a label is enveloped in `$` it may contain LaTeX math syntax, which is automatically converted to R expressions using [`latex2exp`](https://cran.r-project.org/package=latex2exp) for plotting.
 
@@ -152,7 +150,6 @@ papaja:::print_df(c(12, 12.485))
 papaja:::print_df(12L)
 ```
 
-
 Finally, `print_interval()` can be used to typeset interval estimates.
 
 ```{r print-interval}
@@ -186,7 +183,6 @@ To facilitate typesetting term names for reporting, there is another internal fu
 ```{r prettify-terms}
 papaja:::prettify_terms(mod_terms, standardized = TRUE)
 ```
-
 
 ## Internal workflow
 
@@ -288,7 +284,6 @@ lm_results <- glue_apa_results(
 lm_results
 ```
 
-
 In case, we need to add additional information to this output, we can use `add_glue_to_apa_results()`.
 This function takes an existing output and adds new strings to a specific sublist.
 So, let's add some model fit information to the output.
@@ -309,10 +304,9 @@ add_glue_to_apa_results(
 )
 ```
 
-
 ## User interface
 
-A final issue to consider is that users may pass inapproriate input to **papaja** `apa_print()`.
+A final issue to consider is that users may pass inappropriate input to **papaja** `apa_print()`.
 To ensure that we return correct output or informative error messages, we need input validation.
 Currently, **papaja** relies on the internal function `validate()` for this.
 

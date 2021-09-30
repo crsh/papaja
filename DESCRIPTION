@@ -37,6 +37,7 @@ Suggests:
   car,
   dplyr,
   emmeans,
+  ggforce,
   ggplot2,
   latex2exp,
   MBESS,

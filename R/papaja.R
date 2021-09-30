@@ -24,9 +24,9 @@
 #'   for detailed installation instructions.
 #'
 #' @section Getting help:
-#' For a comprehensive introduction to `papaja`, check out the current draft of the [`papaja` manual](https://crsh.github.io/papaja_man/).
+#' For a comprehensive introduction to `papaja`, see the current draft of the [manual](https://crsh.github.io/papaja_man/).
 #' If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the `papaja` tag](https://t.co/Z3auyUrbTa).
-#' If you believe you have found a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
+#' If you believe you have found a bug or would like to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 #'
 #' @section Authors:
 #'    Frederik Aust (frederik.aust at uni-koeln.de).

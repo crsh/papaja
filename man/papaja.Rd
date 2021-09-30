@@ -32,9 +32,9 @@ for detailed installation instructions.
 
 \section{Getting help}{
 
-For a comprehensive introduction to \code{papaja}, check out the current draft of the \href{https://crsh.github.io/papaja_man/}{\code{papaja} manual}.
+For a comprehensive introduction to \code{papaja}, see the current draft of the \href{https://crsh.github.io/papaja_man/}{manual}.
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow \href{https://t.co/Z3auyUrbTa}{using the \code{papaja} tag}.
-If you believe you have found a bug or you want to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.
+If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.
 }
 
 \section{Authors}{
