@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library("papaja")
 ```
 
-This document provides a brief overview of issues to consider, when implementing a new method for `apa_print()`, a convenience function to facilitate reporting of results in accordance with APA reporting guidelines.
+This document provides a brief overview of issues to consider when implementing a new method for `apa_print()`, a convenience function to facilitate reporting of results in accordance with APA reporting guidelines.
 If you consider adding a new method, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
 
 ## Deciding on a new method
@@ -69,16 +69,16 @@ The names of the list correspond to the names of the predictors.
 lm_fit_apa$estimate
 ```
 
-The `estimate`-list may contain additional elements, such as the list `modelfit`, that contains quantitative estimates of the model fit.
+The `estimate` list may contain additional elements, such as the list `modelfit`, that contains quantitative estimates of the model fit.
 
-The `statistic` element of the returned `apa_results`-list contains a named list with the same structure as `estimate`.
+The `statistic` element of the returned `apa_results` list contains a named list with the same structure as `estimate`.
 Instead of parameter estimates, `statistic` contains the corresponding inferential test statistics, such as significance tests or Bayesian model comparisons.
 
 ```{r statistic}
 lm_fit_apa$statistic
 ```
 
-Note that the `statistics`-list misses elements for the information criteria `AIC` and `BIC`.
+Note that the `statistics` list misses elements for the information criteria `AIC` and `BIC`.
 Because no inferential test statistics on the information criteria are available, it is fine to simply drop those elements.
 
 The `full_results` element is a named list that simply combines the results of `estimate` and `statistic` for convenience in reporting.
@@ -88,7 +88,7 @@ lm_fit_apa$full_result
 ```
 
 Finally, the `table` element contains a `data.frame` of class `apa_results_table` that summarizes the results.
-In essence this is simply a regular `data.frame` that follows the [column naming conventions](https://www.tidymodels.org/learn/develop/broom/#glossary) used in [`broom`](https://cran.r-project.org/package=broom) but allows for prettier printing of variable labels.
+In essence this is simply a regular `data.frame` that follows the [column-naming conventions](https://www.tidymodels.org/learn/develop/broom/#glossary) used in [**broom**](https://cran.r-project.org/package=broom) but allows for prettier printing of variable labels.
 
 ```{r table}
 lm_fit_apa$table
@@ -136,7 +136,7 @@ printnum(x, digits = 3, big.mark = ".", decimal.mark = ",")
 printnum(Inf)
 ```
 
-`printp()` is a wrapper for `printnum()` that sets appropriate defaults to report p-values in accordance with APA guidelines.
+`printp()` is a wrapper for `printnum()` that sets appropriate defaults to report *p* values in accordance with APA guidelines.
 
 ```{r printp}
 printp(c(0.0001, 0.05, 0.99999))
@@ -156,7 +156,7 @@ Finally, `print_interval()` can be used to typeset interval estimates.
 print_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
 ```
 
-Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence and Bayesian highest density intervals.
+Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence intervals and Bayesian highest-density intervals.
 
 ```{r print-confint}
 papaja:::print_confint(rnorm(2), conf_level = 0.95)
@@ -216,7 +216,7 @@ Once the results table has been assembled, numeric values have been typeset, and
 Consider the following example of an `lm`-object.
 First we `tidy()` and `glance()` the object to obtain tidy results.
 We than typeset all "special" numerical results, that is, all results that would not be typeset appropriately by applying `printnum()` with its default settings.
-Moreover, we combine the separate columns for lower and upper confidence interval bounds into on column `conf.int` which contains the complete confidence interval.
+Moreover, we combine the separate columns for lower and upper confidence interval bounds into one column `conf.int` which contains the complete confidence interval.
 
 ```{r tidy-results}
 lm_fit <- lm(mpg ~ cyl + wt, mtcars)
@@ -284,7 +284,7 @@ lm_results <- glue_apa_results(
 lm_results
 ```
 
-In case, we need to add additional information to this output, we can use `add_glue_to_apa_results()`.
+If we need to add additional information to this output, we can use `add_glue_to_apa_results()`.
 This function takes an existing output and adds new strings to a specific sublist.
 So, let's add some model fit information to the output.
 
@@ -306,7 +306,7 @@ add_glue_to_apa_results(
 
 ## User interface
 
-A final issue to consider is that users may pass inappropriate input to **papaja** `apa_print()`.
+A final issue to consider is that users may pass inappropriate input to `apa_print()`.
 To ensure that we return correct output or informative error messages, we need input validation.
 Currently, **papaja** relies on the internal function `validate()` for this.
 
