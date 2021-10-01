@@ -3,7 +3,7 @@ title             : "**papaja**: Prepare APA Journal Articles with R Markdown"
 shorttitle        : "**papaja**"
 author: 
   - name          : "Frederik Aust"
-    affiliation   : "1"
+    affiliation   : "1,2"
     corresponding : yes    # Define only one corresponding author
     address       : "Department Psychology, University of Cologne, Herbert-Lewin-Str. 2, 50931 Köln, Germany"
     email         : "frederik.aust@uni-koeln.de"
@@ -11,6 +11,20 @@ author:
       - Conceptualization
       - Writing - Original Draft Preparation
       - Writing - Review & Editing
+      - Software
+      - Project administration
+  - name          : "Marius Barth"
+    affiliation   : "1"
+    role:   # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
+      - Conceptualization
+      - Writing - Review & Editing
+      - Software
+      
+affiliation:
+  - id            : "1"
+    institution   : "University of Cologne"
+  - id            : "2"
+    institution   : "University of Amsterdam"
 
 abstract: "(ref:abstract)"
   
