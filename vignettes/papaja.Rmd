@@ -9,15 +9,15 @@ author:
     email         : "frederik.aust@uni-koeln.de"
     role:   # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
       - Conceptualization
-      - Writing - Original Draft Preparation
-      - Writing - Review & Editing
+      - Writing---Original Draft Preparation
+      - Writing---Review & Editing
       - Software
       - Project administration
   - name          : "Marius Barth"
     affiliation   : "1"
     role:   # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
       - Conceptualization
-      - Writing - Review & Editing
+      - Writing---Review & Editing
       - Software
       
 affiliation:
@@ -29,7 +29,7 @@ affiliation:
 abstract: "(ref:abstract)"
   
 keywords: "APA style, R, knitr, R markdown, papaja"
-wordcount: "~1750"
+wordcount: "~3147"
 
 bibliography      : ["references.json", "r-references.bib"]
 
@@ -59,7 +59,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-(ref:abstract) **papaja** addresses computational irreproducibility in research reports caused by reporting errors, i.e. incomplete or incorrect reporting of the analytic procedure or analytic results. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society (6th edition). **papaja** provides **rmarkdown** templates to create DOCX documents and PDF documents and it provides helper-functions to facilitate the reporting of results of your analyses in accordance with APA guidelines. This document was written with papaja and provides a brief overview of the package's main features: An R Markdown template for APA-style manuscripts and helper-functions that facilitate reporting of analytic results in accordance with APA guidelines.
+(ref:abstract) **papaja** addresses computational irreproducibility in research reports caused by reporting errors, i.e. incomplete or incorrect reporting of the analytic procedure or analytic results. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society (6th edition). This document was written with **papaja** and provides a brief overview of the package's main features: An R Markdown template for APA-style manuscripts and helper-functions that facilitate reporting of analytic results in accordance with APA guidelines.
 
 ```{r include = FALSE}
 library("dplyr")
@@ -190,7 +190,7 @@ To facilitate inserting citations, you may use the RStudio Visual Editor's [bibl
 If you use VSCode with the [R extension](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r) or RStudio without the Visual Editor, the add-in provided in [**citr**](https://github.com/crsh/citr) serves a similar purpose.
 Both the Visual Editor and **citr** can also access you Zotero database and copy references to your bibliography file.
 
-As an academic and open source developer, I believe it is important to credit the software we use for our publications.
+As academics and open source developers, we believe it is important to credit the software we use for our publications.
 A lot of R packages are developed by academics free of charge.
 As citations are the currency of academia, it's easy to compensate volunteers for their work by citing their R packages.
 **papaja** provides two functions that make citing R and its packages quite convenient:
@@ -212,7 +212,7 @@ my_citation <- cite_r(file = "r-references.bib")
 ## Equations
 
 Equations can be reported using the powerful \LaTeX syntax.
-Inline math must be enclosed in `$` or `\(` and `\)`, for example, \$`d' = z(H) - z(\mathit{FA})$`, which renders to $d' = z(H) - z(\mathit{FA})$.
+Inline math must be enclosed in `$` or `\(` and `\)`, for example, `$d' = z(H) - z(\mathit{FA})$`, which renders to $d' = z(H) - z(\mathit{FA})$.
 For larger formulas, displayed equations are more appropriate; they are enclosed in `$$` or `\[`and `\]`, and will, for example, render to
 
 $$
@@ -224,7 +224,7 @@ $$
 If you are not familiar with R Markdown and how it can be used to conduct and document your analyses, I recommend you familiarize yourself with R Markdown first.
 RStudio provide a [concise introduction](https://rmarkdown.rstudio.com/lesson-1.html).
 
-`apa_print()` is a core function in **papaja** to facilitate reporting analytic results for a growing number of analytic output objects, Table \@ref(tab:apa-print-methods).
+`apa_print()` is a core function in **papaja** to facilitate reporting analytic results for a growing number of analytic output objects, Table \@ref(tab:apa-print-methods).
 Consider the following example of an analysis of variance.
 After performing the analysis, the result is passed to `apa_print()`.
 The function takes the R object returned by the analysis function and in turn returns a list that contains reportabel text and tables.
@@ -304,7 +304,7 @@ head(recall_anova_results$table, 3)
 
 Tables returned by `apa_print()` can be conveniently included in a manuscript by passing them to `apa_table()`.
 This function was designed with exemplary table from the APA manual in mind and to work well with `apa_print()`.
-Conveniently, `apa_table()` uses any available variable labels as informative column headers, Table \@ref(tab:anova-table).
+Conveniently, `apa_table()` uses any available variable labels as informative column headers, Table \@ref(tab:anova-table).
 Unfortunately, table formatting is somewhat limited for DOCX documents due to the limited table representation in `pandoc` (e.g., it is currently not possible span header cells across multiple columns or have multiple header rows).
 Of course, popular packages for creating tables, such as [**kableExtra**](https://haozhu233.github.io/kableExtra/), [**huxtable**](https://hughjonesd.github.io/huxtable/), or [**flextable**](https://ardata-fr.github.io/flextable-book/index.html) can also be used and may be preferable for more complex tables.
 
@@ -341,8 +341,8 @@ To place tables and figures in text instead, the `floatsintext` field in the YAM
 ## Figures
 
 Figures generated in R are automatically inserted into the document.
-**papaja** provides a set of functions built around `apa_factorial_plot()` that facilitate visualizing data from factorial study designs, Figure \@ref(fig:beeplots)(A).
-For **ggplot2** users, **papaja** provides `theme_apa()`, a theme designed with APA manuscript guidelines in mind, Figure \@ref(fig:beeplots)(B).
+**papaja** provides a set of functions built around `apa_factorial_plot()` that facilitate visualizing data from factorial study designs, Figure \@ref(fig:beeplots)(A).
+For **ggplot2** users, **papaja** provides `theme_apa()`, a theme designed with APA manuscript guidelines in mind, Figure \@ref(fig:beeplots)(B).
 
 ```{r beeplots-display, echo = TRUE, eval = FALSE}
 apa_beeplot(
@@ -411,14 +411,16 @@ The file used to create this document is available at the [**papaja** GitHub rep
 Moreover, a [collection of papers](http://frederikaust.com/papaja_man/published-manuscripts.html) written with **papaja,** including the corresponding R Markdown files, is listed in the manual.
 If you have published a paper that was written with **papaja**, please add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send us to me.
 
-# Final words
+# Contributing
 
 If you like **papaja** and would like to contribute, we highly appreciate any contributions to the R package or its documentation.
 Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
 There are many additional analyses that we would like `apa_print()` to support; new S3/S4-methods are always appreciated (e.g., for `factanal`, `fa`, `lavaan`).
 For a primer on adding new `apa_print()`-methods, see the getting-started-vignette (`vignette("add_apa_print_methods", package = "papaja")`).
 Before working on a contribution, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
+
 Enjoy writing.
+:)
 
 \pagebreak
 
