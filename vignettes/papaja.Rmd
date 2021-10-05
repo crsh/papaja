@@ -77,7 +77,7 @@ Computational reproducibility is threatened by uncountable sources of errors, bu
 **papaja** was designed to address these problems.
 The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society [APA, 6th edition, @american_psychological_association_publication_2010].
 **papaja** provides [**rmarkdown**](http://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
-Moreover, **papaja** provides helper-functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
+Moreover, **papaja** provides helper functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
 This document was written with **papaja** and provides a brief overview of the package's main features.
 For a comprehensive introduction and installation instructions, see the current draft of the [**papaja** manual](https://crsh.github.io/papaja_man/).[^1]
 
@@ -97,13 +97,13 @@ National Science Foundation subcommittee on Replicability in Science:
 Irreproducible results are scientifically and ethically unacceptable.
 They impede an accumulation of knowledge, waste resources, and when applied could have serious consequences.
 A recent investigation of breast cancer treatments erroneously concluded that radiotherapy after mastectomy increased mortality because of an error in the analysis code [@henson_inferring_2016].
-A corrected reanalysis indicated that, in fact, the opposite was the case---the treatment appeared to be effective and decrease in mortality.
+A corrected reanalysis indicated that, in fact, the opposite was the case---the treatment appeared to be effectively decrease mortality.
 Examples like this show that computational reproducibility cannot be a forgone conclusion.
 
-Large-scale scrutiny of statistics published in over 30,000 articles in psychology journals show that every other article reports at least one impossible combination of test statistic, degrees of freedom, and $p$ value; in every tenth article such inconsistencies call the statistical inference into question [@nuijten_prevalence_2016].
+Large-scale scrutiny of statistics published in over 30,000 articles in psychology journals shows that every other article reports at least one impossible combination of test statistic, degrees of freedom, and $p$ value; in every tenth article such inconsistencies call the statistical inference into question [@nuijten_prevalence_2016].
 More in-depth investigations that attempted to reproduce reported results from the underlying raw data paint a similar picture.
 For example, in a sample of 46 articles, two thirds of key claims could be reproduced but in every tenth case only after deviating from the reported analysis plan [@artner_reproducibility_2020].
-For those results that were irreproducible, the reproduction every fourth result that was irreproducible the results of the reproduction attempt cast doubt on the statistical inference, i.e. the results were no longer statistically significant.
+For one in four irreproducible results, the reproduction attempt yielded results that were no longer statistically significant calling the original statistical inference into question.
 These figures clearly show that there is a need for efforts to improve the computational reproducibility of the published literature.
 
 Computational irreproducibility is, of course, multi-causal.
@@ -111,17 +111,17 @@ While there is only one way in which a research report is computationally reprod
 Broadly speaking, there are at least four causes for irreproducible analyses: (1) incomplete or incorrect reporting of the analytic procedure, (2) incorrect execution of the analytic procedure, (3) incorrect reporting of results, and (4) code rot, i.e., irreproducibility caused by (inadvertent) changes to the computational environment (e.g., software updates, changes to data files).
 We currently see no technical solution to the first two causes.
 Incomplete reporting (1) may be somewhat mitigated by strictly enforcing reporting guidelines.
-However, verify that the analytic procedure is reported faithfully (1) and was executed correctly (2) ultimately requires manual scrutiny of analysis scripts and/or reproduction and is possible only if authors share their data.
-Code rot (4), on the other hand, can be adequately addressed by the conserving software environment in which the results were produced (e.g., R and all R packages).
-Several seasoned solution, such as software containers or a virtual machine, exist [@piccolo_tools_2016; @gruning_practical_2018].[^2]
+However, verifying that the analytic procedure is reported faithfully (1) and was executed correctly (2) ultimately requires manual scrutiny of analysis scripts and/or reproduction and is possible only if authors share their data.
+Code rot (4), on the other hand, can be adequately addressed by conserving the software environment in which the results were produced (e.g., R and all R packages).
+Several seasoned technical solutions, such as software containers or a virtual machine, exist [@piccolo_tools_2016; @gruning_practical_2018].[^2]
 **papaja** provides a technical safeguard for correct reporting of results (3).
 
 [^2]: **papaja** can be readily combined with these tools as documented in the section on [reproducible software environments](http://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments) in the **papaja** manual.
 
-When it comes to reporting quantitative results, most researchers engage in what we refer to as *copy-paste-reporting*.
-Quantitative analyses and reporting are done is separate software.
+When it comes to reporting quantitative results, most researchers engage in what we refer to as *copy-paste reporting*.
+Quantitative analyses and reporting are done in separate software.
 Thus, by necessity quantitative results are copied from the analysis software and pasted into the report.
-Copy-paste-reporting underlies and contributes to several of the most common causes for computational irreproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
+Copy-paste reporting underlies and contributes to several of the most common causes for computational irreproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
 We are convinced that errors caused by copy-paste-reporting cannot be addressed by appealing to researchers to be more careful.
 The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to irreproducible results is substantial.
 Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report irreproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
@@ -129,24 +129,24 @@ Evidently, computational reproducibility is difficult to attain.
 
 # The solution: Dynamic documents
 
-We believe copy-paste-reporting is a flawed approach to reporting quantitative results.
+We believe copy-paste reporting is a flawed approach to reporting quantitative results.
 Hence, we believe researchers need stop copy-pasting to safeguard the computational reproducibility of their manuscripts.
 Manuscripts should be dynamic (or "living") documents [@knuth_literate_1984; @xie_r_2018] that contain direct links to the analytic software.
 Dynamic documents fuse analysis code and prose such that statistics, figures, and tables are automatically inserted into a manuscript---and updated as data or analysis code change.
 As an added benefit, dynamic documents have great potential to improve the computational reproducibility of manuscripts beyond reporting errors as they facilitate independent reproduction.
 Dynamic documents fully document the analytic procedure and establish direct links to the associated scientific claims.
 
-**papaja**, and [the software it builds on](http://frederikaust.com/papaja_man/introduction.html#document-compilation), provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA-style.
+**papaja**, and [the software it builds on](http://frederikaust.com/papaja_man/introduction.html#document-compilation), provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA style.
 The dominant approach to creating dynamic documents in R is to use the [**rmarkdown**](http://rmarkdown.rstudio.com/) package [@xie_r_2018].
 **papaja** provides R Markdown templates to create DOCX and PDF documents (using \LaTeX document class `apa6`).
 Moreover, **papaja** provides several functions to conveniently report analytic results according to APA guidelines.
-In the remainder of this document illustrates how these functions can be used.
+The remainder of this document illustrates how these functions can be used.
 
 # Setting up a new document
 
 Once **papaja** and all other [required software](http://frederikaust.com/papaja_man/introduction.html#software-requirements) is installed, the APA template is available through the RStudio menu, see Figure \@ref(fig:rstudio).
-When you click RStudio's *Knit* button a APA conform manuscript is rendered, which includes both your text and the output of any embedded R code chunks within the manuscript.
-If you don't use RStudio, a new document can be created using `rmarkdown::draft()` and rendered using `rmarkdown::render()`.
+When you click RStudio's *Knit* button, a manuscript conforming to APA style is rendered, which includes both your text and the output of any embedded R code chunks within the manuscript.
+Of course, a new document can also be created without RStudio using `rmarkdown::draft()` and rendered using `rmarkdown::render()`.
 
 ```{r no-rstudio, echo = TRUE, eval = FALSE}
 # Create new R Markdown file
@@ -185,21 +185,21 @@ The DOCX documents produced by **papaja** should, however, be suitable for colla
 
 Like **rmarkdown**, **papaja** uses Markdown syntax to format text.
 A comprehensive overview of the supported Markdown syntax is available in the [`pandoc` manual](https://pandoc.org/MANUAL.html#pandocs-markdown).
-In the following, I will highlight a few features that are of particular relevance to the technical writing of research reports.
+In the following, we will highlight a few features that are of particular relevance to the technical writing of research reports.
 
 ## Citations
 
 By default, citations in **papaja** are processed by the `pandoc` extension `citeproc`, which works well for both PDF and DOCX documents.
-`citeproc` takes reference information from a bibliography file, which can be in one of formats (e.g., CSL-JSON, Bib(La)TeX, EndNote, RIS, Medline).
+`citeproc` takes reference information from a bibliography file, which can be in one of several formats (e.g., CSL-JSON, Bib(La)TeX, EndNote, RIS, Medline).
 To start citing, specify the path to the bibliography file in `bibliography` field of the YAML front matter.
 Once `citeproc` knows where to look for reference information, `[@james_1890]` will render to a citation within parentheses, i.e., (James, 1890).
-Multiple citations must be separated by `;` (e.g., `[@james_1890; @bem_2011]`) and are automatically ordered alphabetically as per APA style, i.e., (Bem, 2011; James, 1890).
+Multiple citations must be separated by a semicolon `;` (e.g., `[@james_1890; @bem_2011]`) and are automatically ordered alphabetically as per APA style, i.e., (Bem, 2011; James, 1890).
 To cite a source in text simply omit the brackets.
 The `pandoc` manual provides a comprehensive overview of [`citeproc`](https://pandoc.org/MANUAL.html#citations) and the supported [citation syntax](https://pandoc.org/MANUAL.html#citation-syntax).
 
 To facilitate inserting citations, you may use the RStudio Visual Editor's [bibliography search](https://rstudio.github.io/visual-markdown-editing/citations.html#inserting-citations) and auto-completion of reference handles.
 If you use VSCode with the [R extension](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r) or RStudio without the Visual Editor, the add-in provided in [**citr**](https://github.com/crsh/citr) serves a similar purpose.
-Both the Visual Editor and **citr** can also access you Zotero database and copy references to your bibliography file.
+Both the Visual Editor and **citr** can also access your Zotero database and copy references to your bibliography file.
 
 As academics and open source developers, we believe it is important to credit the software we use for our publications.
 A lot of R packages are developed by academics free of charge.
@@ -232,13 +232,13 @@ $$
 
 # Reporting results
 
-If you are not familiar with R Markdown and how it can be used to conduct and document your analyses, I recommend you familiarize yourself with R Markdown first.
-RStudio provide a [concise introduction](https://rmarkdown.rstudio.com/lesson-1.html).
+If you are not familiar with R Markdown and how it can be used to conduct and document your analyses, we recommend you familiarize yourself with R Markdown first.
+RStudio provides a [concise introduction](https://rmarkdown.rstudio.com/lesson-1.html).
 
 `apa_print()` is a core function in **papaja** to facilitate reporting analytic results for a growing number of analytic output objects, Table \@ref(tab:apa-print-methods).
 Consider the following example of an analysis of variance.
 After performing the analysis, the result is passed to `apa_print()`.
-The function takes the R object returned by the analysis function and in turn returns a list that contains reportabel text and tables.
+The function takes the R object returned by the analysis function and in turn returns a list that contains reportable text and tables.
 
 ```{r anova-display, echo = TRUE, eval = FALSE}
 recall_anova <- afex::aov_4(
@@ -314,7 +314,7 @@ head(recall_anova_results$table, 3)
 ## Tables
 
 Tables returned by `apa_print()` can be conveniently included in a manuscript by passing them to `apa_table()`.
-This function was designed with exemplary table from the APA manual in mind and to work well with `apa_print()`.
+This function was designed with exemplary tables from the APA manual in mind and to work well with `apa_print()`.
 Conveniently, `apa_table()` uses any available variable labels as informative column headers, Table \@ref(tab:anova-table).
 Unfortunately, table formatting is somewhat limited for DOCX documents due to the limited table representation in `pandoc` (e.g., it is currently not possible span header cells across multiple columns or have multiple header rows).
 Of course, popular packages for creating tables, such as [**kableExtra**](https://haozhu233.github.io/kableExtra/), [**huxtable**](https://hughjonesd.github.io/huxtable/), or [**flextable**](https://ardata-fr.github.io/flextable-book/index.html) can also be used and may be preferable for more complex tables.
@@ -408,7 +408,7 @@ Again, as required by the APA guidelines, figures are deferred to the final page
 ## Referencing tables and figures
 
 **papaja** builds on the **bookdown** package, which provides limited cross-referencing capabilities within documents.
-By default automatically generated table and figure numbers can be inserted into the text using `\@ref(tab:chunk-name)` for tables or `\@ref(fig:chunk-name)` for figures.
+By default, automatically generated table and figure numbers can be inserted into the text using `\@ref(tab:chunk-name)` for tables or `\@ref(fig:chunk-name)` for figures.
 Note that for this syntax to work chunk names cannot include underscores (i.e., `_`).
 
 # Getting help
