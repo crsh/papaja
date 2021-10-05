@@ -1,5 +1,6 @@
 ---
 title: "Getting started on developing new `apa_print()` methods"
+author: "Frederik Aust"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Developing new apa_print() methods}

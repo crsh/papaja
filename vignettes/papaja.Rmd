@@ -71,7 +71,12 @@ library("ggforce")
 load("../tests/testthat/data/mixed_data.rdata")
 ```
 
-Computational reproducibility is of fundamental importance to the quantitative sciences [@cacioppo_social_2015; @peng_reproducible_2011; @donoho_invitation_2010; @hutson_artificial_2018]. Yet, irreproducible results widely prevalent. Computational reproducibility is threatened by uncountable sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020]. **papaja** was designed to address these problems. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society [APA, 6th edition, @american_psychological_association_publication_2010]. **papaja** provides [**rmarkdown**](http://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
+Computational reproducibility is of fundamental importance to the quantitative sciences [@cacioppo_social_2015; @peng_reproducible_2011; @donoho_invitation_2010; @hutson_artificial_2018].
+Yet, irreproducible results widely prevalent.
+Computational reproducibility is threatened by uncountable sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020].
+**papaja** was designed to address these problems.
+The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society [APA, 6th edition, @american_psychological_association_publication_2010].
+**papaja** provides [**rmarkdown**](http://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
 Moreover, **papaja** provides helper-functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
 This document was written with **papaja** and provides a brief overview of the package's main features.
 For a comprehensive introduction and installation instructions, see the current draft of the [**papaja** manual](https://crsh.github.io/papaja_man/).[^1]
@@ -86,7 +91,8 @@ Execution of analyses and reporting of results are typically not considered sour
 The natural assumption of computational reproducibility reflects its fundamental importance to quantitative sciences as acknowledged by the U.S.
 National Science Foundation subcommittee on Replicability in Science:
 
-> [Computational] Reproducibility is a minimum necessary condition for a finding to be believable and informative. [p. 4, @cacioppo_social_2015]
+> [Computational] Reproducibility is a minimum necessary condition for a finding to be believable and informative.
+> [p. 4, @cacioppo_social_2015]
 
 Irreproducible results are scientifically and ethically unacceptable.
 They impede an accumulation of knowledge, waste resources, and when applied could have serious consequences.
@@ -94,7 +100,9 @@ A recent investigation of breast cancer treatments erroneously concluded that ra
 A corrected reanalysis indicated that, in fact, the opposite was the case---the treatment appeared to be effective and decrease in mortality.
 Examples like this show that computational reproducibility cannot be a forgone conclusion.
 
-Large-scale scrutiny of statistics published in over 30,000 articles in psychology journals show that every other article reports at least one impossible combination of test statistic, degrees of freedom, and $p$ value; in every tenth article such inconsistencies call the statistical inference into question [@nuijten_prevalence_2016]. More in-depth investigations that attempted to reproduce reported results from the underlying raw data paint a similar picture. For example, in a sample of 46 articles, two thirds of key claims could be reproduced but in every tenth case only after deviating from the reported analysis plan [@artner_reproducibility_2020].
+Large-scale scrutiny of statistics published in over 30,000 articles in psychology journals show that every other article reports at least one impossible combination of test statistic, degrees of freedom, and $p$ value; in every tenth article such inconsistencies call the statistical inference into question [@nuijten_prevalence_2016].
+More in-depth investigations that attempted to reproduce reported results from the underlying raw data paint a similar picture.
+For example, in a sample of 46 articles, two thirds of key claims could be reproduced but in every tenth case only after deviating from the reported analysis plan [@artner_reproducibility_2020].
 For those results that were irreproducible, the reproduction every fourth result that was irreproducible the results of the reproduction attempt cast doubt on the statistical inference, i.e. the results were no longer statistically significant.
 These figures clearly show that there is a need for efforts to improve the computational reproducibility of the published literature.
 
@@ -113,7 +121,10 @@ Several seasoned solution, such as software containers or a virtual machine, exi
 When it comes to reporting quantitative results, most researchers engage in what we refer to as *copy-paste-reporting*.
 Quantitative analyses and reporting are done is separate software.
 Thus, by necessity quantitative results are copied from the analysis software and pasted into the report.
-Copy-paste-reporting underlies and contributes to several of the most common causes for computational irreproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020]. We are convinced that errors caused by copy-paste-reporting cannot be addressed by appealing to researchers to be more careful. The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to irreproducible results is substantial. Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report irreproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
+Copy-paste-reporting underlies and contributes to several of the most common causes for computational irreproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
+We are convinced that errors caused by copy-paste-reporting cannot be addressed by appealing to researchers to be more careful.
+The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to irreproducible results is substantial.
+Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report irreproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
 Evidently, computational reproducibility is difficult to attain.
 
 # The solution: Dynamic documents
@@ -125,7 +136,7 @@ Dynamic documents fuse analysis code and prose such that statistics, figures, an
 As an added benefit, dynamic documents have great potential to improve the computational reproducibility of manuscripts beyond reporting errors as they facilitate independent reproduction.
 Dynamic documents fully document the analytic procedure and establish direct links to the associated scientific claims.
 
-**papaja**, and the software it builds on, provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA-style.
+**papaja**, and [the software it builds on](http://frederikaust.com/papaja_man/introduction.html#document-compilation), provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA-style.
 The dominant approach to creating dynamic documents in R is to use the [**rmarkdown**](http://rmarkdown.rstudio.com/) package [@xie_r_2018].
 **papaja** provides R Markdown templates to create DOCX and PDF documents (using \LaTeX document class `apa6`).
 Moreover, **papaja** provides several functions to conveniently report analytic results according to APA guidelines.

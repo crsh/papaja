@@ -1,6 +1,6 @@
 #' Prepare APA Journal Articles with R Markdown
 #'
-#' `papaja` is an R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
+#' `papaja` is an [award-winning](https://improvingpsych.org/mission/awards/) R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 #'
 #' @details
 #'
