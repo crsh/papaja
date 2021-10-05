@@ -7,6 +7,7 @@
   ]]
 
 local List = require 'pandoc.List'
+local utils = require 'pandoc.utils'
 
 local function intercalate(lists, elem)
   local result = List:new{}
@@ -256,11 +257,7 @@ function table.flatten(arr)
 
 	local function flatten(arr)
 		for _, v in ipairs(arr) do
-			if type(v) == "table" then
-				flatten(v)
-			else
-				table.insert(result, v)
-			end
+			table.insert(result, v)
 		end
 	end
 
@@ -268,7 +265,9 @@ function table.flatten(arr)
 	return result
 end
 
-
+function MetaInlines_to_MetaBlocks(mi)
+  return pandoc.MetaBlocks(List:new{pandoc.Para(table.flatten(mi))})
+end
 
 
 --- Create raw LaTeX environments from metadata fields
@@ -276,7 +275,7 @@ local function make_latex_envir(name, metadata)
   local data = {table.unpack(metadata)}
   local pandoc_type = data[1].t
 
-  if pandoc_type == "Para" or pandoc_type == "Plain" or pandoc_type == "RawBlock" then
+  if pandoc_type == "Para" or pandoc_type == "Plain" or pandoc_type == "RawBlock" or pandoc_type == "LineBlock" then
     local envir = List:new{pandoc.Para(pandoc.RawInline("latex", "\\" .. name .. "{"))}
     envir:extend(data)
     envir:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "}"))})
@@ -287,55 +286,63 @@ local function make_latex_envir(name, metadata)
 end
 
 function Pandoc (document)
+  local meta = document.meta
+  local blocks = document.blocks
 
-  document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% papaja Lua-filter additions"))})
+  blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% papaja Lua-filter additions"))})
 
-  if document.meta.note ~= nil and document.meta.note[1] ~= nil then
-    document.blocks:extend(make_latex_envir("note", document.meta.note))
+  if meta.note ~= nil and meta.note[1] ~= nil then
+    blocks:extend(make_latex_envir("note", meta.note))
   end
 
-  if document.meta.authornote == nil or document.meta.authornote[1] == nil then
-    document.meta.authornote = List:new{}
+  if meta.authornote == nil or meta.authornote[1] == nil then
+    meta.authornote = List:new{}
   end
 
-  if document.meta.author ~= nil then
-    local roles = create_roles(document.meta.author)
-    local equal_contributors = create_equal_contributors(document.meta.author)
+  print(meta.authornote.t)
+
+  if meta.author ~= nil then
+    local roles = create_roles(meta.author)
+    local equal_contributors = create_equal_contributors(meta.author)
     if #roles > 0 or #equal_contributors > 0 then
-      table.insert(document.meta.authornote, pandoc.Para(roles .. equal_contributors))
+      local note_addition = pandoc.Para(roles .. equal_contributors)
+      if(meta.authornote.t == "MetaInlines") then
+        meta.authornote = MetaInlines_to_MetaBlocks(meta.authornote)
+      end
+      table.insert(meta.authornote, note_addition)
     end
 
-    local correspondence = create_correspondence(document.meta.author)
+    local correspondence = create_correspondence(meta.author)
     if #correspondence > 0 then
-      table.insert(document.meta.authornote, pandoc.Para(correspondence))
+      table.insert(meta.authornote, pandoc.Para(correspondence))
     end
   end
 
-  if document.meta.authornote ~= nil and document.meta.authornote[1] ~= nil then
-    document.blocks:extend(make_latex_envir("authornote", document.meta.authornote))
+  if meta.authornote ~= nil and meta.authornote[1] ~= nil then
+    blocks:extend(make_latex_envir("authornote", meta.authornote))
   end
 
-  if document.meta.affiliation ~= nil then
-    local affiliations = create_affiliation_inlines(document.meta.affiliation)
+  if meta.affiliation ~= nil then
+    local affiliations = create_affiliation_inlines(meta.affiliation)
     if #affiliations > 0 then
-      document.meta.affiliation = affiliations
-      document.blocks:extend(make_latex_envir("affiliation", document.meta.affiliation))
+      meta.affiliation = affiliations
+      blocks:extend(make_latex_envir("affiliation", meta.affiliation))
     end
   else
-    document.blocks:extend(make_latex_envir("affiliation", {pandoc.RawInline("latex", "\\phantom{0}")}))
+    blocks:extend(make_latex_envir("affiliation", {pandoc.RawInline("latex", "\\phantom{0}")}))
   end
 
-  document.blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
+  blocks:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
 
-  if document.meta.author ~= nil then
-    document.meta.author = pandoc.MetaInlines(create_authors_inlines(document.meta.author, "&", true))
+  if meta.author ~= nil then
+    meta.author = pandoc.MetaInlines(create_authors_inlines(meta.author, "&", true))
   else
-    document.meta.author = FORMAT == "latex"
+    meta.author = FORMAT == "latex"
       and pandoc.MetaInlines({pandoc.RawInline("latex", "\\phantom{0}")})
       or nil
   end
 
-  return document
+  return pandoc.Pandoc(blocks, meta)
 end
 
 
