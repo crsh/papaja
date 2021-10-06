@@ -30,7 +30,8 @@ Returns \code{bib_name} invisibly.
 }
 \description{
 Downloads and saves a Zotero reference library (or a subset) and saves it as
-BibTeX file. \emph{This function now lives in the package \pkg{citr}.}
+BibTeX file. \emph{This function has been defunct. Use
+\code{\link[RefManageR:ReadZotero]{RefManageR::ReadZotero()}} instead.}
 }
 \details{
 This function retrieves references through the Zotero web API. \code{x}
