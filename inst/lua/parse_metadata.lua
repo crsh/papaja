@@ -270,6 +270,10 @@ function MetaInlines_to_MetaBlocks(mi)
 end
 
 
+-- I think previopus attemps to modify header includes failed because they are
+-- overwritten by the command line option --include-in-header generated in
+-- the apa6_pdf() preprocessor.
+
 -- local function add_header_includes(meta, blocks)
 --
 --   local header_includes = pandoc.List(blocks)
@@ -340,8 +344,8 @@ function Pandoc (document)
   --   meta["author-meta"] = pandoc.MetaInlines{pandoc.Str""}
   -- end
 
-  if meta.shorttitle == nil or meta.shorttitle[1] ~= nil then
-    meta.shorttitle = pandoc.MetaInlines{pandoc.Str"SHORT", pandoc.Space(), pandoc.Str"TITLE"}
+  if meta.shorttitle == nil or meta.shorttitle[1] == nil then
+    meta.shorttitle = pandoc.MetaInlines(List{pandoc.Str"SHORT", pandoc.Space(), pandoc.Str"TITLE"})
   end
 
   -- Append additional Latex environments

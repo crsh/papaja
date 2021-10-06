@@ -1,5 +1,5 @@
 ---
-title             : "**papaja**: Prepare APA Journal Articles with R Markdown"
+title             : "Prepare APA Journal Articles with R Markdown"
 shorttitle        : "**papaja**"
 author: 
   - name          : "Frederik Aust"
@@ -39,12 +39,14 @@ tablelist         : no
 footnotelist      : no
 lineno            : yes
 linkcolor         : "blue"
+csquotes          : false
 
 class             : "man"
 output            : papaja::apa6_pdf
 
 header-includes:
   - \usepackage{fvextra}
+  - \usepackage{csquotes}
   - \usepackage{subfig}
   - \renewcommand*{\thesubfigure}{\MakeUppercase{\alph{subfigure}}}
   - \raggedbottom
@@ -54,7 +56,7 @@ editor_options:
     wrap: "sentence"
 
 vignette: >
-  %\VignetteIndexEntry{papaja}
+  %\VignetteIndexEntry{Prepare APA Journal Articles with R Markdown}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
