@@ -10,7 +10,7 @@ local List = require 'pandoc.List'
 local utils = require 'pandoc.utils'
 
 local function intercalate(lists, elem)
-  local result = List{}
+  local result = List:new{}
   for i = 1, (#lists - 1) do
     result:extend(lists[i])
     result:extend(elem)
@@ -33,7 +33,7 @@ local function author_inline_generator(sups)
     end
   else
     return function (author)
-      local author_marks = List{}
+      local author_marks = List:new{}
 
       if author.equal_contrib then
         author_marks[#author_marks + 1] = equal_contributor_mark
@@ -54,17 +54,17 @@ end
 
 --- Generate a list of inlines containing all authors
 local function create_authors_inlines(authors, and_str, sups)
-  local padded_and_str = List{pandoc.Space(), pandoc.Str(and_str), pandoc.Space()}
+  local padded_and_str = List:new{pandoc.Space(), pandoc.Str(and_str), pandoc.Space()}
 
   local inlines_generator = author_inline_generator(sups)
-  local inlines = List(authors):map(inlines_generator)
+  local inlines = List:new(authors):map(inlines_generator)
   local last_author = inlines[#inlines]
   inlines[#inlines] = nil
 
   local result
   if #authors > 2 then
     result = intercalate(inlines, {pandoc.Str ",", pandoc.Space()})
-    result:extend(List{pandoc.Str ","})
+    result:extend(List:new{pandoc.Str ","})
   else
     result = intercalate(inlines, {})
   end
@@ -82,7 +82,7 @@ end
 --- Create inlines for a single affilliation
 local function affiliation_inline_generator()
   return function (affiliation)
-    local affiliation_marks = List{}
+    local affiliation_marks = List:new{}
 
     if not affiliation.id and not affiliation.institution then
       return nil
@@ -92,7 +92,7 @@ local function affiliation_inline_generator()
       affiliation.id[1] = ""
     end
 
-    local res = List{
+    local res = List:new{
       pandoc.Superscript(affiliation.id[1]), pandoc.Space(),
       table.unpack(affiliation.institution)
     }
@@ -104,24 +104,24 @@ end
 --- Generate a list of inlines containing all affiliations
 local function create_affiliation_inlines(affiliation)
   local inlines_generator = affiliation_inline_generator()
-  local inlines = List(affiliation):map(inlines_generator)
+  local inlines = List:new(affiliation):map(inlines_generator)
 
-  local result = List{}
+  local result = List:new{}
   result:extend(inlines)
   result = intercalate(result, {pandoc.RawInline("latex", "\\\\")})
 
-  local test = List{}
+  local test = List:new{}
   for i=1, #result do
     table.insert(test, result[i])
   end
 
-  return List{pandoc.RawInline("latex", "\\vspace{0.5cm}")} .. test
+  return List:new{pandoc.RawInline("latex", "\\vspace{0.5cm}")} .. test
 end
 
 
 --- Generate equal contributor elements for the author note
 local function create_equal_contributors(authors)
-  local equal_contributors_i = List{}
+  local equal_contributors_i = List:new{}
   local equal_contributors = {table.unpack(authors)}
 
   for i, author in ipairs(authors) do
@@ -135,36 +135,36 @@ local function create_equal_contributors(authors)
   end
 
   if #equal_contributors == 0 then
-    return List.new{}
+    return List:new{}
   end
 
   local mark
   if #equal_contributors > 0 then
-    mark = List{pandoc.Superscript(equal_contributor_mark[1]), pandoc.Str(" ")}
+    mark = List:new{pandoc.Superscript(equal_contributor_mark[1]), pandoc.Str(" ")}
   else
-    mark = List{}
+    mark = List:new{}
   end
 
   local equal_contributors_inline
   if #equal_contributors == 0 then
-    equal_contributors_inline = List{}
+    equal_contributors_inline = List:new{}
   else
     if #equal_contributors < #authors then
       equal_contributors_inline = create_authors_inlines(equal_contributors, "and", false)
     else
-      equal_contributors_inline = List{pandoc.Str"All", pandoc.Space(), pandoc.Str"authors"}
+      equal_contributors_inline = List:new{pandoc.Str"All", pandoc.Space(), pandoc.Str"authors"}
     end
   end
 
   local contribution_line
   if #equal_contributors > 0 then
-    contribution_line = List{
+    contribution_line = List:new{
       pandoc.Space(), pandoc.Str"contributed", pandoc.Space(), pandoc.Str"equally",
       pandoc.Space(), pandoc.Str"to", pandoc.Space(), pandoc.Str"this", pandoc.Space(),
       pandoc.Str"work", pandoc.Str".", pandoc.Space()
     }
   else
-    contribution_line = List{}
+    contribution_line = List:new{}
   end
 
   return mark .. equal_contributors_inline .. contribution_line
@@ -173,10 +173,10 @@ end
 
 --- Generate a roles elements for the author note
 local function create_roles(authors)
-  local authors_roles = List{}
+  local authors_roles = List:new{}
 
   authors_roles:extend(
-    List{
+    List:new{
       pandoc.Str "The", pandoc.Space(), pandoc.Str "authors", pandoc.Space(),
       pandoc.Str "made", pandoc.Space(), pandoc.Str "the", pandoc.Space(),
       pandoc.Str "following", pandoc.Space(), pandoc.Str "contributions",
@@ -189,18 +189,18 @@ local function create_roles(authors)
   for i, author in ipairs(authors) do
     if author.role then
       authors_roles:extend(author.name)
-      authors_roles:extend(List{pandoc.Str ":", pandoc.Space()})
+      authors_roles:extend(List:new{pandoc.Str ":", pandoc.Space()})
       authors_roles:extend(intercalate(author.role, {pandoc.Str ",", pandoc.Space()}))
-      authors_roles:extend(List{pandoc.Str ";", pandoc.Space()})
+      authors_roles:extend(List:new{pandoc.Str ";", pandoc.Space()})
     end
   end
 
   if #authors_roles == no_roles then
-    return List.new{}
+    return List:new{}
   else
     table.remove(authors_roles, #authors_roles)
     table.remove(authors_roles, #authors_roles)
-    authors_roles:extend(List{pandoc.Str ".", pandoc.Space()})
+    authors_roles:extend(List:new{pandoc.Str ".", pandoc.Space()})
     return authors_roles
   end
 end
@@ -208,40 +208,40 @@ end
 
 --- Generate a correspondence elements for the author note
 local function create_correspondence(authors)
-  local corresponding_authors = List{}
+  local corresponding_authors = List:new{}
 
   for i, author in ipairs(authors) do
     if author.corresponding and (author.address or author.email) then
-      local address = List{pandoc.Str ""}
+      local address = List:new{pandoc.Str ""}
       if author.address ~= nil then
-        address = List{pandoc.Str ",", pandoc.Space()} ..
+        address = List:new{pandoc.Str ",", pandoc.Space()} ..
           author.address
       end
-      local email = List{pandoc.Str ""}
+      local email = List:new{pandoc.Str ""}
       if author.email ~= nil then
-        email = List{pandoc.Space(), pandoc.Str "E-mail:", pandoc.Space()} ..
+        email = List:new{pandoc.Space(), pandoc.Str "E-mail:", pandoc.Space()} ..
           author.email
       end
-      contact_info = List(author.name .. address .. List{pandoc.Str "."} .. email)
+      contact_info = List:new(author.name .. address .. List:new{pandoc.Str "."} .. email)
       table.insert(corresponding_authors, {pandoc.Str(contact_info)})
     end
   end
 
   if #corresponding_authors == 0 then
-    return List.new{}
+    return List:new{}
   end
 
   local correspondence_line
   if #corresponding_authors > 0 then
-    correspondence_line = List{
+    correspondence_line = List:new{
       pandoc.Str"Correspondence", pandoc.Space(), pandoc.Str"concerning", pandoc.Space(),
       pandoc.Str"this", pandoc.Space(), pandoc.Str"article", pandoc.Space(),
       pandoc.Str"should", pandoc.Space(), pandoc.Str"be", pandoc.Space(),
       pandoc.Str"addressed", pandoc.Space(), pandoc.Str"to", pandoc.Space()
     }
   else
-    contact_info = List{}
-    correspondence_line =  List{}
+    contact_info = List:new{}
+    correspondence_line =  List:new{}
   end
 
   return correspondence_line .. contact_info
@@ -266,7 +266,7 @@ function table.flatten(arr)
 end
 
 function MetaInlines_to_MetaBlocks(mi)
-  return pandoc.MetaBlocks(List{pandoc.Para(table.flatten(mi))})
+  return pandoc.MetaBlocks(List:new{pandoc.Para(table.flatten(mi))})
 end
 
 
@@ -276,7 +276,7 @@ end
 
 -- local function add_header_includes(meta, blocks)
 --
---   local header_includes = pandoc.List(blocks)
+--   local header_includes = pandoc.List:new(blocks)
 --
 --   -- add any exisiting meta['header-includes']
 --   -- it could be a MetaList or a single String
@@ -303,12 +303,12 @@ local function make_latex_envir(name, metadata)
   local pandoc_type = data[1].t
 
   if pandoc_type == "Para" or pandoc_type == "Plain" or pandoc_type == "RawBlock" or pandoc_type == "LineBlock" then
-    local envir = List{pandoc.Para(pandoc.RawInline("latex", "\\" .. name .. "{"))}
+    local envir = List:new{pandoc.Para(pandoc.RawInline("latex", "\\" .. name .. "{"))}
     envir:extend(data)
-    envir:extend(List{pandoc.Para(pandoc.RawInline("latex", "}"))})
+    envir:extend(List:new{pandoc.Para(pandoc.RawInline("latex", "}"))})
     return envir
   else
-    return List{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
+    return List:new{pandoc.Para({pandoc.RawInline("latex", "\\" .. name), pandoc.Span(data)})}
   end
 end
 
@@ -345,16 +345,16 @@ function Pandoc (document)
   -- end
 
   if meta.shorttitle == nil or meta.shorttitle[1] == nil then
-    meta.shorttitle = pandoc.MetaInlines(List{pandoc.Str"SHORT", pandoc.Space(), pandoc.Str"TITLE"})
+    meta.shorttitle = pandoc.MetaInlines(List:new{pandoc.Str"SHORT", pandoc.Space(), pandoc.Str"TITLE"})
   end
 
   -- Append additional Latex environments
-  blocks:extend(List{pandoc.Para(pandoc.RawInline("latex", "% papaja Lua-filter additions"))})
+  blocks:extend(List:new{pandoc.Para({pandoc.RawInline("latex", "% papaja Lua-filter additions")})})
 
   blocks:extend(make_latex_envir("shorttitle", meta.shorttitle))
 
   if meta.authornote == nil or meta.authornote[1] == nil then
-    meta.authornote = List{}
+    meta.authornote = List:new{}
   end
 
   if meta.author ~= nil then
@@ -396,7 +396,7 @@ function Pandoc (document)
     blocks:extend(make_latex_envir("leftheader", meta.leftheader))
   end
 
-  blocks:extend(List{pandoc.Para(pandoc.RawInline("latex", "% End of papaja Lua-filter additions"))})
+  blocks:extend(List:new{pandoc.Para({pandoc.RawInline("latex", "% End of papaja Lua-filter additions")})})
 
   if meta.author ~= nil then
     meta.author = pandoc.MetaInlines(create_authors_inlines(meta.author, "&", true))
