@@ -54,6 +54,17 @@ jobs:
       - run: tlmgr --version
       - run: tlmgr install apa6 threeparttable caption fancyhdr endfloat was multirow threeparttablex environ trimspaces lineno csquotes babel-english grfext
 
+      - name: Install Ghostscript on Linux
+        if: runner.os == 'Linux'
+        run: sudo DEBIAN_FRONTEND=noninteractive apt-get install --yes ghostscript
+
+      - name: Install Ghostscript on macOS
+        if: runner.os == 'macOS'
+        run: brew install ghostscript
+
+      - name: Install Ghostscript on Windows
+        if: runner.os == 'Windows'
+        run: choco install ghostscript --no-progress
 
       - name: Install pak and query dependencies
         run: |

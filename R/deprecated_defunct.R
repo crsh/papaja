@@ -29,8 +29,8 @@ apa_prepare_doc <- function() {
 #'
 #' Downloads and saves a `.bib`-reference file form the web, so it can be
 #' used to cite references in a Markdown-document using pandoc or LaTeX.
-#' *This function has been defunct. Please use
-#' \code{\link[downloader]{download}} instead.*
+#' *This function has been defunct. Please use \code{download} from the
+#' \pkg{downloader} instead.*
 #'
 #' @param x Character. URL of the \code{.bib}-file to fetch.
 #' @param bib_name Character. The path and name of the file to be created.
