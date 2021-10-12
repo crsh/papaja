@@ -92,6 +92,9 @@ apa_print.list <- function(
   , in_paren = FALSE
   , ...
 ) {
+
+  deprecate_ci(...)
+
   if(length(x) == 1) apa_print(x[[1]]) else {
     if(class(x[[1]]) != "lm") stop("Currently, only model comparisons for 'lm' objects are supported.")
   }

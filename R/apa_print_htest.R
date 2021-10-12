@@ -71,6 +71,8 @@ apa_print.htest <- function(
   , in_paren = FALSE
   , ...
 ) {
+  deprecate_ci(...)
+
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)

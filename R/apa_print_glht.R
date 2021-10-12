@@ -36,6 +36,8 @@ apa_print.summary.glht <- function(
   , in_paren = FALSE
   , ...
 ) {
+  deprecate_ci(...)
+
   validate(x, check_class = "summary.glht")
   validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(in_paren, check_class = "logical", check_length = 1)

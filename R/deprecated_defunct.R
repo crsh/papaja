@@ -115,3 +115,11 @@ apa_table.word <- function(x, ...) {
 
   apa_table.markdown(x, ...)
 }
+
+
+deprecate_ci <- function(...) {
+  if(any(...names() == "ci")) {
+    stop("Using argument 'ci' in calls to 'apa_print()' is now defunct. Please use 'conf.int' instead.", call. = FALSE)
+  }
+}
+

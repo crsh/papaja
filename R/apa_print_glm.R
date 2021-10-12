@@ -96,6 +96,7 @@ apa_print.glm <- function(
   , in_paren = FALSE
   , ...
 ) {
+  deprecate_ci(...)
 
   validate(x, check_class = "glm")
 
@@ -159,6 +160,8 @@ apa_print.lm <- function(
   , in_paren = FALSE
   , ...
 ) {
+
+  deprecate_ci(...)
 
   validate(x, check_class = "lm")
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
