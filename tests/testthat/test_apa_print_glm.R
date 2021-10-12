@@ -114,6 +114,7 @@ test_that(
     expect_error(
       apa_print(lm_fit, ci = .95)
       , "Using argument 'ci' in calls to 'apa_print()' is now defunct. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
 
   }
