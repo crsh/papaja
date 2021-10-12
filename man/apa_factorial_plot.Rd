@@ -118,6 +118,9 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 \item{main}{Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
 }
+\value{
+A (nested) list of plot options. \emph{Note that the structure of the return value is about to change in a forthcoming release of papaja.}
+}
 \description{
 Create one or more plots by sequentially calling functions from the \pkg{graphics} package.
 \code{apa_factorial_plot()} is the workhorse function that is called by

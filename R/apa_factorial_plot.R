@@ -37,6 +37,7 @@
 #' @param ylab Character or expression. Label for *y* axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
+#' @return A (nested) list of plot options. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
 #' @inheritDotParams graphics::plot.window
 #' @details
 #'    The measure of dispersion can be either [conf_int()] for between-subjects confidence intervals, [se()] for standard errors,
