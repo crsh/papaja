@@ -139,7 +139,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v1
         with:
-          build_args: '--compact-vignettes=both'
+          build_args: '"--compact-vignettes=both"'
 
       - name: Code Coverage
         env:
