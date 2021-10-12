@@ -9,18 +9,19 @@ Prepare APA Journal Articles<br />with R Markdown
 has not yet been a stable, usable release suitable for the
 public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 ![GitHub last commit
-(devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github&logoColor=%23FFF)
+(devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github&logoColor=%2523FFF)
 [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
 [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja)
 [![GitHub bug
-issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%2523FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 ![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
 
-**papaja** is an R package that facilitates creating computationally
-reproducible, submission-ready manuscripts which conform to the American
-Psychological Association (APA) manuscript guidelines (6th Edition).
-**papaja** provides
+**papaja** is an
+[award-winning](https://improvingpsych.org/mission/awards/) R package
+that facilitates creating computationally reproducible, submission-ready
+manuscripts which conform to the American Psychological Association
+(APA) manuscript guidelines (6th Edition). **papaja** provides
 
 -   an [R Markdown](http://rmarkdown.rstudio.com/) template that can be
     used with (or without) [RStudio](http://www.rstudio.com/) to create
@@ -30,14 +31,13 @@ Psychological Association (APA) manuscript guidelines (6th Edition).
 -   functions to create **tables**, and
 -   functions to create **figures** in accordance with APA guidelines.
 
-For a comprehensive introduction to **papaja**, check out the current
-draft of the [**papaja** manual](https://crsh.github.io/papaja_man/). If
-you have a specific question that is not answered in the manual, feel
-free to ask a question on Stack Overflow [using the **papaja**
-tag](https://t.co/Z3auyUrbTa). If you believe you have found a bug or
-you want to request a new feature, [open an
-issue](https://github.com/crsh/papaja/issues) on Github and provide a
-[minimal complete verifiable
+For a comprehensive introduction to **papaja**, see the current draft of
+the [manual](https://crsh.github.io/papaja_man/). If you have a specific
+question that is not answered in the manual, feel free to ask a question
+on Stack Overflow [using the **papaja** tag](https://t.co/Z3auyUrbTa).
+If you believe you have found a bug or would like to request a new
+feature, [open an issue](https://github.com/crsh/papaja/issues) on
+Github and provide a [minimal complete verifiable
 example](https://stackoverflow.com/help/mcve).
 
 ## Example
@@ -259,7 +259,7 @@ rmarkdown::render("mymanuscript.Rmd")
 ## Getting help
 
 ![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%23FFF)
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
 
 For a comprehensive introduction to **papaja**, check out the current
 draft of the [**papaja** manual](https://crsh.github.io/papaja_man/). If
@@ -278,7 +278,7 @@ Please cite **papaja** if you use it. You can for example [use
 or copy the reference information returned by `citation('papaja')` to
 your BibTeX file.
 
-    Aust, F., Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9997. Retrieved from https://github.com/crsh/papaja
+    Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9997. Retrieved from https://github.com/crsh/papaja
 
 ## papaja in the wild
 
@@ -314,9 +314,9 @@ CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-s
 ## Contribute
 
 [![GitHub help wanted
-issues](https://img.shields.io/github/issues/crsh/papaja/help%20wanted?logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
+issues](https://img.shields.io/github/issues/crsh/papaja/help%20wanted?logo=github&logoColor=%2523FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
 [![GitHub documentation
-issues](https://img.shields.io/github/issues/crsh/papaja/documentation?logo=github&logoColor=%23FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation)
+issues](https://img.shields.io/github/issues/crsh/papaja/documentation?logo=github&logoColor=%2523FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation)
 
 Like **papaja** and want to contribute? We highly appreciate any
 contributions to the R package or its documentation. Take a look at the
@@ -324,7 +324,7 @@ contributions to the R package or its documentation. Take a look at the
 inspiration. There are many additional analyses that we would like
 `apa_print()` to support. Any new S3/S4-methods for this function are
 always appreciated (e.g., `factanal`, `fa`, `lavaan`). For a primer on
-adding new `apa_print()`-methods, see the Getting-started-vignette:
+adding new `apa_print()`-methods, see the getting-started-vignette:
 
 ``` r
 `vignette("add_apa_print_methods", package = "papaja")`
