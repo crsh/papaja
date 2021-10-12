@@ -379,10 +379,10 @@ apa_print.anova <- function(
   , intercept = FALSE
   , mse = TRUE
   , in_paren = FALSE
-  # , ci = 0.95
+  # , conf.int = 0.95
   , ...
 ) {
-  # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+  # if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
   ellipsis <- list(...)
 

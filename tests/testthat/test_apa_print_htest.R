@@ -80,7 +80,7 @@ test_that(
     )
     # Provide a custom ci, check values and labelling
     ci <- structure(c(1.0, 2.0), "conf.level" = .7)
-    t_test_output <- apa_print(t_test, ci = ci)
+    t_test_output <- apa_print(t_test, conf.int = ci)
     expect_apa_results(
       t_test_output
       , labels = list(

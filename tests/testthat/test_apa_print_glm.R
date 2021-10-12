@@ -58,7 +58,7 @@ test_that(
     expect_identical(nrow(lm_fit_output$table), 2L)
 
     # Manual CI
-    lm_fit_output <- apa_print(lm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
+    lm_fit_output <- apa_print(lm_fit, conf.int = matrix(c(1, 2), ncol = 2, nrow = 2, byrow = TRUE, dimnames = list(names(lm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
     expect_identical(lm_fit_output$full$Intercept, "$b = 5.03$, 95\\% CI $[1.00, 2.00]$, $t(18) = 22.85$, $p < .001$")
     expect_identical(lm_fit_output$full$groupTrt, "$b = -0.37$, 95\\% CI $[1.00, 2.00]$, $t(18) = -1.19$, $p = .249$")
     expect_identical(lm_fit_output$full$modelfit$r2, "$R^2 = .07$, 90\\% CI $[0.00, 0.33]$, $F(1, 18) = 1.42$, $p = .249$")
@@ -108,7 +108,7 @@ test_that(
     )
 
     # No CI information
-    expect_error(apa_print(lm_fit, ci = NULL), "The parameter 'ci' is NULL.")
+    expect_error(apa_print(lm_fit, conf.int = NULL), "The parameter 'conf.int' is NULL.")
   }
 )
 
@@ -188,7 +188,7 @@ test_that(
     expect_identical(nrow(glm_fit_output$table), 3L)
 
     # Manual CI
-    glm_fit_output <- apa_print(glm_fit, ci = matrix(c(1, 2), ncol = 2, nrow = 3, byrow = TRUE, dimnames = list(names(glm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
+    glm_fit_output <- apa_print(glm_fit, conf.int = matrix(c(1, 2), ncol = 2, nrow = 3, byrow = TRUE, dimnames = list(names(glm_fit$coefficients), c("2.5 \\%", "97.5 \\%"))))
     expect_apa_results(
       glm_fit_output
       , labels = list(

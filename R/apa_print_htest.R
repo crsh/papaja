@@ -14,7 +14,7 @@
 #'   used for the *estimate*, otherwise the supplied name is used. See details.
 #' @param n Numeric. Sample size; required when reporting \eqn{\chi^2} tests,
 #'   otherwise this parameter is ignored.
-#' @param ci Numeric. If \code{NULL} (the default), the function tries to
+#' @param conf.int Numeric. If \code{NULL} (the default), the function tries to
 #'   obtain confidence intervals from `x`. Other confidence intervals can be
 #'   supplied as a `vector` of length 2 (lower and upper boundary,
 #'   respectively) with attribute `conf.level` set, e.g., when calculating
@@ -67,7 +67,7 @@ apa_print.htest <- function(
   , stat_name = NULL
   , est_name = NULL
   , n = NULL
-  , ci = NULL
+  , conf.int = NULL
   , in_paren = FALSE
   , ...
 ) {
@@ -75,7 +75,7 @@ apa_print.htest <- function(
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf), check_length = 1)
-  if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 2)
+  if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
@@ -97,10 +97,10 @@ apa_print.htest <- function(
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
 
-  if(is.null(ci)) {
+  if(is.null(conf.int)) {
     conf_int <- list(x$conf.int)
   } else {
-    conf_int <- list(ci)
+    conf_int <- list(conf.int)
   }
 
 

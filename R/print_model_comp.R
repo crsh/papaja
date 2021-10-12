@@ -8,8 +8,8 @@
 #'
 #' @param x A data frame of class `apa_variance_table` as returned by [arrange_anova()].
 #' @param models List. List containing fitted `lm` objects that were compared using [anova()]. If the list is named, element names are used as model names in the output object.
-#' @param ci Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`. If `ci = NULL` no confidence intervals are estimated.
-#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`; ignored if `ci = NULL`.
+#' @param conf.int Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`. If `conf.int = NULL` no confidence intervals are estimated.
+#' @param boot_samples Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if `x` is a model comparison object of class `anova`; ignored if `conf.int = NULL`.
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
 #' @inheritParams glue_apa_results
 #' @inheritParams apa_print.glm
@@ -48,7 +48,7 @@
 print_model_comp <- function(
   x
   , models = NULL
-  , ci = NULL
+  , conf.int = NULL
   , boot_samples = 1000
   , progress_bar = FALSE
   , in_paren = FALSE
@@ -57,7 +57,7 @@ print_model_comp <- function(
   validate(x, check_class = "data.frame")
   validate(x, check_class = "apa_model_comp")
   validate(in_paren, check_class = "logical", check_length = 1)
-  validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+  validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   if(!is.null(models)) validate(models, check_class = "list", check_length = nrow(x) + 1)
 
   if(!is.null(names(models))) {
@@ -81,7 +81,7 @@ print_model_comp <- function(
       }
     )
   } else { # Bootstrap CI
-    boot_r2_ci <- delta_r2_ci(x, models, ci = ci, R = boot_samples, progress_bar = progress_bar)
+    boot_r2_ci <- delta_r2_ci(x, models, conf.int = conf.int, R = boot_samples, progress_bar = progress_bar)
 
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
@@ -89,7 +89,7 @@ print_model_comp <- function(
     delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
 
     apa_res$estimate <- paste0(
-      "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", ci * 100, "\\% CI "
+      "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", conf.int * 100, "\\% CI "
       , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE, enclose_math = TRUE)
     )
   }
@@ -113,7 +113,7 @@ print_model_comp <- function(
 
   # Assemble table
   model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
-      lm_table <- apa_print(x, ci = ci + (1 - ci) / 2)$table[, c("term", "estimate", "conf.int"), drop = FALSE]
+      lm_table <- apa_print(x, conf.int = conf.int + (1 - conf.int) / 2)$table[, c("term", "estimate", "conf.int"), drop = FALSE]
       lm_table[, "estimate"] <- apply(lm_table[, c("estimate", "conf.int"), drop = FALSE], MARGIN = 1, paste, collapse = " ")
       lm_table[, c("term", "estimate"), drop = FALSE]
     }
@@ -155,7 +155,7 @@ print_model_comp <- function(
 
   ## This part is a disaster and needs refactoring
   model_fits$r.squared <- sapply(models, function(x) { # Get R^2 with CI
-    r2 <- apa_print(x, ci = ci + (1 - ci) / 2, observed = observed)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
+    r2 <- apa_print(x, conf.int = conf.int + (1 - conf.int) / 2, observed = observed)$estimate$modelfit$r2 # Calculate correct CI for function focusing on b CI
     r2 <- gsub("\\$R\\^2 = |\\$", "", r2)
     r2 <- gsub(", \\d\\d\\\\\\% CI", "", r2)
     # restore dollars where necessary
@@ -163,7 +163,7 @@ print_model_comp <- function(
     r2
   })
 
-  colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$\\mathit{df}$", "$\\mathit{df}_{\\mathrm{res}}$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
+  colnames(model_fits) <- c(paste0("$R^2$ [", conf.int * 100, "\\% CI]"), "$F$", "$\\mathit{df}$", "$\\mathit{df}_{\\mathrm{res}}$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
 
   ## Add differences in model fits
   model_diffs <- printnum(
@@ -175,7 +175,7 @@ print_model_comp <- function(
   model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\$\\\\Delta R\\^2 = |\\$$", "", unlist(apa_res$estimate))) # Replace by previous estimate with CI
   model_diffs <- rbind("", model_diffs)
 
-  r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", ci * 100, "\\% CI]")
+  r2_diff_colname <- if(boot_samples <= 0) "$\\Delta R^2$" else paste0("$\\Delta R^2$ [", conf.int * 100, "\\% CI]")
   colnames(model_diffs) <- c(r2_diff_colname, "$\\Delta \\mathrm{AIC}$", "$\\Delta \\mathrm{BIC}$")
 
   diff_stats <- x[, c("statistic", "df", "df.residual", "p.value")]

@@ -12,7 +12,7 @@
 #' @param standardized Logical. Indicates if coefficients were standardized
 #'   (e.g., using \code{scale()}), and leading zeros should be omitted if
 #'   appropriate. See details.
-#' @param ci Numeric. Either a single value (range \[0, 1\]) giving the
+#' @param conf.int Numeric. Either a single value (range \[0, 1\]) giving the
 #'   confidence level or a two-column `matrix` with confidence region bounds as
 #'   column names (e.g. `"2.5 %"` and `"97.5 %"`) and coefficient names as row
 #'   names (in the same order as they appear in `summary(x)$coefficients`.
@@ -34,7 +34,7 @@
 #'   If `standardized = TRUE`, `scale()` is removed from coefficient names
 #'   (see examples). This option is currently ignored for `glm`-objects.
 #'
-#'   If `ci` is a single value, confidence intervals are calculated using
+#'   If `conf.int` is a single value, confidence intervals are calculated using
 #'   [stats::confint()].
 #'
 #'   If `x` is an `lm` object and the \pkg{MBESS} package is available,
@@ -92,7 +92,7 @@
 apa_print.glm <- function(
   x
   , est_name = NULL
-  , ci = 0.95
+  , conf.int = 0.95
   , in_paren = FALSE
   , ...
 ) {
@@ -101,33 +101,33 @@ apa_print.glm <- function(
 
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
 
-    if(!is.null(ci)) {
-    if(length(ci) == 1) {
-      validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
-      ci <- suppressMessages({stats::confint(x, level = ci)})
+    if(!is.null(conf.int)) {
+    if(length(conf.int) == 1) {
+      validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+      conf.int <- suppressMessages({stats::confint(x, level = conf.int)})
     } else {
-      validate(ci, check_class = "matrix")
-      sapply(ci, validate, check_class = "numeric")
+      validate(conf.int, check_class = "matrix")
+      sapply(conf.int, validate, check_class = "numeric")
     }
-  } else validate(ci)
+  } else validate(conf.int)
   validate(in_paren, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
 
   if(is.null(est_name)) est_name <- "b"
 
-  if(is.matrix(ci)) {
-    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
+  if(is.matrix(conf.int)) {
+    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(conf.int), perl = TRUE))
     conf_level <- 100 - conf_level[1] * 2
   } else {
-    conf_level <- 100 * ci
+    conf_level <- 100 * conf.int
   }
 
   regression_table <- arrange_regression(
     x
     , est_name = est_name
     , standardized = FALSE
-    , ci = ci
+    , conf.int = conf.int
     , ...
   )
 
@@ -154,7 +154,7 @@ apa_print.lm <- function(
   x
   , est_name = NULL
   , standardized = FALSE
-  , ci = 0.95
+  , conf.int = 0.95
   , observed = TRUE
   , in_paren = FALSE
   , ...
@@ -163,15 +163,15 @@ apa_print.lm <- function(
   validate(x, check_class = "lm")
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   validate(standardized, check_class = "logical", check_length = 1)
-  if(!is.null(ci)) {
-    if(length(ci) == 1) {
-      validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
-      ci <- stats::confint(x, level = ci)
+  if(!is.null(conf.int)) {
+    if(length(conf.int) == 1) {
+      validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+      conf.int <- stats::confint(x, level = conf.int)
     } else {
-      validate(ci, check_class = "matrix")
-      sapply(ci, validate, check_class = "numeric")
+      validate(conf.int, check_class = "matrix")
+      sapply(conf.int, validate, check_class = "numeric")
     }
-  } else validate(ci)
+  } else validate(conf.int)
   validate(in_paren, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
@@ -179,18 +179,18 @@ apa_print.lm <- function(
   if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
   if(standardized) ellipsis$gt1 <- FALSE
 
-  if(is.matrix(ci)) {
-    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
+  if(is.matrix(conf.int)) {
+    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(conf.int), perl = TRUE))
     conf_level <- 100 - conf_level[1] * 2
   } else {
-    conf_level <- 100 * ci
+    conf_level <- 100 * conf.int
   }
 
   regression_table <- arrange_regression(
     x
     , est_name = est_name
     , standardized = standardized
-    , ci = ci
+    , conf.int = conf.int
     , ...
   )
 
