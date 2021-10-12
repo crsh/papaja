@@ -88,6 +88,7 @@ apa_plot.data.frame <- function(
   , fun_aggregate = mean
   , jit = .3
   , mfrow = NULL
+  , reference = 0
   , ...
 ) {
 
@@ -215,6 +216,7 @@ apa_plot.data.frame <- function(
     0
     , y.values[, dv, drop = FALSE]
     , aggregated[, dv, drop = FALSE]
+    , reference
     , na.rm = TRUE
   )
 
@@ -278,7 +280,7 @@ apa_plot.data.frame <- function(
               id = id
               , dv = dv
               , factors = factors
-              , reference = ellipsis$reference
+              , reference = reference
               , jit = jit
             )
             , visuals = list(
@@ -293,7 +295,7 @@ apa_plot.data.frame <- function(
                 , args = list(
                   xlim = if(length(factors) > 0L) c(0, nlevels(y.values[[factors[[1L]]]])) else c(0, 1)
                   , ylim = ylim
-                  , log = gsub(ellipsis$log, pattern = "x", replacement = "", fixed = TRUE)
+                  , log = gsub(paste0(ellipsis$log, ""), pattern = "x", replacement = "", fixed = TRUE)
                   , xaxs = ellipsis$xaxs
                   , yaxs = ellipsis$yaxs
                   , lab  = ellipsis$lab
