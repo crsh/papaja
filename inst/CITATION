@@ -6,7 +6,7 @@ note <- paste0("R package version ", meta$Version)
 bibentry(
   bibtype = "Manual"
   , textVersion = paste0(
-    "Aust, F., Barth, M. ("
+    "Aust, F. & Barth, M. ("
     , year
     , "). papaja: Prepare reproducible APA journal articles with R Markdown. "
     , note

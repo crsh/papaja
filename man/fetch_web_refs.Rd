@@ -14,8 +14,8 @@ fetch_web_refs(x, bib_name)
 \description{
 Downloads and saves a \code{.bib}-reference file form the web, so it can be
 used to cite references in a Markdown-document using pandoc or LaTeX.
-\emph{This function has been defunct. Please use
-\code{\link[downloader]{download}} instead.}
+\emph{This function has been defunct. Please use \code{download} from the
+\pkg{downloader} instead.}
 }
 \details{
 If the function is called in an RMarkdown-document the file name

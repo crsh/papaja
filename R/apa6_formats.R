@@ -489,16 +489,15 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
 
   ## Essential manuscript parts
-  if(!is.null(metadata$shorttitle)) {
-    short_title <- paste0("\\shorttitle{", escape_latex(metadata$shorttitle), "}")
-  } else {
-    short_title <- paste0("\\shorttitle{SHORTTITLE}")
-  }
-  header_includes <- c(header_includes, short_title)
+  # if(!is.null(metadata$shorttitle)) {
+  #   short_title <- paste0("\\shorttitle{", escape_latex(metadata$shorttitle), "}")
+  # } else {
+  # }
+  # header_includes <- c(header_includes, short_title)
 
-  if(!is.null(metadata$leftheader)) {
-    header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
-  }
+  # if(!is.null(metadata$leftheader)) {
+  #   header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
+  # }
 
   if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
     keywords <- paste(unlist(metadata$keywords), collapse = ", ")

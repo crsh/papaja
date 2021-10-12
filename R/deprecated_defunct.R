@@ -29,8 +29,8 @@ apa_prepare_doc <- function() {
 #'
 #' Downloads and saves a `.bib`-reference file form the web, so it can be
 #' used to cite references in a Markdown-document using pandoc or LaTeX.
-#' *This function has been defunct. Please use
-#' \code{\link[downloader]{download}} instead.*
+#' *This function has been defunct. Please use \code{download} from the
+#' \pkg{downloader} instead.*
 #'
 #' @param x Character. URL of the \code{.bib}-file to fetch.
 #' @param bib_name Character. The path and name of the file to be created.
@@ -52,8 +52,8 @@ fetch_web_refs <- function(x, bib_name) {
 #' Save a collection from a Zotero-Account to a BibTeX-file (defunct)
 #'
 #' Downloads and saves a Zotero reference library (or a subset) and saves it as
-#' BibTeX file. *This function has been defunct. Use
-#' [RefManageR::ReadZotero()] instead.*
+#' BibTeX file. *This function has been defunct. Use `ReadZotero()` from the
+#' \pkg{RefManageR} package instead.*
 #'
 #' @param x Character. Zotero user or group ID, see details.
 #' @param lib_type Character. Specifies if the supplied ID is associated with a
