@@ -4,7 +4,7 @@
 \alias{arrange_regression}
 \title{Create a Regression Table}
 \usage{
-arrange_regression(x, est_name, standardized, ci, ...)
+arrange_regression(x, est_name, standardized, conf.int, ...)
 }
 \arguments{
 \item{x}{\code{glm} or \code{lm} object. See details.}
@@ -18,7 +18,7 @@ is used. See details.}
 (e.g., using \code{scale()}), and leading zeros should be omitted if
 appropriate. See details.}
 
-\item{ci}{Numeric. Either a single value (range [0, 1]) giving the
+\item{conf.int}{Numeric. Either a single value (range [0, 1]) giving the
 confidence level or a two-column \code{matrix} with confidence region bounds as
 column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and coefficient names as row
 names (in the same order as they appear in \code{summary(x)$coefficients}.

@@ -9,7 +9,7 @@
   stat_name = NULL,
   est_name = NULL,
   n = NULL,
-  ci = NULL,
+  conf.int = NULL,
   in_paren = FALSE,
   ...
 )
@@ -29,7 +29,7 @@ used for the \emph{estimate}, otherwise the supplied name is used. See details.}
 \item{n}{Numeric. Sample size; required when reporting \eqn{\chi^2} tests,
 otherwise this parameter is ignored.}
 
-\item{ci}{Numeric. If \code{NULL} (the default), the function tries to
+\item{conf.int}{Numeric. If \code{NULL} (the default), the function tries to
 obtain confidence intervals from \code{x}. Other confidence intervals can be
 supplied as a \code{vector} of length 2 (lower and upper boundary,
 respectively) with attribute \code{conf.level} set, e.g., when calculating

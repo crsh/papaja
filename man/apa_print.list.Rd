@@ -7,7 +7,7 @@
 \method{apa_print}{list}(
   x,
   anova_fun = stats::anova,
-  ci = 0.9,
+  conf.int = 0.9,
   boot_samples = 10000,
   progress_bar = interactive(),
   observed = TRUE,
@@ -23,7 +23,7 @@ the output object.}
 \item{anova_fun}{Function. Function to compare model-objects contained in
 \code{x}.}
 
-\item{ci}{Numeric. Confidence level for the bootstrap confidence interval
+\item{conf.int}{Numeric. Confidence level for the bootstrap confidence interval
 for \eqn{\Delta R^2} (range [0, 1]); ignored if \code{boot_samples = 0}.}
 
 \item{boot_samples}{Numeric. Number of bootstrap samples to estimate
@@ -63,7 +63,7 @@ with type of nonnormality." (p. 939, Algina, Keselman & Penfield, 2010)}
 
 If \pkg{MBESS} is available, confidence intervals for \eqn{R^2} are
 computed using \code{\link[MBESS:ci.R2]{MBESS::ci.R2()}} to obtain a confidence region that
-corresponds to the confidence level \code{ci}, the default being a 90\% CI (see
+corresponds to the confidence level \code{conf.int}, the default being a 90\% CI (see
 Steiger, 2004). If \code{observed = FALSE}, it is assumed that predictors are
 fixed variables, i.e., "the values of the [predictors] were selected a
 priori as part of the research design" (p. 15, Kelly, 2007); put

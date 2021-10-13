@@ -7,7 +7,7 @@
 print_model_comp(
   x,
   models = NULL,
-  ci = NULL,
+  conf.int = NULL,
   boot_samples = 1000,
   progress_bar = FALSE,
   in_paren = FALSE,
@@ -19,9 +19,9 @@ print_model_comp(
 
 \item{models}{List. List containing fitted \code{lm} objects that were compared using \code{\link[=anova]{anova()}}. If the list is named, element names are used as model names in the output object.}
 
-\item{ci}{Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{ci = NULL} no confidence intervals are estimated.}
+\item{conf.int}{Numeric. Confidence level for the confidence interval for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}. If \code{conf.int = NULL} no confidence intervals are estimated.}
 
-\item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{ci = NULL}.}
+\item{boot_samples}{Numeric. Number of bootstrap samples to estimate confidence intervals for \eqn{\Delta R^2} if \code{x} is a model comparison object of class \code{anova}; ignored if \code{conf.int = NULL}.}
 
 \item{progress_bar}{Logical. Determines whether a progress bar is printed while bootstrapping.}
 

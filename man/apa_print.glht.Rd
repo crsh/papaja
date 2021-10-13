@@ -7,7 +7,7 @@
 \usage{
 \method{apa_print}{glht}(x, test = multcomp::adjusted(), ...)
 
-\method{apa_print}{summary.glht}(x, ci = 0.95, in_paren = FALSE, ...)
+\method{apa_print}{summary.glht}(x, conf.int = 0.95, in_paren = FALSE, ...)
 }
 \arguments{
 \item{x}{Object}
@@ -16,7 +16,7 @@
 
 \item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
 
-\item{ci}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
+\item{conf.int}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.}
 

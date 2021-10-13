@@ -7,13 +7,13 @@
 \alias{apa_print.summary.lm}
 \title{Typeset Statistical Results from GLM}
 \usage{
-\method{apa_print}{glm}(x, est_name = NULL, ci = 0.95, in_paren = FALSE, ...)
+\method{apa_print}{glm}(x, est_name = NULL, conf.int = 0.95, in_paren = FALSE, ...)
 
 \method{apa_print}{lm}(
   x,
   est_name = NULL,
   standardized = FALSE,
-  ci = 0.95,
+  conf.int = 0.95,
   observed = TRUE,
   in_paren = FALSE,
   ...
@@ -31,7 +31,7 @@
 standardized regression coefficients) is used. Otherwise the supplied name
 is used. See details.}
 
-\item{ci}{Numeric. Either a single value (range [0, 1]) giving the
+\item{conf.int}{Numeric. Either a single value (range [0, 1]) giving the
 confidence level or a two-column \code{matrix} with confidence region bounds as
 column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and coefficient names as row
 names (in the same order as they appear in \code{summary(x)$coefficients}.
@@ -72,7 +72,7 @@ final document type, you can pass LaTeX-markup to format the final text
 If \code{standardized = TRUE}, \code{scale()} is removed from coefficient names
 (see examples). This option is currently ignored for \code{glm}-objects.
 
-If \code{ci} is a single value, confidence intervals are calculated using
+If \code{conf.int} is a single value, confidence intervals are calculated using
 \code{\link[stats:confint]{stats::confint()}}.
 
 If \code{x} is an \code{lm} object and the \pkg{MBESS} package is available,
