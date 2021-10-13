@@ -74,10 +74,10 @@ load("../tests/testthat/data/mixed_data.rdata")
 ```
 
 Computational reproducibility is of fundamental importance to the quantitative sciences [@cacioppo_social_2015; @peng_reproducible_2011; @donoho_invitation_2010; @hutson_artificial_2018].
-Yet, irreproducible results widely prevalent.
-Computational reproducibility is threatened by uncountable sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020].
+Yet, irreproducible results are widely prevalent.
+Computational reproducibility is threatened by countless sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020].
 **papaja** was designed to address these problems.
-The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society [APA, 6th edition, @american_psychological_association_publication_2010].
+The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Association [APA, 6th edition, @american_psychological_association_publication_2010].
 **papaja** provides [**rmarkdown**](http://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
 Moreover, **papaja** provides helper functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
 This document was written with **papaja** and provides a brief overview of the package's main features.
@@ -86,10 +86,10 @@ For a comprehensive introduction and installation instructions, see the current 
 [^1]: If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow using the [**papaja** tag](https://t.co/Z3auyUrbTa).
     If you believe you have found a bug or would like to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 
-# The problem: Copy-paste-reporting
+# The problem: Copy-paste reporting
 
 Readers of scientific journal articles generally assume that numerical results and figures directly flow from the underlying data and analytic procedure.
-Execution of analyses and reporting of results are typically not considered sources of error that threaten the validity of scientific claims---the computational reproducibility of the reported results is a forgone conclusion.
+Execution of analyses and reporting of results were typically not considered sources of error that threaten the validity of scientific claims---the computational reproducibility of the reported results is a forgone conclusion.
 The natural assumption of computational reproducibility reflects its fundamental importance to quantitative sciences as acknowledged by the U.S.
 National Science Foundation subcommittee on Replicability in Science:
 
@@ -105,14 +105,14 @@ Examples like this show that computational reproducibility cannot be a forgone c
 Large-scale scrutiny of statistics published in over 30,000 articles in psychology journals shows that every other article reports at least one impossible combination of test statistic, degrees of freedom, and $p$ value; in every tenth article such inconsistencies call the statistical inference into question [@nuijten_prevalence_2016].
 More in-depth investigations that attempted to reproduce reported results from the underlying raw data paint a similar picture.
 For example, in a sample of 46 articles, two thirds of key claims could be reproduced but in every tenth case only after deviating from the reported analysis plan [@artner_reproducibility_2020].
-For one in four irreproducible results, the reproduction attempt yielded results that were no longer statistically significant calling the original statistical inference into question.
+For one in four irreproducible results, the reproduction attempt yielded results that were no longer statistically significant, calling the original statistical inference into question.
 These figures clearly show that there is a need for efforts to improve the computational reproducibility of the published literature.
 
 Computational irreproducibility is, of course, multi-causal.
-While there is only one way in which a research report is computationally reproducible, the number of things that can go wrong is uncountable.
+While there is only one way in which a research report is computationally reproducible, the is a countless number of things that can go wrong.
 Broadly speaking, there are at least four causes for irreproducible analyses: (1) incomplete or incorrect reporting of the analytic procedure, (2) incorrect execution of the analytic procedure, (3) incorrect reporting of results, and (4) code rot, i.e., irreproducibility caused by (inadvertent) changes to the computational environment (e.g., software updates, changes to data files).
 We currently see no technical solution to the first two causes.
-Incomplete reporting (1) may be somewhat mitigated by strictly enforcing reporting guidelines.
+Incomplete reporting (1) may be partially mitigated by strictly enforcing reporting guidelines.
 However, verifying that the analytic procedure is reported faithfully (1) and was executed correctly (2) ultimately requires manual scrutiny of analysis scripts and/or reproduction and is possible only if authors share their data.
 Code rot (4), on the other hand, can be adequately addressed by conserving the software environment in which the results were produced (e.g., R and all R packages).
 Several seasoned technical solutions, such as software containers or a virtual machine, exist [@piccolo_tools_2016; @gruning_practical_2018].[^2]
@@ -124,7 +124,7 @@ When it comes to reporting quantitative results, most researchers engage in what
 Quantitative analyses and reporting are done in separate software.
 Thus, by necessity quantitative results are copied from the analysis software and pasted into the report.
 Copy-paste reporting underlies and contributes to several of the most common causes for computational irreproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
-We are convinced that errors caused by copy-paste-reporting cannot be addressed by appealing to researchers to be more careful.
+We are convinced that errors caused by copy-paste reporting cannot be addressed by appealing to researchers to be more careful.
 The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to irreproducible results is substantial.
 Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report irreproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
 Evidently, computational reproducibility is difficult to attain.
@@ -201,11 +201,11 @@ The `pandoc` manual provides a comprehensive overview of [`citeproc`](https://pa
 
 To facilitate inserting citations, you may use the RStudio Visual Editor's [bibliography search](https://rstudio.github.io/visual-markdown-editing/citations.html#inserting-citations) and auto-completion of reference handles.
 If you use VSCode with the [R extension](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r) or RStudio without the Visual Editor, the add-in provided in [**citr**](https://github.com/crsh/citr) serves a similar purpose.
-Both the Visual Editor and **citr** can also access your Zotero database and copy references to your bibliography file.
+Both the Visual Editor and **citr** can also access your Zotero database directly and copy references to your bibliography file.
 
 As academics and open source developers, we believe it is important to credit the software we use for our publications.
 A lot of R packages are developed by academics free of charge.
-As citations are the currency of academia, it's easy to compensate volunteers for their work by citing their R packages.
+As citations are the currency of academia, it is easy to compensate volunteers for their work by citing their R packages.
 **papaja** provides two functions that make citing R and its packages quite convenient:
 
 ```{r r-references}
@@ -240,7 +240,7 @@ RStudio provides a [concise introduction](https://rmarkdown.rstudio.com/lesson-1
 `apa_print()` is a core function in **papaja** to facilitate reporting analytic results for a growing number of analytic output objects, Table \@ref(tab:apa-print-methods).
 Consider the following example of an analysis of variance.
 After performing the analysis, the result is passed to `apa_print()`.
-The function takes the R object returned by the analysis function and in turn returns a list that contains reportable text and tables.
+The function takes the R object returned by the analysis function and returns a list that contains reportable text and tables.
 
 ```{r anova-display, echo = TRUE, eval = FALSE}
 recall_anova <- afex::aov_4(
