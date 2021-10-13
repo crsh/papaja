@@ -118,7 +118,7 @@ apa_table.word <- function(x, ...) {
 
 
 deprecate_ci <- function(...) {
-  if(any(...names() == "ci")) {
+  if(any(names(list(...)) == "ci")) {
     stop("Using argument 'ci' in calls to 'apa_print()' is now defunct. Please use 'conf.int' instead.", call. = FALSE)
   }
 }
