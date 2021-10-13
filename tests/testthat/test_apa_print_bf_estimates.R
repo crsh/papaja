@@ -10,7 +10,7 @@ test_that(
     posterior_samples <- BayesFactor::posterior(ttest, iterations = 5000)
 
     # Default
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFoneSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
     )
@@ -20,7 +20,7 @@ test_that(
     expect_identical(estimates, "$M = -1.43$ 95\\% HDI $[-2.33, -0.57]$")
 
     # Custom HDI coverage
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFoneSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
       , hdi = 0.5
@@ -29,7 +29,7 @@ test_that(
     expect_identical(estimates, "$M = -1.43$ 50\\% HDI $[-1.74, -1.19]$")
 
     # Custom central tendency
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFoneSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
       , central_tendency = mean
@@ -38,7 +38,7 @@ test_that(
     expect_identical(estimates, "$M = -1.41$ 95\\% HDI $[-2.33, -0.57]$")
 
     # Standardized
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFoneSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
       , standardized = TRUE
@@ -56,7 +56,7 @@ test_that(
     posterior_samples <- BayesFactor::posterior(ttest, iterations = 5000)
 
     # Default
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFindepSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
     )
@@ -66,7 +66,7 @@ test_that(
     expect_identical(estimates, "$M = -1.13$ 95\\% HDI $[-2.78, 0.50]$")
 
     # Custom HDI coverage
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFindepSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
       , hdi = 0.5
@@ -75,7 +75,7 @@ test_that(
     expect_identical(estimates, "$M = -1.13$ 50\\% HDI $[-1.56, -0.48]$")
 
     # Custom central tendency
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFindepSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
       , central_tendency = mean
@@ -84,7 +84,7 @@ test_that(
     expect_identical(estimates, "$M = -1.16$ 95\\% HDI $[-2.78, 0.50]$")
 
     # Standardized
-    estimates <- bf_estimates(
+    estimates <- bf_estimates.BFindepSample(
       ttest@numerator$`Alt., r=0.707`
       , posterior_samples
       , standardized = TRUE

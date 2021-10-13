@@ -77,7 +77,6 @@
 #'   , plot = c("error_bars", "points", "swarms")
 #'   , ylim = c(0, 100)
 #' )
-#' @importFrom methods as
 #' @export
 
 

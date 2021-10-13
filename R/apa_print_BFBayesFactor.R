@@ -167,21 +167,7 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 }
 
 
-#' @rdname apa_print.BFBayesFactor
-#' @export
 
-setMethod(f = "apa_print", signature = "BFBayesFactor", definition = apa_print.BFBayesFactor)
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-
-setMethod(f = "apa_print", signature = "BFBayesFactorTop", definition = apa_print.BFBayesFactorTop)
-
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-
-setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
 
 
 apa_print_bf <- function(x, ...) {
@@ -273,14 +259,11 @@ bf_sort_terms <- function(x) {
 }
 
 
-# bf_estimates <- function(x, ...) UseMethod("bf_estimates", x)
 
-# bf_estimates.default <- function(x, ...) no_method(x)
+bf_estimates <- function(x, ...) UseMethod("bf_estimates", x)
 
-setGeneric(
-  name = "bf_estimates"
-  , def = function(x, ...) standardGeneric("bf_estimates")
-)
+bf_estimates.default <- function(x, ...) no_method(x)
+
 
 bf_estimates_ttest <- function(
   x
@@ -298,7 +281,12 @@ bf_estimates_ttest <- function(
     estimate <- "delta"
     est_name <- "d"
   } else {
-    estimate <- ifelse(class(x) == "BFoneSample", "mu", "beta (x - y)")
+    estimate <- if(inherits(x, "BFoneSample")) {
+      "mu"
+    } else {
+      # part in parentheses changes if formula method is used, so we have to grep 'beta'
+      colnames(samples)[grep(colnames(samples), pattern = "beta", fixed = TRUE)]
+    }
     est_name <- "M"
   }
 
@@ -311,15 +299,9 @@ bf_estimates_ttest <- function(
   estimate
 }
 
-suppressMessages(
-  setMethod(f = "bf_estimates", signature = "BFoneSample", definition = bf_estimates_ttest)
-)
 
-suppressMessages(
-  setMethod(f = "bf_estimates", signature = "BFindepSample", definition = bf_estimates_ttest)
-)
-
-
+bf_estimates.BFoneSample   <- bf_estimates_ttest
+bf_estimates.BFindepSample <- bf_estimates_ttest
 
 
 # typeset_ratio_subscript <- function(x) {

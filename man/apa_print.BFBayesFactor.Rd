@@ -4,9 +4,6 @@
 \alias{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactorTop}
 \alias{apa_print.BFBayesFactorList}
-\alias{apa_print,BFBayesFactor-method}
-\alias{apa_print,BFBayesFactorTop-method}
-\alias{apa_print,BFBayesFactorList-method}
 \title{Typeset Bayes Factors}
 \usage{
 \method{apa_print}{BFBayesFactor}(
@@ -27,25 +24,6 @@
 \method{apa_print}{BFBayesFactorTop}(x, ...)
 
 \method{apa_print}{BFBayesFactorList}(x, ...)
-
-\S4method{apa_print}{BFBayesFactor}(
-  x,
-  iterations = 10000,
-  central_tendency = median,
-  hdi = 0.95,
-  standardized = FALSE,
-  ratio_subscript = "10",
-  auto_invert = FALSE,
-  scientific = TRUE,
-  max = 1000,
-  min = 1/max,
-  evidential_boost = NULL,
-  ...
-)
-
-\S4method{apa_print}{BFBayesFactorTop}(x, ...)
-
-\S4method{apa_print}{BFBayesFactorList}(x, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}

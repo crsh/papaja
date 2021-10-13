@@ -39,6 +39,13 @@ test_that(
     expect_equivalent(ttest_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 1.27$")
     expect_identical(ttest_output$esti, "$M = -1.13$ 95\\% HDI $[-2.76, 0.46]$")
     expect_identical(ttest_output$full, "$M = -1.13$ 95\\% HDI $[-2.76, 0.46]$, $\\mathrm{BF}_{\\textrm{10}} = 1.27$")
+
+    # Formula method ----
+    set.seed(123L)
+    ttest_form <- ttestBF(formula = extra ~ group, data = sleep)
+
+    ttest_form_output <- apa_print(ttest_form)
+    expect_identical(ttest_output, ttest_form_output)
   }
 )
 

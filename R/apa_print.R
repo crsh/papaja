@@ -22,7 +22,7 @@ apa_print <- function(x, ...) {
 
 
 # #' @importClassesFrom BayesFactor BFBayesFactor
-setGeneric("apa_print")
+# setGeneric("apa_print")
 
 #' @method apa_print default
 #' @export
