@@ -194,7 +194,6 @@ apa_print.summary.aovlist <- function(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , est_first = FALSE
     , simplify = FALSE
@@ -287,7 +286,6 @@ apa_print.summary.Anova.mlm <- function(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , est_first = FALSE
     , simplify = FALSE
@@ -432,7 +430,6 @@ apa_print.anova <- function(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = attr(beautiful_table, "term_names")
         , in_paren = in_paren
         , simplify = FALSE
       )
@@ -473,7 +470,6 @@ apa_print.anova <- function(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = attr(beautiful_table, "term_names")
         , in_paren = in_paren
         , simplify = FALSE
       )
@@ -518,7 +514,6 @@ apa_print.anova <- function(
       beautiful_table
       , est_glue = construct_glue(beautiful_table, "estimate")
       , stat_glue = construct_glue(beautiful_table, "statistic")
-      , term_names = attr(beautiful_table, "term_names")
       , in_paren = in_paren
       , est_first = FALSE
       , simplify = FALSE

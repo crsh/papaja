@@ -17,7 +17,7 @@
 #'    `modelfit`).
 #' @param term_names Character. Used as names for the `estimate`-,
 #'    `statistics`-, and `full_result` sub-lists, if multiple estimates or
-#'    statistics are glued.
+#'    statistics are glued. Defaults to `attr(x, "sanitized_term_names")`.
 #' @param in_paren Logical. Whether the formatted string is to be reported in
 #'    parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
 #'    enclosing degrees of freedom) are replaced with brackets.
@@ -66,14 +66,16 @@
 #'     )
 #' )
 
-glue_apa_results <- function(x = NULL, ...) {
+glue_apa_results <- function(x = NULL, term_names = NULL, ...) {
     if(!is.null(x)) validate(x, check_class = "data.frame")
 
-    # Remove 'term_names' attribute from 'sort_terms()'
-    attr(x, "sanitized_term_names") <- NULL
+    if(is.null(term_names)) {
+      term_names <- attr(x, "sanitized_term_names")
+    }
 
     apa_res <- add_glue_to_apa_results(
         .x = x
+        , term_names = term_names
         , ...
         , container = init_apa_results()
     )
@@ -85,6 +87,9 @@ glue_apa_results <- function(x = NULL, ...) {
       if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
       apa_res$table <- x
     }
+
+    # Remove 'sanitized_term_names' attribute from 'sort_terms()'
+    attr(apa_res$table, "sanitized_term_names") <- NULL
 
     apa_res
 }

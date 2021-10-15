@@ -64,6 +64,11 @@ test_that(
           , lrc = "$\\hat{\\beta} = -3.23$, 95\\% CI $[-3.30, -3.17]$, $t(68) = -94.36$, $p < .001$"
         )
       )
+
+      expect_warning(
+        apa_print(fm1, args_confint = .9)
+        , "deprecated. Please use 'conf.int' instead."
+      )
   }
 )
 

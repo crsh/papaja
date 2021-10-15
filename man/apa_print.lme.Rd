@@ -5,7 +5,7 @@
 \alias{apa_print.anova.lme}
 \title{Typeset Statistical Results from Nonlinear Hierarchical Models}
 \usage{
-\method{apa_print}{lme}(x, args_confint = NULL, in_paren = FALSE, est_name = NULL, ...)
+\method{apa_print}{lme}(x, conf.int = 0.95, in_paren = FALSE, est_name = NULL, ...)
 
 \method{apa_print}{anova.lme}(x, in_paren = FALSE, ...)
 }
@@ -13,8 +13,8 @@
 \item{x}{A (non-)linear mixed-effects model fitted with \code{\link[nlme:lme]{nlme::lme()}} or
 \code{\link[nlme:nlme]{nlme::nlme()}}}
 
-\item{args_confint}{Named list. Arguments that are passed to
-\code{\link[nlme:intervals.lme]{nlme::intervals.lme()}}.}
+\item{conf.int}{Numeric specifying the required confidence level \emph{or} a named list
+of additional arguments that are passed to \code{\link[nlme:intervals.lme]{nlme::intervals.lme()}}.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
@@ -33,7 +33,7 @@ with APA manuscript guidelines.
 \examples{
   library(nlme)
   fm1 <- lme(distance ~ age, data = Orthodont, method = "ML") # random is ~ age
-  apa_print(fm1)
+  apa_print(fm1, conf.int = .9)
   # ANOVA-like tables
   single_anova <- anova(fm1)
   apa_print(single_anova)

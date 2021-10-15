@@ -8,7 +8,7 @@
 \method{apa_print}{merMod}(
   x,
   effects = "fixed",
-  args_confint = NULL,
+  conf.int = 0.95,
   in_paren = FALSE,
   est_name = NULL,
   ...
@@ -23,7 +23,8 @@
 \item{effects}{Character. Determines which information is returned.
 Currently, only fixed-effects terms (\code{"fixed"}) are supported.}
 
-\item{args_confint}{Named list. Additional arguments that are passed to
+\item{conf.int}{Numeric specifying the required confidence level \emph{or} a named
+list specifying additional arguments that are passed to
 \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in

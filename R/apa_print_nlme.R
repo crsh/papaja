@@ -6,8 +6,8 @@
 #'
 #' @param x A (non-)linear mixed-effects model fitted with [nlme::lme()] or
 #'   [nlme::nlme()]
-#' @param args_confint Named list. Arguments that are passed to
-#'   [nlme::intervals.lme()].
+#' @param conf.int Numeric specifying the required confidence level *or* a named list
+#'   of additional arguments that are passed to [nlme::intervals.lme()].
 #' @inheritParams apa_print.merMod
 #'
 #' @evalRd apa_results_return_value()
@@ -15,7 +15,7 @@
 #' @examples
 #'   library(nlme)
 #'   fm1 <- lme(distance ~ age, data = Orthodont, method = "ML") # random is ~ age
-#'   apa_print(fm1)
+#'   apa_print(fm1, conf.int = .9)
 #'   # ANOVA-like tables
 #'   single_anova <- anova(fm1)
 #'   apa_print(single_anova)
@@ -27,15 +27,29 @@
 
 apa_print.lme <- function(
   x
-  , args_confint = NULL
+  , conf.int = 0.95
   , in_paren = FALSE
   , est_name = NULL
   , ...
 ) {
 
-  # Input validation ----
-  if(is.null(args_confint)) args_confint <- list()
-  validate(args_confint, check_class = "list")
+  ellipsis <- list(...)
+
+  # Input validation and processing ----
+
+  if(!is.null(ellipsis$args)) {
+    warning("Argument 'args_confint' has been deprecated. Please use 'conf.int' instead.")
+    conf.int <- ellipsis$args
+    ellipsis$args_confint <- NULL
+  }
+
+  if(is.list(conf.int)) {
+    validate(conf.int, check_class = "list")
+  } else {
+    validate(conf.int, check_class = "numeric", check_length = 1L)
+    conf.int <- list(level = conf.int)
+  }
+
 
 
   # `in_paren` is validated in `glue_apa_results()`
@@ -58,7 +72,7 @@ apa_print.lme <- function(
   )
 
   args_confint <- defaults(
-    args_confint
+    conf.int
     , set = list(
       object = x
       , which = "fixed"
@@ -88,14 +102,13 @@ apa_print.lme <- function(
   res_table$Value <- NULL
 
   # Canonize, beautify, and glue ----
-  canonical_table <- canonize(res_table, est_label = est_name)
-  beautiful_table <- beautify(canonical_table, ...)
+  ellipsis$x <- canonize(res_table, est_label = est_name)
+  beautiful_table <- do.call("beautify", ellipsis)
 
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , simplify = FALSE
   )
@@ -130,7 +143,6 @@ apa_print.anova.lme <- function(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , simplify = FALSE
   )
