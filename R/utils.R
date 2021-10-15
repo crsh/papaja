@@ -326,7 +326,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   if(!is.null(y$term)) {
     perm <- term_order(y$term)
     y <- y[perm, , drop = FALSE]
-    attr(y, "term_names") <- sanitize_terms(unlabel(x$term)[perm])
+    attr(y, "sanitized_term_names") <- sanitize_terms(unlabel(x$term)[perm])
   }
 
   rownames(y) <- NULL

@@ -70,7 +70,7 @@ glue_apa_results <- function(x = NULL, ...) {
     if(!is.null(x)) validate(x, check_class = "data.frame")
 
     # Remove 'term_names' attribute from 'sort_terms()'
-    attr(x, "term_names") <- NULL
+    attr(x, "sanitized_term_names") <- NULL
 
     apa_res <- add_glue_to_apa_results(
         .x = x

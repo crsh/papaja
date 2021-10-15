@@ -100,6 +100,14 @@ expect_apa_results <- function(
     }
   }
 
+  # consistency between ordering of names of reporting strings and table
+  if(!is.null(object$table$term)) {
+  expect_equal(
+    tolower(sanitize_terms(unlabel(gsub(object$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))))
+    , tolower(names(object$full_result)[!names(object$full_result) == "modelfit"])
+  )
+  }
+
   # Invisibly return the value
   invisible(act$val)
 }
