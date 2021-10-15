@@ -295,37 +295,43 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
   args <- list(...)
 
+  y <- x
+
   # apply printnum ----
-  for (i in colnames(x)) {
+  for (i in colnames(y)) {
     if(i == "p.value") {
-      x[[i]] <- printp(x[[i]])
+      y[[i]] <- printp(y[[i]])
     } else if(i %in% c("df", "df.residual", "multivariate.df", "multivariate.df.residual")) {
-      x[[i]] <- print_df(x[[i]])
+      y[[i]] <- print_df(y[[i]])
     } else if(i == "conf.int") {
-      tmp <- unlist(lapply(X = x[[i]], FUN = function(x, ...){
+      tmp <- unlist(lapply(X = y[[i]], FUN = function(x, ...){
         # TODO: Switch to using print_interval here
         paste0("[", paste(printnum(x, use_math = use_math, ...), collapse = ", "), "]")
       }, ...))
-      variable_label(tmp) <- variable_label(x[[i]])
-      x[[i]] <- tmp
+      variable_label(tmp) <- variable_label(y[[i]])
+      y[[i]] <- tmp
     } else if (i == "estimate"){
-      args$x <- x[[i]]
-      x[[i]] <- do.call("printnum", args)
+      args$x <- y[[i]]
+      y[[i]] <- do.call("printnum", args)
     } else if (i == "term"){
-      x[[i]] <- prettify_terms(as.character(x[[i]]), standardized = standardized)  # todo: standardized ???
+      y[[i]] <- prettify_terms(as.character(y[[i]]), standardized = standardized)  # todo: standardized ???
     } else {
-      x[[i]] <- printnum(x[[i]])
+      y[[i]] <- printnum(y[[i]])
     }
   }
 
   # rearrange ----
-  x <- sort_columns(x)
+  y <- sort_columns(y)
 
-  if(!is.null(x$term)) x <- sort_terms(x, "term")
-  rownames(x) <- NULL
+  if(!is.null(y$term)) {
+    perm <- term_order(y$term)
+    y <- y[perm, , drop = FALSE]
+    attr(y, "term_names") <- sanitize_terms(unlabel(x$term)[perm])
+  }
 
-  class(x) <- c("apa_results_table", "data.frame")
-  x
+  rownames(y) <- NULL
+  class(y) <- c("apa_results_table", "data.frame")
+  y
 }
 
 
@@ -519,7 +525,19 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 sort_terms <- function(x, colname) {
   validate(x, check_class = "data.frame", check_cols = colname)
 
-  x[order(sapply(.str_extract_all(x[[colname]], "\\\\times"), length)), ]
+  perm <- term_order(x[[colname]])
+  x[perm, , drop = FALSE]
+}
+
+term_order <- function(x) {
+  order(
+    unlist(
+      lapply(
+        X = strsplit(x, split = "\\times", fixed = TRUE)
+        , FUN = length
+      )
+    )
+  )
 }
 
 

@@ -458,5 +458,20 @@ test_that(
   }
 )
 
+
+test_that(
+  "Ensure proper sorting of terms"
+  , {
+    load("data/mixed_data.rdata")
+    unsorted_aov <- afex::aov_4(formula = Recall ~ Gender * Dosage * (Task|Subject), data = mixed_data, fun_aggregate = mean)
+    apa_out <- apa_print(unsorted_aov)
+
+    expect_equal(
+      unlabel(gsub(apa_out$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))
+      , names(apa_out$estimate)
+    )
+  }
+)
+
 # restore previous options
  options(op)

@@ -170,7 +170,7 @@ apa_print.htest <- function(
     , n = as.integer(n)
     , est_glue = construct_glue(x, "estimate")
     , stat_glue = construct_glue(x, "statistic")
-    , term_names = sanitize_terms(y$term)
+    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
   )
 }

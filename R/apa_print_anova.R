@@ -194,7 +194,7 @@ apa_print.summary.aovlist <- function(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(unlabel(canonical_table$term))
+    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , est_first = FALSE
     , simplify = FALSE
@@ -283,12 +283,11 @@ apa_print.summary.Anova.mlm <- function(
   ellipsis$x <- canonical_table
   beautiful_table <- do.call("beautify", ellipsis)
 
-
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(unlabel(canonical_table$term))
+    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , est_first = FALSE
     , simplify = FALSE
@@ -433,7 +432,7 @@ apa_print.anova <- function(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = sanitize_terms(x$Effect)
+        , term_names = attr(beautiful_table, "term_names")
         , in_paren = in_paren
         , simplify = FALSE
       )
@@ -474,7 +473,7 @@ apa_print.anova <- function(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = sanitize_terms(tinylabels::unlabel(x$Effect))
+        , term_names = attr(beautiful_table, "term_names")
         , in_paren = in_paren
         , simplify = FALSE
       )
@@ -519,7 +518,7 @@ apa_print.anova <- function(
       beautiful_table
       , est_glue = construct_glue(beautiful_table, "estimate")
       , stat_glue = construct_glue(beautiful_table, "statistic")
-      , term_names = sanitize_terms(tinylabels::unlabel(canonical_table$term))
+      , term_names = attr(beautiful_table, "term_names")
       , in_paren = in_paren
       , est_first = FALSE
       , simplify = FALSE

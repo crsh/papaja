@@ -38,7 +38,7 @@ apa_print.summary.manova <- function(x, in_paren = FALSE, ...) {
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(df$Effect)
+    , term_names = attr(beautiful_table, "term_names")
     , in_paren = in_paren
     , simplify = FALSE
   )

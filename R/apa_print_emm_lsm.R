@@ -404,6 +404,7 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
     class(beautiful_table) <- c("apa_results_table", "data.frame")
 
     term_names <- sanitize_terms(
+      # todo: check ordering of terms
       as.character(interaction(c(canonical_table["term"], by_vars), sep = "_"))
     )
   }
