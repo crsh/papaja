@@ -37,7 +37,7 @@ test_that(
       )
 
       # Also works for nonlinear models of class 'c("nlme", "lme")'
-      # from the example ssection of nlme::nlme()
+      # from the example section of nlme::nlme()
       fm1 <- nlme::nlme(height ~ stats::SSasymp(age, Asym, R0, lrc),
                         data = datasets::Loblolly,
                         fixed = Asym + R0 + lrc ~ 1,
