@@ -378,7 +378,6 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
     )
   } else {
     canonical_table <- canonize(x)
-    term_names <- sanitize_terms(unlabel(canonical_table$term))
   }
 
   tinylabels::variable_labels(canonical_table) <- c(term = "Effect")
@@ -393,6 +392,7 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
   )
   ellipsis$x <- canonical_table
   beautiful_table <- do.call("beautify", ellipsis)
+  term_names <- attr(beautiful_table, "sanitized_term_names")
 
   if(!is.null(by_vars)) {
     beautiful_table <- as.data.frame(
@@ -404,8 +404,7 @@ apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
     class(beautiful_table) <- c("apa_results_table", "data.frame")
 
     term_names <- sanitize_terms(
-      # todo: check ordering of terms
-      as.character(interaction(c(canonical_table["term"], by_vars), sep = "_"))
+      apply(cbind(term_names, by_vars), 1, paste, collapse = "_")
     )
   }
 

@@ -97,6 +97,7 @@ expect_apa_results <- function(
       }
       expect_identical(names(object$full_result), term_names)
 
+      term_names <- term_names[term_names != "modelfit"]
       expect_identical(nrow(object$table), length(term_names))
     }
   }

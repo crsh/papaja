@@ -105,6 +105,7 @@ test_that(
         , statistic = "$t(18)$"
         , p.value   = "$p$"
       )
+      , term_names = c("Intercept", "z_ctl", "modelfit")
       , table_terms = c("Intercept", "Ctl")
     )
 

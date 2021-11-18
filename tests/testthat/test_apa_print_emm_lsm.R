@@ -469,6 +469,28 @@ test_that(
       , estimate = NULL
       , statistic = "$F(2, 15.58) = 1.46$, $p = .263$"
     )
+
+
+    # Ensure proper sorting of terms
+    load("data/mixed_data.rdata")
+    unsorted_aov <- afex::aov_4(formula = Recall ~ Gender * Dosage * (Task * Valence |Subject), data = mixed_data, fun_aggregate = mean)
+    
+    unsorted_emm <- emmeans::joint_tests(unsorted_aov, by = "Gender")
+    apa_out <- apa_print(unsorted_emm)
+
+    expect_apa_results(
+      apa_out
+      , labels = list(
+        Gender = "Gender"
+        , term = "Effect"
+        , statistic = "$F$"
+        , df = "$\\mathit{df}$"
+        , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
+        , p.value = "$p$"
+      )
+      , term_names = papaja:::sanitize_terms(paste(unlabel(gsub(apa_out$table$term, pattern =  " $\\times$ ", replacement = "_", fixed = TRUE)), apa_out$table$Gender, sep = "_")) 
+      , table_terms = prettify_terms(data.frame(unsorted_emm)$model.term)
+    )
   }
 )
 
