@@ -454,6 +454,18 @@ prettify_terms.numeric <- function(x, standardized = FALSE, ...) {
   )
 }
 
+#' @rdname prettify_terms
+#' @method prettify_terms factor
+#' @export
+
+prettify_terms.factor <- function(x, standardized = FALSE, ...) {
+  prettify_terms(
+    as.character(x)
+    , standardized = standardized
+    , ...
+  )
+}
+
 
 capitalize <- function(x) {
   substring(x, first = 1, last = 1) <- toupper(substring(x, first = 1, last = 1))
