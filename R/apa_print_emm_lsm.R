@@ -90,7 +90,7 @@ apa_print.summary_emm <- function(
   # Attempt to extract family size from messages for summary-objects
   object_messages <- attr(x, "mesg")
 
-  if(is.null(attr(x, "famSize"))) {
+  if(!is.null(object_messages)) {
     family_size_mesg <- .str_extract_first(
       object_messages
       , "for (\\d+) (estimates|tests)"
