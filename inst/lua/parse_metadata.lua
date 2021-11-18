@@ -208,7 +208,7 @@ end
 
 --- Generate a correspondence elements for the author note
 local function create_correspondence(authors)
-  local corresponding_authors = List:new{}
+  local corresponding_authors = 0
 
   for i, author in ipairs(authors) do
     if author.corresponding and (author.address or author.email) then
@@ -223,16 +223,16 @@ local function create_correspondence(authors)
           author.email
       end
       contact_info = List:new(author.name .. address .. List:new{pandoc.Str "."} .. email)
-      table.insert(corresponding_authors, {pandoc.Str(contact_info)})
+      corresponding_authors =  corresponding_authors +1
     end
   end
 
-  if #corresponding_authors == 0 then
+  if corresponding_authors == 0 then
     return List:new{}
   end
 
   local correspondence_line
-  if #corresponding_authors > 0 then
+  if corresponding_authors > 0 then
     correspondence_line = List:new{
       pandoc.Str"Correspondence", pandoc.Space(), pandoc.Str"concerning", pandoc.Space(),
       pandoc.Str"this", pandoc.Space(), pandoc.Str"article", pandoc.Space(),
