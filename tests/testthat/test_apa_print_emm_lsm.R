@@ -460,6 +460,7 @@ test_that(
         , p.value = "$p$"
       )
       , term_names = paste("Valence", levels(tw_rm_data$Task), sep = "_")
+      , table_terms = rep("Valence", 2) # Levels split by are in "Task" column
     )
 
     expect_apa_term(

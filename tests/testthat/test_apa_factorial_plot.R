@@ -208,4 +208,4 @@ test_that(
   }
 )
 
-file.remove("Rplots.pdf")
+suppressWarnings(file.remove("Rplots.pdf"))

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 library("papaja")
 ```
 
-This document provides a brief overview of issues to consider when implementing a new method for `apa_print()`, a convenience function to facilitate reporting of results in accordance with APA reporting guidelines.
+Here, we provide a brief overview of issues to consider when implementing a new method for `apa_print()`, a convenience function to facilitate reporting of results in accordance with APA reporting guidelines.
 If you consider adding a new method, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
 
 ## Deciding on a new method

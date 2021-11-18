@@ -105,6 +105,7 @@ test_that(
         , statistic = "$t(18)$"
         , p.value   = "$p$"
       )
+      , table_terms = c("Intercept", "Ctl")
     )
 
     # No CI information

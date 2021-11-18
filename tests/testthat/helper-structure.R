@@ -25,6 +25,7 @@ expect_apa_results <- function(
   , col.names = NULL
   , labels = NULL
   , term_names = NULL
+  , table_terms = TRUE
   , ...
 ) {
 
@@ -102,10 +103,14 @@ expect_apa_results <- function(
 
   # consistency between ordering of names of reporting strings and table
   if(!is.null(object$table$term)) {
-  expect_equal(
-    tolower(sanitize_terms(unlabel(gsub(object$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))))
-    , tolower(names(object$full_result)[!names(object$full_result) == "modelfit"])
-  )
+    if(isTRUE(table_terms)) {
+      expect_equal(
+        tolower(sanitize_terms(unlabel(gsub(object$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))))
+        , tolower(names(object$full_result)[!names(object$full_result) == "modelfit"])
+      )
+    } else {
+      expect_equivalent(unclass(object$table$term)[1:nrow(object$table)], table_terms)
+    }
   }
 
   # Invisibly return the value

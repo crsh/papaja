@@ -89,7 +89,7 @@ For a comprehensive introduction and installation instructions, see the current 
 # The problem: Copy-paste reporting
 
 Readers of scientific journal articles generally assume that numerical results and figures directly flow from the underlying data and analytic procedure.
-Execution of analyses and reporting of results were typically not considered sources of error that threaten the validity of scientific claims---the computational reproducibility of the reported results is a forgone conclusion.
+Execution of analyses and reporting of results are typically not considered sources of error that threaten the validity of scientific claims---the computational reproducibility of the reported results is a forgone conclusion.
 The natural assumption of computational reproducibility reflects its fundamental importance to quantitative sciences as acknowledged by the U.S.
 National Science Foundation subcommittee on Replicability in Science:
 
