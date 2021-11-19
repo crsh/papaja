@@ -167,7 +167,7 @@ apa_print.summary_emm <- function(
   # factors <- gsub("^1$", "X1", factors)
 
   ## Typeset columns
-  tidy_x[, factors] <- prettify_terms(tidy_x[, factors], ...)
+  tidy_x[, factors] <- beautify_terms(tidy_x[, factors], ...)
 
   tidy_x$estimate <- printnum(tidy_x$estimate, ...)
 

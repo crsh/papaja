@@ -58,7 +58,7 @@ apa_print.summary.glht <- function(
 
   ## Typeset columns
   sanitzied_contrasts <- sanitize_terms(tidy_x$contrast)
-  tidy_x$contrast <- prettify_terms(tidy_x$contrast)
+  tidy_x$contrast <- beautify_terms(tidy_x$contrast)
   tidy_x$estimate <- printnum(tidy_x$estimate, ...)
   tidy_x$statistic <- printnum(tidy_x$statistic, digits = 2)
   tidy_x[[p_value]] <- printp(tidy_x[[p_value]])

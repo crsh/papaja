@@ -213,3 +213,52 @@ lookup_labels <- c(
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"
 )
+
+
+#' Lookup Table for Genearted Words and Phrases
+#'
+#' Some words and phrases used throughout a papaja manuscript are automatically
+#' generated and need to vary when the locale of a document is changed. This
+#' function returns the words and phrases by language.
+#'
+#' @param x Integer. Locale.
+#' @keywords internal
+
+localize <- function(x) {
+  switch(
+    x
+    , list( # Default
+      author_note = "Author note"
+      , abstract = "Abstract"
+      , keywords = "Keywords"
+      , word_count = "Word count"
+      , table = "Table"
+      , figure = "Figure"
+      , note = "Note"
+      , correspondence = "Correspondence concerning this article should be addressed to "
+      , email = "E-mail"
+    )
+    , german = list(
+      author_note = "Anmerkung des Autors"
+      , abstract = "Zusammenfassung"
+      , keywords = "Schl\u00fcsselw\u00f6rter"
+      , word_count = "Wortanzahl"
+      , table = "Tabelle"
+      , figure = "Abbildung"
+      , note = "Anmerkung"
+      , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
+      , email = "E-Mail"
+    )
+    , dutch = list(
+      author_note = "Over de auteur"
+      , abstract = "Samenvatting"
+      , keywords = "Trefwoorden"
+      , word_count = "Aantal woorden"
+      , table = "Tabel"
+      , figure = "Figuur"
+      , note = "Opmerking"
+      , correspondence = "Correspondentie betreffende dit artikel wordt geadresseerd aan "
+      , email = "E-mail"
+    )
+  )
+}

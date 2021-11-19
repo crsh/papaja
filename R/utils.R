@@ -73,7 +73,6 @@ validate <- function(
 }
 
 
-
 #' Create Empty Container for Results
 #'
 #' Creates the default empty container for the results of [apa_print()].
@@ -101,35 +100,6 @@ init_apa_results <- function(){
     )
     , class = c("apa_results", "list")
   )
-}
-
-
-
-#' Escape Symbols for LaTeX Output
-#'
-#' This function is a copy of the non-exported function `escape_latex()` from the \pkg{knitr} package.
-#' *This function is not exported.*
-#'
-#' @param x Character.
-#' @param newlines Logical. Determines if \code{\\n} are escaped.
-#' @param spaces Logical. Determines if multiple spaces are escaped.
-#'
-#' @keywords internal
-
-escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
-  if(is.null(x)) return(x)
-
-  x <- gsub("\\\\", "\\\\textbackslash", x)
-  x <- gsub("([#$%&_{}])", "\\\\\\1", x)
-  x <- gsub("\\\\textbackslash", "\\\\textbackslash{}", x)
-  x <- gsub("~", "\\\\textasciitilde{}", x)
-  x <- gsub("\\^", "\\\\textasciicircum{}", x)
-  if (newlines)
-    x <- gsub("(?<!\n)\n(?!\n)", "\\\\\\\\", x, perl = TRUE)
-  if (spaces)
-    x <- gsub("  ", "\\\\ \\\\ ", x)
-
-  x
 }
 
 
@@ -165,6 +135,7 @@ convert_stat_name <- function(x) {
     return(new_stat_name)
   }
 
+  # TODO: Add remaining to lookup tables and remove function
   new_stat_name <- switch(
     new_stat_name
     , new_stat_name
@@ -184,10 +155,10 @@ convert_stat_name <- function(x) {
 }
 
 
-
 #' Transform to a Canonical Table
 #'
-#' Internal function that transforms a data frame by renaming and labelling columns.
+#' Internal function that puts a data frame into a canonical structure by 
+#' renaming and labelling columns.
 #'
 #' @param x          A data frame.
 #' @param stat_label Character. Label for column `statistic`.
@@ -256,26 +227,9 @@ canonize <- function(
       , df.residual = paste0("$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{", df_correction_type, "}}$")
     )
   }
+
   x
 }
-
-#' @keywords internal
-
-remove_residuals_row <- function(x) {
-
-  resid_row <- apply(X = x, MARGIN = 1L, FUN = anyNA)
-
-  if(any(resid_row)) {
-    stopifnot(sum(resid_row) == 1)
-    x$sumsq_err <- x$sumsq[resid_row]
-    x$df.residual <- x$df[resid_row]
-    tinylabels::variable_label(x) <- c(df.residual = "$\\mathit{df}_{\\mathrm{res}}$")
-    x[!resid_row, , drop = FALSE]
-  } else {
-    x
-  }
-}
-
 
 #' Beautify a Canonical Table
 #'
@@ -314,7 +268,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
       args$x <- y[[i]]
       y[[i]] <- do.call("printnum", args)
     } else if (i == "term"){
-      y[[i]] <- prettify_terms(as.character(y[[i]]), standardized = standardized)  # todo: standardized ???
+      y[[i]] <- beautify_terms(as.character(y[[i]]), standardized = standardized)
     } else {
       y[[i]] <- printnum(y[[i]])
     }
@@ -333,187 +287,6 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   class(y) <- c("apa_results_table", "data.frame")
   y
 }
-
-
-
-
-#' Sanitize Term Names
-#'
-#' Remove characters from term names that will be difficult to address using the \code{$}-operator.
-#' *This function is not exported.*
-#'
-#' @param x Character. Vector of term names to be sanitized.
-#' @param standardized Logical. If `TRUE`, the name of the function [[scale()]] will be
-#'    removed from term names.
-#'
-#' @keywords internal
-#' @export
-#' @examples
-#' \dontrun{
-#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
-#' }
-
-sanitize_terms <- function(x, ...) {
-  UseMethod("sanitize_terms", x)
-}
-
-#' @rdname sanitize_terms
-#' @method sanitize_terms character
-#' @export
-
-sanitize_terms.character <- function(x, standardized = FALSE, ...) {
-  if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
-  x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
-  x <- gsub("\\.0+$", "", x)                        # Remove trailing 0-digits
-  x <- gsub(",", "", x)                             # Remove big mark
-  x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
-  x
-}
-
-#' @rdname sanitize_terms
-#' @method sanitize_terms factor
-#' @export
-
-sanitize_terms.factor <- function(x, ...) {
-  factor(sanitize_terms(as.character(x)))
-}
-
-
-#' @rdname sanitize_terms
-#' @method sanitize_terms data.frame
-#' @export
-
-sanitize_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, sanitize_terms, ...), stringsAsFactors = FALSE)
-}
-
-#' @rdname sanitize_terms
-#' @method sanitize_terms list
-#' @export
-
-sanitize_terms.list <- function(x, ...) {
-  lapply(x, sanitize_terms, ...)
-}
-
-
-#' Prettify Term Names
-#'
-#' Remove parentheses, replace colons with \code{$\\times$}.
-#' Useful to prettify term names in [apa_print()] tables.
-#'
-#' @param x Character. Vector of term names to be prettified.
-#' @param standardized Logical. If `TRUE`, the name of the function [scale()] will be
-#'    removed from term names.
-#'
-#' @examples
-#' NULL
-#' @keywords internal
-#' @export
-
-prettify_terms <- function(x, ...) {
-  UseMethod("prettify_terms", x)
-}
-
-#' @rdname prettify_terms
-#' @method prettify_terms character
-#' @export
-
-prettify_terms.character <- function(x, standardized = FALSE, retain_period = FALSE, ...) {
-  if(standardized) x <- gsub("scale\\(", "", x)       # Remove scale()
-  x <- gsub(pattern = "\\(|\\)|`|.+\\$", replacement = "", x = x)                 # Remove parentheses and backticks
-  x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
-  x <- gsub("\\_", " ", x)                        # Remove underscores
-  if(!retain_period) {
-    x <- gsub("\\.", " ", x)
-  }
-  for (i in seq_along(x)) {
-    x2 <- unlist(strsplit(x[i], split = ":"))
-    x2 <- capitalize(x2)
-    x[i] <- paste(x2, collapse = " $\\times$ ")
-  }
-  x
-}
-
-#' @rdname prettify_terms
-#' @method prettify_terms data.frame
-#' @export
-
-prettify_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, prettify_terms, ...), stringsAsFactors = FALSE)
-}
-
-#' @rdname prettify_terms
-#' @method prettify_terms numeric
-#' @export
-
-prettify_terms.numeric <- function(x, standardized = FALSE, ...) {
-  prettify_terms(
-    printnum(x, ...)
-    , standardized = standardized
-    , retain_period = TRUE
-  )
-}
-
-#' @rdname prettify_terms
-#' @method prettify_terms factor
-#' @export
-
-prettify_terms.factor <- function(x, standardized = FALSE, ...) {
-  prettify_terms(
-    as.character(x)
-    , standardized = standardized
-    , ...
-  )
-}
-
-
-capitalize <- function(x) {
-  substring(x, first = 1, last = 1) <- toupper(substring(x, first = 1, last = 1))
-  x
-}
-
-
-#' Select Parameters
-#'
-#' If a \code{list} holds vectors of parameter values, this function extracts the i-th parameter value from each vector and creates
-#' a new \code{list} with these values. Especially helpful if a function is called repeatedly via \code{do.call} with different
-#' parameter values from within a function.
-#'
-#' @param x List. A list of parameter values.
-#' @param i Integer. The i-th element of each vector that is to be extracted.
-#'
-#' @keywords internal
-#' @examples
-#' NULL
-
-sel <- function(x, i){
-  x <- x[(i-1)%%length(x)+1]
-  return(x)
-}
-
-
-#' Set Defaults
-#'
-#' A helper function that is intended for internal use. A list \code{ellipsis} may be manipulated by overwriting (via \code{set}) or adding (via \code{set.if.null}) list elements.
-#'
-#' @param ellipsis A \code{list}, usually a list that comes from an ellipsis
-#' @param set A named  \code{list} of parameters that are intended to be set.
-#' @param set.if.null A named \code{list} of parameters that are intended to be set if and only if the parameter is not already in \code{ellipsis}.
-#' @keywords internal
-
-defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
-
-  ellipsis <- as.list(ellipsis)
-
-  for (i in names(set)) {
-    ellipsis[[i]] <- set[[i]]
-  }
-  for (i in names(set.if.null)) {
-    if(is.null(ellipsis[[i]])) ellipsis[[i]] <- set.if.null[[i]]
-  }
-  return(ellipsis)
-}
-
 
 
 #' Sort ANOVA or Regression Table by Predictors/Effects
@@ -572,98 +345,27 @@ sort_columns <- function(x) {
 }
 
 
-#' Corresponding-Author Line
-#'
-#' Internal function. Construct corresponding-author line.
-#'
-#' @param x List. Meta data of the document as a result from [yaml::yaml.load()].
-#' @keywords internal
-
-corresponding_author_line <- function(x) {
-  apa_terms <- getOption("papaja.terms")
-
-  if(is.null(x$name)) stop("\nPlease provide the corresponding author's name in the documents YAML front matter. Use the 'name' element of the 'author' list.\n")
-  if(is.null(x$address)) stop("\nPlease provide the corresponding author's complete postal address in the documents YAML front matter. Use the 'address' element of the 'author' list.\n")
-  if(is.null(x$email)) stop("\nPlease provide the corresponding author's e-mail address in the documents YAML front matter. Use the 'email' element of the 'author' list.\n")
-
-  corresponding_line <- paste0(
-    apa_terms$correspondence, x$name, ", "
-    , x$address, ". "
-    , apa_terms$email, ": ", x$email
-  )
-
-  corresponding_line
-}
-
-#' Define Phrases According to Locale
-#'
-#' Internal function. Defines phrases used throughout the manuscript.
-#'
-#' @param x Integer. Locale.
-#' @keywords internal
-
-localize <- function(x) {
-  switch(
-    x
-    , list( # Default
-      author_note = "Author note"
-      , abstract = "Abstract"
-      , keywords = "Keywords"
-      , word_count = "Word count"
-      , table = "Table"
-      , figure = "Figure"
-      , note = "Note"
-      , correspondence = "Correspondence concerning this article should be addressed to "
-      , email = "E-mail"
-    )
-    , german = list(
-      author_note = "Anmerkung des Autors"
-      , abstract = "Zusammenfassung"
-      , keywords = "Schl\u00fcsselw\u00f6rter"
-      , word_count = "Wortanzahl"
-      , table = "Tabelle"
-      , figure = "Abbildung"
-      , note = "Anmerkung"
-      , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
-      , email = "E-Mail"
-    )
-    , dutch = list(
-      author_note = "Over de auteur"
-      , abstract = "Samenvatting"
-      , keywords = "Trefwoorden"
-      , word_count = "Aantal woorden"
-      , table = "Tabel"
-      , figure = "Figuur"
-      , note = "Opmerking"
-      , correspondence = "Correspondentie betreffende dit artikel wordt geadresseerd aan "
-      , email = "E-mail"
-    )
-  )
-}
-
-#' Package Available
-#'
-#' Internal function to check if a specified package is installed.
-
-#' @param x Character. Name of the package to be checked.
-#' @return Logical. Is the specified package installed?
-#' @keywords internal
-
-package_available <- function(x) x %in% rownames(utils::installed.packages())
-
-no_method <- function(x) {
-  stop(
-    "Objects of class '"
-    , class(x)
-    , "' are currently not supported (no method defined)."
-    , "\nVisit https://github.com/crsh/papaja/issues to request support for this class."
-    , call. = FALSE
-  )
-}
-
 rename_column <- function(x, current_name, new_name) {
   colnames(x)[colnames(x) %in% current_name] <- new_name[current_name %in% colnames(x)]
   x
+}
+
+
+#' @keywords internal
+
+remove_residuals_row <- function(x) {
+
+  resid_row <- apply(X = x, MARGIN = 1L, FUN = anyNA)
+
+  if(any(resid_row)) {
+    stopifnot(sum(resid_row) == 1)
+    x$sumsq_err <- x$sumsq[resid_row]
+    x$df.residual <- x$df[resid_row]
+    tinylabels::variable_label(x) <- c(df.residual = "$\\mathit{df}_{\\mathrm{res}}$")
+    x[!resid_row, , drop = FALSE]
+  } else {
+    x
+  }
 }
 
 
@@ -747,44 +449,67 @@ complete_observations <- function(data, id, within, dv) {
   attr(data, "removed_cases_implicit_NA") <- implicit_NA
 
   data
-
 }
 
 
-#' Add Equals Where Necessary
+#' Select Parameters
 #'
-#' This is an internal function that prepends every element of a character
-#' vector with an 'equals' sign if the respective element does not contain one of
-#' \code{c("=", "<", ">")}.
+#' If a \code{list} holds vectors of parameter values, this function extracts the i-th parameter value from each vector and creates
+#' a new \code{list} with these values. Especially helpful if a function is called repeatedly via \code{do.call} with different
+#' parameter values from within a function.
 #'
-#' @param x A character vector.
+#' @param x List. A list of parameter values.
+#' @param i Integer. The i-th element of each vector that is to be extracted.
 #'
 #' @keywords internal
+#' @examples
+#' NULL
+
+sel <- function(x, i){
+  x <- x[(i-1)%%length(x)+1]
+  return(x)
+}
 
 
-add_equals <-function(x) {
+#' Set Defaults
+#'
+#' A helper function that is intended for internal use. A list \code{ellipsis} may be manipulated by overwriting (via \code{set}) or adding (via \code{set.if.null}) list elements.
+#'
+#' @param ellipsis A \code{list}, usually a list that comes from an ellipsis
+#' @param set A named  \code{list} of parameters that are intended to be set.
+#' @param set.if.null A named \code{list} of parameters that are intended to be set if and only if the parameter is not already in \code{ellipsis}.
+#' @keywords internal
 
-  validate(x, check_class = "character")
+defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 
-  to_add <- !grepl(x, pattern = "=|<|>") # should we add geq and leq?
+  ellipsis <- as.list(ellipsis)
 
-  if(any(to_add)) {
-    x[to_add] <- paste0("= ", x[to_add])
+  for (i in names(set)) {
+    ellipsis[[i]] <- set[[i]]
   }
-  x
+  for (i in names(set.if.null)) {
+    if(is.null(ellipsis[[i]])) ellipsis[[i]] <- set.if.null[[i]]
+  }
+  return(ellipsis)
 }
 
 
-.str_extract_first <- function(x, pattern, useBytes = TRUE, ...) {
-  regmatches(
-    x
-    , regexpr(pattern, text = x, useBytes = useBytes, ...)
-  )
-}
+#' Package Available
+#'
+#' Internal function to check if a specified package is installed.
 
-.str_extract_all <- function(x, pattern, useBytes = TRUE, ...) {
-  regmatches(
-    x
-    , gregexpr(pattern, text = x, useBytes = useBytes, ...)
+#' @param x Character. Name of the package to be checked.
+#' @return Logical. Is the specified package installed?
+#' @keywords internal
+
+package_available <- function(x) x %in% rownames(utils::installed.packages())
+
+no_method <- function(x) {
+  stop(
+    "Objects of class '"
+    , class(x)
+    , "' are currently not supported (no method defined)."
+    , "\nVisit https://github.com/crsh/papaja/issues to request support for this class."
+    , call. = FALSE
   )
 }

@@ -25,7 +25,7 @@ If you consider adding a new method, please review our brief [contributing guide
 ## Deciding on a new method
 
 If you are reporting the results of a statistical analysis that is not yet supported by `apa_print()` you probably have a good motivation and possibly prior work to build on.
-If you are just looking for a way to contribute, take a look at the [open issues](https://github.com/crsh/papaja/issues) for inspiration.
+If you are just looking for a way to contribute to, take a look at the [open issues](https://github.com/crsh/papaja/issues) for inspiration.
 
 `apa_print()` is a generic, meaning it can, in principle, work on any output object with a class that is specific enough to purposefully extract the results of the analysis.
 For example, objects of class `htest`, as returned by `t.test()`, `cor.test()`, `prop.test()`, etc., are named lists that follow a loose convention about the named objects they contain.
@@ -175,14 +175,14 @@ To facilitate the generation of list names, **papaja** provides the internal fun
 ```{r sanitize-terms}
 mod_terms <- c("(Intercept)", "Factor A", "Factor B",
                "Factor A:Factor B", "scale(Factor A)")
-papaja:::sanitize_terms(mod_terms, standardized = TRUE)
+papaja::sanitize_terms(mod_terms, standardized = TRUE)
 ```
 
 While these sanitized terms are well suited to name R objects, they are not ideal for reporting.
-To facilitate typesetting term names for reporting, there is another internal function `papaja:::prettify_terms()`.
+To facilitate typesetting term names for reporting, there is another internal function `papaja:::beautify_terms()`.
 
 ```{r prettify-terms}
-papaja:::prettify_terms(mod_terms, standardized = TRUE)
+papaja::beautify_terms(mod_terms, standardized = TRUE)
 ```
 
 ## Internal workflow

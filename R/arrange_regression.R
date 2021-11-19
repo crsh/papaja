@@ -47,7 +47,7 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
     , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
   regression_table <- regression_table[, c("term", "estimate", "conf.int", "statistic", "p.value")] # Change order of columns
-  regression_table$term <- prettify_terms(regression_table$term, standardized = standardized)
+  regression_table$term <- beautify_terms(regression_table$term, standardized = standardized)
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
