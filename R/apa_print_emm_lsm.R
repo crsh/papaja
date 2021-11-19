@@ -450,15 +450,15 @@ est_name_from_call <- function(x) {
     # See https://github.com/rvlenth/emmeans/blob/be94689c22df5fae23287ce2b7ed7a21232fb32b/R/transformations.R
     est_name <- switch(
       link
-      , "logit" = "\\mathrm{logit}(p)"
-      , "probit" = "\\Phi^{-1}(p)"
-      , "cauchit" = "\\mathrm{cauchit}(p)"
-      , "cloglog" = "\\mathrm{cloglog}(p)"
-      , "log" = "\\log(M)"
-      , "sqrt" = "\\sqrt{M}"
-      , "log.o.r." = "\\log(\\mathit{OR})"
-      , "exp" = "\\exp(M)"
-      , "inverse" = "1/M"
+      , "logit"     = "\\mathrm{logit}(p)"
+      , "probit"    = "\\Phi^{-1}(p)"
+      , "cauchit"   = "\\mathrm{cauchit}(p)"
+      , "cloglog"   = "\\mathrm{cloglog}(p)"
+      , "log"       = "\\log(M)"
+      , "sqrt"      = "\\sqrt{M}"
+      , "log.o.r."  = "\\log(\\mathit{OR})"
+      , "exp"       = "\\exp(M)"
+      , "inverse"   = "1/M"
       , "M"
     )
   } else {
@@ -500,22 +500,7 @@ est_name_from_call <- function(x) {
 parse_adjust_name <- function(x, n = NULL, mesg = NULL) {
   if(is.null(x) || x == "none") return(NULL)
 
-  res <- switch(
-    x
-    , holm       = c(p.value = "Holm"            , conf.int = "Bonferroni")
-    , hochberg   = c(p.value = "Hochberg"        , conf.int = "Bonferroni")
-    , hommel     = c(p.value = "Hommel"          , conf.int = "Bonferroni")
-    , bonferroni = c(p.value = "Bonferroni"      , conf.int = "Bonferroni")
-    , BH         = c(p.value = "BH"              , conf.int = "Bonferroni")
-    , BY         = c(p.value = "BY"              , conf.int = "Bonferroni")
-    , fdr        = c(p.value = "FDR"             , conf.int = "Bonferroni")
-    , tukey      = c(p.value = "Tukey"           , conf.int = "Tukey")
-    , scheffe    = c(p.value = "Scheff\\'e"      , conf.int = "Scheff\\'e")
-    , sidak      = c(p.value = "Sidak"           , conf.int = "Sidak")
-    , dunnettx   = c(p.value = "Dunnett"         , conf.int = "Dunnett")
-    , mvt        = c(p.value = "MV \\mathit{t}"  , conf.int = "MV \\mathit{t}")
-    , "adj"
-  )
+  res <- lookup_adjust_names(x)
 
   # Attempt to use rank instead of family size
   if(x == "scheffe") {

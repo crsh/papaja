@@ -215,6 +215,38 @@ lookup_labels <- c(
 )
 
 
+#' Lookup Table for P Value/Confindence Interval Adjustment Names
+#'
+#' `apa_print()` converts many statistical output objects that include 
+#' inferential statistics adjusted for multiple comparisons. To make these 
+#' adjustments transparent the statistics get an index with the
+#' corresponding name. This function returns the proper names for these indices.
+#'
+#' @rdname lookup_tables
+#' @examples
+#'   papaja:::lookup_adjust_names("fdr")
+#' @keywords internal
+
+lookup_adjust_names <- function(x) {
+  switch(
+    x
+    , "holm"       = c(p.value = "Holm"            , conf.int = "Bonferroni")
+    , "hochberg"   = c(p.value = "Hochberg"        , conf.int = "Bonferroni")
+    , "hommel"     = c(p.value = "Hommel"          , conf.int = "Bonferroni")
+    , "bonferroni" = c(p.value = "Bonferroni"      , conf.int = "Bonferroni")
+    , "BH"         = c(p.value = "BH"              , conf.int = "Bonferroni")
+    , "BY"         = c(p.value = "BY"              , conf.int = "Bonferroni")
+    , "fdr"        = c(p.value = "FDR"             , conf.int = "Bonferroni")
+    , "tukey"      = c(p.value = "Tukey"           , conf.int = "Tukey")
+    , "scheffe"    = c(p.value = "Scheff\\'e"      , conf.int = "Scheff\\'e")
+    , "sidak"      = c(p.value = "Sidak"           , conf.int = "Sidak")
+    , "dunnettx"   = c(p.value = "Dunnett"         , conf.int = "Dunnett")
+    , "mvt"        = c(p.value = "MV \\mathit{t}"  , conf.int = "MV \\mathit{t}")
+    , "adj"
+  )
+}
+
+
 #' Lookup Table for Genearted Words and Phrases
 #'
 #' Some words and phrases used throughout a papaja manuscript are automatically
