@@ -160,9 +160,9 @@ print_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
 Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence intervals and Bayesian highest-density intervals.
 
 ```{r print-confint}
-papaja:::print_confint(rnorm(2), conf_level = 0.95)
+print_confint(rnorm(2), conf_level = 0.95)
 
-papaja:::print_hdint(rnorm(2), conf_level = 0.95)
+print_hdint(rnorm(2), conf_level = 0.95)
 ```
 
 ## Typesetting model terms
@@ -175,14 +175,14 @@ To facilitate the generation of list names, **papaja** provides the internal fun
 ```{r sanitize-terms}
 mod_terms <- c("(Intercept)", "Factor A", "Factor B",
                "Factor A:Factor B", "scale(Factor A)")
-papaja::sanitize_terms(mod_terms, standardized = TRUE)
+sanitize_terms(mod_terms, standardized = TRUE)
 ```
 
 While these sanitized terms are well suited to name R objects, they are not ideal for reporting.
-To facilitate typesetting term names for reporting, there is another internal function `papaja:::beautify_terms()`.
+To facilitate typesetting term names for reporting, there is another internal function `beautify_terms()`.
 
 ```{r prettify-terms}
-papaja::beautify_terms(mod_terms, standardized = TRUE)
+beautify_terms(mod_terms, standardized = TRUE)
 ```
 
 ## Internal workflow
