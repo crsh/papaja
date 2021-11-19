@@ -405,7 +405,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
       if(csl_specified) {
-        args <- c(args, "--csl", metadata$csl)
+        args <- c(args, "--csl", rmarkdown::pandoc_path_arg(tools::file_path_as_absolute(metadata$csl)))
       }
 
       args <- rmdfiltr::add_citeproc_filter(args)
@@ -626,7 +626,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
   ## Add appendix
   if(!is.null(metadata$appendix)) {
-    appendices <- sapply(metadata$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x)))
+    appendices <- sapply(metadata$appendix, function(x) rmarkdown::pandoc_path_arg(tools::file_path_sans_ext(tools::file_path_as_absolute(x))))
     args <- c(args, paste0("--include-after-body=", appendices, ".tex"))
   }
 
@@ -673,7 +673,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
       if(csl_specified) {
-        args <- c(args, "--csl", metadata$csl)
+        args <- c(args, "--csl", rmarkdown::pandoc_path_arg(tools::file_path_as_absolute(metadata$csl)))
       }
 
       args <- rmdfiltr::add_citeproc_filter(args)
