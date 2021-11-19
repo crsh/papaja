@@ -35,8 +35,6 @@
 #'
 #' printnum(0)
 #' printnum(0, zero = FALSE)
-#'
-#' printp(0.0001)
 #' @rdname printnum
 #' @export
 
@@ -377,10 +375,10 @@ printnum.tiny_labelled <-function(x, ...){
 #' @param digits Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.
 #' @inheritParams printnum.numeric
 #' @examples
-#' printp(0.05)
-#' printp(0.0005)
-#' printp(0.99999999)
-#' printp(c(.001, 0), add_equals = TRUE)
+#' print_p(0.05)
+#' print_p(0.0005)
+#' print_p(0.99999999)
+#' print_p(c(.001, 0), add_equals = TRUE)
 #' @export
 
 print_p <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
@@ -397,7 +395,7 @@ print_p <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   )
 }
 
-#' @rdname printp
+#' @rdname print_p
 #' @export
 
 printp <- print_p

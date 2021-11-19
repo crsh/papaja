@@ -2,9 +2,12 @@
 % Please edit documentation in R/print_num.R
 \name{print_p}
 \alias{print_p}
+\alias{printp}
 \title{Prepare Numeric Values for Printing as p value}
 \usage{
 print_p(x, digits = 3L, na_string = "", add_equals = FALSE)
+
+printp(x, digits = 3L, na_string = "", add_equals = FALSE)
 }
 \arguments{
 \item{x}{Numeric. The \emph{p} value(s) to report.}
@@ -20,8 +23,8 @@ prepended with an \code{=}.}
 Convenience wrapper for \code{\link{printnum}} to print \emph{p} values.
 }
 \examples{
-printp(0.05)
-printp(0.0005)
-printp(0.99999999)
-printp(c(.001, 0), add_equals = TRUE)
+print_p(0.05)
+print_p(0.0005)
+print_p(0.99999999)
+print_p(c(.001, 0), add_equals = TRUE)
 }

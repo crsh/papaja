@@ -194,6 +194,4 @@ printnum(1/3, digits = 5)
 
 printnum(0)
 printnum(0, zero = FALSE)
-
-printp(0.0001)
 }
