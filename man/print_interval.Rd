@@ -2,9 +2,10 @@
 % Please edit documentation in R/print_interval.R
 \name{print_interval}
 \alias{print_interval}
-\alias{print_interval.data.frame}
 \alias{print_interval.numeric}
 \alias{print_interval.matrix}
+\alias{print_interval.data.frame}
+\alias{print_interval.list}
 \alias{print_confint}
 \alias{print_hdint}
 \title{Typeset Interval Estimate}
@@ -16,8 +17,6 @@ print_interval(
   interval_type = NULL,
   enclose_math = FALSE
 )
-
-\method{print_interval}{data.frame}(x, ...)
 
 \method{print_interval}{numeric}(
   x,
@@ -35,6 +34,10 @@ print_interval(
   enclose_math = FALSE,
   ...
 )
+
+\method{print_interval}{data.frame}(x, ...)
+
+\method{print_interval}{list}(x, ...)
 
 print_confint(x, ..., interval_type = "CI")
 

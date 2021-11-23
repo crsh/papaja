@@ -489,7 +489,7 @@ test_that(
         , p.value = "$p$"
       )
       , term_names = papaja:::sanitize_terms(paste(unlabel(gsub(apa_out$table$term, pattern =  " $\\times$ ", replacement = "_", fixed = TRUE)), apa_out$table$Gender, sep = "_")) 
-      , table_terms = prettify_terms(data.frame(unsorted_emm)$model.term)
+      , table_terms = beautify_terms(data.frame(unsorted_emm)$model.term)
     )
   }
 )

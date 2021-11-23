@@ -62,15 +62,6 @@ print_interval.default <- function(x, ...) {
 }
 
 #' @rdname print_interval
-#' @method print_interval data.frame
-#' @export
-
-print_interval.data.frame <- function(x, ...) {
-    x <- as.matrix(x)
-    print_interval(x, ...)
-}
-
-#' @rdname print_interval
 #' @method print_interval numeric
 #' @export
 
@@ -196,6 +187,25 @@ print_interval.matrix <- function(
 
     interval
 }
+
+#' @rdname print_interval
+#' @method print_interval data.frame
+#' @export
+
+print_interval.data.frame <- function(x, ...) {
+    x <- as.matrix(x)
+    print_interval(x, ...)
+}
+
+#' @rdname print_interval
+#' @method print_interval list
+#' @export
+
+print_interval.list <- function(x, ...) {
+  x <- as.data.frame(x)
+  print_interval(x, ...)
+}
+
 
 #' @rdname print_interval
 #' @export

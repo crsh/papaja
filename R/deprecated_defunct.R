@@ -123,3 +123,8 @@ deprecate_ci <- function(...) {
   }
 }
 
+
+prettify_terms <- function(...) {
+  .Defunct("beautify_terms")
+  beautify_terms(...)
+}

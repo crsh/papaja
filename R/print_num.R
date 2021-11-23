@@ -35,14 +35,17 @@
 #'
 #' printnum(0)
 #' printnum(0, zero = FALSE)
-#'
-#' printp(0.0001)
 #' @rdname printnum
 #' @export
 
 printnum <- function(x, ...) {
   UseMethod("printnum", x)
 }
+
+#' @rdname printnum
+#' @export
+
+print_num <- printnum
 
 
 #' @rdname printnum
@@ -100,6 +103,8 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
     names(tens) <- 2:9
     number_names <- c("thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion")
 
+     collapse0 <- function(...) as.numeric(paste(..., collapse = ""))
+
     digits <- rev(strsplit(as.character(x), "")[[1]])
     n_digits <- length(digits)
     if(n_digits == 1) {
@@ -118,7 +123,7 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
       number <- paste(
         single_digits[digits[3]]
         , "hundred and"
-        , Recall(collapse(digits[2:1]))
+        , Recall(collapse0(digits[2:1]))
       )
     } else {
       required_number_word <- ((n_digits + 2) %/% 3) - 1
@@ -126,16 +131,14 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
         stop("Number is too large.")
       }
       number <- paste(
-        Recall(collapse(digits[n_digits:(3*required_number_word + 1)]))
+        Recall(collapse0(digits[n_digits:(3*required_number_word + 1)]))
         , number_names[required_number_word]
         , ","
-        , Recall(collapse(digits[(3*required_number_word):1])))
+        , Recall(collapse0(digits[(3*required_number_word):1])))
     }
 
     number
   }
-
-  collapse <- function(...) as.numeric(paste(..., collapse = ""))
 
   clean_number <- function(x) {
     x <- gsub("^\ +|\ +$", "", x)
@@ -278,7 +281,7 @@ printnum.numeric <- function(
 
   # Typeset scientific
   if(any(is_scientific)) {
-    y[is_scientific] <- typeset_scientific(y[is_scientific])
+    y[is_scientific] <- print_scientific(y[is_scientific])
     y[is_scientific & use_math] <- paste0("$", y[is_scientific & use_math], "$")
   }
 
@@ -372,13 +375,13 @@ printnum.tiny_labelled <-function(x, ...){
 #' @param digits Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.
 #' @inheritParams printnum.numeric
 #' @examples
-#' printp(0.05)
-#' printp(0.0005)
-#' printp(0.99999999)
-#' printp(c(.001, 0), add_equals = TRUE)
+#' print_p(0.05)
+#' print_p(0.0005)
+#' print_p(0.99999999)
+#' print_p(c(.001, 0), add_equals = TRUE)
 #' @export
 
-printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
+print_p <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
   validate(digits, check_class = "numeric")
 
@@ -392,6 +395,11 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   )
 }
 
+#' @rdname print_p
+#' @export
+
+printp <- print_p
+
 
 #' Print Degrees of Freedom
 #'
@@ -399,6 +407,7 @@ printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
 #' that trailing digits are only printed if non-integer values are given.
 #'
 #' @keywords internal
+#' @export
 
 print_df <- function(x, digits = 2L) {
 
@@ -426,11 +435,12 @@ print_df <- function(x, digits = 2L) {
 #' Typesets scientific notation of numbers into properly typeset math strings.
 #'
 #' @param x Character.
+#' @keywords internal
 #'
 #' @examples
-#' papaja:::typeset_scientific("1.25e+04")
+#' papaja:::print_scientific("1.25e+04")
 
-typeset_scientific <- function(x) {
+print_scientific <- function(x) {
   x <- gsub("e\\+00$", "", x)
   x <- gsub("e\\+0?(\\d+)$", " \\\\times 10\\^\\{\\1\\}", x)
   x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)

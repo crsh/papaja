@@ -213,3 +213,84 @@ lookup_labels <- c(
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"
 )
+
+
+#' Lookup Table for P Value/Confindence Interval Adjustment Names
+#'
+#' `apa_print()` converts many statistical output objects that include 
+#' inferential statistics adjusted for multiple comparisons. To make these 
+#' adjustments transparent the statistics get an index with the
+#' corresponding name. This function returns the proper names for these indices.
+#'
+#' @rdname lookup_tables
+#' @examples
+#'   papaja:::lookup_adjust_names("fdr")
+#' @keywords internal
+
+lookup_adjust_names <- function(x) {
+  switch(
+    x
+    , "holm"       = c(p.value = "Holm"            , conf.int = "Bonferroni")
+    , "hochberg"   = c(p.value = "Hochberg"        , conf.int = "Bonferroni")
+    , "hommel"     = c(p.value = "Hommel"          , conf.int = "Bonferroni")
+    , "bonferroni" = c(p.value = "Bonferroni"      , conf.int = "Bonferroni")
+    , "BH"         = c(p.value = "BH"              , conf.int = "Bonferroni")
+    , "BY"         = c(p.value = "BY"              , conf.int = "Bonferroni")
+    , "fdr"        = c(p.value = "FDR"             , conf.int = "Bonferroni")
+    , "tukey"      = c(p.value = "Tukey"           , conf.int = "Tukey")
+    , "scheffe"    = c(p.value = "Scheff\\'e"      , conf.int = "Scheff\\'e")
+    , "sidak"      = c(p.value = "Sidak"           , conf.int = "Sidak")
+    , "dunnettx"   = c(p.value = "Dunnett"         , conf.int = "Dunnett")
+    , "mvt"        = c(p.value = "MV \\mathit{t}"  , conf.int = "MV \\mathit{t}")
+    , "adj"
+  )
+}
+
+
+#' Lookup Table for Genearted Words and Phrases
+#'
+#' Some words and phrases used throughout a papaja manuscript are automatically
+#' generated and need to vary when the locale of a document is changed. This
+#' function returns the words and phrases by language.
+#'
+#' @param x Integer. Locale.
+#' @keywords internal
+
+localize <- function(x) {
+  switch(
+    x
+    , list( # Default
+      author_note = "Author note"
+      , abstract = "Abstract"
+      , keywords = "Keywords"
+      , word_count = "Word count"
+      , table = "Table"
+      , figure = "Figure"
+      , note = "Note"
+      , correspondence = "Correspondence concerning this article should be addressed to "
+      , email = "E-mail"
+    )
+    , german = list(
+      author_note = "Anmerkung des Autors"
+      , abstract = "Zusammenfassung"
+      , keywords = "Schl\u00fcsselw\u00f6rter"
+      , word_count = "Wortanzahl"
+      , table = "Tabelle"
+      , figure = "Abbildung"
+      , note = "Anmerkung"
+      , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
+      , email = "E-Mail"
+    )
+    , dutch = list(
+      author_note = "Over de auteur"
+      , abstract = "Samenvatting"
+      , keywords = "Trefwoorden"
+      , word_count = "Aantal woorden"
+      , table = "Tabel"
+      , figure = "Figuur"
+      , note = "Opmerking"
+      , correspondence = "Correspondentie betreffende dit artikel wordt geadresseerd aan "
+      , email = "E-mail"
+    )
+  )
+}
