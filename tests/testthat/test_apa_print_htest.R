@@ -53,14 +53,14 @@ test_that(
     expect_apa_results(
       t_test_output
       , labels = list(
-        estimate = "$M_d$"
+        estimate = "$\\Delta M$"
         , conf.int = "95\\% CI"
         , statistic = "$t$"
         , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
     )
-    expect_identical(t_test_output$full, "$M_d = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
+    expect_identical(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
 
     t_test <- t.test(sleep$extra, mu = 0)
     t_test_output <- apa_print(t_test)
@@ -126,14 +126,14 @@ test_that(
     expect_apa_results(
       wilcox_test_output
       , labels = list(
-        estimate    = "$\\mathit{Mdn}_d$"
+        estimate    = "$\\Delta \\mathit{Mdn}$"
         , conf.int  = "95\\% CI"
         , statistic = "$W$"
         , p.value   = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$est,  "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60, 0.10]$")
-    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
+    expect_identical(wilcox_test_output$est,  "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$")
+    expect_identical(wilcox_test_output$full, "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
 
 
     wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, exact = FALSE)

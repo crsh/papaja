@@ -38,6 +38,7 @@ lookup_names <- c(
   , "difference.in.means"       = "estimate"
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
+  , "p"                         = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
   , "Eta2_partial"     = "estimate"
@@ -136,11 +137,12 @@ lookup_labels <- c(
   , "tau"                       = "$\\uptau$"
   , "mean.of.x"                 = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
-  , "mean.of.the.differences"   = "$M_d$"
-  , "mean.difference"           = "$M_d$"
-  , "difference.in.location"    = "$\\mathit{Mdn}_d$"
+  , "mean.of.the.differences"   = "$\\Delta M$"
+  , "mean.difference"           = "$\\Delta M$"
+  , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
   , "difference.in.proportions" = "\\Delta p"
+  , "p"                         = "$p$"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"
   , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
