@@ -200,7 +200,7 @@ test_that(
     expect_apa_results(
       anova_bf_main_output
       , labels = list(
-        rhs = "Model"
+        model = "Model"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
       )
     )
@@ -293,7 +293,7 @@ test_that(
     expect_apa_results(
       regression_bf_all_output
       , labels = list(
-        rhs = "Model"
+        model = "Model"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
       )
     )

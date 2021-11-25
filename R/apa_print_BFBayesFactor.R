@@ -212,7 +212,7 @@ apa_print.BFBayesFactorTop <- function(x, inverse = FALSE, ...) {
   
   res <- do.call("apa_print", ellipsis)
 
-  res$table <- rename_column(res$table, "rhs", "term")
+  res$table <- rename_column(res$table, "model", "term")
   variable_label(res$table$term) <- "Term"
 
   res
@@ -365,8 +365,8 @@ bf_sample_summarize <- function(
   validate(estimate, check_class = "character", check_length = 1)
   validate(hdi, check_class = "numeric", check_length = 1, check_range = c(0, 1))
 
-  # rhs column only contains HA short name
-  data_frame$rhs <- NULL
+  # model column only contains HA short name
+  data_frame$model <- NULL
 
   posterior_samples <- BayesFactor::posterior(
     x
@@ -393,7 +393,7 @@ bf_add_names.default <- function(x, data_frame, ...) data_frame
 
 bf_add_names.BFlinearModel <- function(x, data_frame, ...) {
   cbind(
-    rhs = names(x)$numerator
+    model = names(x)$numerator
     , data_frame
   )
 }

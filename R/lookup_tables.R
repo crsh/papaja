@@ -24,7 +24,7 @@ lookup_names <- c(
   , "Effect"     = "term"
   , "Term"       = "term"
   , "model.term" = "term"
-  , "rhs"        = "rhs"
+  , "model"        = "model"
   # estimate
   , "Estimate"                = "estimate"
   , "estimate"                  = "estimate"
@@ -141,7 +141,7 @@ lookup_labels <- c(
   , "Effect"     = "Effect"
   , "Term"       = "Term"
   , "model.term" = "Term"
-  , "rhs"        = "Model"
+  , "model"        = "Model"
   , "contrast"   = "Contrast"
   # estimate
   , "cor"                       = "$r$"
