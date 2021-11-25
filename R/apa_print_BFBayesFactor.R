@@ -233,7 +233,7 @@ apa_print_bf.numeric <- function(
     if(is.null(ellipsis$digits)) ellipsis$digits <- 2
 
     bf <- do.call("printnum", ellipsis)
-    bf <- typeset_scientific(bf)
+    bf <- print_scientific(bf)
   } else {
     if(is.null(ellipsis$zero)) ellipsis$zero <- FALSE
     bf <- do.call("printnum", ellipsis)

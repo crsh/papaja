@@ -82,7 +82,7 @@ glue_apa_results <- function(x = NULL, term_names = NULL, ...) {
 
     if(!is.null(x) && is.data.frame(x)) {
       if(!inherits(x, "apa_results_table")) {
-        if("term" %in% names(x)) x$term <- prettify_terms(x$term)
+        if("term" %in% names(x)) x$term <- beautify_terms(x$term)
       }
       if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
       apa_res$table <- x
@@ -278,34 +278,4 @@ stat_glue <- function(x) {
   )
 
   unclass(constructed_glue)
-}
-
-
-#' Strip Math Tags from Variable Labels or Strings
-#'
-#' Internal function to strip math tags from variable labels or strings. `svl()`
-#' returns the stripped variable label of `x`, if available. `strip_math_tags` returns
-#' the stripped character `x`.
-#'
-#' @param x A (labelled) character string.
-#'
-#' @rdname strip_math_tags
-#' @keywords internal
-
-svl <- function(x, use_math = FALSE) {
-  y <- variable_labels(x)
-  if(is.null(y)) y <- x
-
-  if(!use_math) {
-    return(strip_math_tags(y))
-  } else {
-    y
-  }
-}
-
-#' @rdname strip_math_tags
-#' @keywords internal
-
-strip_math_tags <- function(x) {
-  gsub(pattern = "$", replacement = "", x = x, fixed = TRUE)
 }

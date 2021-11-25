@@ -4,6 +4,7 @@
 \name{lookup_names}
 \alias{lookup_names}
 \alias{lookup_labels}
+\alias{lookup_adjust_names}
 \title{Lookup Tables for Column Names and Variable Labels}
 \format{
 An object of class \code{character} of length 89.
@@ -14,15 +15,23 @@ An object of class \code{character} of length 85.
 lookup_names
 
 lookup_labels
+
+lookup_adjust_names(x)
 }
 \description{
 \code{apa_print()} converts many statistical output objects to output objects that
 contain an \code{apa_results_table/data.frame} with standardized column names and
 variable labels. For this purpose, it relies on the lookup tables provided
 here.
+
+\code{apa_print()} converts many statistical output objects that include
+inferential statistics adjusted for multiple comparisons. To make these
+adjustments transparent the statistics get an index with the
+corresponding name. This function returns the proper names for these indices.
 }
 \examples{
   papaja:::lookup_names[["mean.of.x"]]
   papaja:::lookup_labels[["mean.of.x"]]
+  papaja:::lookup_adjust_names("fdr")
 }
 \keyword{internal}

@@ -88,7 +88,7 @@ print_anova <- function(
     , colnames(x)
   )
   anova_table <- data.frame(x[, cols], row.names = NULL)
-  anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
+  anova_table[["term"]] <- beautify_terms(anova_table[["term"]])
 
   correction_type <- attr(x, "correction")
 

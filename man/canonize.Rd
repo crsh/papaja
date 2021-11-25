@@ -14,6 +14,7 @@ canonize(x, stat_label = NULL, est_label = NULL)
 \item{est_label}{Character. Label for column \code{estimate}.}
 }
 \description{
-Internal function that transforms a data frame by renaming and labelling columns.
+Internal function that puts a data frame into a canonical structure by
+renaming and labelling columns.
 }
 \keyword{internal}
