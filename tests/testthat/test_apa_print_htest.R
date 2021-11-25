@@ -239,6 +239,20 @@ test_that(
 test_that(
   "Chi-squared for contingency tables"
   , {
+    prop_test <- prop.test(5, 10)
+    prop_test_output <- suppressWarnings(apa_print(prop_test, n = 10))
+
+    expect_apa_results(
+      prop_test_output
+      ,  labels = list(
+        estimate = "$p$"
+        , conf.int = "95\\% CI"
+        , statistic = "$\\chi^2$"
+        , df      = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
+
     smokers  <- c(83, 90, 129, 70)
     patients <- c(86, 93, 136, 82)
     prop_test <- prop.test(smokers, patients)
