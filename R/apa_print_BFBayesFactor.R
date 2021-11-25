@@ -83,12 +83,34 @@ apa_print.BFBayesFactor <- function(
   ellipsis$max <- max
   ellipsis$min <- min
 
+  x_df <- as.data.frame(x)
+  x_df <- rename_column(x_df, "bf", "bf10")
+  x_df$code <- NULL
+  x_df$time <- NULL
+
+  if(!is.null(evidential_boost)) {
+    x_df$bf <- x_df * evidential_boost
+  }
+
+  x_df <- bf_add_names(x, x_df)
+
+  x_df <- bf_add_estimates(
+    x
+    , x_df
+    , central_tendency = median
+    , hdi = 0.95
+    , standardized = FALSE
+  )
+  
+  x_canonized <- canonize(x_df)
+  x_beautified <- beautify(x_canonized, standardized = standardized)
+
+
   if(length(x) > 1) {
     bf <- c()
     for(i in seq_along(x)) {
       ellipsis$x <- x[i]
       if(!is.null(evidential_boost)) ellipsis$evidential_boost <- evidential_boost[i]
-      # bf[i] <- print_bf(x[i], ...)
       bf[i] <- do.call("apa_print_bf", ellipsis)
     }
     bf <- as.list(bf)
@@ -99,17 +121,6 @@ apa_print.BFBayesFactor <- function(
 
   apa_res <- init_apa_results()
   apa_res$statistic <- bf
-
-  if(class(x@numerator[[1]]) %in% c("BFoneSample", "BFindepSample")) {
-    posterior_samples <- BayesFactor::posterior(x, index = 1, iterations = iterations)
-    apa_res$estimate <- bf_estimates(
-      x@numerator[[1]]
-      , posterior_samples
-      , central_tendency = central_tendency
-      , hdi = hdi
-      , standardized = standardized
-    )
-  }
 
   apa_res$full_result <- paste0(apa_res$estimate, ", ", apa_res$statistic)
 
@@ -260,49 +271,76 @@ bf_sort_terms <- function(x) {
 
 
 
-bf_estimates <- function(x, ...) UseMethod("bf_estimates", x)
+bf_add_estimates <- function(x, ...) UseMethod("bf_add_estimates", x@numerator[[1]])
 
-bf_estimates.default <- function(x, ...) no_method(x)
+bf_add_estimates.default <- function(x, data_frame, ...) data_frame
 
-
-bf_estimates_ttest <- function(
+bf_add_estimates_ttest <- function(
   x
-  , samples
+  , data_frame
   , central_tendency = median
   , hdi = 0.95
   , standardized = FALSE
 ) {
-  validate(samples, check_class = "mcmc")
   validate(central_tendency, check_class = "function")
   validate(hdi, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(standardized, check_class = "logical", check_length = 1)
 
+  posterior_samples <- BayesFactor::posterior(
+    x
+    , index = 1
+    , iterations = iterations
+    , progress = FALSE
+  )
+
   if(standardized) {
     estimate <- "delta"
-    est_name <- "d"
+    est_name <- "delta"
   } else {
-    estimate <- if(inherits(x, "BFoneSample")) {
+    estimate <- if(inherits(x@numerator[[1]], "BFoneSample")) {
       "mu"
     } else {
       # part in parentheses changes if formula method is used, so we have to grep 'beta'
-      colnames(samples)[grep(colnames(samples), pattern = "beta", fixed = TRUE)]
+      colnames(posterior_samples)[grep(colnames(posterior_samples), pattern = "beta", fixed = TRUE)]
     }
-    est_name <- "M"
+    est_name <- "mean"
   }
 
-  samples <- as.numeric(samples[, estimate])
+  posterior_samples <- as.numeric(posterior_samples[, estimate])
 
-  est_mean <- central_tendency(samples)
-  est_hdi <- hd_int(samples, level = hdi)
+  est_mean <- central_tendency(posterior_samples)
+  est_hdi <- hd_int(posterior_samples, level = hdi)
 
-  estimate <- paste0("$", est_name, " = ", printnum(est_mean), "$ ", print_hdint(est_hdi, enclose_math = TRUE))
-  estimate
+  data_frame[[est_name]] <- est_mean
+  data_frame$hd.int <- list(est_hdi)
+
+  # estimate <- paste0("$", est_name, " = ", printnum(est_mean), "$ ", print_hdint(est_hdi, enclose_math = TRUE))
+  # estimate
+
+  data_frame
 }
 
+bf_add_estimates.BFoneSample   <- bf_add_estimates_ttest
+bf_add_estimates.BFindepSample <- bf_add_estimates_ttest
 
-bf_estimates.BFoneSample   <- bf_estimates_ttest
-bf_estimates.BFindepSample <- bf_estimates_ttest
 
+bf_add_names <- function(x, ...) UseMethod("bf_add_names", x@numerator[[1]])
+
+bf_add_names.default <- function(x, data_frame, ...) data_frame
+
+
+
+# Classes
+# ~~BFBayesFactor~~
+# ~~BFBayesFactorTop~~
+# ~~BFBayesFactorList~~
+# BFcontigencyTable
+# BFcorrelation
+# ~~BFindepSample~~
+# ~~BFoneSample~~
+# BFlinearModel
+# BFprobability
+# BFproportion
 
 # typeset_ratio_subscript <- function(x) {
 #   gsub(

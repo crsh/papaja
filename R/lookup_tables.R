@@ -33,11 +33,13 @@ lookup_names <- c(
   , "rho"                       = "estimate"
   , "tau"                       = "estimate"
   , "mean.of.x"                 = "estimate"
+  , "mean"                      = "estimate"
   , "X.pseudo.median"           = "estimate"
   , "difference.in.location"    = "estimate"
   , "difference.in.means"       = "estimate"
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
+  , "delta"                     = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
   , "Eta2_partial"     = "estimate"
@@ -50,6 +52,7 @@ lookup_names <- c(
   , "Epsilon2_generalized" = "estimate"
   # ----
   , "conf.int"   = "conf.int"
+  , "hd.int"     = "conf.int"
   , "stderr"     = "std.error"
   , "std.err"    = "std.error"
   , "Std.Error"  = "std.error"
@@ -79,6 +82,9 @@ lookup_names <- c(
   , "T"         = "statistic"
   , "z"         = "statistic"
   , "z.value"   = "statistic"
+  , "bf"        = "statistic"
+  , "bf10"      = "statistic"
+  , "bf01"      = "statistic"
   , "Bartlett.s.K.2"          = "statistic"
   , "Bartlett.s.K.squared"    = "statistic"
   # df, df.residual
@@ -110,6 +116,7 @@ lookup_names <- c(
   , "Pr...t.."   = "p.value"
   , "Pr...z.."   = "p.value"
   , "pvalues"    = "p.value"
+  , "error"      = "mcmc.error"
 )
 
 
@@ -135,12 +142,14 @@ lookup_labels <- c(
   , "rho"                       = "$r_{\\mathrm{s}}$" # capital or small S???
   , "tau"                       = "$\\uptau$"
   , "mean.of.x"                 = "$M$"
+  , "mean"                      = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
   , "mean.of.the.differences"   = "$M_d$"
   , "mean.difference"           = "$M_d$"
   , "difference.in.location"    = "$\\mathit{Mdn}_d$"
   , "difference.in.means"       = "$\\Delta M$"
   , "difference.in.proportions" = "\\Delta p"
+  , "delta"                     = "\\delta"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"
   , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
@@ -174,12 +183,15 @@ lookup_labels <- c(
   , "chisq"     = "$\\chi^2$"
   , "Chisq"     = "$\\chi^2$"
   , "X.squared" = "$\\chi^2$"
-  , "W"                       = "$W$"
-  , "V"                       = "$V$"
-  , "S"                       = "$S$"
-  , "T"                       = "$T$"
-  , "z"                       = "$z$"
-  , "z.value"                 = "$z$"
+  , "W"         = "$W$"
+  , "V"         = "$V$"
+  , "S"         = "$S$"
+  , "T"         = "$T$"
+  , "z"         = "$z$"
+  , "z.value"   = "$z$"
+  , "bf"        = "$\\mathrm{BF}$"
+  , "bf10"      = "$\\mathrm{BF}_{\\textrm{10}}$"
+  , "bf01"      = "$\\mathrm{BF}_{\\textrm{01}}$"
   , "Bartlett.s.K.2"          = "$K^2$"
   , "Bartlett.s.K.squared"    = "$K^2$"
   # df, df.residual
@@ -212,4 +224,5 @@ lookup_labels <- c(
   , "Pr..F."      = "$p$"
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"
+  , "error"       = "$\\pm\\%$"
 )
