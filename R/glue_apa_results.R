@@ -252,7 +252,7 @@ stat_glue <- function(x) {
     stat_list <- c(
       stat_list
       , glue::glue_collapse(
-        c("$<<svl(statistic)>>", df, " ", "<<add_equals(statistic)>>$")
+        c("$<<svl(statistic)>>", df, " ", "<<add_equals(strip_math_tags(statistic))>>$")
       )
     )
   }

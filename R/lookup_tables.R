@@ -21,9 +21,10 @@ lookup_names <- c(
   , "BIC"     = "BIC"
   , "npar"    = "n.parameters"
   # term
-  , "Effect"  = "term"
-  , "Term"    = "term"
+  , "Effect"     = "term"
+  , "Term"       = "term"
   , "model.term" = "term"
+  , "rhs"        = "rhs"
   # estimate
   , "Estimate"                = "estimate"
   , "estimate"                  = "estimate"
@@ -40,6 +41,7 @@ lookup_names <- c(
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
   , "delta"                     = "estimate"
+  , "proportion"                = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
   , "Eta2_partial"     = "estimate"
@@ -85,6 +87,9 @@ lookup_names <- c(
   , "bf"        = "statistic"
   , "bf10"      = "statistic"
   , "bf01"      = "statistic"
+  , "logbf"        = "statistic"
+  , "logbf10"      = "statistic"
+  , "logbf01"      = "statistic"
   , "Bartlett.s.K.2"          = "statistic"
   , "Bartlett.s.K.squared"    = "statistic"
   # df, df.residual
@@ -136,6 +141,7 @@ lookup_labels <- c(
   , "Effect"     = "Effect"
   , "Term"       = "Term"
   , "model.term" = "Term"
+  , "rhs"        = "Model"
   , "contrast"   = "Contrast"
   # estimate
   , "cor"                       = "$r$"
@@ -148,8 +154,10 @@ lookup_labels <- c(
   , "mean.difference"           = "$M_d$"
   , "difference.in.location"    = "$\\mathit{Mdn}_d$"
   , "difference.in.means"       = "$\\Delta M$"
-  , "difference.in.proportions" = "\\Delta p"
-  , "delta"                     = "\\delta"
+  # TODO: We should probably use something other than p here
+  , "difference.in.proportions" = "$\\Delta p$"
+  , "delta"                     = "$\\delta$"
+  , "proportion"                = "$p$"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"
   , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
@@ -192,6 +200,9 @@ lookup_labels <- c(
   , "bf"        = "$\\mathrm{BF}$"
   , "bf10"      = "$\\mathrm{BF}_{\\textrm{10}}$"
   , "bf01"      = "$\\mathrm{BF}_{\\textrm{01}}$"
+  , "logbf"        = "$\\log \\mathrm{BF}$"
+  , "logbf10"      = "$\\log \\mathrm{BF}_{\\textrm{10}}$"
+  , "logbf01"      = "$\\log \\mathrm{BF}_{\\textrm{01}}$"
   , "Bartlett.s.K.2"          = "$K^2$"
   , "Bartlett.s.K.squared"    = "$K^2$"
   # df, df.residual

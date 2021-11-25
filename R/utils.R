@@ -118,6 +118,7 @@ canonize <- function(
   x
   , stat_label = NULL
   , est_label = NULL
+  , interval_type = "CI"
 ) {
 
   # args <- list(...)
@@ -133,22 +134,7 @@ canonize <- function(
     , "statistic"    = stat_label
   )
 
-  if(!is.null(x$conf.int)) {
-    conf_level <- attr(x$conf.int, "conf.level")
-    if(is.null(conf_level)) {
-      conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
-    }
-
-    conf_label <- paste0(
-      if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
-      , "CI"
-    )
-
-    new_labels <- c(new_labels, "conf.int" = conf_label)
-  }
-
   colnames(x) <- make.names(colnames(x))
-
   names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
   warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
@@ -163,6 +149,19 @@ canonize <- function(
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
   colnames(x)[names_in_lookup_names] <- lookup_names[colnames(x)[names_in_lookup_names]]
 
+  if(!is.null(x$conf.int)) {
+    conf_level <- attr(x$conf.int, "conf.level")
+    if(is.null(conf_level)) {
+      conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
+    }
+
+    conf_label <- paste0(
+      if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+      , interval_type
+    )
+
+    variable_labels(x) <- c("conf.int" = conf_label)
+  }
 
   # Adjust labels if dfs were corrected ----
   # - Hierarchical Linear Models: Kenward-Roger and Satterthwaite
@@ -190,7 +189,7 @@ canonize <- function(
 #' @param ... Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).
 #' @keywords internal
 
-beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
+beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL, ...) {
 
   validate(x, check_class = "data.frame", check_infinite = FALSE)
   validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
@@ -202,7 +201,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
   # apply printnum ----
   for (i in colnames(y)) {
     if(i == "p.value") {
-      y[[i]] <- printp(y[[i]])
+      y[[i]] <- print_p(y[[i]])
     } else if(i %in% c("df", "df.residual", "multivariate.df", "multivariate.df.residual")) {
       y[[i]] <- print_df(y[[i]])
     } else if(i == "conf.int") {
@@ -211,23 +210,32 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
       }, ...))
       variable_label(tmp) <- variable_label(y[[i]])
       y[[i]] <- tmp
-    } else if (i == "estimate"){
+    } else if (i == "estimate") {
       args$x <- y[[i]]
-      y[[i]] <- do.call("printnum", args)
+      y[[i]] <- do.call("print_num", args)
+    } else if (i == "statistic") {
+      args_stat$x <- y[[i]]
+      y[[i]] <- do.call("print_num", args_stat)
     } else if (i == "term"){
       y[[i]] <- beautify_terms(as.character(y[[i]]), standardized = standardized)
+    } else if (i == "rhs"){
+      tmp <- beautify_model(as.character(y[[i]]), standardized = standardized)
+      variable_label(tmp) <- variable_label(y[[i]])
+      y[[i]] <- tmp
     } else {
-      y[[i]] <- printnum(y[[i]])
+      y[[i]] <- print_num(y[[i]])
     }
   }
 
   # rearrange ----
   y <- sort_columns(y)
 
-  if(!is.null(y$term)) {
-    perm <- term_order(y$term)
+  identifier <- intersect(colnames(y), c("term", "rhs")) 
+
+  if(length(identifier) > 0) {
+    perm <- term_order(y[[identifier]])
     y <- y[perm, , drop = FALSE]
-    attr(y, "sanitized_term_names") <- sanitize_terms(unlabel(x$term)[perm])
+    attr(y, "sanitized_term_names") <- sanitize_terms(unlabel(x[[identifier]])[perm])
   }
 
   rownames(y) <- NULL
@@ -287,7 +295,7 @@ sort_columns <- function(x) {
   se <- NULL
   if(!any(colnames(x) == "conf.int")) se <- "std.error"
 
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "mse", "p.value"), colnames(x))
+  ordered_cols <- intersect(c("rhs", "term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "mse", "p.value"), colnames(x))
   x[, ordered_cols, drop = FALSE]
 }
 
