@@ -42,6 +42,7 @@ lookup_names <- c(
   , "coefficients"              = "estimate"
   , "delta"                     = "estimate"
   , "proportion"                = "estimate"
+  , "p"                         = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
   , "Eta2_partial"     = "estimate"
@@ -150,14 +151,13 @@ lookup_labels <- c(
   , "mean.of.x"                 = "$M$"
   , "mean"                      = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
-  , "mean.of.the.differences"   = "$M_d$"
-  , "mean.difference"           = "$M_d$"
-  , "difference.in.location"    = "$\\mathit{Mdn}_d$"
+  , "mean.of.the.differences"   = "$M_\\Delta$"
+  , "mean.difference"           = "$\\Delta M$"
+  , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
-  # TODO: We should probably use something other than p here
-  , "difference.in.proportions" = "$\\Delta p$"
+  , "difference.in.proportions" = "\\Delta \\hat\\pi"
+  , "p"                         = "$\\hat\\pi$"
   , "delta"                     = "$\\delta$"
-  , "proportion"                = "$p$"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"
   , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
