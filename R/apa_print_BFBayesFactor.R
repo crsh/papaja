@@ -94,7 +94,7 @@ apa_print.BFBayesFactor <- function(
   if(!is.null(evidential_boost)) validate(evidential_boost, check_class = "numeric", check_range = c(0, Inf))
 
   ellipsis <- list(...)
-  ellipsis$standardized <- standardized
+  ellipsis$standardized <- isTRUE(standardized)
   
   args_stat <- list()
 
