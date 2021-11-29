@@ -106,7 +106,7 @@ test_that(
     print_apa_results_table <- capture_output(print(x))
     expect_identical(
       print_apa_results_table
-      , "A data.frame with 5 labelled columns:\n\n  estimate       conf.int statistic df p.value\n1    -5.62 [-9.93, -1.31]     -2.87 11    .015\n\nestimate : $M_d$ \nconf.int : 95\\\\% CI \nstatistic: $t$ \ndf       : $\\\\mathit{df}$ \np.value  : $p$ "
+      , "A data.frame with 5 labelled columns:\n\n  estimate       conf.int statistic df p.value\n1    -5.62 [-9.93, -1.31]     -2.87 11    .015\n\nestimate : $M_\\\\Delta$ \nconf.int : 95\\\\% CI \nstatistic: $t$ \ndf       : $\\\\mathit{df}$ \np.value  : $p$ "
     )
   }
 )
