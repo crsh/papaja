@@ -53,14 +53,14 @@ test_that(
     expect_apa_results(
       t_test_output
       , labels = list(
-        estimate = "$\\Delta M$"
+        estimate = "$M_\\Delta$"
         , conf.int = "95\\% CI"
         , statistic = "$t$"
         , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
     )
-    expect_identical(t_test_output$full, "$\\Delta M = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
+    expect_identical(t_test_output$full, "$M_\\Delta = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
 
     t_test <- t.test(sleep$extra, mu = 0)
     t_test_output <- apa_print(t_test)
@@ -245,7 +245,7 @@ test_that(
     expect_apa_results(
       prop_test_output
       ,  labels = list(
-        estimate = "$p$"
+        estimate = "$\\hat\\pi$"
         , conf.int = "95\\% CI"
         , statistic = "$\\chi^2$"
         , df      = "$\\mathit{df}$"
@@ -276,7 +276,7 @@ test_that(
     expect_apa_results(
       two_sample_prop_test_output
       , labels = list(
-        estimate    = "\\Delta p"
+        estimate    = "\\Delta \\hat\\pi"
         , conf.int  = "95\\% CI"
         , statistic = "$\\chi^2$"
         , df        ="$\\mathit{df}$"
