@@ -155,7 +155,7 @@ lookup_labels <- c(
   , "mean.difference"           = "$\\Delta M$"
   , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
-  , "difference.in.proportions" = "\\Delta \\hat\\pi"
+  , "difference.in.proportions" = "$\\Delta \\hat\\pi$"
   , "p"                         = "$\\hat\\pi$"
   , "delta"                     = "$\\delta$"
   # estimate from effectsize package
