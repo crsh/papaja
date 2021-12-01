@@ -76,8 +76,6 @@ apa_beeplot(data = example_data, dv = "first_dv", id = "sid", factors = c("A", "
 apa_barplot(data = example_data, dv = "first_dv", id = "sid", factors = c("A", "B"))
 apa_barplot(data = example_data, dv = "first_dv", id = "sid", factors = c("B", "A"))
 apa_barplot(data = example_data, dv = "first_dv", id = "sid", factors = "A")
-apa_beeplot(data = data.frame(sid = seq_len(1e3), dv = rnorm(1e3)), dv = "dv", id = "sid", level = (1-1e-6) )
-# todo: fix x coordinates of error bars
 ```
 
 
@@ -125,19 +123,12 @@ apa_plot(formula = first_dv ~ A * B + (1 | sid), data = example_data) |>
 apa_beeplot(formula = first_dv ~ (A * B | sid), data = example_data) |>
   error_bars(lwd = 1.5, col = 1:3) |>
   points(lwd = 1.4, col = 1:3, bg = 1:3) |>
-  x_axis(lwd = 1.3, col = "skyblue4", col.axis = ) |>
+  x_axis(lwd = 1.3, col = "skyblue4", col.axis = "red") |>
   y_axis(lwd = 1.3, col = "skyblue4") |>
   annotation(main = "blabla", col.lab = "skyblue4")
 
 ```
 
 
-```{r}
-apa_barplot(first_dv ~ (A + B | sid), example_data) |>
-  intercept(y = 1:5/5, lwd = 3, col = 4) |>
-  add() |>
-  intercept(y = 1:5/5 + 1, lwd = 2, col = 2)
-
-```
 
 
