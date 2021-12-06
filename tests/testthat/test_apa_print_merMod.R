@@ -213,10 +213,10 @@ test_that(
   , {
     set.seed(42L)
     captured <- capture_output({
-      mixed_KR  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "KR")
-      mixed_S   <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "S")
-      mixed_PB  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "PB", args_test = list(nsim = 50))
-      mixed_LRT <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "LRT")
+      mixed_KR  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "KR", progress = interactive())
+      mixed_S   <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "S", progress = interactive())
+      mixed_PB  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "PB", args_test = list(nsim = 50), progress = interactive())
+      mixed_LRT <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "LRT", progress = interactive())
     })
     #
     apa_KR  <- apa_print(mixed_KR)
@@ -317,7 +317,7 @@ test_that(
       ungroup() %>%
       mutate(errors=floor(runif(n=40,min=0,max=30)))
 
-    glmm <- afex::mixed(errors~group*session*task+(1|participant), df)
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, progress = interactive())
     apa_t <- apa_print(glmm$full_model)
 
     expect_apa_results(
@@ -332,7 +332,7 @@ test_that(
       )
     )
 
-    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT")
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT", progress = interactive())
     apa_LRT <- apa_print(glmm)
 
     expect_apa_results(
