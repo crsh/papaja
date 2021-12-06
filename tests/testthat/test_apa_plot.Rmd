@@ -82,6 +82,8 @@ apa_barplot(data = example_data, dv = "first_dv", id = "sid", factors = "A")
 ## Line plots
 
 ```{r}
+apa_lineplot(formula = first_dv ~ A + (1|sid), data = example_data)
+apa_lineplot(formula = first_dv ~ A + (B|sid), data = example_data)
 apa_lineplot(data = example_data, dv = "first_dv", id = "sid", factors = c("A", "B", "C"))
 ```
 

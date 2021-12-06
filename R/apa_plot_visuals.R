@@ -54,9 +54,10 @@ inherit_args <- function(x, creator = "points") {
 }
 
 
-
-
-
+#' Bars
+#'
+#' Add
+#'
 #' @export
 
 bars <- function(x, ...) {
@@ -436,7 +437,8 @@ x_axis.apa_plot <- function(x, ...) {
 
 .x_axis <- function(...) {
   x <- evalq(x, parent.frame(1L))
-  args_bars<- inherit_args(x, creator = "bars")
+  args_bars <- inherit_args(x, creator = "bars")
+  print(args_bars)
 
   factors <- x$input$factors
 
@@ -461,7 +463,7 @@ x_axis.apa_plot <- function(x, ...) {
   )
 
   ylim1 <- x$visuals$plot.window$args$ylim[1]
-  if(!is.null(args_bars) && x$input$reference == ylim1) {
+  if(length(args_bars) && x$input$reference == ylim1) {
     args_axis <- defaults(
       args_axis
       , set = list(

@@ -37,6 +37,7 @@
 #' @param ylab Character or expression. Label for *y* axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
+#' @inherit formula_processor
 #' @inheritDotParams graphics::plot.window
 #' @details
 #'    The measure of dispersion can be either [conf_int()] for between-subjects confidence intervals, [se()] for standard errors,
@@ -82,6 +83,12 @@
 
 apa_factorial_plot <-function(data, ...){
   UseMethod("apa_factorial_plot", data)
+}
+
+#' @rdname apa_factorial_plot
+#' @export
+apa_factorial_plot.formula <- function(formula, data, ...) {
+  formula_processor(formula = formula, data = data, .fun = apa_factorial_plot, ...)
 }
 
 #' @rdname apa_factorial_plot

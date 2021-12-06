@@ -8,6 +8,11 @@
 #' @family plots for factorial designs
 #' @examples
 #' apa_beeplot(
+#'   formula = yield ~ (N | block)
+#'   , data = npk
+#' )
+#'
+#' apa_beeplot(
 #'    data = npk
 #'    , id = "block"
 #'    , dv = "yield"

@@ -2,11 +2,14 @@
 % Please edit documentation in R/apa_factorial_plot.R
 \name{apa_factorial_plot}
 \alias{apa_factorial_plot}
+\alias{apa_factorial_plot.formula}
 \alias{apa_factorial_plot.default}
 \alias{apa_factorial_plot.afex_aov}
 \title{Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
 apa_factorial_plot(data, ...)
+
+\method{apa_factorial_plot}{formula}(formula, data, ...)
 
 \method{apa_factorial_plot}{default}(
   data,
@@ -60,6 +63,11 @@ apa_factorial_plot(data, ...)
     \item{\code{asp}}{numeric, giving the \bold{asp}ect ratio y/x,
     see \sQuote{Details}.}
   }}
+
+\item{formula}{A two-sided formula specifying the dependent variable on the left
+of a \code{~} operator, and factors on the right. A vertical bar (\code{|}) can be used to
+specify an additional subject identifier, which must be provided if an additional
+aggregation step is necessary. See the examples section for details.}
 
 \item{id}{Character. Variable name that identifies subjects.}
 

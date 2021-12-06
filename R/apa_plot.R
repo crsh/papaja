@@ -46,6 +46,15 @@ apa_plot.formula <- function(formula, data, ...) {
 
 
 
+#' Formula Interface for Plot Functions
+#'
+#' This is an internal function that ensures consistent processing of formulae
+#' in plotting functions.
+#'
+#' @param formula A two-sided formula specifying the dependent variable on the left
+#'   of a `~` operator, and factors on the right. A vertical bar (`|`) can be used to
+#'   specify an additional subject identifier, which must be provided if an additional
+#'   aggregation step is necessary. See the examples section for details.
 #' @keywords internal
 
 formula_processor <- function(formula, data, .fun, ...) {
