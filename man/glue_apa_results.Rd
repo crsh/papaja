@@ -5,7 +5,7 @@
 \alias{add_glue_to_apa_results}
 \title{Create a New \code{apa_results} Object}
 \usage{
-glue_apa_results(x = NULL, ...)
+glue_apa_results(x = NULL, term_names = NULL, ...)
 
 add_glue_to_apa_results(
   ...,
@@ -22,6 +22,10 @@ add_glue_to_apa_results(
 \arguments{
 \item{x}{An environment, list or data frame used to look up values for
 substitution.}
+
+\item{term_names}{Character. Used as names for the \code{estimate}-,
+\code{statistics}-, and \code{full_result} sub-lists, if multiple estimates or
+statistics are glued. Defaults to \code{attr(x, "sanitized_term_names")}.}
 
 \item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
 string(s) to format. Multiple inputs are concatenated together before formatting.
@@ -41,20 +45,16 @@ format. Each string creates a new (named) element in the
 \code{statistics}, and \code{full_result} to append glued results to (e.g.,
 \code{modelfit}).}
 
-\item{term_names}{Character. Used as names for the \code{estimate}-,
-\code{statistics}-, and \code{full_result} sub-lists, if multiple estimates or
-statistics are glued.}
-
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{est_first}{Logical. Determines in which order \code{estimate} and \code{statistic}
-are glued together to \code{full_result}.}
+\item{est_first}{Logical. Determines in which order \code{estimate} and
+\code{statistic} are glued together to \code{full_result}.}
 
 \item{simplify}{Logical. Determines whether the \code{estimate}, \code{statistic}, and
-\code{full_result} sub-lists should be simplified if only one term is available
-from the model object.}
+\code{full_result} sub-lists should be simplified if only one term is
+available from the model object.}
 }
 \value{
 Returns a list of class \code{apa_results}

@@ -1,11 +1,13 @@
-#' Format Within-Subjects Confidence Intervals (APA 6th edition)
+#' Typeset Within-Subjects Confidence Intervals
 #'
-#' This method takes an output object from \code{\link{wsci}} and creates a table
-#' and character strings to report means and within-subjects confidence intervals
-#' in a table or in text.
+#' This method takes an output object from \code{\link{wsci}} and creates a
+#' table and character strings to report means and within-subjects confidence
+#' intervals in a table or in text.
 #'
 #' @param x An object of class \code{papaja_wsci}.
-#' @param ... Arguments passed on to \code{\link{printnum}}
+#' @inheritDotParams printnum
+#'
+#' @evalRd apa_results_return_value()
 #'
 #' @method apa_print papaja_wsci
 #' @export

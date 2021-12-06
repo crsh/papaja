@@ -7,7 +7,7 @@
 simple_codebook(x, ...)
 }
 \arguments{
-\item{x}{data.frame. Data to be written.}
+\item{x}{data.frame. Data to be documented.}
 
 \item{...}{
   Arguments passed on to \code{\link[utils:write.table]{utils::write.table}}
@@ -52,11 +52,12 @@ simple_codebook(x, ...)
   }}
 }
 \description{
-Generate a simple codebook in CSV-format
+Generate a simple codebook in CSV-format from a (labelled) \code{data.frame}.
 }
 \details{
-If the \pkg{skimr} package is installed, an in-line histogram is added
-for all numeric variables.
+If the \pkg{skimr} package is installed, an in-line histogram is
+added for all numeric variables. If columns are labelled, the labelles
+are included in the codebook.
 }
 \examples{
 \dontrun{

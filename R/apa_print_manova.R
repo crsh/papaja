@@ -1,5 +1,6 @@
 
-#' @param test For MANOVA, the multivariate test statistic to be reported, see \code{\link[stats]{summary.manova}}.
+#' @param test Character. For MANOVA, the multivariate test statistic to be
+#'   reported, see \code{\link[stats]{summary.manova}}.
 #' @inheritParams glue_apa_results
 #' @rdname apa_print.aov
 #' @method apa_print manova
@@ -37,7 +38,6 @@ apa_print.summary.manova <- function(x, in_paren = FALSE, ...) {
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(df$Effect)
     , in_paren = in_paren
     , simplify = FALSE
   )

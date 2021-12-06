@@ -1,19 +1,31 @@
-#' APA Article (6th edition)
+#' APA manuscript (6th edition)
 #'
-#' Template for creating an article according to APA guidelines (6th edition) in PDF format.
+#' Template for creating an article according to APA guidelines (6th edition)
+#' in PDF or DOCX format.
 #'
 #' @inheritParams rmarkdown::pdf_document
-#' @param md_extensions Markdown extensions to be added or removed from the default definition of R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
-#' @param ... Further arguments to pass to \code{\link[rmarkdown]{pdf_document}} or \code{\link[rmarkdown]{word_document}}.
+#' @param md_extensions Markdown extensions to be added or removed from the
+#'   default definition of R Markdown. See the
+#'   \code{\link[rmarkdown]{rmarkdown_format}} for additional details.
+#' @param ... Further arguments to pass to
+#'   \code{\link[bookdown]{pdf_document2}} or
+#'   \code{\link[bookdown]{word_document2}}.
 #' @details
-#'    When creating PDF documents the YAML option \code{classoption} is passed to the class options of the LaTeX apa6 document class.
-#'    In this case, additional options are available. Refer to the apa6 document class
-#'    \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation} to find out about class options
-#'    such as paper size or draft watermarks.
+#'   When creating PDF documents the YAML option `classoption` is passed
+#'   to the class options of the LaTeX apa6 document class. In this case,
+#'   additional options are available. Refer to the `apa6` document class
+#'   \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation}
+#'   to find out about class options such as paper size or draft watermarks.
 #'
-#'    When creating PDF documents the output device for figures defaults to \code{c("pdf", "png")},
-#'    so that each figure is saved in all four formats at a resolution of 300 dpi.
-#' @seealso \code{\link[bookdown]{html_document2}}, \code{\link[rmarkdown]{pdf_document}}, \code{\link[rmarkdown]{word_document}}
+#'   Please refer to the \href{http://frederikaust.com/papaja_man/r-markdown-components.html#yaml-front-matter}{\pkg{papaja} online-manual}
+#'   for additional information on available YAML front matter settings.
+#'   Note that the available settings for DOCX documents are more limited
+#'   than for PDF documents.
+#'
+#'   When creating PDF documents the output device for figures defaults to
+#'   \code{c("pdf", "png")}, so that each figure is saved in all four formats
+#'   at a resolution of 300 dpi.
+#' @seealso [bookdown::pdf_document2], [bookdown::word_document2]
 #' @examples NULL
 #' @export
 
@@ -179,8 +191,7 @@ apa6_pdf <- function(
 }
 
 
-#' @describeIn apa6_pdf Format to create .docx-files. \code{class} parameter is ignored. \emph{This function
-#'    should be considered experimental.}
+#' @rdname apa6_pdf
 #' @export
 
 apa6_docx <- function(
@@ -478,16 +489,15 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
 
 
   ## Essential manuscript parts
-  if(!is.null(metadata$shorttitle)) {
-    short_title <- paste0("\\shorttitle{", escape_latex(metadata$shorttitle), "}")
-  } else {
-    short_title <- paste0("\\shorttitle{SHORTTITLE}")
-  }
-  header_includes <- c(header_includes, short_title)
+  # if(!is.null(metadata$shorttitle)) {
+  #   short_title <- paste0("\\shorttitle{", escape_latex(metadata$shorttitle), "}")
+  # } else {
+  # }
+  # header_includes <- c(header_includes, short_title)
 
-  if(!is.null(metadata$leftheader)) {
-    header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
-  }
+  # if(!is.null(metadata$leftheader)) {
+  #   header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
+  # }
 
   if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
     keywords <- paste(unlist(metadata$keywords), collapse = ", ")

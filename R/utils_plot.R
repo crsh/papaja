@@ -1,10 +1,10 @@
-#' Brighten up a Colour
+#' Brighten up a Color
 #'
-#' Brighten up a specified colour (e.g., the swarm colour in [apa_beeplot()]).
+#' Brighten up a specified color (e.g., the swarm color in [apa_beeplot()]).
 #' *This function is not exported.*
 #'
 #' @param col Colour to be brightened up. Can be anything that is digestible by [col2rgb()].
-#' @param factor Numeric. The rate with which the colour channel should be boosted. Must be in the range between 0 and 1.
+#' @param factor Numeric. The rate with which the color channel should be boosted. Must be in the range between 0 and 1.
 #' @return A character vector as returned by [rgb()].
 #' @keywords internal
 

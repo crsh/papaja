@@ -404,7 +404,9 @@ test_that(
 test_that(
   "Levene test"
   , {
-    levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = carData::Moore)
+    load("data/ow_data.rdata")
+
+    levene_test <- car::leveneTest(Alertness ~ Dosage, data = ow_data)
     levene_test_output <- apa_print(levene_test)
 
     expect_apa_results(
@@ -416,7 +418,7 @@ test_that(
         , p.value     = "$p$"
       )
     )
-    expect_identical(levene_test_output$stat, "$F(5, 39) = 1.47$, $p = .222$")
+    expect_identical(levene_test_output$stat, "$F(2, 15) = 4.17$, $p = .036$")
   }
 )
 
@@ -452,6 +454,21 @@ test_that(
       apa_print(afex::aov_4(yield~(N*P|block), data = npk, observed = "N"), observed = "P")
       , regexp = "In your call to apa_print(), you specified the model terms \"P\" as observed, whereas in your call to afex::aov_car(), you specified the model terms \"N\" as observed. Make sure that this is what you want."
       , fixed = TRUE
+    )
+  }
+)
+
+
+test_that(
+  "Ensure proper sorting of terms"
+  , {
+    load("data/mixed_data.rdata")
+    unsorted_aov <- afex::aov_4(formula = Recall ~ Gender * Dosage * (Task|Subject), data = mixed_data, fun_aggregate = mean)
+    apa_out <- apa_print(unsorted_aov)
+
+    expect_equal(
+      unlabel(gsub(apa_out$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))
+      , names(apa_out$estimate)
     )
   }
 )

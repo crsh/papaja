@@ -77,9 +77,9 @@ Possible options are \code{"all.obs"} or \code{"complete.obs"}.}
 \item{intercept}{Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
 case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.}
 
-\item{args_x_axis}{An optional \code{list} that contains further arguments that may be passed to \code{\link[=axis]{axis()}} for customising the \emph{x} axis.}
+\item{args_x_axis}{An optional \code{list} that contains further arguments that may be passed to \code{\link[=axis]{axis()}} for customizing the \emph{x} axis.}
 
-\item{args_y_axis}{An optional \code{list} that contains further arguments that may be passed to \code{\link[=axis]{axis()}} for customising the \emph{y} axis.}
+\item{args_y_axis}{An optional \code{list} that contains further arguments that may be passed to \code{\link[=axis]{axis()}} for customizing the \emph{y} axis.}
 
 \item{args_title}{An optional \code{list} that contains further arguments that may be passed to \code{\link[=title]{title()}}.}
 
@@ -95,6 +95,9 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{main}{Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
+}
+\value{
+A (nested) list of plot options. \emph{Note that the structure of the return value is about to change in a forthcoming release of papaja.}
 }
 \description{
 Create one or more bar plots from a \code{data.frame} containing data from
@@ -125,7 +128,7 @@ and \code{\link[=apa_beeplot]{apa_beeplot()}} are wrapper functions that sequent
 \item \code{\link[=lines]{lines()}} for intercepts.
 }
 
-These calls can be customised by setting the respective parameters \verb{args_*** = list(...)}.
+These calls can be customized by setting the respective parameters \verb{args_*** = list(...)}.
 }
 }
 \examples{

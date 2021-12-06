@@ -1,6 +1,6 @@
 # Contributing to papaja
 
-This document outlines how to propose a change to `papaja`.
+This document outlines how to propose a change to **papaja**.
 
 ## Minor changes
 
@@ -24,7 +24,7 @@ If you’ve found a bug, create an associated issue and illustrate the bug with 
 ### Pull request process
 
 *  We recommend that you create a `git` branch for each pull request (PR).  
-*  Look at the Travis build status before and after making changes (Did you break anything?).
+*  Look at the GitHub action build status before and after making changes (Did you break anything?).
 The `README` should contain badges for any continuous integration services used
 by the package.  
 *  New code should follow the tidyverse [style guide](http://style.tidyverse.org).
@@ -40,9 +40,9 @@ with test cases included are easier to accept.
 *  For user-facing changes, add a bullet to the top of `NEWS.md` below the
 current development version header describing the changes made, followed by your
 GitHub username, and links to relevant issue(s)/PR(s).
-*  If you are interested in add new methods to `apa_print()`, please review the getting-started vignette (`vignette("add_apa_print_methods", package = "papaja")`).
+*  If you are interested in adding new methods to `apa_print()`, please review the getting-started vignette (`vignette("add_apa_print_methods", package = "papaja")`).
 
 ### Code of Conduct
 
-Please note that the papaja project is released with a [contributor code of conduct](CODE_OF_CONDUCT.md).
+Please note that the **papaja** project is released with a [contributor code of conduct](CODE_OF_CONDUCT.md).
 By contributing to this project you agree to abide by its terms.

@@ -3,12 +3,12 @@
 \name{apa_print.merMod}
 \alias{apa_print.merMod}
 \alias{apa_print.mixed}
-\title{Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)}
+\title{Typeset Statistical Results from Hierarchical GLM}
 \usage{
 \method{apa_print}{merMod}(
   x,
   effects = "fixed",
-  args_confint = NULL,
+  conf.int = 0.95,
   in_paren = FALSE,
   est_name = NULL,
   ...
@@ -17,31 +17,34 @@
 \method{apa_print}{mixed}(x, ...)
 }
 \arguments{
-\item{x}{A fitted hierarchical (generalized) linear model, either from \code{\link[lme4:lmer]{lme4::lmer()}},
-\code{\link[lmerTest:lmer]{lmerTest::lmer()}}, \code{\link[afex:mixed]{afex::mixed()}}, or \code{\link[lme4:glmer]{lme4::glmer()}}.}
+\item{x}{A fitted hierarchical (generalized) linear model, either from
+\code{\link[lme4:lmer]{lme4::lmer()}}, \code{\link[lmerTest:lmer]{lmerTest::lmer()}}, \code{\link[afex:mixed]{afex::mixed()}}, or \code{\link[lme4:glmer]{lme4::glmer()}}.}
 
-\item{effects}{Character. Determines which information is returned. Currently, only fixed-effects terms
-(\code{"fixed"}) are supported.}
+\item{effects}{Character. Determines which information is returned.
+Currently, only fixed-effects terms (\code{"fixed"}) are supported.}
 
-\item{args_confint}{Named list. Additional arguments that are passed to \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
+\item{conf.int}{Numeric specifying the required confidence level \emph{or} a named
+list specifying additional arguments that are passed to
+\code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{est_name}{An optional character. The label to be used for fixed-effects coefficients.}
+\item{est_name}{An optional character. The label to be used for
+fixed-effects coefficients.}
 
-\item{...}{Further arguments that are passed to \code{\link[=printnum]{printnum()}}.}
+\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 }
 \description{
 These methods take objects from various R functions that calculate
-hierarchical (generalized) linear models to create formatted character strings
-to report the results in accordance with APA manuscript guidelines.
+hierarchical (generalized) linear models to create formatted character
+strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
-Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}. By
-default, \emph{Wald} confidence intervals are calculated, but this may change in
-the future.
+Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}.
+By default, \emph{Wald} confidence intervals are calculated, but this may
+change in the future.
 }
 \examples{
   # Fit a linear mixed model using the lme4 package
@@ -65,3 +68,14 @@ Other apa_print:
 \code{\link{apa_print}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

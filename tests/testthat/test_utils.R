@@ -1,23 +1,6 @@
 context("Utility functions")
 
 test_that(
-  "convert_stat_name()"
-  , {
-    chis <- c(
-      convert_stat_name("X-squared")
-      , convert_stat_name("Chi-squared")
-      , convert_stat_name("chi-squared")
-      , convert_stat_name("X^2")
-    )
-    expect_equal(chis, rep("\\chi^2", length(chis)))
-
-    expect_equal(convert_stat_name("t"), "t")
-    expect_equal(convert_stat_name("z"), "z")
-  }
-)
-
-
-test_that(
   "add_equals()"
   , {
     x <- list(

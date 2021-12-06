@@ -23,10 +23,12 @@ lookup_names <- c(
   # term
   , "Effect"  = "term"
   , "Term"    = "term"
+  , "model.term" = "term"
   # estimate
   , "Estimate"                = "estimate"
   , "estimate"                  = "estimate"
   , "mean.of.the.differences"   = "estimate"
+  , "mean.difference"           = "estimate"
   , "cor"                       = "estimate"
   , "rho"                       = "estimate"
   , "tau"                       = "estimate"
@@ -36,6 +38,7 @@ lookup_names <- c(
   , "difference.in.means"       = "estimate"
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
+  , "p"                         = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
   , "Eta2_partial"     = "estimate"
@@ -66,6 +69,7 @@ lookup_names <- c(
   , "approx.F"  = "statistic"
   , "F.value"   = "statistic"
   , "F"         = "statistic"
+  , "F.ratio"   = "statistic"
   , "LRT"       = "statistic"
   , "Chisq"     = "statistic"
   , "chisq"     = "statistic"
@@ -88,6 +92,8 @@ lookup_names <- c(
   , "Chi.Df"     = "df"
   , "parameter1" = "df"
   , "parameter2" = "df.residual"
+  , "df1" = "df"
+  , "df2" = "df.residual"
   , "num.Df"     = "df"
   , "den.Df"     = "df.residual"
   , "NumDF"      = "df"
@@ -96,6 +102,7 @@ lookup_names <- c(
   , "denDF"      = "df.residual"
   , "num.df"     = "df"
   , "denom.df"   = "df.residual"
+  , "den.df"     = "df.residual"
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
@@ -120,19 +127,22 @@ lookup_labels <- c(
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
   # term
-  , "Effect"   = "Effect"
-  , "Term"     = "Term"
-  , "contrast" = "Contrast"
+  , "Effect"     = "Effect"
+  , "Term"       = "Term"
+  , "model.term" = "Term"
+  , "contrast"   = "Contrast"
   # estimate
   , "cor"                       = "$r$"
   , "rho"                       = "$r_{\\mathrm{s}}$" # capital or small S???
   , "tau"                       = "$\\uptau$"
   , "mean.of.x"                 = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
-  , "mean.of.the.differences"   = "$M_d$"
-  , "difference.in.location"    = "$\\mathit{Mdn}_d$"
+  , "mean.of.the.differences"   = "$M_\\Delta$"
+  , "mean.difference"           = "$\\Delta M$"
+  , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
-  , "difference.in.proportions" = "\\Delta p"
+  , "difference.in.proportions" = "\\Delta \\hat\\pi"
+  , "p"                         = "$\\hat\\pi$"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"
   , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
@@ -160,6 +170,7 @@ lookup_labels <- c(
   , "t.value"   = "$t$"
   , "F.value"   = "$F$"
   , "F"         = "$F$"
+  , "F.ratio"   = "$F$"
   , "approx.F"  = "$F$"
   , "LRT"       = "$\\chi^2$"
   , "chisq"     = "$\\chi^2$"
@@ -183,6 +194,8 @@ lookup_labels <- c(
   , "Chi.Df"     = "$\\mathit{df}$"
   , "parameter1" = "$\\mathit{df}$"
   , "parameter2" = "$\\mathit{df}_{\\mathrm{res}}$"
+  , "df1"        = "$\\mathit{df}$"
+  , "df2"        = "$\\mathit{df}_{\\mathrm{res}}$"
   , "num.Df"     = "$\\mathit{df}$"
   , "den.Df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   , "NumDF"      = "$\\mathit{df}$"
@@ -191,6 +204,7 @@ lookup_labels <- c(
   , "denDF"      = "$\\mathit{df}_{\\mathrm{res}}$"
   , "num.df"     = "$\\mathit{df}$"
   , "denom.df"   = "$\\mathit{df}_{\\mathrm{res}}$"
+  , "den.df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   # p.value
   , "p.value"     = "$p$"
   , "Pr...t.."    = "$p$"
@@ -201,3 +215,84 @@ lookup_labels <- c(
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"
 )
+
+
+#' Lookup Table for P Value/Confindence Interval Adjustment Names
+#'
+#' `apa_print()` converts many statistical output objects that include 
+#' inferential statistics adjusted for multiple comparisons. To make these 
+#' adjustments transparent the statistics get an index with the
+#' corresponding name. This function returns the proper names for these indices.
+#'
+#' @rdname lookup_tables
+#' @examples
+#'   papaja:::lookup_adjust_names("fdr")
+#' @keywords internal
+
+lookup_adjust_names <- function(x) {
+  switch(
+    x
+    , "holm"       = c(p.value = "Holm"            , conf.int = "Bonferroni")
+    , "hochberg"   = c(p.value = "Hochberg"        , conf.int = "Bonferroni")
+    , "hommel"     = c(p.value = "Hommel"          , conf.int = "Bonferroni")
+    , "bonferroni" = c(p.value = "Bonferroni"      , conf.int = "Bonferroni")
+    , "BH"         = c(p.value = "BH"              , conf.int = "Bonferroni")
+    , "BY"         = c(p.value = "BY"              , conf.int = "Bonferroni")
+    , "fdr"        = c(p.value = "FDR"             , conf.int = "Bonferroni")
+    , "tukey"      = c(p.value = "Tukey"           , conf.int = "Tukey")
+    , "scheffe"    = c(p.value = "Scheff\\'e"      , conf.int = "Scheff\\'e")
+    , "sidak"      = c(p.value = "Sidak"           , conf.int = "Sidak")
+    , "dunnettx"   = c(p.value = "Dunnett"         , conf.int = "Dunnett")
+    , "mvt"        = c(p.value = "MV \\mathit{t}"  , conf.int = "MV \\mathit{t}")
+    , "adj"
+  )
+}
+
+
+#' Lookup Table for Genearted Words and Phrases
+#'
+#' Some words and phrases used throughout a papaja manuscript are automatically
+#' generated and need to vary when the locale of a document is changed. This
+#' function returns the words and phrases by language.
+#'
+#' @param x Integer. Locale.
+#' @keywords internal
+
+localize <- function(x) {
+  switch(
+    x
+    , list( # Default
+      author_note = "Author note"
+      , abstract = "Abstract"
+      , keywords = "Keywords"
+      , word_count = "Word count"
+      , table = "Table"
+      , figure = "Figure"
+      , note = "Note"
+      , correspondence = "Correspondence concerning this article should be addressed to "
+      , email = "E-mail"
+    )
+    , german = list(
+      author_note = "Anmerkung des Autors"
+      , abstract = "Zusammenfassung"
+      , keywords = "Schl\u00fcsselw\u00f6rter"
+      , word_count = "Wortanzahl"
+      , table = "Tabelle"
+      , figure = "Abbildung"
+      , note = "Anmerkung"
+      , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
+      , email = "E-Mail"
+    )
+    , dutch = list(
+      author_note = "Over de auteur"
+      , abstract = "Samenvatting"
+      , keywords = "Trefwoorden"
+      , word_count = "Aantal woorden"
+      , table = "Tabel"
+      , figure = "Figuur"
+      , note = "Opmerking"
+      , correspondence = "Correspondentie betreffende dit artikel wordt geadresseerd aan "
+      , email = "E-mail"
+    )
+  )
+}

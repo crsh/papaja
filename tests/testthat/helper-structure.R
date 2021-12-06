@@ -17,12 +17,15 @@ if(packageVersion("afex") >= '1.0.0') {
 # 6. table columns: each column of class tiny_labelled/character
 # 7. Optional: Test specific col.names
 # 8. Optional: Test variable labels (and col.names)
+# 9. Optional: Test names of terms in results
 
 
 expect_apa_results <- function(
   object
   , col.names = NULL
   , labels = NULL
+  , term_names = NULL
+  , table_terms = TRUE
   , ...
 ) {
 
@@ -85,7 +88,49 @@ expect_apa_results <- function(
     if(!is.null(labels)) {
       expect_identical(variable_labels(object$table), labels)
     }
+    if(!is.null(term_names)) {
+      if(!is.null(object$estimate)) {
+        expect_identical(names(object$estimate), term_names)
+      }
+      if(!is.null(object$statistic)) {
+        expect_identical(names(object$statistic), term_names)
+      }
+      expect_identical(names(object$full_result), term_names)
+
+      term_names <- term_names[term_names != "modelfit"]
+      expect_identical(nrow(object$table), length(term_names))
+    }
   }
+
+  # consistency between ordering of names of reporting strings and table
+  if(!is.null(object$table$term)) {
+    if(isTRUE(table_terms)) {
+      expect_equal(
+        tolower(sanitize_terms(unlabel(gsub(object$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))))
+        , tolower(names(object$full_result)[!names(object$full_result) == "modelfit"])
+      )
+    } else {
+      expect_equivalent(unclass(object$table$term)[1:nrow(object$table)], table_terms)
+    }
+  }
+
+  # Invisibly return the value
+  invisible(act$val)
+}
+
+
+expect_apa_term <- function(object, term, estimate = NULL, statistic = NULL) {
+  act <- list(
+    value = object
+    , label = deparse(substitute(object))
+  )
+
+  full_result <- paste(c(estimate, statistic), collapse = ", ")
+
+  expect_identical(object$estimate[[term]], estimate)
+  expect_identical(object$statistic[[term]], statistic)
+  expect_identical(object$full_result[[term]], full_result)
+
   # Invisibly return the value
   invisible(act$val)
 }

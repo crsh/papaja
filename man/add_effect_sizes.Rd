@@ -10,7 +10,7 @@ add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
 \item{x}{An object of class \code{apa_variance_table}.}
 
 \item{es}{Character. A vector naming all to-be-computed effect-size measures.
-Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+Currently, partial eta-squared (\code{"pes"}), generalized eta-squared
 (\code{"ges"}), and eta-squared (\code{"es"}) are supported.}
 
 \item{observed}{Character. A vector naming all factors that are observed

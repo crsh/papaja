@@ -24,8 +24,8 @@
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
 #'  `c("points", "error_bars", "bars", "swarms", "lines")`.
 #' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to `0.3`, defaults to `0.4` if `plot = "bars"`.
-#' @param args_x_axis An optional `list` that contains further arguments that may be passed to [axis()] for customising the *x* axis.
-#' @param args_y_axis An optional `list` that contains further arguments that may be passed to [axis()] for customising the *y* axis.
+#' @param args_x_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *x* axis.
+#' @param args_y_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *y* axis.
 #' @param args_title  An optional `list` that contains further arguments that may be passed to [title()].
 #' @param args_rect An optional `list` that contains further arguments that may be passed to [rect()].
 #' @param args_points An optional `list` that contains further arguments that may be passed to [points()].
@@ -37,6 +37,7 @@
 #' @param ylab Character or expression. Label for *y* axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
+#' @return A (nested) list of plot options. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
 #' @inherit formula_processor
 #' @inheritDotParams graphics::plot.window
 #' @details
@@ -64,7 +65,7 @@
 #' - [legend()] for a legend, and
 #' - [lines()] for intercepts.
 #'
-#' These calls can be customised by setting the respective parameters `args_*** = list(...)`.
+#' These calls can be customized by setting the respective parameters `args_*** = list(...)`.
 #'
 #' @family plots for factorial designs
 #' @examples
@@ -83,7 +84,6 @@
 #'   , plot = c("error_bars", "points", "swarms")
 #'   , ylim = c(0, 100)
 #' )
-#' @importFrom methods as
 #' @export
 
 apa_factorial_plot <-function(data, ...){

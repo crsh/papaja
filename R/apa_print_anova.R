@@ -1,45 +1,51 @@
-#' Format statistics from ANOVA (APA 6th edition)
+#' Typeset Statistical Results from ANOVA
 #'
-#' These methods take objects from various R functions that calculate ANOVA to create formatted character
-#' strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
+#' These methods take objects from various R functions that calculate ANOVA to
+#' create formatted character strings to report the results in accordance with
+#' APA manuscript guidelines. For `anova`-objects from model comparisons see
+#' \code{\link{apa_print.list}}.
 #'
-#' @param x          An object containing the results from an analysis of variance ANOVA
-#' @param correction Character. For repeated-measures ANOVA, the type of sphericity correction to be used.
-#'   Possible values are `"GG"` for the Greenhouse-Geisser method (the default), `"HF"` for the Huyn-Feldt method, or `"none"` for no correction.
-#' @param intercept Logical. Indicates if the intercept term should be included in output.
-#' @param estimate Character, function, or data frame. Determines which estimate of effect size is to be used. See details.
-#' @param mse Logical. Indicates if mean squared errors should be included in output. The default is \code{TRUE}, but this can be changed
-#'   either by supplying a different value in the function call or by changing the global default via `options(papaja.mse = FALSE)`.
-#' @param observed Character. The names of the factors that are observed, (i.e., not manipulated).
-#'   Necessary only for calculating *generalized* eta squared; otherwise ignored.
-#'   If `x` is of class `afex_aov`, `observed` is automatically deduced from `x`.
-#' @inheritParams glue_apa_results
+#' @param x An object containing the results from an analysis of variance ANOVA
+#' @param correction Character. For repeated-measures ANOVA, the type of
+#'   sphericity correction to be used. Possible values are `"GG"` for the
+#'   Greenhouse-Geisser method (the default), `"HF"` for the Huyn-Feldt method,
+#'   or `"none"` for no correction.
+#' @param intercept Logical. Indicates if the intercept term should be included
+#'   in output.
+#' @param estimate Character, function, or data frame. Determines which
+#'   estimate of effect size is to be used. See details.
+#' @param mse Logical. Indicates if mean squared errors should be included in
+#'   output. The default is `TRUE`, but this can be changed either by supplying
+#'   a different value in the function call or by changing the global default
+#'   via `options(papaja.mse = FALSE)`.
+#' @param observed Character. The names of the factors that are observed,
+#'   i.e., not manipulated. Necessary only for calculating *generalized* eta
+#'   squared; otherwise ignored. If `x` is of class `afex_aov`, `observed` is
+#'   automatically deduced from `x`.
+#' @inheritParams beautify
 #' @details
-#'    The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
-#'    are omitted and other non-word characters are replaced by `_`.
+#'   The factor names are sanitized to facilitate their use as list names (see
+#'   Value section). Parentheses are omitted and other non-word characters are
+#'   replaced by `_`.
 #'
-#'    Argument `estimate` determines which measure of effect size is to be used:
-#'    It is currently possible to provide a character, where
-#'    `"ges"` calculates generalized eta squared,
-#'    `"pes"` calculates partial eta squared, and
-#'    `"es"` calculates eta squared.
-#'    Note that eta squared is calculated correctly if and only if the design is balanced.
+#'   Argument `estimate` determines which measure of effect size is to be used:
+#'   It is currently possible to provide one of three characters to specify the
+#'   to-be-calculated effect size: \code{"ges"} for generalized \eqn{eta^2},
+#'   \code{"pes"} for partial \eqn{eta^2}, and \code{"es"} for \eqn{eta^2}.
+#'   Note that \eqn{eta^2} is calculated correctly if and only if the design is
+#'   balanced.
 #'
-#'    It is also possible to provide a `data frame` with columns `estimate`, `conf.low`, and `conf.high`, which allows
-#'    for including custom effect-size measures.
+#'   It is also possible to provide a `data.frame` with columns `estimate`,
+#'   `conf.low`, and `conf.high`, which allows for including custom effect-
+#'   size measures.
 #'
-#'    A third option is to provide a function from the \pkg{effectsize} package
-#'    that will be used to calculate effect-size measures from `x`. If the
-#'    \pkg{effectsize} package is installed (and \pkg{papaja} is loaded), this is the new default. This default
-#'    can be changed via `options(papaja.estimate_anova = ...)`.
+#'   A third option is to provide a function from the \pkg{effectsize} package
+#'   that will be used to calculate effect-size measures from `x`. If
+#'   \pkg{effectsize} is installed (and \pkg{papaja} is loaded), this is the
+#'   new default. This default can be changed via
+#'   `options(papaja.estimate_anova = ...)`.
 #'
-#' @return
-#' `apa_print.aov()` and related functions return a named list containing the following components:
-#'
-#' - `estimate` A named list of character strings giving the effect-size estimates for each factor, either in units of the analysed scale or as standardized effect size.
-#' - `statistic` A named list of character strings giving the test statistic, parameters, and *p* value for each factor.
-#' - `full_result` A named list of character strings combining `estimate` and `statistic` for each factor.
-#' - `table` A data frame containing the complete ANOVA table, which can be passed to [apa_table()].
+#' @evalRd apa_results_return_value()
 #'
 #' @references
 #'    Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
@@ -58,8 +64,25 @@
 #' @method apa_print aov
 #' @export
 
-apa_print.aov <- function(x, ...) {
-  apa_print(summary(x)[[1]], .x = x, ...) # apa_print.anova
+apa_print.aov <- function(
+  x
+  , estimate = getOption("papaja.estimate_anova", "ges")
+  , observed = NULL
+  , intercept = FALSE
+  , mse = TRUE
+  , in_paren = FALSE
+  , ...
+) {
+  apa_print(
+    summary(x)
+    , .x = x
+    , intercept = intercept
+    , estimate = estimate
+    , mse = mse
+    , observed = observed
+    , in_paren = in_paren
+    , ...
+  ) # apa_print.anova
 }
 
 
@@ -67,8 +90,24 @@ apa_print.aov <- function(x, ...) {
 #' @method apa_print summary.aov
 #' @export
 
-apa_print.summary.aov <- function(x, ...) {
-  apa_print(x[[1]], ...) # apa_print.anova
+apa_print.summary.aov <- function(
+  x
+  , estimate = getOption("papaja.estimate_anova", "ges")
+  , observed = NULL
+  , intercept = FALSE
+  , mse = TRUE
+  , in_paren = FALSE
+  , ...
+) {
+  apa_print(
+    x[[1]]
+    , intercept = intercept
+    , estimate = estimate
+    , mse = mse
+    , observed = observed
+    , in_paren = in_paren
+    , ...
+  ) # apa_print.anova
 }
 
 
@@ -76,8 +115,25 @@ apa_print.summary.aov <- function(x, ...) {
 #' @method apa_print aovlist
 #' @export
 
-apa_print.aovlist <- function(x, ...) {
-  apa_print(summary(x), .x = x, ...) # apa_print.summary.aovlist
+apa_print.aovlist <- function(
+  x
+  , estimate = getOption("papaja.estimate_anova", "ges")
+  , observed = NULL
+  , intercept = FALSE
+  , mse = TRUE
+  , in_paren = FALSE
+  , ...
+) {
+  apa_print(
+    summary(x)
+    , .x = x
+    , estimate = estimate
+    , mse = mse
+    , observed = observed
+    , intercept = intercept
+    , in_paren = in_paren
+    , ...
+  ) # apa_print.summary.aovlist
 }
 
 
@@ -88,9 +144,9 @@ apa_print.aovlist <- function(x, ...) {
 apa_print.summary.aovlist <- function(
   x
   , estimate = getOption("papaja.estimate_anova", "ges")
-  , mse = TRUE
   , observed = NULL
   , intercept = FALSE
+  , mse = TRUE
   , in_paren = FALSE
   , ...
 ) {
@@ -138,7 +194,6 @@ apa_print.summary.aovlist <- function(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(unlabel(canonical_table$term))
     , in_paren = in_paren
     , est_first = FALSE
     , simplify = FALSE
@@ -152,8 +207,12 @@ apa_print.summary.aovlist <- function(
 
 apa_print.Anova.mlm <- function(
   x
+  , estimate = getOption("papaja.estimate_anova", "ges")
+  , observed = NULL
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
+  , mse = TRUE
+  , in_paren = FALSE
   , ...
 ) {
 
@@ -163,7 +222,16 @@ apa_print.Anova.mlm <- function(
     summary_x <- suppressWarnings(summary(x, multivariate = FALSE)) # car:::summary.Anova.mlm
   }
 
-  apa_print(summary_x, correction = correction, intercept = intercept, .x = x, ...)
+  apa_print(
+    summary_x
+    , .x = x
+    , correction = correction
+    , intercept = intercept
+    , estimate = estimate
+    , mse = mse
+    , observed = observed
+    , in_paren = in_paren
+  )
 }
 
 
@@ -173,11 +241,11 @@ apa_print.Anova.mlm <- function(
 
 apa_print.summary.Anova.mlm <- function(
   x
+  , estimate = getOption("papaja.estimate_anova", "ges")
+  , observed = NULL
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , estimate = getOption("papaja.estimate_anova", "ges")
-  , mse = getOption("papaja.mse")
-  , observed = NULL
+  , mse = TRUE
   , in_paren = FALSE
   , ...
 ) {
@@ -214,12 +282,10 @@ apa_print.summary.Anova.mlm <- function(
   ellipsis$x <- canonical_table
   beautiful_table <- do.call("beautify", ellipsis)
 
-
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(unlabel(canonical_table$term))
     , in_paren = in_paren
     , est_first = FALSE
     , simplify = FALSE
@@ -235,8 +301,12 @@ apa_print.summary.Anova.mlm <- function(
 
 apa_print.afex_aov <- function(
   x
+  , estimate = getOption("papaja.estimate_anova", "ges")
+  , observed = NULL
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
+  , mse = TRUE
+  , in_paren = FALSE
   , ...
 ) {
   validate(intercept, check_class = "logical", check_length = 1)
@@ -247,12 +317,15 @@ apa_print.afex_aov <- function(
   }
 
   ellipsis <- list(...)
-  ellipsis$intercept = intercept
+  ellipsis$estimate <- estimate
+  ellipsis$intercept <- intercept
+  ellipsis$mse <- mse
+  ellipsis$in_paren <- in_paren
 
-  if(is.null(ellipsis$observed)) {
+  if(is.null(observed)) {
     # If 'observed' is not specified, obtain information from afex_aov object
-    ellipsis$observed <- attr(x$anova_table, "observed")
-  } else if(!setequal(ellipsis$observed, attr(x$anova_table, "observed"))){
+    observed <- attr(x$anova_table, "observed")
+  } else if(!setequal(observed, attr(x$anova_table, "observed"))){
     # If it is specified, warn if the sets of observed factors are unequal
     print_terms <- function(x) { # This helper function could be moved to utils.R
       n_terms <- length(x)
@@ -266,9 +339,9 @@ apa_print.afex_aov <- function(
 
     warning(
       "In your call to apa_print(), you specified "
-      , if(length(ellipsis$observed) == 0L) "no " else {"the "}
+      , if(length(observed) == 0L) "no " else {"the "}
       , "model terms "
-      , print_terms(ellipsis$observed)
+      , print_terms(observed)
       , "as observed, "
       , "whereas in your call to afex::aov_car(), you specified "
       , if(length(attr(x$anova_table, "observed")) == 0L) "no " else "the "
@@ -277,6 +350,8 @@ apa_print.afex_aov <- function(
       , "as observed. Make sure that this is what you want."
     )
   }
+
+  ellipsis$observed <- observed
 
 
   if(inherits(x$Anova, "Anova.mlm")) {
@@ -296,15 +371,15 @@ apa_print.afex_aov <- function(
 
 apa_print.anova <- function(
   x
-  , intercept = FALSE
   , estimate = getOption("papaja.estimate_anova", "ges")
-  , mse = TRUE
   , observed = NULL
+  , intercept = FALSE
+  , mse = TRUE
   , in_paren = FALSE
-  # , ci = 0.95
+  # , conf.int = 0.95
   , ...
 ) {
-  # if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+  # if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   # Add method for levene test
   ellipsis <- list(...)
 
@@ -355,7 +430,6 @@ apa_print.anova <- function(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = sanitize_terms(x$Effect)
         , in_paren = in_paren
         , simplify = FALSE
       )
@@ -396,7 +470,6 @@ apa_print.anova <- function(
         beautiful_table
         , est_glue = construct_glue(beautiful_table, "estimate")
         , stat_glue = construct_glue(beautiful_table, "statistic")
-        , term_names = sanitize_terms(tinylabels::unlabel(x$Effect))
         , in_paren = in_paren
         , simplify = FALSE
       )
@@ -441,7 +514,6 @@ apa_print.anova <- function(
       beautiful_table
       , est_glue = construct_glue(beautiful_table, "estimate")
       , stat_glue = construct_glue(beautiful_table, "statistic")
-      , term_names = sanitize_terms(tinylabels::unlabel(canonical_table$term))
       , in_paren = in_paren
       , est_first = FALSE
       , simplify = FALSE

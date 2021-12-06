@@ -3,45 +3,38 @@
 \docType{package}
 \name{papaja}
 \alias{papaja}
-\title{APA manuscripts from R Markdown}
+\title{Prepare APA Journal Articles with R Markdown}
 \description{
-\pkg{papaja} is a R-package in the making including a \href{http://rmarkdown.rstudio.com/}{R Markdown} template
-that can be used with (or without) \href{http://www.rstudio.com/}{RStudio} to produce documents, which conform to
-the American Psychological Association (APA, 2010) manuscript guidelines (6th Edition). The package uses the LaTeX
-document class \href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file, so you can create PDF documents,
-or Word documents if you have to. Moreover, \code{papaja} supplies R-functions (e.g., \code{\link{apa_print}}) that
-facilitate reporting results of your analyses in accordance with APA guidelines.
+\code{papaja} is an \href{https://improvingpsych.org/mission/awards/}{award-winning} R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 }
 \details{
-Note, at this point \code{papaja} is in active development and should be considered alpha. If you experience any problems,
-please \href{https://github.com/crsh/papaja/issues}{open an issue} with a reproducible example of the encountered problem.
+\code{papaja} provides
+\itemize{
+\item an \href{http://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{http://www.rstudio.com/}{RStudio} to create PDF documents (using the \href{http://www.ctan.org/pkg/apa6}{apa6} LaTeX class) or Word documents (using a .docx-reference file).
+\item Functions to \emph{typeset} the results from \emph{statistical analyses} (e.g., \code{\link[=apa_print]{apa_print()}}),
+\item functions to create \emph{tables} (\code{\link[=apa_table]{apa_table()}}), and
+\item functions to create \emph{figures} in accordance with APA guidelines (e.g., \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}).
 }
-\section{Functions}{
-
-To get a list of all functions try \code{ls("package:papaja")} or click the Index link at the bottom of this document.
 }
-
 \section{System requirements}{
 
-To use \pkg{papaja} you need to make sure the following software is installed on your computer:
+To use \code{papaja} you need either an up-to-date version of
+\href{http://www.rstudio.com/}{RStudio} or
+\href{http://johnmacfarlane.net/pandoc/}{pandoc}. If you want to create PDF-
+in addition to DOCX-documents you additionally need a
+\href{http://de.wikipedia.org/wiki/TeX}{TeX} distribution. We recommend
+\href{https://yihui.name/tinytex/}{TinyTex}, which can be installed from within
+R via the \pkg{tinytex} package.
 
-\itemize{
-\item{\href{http://www.rstudio.com/}{RStudio} (>= 0.98.932) or if you don't use RStudio
-, you need to install \href{http://johnmacfarlane.net/pandoc/}{pandoc} using the
-\href{https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md}{instructions for your operating system}}
-\item{A \href{http://de.wikipedia.org/wiki/TeX}{TeX} distribution (2013 or later; e.g., \href{http://miktex.org/}{MikTeX}
-for Windows, \href{https://tug.org/mactex/}{MacTeX} for Mac, obviously, or \href{http://www.tug.org/texlive/}{TeX Live}
-for Linux)}
+Please refer to the \href{https://crsh.github.io/papaja_man/introduction.html#getting-started}{\code{papaja} manual}
+for detailed installation instructions.
 }
 
-\emph{Windows} users should use MikTeX if possible. Currently, pandoc and the Windows version of Tex Live
-\href{https://github.com/rstudio/rmarkdown/issues/6}{don't seem to like each other}. Make sure you install the
-\emph{complete}---not the basic---version.
+\section{Getting help}{
 
-\emph{Ubuntu 14.04} users need a few additional TeX packages for the document class
-\href{http://www.ctan.org/pkg/apa6}{apa6} to work:
-
-\code{sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern}
+For a comprehensive introduction to \code{papaja}, see the current draft of the \href{https://crsh.github.io/papaja_man/}{manual}.
+If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow \href{https://t.co/Z3auyUrbTa}{using the \code{papaja} tag}.
+If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.
 }
 
 \section{Authors}{
@@ -55,15 +48,3 @@ Marius Barth (marius.barth at uni-koeln.de).
 Frederik Aust (frederik.aust at uni-koeln.de).
 }
 
-\section{Contributors}{
-
-\itemize{
-\item{Birk Diedenhofen}
-\item{Christoph Stahl}
-}
-}
-
-\references{
-American Psychological Association. (2010). Publication Manual of the American Psychological Association (6th edition).
-Washington, DC: American Psychological Association.
-}

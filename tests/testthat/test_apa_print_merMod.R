@@ -11,7 +11,7 @@ test_that(
     apa_lme4 <- apa_print(model_lme4)
     # apa2_lme4 <-apa_print(model2_lme4)
     apa_lmerTest <- apa_print(model_lmerTest)
-    apa_lmerTest_specialties <- apa_print(model_lmerTest, in_paren = TRUE, args_confint = list(level = .96), digits = 4L, est_name = "$\\gamma")
+    apa_lmerTest_specialties <- apa_print(model_lmerTest, in_paren = TRUE, conf.int = list(level = .96), digits = 4L, est_name = "$\\gamma")
 
     expect_apa_results(
       apa_lme4
@@ -123,7 +123,12 @@ test_that(
       , family = stats::binomial
     )
 
-    apa_gm1 <- apa_print(gm1, args_confint = list(level = .90))
+    apa_gm1 <- apa_print(gm1, conf.int = list(level = .90))
+
+    expect_warning(
+      apa_print(gm1, args_confint = list(level = .90))
+      , "Argument 'args_confint' has been deprecated. Please use 'conf.int' instead."
+    )
 
     expect_apa_results(
       apa_gm1

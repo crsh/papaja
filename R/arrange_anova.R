@@ -1,4 +1,4 @@
-#' Create Variance Table from Various ANOVA bjects
+#' Create Variance Table from Various ANOVA objects
 #'
 #' These methods take objects from various R functions that calculate ANOVA to create
 #' a \code{data.frame} containing a variance table. \emph{This function is not exported

@@ -1,31 +1,18 @@
-#' Format statistics (APA 6th edition)
+#' Typeset Statistical Results from General Linear Hypothesis Tests
 #'
-#' Takes various \code{lsmeans} and \code{emmeans} objects methods to create formatted character strings to report the results in
-#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
+#' \emph{These methods are not properly tested and should be
 #' considered experimental.}
 #'
 #' @param x Object
 #' @param test Function. Computes p-values (adjusted for multiple comparisons).
-#' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
+#' @param conf.int Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 #'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
 #'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
 # #' @param contrast_names Character. A vector of names to identify calculated contrasts.
 #' @param ... Further arguments to pass to \code{\link{printnum}} to format the estimate.
 #' @inheritParams glue_apa_results
-#' @details
 #'
-#'    ADJUSTED CONFIDENCE INTERVALS
-#'
-#' @return \code{apa_print()} returns a list containing the following components according to the input:
-#'
-#'    \describe{
-#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-#'          and \emph{p} value.}
-#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-#'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
-#'      \item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
-#'    }
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples
@@ -45,23 +32,25 @@ apa_print.glht <- function(x, test = multcomp::adjusted(), ...) {
 
 apa_print.summary.glht <- function(
   x
-  , ci = 0.95
+  , conf.int = 0.95
   , in_paren = FALSE
   , ...
 ) {
+  deprecate_ci(...)
+
   validate(x, check_class = "summary.glht")
-  validate(ci, check_class = "numeric", check_length = 1, check_range = c(0, 1))
+  validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   validate(in_paren, check_class = "logical", check_length = 1)
 
   tidy_x <- broom::tidy(x)
   test_stat <- ifelse(x$df == 0, "z", paste0("t(", x$df, ")"))
-  conf_level <- paste0(ci * 100, "% CI")
+  conf_level <- paste0(conf.int * 100, "% CI")
   p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
 
   # Assamble table
   ## Add (adjusted) confidence intervall
   multcomp_adjustment <- if(x$test$type == "none") multcomp::univariate_calpha() else multcomp::adjusted_calpha()
-  print_ci <- stats::confint(x, level = ci, calpha = multcomp_adjustment)$confint
+  print_ci <- stats::confint(x, level = conf.int, calpha = multcomp_adjustment)$confint
   dimnames(print_ci) <- NULL
   table_ci <- unlist(print_confint(print_ci[, -1], ...)) # Remove point estimate from matrix
   tidy_x$std.error <- table_ci
@@ -69,7 +58,7 @@ apa_print.summary.glht <- function(
 
   ## Typeset columns
   sanitzied_contrasts <- sanitize_terms(tidy_x$contrast)
-  tidy_x$contrast <- prettify_terms(tidy_x$contrast)
+  tidy_x$contrast <- beautify_terms(tidy_x$contrast)
   tidy_x$estimate <- printnum(tidy_x$estimate, ...)
   tidy_x$statistic <- printnum(tidy_x$statistic, digits = 2)
   tidy_x[[p_value]] <- printp(tidy_x[[p_value]])

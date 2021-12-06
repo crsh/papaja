@@ -1,10 +1,11 @@
 #' Replace Parentheses with Brackets
 #'
-#' Takes a single character or a list of characters and replaces parentheses with brackets. Can be used to
-#' prepare a string of statistics (e.g. containing degrees of freedom) for reporting within parentheses.
+#' Takes a single character or a list of characters and replaces parentheses
+#' with brackets. Can be used to prepare a string of statistics (e.g. containing
+#' degrees of freedom) for reporting within parentheses.
 #'
 #' @param x Character. Single character or list of characters.
-#' @return An object of the same type as \code{x}.
+#' @return An object of the same type as `x`.
 #'
 #' @seealso apa_print
 #' @examples

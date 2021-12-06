@@ -2,43 +2,50 @@
 % Please edit documentation in R/cite_r.R
 \name{cite_r}
 \alias{cite_r}
-\title{Cite R and R packages}
+\title{Cite R and R Packages}
 \usage{
 cite_r(
   file = NULL,
   prefix = "R-",
   footnote = FALSE,
   pkgs = NULL,
-  withhold = TRUE
+  omit = TRUE,
+  ...
 )
 }
 \arguments{
-\item{file}{Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL}, only R
-is cited.}
+\item{file}{Character. Path and name of the \code{.bib}-file holding the
+references. If \code{NULL}, only R is cited.}
 
-\item{prefix}{Character. The prefix used for all R-package reference handles.}
+\item{prefix}{Character. Prefix used for all R-package reference handles.}
 
-\item{footnote}{Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
-is available.}
+\item{footnote}{Logical. Indicates if packages should be cited in a
+footnote. Ignored if no package information is available.}
 
-\item{pkgs}{Character. Vector of package names to cite or withhold depending on \code{withhold}.}
+\item{pkgs}{Character. Vector of package names to cite or omit depending
+on \code{omit}.}
 
-\item{withhold}{Logical. If \code{TRUE}, \code{pkgs} constitutes a list of packages \emph{not} to cite (a blacklist).
-If \code{FALSE}, \code{pkgs} constitutes a list of packages to cite (a whitelist).}
+\item{omit}{Logical. If \code{TRUE}, \code{pkgs} constitutes a list of packages
+\emph{not} to cite (a blacklist). If \code{FALSE}, \code{pkgs} constitutes a list of
+packages to cite (a whitelist).}
+
+\item{...}{Additional arguments, which are currently ignored.}
 }
 \value{
-If \code{footnote = FALSE} a character string is returned, otherwise a named list with the elements \code{r}
-and \code{pkgs}.
+If \code{footnote = FALSE} a character string is returned, otherwise a
+named list with the elements \code{r} and \code{pkgs}.
 }
 \description{
-Creates a character string to cite R and R packages.
+Creates character strings to cite R and R packages.
 }
 \details{
-If \code{footnote = FALSE}, a character string citing R and R packages including version
-numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
-former element holds a character string citing R and a reference to a footnote; the latter element contains
-a character string for the footnote citing R-packages. For correct rendering, the footnote string needs
-to be a separate paragraph in the Markdown document.
+If \code{footnote = FALSE}, a character string citing R and R packages
+including version numbers is returned. Otherwise a named list with the
+elements \code{r} and \code{pkgs} is returned. The former element holds a character
+string citing R and a reference to a footnote; the latter element contains
+a character string that creates the footnote. For correct rendering, the
+footnote string needs to be a separate paragraph in the R Markdown
+document.
 }
 \examples{
 cite_r()

@@ -11,7 +11,7 @@
 #'
 #' @keywords internal
 
-arrange_regression <- function(x, est_name, standardized, ci, ...) {
+arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
   ellipsis <- list(...)
   summary_x <- summary(x)
 
@@ -28,15 +28,15 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
     if(standardized) ellipsis$gt1 <- FALSE
   }
 
-  if(is.matrix(ci)) {
-    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
+  if(is.matrix(conf.int)) {
+    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(conf.int), perl = TRUE))
     conf_level <- 100 - conf_level[1] * 2
   } else {
-    conf_level <- 100 * ci
+    conf_level <- 100 * conf.int
   }
 
   tidy_x <- broom::tidy(x)
-  tidy_x <- cbind(tidy_x, ci) # Also adds term rownames
+  tidy_x <- cbind(tidy_x, conf.int) # Also adds term rownames
   rownames(tidy_x) <- sanitize_terms(tidy_x$term, standardized = standardized)
 
   ## Assemble regression table
@@ -47,7 +47,7 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
     , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
   regression_table <- regression_table[, c("term", "estimate", "conf.int", "statistic", "p.value")] # Change order of columns
-  regression_table$term <- prettify_terms(regression_table$term, standardized = standardized)
+  regression_table$term <- beautify_terms(regression_table$term, standardized = standardized)
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)

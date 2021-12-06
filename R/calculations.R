@@ -7,12 +7,12 @@
 
 #' @keywords internal
 
-delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...) {
+delta_r2_ci <- function(x, models, conf.int = 0.90, R = 100, progress_bar = FALSE, ...) {
   if(!package_available("boot")) stop("Please install the package 'boot' to calculate bootstrap confidence intervals.")
 
   validate(x, check_class = "data.frame")
   validate(length(models), "length(models)", check_range = c(2, Inf))
-  validate(ci, check_range = c(0, 1))
+  validate(conf.int, check_range = c(0, 1))
 
   model_summaries <- lapply(models, summary)
   r2s <- sapply(model_summaries, function(x) x$r.squared)
@@ -51,10 +51,10 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
     )
 
 
-    boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = ci, type = "perc")
+    boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = conf.int, type = "perc")
 
     # If difference is not significant set lower bound (closest to zero) == 0 (p. 210, Algina, Keselman & Penfield, 2007)
-    if(x[y, "p.value"] >= (1 - ci) / 2) {
+    if(x[y, "p.value"] >= (1 - conf.int) / 2) {
       lower_bound <- which(boot_r2_ci$percent[1, 4:5] == min(abs(boot_r2_ci$percent[1, 4:5])))
       boot_r2_ci$percent[1, 3 + lower_bound] <- 0
     }
@@ -65,9 +65,9 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, progress_bar = FALSE, ...
 
   percent_cis <- t(cbind(sapply(percent_cis, function(x) x$percent))) # Reformat to one CI per line
   percent_cis <- percent_cis[, 4:5, drop = FALSE] # Preserv matrix structure
-  ci_levels <- c((1 - ci) / 2, (1 - ci) / 2 + ci) * 100
+  ci_levels <- c((1 - conf.int) / 2, (1 - conf.int) / 2 + conf.int) * 100
   colnames(percent_cis) <- paste(ci_levels, "%")
-  attr(percent_cis, "ci.level") <- ci
+  attr(percent_cis, "conf.level") <- conf.int
 
   percent_cis
 }
@@ -257,7 +257,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 within_subjects_conf_int <- wsci
 
 
-#' Summarise Within-Subjects Confidence Intervals
+#' Summarize Within-Subjects Confidence Intervals
 #'
 #' Calculate upper and lower limits of within-subjects confidence intervals calculated
 #' with [wsci()] and return them along their respective means.
@@ -361,7 +361,7 @@ hd_int <- function(x, level = 0.95) {
 #'
 #' @param x An object of class \code{apa_variance_table}.
 #' @param es Character. A vector naming all to-be-computed effect-size measures.
-#'   Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+#'   Currently, partial eta-squared (\code{"pes"}), generalized eta-squared
 #'   (\code{"ges"}), and eta-squared (\code{"es"}) are supported.
 #' @param observed Character. A vector naming all factors that are observed
 #'   (i.e., \emph{not} manipulated).

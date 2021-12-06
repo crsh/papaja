@@ -37,7 +37,7 @@ test_that(
       )
 
       # Also works for nonlinear models of class 'c("nlme", "lme")'
-      # from the example ssection of nlme::nlme()
+      # from the example section of nlme::nlme()
       fm1 <- nlme::nlme(height ~ stats::SSasymp(age, Asym, R0, lrc),
                         data = datasets::Loblolly,
                         fixed = Asym + R0 + lrc ~ 1,
@@ -63,6 +63,11 @@ test_that(
           , R0 = "$\\hat{\\beta} = -8.63$, 95\\% CI $[-9.25, -8.00]$, $t(68) = -27.13$, $p < .001$"
           , lrc = "$\\hat{\\beta} = -3.23$, 95\\% CI $[-3.30, -3.17]$, $t(68) = -94.36$, $p < .001$"
         )
+      )
+
+      expect_warning(
+        apa_print(fm1, args_confint = .9)
+        , "deprecated. Please use 'conf.int' instead."
       )
   }
 )

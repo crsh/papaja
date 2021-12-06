@@ -7,7 +7,7 @@
 \alias{apa_table.matrix}
 \alias{apa_table.list}
 \alias{apa_table.data.frame}
-\title{Prepare table for printing}
+\title{Prepare Table for Printing and Reporting}
 \usage{
 apa_table(x, ...)
 
@@ -68,7 +68,7 @@ apa_table(x, ...)
 )
 }
 \arguments{
-\item{x}{Object to print, can be \code{matrix}, \code{data.frame}, or
+\item{x}{Object to print, either a \code{matrix}, \code{data.frame}, or
 \code{list}. See details.}
 
 \item{...}{
@@ -107,67 +107,69 @@ contents are escaped.}
 
 \item{note}{Character. Note to be printed below the table.}
 
-\item{stub_indents}{List. A named list of vectors that contain indeces of the
-rows to indent. The name of each list element containing the vector is used
-as title for indented sections.}
+\item{stub_indents}{List. A named list of vectors that contain indices of
+rows to indent. The name of each list element containing the vector is
+used as title for indented sections.}
 
-\item{added_stub_head}{Character. Used as stub head (name of first column) if
-\code{row.names = TRUE} is passed to \code{\link[knitr]{kable}}; ignored if
+\item{added_stub_head}{Character. Used as stub head (name of first column)
+if \code{row.names = TRUE} is passed to \code{\link[knitr]{kable}}; ignored if
 row names are omitted from the table.}
 
 \item{col_spanners}{List. A named list of vectors of length 2 that contain
-the first and last column to span. The name of each list element containing
-the vector is used as grouping column name. Ignored in MS Word documents.}
-
-\item{midrules}{Numeric. Vector of line numbers in table (not counting column
-headings) that should be followed by a horizontal rule; ignored in MS Word
+the indices of the first and last column to span. The name of each list
+element is used as grouping column name. Currently ignored in Word
 documents.}
 
+\item{midrules}{Numeric. Vector of line numbers in table (not counting
+column headings) that should be followed by a horizontal rule; currently
+ignored in Word documents.}
+
 \item{placement}{Character. Indicates whether table should be placed, for
-example, at the exact location (\code{h}), at the top (\code{t}), bottom
+example, at the current location (\code{h}), at the top (\code{t}), bottom
 (\code{b}), or on a separate page (\code{p}). Arguments can be combined to
-indicate order of preference (\code{htb}); ignored when
-\code{longtable = TRUE}, \code{landscape = TRUE}, and in MS Word documents.}
+indicate order of preference (\code{htb}); currently ignored when
+\code{longtable = TRUE}, \code{landscape = TRUE}, and in Word documents.}
 
 \item{landscape}{Logical. If \code{TRUE} the table is printed in landscape
-format; ignored in MS Word documents.}
+mode; currently ignored in Word documents.}
 
 \item{font_size}{Character. Font size to use for table contents (can be
 \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small},
 \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE},
-\code{huge}, \code{Huge}). Ignored in MS Word documents.}
+\code{huge}, \code{Huge}). Ignored in Word documents.}
 
-\item{span_text_columns}{Logical. If \code{TRUE} tables span across text
-columns in two-column PDF documents (e.g. when setting
-\code{classoption: jou}). Ignored in other documents.}
+\item{span_text_columns}{Logical. If \code{TRUE} tables span across text columns
+in two-column PDF documents (e.g. when setting \code{classoption: jou}).
+Otherwise ignored.}
 
 \item{format.args}{List. A named list of arguments to be passed to
 \code{\link{printnum}} to format numeric values.}
 
 \item{merge_method}{Character. Determines how to merge tables if \code{x} is
-a \code{list}. Can be either \code{indent} or \code{table_spanner}.}
+a \code{list} of matrices or data frames with a common structure. Can be either
+\code{indent} or \code{table_spanner}. See details.}
 }
 \description{
-Formats \code{matrices} and \code{data.frames} to report them as tables
-according to APA guidelines.
+Formats matrices and data frames to report them as tables in R Markdown
+documents according to APA guidelines.
 }
 \details{
-When using \code{apa_table}, the type of the output (LaTeX or MS Word) is
+When using \code{apa_table}, the type of the output (LaTeX or Word) is
 determined automatically by the rendered document type. In interactive R
-session (unless a document is being rendered) the output defaults to LaTeX.
+session the output defaults to LaTeX.
 
-If \code{x} is a \code{list}, all list elements are merged by columns into
-a single table and the names of list elements are added according to the
-setting of \code{merge_method}.
+If \code{x} is a \code{list}, all list elements are merged by columns into a single
+table and the names of list elements are added according to the setting of
+\code{merge_method}.
 
 By default, the width of the table is set to accommodate its contents. In
 some cases, this may cause the table to exceed the page width. To address
-this, tables can be rotated 90 degrees by setting \code{langscape = TRUE}
-or, by explicitly specifying paragraph columns with fixed column widths,
-such that the contents automatically is broken into multiple lines. For
-example, set \code{align = "lm{5cm}l"} to limit the second column to a
-width of 5 cm. Similarly, to space columns equally use
-\code{align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")}
+this, tables can be rotated 90 degrees by setting \code{langscape = TRUE} or,
+by explicitly using "paragraph columns" with fixed column widths, such
+that the contents is automatically broken into multiple lines. For
+example, set \code{align = "lm{5cm}l"} to limit the second column to a width of
+5 cm. Similarly, to space columns equally use
+\code{align = paste0("m{", 1/(ncol(x) + 1), "\\\\linewidth}")}
 }
 \examples{
 

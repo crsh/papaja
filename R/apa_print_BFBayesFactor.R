@@ -1,32 +1,46 @@
-#' Format Bayes factors (APA 6th edition)
+#' Typeset Bayes Factors
 #'
-#' These methods take result objects from the \pkg{BayesFactor} package to create
-#'  formatted character strings to report the results in accordance with APA manuscript
-#'  guidelines. \emph{These methods are not properly tested and should be considered experimental.}
+#' These methods take result objects from the \pkg{BayesFactor} package to
+#' create formatted character strings to report the results in accordance with
+#' APA manuscript guidelines. *These methods are not properly tested and should
+#' be considered experimental.*
 #'
 #' @param x Output object. See details.
-#' @param iterations Numeric. Number of iterations of the MCMC sampler to estimate HDIs from the posterior.
-#' @param central_tendency Function to calculate central tendency of MCMC samples to obtain a point estimate from
-#'   the posterior.
-#' @param hdi Numeric. A single value (range \[0, 1\]) giving the credibility level of the HDI.
-#' @param standardized Logical. Indicates whether to return standardized or unstandardized effect size estimates.
-#' @param ratio_subscript Character. A brief description of the model comparison in the form of \code{"M1/M2"}.
-#' @param auto_invert Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.
+#' @param iterations Numeric. Number of iterations of the MCMC sampler to
+#'   estimate HDIs from the posterior.
+#' @param central_tendency Function to calculate central tendency of MCMC
+#'   samples to obtain a point estimate from the posterior.
+#' @param hdi Numeric. A single value (range \[0, 1\]) giving the credibility
+#'   level of the HDI.
+#' @param standardized Logical. Whether to return standardized or
+#'   unstandardized effect size estimates.
+#' @param ratio_subscript Character. A brief description of the model
+#'   comparison, in the form of `"M1/M2"`.
+#' @param auto_invert Logical. Indicates whether the Bayes factor should be
+#'   inverted (including `ratio_subscript`) if it is less than 1.
 #' @param scientific Logical. Indicates whether to use scientific notation.
-#' @param max Numeric. Upper limit of the Bayes factor before switching to scientific notation.
-#' @param min Numeric. Lower limit of the Bayes factor before switching to scientific notation.
-#' @param evidential_boost Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
-#'   corresponding models (see details).
+#' @param max Numeric. Upper limit of the Bayes factor before switching to
+#'   scientific notation.
+#' @param min Numeric. Lower limit of the Bayes factor before switching to
+#'   scientific notation.
+#' @param evidential_boost Numeric. Vector of the same length as `x`
+#'   containing evidential boost factors for the corresponding models
+#'   (see details).
 #' @inheritDotParams printnum.numeric -x
 #'
-#' @details For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
-#'   odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
-#'   \code{evidential_boost} they are multiplied with the corresponding Bayes factor before the results are formatted.
-#' @return
-#'   ...
+#' @details
+#'   For models with order restrictions, evidential boosts can be calculated
+#'   based on the prior and posterior odds of the restriction
+#'   (e.g., Morey & Wagenmakers, 2014). If evidential boost factors are passed
+#'   to `evidential_boost` they are multiplied with the corresponding Bayes
+#'   factor before the results are formatted.
+#'
+#' @evalRd apa_results_return_value()
+#'
 #' @references
-#' Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian order-restricted and point-null
-#'   hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
+#' Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian
+#'   order-restricted and point-null hypothesis tests. \emph{Statistics &
+#'   Probability Letters}, 92, 121--124. doi:
 #'   \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
 #' @family apa_print
 #' @importFrom stats formula terms setNames median
@@ -153,21 +167,7 @@ apa_print.BFBayesFactorList <- function(x, ...) {
 }
 
 
-#' @rdname apa_print.BFBayesFactor
-#' @export
 
-setMethod(f = "apa_print", signature = "BFBayesFactor", definition = apa_print.BFBayesFactor)
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-
-setMethod(f = "apa_print", signature = "BFBayesFactorTop", definition = apa_print.BFBayesFactorTop)
-
-
-#' @rdname apa_print.BFBayesFactor
-#' @export
-
-setMethod("apa_print", "BFBayesFactorList", apa_print.BFBayesFactorList)
 
 
 apa_print_bf <- function(x, ...) {
@@ -222,7 +222,7 @@ apa_print_bf.numeric <- function(
     if(is.null(ellipsis$digits)) ellipsis$digits <- 2
 
     bf <- do.call("printnum", ellipsis)
-    bf <- typeset_scientific(bf)
+    bf <- print_scientific(bf)
   } else {
     if(is.null(ellipsis$zero)) ellipsis$zero <- FALSE
     bf <- do.call("printnum", ellipsis)
@@ -259,14 +259,11 @@ bf_sort_terms <- function(x) {
 }
 
 
-# bf_estimates <- function(x, ...) UseMethod("bf_estimates", x)
 
-# bf_estimates.default <- function(x, ...) no_method(x)
+bf_estimates <- function(x, ...) UseMethod("bf_estimates", x)
 
-setGeneric(
-  name = "bf_estimates"
-  , def = function(x, ...) standardGeneric("bf_estimates")
-)
+bf_estimates.default <- function(x, ...) no_method(x)
+
 
 bf_estimates_ttest <- function(
   x
@@ -284,7 +281,12 @@ bf_estimates_ttest <- function(
     estimate <- "delta"
     est_name <- "d"
   } else {
-    estimate <- ifelse(class(x) == "BFoneSample", "mu", "beta (x - y)")
+    estimate <- if(inherits(x, "BFoneSample")) {
+      "mu"
+    } else {
+      # part in parentheses changes if formula method is used, so we have to grep 'beta'
+      colnames(samples)[grep(colnames(samples), pattern = "beta", fixed = TRUE)]
+    }
     est_name <- "M"
   }
 
@@ -297,15 +299,9 @@ bf_estimates_ttest <- function(
   estimate
 }
 
-suppressMessages(
-  setMethod(f = "bf_estimates", signature = "BFoneSample", definition = bf_estimates_ttest)
-)
 
-suppressMessages(
-  setMethod(f = "bf_estimates", signature = "BFindepSample", definition = bf_estimates_ttest)
-)
-
-
+bf_estimates.BFoneSample   <- bf_estimates_ttest
+bf_estimates.BFindepSample <- bf_estimates_ttest
 
 
 # typeset_ratio_subscript <- function(x) {

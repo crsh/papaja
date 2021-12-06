@@ -17,15 +17,15 @@
 #'    `modelfit`).
 #' @param term_names Character. Used as names for the `estimate`-,
 #'    `statistics`-, and `full_result` sub-lists, if multiple estimates or
-#'    statistics are glued.
+#'    statistics are glued. Defaults to `attr(x, "sanitized_term_names")`.
 #' @param in_paren Logical. Whether the formatted string is to be reported in
 #'    parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
 #'    enclosing degrees of freedom) are replaced with brackets.
-#' @param est_first Logical. Determines in which order `estimate` and `statistic`
-#'    are glued together to `full_result`.
+#' @param est_first Logical. Determines in which order `estimate` and
+#'    `statistic` are glued together to `full_result`.
 #' @param simplify Logical. Determines whether the `estimate`, `statistic`, and
-#'    `full_result` sub-lists should be simplified if only one term is available
-#'    from the model object.
+#'    `full_result` sub-lists should be simplified if only one term is
+#'    available from the model object.
 #' @inheritParams glue::glue
 #'
 #' @return Returns a list of class `apa_results`
@@ -66,22 +66,30 @@
 #'     )
 #' )
 
-glue_apa_results <- function(x = NULL, ...) {
+glue_apa_results <- function(x = NULL, term_names = NULL, ...) {
     if(!is.null(x)) validate(x, check_class = "data.frame")
+
+    if(is.null(term_names)) {
+      term_names <- attr(x, "sanitized_term_names")
+    }
 
     apa_res <- add_glue_to_apa_results(
         .x = x
+        , term_names = term_names
         , ...
         , container = init_apa_results()
     )
 
     if(!is.null(x) && is.data.frame(x)) {
       if(!inherits(x, "apa_results_table")) {
-        if("term" %in% names(x)) x$term <- prettify_terms(x$term)
+        if("term" %in% names(x)) x$term <- beautify_terms(x$term)
       }
       if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
       apa_res$table <- x
     }
+
+    # Remove 'sanitized_term_names' attribute from 'sort_terms()'
+    attr(apa_res$table, "sanitized_term_names") <- NULL
 
     apa_res
 }
@@ -196,7 +204,7 @@ est_glue <- function(x) {
   if(is.null(x$estimate)) return("")
   est_glue <- "$<<svl(estimate)>> = <<estimate>>$"
   if(!is.null(x$conf.int)) {
-      est_glue <- paste0(est_glue, ", <<svl(conf.int)>> $<<conf.int>>$")
+      est_glue <- paste0(est_glue, ", <<svl(conf.int, use_math = TRUE)>> $<<conf.int>>$")
   }
   est_glue
 }
@@ -270,30 +278,4 @@ stat_glue <- function(x) {
   )
 
   unclass(constructed_glue)
-}
-
-
-#' Strip Math Tags from Variable Labels or Strings
-#'
-#' Internal function to strip math tags from variable labels or strings. `svl()`
-#' returns the stripped variable label of `x`, if available. `strip_math_tags` returns
-#' the stripped character `x`.
-#'
-#' @param x A (labelled) character string.
-#'
-#' @rdname strip_math_tags
-#' @keywords internal
-
-svl <- function(x) {
-  y <- variable_labels(x)
-  if(is.null(y)) y <- x
-
-  strip_math_tags(y)
-}
-
-#' @rdname strip_math_tags
-#' @keywords internal
-
-strip_math_tags <- function(x) {
-  gsub(pattern = "$", replacement = "", x = x, fixed = TRUE)
 }

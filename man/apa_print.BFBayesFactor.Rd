@@ -4,10 +4,7 @@
 \alias{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactorTop}
 \alias{apa_print.BFBayesFactorList}
-\alias{apa_print,BFBayesFactor-method}
-\alias{apa_print,BFBayesFactorTop-method}
-\alias{apa_print,BFBayesFactorList-method}
-\title{Format Bayes factors (APA 6th edition)}
+\title{Typeset Bayes Factors}
 \usage{
 \method{apa_print}{BFBayesFactor}(
   x,
@@ -27,74 +24,67 @@
 \method{apa_print}{BFBayesFactorTop}(x, ...)
 
 \method{apa_print}{BFBayesFactorList}(x, ...)
-
-\S4method{apa_print}{BFBayesFactor}(
-  x,
-  iterations = 10000,
-  central_tendency = median,
-  hdi = 0.95,
-  standardized = FALSE,
-  ratio_subscript = "10",
-  auto_invert = FALSE,
-  scientific = TRUE,
-  max = 1000,
-  min = 1/max,
-  evidential_boost = NULL,
-  ...
-)
-
-\S4method{apa_print}{BFBayesFactorTop}(x, ...)
-
-\S4method{apa_print}{BFBayesFactorList}(x, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
 
-\item{iterations}{Numeric. Number of iterations of the MCMC sampler to estimate HDIs from the posterior.}
+\item{iterations}{Numeric. Number of iterations of the MCMC sampler to
+estimate HDIs from the posterior.}
 
-\item{central_tendency}{Function to calculate central tendency of MCMC samples to obtain a point estimate from
-the posterior.}
+\item{central_tendency}{Function to calculate central tendency of MCMC
+samples to obtain a point estimate from the posterior.}
 
-\item{hdi}{Numeric. A single value (range [0, 1]) giving the credibility level of the HDI.}
+\item{hdi}{Numeric. A single value (range [0, 1]) giving the credibility
+level of the HDI.}
 
-\item{standardized}{Logical. Indicates whether to return standardized or unstandardized effect size estimates.}
+\item{standardized}{Logical. Whether to return standardized or
+unstandardized effect size estimates.}
 
-\item{ratio_subscript}{Character. A brief description of the model comparison in the form of \code{"M1/M2"}.}
+\item{ratio_subscript}{Character. A brief description of the model
+comparison, in the form of \code{"M1/M2"}.}
 
-\item{auto_invert}{Logical. Indicates whether the Bayes factor should be inverted (including \code{ratio_subscript}) if it is less than 1.}
+\item{auto_invert}{Logical. Indicates whether the Bayes factor should be
+inverted (including \code{ratio_subscript}) if it is less than 1.}
 
 \item{scientific}{Logical. Indicates whether to use scientific notation.}
 
-\item{max}{Numeric. Upper limit of the Bayes factor before switching to scientific notation.}
+\item{max}{Numeric. Upper limit of the Bayes factor before switching to
+scientific notation.}
 
-\item{min}{Numeric. Lower limit of the Bayes factor before switching to scientific notation.}
+\item{min}{Numeric. Lower limit of the Bayes factor before switching to
+scientific notation.}
 
-\item{evidential_boost}{Numeric. Vector of the same length as \code{x} containing evidential boost factors for the
-corresponding models (see details).}
+\item{evidential_boost}{Numeric. Vector of the same length as \code{x}
+containing evidential boost factors for the corresponding models
+(see details).}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum.numeric]{printnum.numeric}}
   \describe{
-    \item{\code{gt1}}{Logical. Indicates if the absolute value of the statistic can, in principal, be greater than 1.}
-    \item{\code{zero}}{Logical. Indicates if the statistic can, in principal, be 0.}
-    \item{\code{na_string}}{Character. String to print if element of \code{x} is \code{NA}.}
-    \item{\code{use_math}}{Logical. Indicates whether to insert \code{$} into the output so that \code{Inf} or scientific
-notation is rendered correctly.}
-    \item{\code{add_equals}}{Logical. Indicates if the output string should be prepended with an \emph{equals} sign.}
+    \item{\code{gt1}}{Logical. Indicates if the statistic can, in principle, have an
+absolute value greater than 1. If \code{FALSE}, leading zeros are
+omitted.}
+    \item{\code{zero}}{Logical. Indicates if the statistic can, in principle, be 0. If
+\code{FALSE}, a string of the form \verb{< 0.001} is returned instead of 0.}
+    \item{\code{na_string}}{Character. String to print if any element of \code{x} is \code{NA}.}
+    \item{\code{use_math}}{Logical. Indicates whether to use \code{$} in the output so that
+\code{Inf} or scientific notation is rendered correctly.}
+    \item{\code{add_equals}}{Logical. Indicates if the output string should be
+prepended with an \code{=}.}
   }}
 }
-\value{
-...
-}
 \description{
-These methods take result objects from the \pkg{BayesFactor} package to create
-formatted character strings to report the results in accordance with APA manuscript
-guidelines. \emph{These methods are not properly tested and should be considered experimental.}
+These methods take result objects from the \pkg{BayesFactor} package to
+create formatted character strings to report the results in accordance with
+APA manuscript guidelines. \emph{These methods are not properly tested and should
+be considered experimental.}
 }
 \details{
-For models with order restrictions, evidential boosts can be calculated based on the prior and posterior
-odds of the restriction (Morey & Wagenmakers, 2014). If evidential boost factors are passed to
-\code{evidential_boost} they are multiplied with the corresponding Bayes factor before the results are formatted.
+For models with order restrictions, evidential boosts can be calculated
+based on the prior and posterior odds of the restriction
+(e.g., Morey & Wagenmakers, 2014). If evidential boost factors are passed
+to \code{evidential_boost} they are multiplied with the corresponding Bayes
+factor before the results are formatted.
 }
 \examples{
 \dontrun{
@@ -110,8 +100,9 @@ apa_print(bayesian_anova)
 }
 }
 \references{
-Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian order-restricted and point-null
-hypothesis tests. \emph{Statistics & Probability Letters}, 92, 121--124. doi:
+Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian
+order-restricted and point-null hypothesis tests. \emph{Statistics &
+Probability Letters}, 92, 121--124. doi:
 \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
 }
 \seealso{
@@ -128,3 +119,14 @@ Other apa_print:
 }
 \concept{apa_print}
 \keyword{internal}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

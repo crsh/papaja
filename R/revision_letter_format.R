@@ -1,8 +1,9 @@
-#' Journal revision letter
+#' Revision Letter
 #'
 #' Template for creating a journal revision letters.
 #'
-#' @param keep_tex Logical. Logical. Keep the intermediate tex file used in the conversion to PDF.
+#' @param keep_tex Logical. Whether to keep the intermediate tex file used in
+#'   the conversion to PDF.
 #' @inheritDotParams bookdown::pdf_document2
 #'
 #' @seealso \code{\link[bookdown]{html_document2}}
@@ -104,9 +105,10 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #' @param x Character. One or more quote labels.
 #' @param file Character. Path to LaTeX file from which to quote.
 #'
-#' @details Searches the LaTeX document for labelled quotes preceeded and
-#'   followed by `% <@~{#quote-label}` and `% ~@>}` tags in LaTeX
-#'   comments.
+#' @details Searches the LaTeX document specified in `file` for labelled
+#'   quotes, i.e. paragraphs that are enclosed in `% <@~{#quote-label}` and
+#'   `% ~@>}` tags in LaTeX comments on separate lines. The labelled quote is
+#'   then inserted and rendered `asis`.
 #'
 #' @export
 

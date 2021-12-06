@@ -90,7 +90,7 @@ test_that(
 
     expect_identical(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01, .04]$")
 
-    model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, ci = 0.5)
+    model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, conf.int = 0.5)
     expect_apa_results(model_comp_boot2)
 
     expect_identical(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80, .84]$")

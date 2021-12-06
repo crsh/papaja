@@ -1,8 +1,9 @@
 ---
-title: "Getting started on new `apa_print()` methods"
+title: "Developing new apa_print()-methods"
+author: "Frederik Aust"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting started on new `apa_print()` methods}
+  %\VignetteIndexEntry{Developing new apa_print()-methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,34 +19,34 @@ knitr::opts_chunk$set(
 library("papaja")
 ```
 
-This document provides a brief overview of issues to consider, when implementing a new method for `apa_print()`, a convenience function to facilitate reporting of results in accordance with APA reporting guidelines.
-If you consider adding a new method, read the [contributing guidelines]() first. <!-- TODO: Add link -->
+Here, we provide a brief overview of issues to consider when implementing a new method for `apa_print()`, a convenience function to facilitate reporting of results in accordance with APA reporting guidelines.
+If you consider adding a new method, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
 
 ## Deciding on a new method
 
-The best way to decide on a new method to add is to solve your own problems.
 If you are reporting the results of a statistical analysis that is not yet supported by `apa_print()` you probably have a good motivation and possibly prior work to build on.
-If you are just looking for a way to contribute, take a look at the [open issues]() for inspiration. <!-- TODO: Add link -->
+If you are just looking for a way to contribute to, take a look at the [open issues](https://github.com/crsh/papaja/issues) for inspiration.
 
-`apa_print()` is a generic, meaning it can, in principle, work on any output object with a class that is specific enough to extract the results of the analysis.
+`apa_print()` is a generic, meaning it can, in principle, work on any output object with a class that is specific enough to purposefully extract the results of the analysis.
 For example, objects of class `htest`, as returned by `t.test()`, `cor.test()`, `prop.test()`, etc., are named lists that follow a loose convention about the named objects they contain.
 
 ```{r htest-example}
 t_test_example <- t.test(extra ~ group, data = sleep)
+
 class(t_test_example)
+
 str(t_test_example)
 ```
 
 Hence, if we pass an `htest` object to `apa_print()` the function expects there to be named elements in the list, such as `statistic`, `estimate`, or `p.value`.
 These expectations are reflected in the workings of the `apa_print.htest()` method.
-Objects of less specific classes, such as `list` or `data.frame` cannot be supported, because reliable assumptions about their contents are much more limited.
+Objects of less specific classes, such as `list` or `data.frame` cannot be supported, because we cannot make any useful assumptions about their structure.
 
 ## Default structure of output
 
-Objects returned by `apa_print()` are of class `apa_results`, a named list with four elements.
-The internal function `init_apa_results()` can be used to generate such a to-be-filled and -returned list:
+Objects returned by `apa_print()` are of class `apa_results`, a named list with four elements:
 
-```{r apa-results}
+```{r apa-results, echo = FALSE}
 papaja:::init_apa_results()
 ```
 
@@ -62,7 +63,6 @@ lm_fit <- lm(weight ~ group)
 lm_fit_apa <- apa_print(lm_fit)
 ```
 
-
 The `estimate` element of the returned `apa_results`-list itself contains a named list with estimated parameters---in this case regression coefficients---and corresponding confidence intervals for the model.
 The names of the list correspond to the names of the predictors.
 
@@ -70,18 +70,17 @@ The names of the list correspond to the names of the predictors.
 lm_fit_apa$estimate
 ```
 
-The `estimate`-list may contain additional elements, such as in this case the list `modelfit`, that contains estimates that quantify the quality of the model fit.
+The `estimate` list may contain additional elements, such as the list `modelfit`, that contains quantitative estimates of the model fit.
 
-The `statistic` element of the returned `apa_results`-list again contains a named list with the same structure as `estimate`.
-The two lists mainly differ with respect to their contents.
-Instead of parameter estimates, `statistic` contains the corresponding inferential statistics, such as significance tests or Bayesian model comparisons.
+The `statistic` element of the returned `apa_results` list contains a named list with the same structure as `estimate`.
+Instead of parameter estimates, `statistic` contains the corresponding inferential test statistics, such as significance tests or Bayesian model comparisons.
 
 ```{r statistic}
 lm_fit_apa$statistic
 ```
 
-Note that the `statistics`-list misses elements for the information criteria `AIC` and `BIC`.
-Because no inferential statistics on the information criteria are available, it is fine to simply drop those elements.
+Note that the `statistics` list misses elements for the information criteria `AIC` and `BIC`.
+Because no inferential test statistics on the information criteria are available, it is fine to simply drop those elements.
 
 The `full_results` element is a named list that simply combines the results of `estimate` and `statistic` for convenience in reporting.
 
@@ -90,30 +89,34 @@ lm_fit_apa$full_result
 ```
 
 Finally, the `table` element contains a `data.frame` of class `apa_results_table` that summarizes the results.
-For more complex analyses `table` may contain a named list of `apa_result_table`s.
-In essence this is simply a regular `data.frame` that follows the column naming conventions used in [`broom`](https://cran.r-project.org/package=broom) but allows for prettier printing of variable labels.
+In essence this is simply a regular `data.frame` that follows the [column-naming conventions](https://www.tidymodels.org/learn/develop/broom/#glossary) used in [**broom**](https://cran.r-project.org/package=broom) but allows for prettier printing of variable labels.
 
 ```{r table}
 lm_fit_apa$table
 ```
 
-Variable labels, as implemented in `papaja`, are attributes of each column that define a typeset label for the respective column.
+For more complex analyses `table` may contain a named list of `apa_result_table`s.
+We use **tinylabels** to set variable labels.
+These variable labels are attributes attached to each column and contain a typeset label for the respective column.
 
 ```{r variable-labels}
+# library("tinylabels")
+
 letters
 
 variable_label(letters) <- "Letters of the alphabet"
 variable_label(letters)
 
 letters
+
+str(letters)
 ```
 
 ```{r variable-label-column}
 lm_fit_apa$table$statistic
 ```
 
-
-These variable labels are automatically used by `apa_table()` and plotting functions from the `apa_factorial_plot()`-family to create sensible default labels.
+Variable labels are automatically used by `apa_table()` and plotting functions from the `apa_factorial_plot()`-family to create sensible default labels.
 If a label is enveloped in `$` it may contain LaTeX math syntax, which is automatically converted to R expressions using [`latex2exp`](https://cran.r-project.org/package=latex2exp) for plotting.
 
 Any new `apa_print()` method should output an object of this basic structure.
@@ -122,51 +125,65 @@ Any new `apa_print()` method should output an object of this basic structure.
 
 `apa_results` do not contain numeric information.
 Rather the numeric information has been processed for printing in accordance with APA guidelines.
-There are two `papaja`-functions to facilitate the typesetting.
+There are several **papaja**-functions to facilitate the typesetting.
 `printnum()` is a flexible general purpose function that wraps `formatC()` and can be used to round, set decimal as well as thousands separators, or remove leading zeros.
 
 ```{r printnum}
-printnum(rnorm(3) * 1e4, digits = 3, big.mark = ".", decimal.mark = ",")
+x <- rnorm(3) * 1e4
+printnum(x)
+
+printnum(x, digits = 3, big.mark = ".", decimal.mark = ",")
+
+printnum(Inf)
 ```
 
-`printp()` is a wrapper for `printnum()` that sets appropriate defaults to report p-values in accordance with APA guidelines.
+`printp()` is a wrapper for `printnum()` that sets appropriate defaults to report *p* values in accordance with APA guidelines.
 
 ```{r printp}
 printp(c(0.0001, 0.05, 0.99999))
 ```
 
-Finally, `papaja` provides an internal function `papaja:::print_interval()` to typeset interval estimates.
+The internal function `print_df()` is geared towards typesetting degrees of freedom.
 
-```{r print-interval}
-papaja:::print_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
+```{r printdf}
+papaja:::print_df(c(12, 12.485))
+
+papaja:::print_df(12L)
 ```
 
-Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence and Bayesian highest density intervals.
+Finally, `print_interval()` can be used to typeset interval estimates.
+
+```{r print-interval}
+print_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
+```
+
+Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence intervals and Bayesian highest-density intervals.
 
 ```{r print-confint}
-papaja:::print_confint(rnorm(2), conf_level = 0.95)
-papaja:::print_hdint(rnorm(2), conf_level = 0.95)
+print_confint(rnorm(2), conf_level = 0.95)
+
+print_hdint(rnorm(2), conf_level = 0.95)
 ```
 
 ## Typesetting model terms
 
-When creating named lists from terms, these terms names should ideally follow tidy naming conventions.
-Specifically, they should use `_` as separator, and be valid R names.
+When creating named lists from terms, these terms names should use `_` as separator, and be valid R names.
 Adhering to these conventions ensures that `apa_results` can conveniently be indexed using the `$` operator.
 
-To facilitate the generation of list names, `papaja` provides the internal function `sanitize_terms()`.
+To facilitate the generation of list names, **papaja** provides the internal function `sanitize_terms()`.
 
 ```{r sanitize-terms}
-papaja:::sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(Factor A)"), standardized = TRUE)
+mod_terms <- c("(Intercept)", "Factor A", "Factor B",
+               "Factor A:Factor B", "scale(Factor A)")
+sanitize_terms(mod_terms, standardized = TRUE)
 ```
 
 While these sanitized terms are well suited to name R objects, they are not ideal for reporting.
-To facilitate typesetting term names for reporting, there is another internal function `papaja:::prettify_terms()`.
+To facilitate typesetting term names for reporting, there is another internal function `beautify_terms()`.
 
 ```{r prettify-terms}
-papaja:::prettify_terms(c("(Intercept)", "Factor A:Factor B", "scale(Factor A)"), standardized = TRUE)
+beautify_terms(mod_terms, standardized = TRUE)
 ```
-
 
 ## Internal workflow
 
@@ -189,42 +206,114 @@ For convenience, `apa_print.aov()` calls `summary()` with its default arguments 
 papaja:::apa_print.aov
 ```
 
-This approach furthermore ensures that a variety of object types are supported while minimizing code redundancy.
+This approach also ensures that a variety of object types are supported while minimizing code redundancy.
 
 ### Restructuring results
 
-The internals of `apa_print()` heavily rely on the [`broom`](https://cran.r-project.org/package=broom), a package to that provides functions turn the output of analysis functions into tidy `data.frame`s.
-The objects are often processed using `broom::tidy()` and `broom::glance()` if necessary before being modified further to create the contents of the `table` element.
+The internals of `apa_print()` heavily rely on [**broom**](https://cran.r-project.org/package=broom), a package to conveniently restructure the output of analysis functions into tidy `data.frame`s.
+The objects are often processed using `broom::tidy()`, and `broom::glance()` if necessary, before being modified further to create the contents of the `table` element.
 
-Once the results table has been assembled, variable labels have been assigned, and the `apa_results_table` class has been applied, `estimate`, `statistic`, and `full_result` can be derived from it.
-A convenient approach is to use `apply()` rowwise.
+Once the results table has been assembled, numeric values have been typeset, and variable labels have been assigned `glue_apa_results()` can be used to create an `apa_results` object according to the above specifications.
+Consider the following example of an `lm`-object.
+First we `tidy()` and `glance()` the object to obtain tidy results.
+We than typeset all "special" numerical results, that is, all results that would not be typeset appropriately by applying `printnum()` with its default settings.
+Moreover, we combine the separate columns for lower and upper confidence interval bounds into one column `conf.int` which contains the complete confidence interval.
 
-```{r construct-estimate}
+```{r tidy-results}
+lm_fit <- lm(mpg ~ cyl + wt, mtcars)
+
+# Tidy and typeset output
 library("broom")
 tidy_lm_fit <- tidy(lm_fit, conf.int = TRUE)
+tidy_lm_fit$p.value <- printp(tidy_lm_fit$p.value)
+tidy_lm_fit$conf.int <- unlist(print_confint(tidy_lm_fit[, c("conf.low", "conf.high")]))
 
-tidy_lm_fit$estimate <- printnum(tidy_lm_fit$estimate)
-tidy_lm_fit$ci <- apply(tidy_lm_fit[, c("conf.low", "conf.high")], 1, papaja:::print_confint, conf_level = 0.95)
+str(tidy_lm_fit)
 
-tidy_lm_fit[, c("estimate", "ci")]
+glance_lm_fit <- glance(lm_fit)
+glance_lm_fit$r.squared <- printnum(glance_lm_fit$r.squared, gt1 = FALSE)
+glance_lm_fit$p.value <- printp(glance_lm_fit$p.value)
+glance_lm_fit$df <- papaja:::print_df(glance_lm_fit$df)
+glance_lm_fit$df.residual <- papaja:::print_df(glance_lm_fit$df.residual)
 
-
-results <- papaja:::init_apa_results()
-results$estimate <- as.list(apply(tidy_lm_fit, 1, function(x) paste0("b = ", x["estimate"], " ", x["ci"])))
-names(results$estimate) <- papaja:::sanitize_terms(tidy_lm_fit$term)
-
-results
+str(glance_lm_fit)
 ```
 
+Next, we typeset the remaining numeric columns and assign informative variable labels:
+
+```{r construct-apa-results-labels}
+tidy_lm_fit <- printnum(tidy_lm_fit)
+
+variable_labels(tidy_lm_fit) <- c(
+  term = "Term"
+  , estimate = "$b$"
+  , statistic = paste0("$t(", glance_lm_fit$df.residual, ")")
+  , p.value = "$p$"
+  , conf.int = "95% CI"
+)
+
+glance_lm_fit <- printnum(glance_lm_fit)
+
+variable_labels(glance_lm_fit) <- c(
+  r.squared = "$R^2$"
+  , statistic = "$F$"
+  , p.value = "$p$"
+  , AIC = "$\\mathrm{AIC}$"
+)
+```
+
+Now we can use `glue_apa_results()` to create the output object.
+In doing so, we use the internal function `construct_glue()` to automatically determine the correct "glue" of the reporting string.
+Let's first examine the glue.
+
+```{r glue}
+papaja:::construct_glue(tidy_lm_fit, "estimate")
+```
+
+The character string contains a combination of text and to-be-evaluated R code enveloped in `<<` and `>>`.
+All variable names (e.g. `estimate`) are assumed to be columns of `x` (here `tidy_lm_fit`) or any additional object passed to `glue_apa_results()` via `...`.
+`svl()` is a function that returns a column variable label but, by default, remove the math-environment tags (`$`) as these are not needed here.
+
+```{r construct-apa-results}
+lm_results <- glue_apa_results(
+    x = tidy_lm_fit
+    , est_glue = papaja:::construct_glue(tidy_lm_fit, "estimate")
+    , stat_glue = papaja:::construct_glue(tidy_lm_fit, "statistic")
+    , term_names = sanitize_terms(tidy_lm_fit$term)
+)
+
+lm_results
+```
+
+If we need to add additional information to this output, we can use `add_glue_to_apa_results()`.
+This function takes an existing output and adds new strings to a specific sublist.
+So, let's add some model fit information to the output.
+
+```{r amend-apa-results}
+add_glue_to_apa_results(
+  .x = glance_lm_fit
+  , container = lm_results
+  , sublist = "modelfit"
+  , est_glue = c(
+      r2 = "$<<svl(r.squared)>> = <<r.squared>>$"
+      , aic = ""
+  )
+  , stat_glue = c(
+      r2 = papaja:::construct_glue(glance_lm_fit, "statistic")
+      , aic = "$<<svl(AIC)>> = <<AIC>>$"
+  )
+)
+```
 
 ## User interface
 
-A final issue to consider is to make sure that the objects users pass to `papaja` functions is appropriate.
-This input validation serves to provide useful error messages to users and point them towards what is going wrong.
-Currently, `papaja` relies on the internal function `validate()` for this.
+A final issue to consider is that users may pass inappropriate input to `apa_print()`.
+To ensure that we return correct output or informative error messages, we need input validation.
+Currently, **papaja** relies on the internal function `validate()` for this.
 
 ```{r}
 in_paren <- TRUE
 papaja:::validate(in_paren, check_class = "logical", check_length = 1)
 ```
 
+Please use either `validate()` or perform input validation using the [**assertthat**](https://cran.r-project.org/package=assertthat) package.

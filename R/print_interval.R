@@ -1,29 +1,30 @@
-#' Create Interval Strings
+#' Typeset Interval Estimate
 #'
-#' Creates a character string to report an interval.
-#' \emph{This function is not exported.}
+#' Creates a character string to report interval estimates, such as frequentist
+#' confidence or Bayesian credible intervals.
 #'
 #' @param x Numeric. A vector (of length 2, unless `y` is also specified) with,
-#'    a two-column `matrix`, or a `data.frame`, which can coerced to a
-#'    `matrix`.
-#' @param y Numeric. A vector of the same length as `x`.
-#' @param conf_level Numeric. Confidence level of the interval. Ignored if level can be infered from attributes of `x`, see Details.
+#'   a two-column `matrix`, or a `data.frame`, which can coerced to a `matrix`.
+#' @param y Numeric. An optional vector of the same length as `x`.
+#' @param conf_level Numeric. Confidence level of the interval. Ignored if
+#'   level can be inferred from attributes of `x`, see Details.
 #' @param interval_type Character. Abbreviation indicating the type of interval
-#'    estimate, e.g. `CI`.
-#' @param enclose_math Logical. Indicates whether the interval should be enclosed in `$` (i.e., math environment).
+#'   estimate, e.g. `CI`.
+#' @param enclose_math Logical. Indicates whether the interval should be
+#'   enclosed in `$` (i.e., a math environment).
 #' @inheritDotParams printnum
 #'
 #' @details If possible the confidence level of the interval is inferred from
-#'    attributes of `x`. For a vector of length 2, the attribute `conf.level` is
-#'    is consulted; for a `matrix` or `data.frame` the column names are used,
-#'    if they are of the format "2.5 \%" and "97.5 \%".
+#'   attributes of `x`. For a vector of length 2, the attribute `conf.level` is
+#'   is consulted; for a `matrix` or `data.frame` the column names are used,
+#'   if they are of the format "2.5 \%" and "97.5 \%".
 #'
-#'    If `x` is a `matrix` or `data.frame` the row names are used as names for
-#'    the returned `list` of intervals.
+#'   If `x` is a `matrix` or `data.frame` the row names are used as names for
+#'   the returned `list` of intervals.
 #'
-#' @return A singel interval is returned as a `character` vector of length 1;
-#'    multiple intervals are returned as a named `list` of `character` vectors
-#'    of length 1.
+#' @return A single interval is returned as a `character` vector of length 1;
+#'   multiple intervals are returned as a named `list` of `character` vectors
+#'   of length 1.
 #'
 #' @keywords internal
 #' @seealso \code{\link{printnum}}
@@ -58,15 +59,6 @@ print_interval <- function(
 
 print_interval.default <- function(x, ...) {
     stop("No method for objects of class ", class(x))
-}
-
-#' @rdname print_interval
-#' @method print_interval data.frame
-#' @export
-
-print_interval.data.frame <- function(x, ...) {
-    x <- as.matrix(x)
-    print_interval(x, ...)
 }
 
 #' @rdname print_interval
@@ -113,7 +105,7 @@ print_interval.numeric <- function(
       interval <- paste0(
           conf_level
           , "$["
-          , paste(strip_math_tags(x), collapse = ", ")
+          , paste(strip_math_tags(x), collapse = ",\ ")
           , "]$"
       )
     } else {
@@ -140,9 +132,13 @@ print_interval.matrix <- function(
     , ...
 ) {
     if(!is.null(colnames(x))) {
-        col_conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(x), perl = TRUE))
-        col_conf_level <- if(anyNA(col_conf_level)) NULL else col_conf_level
-        if(!is.null(col_conf_level)) conf_level <- 100 - col_conf_level[1] * 2
+      suppressWarnings(
+        col_conf_level <- as.numeric(
+          gsub("[^.|\\d]", "", colnames(x), perl = TRUE)
+        )
+      )
+      col_conf_level <- if(anyNA(col_conf_level)) NULL else col_conf_level
+      if(!is.null(col_conf_level)) conf_level <- 100 - col_conf_level[1] * 2
     }
 
     # if(nrow(x) == 1) {
@@ -191,6 +187,25 @@ print_interval.matrix <- function(
 
     interval
 }
+
+#' @rdname print_interval
+#' @method print_interval data.frame
+#' @export
+
+print_interval.data.frame <- function(x, ...) {
+    x <- as.matrix(x)
+    print_interval(x, ...)
+}
+
+#' @rdname print_interval
+#' @method print_interval list
+#' @export
+
+print_interval.list <- function(x, ...) {
+  x <- as.data.frame(x)
+  print_interval(x, ...)
+}
+
 
 #' @rdname print_interval
 #' @export

@@ -5,7 +5,7 @@
 \alias{arrange_anova.anova}
 \alias{arrange_anova.summary.aov}
 \alias{arrange_anova.summary.Anova.mlm}
-\title{Create Variance Table from Various ANOVA bjects}
+\title{Create Variance Table from Various ANOVA objects}
 \usage{
 arrange_anova(x, ...)
 

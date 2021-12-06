@@ -1,49 +1,40 @@
-#' Format Statistics (APA 6th edition)
+#' Typeset Statistical Results from Hypothesis Tests
 #'
-#' Takes `htest` objects from various statistical methods (e.g., [t.test()], [wilcox.test()], [cor.test()]) to create
-#' formatted character strings to report the results in accordance with APA manuscript guidelines.
+#' Takes `htest` objects from various statistical methods (e.g., [t.test()],
+#' [wilcox.test()], [cor.test()]) to create formatted character strings to
+#' report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x An `htest` object. See details.
-#' @param stat_name Character. If `NULL` (the default), the name given in `x` (or a formally correct
-#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the *test statistic*, otherwise the
-#'    supplied name is used. See details.
-#' @param est_name Character. If `NULL` (the default), the name given in `x` (or a formally correct
-#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the *estimate*, otherwise the
-#'    supplied name is used. See details.
-#' @param n Numeric. Sample size; required when reporting chi-squared tests, otherwise this parameter
-#'    is ignored.
-#' @param ci Numeric. If \code{NULL} (the default), the function tries to obtain confidence intervals from `x`.
-#'    Other confidence intervals can be supplied as a `vector` of length 2 (lower and upper boundary, respectively)
-#'    with attribute `conf.level` set, e.g., when calculating bootstrapped confidence intervals.
+#' @param stat_name Character. If `NULL` (the default), the name given in `x`
+#'   (or a formally correct adaptation, such as \eqn{\chi^2} instead of
+#'   "x-squared") is used for the *test statistic*, otherwise the supplied name
+#'   is used. See details.
+#' @param est_name Character. If `NULL` (the default), the name given in `x`
+#'   (or a formally correct adaptation, such as \eqn{r_S} instead of "rho") is
+#'   used for the *estimate*, otherwise the supplied name is used. See details.
+#' @param n Numeric. Sample size; required when reporting \eqn{\chi^2} tests,
+#'   otherwise this parameter is ignored.
+#' @param conf.int Numeric. If \code{NULL} (the default), the function tries to
+#'   obtain confidence intervals from `x`. Other confidence intervals can be
+#'   supplied as a `vector` of length 2 (lower and upper boundary,
+#'   respectively) with attribute `conf.level` set, e.g., when calculating
+#'   bootstrapped confidence intervals.
 #' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
-#' @details The function should work on a wide range of `htest` objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-#'    experience inaccuracies you may report these [here]{https://github.com/crsh/papaja/issues} (please include
-#'    a reproducible example in your report).
+#' @details
+#'   The function should work on a wide range of `htest` objects. Due to the
+#'   large number of functions that produce these objects and their
+#'   idiosyncrasies, the returned strings should be compared to the original
+#'   object. If you experience inaccuracies you may report these
+#'   [here]{https://github.com/crsh/papaja/issues} (please include
+#'   a reproducible example in your report).
 #'
-#'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-#'    \pkg{knitr}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
-#'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
+#'   `stat_name` and `est_name` are placed in the output string and are thus
+#'   passed to pandoc or LaTeX through \pkg{knitr}. Thus, to the extent it is
+#'   supported by the final document type, you can pass LaTeX-markup to format
+#'   the final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
-#' @return
-#'   A list (of additional class `apa_results`) containing the following components is returned:
-#'
-#'    \describe{
-#'      \item{`statistic`}{
-#'        A character string giving the test statistic, parameters (e.g., degrees of freedom), and *p* value.
-#'      }
-#'      \item{`estimate`}{
-#'        A character string giving the descriptive estimates and confidence intervals if possible,
-#'        either in units of the analysed scale or as standardized effect size.
-#'      }
-#'      \item{`full_result`}{
-#'        A joint character string combining `estimate` and `statistic`.
-#'      }
-#'      \item{`table`}{
-#'        A data frame, which can be passed to [apa_table()].
-#'      }
-#'    }
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples
@@ -76,15 +67,17 @@ apa_print.htest <- function(
   , stat_name = NULL
   , est_name = NULL
   , n = NULL
-  , ci = NULL
+  , conf.int = NULL
   , in_paren = FALSE
   , ...
 ) {
+  deprecate_ci(...)
+
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf), check_length = 1)
-  if(!is.null(ci)) validate(ci, check_class = "numeric", check_length = 2)
+  if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
   ellipsis <- list(...)
@@ -106,10 +99,10 @@ apa_print.htest <- function(
   }
   if(length(x$estimate) > 2L) x$estimate <- NULL
 
-  if(is.null(ci)) {
+  if(is.null(conf.int)) {
     conf_int <- list(x$conf.int)
   } else {
-    conf_int <- list(ci)
+    conf_int <- list(conf.int)
   }
 
 
@@ -177,7 +170,6 @@ apa_print.htest <- function(
     , n = as.integer(n)
     , est_glue = construct_glue(x, "estimate")
     , stat_glue = construct_glue(x, "statistic")
-    , term_names = sanitize_terms(y$term)
     , in_paren = in_paren
   )
 }
