@@ -2,13 +2,13 @@
 % Please edit documentation in R/apa_beeplot.R
 \name{apa_beeplot}
 \alias{apa_beeplot}
-\alias{apa_beeplot.data.frame}
+\alias{apa_beeplot.default}
 \alias{apa_beeplot.afex_aov}
 \title{Bee-swarm Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
 apa_beeplot(x, ...)
 
-\method{apa_beeplot}{data.frame}(
+\method{apa_beeplot}{default}(
   data,
   id,
   factors = NULL,

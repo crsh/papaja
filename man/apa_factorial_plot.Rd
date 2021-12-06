@@ -161,6 +161,12 @@ These calls can be customised by setting the respective parameters \verb{args_**
 }
 \examples{
 apa_factorial_plot(
+  formula = yield ~ (N + P + K | block)
+  , data = npk
+  , plot = c("error_bars", "points", "swarms")
+)
+
+apa_factorial_plot(
   data = npk
   , id = "block"
   , dv = "yield"

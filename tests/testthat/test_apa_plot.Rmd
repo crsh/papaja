@@ -44,6 +44,61 @@ apa_beeplot(data = example_data, dv = "first_dv", id = "sid", factors = c("A", "
 ```
 
 
+# Legacy frontend
+
+```{r}
+apa_beeplot(
+  data = example_data
+  , dv = "first_dv"
+  , factors = c("A", "B", "D")
+  , id = "sid"
+  , args_points = list(
+    pch = rep(21, 3)
+    , bg = c("red", "green", "orange")
+  )
+  , args_error_bars = list(
+    col = "red"
+    , lwd = 1:3
+  )
+)
+```
+
+```{r}
+apa_barplot(
+  data = example_data
+  , dv = "first_dv"
+  , factors = c("A", "B", "D")
+  , id = "sid"
+  , args_rect = list(
+    col = 3:5
+    , border = 1:3
+  )
+  , args_legend = list(
+    legend = letters[2:4]
+  )
+)
+```
+
+```{r}
+apa_lineplot(
+  data = example_data
+  , dv = "first_dv"
+  , factors = c("A", "B", "D")
+  , id = "sid"
+  , args_lines = list(
+    lwd = 3:1
+  )
+  , args_points = list(
+    cex = 3
+  )
+  , args_x_axis = list(
+    cex.axis = 2
+  )
+)
+```
+
+
+
 # Swarms and legends should properly inherit arguemnts
 
 - Points' background and line colour

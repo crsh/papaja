@@ -1,10 +1,16 @@
 
-
-#' @export
+#' Plots that Conform to APA Guidelines
+#'
+#' Internal workhorse function for all `apa_***plot()` functions.
+#'
+#' @param x An object of class `formula` or `data.frame`
+#' @rdname apa_plot
+#' @keywords internal
 
 apa_plot <- function(x, ...) {
   UseMethod("apa_plot")
 }
+
 
 
 
@@ -38,7 +44,10 @@ apa_plot <- function(x, ...) {
 #'  apa_plot(yield ~ (1|N*P), data = npk)
 #'  }
 #'
-#' @export
+#' @inheritParams formula_processor
+#' @rdname apa_plot
+#' @method apa_plot formula
+#' @keywords internal
 
 apa_plot.formula <- function(formula, data, ...) {
   formula_processor(formula = formula, data = data, .fun = apa_plot, ...)
@@ -55,6 +64,7 @@ apa_plot.formula <- function(formula, data, ...) {
 #'   of a `~` operator, and factors on the right. A vertical bar (`|`) can be used to
 #'   specify an additional subject identifier, which must be provided if an additional
 #'   aggregation step is necessary. See the examples section for details.
+#' @param data A data frame (or list) from which the variables in `formula` should be taken.
 #' @keywords internal
 
 formula_processor <- function(formula, data, .fun, ...) {
@@ -82,13 +92,14 @@ formula_processor <- function(formula, data, .fun, ...) {
 }
 
 
+#' @rdname apa_plot
 #' @method apa_plot data.frame
-#' @export
+#' @keywords internal
 
 apa_plot.data.frame <- function(
   data
   , dv
-  , id
+  , id = NULL
   , factors = NULL
   , use = "all.obs"
   , tendency = mean
@@ -322,7 +333,6 @@ apa_plot.data.frame <- function(
       , class = c("apa_plot_list", "list")
     )
   )
-
 }
 
 

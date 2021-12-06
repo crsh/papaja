@@ -69,6 +69,12 @@
 #' @family plots for factorial designs
 #' @examples
 #' apa_factorial_plot(
+#'   formula = yield ~ (N + P + K | block)
+#'   , data = npk
+#'   , plot = c("error_bars", "points", "swarms")
+#' )
+#'
+#' apa_factorial_plot(
 #'   data = npk
 #'   , id = "block"
 #'   , dv = "yield"
@@ -80,13 +86,14 @@
 #' @importFrom methods as
 #' @export
 
-
 apa_factorial_plot <-function(data, ...){
   UseMethod("apa_factorial_plot", data)
 }
 
 #' @rdname apa_factorial_plot
+#' @method apa_factorial_plot formula
 #' @export
+
 apa_factorial_plot.formula <- function(formula, data, ...) {
   formula_processor(formula = formula, data = data, .fun = apa_factorial_plot, ...)
 }
@@ -248,53 +255,12 @@ apa_factorial_plot.default <- function(
 
   x <- do.call("legends", c(list(.x = x), as.list(args_legend)))
 
-
-
   for (i in seq_along(x$plots)) {
     x$plots[[i]]$.state <- "modify"
   }
 
   x
 }
-
-
-
-#' Plots for factorial designs that conform to APA guidelines, two-factors internal function
-#'
-#' Internal function that is called (possibly multiple times) by [apa_factorial_plot()].
-#'
-#' @param aggregated A `data.frame`, the *aggregated* data.
-#' @param y.values   A `data.frame` containing the measures of central tendency and of dispersion per cell of the design.
-#' @param id Character. Variable name that identifies subjects.
-#' @param dv Character. The name of the dependent variable.
-#' @param factors Character. A vector of up to four variable names that is used to stratify the data.
-#' @param intercept Numeric. See details in [apa_factorial_plot()]
-#'
-#' @keywords internal
-
-apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, intercept = NULL, ...) {
-
-  # Draw intercept
-  if(!is.null(intercept)){
-    if(is.matrix(intercept)) {
-      diff <- (args_plot_window$xlim[2] - args_plot_window$xlim[1])/(ncol(intercept)-1)
-      x.vector <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff)
-      for(i in seq_len(nrow(intercept))) {
-        for (j in seq_len(ncol(intercept))) {
-          lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i, j], 2))
-        }
-      }
-    } else {
-      n_lines <- length(intercept)
-      x_coordinates <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff(args_plot_window$xlim)/n_lines)
-      for (i in seq_len(n_lines)){
-        y_coordinates <- rep(intercept[i], 2)
-        lines(x = x_coordinates[(0:1) + i], y = y_coordinates)
-      }
-    }
-  }
-}
-
 
 #' @rdname apa_factorial_plot
 #' @export

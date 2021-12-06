@@ -139,8 +139,8 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 #     ifelse(all(rowSums(table(data[[id]], data[[x]]))==1), "between", "within")
 #   }))
 
-  # test <- tapply(data[[dv]], data[, c(id, within), drop = FALSE], FUN = function(x){sum(!is.na(x))})
-  test <- table(data[, c(dv, id, within), drop = FALSE], useNA = "always")
+  test <- tapply(data[[dv]], data[, c(id, within), drop = FALSE], FUN = function(x){sum(!is.na(x))})
+  # test <- table(data[, c(dv, id, within), drop = FALSE], useNA = "always")
 
   if(any(test > 1, na.rm = TRUE)){
     stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination.")

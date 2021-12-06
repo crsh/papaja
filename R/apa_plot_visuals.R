@@ -721,6 +721,7 @@ legends.apa_plot <- function(.x, ...) {
       , lwd    = if(is.null(args_lines$lwd))  NULL else rep(args_lines$lwd , length.out = nlevels_fct2)
       # Bar plot stuff
       , fill   = if(is.null(args_bars$col)) NULL else rep(args_bars$col, length.out = nlevels_fct2)
+      , border = if(is.null(args_bars$border)) "black" else rep(args_bars$border, length.out = nlevels_fct2)
     )
   )
   do.call("legend", args_legend)

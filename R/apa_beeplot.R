@@ -55,7 +55,7 @@ apa_beeplot.formula <- function(formula, data, ...) {
 #' @rdname apa_beeplot
 #' @export
 
-apa_beeplot.data.frame <- function(
+apa_beeplot.default <- function(
   data
   , id
   , factors = NULL
