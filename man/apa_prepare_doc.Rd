@@ -8,8 +8,8 @@ apa_prepare_doc()
 }
 \description{
 Prepares objects to be used in the rendering process and creates title page
-and abstract for MS Word documents. \emph{This function is no longer needed
-and thus has been deprecated.}
+and abstract for MS Word documents. \emph{This function has been defunct. It is
+no longer needed.}
 }
 \details{
 The function creates and locks a non-exported object \code{apa_lang}

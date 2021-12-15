@@ -83,7 +83,7 @@ apa6_pdf <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format = "papaja::apa6_pdf") }
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input) }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -111,17 +111,6 @@ apa6_pdf <- function(
   config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
     output_text <- readLines(output_file, encoding = "UTF-8")
-
-    # Remove indentation so that endfloat can process the lltable environments
-    appendix_lines <- grep("\\\\(begin|end)\\{appendix\\}", output_text)
-    if(length(appendix_lines) == 2) {
-      output_text[appendix_lines[1]:appendix_lines[2]] <- gsub(
-        "^\\s+"
-        , ""
-        , output_text[appendix_lines[1]:appendix_lines[2]]
-        , useBytes = TRUE
-      )
-    }
 
     # Correct abstract and note environment
     ## Note is added to the end of the document by Lua filter and needs to be
@@ -179,14 +168,6 @@ apa6_pdf <- function(
     bookdown_post_processor(metadata = metadata, input = input_file, output = output_file, clean = clean, verbose = verbose)
   }
 
-  if(Sys.info()["sysname"] == "Windows") {
-    config$on_exit <- function() {
-      revert_original_input_file(2)
-    }
-  } else {
-    config$on_exit <- revert_original_input_file
-  }
-
   config
 }
 
@@ -233,16 +214,12 @@ apa6_docx <- function(
   config$knitr$opts_chunk$message <- FALSE
   config$knitr$opts_knit$rmarkdown.pandoc.to <- "docx"
   config$knitr$knit_hooks$inline <- inline_numbers
-  # config$knitr$knit_hooks$plot <- function(x, options) {
-  #   options$fig.cap <- paste("*", getOption("papaja.terms")$figure, ".* ", options$fig.cap)
-  #   knitr::hook_plot_md(x, options)
-  # }
 
   config$knitr$opts_chunk$dev <- c("png", "pdf") #, "svg", "tiff")
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- function(input, ...) { modify_input_file(input=input, format="papaja::apa6_docx") }
+  config$pre_knit <- function(input, ...) { modify_input_file(input=input) }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
@@ -303,14 +280,6 @@ apa6_docx <- function(
       , recurse = TRUE
       , include_directories = FALSE
     )
-  }
-
-  if(Sys.info()["sysname"] == "Windows") {
-    config$on_exit <- function() {
-      revert_original_input_file(2)
-    }
-  } else {
-    config$on_exit <- revert_original_input_file
   }
 
   config
@@ -508,7 +477,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   }
 
   ## Manuscript and table formatting
-
   if(
     ((!is.null(metadata$figsintext) & !isTRUE(metadata$figsintext)) ||
      (!is.null(metadata$floatsintext) & !isTRUE(metadata$floatsintext))) &&
@@ -542,7 +510,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   # Add after lineno to avoid LaTeX warning
   # https://tex.stackexchange.com/questions/447006/lineno-package-in-latex-causes-warning-message
   header_includes <- c(header_includes, "\\usepackage{csquotes}")
-
 
   if(!is.null(metadata$geometry)) {
     header_includes <- c(header_includes, paste0("\\geometry{", metadata$geometry, "}\n\n"))
@@ -621,13 +588,6 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   if(length(after_body_includes) > 0) {
     args <- c(args, "--include-after", tmp_includes_file(after_body_includes))
 
-  }
-
-
-  ## Add appendix
-  if(!is.null(metadata$appendix)) {
-    appendices <- sapply(metadata$appendix, function(x) tools::file_path_sans_ext(tools::file_path_as_absolute(x)))
-    args <- c(args, paste0("--include-after-body=", appendices, ".tex"))
   }
 
   args
@@ -718,35 +678,59 @@ replace_yaml_front_matter <- function(x, input_text, input_file) {
 }
 
 
-modify_input_file <- function(input, format) {
+# Only for backward compatibility; we should recommend
+# adding appendices manually in the documentation
+modify_input_file <- function(input) {
   input_text <- readLines_utf8(con = basename(input))
 
   yaml_params <- get_yaml_params(input_text)
 
-  if(!is.null(yaml_params$appendix)) {
-    hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input))), ".Rmd")
+  appendices <- yaml_params$appendix
 
-    if(!file.copy(input, file.path(dirname(input), hashed_name))) {
-      stop(paste0("Could not create a copy of the original input file '", input, "' while trying to render the appendix. Most likely you need to restore the temorary backup of '", input, "' that was created during a previous failed knit attempt at '", hashed_name, "'. Once you have restored the backup, remove the backup file and try again."))
-    } else {
-      # Add render_appendix()-chunk
-      for(i in seq_along(yaml_params$appendix)) {
-        input_text <- c(
-          input_text
-          , if(format %in% c("papaja::apa6_word", "papaja::apa6_docx")) {
-            paste0(
-              "<div custom-style='h1-pagebreak'>Appendix "
-              , if(length(yaml_params$appendix) > 1) LETTERS[i] else NULL
-              , "</div>"
-            )
-          } else NULL
-          , ""
-          , "```{r echo = FALSE, results = 'asis', cache = FALSE}"
-          , paste0("papaja::render_appendix('", yaml_params$appendix[i], "')")
+  if(!is.null(appendices)) {
+
+    child_regex <- paste0(
+      "child\\s*=\\s*['\"]", "(", appendices, ")", "['\"]"
+    )
+
+    missing_appendix <- sapply(
+      child_regex
+      , function(x) !grepl(x, paste0(input_text, collapse = "\n"))
+    )
+    missing_appendix <- setNames(missing_appendix, appendices)
+
+    if(any(missing_appendix)) {
+      appendix_section_line <- grep("^# \\(APPENDIX\\)", input_text)
+
+      if(length(appendix_section_line) == 0) {
+          input_text <- c(
+            input_text
+            , ""
+            , ""
+            , "\\newpage"
+            , ""
+            , "# (APPENDIX) Appendix {-}"
+            , ""
+          )
+      }
+
+      child_chunk <- function(x) {
+        c(
+          paste0("```{r child = \"", x, "\"}")
           , "```"
           , ""
         )
       }
+
+      appendix_child_chunks <- unlist(
+        lapply(appendices[missing_appendix], child_chunk)
+      )
+
+      input_text <- c(
+        input_text
+        , appendix_child_chunks
+      )
+
       # latest changes due to issue #446
       writeLines(input_text, con = input, useBytes = TRUE)
     }
@@ -754,26 +738,6 @@ modify_input_file <- function(input, format) {
 
   return(NULL)
 }
-
-revert_original_input_file <- function(x = 1) {
-  # Get name of input file from render() because nothing is passed into on_exit()
-  input_file <- get("original_input", envir = parent.frame(x))
-  input_file <- tools::file_path_as_absolute(input_file)
-
-  hashed_name <- paste0(base64enc::base64encode(charToRaw(basename(input_file))), ".Rmd")
-  hashed_path <- file.path(dirname(input_file), hashed_name)
-
-  if(file.exists(hashed_path)) {
-    if(!file.copy(hashed_path, input_file, overwrite = TRUE)) {
-      stop(paste0("Could not revert modified input file to original input file after trying to render the appendix. The file '", basename(input_file), "' has been modified. A copy of the orignal input file named '", hashed_name, "' has been saved in the same directory."))
-    } else {
-      unlink(hashed_path)
-    }
-  }
-
-  return(NULL)
-}
-
 
 
 #' @keywords internal
