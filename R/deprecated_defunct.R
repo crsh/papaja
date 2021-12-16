@@ -225,7 +225,7 @@ render_appendix <- function(
       )
     }
 
-    csl_call <- paste0("--csl=", csl)
+    csl_call <- paste0("--csl=", rmarkdown::pandoc_path_arg(tools::file_path_as_absolute(csl)))
   } else {
     bib_call <- gsub("^--", "-M ", bib_call)
     csl_call <- NULL

@@ -374,7 +374,7 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
       if(csl_specified) {
-        args <- c(args, "--csl", metadata$csl)
+        args <- c(args, "--csl", rmarkdown::pandoc_path_arg(tools::file_path_as_absolute(metadata$csl)))
       }
 
       args <- rmdfiltr::add_citeproc_filter(args)
@@ -633,7 +633,7 @@ word_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_d
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {
       if(csl_specified) {
-        args <- c(args, "--csl", metadata$csl)
+        args <- c(args, "--csl", rmarkdown::pandoc_path_arg(tools::file_path_as_absolute(metadata$csl)))
       }
 
       args <- rmdfiltr::add_citeproc_filter(args)
