@@ -13,7 +13,7 @@ end
 function Image (img)
   if img.caption[1] ~= nil then
     img.caption[1] = pandoc.Emph(img.caption[1])
-    img.caption[3] = pandoc.Emph(string.gsub(img.caption[3].c, ":", ".  "))
+    img.caption[3] = pandoc.Emph(string.gsub(pandoc.utils.stringify(img.caption[3]), ":", ".  "))
   end
   return img
 end

@@ -52,12 +52,9 @@ This is our response
 \NotEstimated
 
 
-\clearpage
+\newpage
 
 # References
 
-\begingroup
-
-<div id="refs"></div>
-
-\endgroup
+::: {#refs custom-style="Bibliography"}
+:::
