@@ -117,11 +117,40 @@ apa_table.word <- function(x, ...) {
 }
 
 
-deprecate_ci <- function(...) {
-  if(any(names(list(...)) == "ci")) {
-    stop("Using argument 'ci' in calls to 'apa_print()' is now defunct. Please use 'conf.int' instead.", call. = FALSE)
+deprecate_ci <- function(conf.int, ...) {
+  x <- list(...)
+
+  partial_matches <- pmatch(names(x), table = c("ci", "conf.level", "args_confint"), duplicates.ok = TRUE)
+  names(partial_matches) <- c("ci", "conf.level", "args_confint")[partial_matches]
+  x_deprecated <- x[!is.na(partial_matches)]
+  names(x_deprecated) <- names(partial_matches[!is.na(partial_matches)])
+  if(length(x_deprecated) > 1L) {
+    stop(
+      "Using arguments "
+      , paste(encodeString(names(x_deprecated), quote = "'"), collapse = " and ")
+      , " in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead. "
+      , "Your call to 'apa_print()' failed because conflicting deprecated arguments were provided."
+      , call. = FALSE
+    )
   }
+
+  if(length(x_deprecated)) {
+    warning(
+      "Using argument "
+      , encodeString(names(x_deprecated), quote = "'")
+      , " in calls to 'apa_print()' is deprecated. "
+      , "Please use 'conf.int' instead."
+      , call. = FALSE
+    )
+    conf.int <- x_deprecated[[1L]]
+  }
+  list(
+    conf.int = conf.int
+    , ellipsis = x[is.na(partial_matches)]
+  )
 }
+
+
 
 
 prettify_terms <- function(...) {

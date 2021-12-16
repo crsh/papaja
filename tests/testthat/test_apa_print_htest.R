@@ -422,3 +422,14 @@ test_that(
     expect_error(apa_print(degenerate, stat_name = "t"), "No statistic available in results table.")
   }
 )
+
+test_that(
+  "Deprecated 'ci' argument"
+  , {
+    expect_warning(
+      apa_print(t.test(yield ~ N, npk), ci = c(1, 2))
+      , regexp = "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
+  }
+)

@@ -7,9 +7,9 @@
 \alias{lookup_adjust_names}
 \title{Lookup Tables for Column Names and Variable Labels}
 \format{
-An object of class \code{character} of length 89.
+An object of class \code{character} of length 90.
 
-An object of class \code{character} of length 85.
+An object of class \code{character} of length 86.
 }
 \usage{
 lookup_names
