@@ -19,7 +19,6 @@ Depends:
   R (>= 3.6),
   tinylabels (>= 0.1.0)
 Imports:
-  base64enc,
   bookdown (>= 0.9.1),
   broom (>= 0.7.0),
   glue (>= 1.4.0),

@@ -9,13 +9,14 @@ author:
     address       : "Postal address"
     email         : "my@email.com"
     role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
-      - Conceptualization
-      - Writing - Original Draft Preparation
-      - Writing - Review & Editing
+      - "Conceptualization"
+      - "Writing - Original Draft Preparation"
+      - "Writing - Review & Editing"
   - name          : "Ernst-August Doelle"
     affiliation   : "1,2"
     role:
-      - Writing - Review & Editing
+      - "Writing - Review & Editing"
+      - "Supervision"
 
 affiliation:
   - id            : "1"
@@ -48,17 +49,17 @@ abstract: |
 keywords          : "keywords"
 wordcount         : "X"
 
-bibliography      : ["r-references.bib"]
+bibliography      : "r-references.bib"
 
 floatsintext      : no
+linenumbers       : yes
+draft             : no
+mask              : no
+
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-linenumbers       : yes
-mask              : no
-draft             : no
 
-documentclass     : "apa6"
 classoption       : "man"
 output            : papaja::apa6_pdf
 ---
@@ -98,9 +99,5 @@ We used `r cite_r("r-references.bib")` for all our analyses.
 
 # References
 
-\begingroup
-\setlength{\parindent}{-0.5in}
-\setlength{\leftskip}{0.5in}
-
-<div id="refs" custom-style="Bibliography"></div>
-\endgroup
+::: {#refs custom-style="Bibliography"}
+:::
