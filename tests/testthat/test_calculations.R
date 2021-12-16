@@ -141,8 +141,10 @@ test_that(
 
     # SS from car output:
     SS_car <- c(3164.0625, 76.5625, 5.0625, 0.0625, 311.25)
-    tinylabels::variable_label(SS_car) <- "$\\hat{\\eta}^2$"
-    es_car <- SS_car / sum(SS_car)
+    es_car_with <- SS_car[1:4] / sum(SS_car)
+    es_car_without <- SS_car[2:4] / sum(SS_car[2:5])
+    tinylabels::variable_label(es_car_with) <-
+      tinylabels::variable_label(es_car_without) <- "$\\hat{\\eta}^2$"
 
     pes_afex <- c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
     tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
@@ -157,13 +159,13 @@ test_that(
     expect_identical(
       object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[1:4] / sum(SS_car)
+      , expected = es_car_with
     )
     without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
       object = without_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[2:4]/sum(SS_car[2:5])
+      , expected = es_car_without
     )
 
 
@@ -219,6 +221,13 @@ test_that(
     # SS from car output:
     SS_car <- c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
     SS_err <- c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
+
+    es_with_intercept <- SS_car/sum(c(SS_car, SS_err))
+    es_without_intercept <- SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+    tinylabels::variable_label(es_with_intercept) <-
+      tinylabels::variable_label(es_without_intercept) <- "$\\hat{\\eta}^2$"
+
+
     tinylabels::variable_label(SS_car) <- "$\\hat{\\eta}^2$"
     pes_afex <- c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
     ges_afex <- c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
@@ -231,12 +240,12 @@ test_that(
     expect_equal(
       object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car/sum(c(SS_car, SS_err))
+      , expected = es_with_intercept
     )
     expect_equal(
       object = without_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+      , expected = es_without_intercept
     )
 
     # Partial eta-squared ----
