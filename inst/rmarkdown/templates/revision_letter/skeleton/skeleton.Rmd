@@ -5,7 +5,6 @@ journal     : "Journal title"
 manuscript  : "Manuscript number"
 
 class       : "draft"
-
 output      : papaja::revision_letter_pdf
 ---
 
