@@ -72,3 +72,24 @@ test_that(
   }
 )
 
+test_that(
+  "Deprecated 'args_confint' argument"
+  , {
+    fm1 <- nlme::nlme(height ~ stats::SSasymp(age, Asym, R0, lrc),
+                      data = datasets::Loblolly,
+                      fixed = Asym + R0 + lrc ~ 1,
+                      random = Asym ~ 1,
+                      start = c(Asym = 103, R0 = -8.5, lrc = -3.3))
+    expect_warning(
+      nlme_model <- apa_print(fm1, args = .6)
+      , regexp = "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
+    expect_identical(
+      nlme_model$estimate$Asym
+      , "$\\hat{\\beta} = 101.45$, 60\\% CI $[99.40, 103.50]$"
+    )
+
+
+  }
+)
