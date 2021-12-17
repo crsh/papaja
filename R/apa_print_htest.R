@@ -71,7 +71,9 @@ apa_print.htest <- function(
   , in_paren = FALSE
   , ...
 ) {
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
@@ -80,7 +82,7 @@ apa_print.htest <- function(
   if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  ellipsis <- list(...)
+
 
   # Arrange table, i.e. coerce 'htest' to a proper data frame ----
 

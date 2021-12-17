@@ -17,7 +17,11 @@ test_that(
     # Main effect ------------------------------------------------------
 
     tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
-    tw_me_emm_output <- apa_print(tw_me_emm)
+    tw_me_emm_output <- expect_warning(
+      apa_print(tw_me_emm, conf.l = .95)
+      , regexp = "Using argument 'conf.level' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
 
     expect_apa_results(
       tw_me_emm_output
@@ -474,7 +478,7 @@ test_that(
     # Ensure proper sorting of terms
     load("data/mixed_data.rdata")
     unsorted_aov <- afex::aov_4(formula = Recall ~ Gender * Dosage * (Task * Valence |Subject), data = mixed_data, fun_aggregate = mean)
-    
+
     unsorted_emm <- emmeans::joint_tests(unsorted_aov, by = "Gender")
     apa_out <- apa_print(unsorted_emm)
 
@@ -488,7 +492,7 @@ test_that(
         , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value = "$p$"
       )
-      , term_names = papaja:::sanitize_terms(paste(unlabel(gsub(apa_out$table$term, pattern =  " $\\times$ ", replacement = "_", fixed = TRUE)), apa_out$table$Gender, sep = "_")) 
+      , term_names = papaja:::sanitize_terms(paste(unlabel(gsub(apa_out$table$term, pattern =  " $\\times$ ", replacement = "_", fixed = TRUE)), apa_out$table$Gender, sep = "_"))
       , table_terms = beautify_terms(data.frame(unsorted_emm)$model.term)
     )
   }

@@ -52,3 +52,17 @@ test_that(
     )
   }
 )
+
+test_that(
+  "Deprecated 'ci' argument"
+  , {
+    amod <- aov(breaks ~ tension, data = warpbreaks)
+    comparisons <- multcomp::glht(amod, linfct = multcomp::mcp(tension = "Tukey"))
+
+    expect_warning(
+      apa_print(comparisons, ci = .99)
+      , regexp = "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
+  }
+)
