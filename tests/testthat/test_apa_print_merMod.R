@@ -127,7 +127,8 @@ test_that(
 
     expect_warning(
       apa_print(gm1, args_confint = list(level = .90))
-      , "Argument 'args_confint' has been deprecated. Please use 'conf.int' instead."
+      , "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
 
     expect_apa_results(
@@ -317,7 +318,7 @@ test_that(
       ungroup() %>%
       mutate(errors=floor(runif(n=40,min=0,max=30)))
 
-    glmm <- afex::mixed(errors~group*session*task+(1|participant), df)
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, progress = interactive())
     apa_t <- apa_print(glmm$full_model)
 
     expect_apa_results(
@@ -332,7 +333,7 @@ test_that(
       )
     )
 
-    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT")
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT", progress = interactive())
     apa_LRT <- apa_print(glmm)
 
     expect_apa_results(
@@ -343,6 +344,20 @@ test_that(
         , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
+    )
+  }
+)
+
+test_that(
+  "Deprecated 'args_confint' argument"
+  , {
+    data(sleepstudy, package = "lme4")
+    fm1 <- lme4::lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+
+    expect_warning(
+      apa_print(fm1, args_confint = list(level = .99, method = "profile"))
+      , regexp = "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
   }
 )

@@ -112,10 +112,10 @@ test_that(
     # No CI information
     expect_error(apa_print(lm_fit, conf.int = NULL), "The parameter 'conf.int' is NULL.")
 
-    # defunct argument 'ci'
-    expect_error(
+    # deprecated argument 'ci'
+    expect_warning(
       apa_print(lm_fit, ci = .95)
-      , "Using argument 'ci' in calls to 'apa_print()' is now defunct. Please use 'conf.int' instead."
+      , "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
       , fixed = TRUE
     )
 

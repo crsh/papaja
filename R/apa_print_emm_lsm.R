@@ -11,7 +11,7 @@
 #' \pkg{emmeans}.
 #' @param contrast_names Character. An optional vector of names to label the
 #' calculated contrasts.
-#' @param conf.level Numeric. Confidence level for confidence intervals.
+#' @param conf.int Numeric. Confidence level for confidence intervals.
 #' @inheritParams emmeans::summary.emmGrid
 #' @inheritParams glue_apa_results
 #' @inheritDotParams printnum
@@ -39,13 +39,17 @@
 #' @method apa_print emmGrid
 #' @export
 
-apa_print.emmGrid <- function(x, infer = TRUE, conf.level = 0.95, ...) {
-  ellipsis <- list(...)
+apa_print.emmGrid <- function(x, infer = TRUE, conf.int = 0.95, ...) {
+
+  ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+  conf.int <- ellipsis_ci$conf.int
+  ellipsis <- ellipsis_ci$ellipsis
+
   if(is.null(ellipsis$est_name)) {
     ellipsis$est_name <- est_name_from_call(x)
   }
 
-  ellipsis$x <- summary(x, infer = infer, level = conf.level)
+  ellipsis$x <- summary(x, infer = infer, level = conf.int)
 
   # Add family size, because it gets lost otherwise
   famSize <- attr(x, "misc")$famSize

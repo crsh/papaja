@@ -117,6 +117,24 @@ test_that(
   }
 )
 
+test_that(
+  "Deprecated 'ci' argument"
+  , {
+    mod1 <- lm(yield ~ N, npk)
+    mod2 <- lm(yield ~ N * P, npk)
+
+    expect_warning(
+      apa_out <- apa_print(list(mod1, mod2), boot_samples = 0L, ci = .96)
+      , regexp = "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
+    expect_identical(
+      as.character(apa_out$table$`Model 1`[[1L]], keep_label = FALSE)
+      , "52.07 [48.02, 56.11]"
+    )
+  }
+)
+
 # context("apa_print.anova() - Model comparison")
 #
 # test_that(

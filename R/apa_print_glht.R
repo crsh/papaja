@@ -36,7 +36,9 @@ apa_print.summary.glht <- function(
   , in_paren = FALSE
   , ...
 ) {
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   validate(x, check_class = "summary.glht")
   validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
@@ -47,19 +49,19 @@ apa_print.summary.glht <- function(
   conf_level <- paste0(conf.int * 100, "% CI")
   p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
 
-  # Assamble table
-  ## Add (adjusted) confidence intervall
+  # Assemble table
+  ## Add (adjusted) confidence interval
   multcomp_adjustment <- if(x$test$type == "none") multcomp::univariate_calpha() else multcomp::adjusted_calpha()
   print_ci <- stats::confint(x, level = conf.int, calpha = multcomp_adjustment)$confint
   dimnames(print_ci) <- NULL
-  table_ci <- unlist(print_confint(print_ci[, -1], ...)) # Remove point estimate from matrix
+  table_ci <- unlist(do.call("print_confint", c(list(x = print_ci[, -1]), ellipsis))) # Remove point estimate from matrix
   tidy_x$std.error <- table_ci
   colnames(tidy_x)[colnames(tidy_x) == "std.error"] <- "conf.int"
 
   ## Typeset columns
   sanitzied_contrasts <- sanitize_terms(tidy_x$contrast)
   tidy_x$contrast <- beautify_terms(tidy_x$contrast)
-  tidy_x$estimate <- printnum(tidy_x$estimate, ...)
+  tidy_x$estimate <- do.call("printnum", c(list(x = tidy_x$estimate), ellipsis))
   tidy_x$statistic <- printnum(tidy_x$statistic, digits = 2)
   tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
 

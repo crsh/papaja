@@ -96,7 +96,9 @@ apa_print.glm <- function(
   , in_paren = FALSE
   , ...
 ) {
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   validate(x, check_class = "glm")
 
@@ -161,7 +163,9 @@ apa_print.lm <- function(
   , ...
 ) {
 
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   validate(x, check_class = "lm")
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
@@ -177,7 +181,6 @@ apa_print.lm <- function(
   } else validate(conf.int)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  ellipsis <- list(...)
 
   if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
   if(standardized) ellipsis$gt1 <- FALSE
@@ -189,12 +192,17 @@ apa_print.lm <- function(
     conf_level <- 100 * conf.int
   }
 
-  regression_table <- arrange_regression(
-    x
-    , est_name = est_name
-    , standardized = standardized
-    , conf.int = conf.int
-    , ...
+  regression_table <- do.call(
+    "arrange_regression"
+    , c(
+      list(
+        x = x
+        , est_name = est_name
+        , standardized = standardized
+        , conf.int = conf.int
+      )
+      , ellipsis
+    )
   )
 
   # Concatenate character strings and return as named list

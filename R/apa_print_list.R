@@ -93,7 +93,9 @@ apa_print.list <- function(
   , ...
 ) {
 
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   if(length(x) == 1) apa_print(x[[1]]) else {
     if(class(x[[1]]) != "lm") stop("Currently, only model comparisons for 'lm' objects are supported.")
@@ -108,7 +110,7 @@ apa_print.list <- function(
 
   # Compare models
   names(x) <- NULL
-  model_comp <- do.call(anova_fun, x, ...)
+  model_comp <- do.call(anova_fun, c(x, ellipsis))
 
   variance_table <- arrange_anova(model_comp)
   if(!is.null(model_labels) & sum(model_labels != "") == length(model_labels)) {

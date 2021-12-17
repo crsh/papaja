@@ -7,7 +7,7 @@
 \alias{apa_print.summary.ref.grid}
 \title{Typeset Statistical Results from Estimated Marginal Means}
 \usage{
-\method{apa_print}{emmGrid}(x, infer = TRUE, conf.level = 0.95, ...)
+\method{apa_print}{emmGrid}(x, infer = TRUE, conf.int = 0.95, ...)
 
 \method{apa_print}{summary_emm}(
   x,
@@ -29,7 +29,7 @@ whether confidence intervals are displayed, and the second determines
 whether \emph{t} tests and \emph{P} values are displayed. If only one value
 is provided, it is used for both.}
 
-\item{conf.level}{Numeric. Confidence level for confidence intervals.}
+\item{conf.int}{Numeric. Confidence level for confidence intervals.}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum]{printnum}}
