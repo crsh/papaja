@@ -25,7 +25,7 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
   } else if(class(x) == "lm") {
     stat_name <- "t"
     if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
-    if(standardized) ellipsis$gt1 <- FALSE
+    if(standardized & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
   }
 
   if(is.matrix(ci)) {
@@ -51,7 +51,7 @@ arrange_regression <- function(x, est_name, standardized, ci, ...) {
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
-  regression_table$p.value <- printp(regression_table$p.value)
+  regression_table$p.value <- printp(regression_table$p.value, ...)
 
   colnames(regression_table) <- c("predictor", "estimate", "ci", "statistic", "p.value")
 

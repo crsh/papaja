@@ -110,7 +110,7 @@ apa_print.htest <- function(
   }
 
   # p-value
-  p <- printp(x$p.value)
+  p <- printp(x$p.value, ...)
 
   apa_res <- apa_print_container()
   apa_res$statistic <- paste0("$", stat_name, " = ", stat, "$, $p ", add_equals(p), "$")

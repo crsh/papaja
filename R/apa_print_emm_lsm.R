@@ -125,7 +125,7 @@ apa_print.summary_emm <- function(
     contrast_table <- rename_column(contrast_table, c("t.ratio", "z.ratio"), "statistic")
     contrast_table$statistic <- printnum(contrast_table$statistic)
     contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
-    contrast_table$p.value <- printp(contrast_table$p.value)
+    contrast_table$p.value <- printp(contrast_table$p.value, ...)
   }
 
   if(ci_supplied) {

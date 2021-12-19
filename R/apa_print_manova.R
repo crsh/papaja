@@ -34,6 +34,7 @@ apa_print.manova <- function(x, test = "Pillai", ...) {
 print_manova <- function(
   x
   , in_paren = FALSE
+  , ...
 ) {
 
 
@@ -86,7 +87,7 @@ print_manova <- function(
   x[["F"]] <- printnum(x[["F"]])
   x[["df1"]] <- print_df(x[["df1"]])
   x[["df2"]] <- print_df(x[["df2"]])
-  x[["p"]] <- printp(x[["p"]])
+  x[["p"]] <- printp(x[["p"]], ...)
 
   x <- sort_terms(x, "Effect")
 

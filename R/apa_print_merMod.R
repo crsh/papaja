@@ -90,7 +90,7 @@
 #'
 #'   if(isLmerTest) {
 #'     res_table$df <- print_df(res_table$df)
-#'     res_table$p.value <- printp(res_table$p.value)
+#'     res_table$p.value <- printp(res_table$p.value, ...)
 #'     res_table <- res_table[, c(est_cols, "df", "p.value")]
 #'   } else {
 #'     res_table <- res_table[, est_cols]
