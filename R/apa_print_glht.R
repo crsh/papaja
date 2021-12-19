@@ -72,7 +72,7 @@ apa_print.summary.glht <- function(
   ## Format numbers
   contrast_table$estimate <- printnum(contrast_table$estimate, ...)
   contrast_table$statistic <- printnum(contrast_table$statistic, digits = 2)
-  contrast_table$p.value <- printp(contrast_table$p.value)
+  contrast_table$p.value <- printp(contrast_table$p.value, ...)
 
   # Concatenate character strings and return as named list
   apa_res <- apa_print_container()
@@ -209,7 +209,7 @@ apa_print.summary.glht <- function(
 #   if(p_supplied) {
 #     contrast_table$statistic <- printnum(contrast_table$statistic)
 #     contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
-#     contrast_table$p.value <- printp(contrast_table$p.value)
+#     contrast_table$p.value <- printp(contrast_table$p.value, ...)
 #   }
 #
 #   # Concatenate character strings and return as named list

@@ -375,12 +375,12 @@ printnumber <- function(x, gt1 = TRUE, zero = TRUE, na_string = "", use_math = T
 #' printp(0.99999999)
 #' @export
 
-printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
+printp <- function(x, digits = 3L, na_string = "", add_equals = FALSE, gt1 = FALSE) {
   validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
   validate(na_string, check_class = "character", check_length = 1)
   validate(digits, check_class = "numeric")
 
-  p <- printnum(x, digits = digits, gt1 = FALSE, zero = FALSE, na_string = na_string, add_equals = add_equals)
+  p <- printnum(x, digits = digits, gt1 = gt1, zero = FALSE, na_string = na_string, add_equals = add_equals)
   p
 }
 

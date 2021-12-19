@@ -41,6 +41,7 @@ print_model_comp <- function(
   , boot_samples = 1000
   , in_paren = FALSE
   , observed_predictors = TRUE
+  , ...
 ) {
   validate(x, check_class = "data.frame")
   validate(x, check_class = "apa_model_comp")
@@ -52,7 +53,10 @@ print_model_comp <- function(
     rownames(x) <- names(models)[-1]
   } else rownames(x) <- sanitize_terms(x$term)
 
-  # Concatenate character strings and return as named list
+  ellipsis <- list(...)
+  if(is.null(ellipsis$gt1)) apa_gt1 <- FALSE else apa_gt1 <- ellipsis$gt1
+
+    # Concatenate character strings and return as named list
   apa_res <- apa_print_container()
 
   ## est
@@ -64,7 +68,7 @@ print_model_comp <- function(
     apa_res$estimate <- sapply(
       seq_along(delta_r2s)
       , function(y) {
-        delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
+        delta_r2_res <- printnum(delta_r2s[y], gt1 = apa_gt1, zero = FALSE)
         paste0("$\\Delta R^2 ", add_equals(delta_r2_res), "$")
       }
     )
@@ -74,11 +78,11 @@ print_model_comp <- function(
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     delta_r2s <- diff(r2s)
-    delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
+    delta_r2_res <- printnum(delta_r2s, gt1 = apa_gt1, zero = FALSE)
 
     apa_res$estimate <- paste0(
       "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", ci * 100, "\\% CI "
-      , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE)
+      , apply(boot_r2_ci, 1, print_confint, gt1 = apa_gt1)
     )
   }
 
@@ -87,7 +91,7 @@ print_model_comp <- function(
   x$statistic <- printnum(x$statistic)
   x$df <- print_df(x$df)
   x$df_res <- print_df(x$df_res)
-  x$p.value <- printp(x$p.value, add_equals = TRUE)
+  x$p.value <- printp(x$p.value, add_equals = TRUE, ...)
 
   apa_res$statistic <- paste0("$F(", x[["df"]], ", ", x[["df_res"]], ") = ", x[["statistic"]], "$, $p ", x[["p.value"]], "$")
   if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
@@ -133,10 +137,12 @@ print_model_comp <- function(
   }
   model_diffs <- as.data.frame(model_diffs, stringsAsFactors = FALSE)
 
+  if(is.null(ellipsis$gt1) | !ellipsis$gt1) fits_gt1 <- c(FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE) else fits_gt1 <- TRUE
+
   model_fits <- printnum(
     model_fits
     , margin = 2
-    , gt1 = c(FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
+    , gt1 = fits_gt1
     , zero = c(FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
     , digits = c(2, 2, 0, 0, 3, 2, 2)
   )
@@ -151,10 +157,11 @@ print_model_comp <- function(
   colnames(model_fits) <- c(paste0("$R^2$ [", ci * 100, "\\% CI]"), "$F$", "$df_1$", "$df_2$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
 
   ## Add differences in model fits
+  if(is.null(ellipsis$gt1) | !ellipsis$gt1) diffs_gt1 <- c(FALSE, TRUE, TRUE) else diffs_gt1 <- TRUE
   model_diffs <- printnum(
     model_diffs
     , margin = 2
-    , gt1 = c(FALSE, TRUE, TRUE)
+    , gt1 = diffs_gt1
     , zero = c(FALSE, TRUE, TRUE)
   )
   model_diffs[, "r.squared"] <- gsub(", \\d\\d\\\\\\% CI", "", gsub("\\\\Delta R\\^2 = ", "", unlist(apa_res$estimate))) # Replace by previous estimate with CI

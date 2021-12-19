@@ -41,6 +41,7 @@ print_anova <- function(
   , es = "ges"
   , mse = getOption("papaja.mse")
   , in_paren = FALSE
+  , ...
 ) {
 
   # When processing aovlist objects, the `(Intercept)` is kept to preserve the
@@ -49,6 +50,9 @@ print_anova <- function(
   validate(x, check_class = "data.frame", check_NA = FALSE)
   validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   validate(intercept, check_class = "logical", check_length = 1)
+
+  ellipsis <- list(...)
+  if(is.null(ellipsis$gt1)) apa_gt1 <- FALSE else apa_gt1 <- ellipsis$gt1
 
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
@@ -73,10 +77,10 @@ print_anova <- function(
 
   # Rounding and filling with zeros
   x$statistic <- printnum(x$statistic, digits = 2)
-  x$p.value <- printp(x$p.value)
+  x$p.value <- printp(x$p.value, ...)
   x$df <- print_df(x$df)
   x$df_res <- print_df(x$df_res)
-  for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = FALSE)}
+  for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = apa_gt1)}
   if(mse) x$mse <- printnum(x$mse, digits = 2)
 
   # Assemble table -------------------------------------------------------------

@@ -178,8 +178,10 @@ apa_print.lm <- function(
 
   ellipsis <- list(...)
 
+  if(is.null(ellipsis$gt1)) glm_gt1 <- FALSE else glm_gt1 <- ellipsis$gt1
+
   if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
-  if(standardized) ellipsis$gt1 <- FALSE
+  if(standardized) ellipsis$gt1 <- glm_gt1
 
   if(is.matrix(ci)) {
     conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(ci), perl = TRUE))
@@ -206,7 +208,7 @@ apa_print.lm <- function(
   summary_x <- summary(x)
   glance_x <- broom::glance(x)
 
-  p <- printp(glance_x$p.value)
+  p <- printp(glance_x$p.value, ...)
   p <- add_equals(p)
 
   apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", p, "$") # glance_x$df
@@ -227,13 +229,13 @@ apa_print.lm <- function(
     )
 
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
-      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
+      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = glm_gt1, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level))
     }
   } else {
-    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
+    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = glm_gt1, zero = FALSE), "$")
   }
 
-  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
+  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = glm_gt1, zero = FALSE), "$")
   apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", printnum(glance_x$AIC), "$")
   apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", printnum(glance_x$BIC), "$")
 
