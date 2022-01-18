@@ -218,21 +218,15 @@ apa_print.summary_emm <- function(
     if(all(tidy_x$df == "$\\infty$")) {
       test_stat <- "z"
       tidy_x$df <- NULL
-    } else if(!multiple_df) {
-      test_stat <- paste0("t(", unique(tidy_x$df), ")")
-      tidy_x$df <- NULL
     } else {
       test_stat <- "t"
+      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
 
     tidy_x_labels <- c(tidy_x_labels, statistic = paste0("$", test_stat, "$"))
 
     if("null.value" %in% names(tidy_x)) {
       tidy_x_labels <- c(tidy_x_labels, null.value = "$\\theta_0$")
-    }
-
-    if(multiple_df) { # Put df in column heading
-      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
 
     variable_labels(tidy_x[[p_value]]) <- switch(
