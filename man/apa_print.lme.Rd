@@ -60,6 +60,6 @@ Other apa_print:
 \item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
 \item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
 
-Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
 
 }
