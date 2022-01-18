@@ -21,7 +21,8 @@ test_that(
         term        = "Term"
         , estimate  = "$\\Delta M$"
         , conf.int  = "95\\% CI"
-        , statistic = "$t(41)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
     )

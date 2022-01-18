@@ -45,7 +45,7 @@ apa_print.summary.glht <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
 
   tidy_x <- broom::tidy(x)
-  test_stat <- ifelse(x$df == 0, "z", paste0("t(", x$df, ")"))
+  test_stat <- if(x$df == 0) "z" else "t"
   conf_level <- paste0(conf.int * 100, "% CI")
   p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
 
@@ -58,12 +58,20 @@ apa_print.summary.glht <- function(
   tidy_x$std.error <- table_ci
   colnames(tidy_x)[colnames(tidy_x) == "std.error"] <- "conf.int"
 
+
+
   ## Typeset columns
-  sanitzied_contrasts <- sanitize_terms(tidy_x$contrast)
+  sanitized_contrasts <- sanitize_terms(tidy_x$contrast)
   tidy_x$contrast <- beautify_terms(tidy_x$contrast)
   tidy_x$estimate <- do.call("printnum", c(list(x = tidy_x$estimate), ellipsis))
   tidy_x$statistic <- printnum(tidy_x$statistic, digits = 2)
   tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
+
+  if(x$df != 0) {
+    tidy_x$df <- print_df(x$df)
+    tidy_x <- tidy_x[, c("contrast", "null.value", "estimate", "conf.int", "statistic", "df", p_value)] # sort columns
+    variable_label(tidy_x$df) <- "$\\mathit{df}$"
+  }
 
   ## Add variable labels
   variable_labels(tidy_x) <- c(
@@ -83,7 +91,7 @@ apa_print.summary.glht <- function(
     tidy_x
     , est_glue = construct_glue(tidy_x, "estimate")
     , stat_glue = construct_glue(tidy_x, "statistic")
-    , term_names = sanitzied_contrasts
+    , term_names = sanitized_contrasts
     , in_paren = in_paren
   )
 }
