@@ -77,6 +77,9 @@
 #'
 #' apa_print(lm_fit2, standardized = TRUE)
 #'
+#' # It is possible to simplify the regression table with fuse_df():
+#' fuse_df(apa_print(lm_fit2, standardized = TRUE))
+#'
 #'
 #' # Dobson (1990) Page 93: Randomized Controlled Trial :
 #' counts <- c(18,17,15,20,10,20,25,13,12)
@@ -135,10 +138,14 @@ apa_print.glm <- function(
   )
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_glm_res(regression_table, in_paren = in_paren, conf_level = conf_level)
-  names(apa_res$estimate) <- sanitize_terms(names(x$coefficients))
-  names(apa_res$statistic) <- names(apa_res$estimate)
-  names(apa_res$full_result) <- names(apa_res$estimate)
+  apa_res <- glue_apa_results(
+    regression_table
+    , est_glue = construct_glue(regression_table, "estimate")
+    , stat_glue = construct_glue(regression_table, "statistic")
+    , in_paren = in_paren
+    , est_first = TRUE
+    , simplify = FALSE
+  )
 
   # Model fit
   glance_x <- broom::glance(x)
@@ -206,10 +213,14 @@ apa_print.lm <- function(
   )
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_glm_res(regression_table, in_paren = in_paren, conf_level = conf_level)
-  names(apa_res$estimate) <- sanitize_terms(names(x$coefficients), standardized = standardized)
-  names(apa_res$statistic) <- names(apa_res$estimate)
-  names(apa_res$full_result) <- names(apa_res$estimate)
+  apa_res <- glue_apa_results(
+    regression_table
+    , est_glue = construct_glue(regression_table, "estimate")
+    , stat_glue = construct_glue(regression_table, "statistic")
+    , in_paren = in_paren
+    , est_first = TRUE
+    , simplify = FALSE
+  )
 
   # Model fit
   summary_x <- summary(x)
@@ -276,25 +287,25 @@ apa_print.summary.lm <- function(x, ...) {
 }
 
 
-apa_glm_res <- function(x, in_paren, conf_level) {
-  apa_res <- init_apa_results()
-
-  apa_res$statistic <- apply(x[, -1], 1, function(y) {
-    y["p.value"] <- add_equals(y["p.value"])
-
-    stat <- paste0("$", svl(x$statistic), " = ",  y["statistic"], "$, $p ", y["p.value"], "$")
-    if(in_paren) stat <- in_paren(stat)
-    stat
-  })
-
-  apa_res$estimate <- apply(x[, -1], 1, function(y) {
-    paste0("$", svl(x$estimate), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", strip_math_tags(y["conf.int"]), "$")
-  })
-
-  apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
-  apa_res[] <- lapply(apa_res, as.list) # preserve class by using []
-
-  apa_res$table <- sort_terms(as.data.frame(x), "term")
-  class(apa_res$table) <- c("apa_results_table", "data.frame")
-  apa_res
-}
+# apa_glm_res <- function(x, in_paren, conf_level) {
+#   apa_res <- init_apa_results()
+#
+#   apa_res$statistic <- apply(x[, -1], 1, function(y) {
+#     y["p.value"] <- add_equals(y["p.value"])
+#
+#     stat <- paste0("$", svl(x$statistic), " = ",  y["statistic"], "$, $p ", y["p.value"], "$")
+#     if(in_paren) stat <- in_paren(stat)
+#     stat
+#   })
+#
+#   apa_res$estimate <- apply(x[, -1], 1, function(y) {
+#     paste0("$", svl(x$estimate), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", strip_math_tags(y["conf.int"]), "$")
+#   })
+#
+#   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+#   apa_res[] <- lapply(apa_res, as.list) # preserve class by using []
+#
+#   apa_res$table <- sort_terms(as.data.frame(x), "term")
+#   class(apa_res$table) <- c("apa_results_table", "data.frame")
+#   apa_res
+# }

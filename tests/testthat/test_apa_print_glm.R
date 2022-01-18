@@ -17,7 +17,8 @@ test_that(
         term        = "Predictor"
         , estimate  = "$b$"
         , conf.int  = "95\\% CI"
-        , statistic = "$t(18)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
     )
@@ -68,7 +69,8 @@ test_that(
         term        = "Predictor"
         , estimate  = "$b$"
         , conf.int  = "95\\% CI"
-        , statistic = "$t(18)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
     )
@@ -83,7 +85,8 @@ test_that(
         term        = "Predictor"
         , estimate  = "$\\beta$"
         , conf.int  = "95\\% CI"
-        , statistic = "$t(18)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
     )
@@ -102,7 +105,8 @@ test_that(
         term        = "Predictor"
         , estimate  = "$b^*$"
         , conf.int  = "95\\% CI"
-        , statistic = "$t(18)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
       , term_names = c("Intercept", "z_ctl", "modelfit")

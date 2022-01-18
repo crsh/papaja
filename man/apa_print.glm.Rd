@@ -102,6 +102,9 @@ lm_fit2 <- lm(scale(trt) ~ scale(ctl))
 
 apa_print(lm_fit2, standardized = TRUE)
 
+# It is possible to simplify the regression table with fuse_df():
+fuse_df(apa_print(lm_fit2, standardized = TRUE))
+
 
 # Dobson (1990) Page 93: Randomized Controlled Trial :
 counts <- c(18,17,15,20,10,20,25,13,12)
