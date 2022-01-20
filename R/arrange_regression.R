@@ -48,7 +48,7 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
     , 1
     , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
-  if(!is_glm) regression_table$df <- print_df(x$df.residual) # is NULL for GLMs
+  if(!is_glm) regression_table$df <- print_df(x$df.residual)
   columns <- intersect(c("term", "estimate", "conf.int", "statistic", "df", "p.value"), colnames(regression_table))
   regression_table <- regression_table[, columns] # Change order of columns
   regression_table$term <- beautify_terms(regression_table$term, standardized = standardized)

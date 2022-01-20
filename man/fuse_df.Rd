@@ -6,17 +6,17 @@
 \alias{fuse_df.apa_results_table}
 \title{Fuse Degrees-of-Freedom Columns into Variable Labels}
 \usage{
-fuse_df(x, quietly = FALSE, ...)
+fuse_df(x, check_df = TRUE, ...)
 
-\method{fuse_df}{apa_results}(x, quietly = FALSE, ...)
+\method{fuse_df}{apa_results}(x, check_df = TRUE, ...)
 
-\method{fuse_df}{apa_results_table}(x, quietly = FALSE, ...)
+\method{fuse_df}{apa_results_table}(x, check_df = TRUE, ...)
 }
 \arguments{
 \item{x}{Either the complete output object created by \code{\link[=apa_print]{apa_print()}} methods,
 or the \code{table} component of such objects.}
 
-\item{quietly}{Logical. If FALSE (the default), checks if df columns contain non-integer values.}
+\item{check_df}{Logical. If TRUE (the default), checks if df columns contain non-integer values.}
 
 \item{...}{further arguments passed from an to other methods}
 }
@@ -29,11 +29,11 @@ test-statistic columns.
   apa_out <- apa_print(aov(yield ~ N * P, npk))
 
   # Standard output with separate columns for degrees of freedom:
-  apa_out
+  apa_out$table
 
   # Modified output where degrees of freedom are incorporated into the variable
   # label of column 'statistic':
-  fuse_df(apa_out)
+  fuse_df(apa_out)$table
 
 
 }

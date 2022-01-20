@@ -48,13 +48,13 @@ test_that(
     expect_error(
       fuse_df(between_anova_out)
       , fixed = TRUE
-      , regexp = "Degrees of freedom (in column 'df') vary by model term."
+      , regexp = "Degrees of freedom (in column 'df') vary across table rows."
     )
 
     multiple_df <- rbind(t_out1$table, t_out2$table)
     expect_error(
       fuse_df(multiple_df)
-      , regexp = "Degrees of freedom (in column 'df') vary by model term."
+      , regexp = "Degrees of freedom (in column 'df') vary across table rows."
       , fixed = TRUE
     )
 
@@ -66,11 +66,11 @@ test_that(
     )
 
     # If no df columns are present in 'x', simply return 'x' but throw a message
-    # if quietly = FALSE
+    # if check_df = FALSE
     apa_no_df <- apa_print(wilcox.test(yield ~ N, data = npk, exact = F))
 
-    # No message if quietly == TRUE:
-    junk <- fuse_df(apa_no_df, quietly = TRUE)
+    # No message if check_df == FALSE:
+    junk <- fuse_df(apa_no_df, check_df = FALSE)
 
     # By default, expect an informative message:
     expect_message(
