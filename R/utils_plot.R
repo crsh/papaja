@@ -90,7 +90,8 @@ combine_plotmath <- function(x){
 #' @keywords internal
 
 tex_conv <- function(x, latex2exp = package_available("latex2exp")){
-  if(!is.null(x)){
+
+  if(length(x) && x != ""){
     if(!is.expression(x)){
       if(latex2exp){
         latex2exp::TeX(x, output = "expression")[[1]]
