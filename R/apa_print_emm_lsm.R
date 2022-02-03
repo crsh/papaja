@@ -2,7 +2,7 @@
 #'
 #' Takes various \pkg{emmeans} objects to create formatted character strings to
 #' report the results in accordance with APA manuscript guidelines.
-#' \emph{\pkg{emmeans} supports a wide range of analysis, not all
+#' \emph{\pkg{emmeans} supports a wide range of analyses, not all
 #' of which are currently (fully) supported. Proceed with caution.}
 #'
 #' @param x Object
@@ -35,7 +35,20 @@
 #'
 #' @family apa_print
 #' @examples
-#'    NULL
+#'   # From the emmeans manual:
+#'   library(emmeans)
+#'   warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
+#'   warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#'   warp.contr <- contrast(warp.emm, "poly")
+#'
+#'   apa_print(warp.contr)
+#'
+#'   # In this example, because degrees of freedom are equal across all rows
+#'   # of the output, it is possible to move that information to the variable
+#'   # labels. This is useful if a compact results table is required:
+#'
+#'   df_to_label(apa_print(warp.contr))
+#'
 #' @method apa_print emmGrid
 #' @export
 

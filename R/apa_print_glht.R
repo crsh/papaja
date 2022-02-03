@@ -16,7 +16,17 @@
 #'
 #' @family apa_print
 #' @examples
-#'    NULL
+#'    # From the multcomp::glht() examples:
+#'    library(multcomp)
+#'    amod <- aov(breaks ~ tension, data = warpbreaks)
+#'    glht_out <- glht(amod, linfct = mcp(tension = "Tukey"))
+#'    apa_print(glht_out)
+#'
+#'   # In this example, because degrees of freedom are equal across all rows
+#'   # of the output, it is possible to move that information to the variable
+#'   # labels. This is useful if a compact results table is required:
+#'
+#'   df_to_label(apa_print(glht_out))
 #' @method apa_print glht
 #' @export
 
