@@ -76,7 +76,7 @@ test_that(
     expect_message(
       fused_out <- transmute_df_to_label(apa_no_df)
       , fixed = TRUE
-      , regexp = "There are no df columns to fuse. Returning original input."
+      , regexp = "There are no df columns to transmute. Returning original input."
     )
     # Also check that x is not modified:
     expect_identical(
