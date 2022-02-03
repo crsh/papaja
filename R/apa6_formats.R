@@ -133,7 +133,7 @@ apa6_pdf <- function(
     output_text <- gsub(
       "\\\\begin\\{document\\}\n\\\\maketitle\n\\\\begin\\{abstract\\}(.+)\\\\end\\{abstract\\}"
       , paste0(
-        "\\\\abstract{\\1}\n\n"
+        "\\\\abstract{%\\1}\n\n"
         , "\n\n\\\\begin\\{document\\}\n\\\\maketitle"
       )
       , output_text
