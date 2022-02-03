@@ -1,8 +1,8 @@
 
-#' Fuse Degrees-of-Freedom Columns into Variable Labels
+#' Transmute Degrees-of-Freedom Columns to Variable Labels
 #'
 #' Takes the output from [apa_print()] methods and modifies the results table
-#' by fusing information about degrees of freedom into the variable labels of
+#' by transmuting information about degrees of freedom into the variable labels of
 #' test-statistic columns.
 #'
 #' @param x    Either the complete output object created by [apa_print()] methods,
@@ -18,36 +18,39 @@
 #'
 #'   # Modified output where degrees of freedom are incorporated into the variable
 #'   # label of column 'statistic':
-#'   fuse_df(apa_out)$table
+#'   transmute_df_to_label(apa_out)$table
 #'
 #'
-#' @rdname fuse_df
+#' @rdname transmute_df_to_label
 #' @export
 
-fuse_df <- function(x, check_df = TRUE, ...) {
-  UseMethod("fuse_df")
+transmute_df_to_label <- function(x, check_df = TRUE, ...) {
+  UseMethod("transmute_df_to_label")
 }
 
-
-
-#' @rdname fuse_df
+#' @rdname transmute_df_to_label
 #' @export
-fuse_df.apa_results <- function(x, check_df = TRUE, ...) {
-  x$table <- fuse_df(x$table, check_df = check_df, ...)
+
+df_to_label <- transmute_df_to_label
+
+#' @rdname transmute_df_to_label
+#' @export
+transmute_df_to_label.apa_results <- function(x, check_df = TRUE, ...) {
+  x$table <- transmute_df_to_label(x$table, check_df = check_df, ...)
   x
 }
 
 
 
-#' @rdname fuse_df
+#' @rdname transmute_df_to_label
 #' @export
 
-fuse_df.apa_results_table <- function(x, check_df = TRUE, ...) {
+transmute_df_to_label.apa_results_table <- function(x, check_df = TRUE, ...) {
 
   check_df <- !isFALSE(check_df) # this is more restrictive than isTRUE(check_df)
 
   if(is.null(x$df) && is.null(x$df.residual)) {
-    if(check_df) message("There are no df columns to fuse. Returning original input.")
+    if(check_df) message("There are no df columns to transmute. Returning original input.")
     return(x)
   }
 
@@ -56,7 +59,7 @@ fuse_df.apa_results_table <- function(x, check_df = TRUE, ...) {
 
   for (i in df_columns) {
     if( length(unique(x[[i]])) > 1L ) {
-      stop("Cannot fuse columns into variable label:\n Degrees of freedom (in column ", encodeString(i, quote = "'"), ") vary across table rows.", call. = FALSE)
+      stop("Cannot transmute columns to variable label:\n Degrees of freedom (in column ", encodeString(i, quote = "'"), ") vary across table rows.", call. = FALSE)
     }
   }
 
