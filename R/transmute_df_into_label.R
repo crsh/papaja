@@ -1,5 +1,5 @@
 
-#' Transmute Degrees-of-Freedom Columns to Variable Labels
+#' Transmute Degrees-of-Freedom Columns into Variable Labels
 #'
 #' Takes the output from [apa_print()] methods and modifies the results table
 #' by transmuting information about degrees of freedom into the variable labels of
@@ -18,34 +18,34 @@
 #'
 #'   # Modified output where degrees of freedom are incorporated into the variable
 #'   # label of column 'statistic':
-#'   transmute_df_to_label(apa_out)$table
+#'   transmute_df_into_label(apa_out)$table
 #'
 #'
-#' @rdname transmute_df_to_label
+#' @rdname transmute_df_into_label
 #' @export
 
-transmute_df_to_label <- function(x, check_df = TRUE, ...) {
-  UseMethod("transmute_df_to_label")
+transmute_df_into_label <- function(x, check_df = TRUE, ...) {
+  UseMethod("transmute_df_into_label")
 }
 
-#' @rdname transmute_df_to_label
+#' @rdname transmute_df_into_label
 #' @export
 
-df_to_label <- transmute_df_to_label
+df_into_label <- transmute_df_into_label
 
-#' @rdname transmute_df_to_label
+#' @rdname transmute_df_into_label
 #' @export
-transmute_df_to_label.apa_results <- function(x, check_df = TRUE, ...) {
-  x$table <- transmute_df_to_label(x$table, check_df = check_df, ...)
+transmute_df_into_label.apa_results <- function(x, check_df = TRUE, ...) {
+  x$table <- transmute_df_into_label(x$table, check_df = check_df, ...)
   x
 }
 
 
 
-#' @rdname transmute_df_to_label
+#' @rdname transmute_df_into_label
 #' @export
 
-transmute_df_to_label.apa_results_table <- function(x, check_df = TRUE, ...) {
+transmute_df_into_label.apa_results_table <- function(x, check_df = TRUE, ...) {
 
   check_df <- !isFALSE(check_df) # this is more restrictive than isTRUE(check_df)
 

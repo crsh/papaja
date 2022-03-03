@@ -39,7 +39,7 @@ considered experimental.}
   # of the output, it is possible to move that information to the variable
   # labels. This is useful if a compact results table is required:
 
-  df_to_label(apa_print(glht_out))
+  df_into_label(apa_print(glht_out))
 }
 \seealso{
 Other apa_print: 
