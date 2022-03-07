@@ -180,6 +180,8 @@ apa_print.BFBayesFactor <- function(
     gsub("_\\{\\\\textrm\\{.+\\}\\}", paste0("_{\\\\textrm{", subscript, "}}"), variable_label(x_canonized$statistic))
   }
 
+  mcmc_error_na <- all(is.na(x_canonized$mcmc.error))
+
   # error_label <- variable_label(x_canonized$mcmc.error)
   x_canonized$mcmc.error <- print_num(x_canonized$mcmc.error, na_string = "")
   # variable_label(x_canonized$mcmc.error) <- error_label
@@ -191,7 +193,8 @@ apa_print.BFBayesFactor <- function(
   }
     
   x_beautified <- do.call("beautify", ellipsis)
-  if(!mcmc_error) x_beautified$mcmc.error <- NULL
+  if(!mcmc_error || mcmc_error_na) x_beautified$mcmc.error <- NULL
+  if(mcmc_error_na) message("All MCMC errors for Bayes factors are NA. The column `mcmc.error` will be omitted. Consider setting `mcmc_error = FALSE`.")
 
   if(!is.null(est_name)) {
     if(!("estimate" %in% colnames(x_beautified))) stop("No estimate available in results table. `est_name` cannot be used.")
