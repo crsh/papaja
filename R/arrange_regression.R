@@ -15,6 +15,8 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
   ellipsis <- list(...)
   summary_x <- summary(x)
 
+  is_glm <- inherits(x, "glm")
+
   # Obtain the name of the test statistic
   if(class(x)[1] == "glm") {
     stat_name <- gsub(
@@ -46,20 +48,19 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
     , 1
     , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
-  regression_table <- regression_table[, c("term", "estimate", "conf.int", "statistic", "p.value")] # Change order of columns
+  if(!is_glm) regression_table$df <- print_df(x$df.residual)
+  columns <- intersect(c("term", "estimate", "conf.int", "statistic", "df", "p.value"), colnames(regression_table))
+  regression_table <- regression_table[, columns] # Change order of columns
   regression_table$term <- beautify_terms(regression_table$term, standardized = standardized)
 
   regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
   regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
   regression_table$p.value <- printp(regression_table$p.value)
 
-  colnames(regression_table) <- c("term", "estimate", "conf.int", "statistic", "p.value")
+  colnames(regression_table) <- c("term", "estimate", "conf.int", "statistic", if(!is_glm) "df" else NULL, "p.value")
 
-  if(stat_name == "z") {
-    test_statistic <- paste0("$", stat_name, "$")
-  } else {
-    test_statistic <- paste0("$", stat_name, "(", x$df.residual, ")$")
-  }
+
+  test_statistic <- paste0("$", stat_name, "$")
 
   variable_label(regression_table) <- c(
     term        = "Predictor"
@@ -68,8 +69,9 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
     , statistic = test_statistic
     , p.value   = "$p$"
   )
+  if(!is.null(regression_table$df)) variable_label(regression_table$df) <- "$\\mathit{df}$"
 
-  class(regression_table) <- c("apa_regression_table", class(regression_table))
+  class(regression_table) <- c("apa_results_table", class(regression_table))
 
   if(class(x)[1] == "glm") {
     attr(regression_table, "family") <- x$family$family
@@ -78,6 +80,8 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
     attr(regression_table, "family") <- "gaussian"
     attr(regression_table, "link") <- "identity"
   }
+
+  attr(regression_table, "sanitized_term_names") <- sanitize_terms(rownames(tidy_x))
 
   regression_table
 }

@@ -2,7 +2,7 @@
 #'
 #' Takes various \pkg{emmeans} objects to create formatted character strings to
 #' report the results in accordance with APA manuscript guidelines.
-#' \emph{\pkg{emmeans} supports a wide range of analysis, not all
+#' \emph{\pkg{emmeans} supports a wide range of analyses, not all
 #' of which are currently (fully) supported. Proceed with caution.}
 #'
 #' @param x Object
@@ -35,7 +35,20 @@
 #'
 #' @family apa_print
 #' @examples
-#'    NULL
+#'   # From the emmeans manual:
+#'   library(emmeans)
+#'   warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
+#'   warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#'   warp.contr <- contrast(warp.emm, "poly")
+#'
+#'   apa_print(warp.contr)
+#'
+#'   # In this example, because degrees of freedom are equal across all rows
+#'   # of the output, it is possible to move that information to the variable
+#'   # labels. This is useful if a compact results table is required:
+#'
+#'   df_into_label(apa_print(warp.contr))
+#'
 #' @method apa_print emmGrid
 #' @export
 
@@ -218,21 +231,15 @@ apa_print.summary_emm <- function(
     if(all(tidy_x$df == "$\\infty$")) {
       test_stat <- "z"
       tidy_x$df <- NULL
-    } else if(!multiple_df) {
-      test_stat <- paste0("t(", unique(tidy_x$df), ")")
-      tidy_x$df <- NULL
     } else {
       test_stat <- "t"
+      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
 
     tidy_x_labels <- c(tidy_x_labels, statistic = paste0("$", test_stat, "$"))
 
     if("null.value" %in% names(tidy_x)) {
       tidy_x_labels <- c(tidy_x_labels, null.value = "$\\theta_0$")
-    }
-
-    if(multiple_df) { # Put df in column heading
-      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
 
     variable_labels(tidy_x[[p_value]]) <- switch(

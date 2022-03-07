@@ -29,7 +29,8 @@ test_that(
         Valence = "Valence"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(4.63)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = levels(tw_rm_data$Valence)
@@ -66,7 +67,7 @@ test_that(
       )
     )
     expect_identical(
-      tw_me_lsm_output$table[, c("Valence", "estimate", "statistic", "p.value")]
+      tw_me_lsm_output$table[, c("Valence", "estimate", "statistic", "df", "p.value")]
       , tw_me_emm_p_output$table
     )
 
@@ -122,7 +123,8 @@ test_that(
         , Valence = "Valence"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(5.52)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = term_names
@@ -165,7 +167,8 @@ test_that(
         , Valence = "Valence"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(5.52)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = term_names
@@ -308,7 +311,8 @@ test_that(
         contrast = "Contrast"
         , estimate = "$\\Delta M$"
         , conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$"
-        , statistic = "$t(8)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , adj.p.value = "$p_\\mathrm{\\scriptsize Tukey(3)}$"
       )
       , term_names = c("Neg_Neu", "Neg_Pos", "Neu_Pos")
@@ -849,7 +853,8 @@ test_that(
         Sepal.Length = "Sepal.Length"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(146)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = c("X1000", "X2000", "X3000")
