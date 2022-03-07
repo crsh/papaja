@@ -20,6 +20,7 @@ lookup_names <- c(
   , "AIC"     = "AIC"
   , "BIC"     = "BIC"
   , "npar"    = "n.parameters"
+  , "alternative" = "alternative"
   # term
   , "Effect"     = "term"
   , "Term"       = "term"
@@ -138,6 +139,7 @@ lookup_labels <- c(
   , "AIC"     = "$\\mathit{AIC}$"
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
+  , "alternative" = "$\\mathcal{H}_1$"
   # term
   , "Effect"     = "Effect"
   , "Term"       = "Term"
@@ -156,6 +158,7 @@ lookup_labels <- c(
   , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
   , "difference.in.proportions" = "\\Delta \\hat\\pi"
+  , "proportion"                         = "$\\hat\\pi$"
   , "p"                         = "$\\hat\\pi$"
   , "delta"                     = "$\\delta$"
   # estimate from effectsize package

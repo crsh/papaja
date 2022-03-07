@@ -62,6 +62,29 @@
 #' }
 
 # TODO: Update documentation
+# TODO: Note in documentation that it's not possible to determine if paired = TRUE
+
+# set.seed(123)
+#     ttest_paired <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2], paired = TRUE)
+#
+#     ttest_paired_output <- apa_print(
+#       ttest_paired
+#       , est_name = "\\Delta M"
+#       , central_tendency = median
+#       , iterations = 10000
+#     )
+
+# Classes
+# ~~BFBayesFactor~~
+# ~~BFBayesFactorTop~~
+# ~~BFBayesFactorList~~
+# ~~BFcontigencyTable~~
+# ~~BFcorrelation~~
+# ~~BFindepSample~~
+# ~~BFoneSample~~
+# ~~BFlinearModel~~
+# BFprobability
+# ~~BFproportion~~
 
 apa_print.BFBayesFactor <- function(
   x
@@ -72,6 +95,7 @@ apa_print.BFBayesFactor <- function(
   , scientific_threshold = c(min = 1/10, max = 1e6)
   , inverse = FALSE
   , log = FALSE
+  , mcmc_error = TRUE
   , evidential_boost = NULL
   , iterations = 10000
   , central_tendency = median
@@ -101,6 +125,7 @@ apa_print.BFBayesFactor <- function(
   bf_colname <- "bf10"
 
   x_df <- as.data.frame(x)
+  x_df <- add_alternative(x_df, range = bf_theta_range(x))
   x_df <- rename_column(x_df, "bf", bf_colname)
   x_df$code <- NULL
   x_df$time <- NULL
@@ -112,7 +137,7 @@ apa_print.BFBayesFactor <- function(
     bf_colname <- "logbf10"
     x_df <- rename_column(x_df, old_bf_colname, bf_colname)
 
-    scientific_threshold = c(min = -1e6, max = 1e6)
+    scientific_threshold <- c(min = -1e6, max = 1e6)
   }
 
   if(!is.null(evidential_boost)) {
@@ -155,6 +180,10 @@ apa_print.BFBayesFactor <- function(
     gsub("_\\{\\\\textrm\\{.+\\}\\}", paste0("_{\\\\textrm{", subscript, "}}"), variable_label(x_canonized$statistic))
   }
 
+  # error_label <- variable_label(x_canonized$mcmc.error)
+  x_canonized$mcmc.error <- print_num(x_canonized$mcmc.error, na_string = "")
+  # variable_label(x_canonized$mcmc.error) <- error_label
+
   ellipsis$x <- x_canonized
   ellipsis$args_stat <- args_stat
   if(any("proportion" %in% colnames(x_df)) & is.null(ellipsis$gt1)) {
@@ -162,6 +191,7 @@ apa_print.BFBayesFactor <- function(
   }
     
   x_beautified <- do.call("beautify", ellipsis)
+  if(!mcmc_error) x_beautified$mcmc.error <- NULL
 
   if(!is.null(est_name)) {
     if(!("estimate" %in% colnames(x_beautified))) stop("No estimate available in results table. `est_name` cannot be used.")
@@ -172,11 +202,17 @@ apa_print.BFBayesFactor <- function(
     variable_label(x_beautified) <- c(statistic = paste0("$", stat_name, "$"))
   }
 
+  term_names <- NULL
+  if("alternative" %in% colnames(x_beautified)) {
+    term_names <- c("interval", "inverse_interval")
+  }
+
   # Create output object ----
   glue_apa_results(
     x_beautified
     , est_glue = construct_glue(x_beautified, "estimate")
     , stat_glue = construct_glue(x_beautified, "statistic")
+    , term_names = term_names
   )
 }
 
@@ -398,18 +434,66 @@ bf_add_names.BFlinearModel <- function(x, data_frame, ...) {
   )
 }
 
+bf_theta_range <- function(x) {
+  switch(
+    class(x@numerator[[1]])
+    , BFcorrelation = c(-1, 1)
+    , BFproportion = c(0, 1)
+    , c(-Inf, Inf)
+  )
+}
 
-# Classes
-# ~~BFBayesFactor~~
-# ~~BFBayesFactorTop~~
-# ~~BFBayesFactorList~~
-# ~~BFcontigencyTable~~
-# ~~BFcorrelation~~
-# ~~BFindepSample~~
-# ~~BFoneSample~~
-# ~~BFlinearModel~~
-# BFprobability
-# ~~BFproportion~~
+add_alternative <- function(x, range = NULL) {
+  alt <- rownames(x)
+  
+  interval_hypothesis <- any(grepl("<", alt))
+  if(interval_hypothesis) {
+    intervals <- .str_extract_first(
+      alt
+      , "(!\\()*[\\w.]+<\\w+<[\\w.]+\\)*"
+      , perl = TRUE
+    )
+
+    interval_bounds <- .str_extract_all(intervals, "[\\d.]+|-*Inf", perl = TRUE)
+    is_inverse <- grepl("!", intervals)
+    intervals <- sapply(
+      seq_along(interval_bounds)
+      , function(x) {
+        if(!is_inverse[x]) {
+          print_interval(
+            as.numeric(interval_bounds[[x]])
+            , use_math = FALSE
+          )
+        } else {
+          bounds <- as.numeric(interval_bounds[[x]])
+
+          on_bound <- bounds %in% range
+          if(any(on_bound)) {
+            bounds <- sort(c(bounds[!on_bound], range[!on_bound]))
+            print_interval(
+              bounds
+              , use_math = FALSE
+            )
+          } else {
+            bounds <- list(c(range[1], bounds[1]), c(bounds[2], range[2]))
+            inverse_interval <- sapply(bounds, print_interval, use_math = FALSE)
+            # paste0("(", paste(inverse_interval, collapse = "~\\cup~"), ")")
+            paste(inverse_interval, collapse = "~\\cup~")
+          }
+        }
+      }
+    )
+
+    # scale <- .str_extract_first(alt, "r=\\d+\\.\\d+")
+    # paste0("$\\text{Cauchy}(", scale, ")^{\\mathcal{T}", intervals, "}$")
+    res <- cbind(x, alternative = paste0("$", intervals, "$"))
+  } else {
+    res <- x
+  }
+  
+  rownames(res) <- NULL
+  res
+}
 
 # typeset_ratio_subscript <- function(x) {
 #   gsub(

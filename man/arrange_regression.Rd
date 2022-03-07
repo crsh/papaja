@@ -24,7 +24,7 @@ column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and coefficient names a
 names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 
-\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
+\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expression
 string(s) to format. Multiple inputs are concatenated together before formatting.
 Named arguments are taken to be temporary variables available for substitution.}
 }

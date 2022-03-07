@@ -18,13 +18,14 @@ test_that(
         estimate = "$M$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
     expect_equivalent(ttest_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 17.26$")
     expect_identical(ttest_output$esti, "$M = -1.43$, 95\\% HDI $[-2.33, -0.54]$")
     expect_identical(ttest_output$full, "$M = -1.43$, 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
-    
+
     set.seed(123)
     ttest_paired <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2], paired = TRUE)
 
@@ -59,6 +60,7 @@ test_that(
         estimate = "$\\Delta M$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -77,16 +79,13 @@ test_that(
     )
     expect_identical(ttest_output, ttest_form_output)
 
-    # TODO: Decide on output structure (only one estimate?)
-    # TODO: Decide on element names
     set.seed(123)
     ttest_onesided <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2], nullInterval = c(0, Inf))
-    
+
     ttest_onesided_output <- apa_print(
       ttest_onesided
       , central_tendency = median
       , iterations = 10000
-      , subscript = "+0"
     )
 
     expect_apa_results(
@@ -94,9 +93,34 @@ test_that(
       , labels = list(
         estimate = "$\\Delta M$"
         , conf.int = "95\\% HDI"
-        , statistic = "$\\mathrm{BF}_{\\textrm{+0}}$"
+        , alternative = "$\\mathcal{H}_1$"
+        , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
+
+    expect_apa_term(
+      ttest_onesided_output
+      , term = "interval"
+      , estimate = "$\\Delta M = 0.26$, 95\\% HDI $[0.00, 1.00]$"
+      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 0.17$"
+    )
+
+    expect_apa_term(
+      ttest_onesided_output
+      , term = "inverse_interval"
+      , estimate = "$\\Delta M = 0.26$, 95\\% HDI $[0.00, 1.00]$"
+      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 2.36$"
+    )
+
+    ttest_output <- apa_print(
+      ttest_onesided
+      , mcmc_error = FALSE
+      , central_tendency = median
+      , iterations = 10000
+    )
+
+    expect_null(ttest_output$table$mcmc.error)
   }
 )
 
@@ -121,6 +145,7 @@ test_that(
         estimate = "$r$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -145,15 +170,16 @@ test_that(
     expect_apa_results(
       prop_output
       , labels = list(
-        estimate = "$p$"
+        estimate = "$\\hat\\pi$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
     expect_equivalent(prop_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 0.66$")
-    expect_identical(prop_output$esti, "$p = .58$, 95\\% HDI $[.40, .74]$")
-    expect_identical(prop_output$full, "$p = .58$, 95\\% HDI $[.40, .74]$, $\\mathrm{BF}_{\\textrm{10}} = 0.66$")
+    expect_identical(prop_output$esti, "$\\hat\\pi = .58$, 95\\% HDI $[.40, .74]$")
+    expect_identical(prop_output$full, "$\\hat\\pi = .58$, 95\\% HDI $[.40, .74]$, $\\mathrm{BF}_{\\textrm{10}} = 0.66$")
   }
 )
 
@@ -174,6 +200,7 @@ test_that(
       cont_output
       , labels = list(
         statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -202,6 +229,7 @@ test_that(
       , labels = list(
         model = "Model"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -228,6 +256,7 @@ test_that(
       , labels = list(
         term = "Term"
         , statistic = "$\\mathrm{BF}_{\\textrm{01}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -264,6 +293,7 @@ test_that(
       , labels = list(
         term = "Term"
         , statistic = "$\\log \\mathrm{BF}_{\\textrm{01}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -295,6 +325,7 @@ test_that(
       , labels = list(
         model = "Model"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -319,6 +350,7 @@ test_that(
       , labels = list(
         term = "Term"
         , statistic = "$\\mathrm{BF}_{\\textrm{01}}$"
+        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -349,6 +381,59 @@ test_that(
       , term = "complaints"
       , estimate = NULL
       , statistic = "$\\log \\mathrm{BF}_{\\textrm{10}} = 5.86$"
+    )
+  }
+)
+
+test_that(
+  "Parse interval hypotheses"
+  , {
+    alt <- data.frame(
+      1:3
+      , row.names = c(
+        "Alt., r=0.707 0<d<Inf"
+        , "Alt., r=0.707 !(0<d<Inf)"
+        , "Alt., r=0.707 !(5<d<10)"
+      )
+    )
+
+    alternative_intervals <- add_alternative(
+      alt
+      , range = c(-Inf, Inf)
+    )[, "alternative", drop = FALSE]
+
+    expect_identical(
+      alternative_intervals
+      , data.frame(
+        alternative = c(
+          "$[0.00, \\infty]$"
+          , "$[-\\infty, 0.00]$"
+          , "$[-\\infty, 5.00]~\\cup~[10.00, \\infty]$"
+        )
+      )
+    )
+
+    alt <- data.frame(
+      1:2
+      , row.names = c(
+        "Alt., r=0.333 0<rho<0.5"
+        , "Alt., r=0.333 !(0<rho<0.5)"
+      )
+    )
+
+    alternative_intervals <- add_alternative(
+      alt
+      , range = c(-1, 1)
+    )[, "alternative", drop = FALSE]
+
+    expect_identical(
+      alternative_intervals
+      , data.frame(
+        alternative = c(
+          "$[0.00, 0.50]$"
+          , "$[-1.00, 0.00]~\\cup~[0.50, 1.00]$"
+        )
+      )
     )
   }
 )

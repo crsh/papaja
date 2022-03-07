@@ -27,7 +27,7 @@ substitution.}
 \code{statistics}-, and \code{full_result} sub-lists, if multiple estimates or
 statistics are glued. Defaults to \code{attr(x, "sanitized_term_names")}.}
 
-\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
+\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expression
 string(s) to format. Multiple inputs are concatenated together before formatting.
 Named arguments are taken to be temporary variables available for substitution.}
 

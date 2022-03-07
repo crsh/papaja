@@ -218,7 +218,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL
       y[[i]] <- do.call("print_num", args_stat)
     } else if (i == "term"){
       y[[i]] <- beautify_terms(as.character(y[[i]]), standardized = standardized)
-    } else if (i == "model"){
+    } else if (i == "model") {
       tmp <- beautify_model(as.character(y[[i]]), standardized = standardized)
       variable_label(tmp) <- variable_label(y[[i]])
       y[[i]] <- tmp
@@ -230,7 +230,8 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL
   # rearrange ----
   y <- sort_columns(y)
 
-  identifier <- intersect(colnames(y), c("term", "model")) 
+  identifier <- intersect(colnames(y), c("term", "model"))
+  stopifnot(length(identifier) <= 1L)
 
   if(length(identifier) > 0) {
     perm <- term_order(y[[identifier]])
@@ -295,7 +296,7 @@ sort_columns <- function(x) {
   se <- NULL
   if(!any(colnames(x) == "conf.int")) se <- "std.error"
 
-  ordered_cols <- intersect(c("model", "term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "mse", "p.value"), colnames(x))
+  ordered_cols <- intersect(c("model", "term", "estimate", "conf.int", se, "alternative", multivariate, "statistic", "df", "df.residual", "mse", "p.value", "mcmc.error"), colnames(x))
   x[, ordered_cols, drop = FALSE]
 }
 

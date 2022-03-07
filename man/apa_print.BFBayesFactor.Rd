@@ -3,30 +3,34 @@
 \name{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactorTop}
-\alias{apa_print.BFBayesFactorList}
 \title{Typeset Bayes Factors}
 \usage{
 \method{apa_print}{BFBayesFactor}(
   x,
+  est_name = NULL,
+  stat_name = NULL,
+  subscript = NULL,
+  escape_subscript = FALSE,
+  scientific_threshold = c(min = 1/10, max = 1e+06),
+  inverse = FALSE,
+  log = FALSE,
+  mcmc_error = TRUE,
+  evidential_boost = NULL,
   iterations = 10000,
   central_tendency = median,
   hdi = 0.95,
   standardized = FALSE,
-  ratio_subscript = "10",
-  auto_invert = FALSE,
-  scientific = TRUE,
-  max = 1000,
-  min = 1/max,
-  evidential_boost = NULL,
   ...
 )
 
-\method{apa_print}{BFBayesFactorTop}(x, ...)
-
-\method{apa_print}{BFBayesFactorList}(x, ...)
+\method{apa_print}{BFBayesFactorTop}(x, inverse = FALSE, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
+
+\item{evidential_boost}{Numeric. Vector of the same length as \code{x}
+containing evidential boost factors for the corresponding models
+(see details).}
 
 \item{iterations}{Numeric. Number of iterations of the MCMC sampler to
 estimate HDIs from the posterior.}
@@ -39,24 +43,6 @@ level of the HDI.}
 
 \item{standardized}{Logical. Whether to return standardized or
 unstandardized effect size estimates.}
-
-\item{ratio_subscript}{Character. A brief description of the model
-comparison, in the form of \code{"M1/M2"}.}
-
-\item{auto_invert}{Logical. Indicates whether the Bayes factor should be
-inverted (including \code{ratio_subscript}) if it is less than 1.}
-
-\item{scientific}{Logical. Indicates whether to use scientific notation.}
-
-\item{max}{Numeric. Upper limit of the Bayes factor before switching to
-scientific notation.}
-
-\item{min}{Numeric. Lower limit of the Bayes factor before switching to
-scientific notation.}
-
-\item{evidential_boost}{Numeric. Vector of the same length as \code{x}
-containing evidential boost factors for the corresponding models
-(see details).}
 
 \item{...}{
   Arguments passed on to \code{\link[=printnum.numeric]{printnum.numeric}}
@@ -72,6 +58,20 @@ omitted.}
     \item{\code{add_equals}}{Logical. Indicates if the output string should be
 prepended with an \code{=}.}
   }}
+
+\item{ratio_subscript}{Character. A brief description of the model
+comparison, in the form of \code{"M1/M2"}.}
+
+\item{auto_invert}{Logical. Indicates whether the Bayes factor should be
+inverted (including \code{ratio_subscript}) if it is less than 1.}
+
+\item{scientific}{Logical. Indicates whether to use scientific notation.}
+
+\item{max}{Numeric. Upper limit of the Bayes factor before switching to
+scientific notation.}
+
+\item{min}{Numeric. Lower limit of the Bayes factor before switching to
+scientific notation.}
 }
 \description{
 These methods take result objects from the \pkg{BayesFactor} package to
