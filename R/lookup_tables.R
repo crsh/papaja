@@ -157,8 +157,8 @@ lookup_labels <- c(
   , "mean.difference"           = "$\\Delta M$"
   , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
-  , "difference.in.proportions" = "\\Delta \\hat\\pi"
-  , "proportion"                         = "$\\hat\\pi$"
+  , "difference.in.proportions" = "$\\Delta \\hat\\pi$"
+  , "proportion"                = "$\\hat\\pi$"
   , "p"                         = "$\\hat\\pi$"
   , "delta"                     = "$\\delta$"
   # estimate from effectsize package
@@ -244,8 +244,8 @@ lookup_labels <- c(
 
 #' Lookup Table for P Value/Confindence Interval Adjustment Names
 #'
-#' `apa_print()` converts many statistical output objects that include 
-#' inferential statistics adjusted for multiple comparisons. To make these 
+#' `apa_print()` converts many statistical output objects that include
+#' inferential statistics adjusted for multiple comparisons. To make these
 #' adjustments transparent the statistics get an index with the
 #' corresponding name. This function returns the proper names for these indices.
 #'
