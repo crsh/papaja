@@ -77,14 +77,14 @@
 # Classes
 # ~~BFBayesFactor~~
 # ~~BFBayesFactorTop~~
-# ~~BFBayesFactorList~~
 # ~~BFcontigencyTable~~
 # ~~BFcorrelation~~
 # ~~BFindepSample~~
 # ~~BFoneSample~~
 # ~~BFlinearModel~~
-# BFprobability
 # ~~BFproportion~~
+# BFBayesFactorList
+# BFprobability
 
 apa_print.BFBayesFactor <- function(
   x
@@ -279,6 +279,16 @@ bf_sort_terms <- function(x) {
 #   apa_res$statistic <- as.list(bf)
 
 #   apa_res
+
+  # test <- setNames(
+  #     lapply(bfList@.Data, as.data.frame)
+  #     , names(bfList)
+  # )
+
+  # do.call("rbind", test) |> 
+  #   tibble::rownames_to_column(var = "model") |>
+  #   tidyr::separate("model", into = c("num", "denom"), sep = "\\.") # Not sure the order is correct
+
 # }
 
 

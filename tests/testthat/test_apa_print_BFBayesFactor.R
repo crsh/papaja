@@ -1,10 +1,65 @@
 context("apa_print.BFBayesFactor()")
 
 test_that(
+  "Parse interval hypotheses"
+  , {
+    alt <- data.frame(
+      1:3
+      , row.names = c(
+        "Alt., r=0.707 0<d<Inf"
+        , "Alt., r=0.707 !(0<d<Inf)"
+        , "Alt., r=0.707 !(5<d<10)"
+      )
+    )
+
+    alternative_intervals <- add_alternative(
+      alt
+      , range = c(-Inf, Inf)
+    )[, "alternative", drop = FALSE]
+
+    expect_identical(
+      alternative_intervals
+      , data.frame(
+        alternative = c(
+          "$[0.00, \\infty]$"
+          , "$[-\\infty, 0.00]$"
+          , "$[-\\infty, 5.00]~\\cup~[10.00, \\infty]$"
+        )
+      )
+    )
+
+    alt <- data.frame(
+      1:2
+      , row.names = c(
+        "Alt., r=0.333 0<rho<0.5"
+        , "Alt., r=0.333 !(0<rho<0.5)"
+      )
+    )
+
+    alternative_intervals <- add_alternative(
+      alt
+      , range = c(-1, 1)
+    )[, "alternative", drop = FALSE]
+
+    expect_identical(
+      alternative_intervals
+      , data.frame(
+        alternative = c(
+          "$[0.00, 0.50]$"
+          , "$[-1.00, 0.00]~\\cup~[0.50, 1.00]$"
+        )
+      )
+    )
+  }
+)
+
+test_that(
   "ttestBF(): One sample"
   , {
     set.seed(123)
-    ttest <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1] - sleep$extra[sleep$group == 2])
+    ttest <- BayesFactor::ttestBF(
+      x = sleep$extra[sleep$group == 1] - sleep$extra[sleep$group == 2]
+    )
 
     ttest_output <- apa_print(
       ttest
@@ -22,23 +77,46 @@ test_that(
       )
     )
 
-    expect_equivalent(ttest_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 17.26$")
-    expect_identical(ttest_output$esti, "$M = -1.43$, 95\\% HDI $[-2.33, -0.54]$")
-    expect_identical(ttest_output$full, "$M = -1.43$, 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
+    expect_equivalent(
+      ttest_output$stat
+      , "$\\mathrm{BF}_{\\textrm{10}} = 17.26$"
+    )
+    expect_identical(
+      ttest_output$esti
+      , "$M = -1.43$, 95\\% HDI $[-2.33, -0.54]$"
+    )
+    expect_identical(
+      ttest_output$full
+      , "$M = -1.43$, 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$"
+    )
 
     set.seed(123)
-    ttest_paired <- BayesFactor::ttestBF(x = sleep$extra[sleep$group == 1], y = sleep$extra[sleep$group == 2], paired = TRUE)
+    ttest_paired <- BayesFactor::ttestBF(
+      x = sleep$extra[sleep$group == 1]
+      , y = sleep$extra[sleep$group == 2]
+      , paired = TRUE
+    )
 
-    # TODO: Note in documentation that it's not possible to determine if paired = TRUE
+    # TODO: Note in documentation that it's not possible to
+    # determine if paired = TRUE
     ttest_paired_output <- apa_print(
       ttest_paired
       , est_name = "\\Delta M"
       , central_tendency = median
       , iterations = 10000
     )
-    expect_equivalent(ttest_paired_output$stat, "$\\mathrm{BF}_{\\textrm{10}} = 17.26$")
-    expect_identical(ttest_paired_output$esti, "$\\Delta M = -1.43$, 95\\% HDI $[-2.33, -0.54]$")
-    expect_identical(ttest_paired_output$full, "$\\Delta M = -1.43$, 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$")
+    expect_equivalent(
+      ttest_paired_output$stat
+      , "$\\mathrm{BF}_{\\textrm{10}} = 17.26$"
+    )
+    expect_identical(
+      ttest_paired_output$esti
+      , "$\\Delta M = -1.43$, 95\\% HDI $[-2.33, -0.54]$"
+    )
+    expect_identical(
+      ttest_paired_output$full
+      , "$\\Delta M = -1.43$, 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$"
+    )
   }
 )
 
@@ -386,57 +464,62 @@ test_that(
 )
 
 test_that(
-  "Parse interval hypotheses"
+  "lmBF()"
   , {
-    alt <- data.frame(
-      1:3
-      , row.names = c(
-        "Alt., r=0.707 0<d<Inf"
-        , "Alt., r=0.707 !(0<d<Inf)"
-        , "Alt., r=0.707 !(5<d<10)"
-      )
+    set.seed(1298)
+    data(puzzles)
+    
+    ## Bayes factor of full model against null
+    bf_full <- lmBF(
+      RT ~ shape + color + shape:color + ID + ID:shape + ID:color
+      , data = puzzles
+      , whichRandom = c("ID", "ID:shape", "ID:color")
     )
-
-    alternative_intervals <- add_alternative(
-      alt
-      , range = c(-Inf, Inf)
-    )[, "alternative", drop = FALSE]
 
     expect_identical(
-      alternative_intervals
-      , data.frame(
-        alternative = c(
-          "$[0.00, \\infty]$"
-          , "$[-\\infty, 0.00]$"
-          , "$[-\\infty, 5.00]~\\cup~[10.00, \\infty]$"
-        )
-      )
+      apa_print(bf_full)$statistic
+      , "$\\mathrm{BF}_{\\textrm{10}} = 3,421.93$"
     )
 
-    alt <- data.frame(
-      1:2
-      , row.names = c(
-        "Alt., r=0.333 0<rho<0.5"
-        , "Alt., r=0.333 !(0<rho<0.5)"
-      )
-    )
+    # bf_shape <- lmBF(
+    #   RT ~ color + shape:color + ID + ID:shape + ID:color
+    #   , data = puzzles
+    #   , whichRandom = c("ID", "ID:shape", "ID:color")
+    # )
 
-    alternative_intervals <- add_alternative(
-      alt
-      , range = c(-1, 1)
-    )[, "alternative", drop = FALSE]
+    # bf_color <- lmBF(
+    #   RT ~ shape + shape:color + ID + ID:shape + ID:color
+    #   , data = puzzles
+    #   , whichRandom = c("ID", "ID:shape", "ID:color")
+    # )
 
-    expect_identical(
-      alternative_intervals
-      , data.frame(
-        alternative = c(
-          "$[0.00, 0.50]$"
-          , "$[-1.00, 0.00]~\\cup~[0.50, 1.00]$"
-        )
-      )
-    )
+    # bf <- bf_full / c(bf_shape, bf_color)
+    # bf_res <- apa_print(bf)
+
   }
 )
 
-# TODO: lmBF
-# TODO: generalTestBF
+test_that(
+  "generalTestBF()"
+  , {
+    set.seed(1298)
+    data(puzzles)
+
+    ## Bayes factor of full model against null
+    bf <-  generalTestBF(
+      RT ~ shape * color + ID
+      , data = puzzles
+      , whichRandom = "ID"
+      , progress = FALSE
+    )
+
+    bf_res <- apa_print(bf)
+
+    expect_apa_term(
+      bf_res
+      , term = "ID"
+      , estimate = NULL
+      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 1.12 \\times 10^{5}$"
+    )
+  }
+)
