@@ -125,6 +125,7 @@ apa_print.BFBayesFactor <- function(
   bf_colname <- "bf10"
 
   x_df <- as.data.frame(x)
+  x_df$error <- x_df$error * 100 # Error to error percent
   x_df <- add_alternative(x_df, range = bf_theta_range(x))
   x_df <- rename_column(x_df, "bf", bf_colname)
   x_df$code <- NULL

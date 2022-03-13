@@ -467,10 +467,10 @@ test_that(
   "lmBF()"
   , {
     set.seed(1298)
-    data(puzzles)
-    
+    data(puzzles, package = "BayesFactor")
+
     ## Bayes factor of full model against null
-    bf_full <- lmBF(
+    bf_full <- BayesFactor::lmBF(
       RT ~ shape + color + shape:color + ID + ID:shape + ID:color
       , data = puzzles
       , whichRandom = c("ID", "ID:shape", "ID:color")
@@ -503,10 +503,10 @@ test_that(
   "generalTestBF()"
   , {
     set.seed(1298)
-    data(puzzles)
+    data(puzzles, package = "BayesFactor")
 
     ## Bayes factor of full model against null
-    bf <-  generalTestBF(
+    bf <-  BayesFactor::generalTestBF(
       RT ~ shape * color + ID
       , data = puzzles
       , whichRandom = "ID"
