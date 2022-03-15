@@ -90,7 +90,19 @@ print_interval.numeric <- function(
 
     validate(x, check_length = 2, check_infinite = FALSE)
 
-    if(!is.null(attr(x, "conf.level"))) conf_level <- attr(x, "conf.level")
+    if(is.null(conf_level)) {
+      if(!is.null(attr(x, "conf.level"))) {
+        conf_level <- attr(x, "conf.level")
+      } else if(!is.null(names(x))) {
+        suppressWarnings(
+          conf_level <- as.numeric(
+            gsub("[^.|\\d]", "", names(x), perl = TRUE)
+          )
+        )
+        conf_level <- if(anyNA(conf_level)) NULL else conf_level
+        if(!is.null(conf_level)) conf_level <- 100 - conf_level[1] * 2
+      }
+    }
 
     if(is.null(interval_type)) conf_level <- NULL
 
@@ -131,7 +143,7 @@ print_interval.matrix <- function(
     , enclose_math = FALSE
     , ...
 ) {
-    if(!is.null(colnames(x))) {
+    if(!is.null(colnames(x)) && is.null(conf_level)) {
       suppressWarnings(
         col_conf_level <- as.numeric(
           gsub("[^.|\\d]", "", colnames(x), perl = TRUE)

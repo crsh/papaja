@@ -90,7 +90,7 @@ print_model_comp <- function(
 
     apa_res$estimate <- paste0(
       "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", conf.int * 100, "\\% CI "
-      , apply(boot_r2_ci, 1, print_confint, gt1 = FALSE, enclose_math = TRUE)
+      , apply(boot_r2_ci, 1, print_interval, gt1 = FALSE, enclose_math = TRUE)
     )
   }
 

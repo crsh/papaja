@@ -73,7 +73,6 @@ test_that(
         estimate = "$M$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -97,8 +96,6 @@ test_that(
       , paired = TRUE
     )
 
-    # TODO: Note in documentation that it's not possible to
-    # determine if paired = TRUE
     ttest_paired_output <- apa_print(
       ttest_paired
       , est_name = "\\Delta M"
@@ -117,6 +114,50 @@ test_that(
       ttest_paired_output$full
       , "$\\Delta M = -1.43$, 95\\% HDI $[-2.33, -0.54]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26$"
     )
+
+    # Custom interval and MCMC error
+    set.seed(123)
+    ttest_interval <- apa_print(
+      ttest_paired
+      , iterations = 1000
+      , interval = function(x) quantile(x, probs = c(0.025, 0.975))
+      , interval_type = "CrI"
+      , mcmc_error = TRUE
+    )
+
+    expect_apa_results(
+      ttest_interval
+      , labels = list(
+        estimate = "$M$"
+        , conf.int = "95\\% CrI"
+        , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
+        , mcmc.error = "$\\pm\\%$"
+      )
+    )
+
+    expect_identical(
+      ttest_interval$full
+      , "$M = -1.43$, 95\\% CrI $[-2.31, -0.44]$, $\\mathrm{BF}_{\\textrm{10}} = 17.26 \\pm 0.00\\%$"
+    )
+
+    # bf_r1
+    set.seed(123)
+    ttest_r1 <- apa_print(
+      ttest_paired
+      , bf_r1 = 3
+    )
+
+    expect_equivalent(
+      ttest_r1$stat
+      , "$\\mathrm{BF}_{\\textrm{10}} = 51.78$"
+    )
+
+    set.seed(123)
+    ttest_1r <- apa_print(
+      ttest_paired
+      , bf_1r = 3
+    )
+    expect_identical(ttest_r1, ttest_1r)
   }
 )
 
@@ -138,7 +179,6 @@ test_that(
         estimate = "$\\Delta M$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -173,7 +213,6 @@ test_that(
         , conf.int = "95\\% HDI"
         , alternative = "$\\mathcal{H}_1$"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -223,7 +262,6 @@ test_that(
         estimate = "$r$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -251,7 +289,6 @@ test_that(
         estimate = "$\\hat\\pi$"
         , conf.int = "95\\% HDI"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -278,7 +315,6 @@ test_that(
       cont_output
       , labels = list(
         statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -315,7 +351,7 @@ test_that(
       anova_bf_main_output
       , term = "shape_ID"
       , estimate = NULL
-      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 2.84$"
+      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 2.84 \\pm 1.12\\%$"
     )
 
     set.seed(123)
@@ -334,7 +370,6 @@ test_that(
       , labels = list(
         term = "Term"
         , statistic = "$\\mathrm{BF}_{\\textrm{01}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -371,7 +406,6 @@ test_that(
       , labels = list(
         term = "Term"
         , statistic = "$\\log \\mathrm{BF}_{\\textrm{01}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -389,7 +423,7 @@ test_that(
   , {
     data(attitude)
     set.seed(123)
-    regression_bf_all = BayesFactor::regressionBF(
+    regression_bf_all <- BayesFactor::regressionBF(
       rating ~ complaints + privileges + learning + raises
       , data = attitude
       , whichModels = "all"
@@ -403,7 +437,6 @@ test_that(
       , labels = list(
         model = "Model"
         , statistic = "$\\mathrm{BF}_{\\textrm{10}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -414,7 +447,7 @@ test_that(
       , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 25.90$"
     )
 
-    regression_bf_top = BayesFactor::regressionBF(
+    regression_bf_top <- BayesFactor::regressionBF(
       rating ~ complaints + privileges + learning + raises
       , data = attitude
       , whichModels = "top"
@@ -428,7 +461,6 @@ test_that(
       , labels = list(
         term = "Term"
         , statistic = "$\\mathrm{BF}_{\\textrm{01}}$"
-        , mcmc.error = "$\\pm\\%$"
       )
     )
 
@@ -439,7 +471,7 @@ test_that(
       , statistic = "$\\mathrm{BF}_{\\textrm{01}} = 2.85 \\times 10^{-3}$"
     )
 
-    regression_bf_top_output <- apa_print(regression_bf_top, inverse = TRUE)
+    regression_bf_top_output <- apa_print(regression_bf_top, reciprocal = TRUE)
 
     expect_apa_term(
       regression_bf_top_output
@@ -451,7 +483,7 @@ test_that(
     regression_bf_top_output <- apa_print(
       regression_bf_top
       , log = TRUE
-      , inverse = TRUE
+      , reciprocal = TRUE
     )
 
     expect_apa_term(
@@ -519,7 +551,7 @@ test_that(
       bf_res
       , term = "ID"
       , estimate = NULL
-      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 1.12 \\times 10^{5}$"
+      , statistic = "$\\mathrm{BF}_{\\textrm{10}} = 1.12 \\times 10^{5} \\pm 0.00\\%$"
     )
   }
 )

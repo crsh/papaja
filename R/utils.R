@@ -105,7 +105,7 @@ init_apa_results <- function(){
 
 #' Transform to a Canonical Table
 #'
-#' Internal function that puts a data frame into a canonical structure by 
+#' Internal function that puts a data frame into a canonical structure by
 #' renaming and labelling columns.
 #'
 #' @param x          A data frame.
@@ -153,6 +153,15 @@ canonize <- function(
     conf_level <- attr(x$conf.int, "conf.level")
     if(is.null(conf_level)) {
       conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
+    }
+    if(is.null(conf_level) && !is.null(names(x$conf.int[[1]]))) {
+      suppressWarnings(
+        conf_level <- as.numeric(
+          gsub("[^.|\\d]", "", names(x$conf.int[[1]]), perl = TRUE)
+        )
+      )
+      conf_level <- if(anyNA(conf_level)) NULL else conf_level
+      if(!is.null(conf_level)) conf_level <- (100 - conf_level[1] * 2) / 100
     }
 
     conf_label <- paste0(

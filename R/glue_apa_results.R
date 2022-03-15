@@ -255,6 +255,18 @@ stat_glue <- function(x) {
         c("$<<svl(statistic)>>", df, " ", "<<add_equals(strip_math_tags(statistic))>>$")
       )
     )
+
+    if(!is.null(x$mcmc.error)) {
+    stat_list[length(stat_list)] <- glue::glue_collapse(
+        c(stat_list[length(stat_list)], "$\\pm <<mcmc.error>>\\%$")
+      )
+
+      stat_list[length(stat_list)] <- gsub(
+        "\\$\\$"
+        , " "
+        , stat_list[length(stat_list)]
+      )
+    }
   }
   if(!is.null(x$mse)) {
     stat_list <- c(
@@ -262,7 +274,6 @@ stat_glue <- function(x) {
       , "$<<svl(mse)>> <<add_equals(mse)>>$"
     )
   }
-
 
   p_value <- names(x)[grepl("p.value", names(x), fixed = TRUE)]
   if(length(p_value) > 0) {
