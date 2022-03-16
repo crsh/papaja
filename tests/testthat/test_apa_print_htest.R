@@ -276,7 +276,7 @@ test_that(
     expect_apa_results(
       two_sample_prop_test_output
       , labels = list(
-        estimate    = "\\Delta \\hat\\pi"
+        estimate    = "$\\Delta \\hat\\pi$"
         , conf.int  = "95\\% CI"
         , statistic = "$\\chi^2$"
         , df        ="$\\mathit{df}$"

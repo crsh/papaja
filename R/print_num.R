@@ -446,3 +446,59 @@ print_scientific <- function(x) {
   x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)
   x
 }
+
+# print_bf <- function(
+#   x
+#   , ratio_subscript = "10"
+#   , auto_invert = FALSE
+#   , escape = TRUE
+#   , scientific = TRUE
+#   , nonscientific_range = c(min = 1/1000, max = 1000)
+#   , log = FALSE
+#   , use_math = FALSE
+#   , ...
+# ) {
+#   validate(x, check_class = "numeric", check_NA = TRUE, check_infinite = FALSE)
+#   validate(ratio_subscript, check_class = "character", check_length = 1)
+#   validate(auto_invert, check_class = "logical", check_length = 1)
+#   validate(scientific, check_class = "logical", check_length = 1)
+#   validate(nonscientific_range, check_class = "numeric", check_length = 2)
+#   validate(log, check_class = "logical", check_length = 1)
+
+#   ellipsis <- list(...)
+#   ellipsis$x <- x
+#   ellipsis$use_math <- use_math
+
+#   if(auto_invert) {
+#     to_invert <- ellipsis$x < 1
+#     ellipsis$x[to_invert] <- 1 / ellipsis$x[to_invert]
+
+#     ratio_subscript <- rep(ratio_subscript, length(x))
+#     ratio_subscript[to_invert] <- invert_subscript(ratio_subscript)
+#   }
+
+#   if(escape) {
+#     ratio_subscript <- paste0("\\textrm{", escape_latex(ratio_subscript), "}")
+#   }
+
+#   if(scientific & (ellipsis$x > nonscientific_range["max"] - 1 | ellipsis$x < nonscientific_range["min"])) {
+#     ellipsis$format <- "e"
+#     if(is.null(ellipsis$digits)) ellipsis$digits <- 2
+
+#     bf <- do.call("printnum", ellipsis)
+#     bf <- print_scientific(bf)
+#   } else {
+#     if(is.null(ellipsis$zero)) ellipsis$zero <- FALSE
+#     bf <- do.call("printnum", ellipsis)
+#   }
+
+#   bf_name <- if(!log) "BF" else "\\log BF"
+
+#   bf <- paste0("$\\mathrm{", bf_name, "}_{", ratio_subscript, "} ", add_equals(bf), "$")
+#   bf
+# }
+
+# invert_subscript <- function(x) {
+#   seperator <- if(nchar(x) == 2) "" else "/"
+#   paste0(rev(unlist(strsplit(x, seperator))), collapse = seperator)
+# }

@@ -55,6 +55,7 @@ sanitize_terms.character <- function(x, standardized = FALSE, ...) {
   x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
   x <- gsub("\\.0+$", "", x)                        # Remove trailing 0-digits
   x <- gsub(",", "", x)                             # Remove big mark
+  x <- gsub(" \\+ ", "_", x)                        # Remove '+' in model names
   x <- gsub("\\W", "_", x)                          # Replace non-word characters with "_"
   x
 }
@@ -157,6 +158,13 @@ beautify_terms.factor <- function(x, standardized = FALSE, ...) {
 
 beautify_terms.data.frame <- function(x, ...) {
   as.data.frame(lapply(x, beautify_terms, ...), stringsAsFactors = FALSE)
+}
+
+
+beautify_model <- function(x, ...) {
+  terms <- strsplit(x, " \\+ ")
+  beautified_terms <- lapply(terms, function(x, ...) paste(beautify_terms(x, ...), collapse = " + "), ...)
+  unlist(beautified_terms)
 }
 
 

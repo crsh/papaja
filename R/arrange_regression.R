@@ -46,7 +46,7 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
   regression_table$conf.int <- apply(
     tidy_x[, utils::tail(names(tidy_x), 2)]
     , 1
-    , function(y) do.call(function(...) print_confint(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
+    , function(y) do.call(function(...) print_interval(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
   if(!is_glm) regression_table$df <- print_df(x$df.residual)
   columns <- intersect(c("term", "estimate", "conf.int", "statistic", "df", "p.value"), colnames(regression_table))

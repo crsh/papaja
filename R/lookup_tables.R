@@ -20,10 +20,12 @@ lookup_names <- c(
   , "AIC"     = "AIC"
   , "BIC"     = "BIC"
   , "npar"    = "n.parameters"
+  , "alternative" = "alternative"
   # term
-  , "Effect"  = "term"
-  , "Term"    = "term"
+  , "Effect"     = "term"
+  , "Term"       = "term"
   , "model.term" = "term"
+  , "model"        = "model"
   # estimate
   , "Estimate"                = "estimate"
   , "estimate"                  = "estimate"
@@ -33,11 +35,14 @@ lookup_names <- c(
   , "rho"                       = "estimate"
   , "tau"                       = "estimate"
   , "mean.of.x"                 = "estimate"
+  , "mean"                      = "estimate"
   , "X.pseudo.median"           = "estimate"
   , "difference.in.location"    = "estimate"
   , "difference.in.means"       = "estimate"
   , "difference.in.proportions" = "estimate"
   , "coefficients"              = "estimate"
+  , "delta"                     = "estimate"
+  , "proportion"                = "estimate"
   , "p"                         = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
@@ -51,6 +56,7 @@ lookup_names <- c(
   , "Epsilon2_generalized" = "estimate"
   # ----
   , "conf.int"   = "conf.int"
+  , "hd.int"     = "conf.int"
   , "stderr"     = "std.error"
   , "std.err"    = "std.error"
   , "Std.Error"  = "std.error"
@@ -80,6 +86,12 @@ lookup_names <- c(
   , "T"         = "statistic"
   , "z"         = "statistic"
   , "z.value"   = "statistic"
+  , "bf"        = "statistic"
+  , "bf10"      = "statistic"
+  , "bf01"      = "statistic"
+  , "logbf"        = "statistic"
+  , "logbf10"      = "statistic"
+  , "logbf01"      = "statistic"
   , "Bartlett.s.K.2"          = "statistic"
   , "Bartlett.s.K.squared"    = "statistic"
   # df, df.residual
@@ -111,6 +123,7 @@ lookup_names <- c(
   , "Pr...t.."   = "p.value"
   , "Pr...z.."   = "p.value"
   , "pvalues"    = "p.value"
+  , "error"      = "mcmc.error"
 )
 
 
@@ -126,23 +139,28 @@ lookup_labels <- c(
   , "AIC"     = "$\\mathit{AIC}$"
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
+  , "alternative" = "$\\mathcal{H}_1$"
   # term
   , "Effect"     = "Effect"
   , "Term"       = "Term"
   , "model.term" = "Term"
+  , "model"        = "Model"
   , "contrast"   = "Contrast"
   # estimate
   , "cor"                       = "$r$"
   , "rho"                       = "$r_{\\mathrm{s}}$" # capital or small S???
   , "tau"                       = "$\\uptau$"
   , "mean.of.x"                 = "$M$"
+  , "mean"                      = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
   , "mean.of.the.differences"   = "$M_\\Delta$"
   , "mean.difference"           = "$\\Delta M$"
   , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
-  , "difference.in.proportions" = "\\Delta \\hat\\pi"
+  , "difference.in.proportions" = "$\\Delta \\hat\\pi$"
+  , "proportion"                = "$\\hat\\pi$"
   , "p"                         = "$\\hat\\pi$"
+  , "delta"                     = "$\\delta$"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"
   , "Eta2_partial"     = "$\\hat{\\eta}^2_p$"
@@ -176,12 +194,18 @@ lookup_labels <- c(
   , "chisq"     = "$\\chi^2$"
   , "Chisq"     = "$\\chi^2$"
   , "X.squared" = "$\\chi^2$"
-  , "W"                       = "$W$"
-  , "V"                       = "$V$"
-  , "S"                       = "$S$"
-  , "T"                       = "$T$"
-  , "z"                       = "$z$"
-  , "z.value"                 = "$z$"
+  , "W"         = "$W$"
+  , "V"         = "$V$"
+  , "S"         = "$S$"
+  , "T"         = "$T$"
+  , "z"         = "$z$"
+  , "z.value"   = "$z$"
+  , "bf"        = "$\\mathrm{BF}$"
+  , "bf10"      = "$\\mathrm{BF}_{\\textrm{10}}$"
+  , "bf01"      = "$\\mathrm{BF}_{\\textrm{01}}$"
+  , "logbf"        = "$\\log \\mathrm{BF}$"
+  , "logbf10"      = "$\\log \\mathrm{BF}_{\\textrm{10}}$"
+  , "logbf01"      = "$\\log \\mathrm{BF}_{\\textrm{01}}$"
   , "Bartlett.s.K.2"          = "$K^2$"
   , "Bartlett.s.K.squared"    = "$K^2$"
   # df, df.residual
@@ -214,13 +238,14 @@ lookup_labels <- c(
   , "Pr..F."      = "$p$"
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"
+  , "error"       = "$\\pm\\%$"
 )
 
 
 #' Lookup Table for P Value/Confindence Interval Adjustment Names
 #'
-#' `apa_print()` converts many statistical output objects that include 
-#' inferential statistics adjusted for multiple comparisons. To make these 
+#' `apa_print()` converts many statistical output objects that include
+#' inferential statistics adjusted for multiple comparisons. To make these
 #' adjustments transparent the statistics get an index with the
 #' corresponding name. This function returns the proper names for these indices.
 #'
