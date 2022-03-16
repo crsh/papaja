@@ -287,7 +287,7 @@ apa_factorial_plot.default <- function(
     if(use_dplyr) {
       aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
     } else {
-      aggregated <- stats::aggregate(stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+      aggregated <- stats::aggregate(x = data[, dv, drop = FALSE], by = data[, c(id, factors), drop = FALSE], FUN = fun_aggregate)
     }
   } else {
     aggregated <- data
@@ -313,7 +313,11 @@ apa_factorial_plot.default <- function(
   if(use_dplyr) {
     yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
   } else {
-    yy <- stats::aggregate(stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
+    yy <- stats::aggregate(
+      x = aggregated[, dv, drop = FALSE]
+      , by = aggregated[, factors, drop = FALSE]
+      , FUN = tendency
+    )
   }
 
   ## Calculate dispersions -----------------------------------------------------
@@ -323,12 +327,21 @@ apa_factorial_plot.default <- function(
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
     if(fun_dispersion == "conf_int") {
-      ee <- stats::aggregate(stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
+      ee <- stats::aggregate(
+        x = aggregated[, dv, drop = FALSE]
+        , by = aggregated[, factors, drop = FALSE]
+        , FUN = dispersion
+        , level = level
+      )
     } else {
       if(use_dplyr) {
         ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
       } else {
-        ee <- stats::aggregate(stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
+        ee <- stats::aggregate(
+          x = aggregated[, dv, drop = FALSE]
+          , by = aggregated[, factors, drop = FALSE]
+          , FUN = dispersion
+        )
       }
     }
   }
