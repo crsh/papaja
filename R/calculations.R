@@ -218,7 +218,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     if(package_available("dplyr")) {
       ee <- fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun = mean)
     } else {
-      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = do.call(rbind, Morey_CI), FUN = mean)
+      ee <- stats::aggregate(stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = do.call(rbind, Morey_CI), FUN = mean)
     }
 
   } else {
