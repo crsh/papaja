@@ -37,11 +37,13 @@
     if(utils::packageVersion("effectsize") >= "0.5") {
       op_papaja$papaja.estimate_anova <- function(
         ...
+        , observed = NULL
         , alternative = "two.sided"
         , ci = 0.9
       ) {
         effectsize_eta_squared(
           ...
+          , observed = observed
           , alternative = alternative
           , ci = ci
         )
