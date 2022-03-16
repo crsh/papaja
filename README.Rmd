@@ -31,7 +31,7 @@ If you want to create PDF- in addition to DOCX-documents you additionally need a
 We recommend you use [TinyTex](https://yihui.name/tinytex/), which can be installed from within R:
 
 ```{r eval = FALSE}
-if(!"tinytex" %in% rownames(installed.packages())) install.packages("tinytex")
+if(!requireNamespace("tinytex", quietly = TRUE)) install.packages("tinytex")
 
 tinytex::install_tinytex()
 ```
@@ -43,7 +43,7 @@ Please refer to the [**papaja** manual](https://crsh.github.io/papaja_man/introd
 
 ```{r install_papapja, eval = FALSE}
 # Install remotes package if necessary
-if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
+if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 
 # Install the stable development version from GitHub
 remotes::install_github("crsh/papaja")

@@ -467,7 +467,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 #' @return Logical. Is the specified package installed?
 #' @keywords internal
 
-package_available <- function(x) x %in% rownames(utils::installed.packages())
+package_available <- function(x) requireNamespace(x, quietly = TRUE)
 
 no_method <- function(x) {
   stop(
