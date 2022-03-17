@@ -96,7 +96,7 @@ test_that(
 )
 
 test_that(
-  "apa_factorial_plot.default(): Inherit customisations"
+  "apa_factorial_plot.default(): Inherit customizations"
   , {
     out <- apa_factorial_plot(
       data = npk

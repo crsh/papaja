@@ -133,7 +133,7 @@ or any other standard function. For within-subjects confidence intervals, specif
 If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
 distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
 \code{level = 0.98}. The default is \code{level = 0.95} for 95\% confidence intervals.
-\subsection{Customisation of plot elements}{
+\subsection{Customization of plot elements}{
 
 \code{\link[=apa_factorial_plot]{apa_factorial_plot()}} and its descendants \code{\link[=apa_barplot]{apa_barplot()}}, \code{\link[=apa_lineplot]{apa_lineplot()}},
 and \code{\link[=apa_beeplot]{apa_beeplot()}} are wrapper functions that sequentially call:

@@ -61,7 +61,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-(ref:abstract) **papaja** addresses computational irreproducibility in research reports caused by reporting errors, i.e. incomplete or incorrect reporting of the analytic procedure or analytic results. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society (6th edition). This document was written with **papaja** and provides a brief overview of the package's main features: An R Markdown template for APA-style manuscripts and helper-functions that facilitate reporting of analytic results in accordance with APA guidelines.
+(ref:abstract) **papaja** addresses computational non-reproduciblity in research reports caused by reporting errors, i.e. incomplete or incorrect reporting of the analytic procedure or analytic results. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society (6th edition). This document was written with **papaja** and provides a brief overview of the package's main features: An R Markdown template for APA-style manuscripts and helper-functions that facilitate reporting of analytic results in accordance with APA guidelines.
 
 ```{r include = FALSE}
 library("dplyr")
@@ -74,7 +74,7 @@ load("../tests/testthat/data/mixed_data.rdata")
 ```
 
 Computational reproducibility is of fundamental importance to the quantitative sciences [@cacioppo_social_2015; @peng_reproducible_2011; @donoho_invitation_2010; @hutson_artificial_2018].
-Yet, irreproducible results are widely prevalent.
+Yet, non-reproducible results are widely prevalent.
 Computational reproducibility is threatened by countless sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020].
 **papaja** was designed to address these problems.
 The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Association [APA, 6th edition, @american_psychological_association_publication_2010].
@@ -96,7 +96,7 @@ National Science Foundation subcommittee on Replicability in Science:
 > [Computational] Reproducibility is a minimum necessary condition for a finding to be believable and informative.
 > [p. 4, @cacioppo_social_2015]
 
-Irreproducible results are scientifically and ethically unacceptable.
+Non-reproducible results are scientifically and ethically unacceptable.
 They impede an accumulation of knowledge, waste resources, and when applied could have serious consequences.
 A recent investigation of breast cancer treatments erroneously concluded that radiotherapy after mastectomy increased mortality because of an error in the analysis code [@henson_inferring_2016].
 A corrected reanalysis indicated that, in fact, the opposite was the case---the treatment appeared to be effectively decrease mortality.
@@ -105,12 +105,12 @@ Examples like this show that computational reproducibility cannot be a forgone c
 Large-scale scrutiny of statistics published in over 30,000 articles in psychology journals shows that every other article reports at least one impossible combination of test statistic, degrees of freedom, and $p$ value; in every tenth article such inconsistencies call the statistical inference into question [@nuijten_prevalence_2016].
 More in-depth investigations that attempted to reproduce reported results from the underlying raw data paint a similar picture.
 For example, in a sample of 46 articles, two thirds of key claims could be reproduced but in every tenth case only after deviating from the reported analysis plan [@artner_reproducibility_2020].
-For one in four irreproducible results, the reproduction attempt yielded results that were no longer statistically significant, calling the original statistical inference into question.
+For one in four non-reproducible results, the reproduction attempt yielded results that were no longer statistically significant, calling the original statistical inference into question.
 These figures clearly show that there is a need for efforts to improve the computational reproducibility of the published literature.
 
-Computational irreproducibility is, of course, multi-causal.
+Computational non-reproduciblity is, of course, multi-causal.
 While there is only one way in which a research report is computationally reproducible, the is a countless number of things that can go wrong.
-Broadly speaking, there are at least four causes for irreproducible analyses: (1) incomplete or incorrect reporting of the analytic procedure, (2) incorrect execution of the analytic procedure, (3) incorrect reporting of results, and (4) code rot, i.e., irreproducibility caused by (inadvertent) changes to the computational environment (e.g., software updates, changes to data files).
+Broadly speaking, there are at least four causes for non-reproducible analyses: (1) incomplete or incorrect reporting of the analytic procedure, (2) incorrect execution of the analytic procedure, (3) incorrect reporting of results, and (4) code rot, i.e., non-reproducible caused by (inadvertent) changes to the computational environment (e.g., software updates, changes to data files).
 We currently see no technical solution to the first two causes.
 Incomplete reporting (1) may be partially mitigated by strictly enforcing reporting guidelines.
 However, verifying that the analytic procedure is reported faithfully (1) and was executed correctly (2) ultimately requires manual scrutiny of analysis scripts and/or reproduction and is possible only if authors share their data.
@@ -123,10 +123,10 @@ Several seasoned technical solutions, such as software containers or a virtual m
 When it comes to reporting quantitative results, most researchers engage in what we refer to as *copy-paste reporting*.
 Quantitative analyses and reporting are done in separate software.
 Thus, by necessity quantitative results are copied from the analysis software and pasted into the report.
-Copy-paste reporting underlies and contributes to several of the most common causes for computational irreproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
+Copy-paste reporting underlies and contributes to several of the most common causes for computational non-reproduciblity: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
 We are convinced that errors caused by copy-paste reporting cannot be addressed by appealing to researchers to be more careful.
-The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to irreproducible results is substantial.
-Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report irreproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
+The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to non-reproducible results is substantial.
+Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report non-reproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
 Evidently, computational reproducibility is difficult to attain.
 
 # The solution: Dynamic documents

@@ -47,7 +47,7 @@
 #'    distribution function that will be covered. For instance, if you want a 98% confidence interval, specify
 #'    `level = 0.98`. The default is `level = 0.95` for 95% confidence intervals.
 #'
-#' ## Customisation of plot elements
+#' ## Customization of plot elements
 #'
 #' [apa_factorial_plot()] and its descendants [apa_barplot()], [apa_lineplot()],
 #' and [apa_beeplot()] are wrapper functions that sequentially call:

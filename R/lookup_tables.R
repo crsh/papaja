@@ -274,7 +274,7 @@ lookup_adjust_names <- function(x) {
 }
 
 
-#' Lookup Table for Genearted Words and Phrases
+#' Lookup Table for Generated Words and Phrases
 #'
 #' Some words and phrases used throughout a papaja manuscript are automatically
 #' generated and need to vary when the locale of a document is changed. This

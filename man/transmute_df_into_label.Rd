@@ -19,7 +19,7 @@ df_into_label(x, check_df = TRUE, ...)
 \item{x}{Either the complete output object created by \code{\link[=apa_print]{apa_print()}} methods,
 or the \code{table} component of such objects.}
 
-\item{check_df}{Logical. If TRUE (the default), checks if df columns contain non-integer values.}
+\item{check_df}{Logical. If TRUE (the default), checks if degrees-of-freedom-columns contain non-integer values.}
 
 \item{...}{further arguments passed from an to other methods}
 }

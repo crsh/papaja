@@ -16,7 +16,7 @@
 apa_interval(
   x,
   ...,
-  conf_level = NULL,
+  conf.int = NULL,
   interval_type = NULL,
   enclose_math = FALSE
 )
@@ -24,7 +24,7 @@ apa_interval(
 print_interval(
   x,
   ...,
-  conf_level = NULL,
+  conf.int = NULL,
   interval_type = NULL,
   enclose_math = FALSE
 )
@@ -32,7 +32,7 @@ print_interval(
 \method{apa_interval}{numeric}(
   x,
   y = NULL,
-  conf_level = NULL,
+  conf.int = NULL,
   interval_type = NULL,
   enclose_math = FALSE,
   ...
@@ -40,7 +40,7 @@ print_interval(
 
 \method{apa_interval}{matrix}(
   x,
-  conf_level = NULL,
+  conf.int = NULL,
   interval_type = NULL,
   enclose_math = FALSE,
   ...
@@ -68,7 +68,7 @@ a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a \code
     \item{\code{}}{}
   }}
 
-\item{conf_level}{Numeric. Confidence level of the interval. Ignored if
+\item{conf.int}{Numeric. Confidence level of the interval. Ignored if
 level can be inferred from attributes of \code{x}, see Details.}
 
 \item{interval_type}{Character. Abbreviation indicating the type of interval
@@ -99,9 +99,9 @@ the returned \code{list} of intervals.
 }
 \examples{
 \dontrun{
-apa_confint(1, 2, conf_level = 0.95)
-apa_confint(c(1, 2), conf_level = 0.95)
-apa_confint(matrix(c(1, 2), ncol = 2), conf_level = 0.95)
+apa_confint(1, 2, conf.int = 0.95)
+apa_confint(c(1, 2), conf.int = 0.95)
+apa_confint(matrix(c(1, 2), ncol = 2), conf.int = 0.95)
 apa_confint(confint(lm(cars)))
 apa_confint(confint(lm(cars)), digits = 3)
 }

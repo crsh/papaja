@@ -7,7 +7,7 @@
 #'
 #' @param x    Either the complete output object created by [apa_print()] methods,
 #'   or the `table` component of such objects.
-#' @param check_df Logical. If TRUE (the default), checks if df columns contain non-integer values.
+#' @param check_df Logical. If TRUE (the default), checks if degrees-of-freedom-columns contain non-integer values.
 #' @param ... further arguments passed from an to other methods
 #'
 #' @examples
