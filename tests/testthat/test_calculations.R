@@ -280,7 +280,7 @@ test_that(
 test_that(
   "Within-subjects confidence intervals: Cousineau vs. Morey method"
   , {
-    aggregated_data <- stats::aggregate(formula = yield ~ N + block, data = npk, FUN = mean)
+    aggregated_data <- stats::aggregate(yield ~ N + block, data = npk, FUN = mean)
     object_1 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Cousineau", level = .98)
     object_2 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Morey", level = .98)
 
@@ -299,7 +299,7 @@ test_that(
           , `Subject identifier` = "block"
           , `Confidence level` = 0.98
           , Method = "Cousineau"
-          , means = aggregate(formula = yield ~ N, data = aggregated_data, FUN = mean)
+          , means = aggregate(yield ~ N, data = aggregated_data, FUN = mean)
       )
     )
     expect_identical(
@@ -315,14 +315,14 @@ test_that(
     # Implicit NAs
     data <- npk
     data$yield[2] <- NA
-    aggregated <- stats::aggregate(formula = yield ~ N + P + block, data = data, FUN = mean)
+    aggregated <- stats::aggregate(yield ~ N + P + block, data = data, FUN = mean)
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))
       , "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\nblock: 1"
     )
     # Explicit NAs
     data <- npk
-    aggregated <- stats::aggregate(formula = yield ~ N + P + block, data = data, FUN = mean)
+    aggregated <- stats::aggregate(yield ~ N + P + block, data = data, FUN = mean)
     aggregated$yield[5] <- NA
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))
