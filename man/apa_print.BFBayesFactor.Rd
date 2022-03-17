@@ -148,7 +148,7 @@ ttest_paired <- BayesFactor::ttestBF(
 # appropriate `est_name` manually.
 apa_print(
   ttest_paired
-  , est_name = "M_\\\\Delta"
+  , est_name = "M_D"
   , iterations = 1000
 )
 

@@ -153,7 +153,7 @@ lookup_labels <- c(
   , "mean.of.x"                 = "$M$"
   , "mean"                      = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
-  , "mean.of.the.differences"   = "$M_\\Delta$"
+  , "mean.of.the.differences"   = "$M_D$"
   , "mean.difference"           = "$\\Delta M$"
   , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
