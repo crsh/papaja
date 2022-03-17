@@ -2,15 +2,15 @@
 % Please edit documentation in R/remove_comments.R
 \name{remove_comments}
 \alias{remove_comments}
-\title{Remove comments from R Markdown}
+\title{Remove Comments}
 \usage{
 remove_comments(x, file)
 }
 \arguments{
-\item{x}{Character. Path to R Markdown file}
+\item{x}{Character. Path to an R Markdown file.}
 
 \item{file}{Character. Name of the new R Markdown file without comments.}
 }
 \description{
-Removes markdown comments from an R Markdown file
+Removes markdown comments from an R Markdown file.
 }

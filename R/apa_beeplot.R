@@ -1,7 +1,7 @@
-#' Beeswarm plots for factorial designs that conform to APA guidelines
+#' Bee-swarm Plots for Factorial Designs that Conform to APA Guidelines
 #'
-#' Wrapper function that creates one or more beeswarm plots from a \code{data.frame} containing data from
-#' a factorial design and sets APA-friendly defaults.
+#' Create one or more beeswarm plots from a `data.frame` containing data from
+#' a factorial design and set APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
 #' @inheritDotParams apa_factorial_plot

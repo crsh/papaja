@@ -79,7 +79,7 @@ test_that(
     out <- apa_factorial_plot(data = data, id = "block", dv = "yield", level = .75)
     data$block <- as.factor(data$block)
     variable_label(data[, c("block", "yield")]) <- c("block" = "block", "yield" = "yield")
-    aggregated <- aggregate(formula = yield ~ block, data = data, FUN = mean)
+    aggregated <- aggregate(yield ~ block, data = data, FUN = mean)
 
     tendency <- mean(aggregated$yield)
     dispersion <- conf_int(aggregated$yield, level = .75)
@@ -96,7 +96,7 @@ test_that(
 )
 
 test_that(
-  "apa_factorial_plot.default(): Inherit customisations"
+  "apa_factorial_plot.default(): Inherit customizations"
   , {
     out <- apa_factorial_plot(
       data = npk
@@ -208,4 +208,4 @@ test_that(
   }
 )
 
-file.remove("Rplots.pdf")
+suppressWarnings(file.remove("Rplots.pdf"))

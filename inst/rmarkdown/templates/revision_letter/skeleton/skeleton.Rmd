@@ -5,7 +5,6 @@ journal     : "Journal title"
 manuscript  : "Manuscript number"
 
 class       : "draft"
-
 output      : papaja::revision_letter_pdf
 ---
 
@@ -52,14 +51,9 @@ This is our response
 \NotEstimated
 
 
-\clearpage
+\newpage
 
 # References
 
-\begingroup
-\setlength{\parindent}{-0.5in}
-\setlength{\leftskip}{0.5in}
-
-<div id = "refs"></div>
-
-\endgroup
+::: {#refs custom-style="Bibliography"}
+:::

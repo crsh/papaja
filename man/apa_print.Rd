@@ -2,33 +2,20 @@
 % Please edit documentation in R/apa_print.R
 \name{apa_print}
 \alias{apa_print}
-\title{Format statistics (APA 6th edition)}
+\title{Typeset Statistical Results}
 \usage{
 apa_print(x, ...)
 }
 \arguments{
-\item{x}{Output object. See details.}
+\item{x}{A model object.}
 
-\item{...}{Additional arguments passed to other methods. See details.}
-}
-\value{
-The form of the value returned by \code{apa_print} depends on the class of \code{x}. See the
-   documentation of the particular methods for details (e.g., \code{?apa_print.htest}).
+\item{...}{Additional arguments passed to methods.}
 }
 \description{
-A generic function that takes objects from various statistical methods to create formatted character
-strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
-methods, which depend on the \code{\link{class}} of the first argument.
-}
-\details{
-Currently the following output objects are supported:
-
-   \itemize{
-     \item \code{htest}
-     \item \code{lm} and \code{summary.lm}
-     \item \code{aov}, \code{aovlist}, \code{summary.aov}, and \code{summary.aovlist}
-     \item \code{anova} and \code{Anova.mlm}
-   }
+A generic function that takes objects from various statistical methods to
+create formatted character strings to report the results in accordance with
+APA manuscript guidelines. The function invokes particular methods, which
+depend on the \code{\link{class}} of the first argument.
 }
 \examples{
 # List methods for apa_print()
@@ -42,6 +29,19 @@ Other apa_print:
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
-\code{\link{apa_print.list}()}
+\code{\link{apa_print.list}()},
+\code{\link{apa_print.lme}()},
+\code{\link{apa_print.merMod}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

@@ -126,50 +126,72 @@ test_that(
         , sumsq = c(3164.0625, 76.5625, 5.0625, 0.0625)
         , df = c(1, 1, 1, 1)
         , sumsq_err = c(311.25, 311.25, 311.25, 311.25)
-        , df_res = c(12, 12, 12, 12)
+        , df.residual = c(12, 12, 12, 12)
         , statistic = c(121.987951807229, 2.95180722891566, 0.195180722891566, 0.00240963855421686)
         , p.value = c(1.21163629179605e-07, 0.111450651130857, 0.66649556577607, 0.961656681938102)
       )
-      , .Names = c("term", "sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value")
+      , .Names = c("term", "sumsq", "df", "sumsq_err", "df.residual", "statistic", "p.value")
       , row.names = c(NA, -4L)
       , class = c("apa_variance_table", "data.frame")
       , correction = "none"
     )
 
-    with_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
-    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
 
     # SS from car output:
     SS_car <- c(3164.0625, 76.5625, 5.0625, 0.0625, 311.25)
+    es_car_with <- SS_car[1:4] / sum(SS_car)
+    es_car_without <- SS_car[2:4] / sum(SS_car[2:5])
+    tinylabels::variable_label(es_car_with) <-
+      tinylabels::variable_label(es_car_without) <- "$\\hat{\\eta}^2$"
 
-    expect_equal(
-      object = with_intercept$es
+    pes_afex <- c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
+    tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
+
+    ges_afex <- pes_afex
+    tinylabels::variable_label(ges_afex) <- "$\\hat{\\eta}^2_G$"
+
+
+
+    # Eta-squared
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = TRUE)
+    expect_identical(
+      object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[1:4] / sum(SS_car)
+      , expected = es_car_with
     )
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
-      # Expectation calculated with afex
-      object = with_intercept$pes
-      , expected = c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
-    )
-    expect_equal(
-      object = with_intercept$ges
-      # Expectation calculated with afex
-      , expected = c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
+      object = without_intercept$estimate
+      # Expectation calculated via sums of squares from car
+      , expected = es_car_without
     )
 
+
+    # Partial eta-squared
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "pes", intercept = TRUE)
     expect_equal(
-      object = without_intercept$es
-      # Expectation calculated via sums of squares from car
-      , expected = SS_car[2:4]/sum(SS_car[2:5])
+      object = with_intercept$estimate
+      , expected = pes_afex
     )
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "pes", intercept = FALSE)[2:4, ]
     expect_equal(
-      object = without_intercept$ges
-      , expected = with_intercept$ges[2:4]
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
     )
+
+
+    # generalized eta-squared
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "ges", intercept = TRUE)
     expect_equal(
-      object = without_intercept$pes
-      , expected = with_intercept$pes[2:4]
+      object = with_intercept$estimate
+      , expected = ges_afex
+    )
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "ges", intercept = FALSE)[2:4, ]
+    expect_equal(
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
     )
   }
 )
@@ -183,53 +205,73 @@ test_that(
         sumsq = c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
         , df = c(1, 1, 1.43869284635452, 1.62877229248125)
         , sumsq_err = c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
-        , df_res = c(4, 4, 5.7547713854181, 6.51508916992501)
+        , df.residual = c(4, 4, 5.7547713854181, 6.51508916992501)
         , statistic = c(47.8579339316403, 7.34693877551021, 1.4590570719603, 0.290657439446368)
         , p.value = c(0.00229109843354983, 0.053508296850918, 0.29341624721021, 0.714981769489886)
         , term = c("(Intercept)", "Task", "Valence", "Task:Valence")
       )
-      , .Names = c("sumsq", "df", "sumsq_err", "df_res", "statistic", "p.value", "term")
+      , .Names = c("sumsq", "df", "sumsq_err", "df.residual", "statistic", "p.value", "term")
       , row.names = c(NA, -4L)
       , class = c("apa_variance_table", "data.frame")
       , correction = "GG"
     )
-    with_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = TRUE)
-    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes", "ges", "es"), intercept = FALSE)[2:4, ]
+
+
 
     # SS from car output:
     SS_car <- c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
     SS_err <- c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
 
-    # Output with intercept ----
+    es_with_intercept <- SS_car/sum(c(SS_car, SS_err))
+    es_without_intercept <- SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+    tinylabels::variable_label(es_with_intercept) <-
+      tinylabels::variable_label(es_without_intercept) <- "$\\hat{\\eta}^2$"
+
+
+    tinylabels::variable_label(SS_car) <- "$\\hat{\\eta}^2$"
+    pes_afex <- c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
+    ges_afex <- c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
+    tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
+    tinylabels::variable_label(ges_afex) <- "$\\hat{\\eta}^2_G$"
+
+    # Eta-squared ----
+    with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = TRUE)
+    without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
-      object = with_intercept$es
+      object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car/sum(c(SS_car, SS_err))
+      , expected = es_with_intercept
     )
     expect_equal(
-      object = with_intercept$ges
-      # Expectation calculated with afex
-      , expected = c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
-    )
-    expect_equal(
-      object = with_intercept$pes
-      # Expectation calculated with afex
-      , expected = c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
+      object = without_intercept$estimate
+      # Expectation calculated via sums of squares from car
+      , expected = es_without_intercept
     )
 
-    # Output without intercept ----
+    # Partial eta-squared ----
+    with_intercept <- add_effect_sizes(apa_variance_table, es = "pes", intercept = TRUE)
+    without_intercept <- add_effect_sizes(apa_variance_table, es = c("pes"), intercept = FALSE)[2:4, ]
+
     expect_equal(
-      object = without_intercept$es
-      # Expectation calculated via sums of squares from car
-      , expected = SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+      object = with_intercept$estimate
+      , expected = pes_afex
+    )
+
+    expect_equal(
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
+    )
+
+    # Generalized eta-squared ----
+    with_intercept <- add_effect_sizes(apa_variance_table, es = "ges", intercept = TRUE)
+    without_intercept <- add_effect_sizes(apa_variance_table, es = "ges", intercept = TRUE)[2:4, ]
+    expect_equal(
+      object = with_intercept$estimate
+      , expected = ges_afex
     )
     expect_equal(
-      object = without_intercept$ges
-      , expected = with_intercept$ges[2:4]
-    )
-    expect_equal(
-      object = without_intercept$pes
-      , expected = with_intercept$pes[2:4]
+      object = without_intercept$estimate
+      , expected = with_intercept$estimate[2:4]
     )
   }
 )
@@ -238,7 +280,7 @@ test_that(
 test_that(
   "Within-subjects confidence intervals: Cousineau vs. Morey method"
   , {
-    aggregated_data <- stats::aggregate(formula = yield ~ N + block, data = npk, FUN = mean)
+    aggregated_data <- stats::aggregate(yield ~ N + block, data = npk, FUN = mean)
     object_1 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Cousineau", level = .98)
     object_2 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Morey", level = .98)
 
@@ -257,7 +299,7 @@ test_that(
           , `Subject identifier` = "block"
           , `Confidence level` = 0.98
           , Method = "Cousineau"
-          , means = aggregate(formula = yield ~ N, data = aggregated_data, FUN = mean)
+          , means = aggregate(yield ~ N, data = aggregated_data, FUN = mean)
       )
     )
     expect_identical(
@@ -273,14 +315,14 @@ test_that(
     # Implicit NAs
     data <- npk
     data$yield[2] <- NA
-    aggregated <- stats::aggregate(formula = yield ~ N + P + block, data = data, FUN = mean)
+    aggregated <- stats::aggregate(yield ~ N + P + block, data = data, FUN = mean)
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))
       , "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\nblock: 1"
     )
     # Explicit NAs
     data <- npk
-    aggregated <- stats::aggregate(formula = yield ~ N + P + block, data = data, FUN = mean)
+    aggregated <- stats::aggregate(yield ~ N + P + block, data = data, FUN = mean)
     aggregated$yield[5] <- NA
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))

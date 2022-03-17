@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{sort_terms}
 \alias{sort_terms}
-\title{Sort ANOVA or regression table by predictors/effects}
+\title{Sort ANOVA or Regression Table by Predictors/Effects}
 \usage{
 sort_terms(x, colname)
 }
 \arguments{
-\item{x}{data.frame. For example, a table element produced by \code{\link{apa_print}}.}
+\item{x}{A data frame. For example, the table element produced by \code{\link[=apa_print]{apa_print()}}.}
 
 \item{colname}{Character. Column name of the \code{data.frame} containing the terms to sort.}
 }
@@ -15,12 +15,13 @@ sort_terms(x, colname)
 Returns the same data.frame with reordered rows.
 }
 \description{
-Sorts rows in ANOVA or regression tables produced by \code{\link{apa_print}}
+Sort rows in ANOVA or regression tables produced by \code{\link[=apa_print]{apa_print()}}
 by complexity (i.e., main effects, two-way interactions, three-way interactions, etc.).
 }
 \examples{
 ## From Venables and Ripley (2002) p. 165.
 npk_aov <- aov(yield ~ block + N * P * K, npk)
 npk_aov_results <- apa_print(npk_aov)
-sort_terms(npk_aov_results$table, "Effect")
+sort_terms(npk_aov_results$table, "term")
 }
+\keyword{internal}

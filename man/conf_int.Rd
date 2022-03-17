@@ -4,7 +4,7 @@
 \alias{conf_int}
 \alias{conf.int}
 \alias{ci}
-\title{Between-subjects confidence intervals}
+\title{Between-Subjects Confidence Intervals}
 \usage{
 conf_int(x, level = 0.95, na.rm = TRUE)
 
@@ -18,7 +18,7 @@ ci(x, level = 0.95, na.rm = TRUE)
 \item{level}{Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
 for 95\% confidence intervals.}
 
-\item{na.rm}{Logical. Specifies if missing values are removed.}
+\item{na.rm}{Logical. Specifies if missing values should be removed.}
 }
 \description{
 Calculates the deviation that is needed to construct confidence intervals for a vector of observations.

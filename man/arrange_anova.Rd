@@ -5,7 +5,7 @@
 \alias{arrange_anova.anova}
 \alias{arrange_anova.summary.aov}
 \alias{arrange_anova.summary.Anova.mlm}
-\title{Create variance table from various ANOVA objects}
+\title{Create Variance Table from Various ANOVA objects}
 \usage{
 arrange_anova(x, ...)
 
@@ -29,17 +29,18 @@ for Huyn-Feldt methods or \code{none} is also possible. Ignored for other object
 }
 \description{
 These methods take objects from various R functions that calculate ANOVA to create
-a \code{data.frame} containing a variance table. \emph{This function is not exported.}
+a \code{data.frame} containing a variance table. \emph{This function is not exported
+and will most likely be deprecated, soon.}
 }
 \details{
-The returned \code{data.frame} can be passed to functions such as \code{\link{print_anova}}.
+The returned \code{data.frame} can be passed to functions such as \code{\link[=print_anova]{print_anova()}}.
 
-   Currently, methods for the following objects are available:
-   \itemize{
-     \item{\code{summary.aov}}
-     \item{\code{summary.aovlist}}
-     \item{\code{Anova.mlm}}
-   }
+Currently, methods for the following objects are available:
+\itemize{
+\item summary.aov
+\item summary.aovlist
+\item Anova.mlm
+}
 }
 \examples{
  \dontrun{
@@ -50,6 +51,6 @@ The returned \code{data.frame} can be passed to functions such as \code{\link{pr
 
 }
 \seealso{
-\code{\link{print_anova}}, \code{\link{print_model_comp}}
+\code{\link[=print_anova]{print_anova()}}, \code{\link[=print_model_comp]{print_model_comp()}}
 }
 \keyword{internal}

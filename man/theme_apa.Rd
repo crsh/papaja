@@ -2,33 +2,52 @@
 % Please edit documentation in R/theme_apa.R
 \name{theme_apa}
 \alias{theme_apa}
-\title{APA compatible ggplot2 theme}
+\title{APA-style \code{ggplot2} Theme}
 \usage{
 theme_apa(base_size = 12, base_family = "", box = FALSE)
 }
 \arguments{
-\item{base_size}{Numeric. Base font size; other font sizes and margins are adjusted relative
-to this.}
+\item{base_size}{Numeric. Base font size; other font sizes and margins are
+adjusted relative to this.}
 
 \item{base_family}{Character. Base font family.}
 
-\item{box}{Logical. Indicates whether to draw a box around the plot.}
+\item{box}{Logical. Indicates whether to draw a black panel border.}
 }
 \description{
-A ggplot2 theme with a white panel background, no grid lines, large axis and legend titles,
-and increased text padding for better readability.
+\pkg{ggplot2} theme with a white panel background, no grid lines, large axis
+and legend titles, and increased text padding for better readability.
 }
-\details{
-This theme is an adaptation of \code{\link[ggplot2]{theme_bw}}. In ggplot2, themes set the
-   general aspect of the plot such as the color of the background, gridlines, the size and colour
-   of fonts.
+\section{Visual example}{
+
+
+\figure{theme_apa.png}
 }
+
 \examples{
  \dontrun{
    # Copied from ?ggtheme
-   p <- ggplot(mtcars) + geom_point(aes(x = wt, y = mpg,
-     colour = factor(gear))) + facet_wrap(~ am)
-   p
-   p + theme_apa()
+   mtcars2 <- within(mtcars, {
+   vs <- factor(vs, labels = c("V-shaped", "Straight"))
+   am <- factor(am, labels = c("Automatic", "Manual"))
+   cyl  <- factor(cyl)
+   gear <- factor(gear)
+   })
+
+   p1 <- ggplot(mtcars2) +
+     geom_point(aes(x = wt, y = mpg, colour = gear)) +
+     labs(
+       title = "Fuel economy declines as weight increases",
+       subtitle = "(1973-1974)",
+       x = "Weight (1000 lbs)",
+       y = "Fuel economy (mpg)",
+       colour = "Gears"
+     )
+
+   p1
+   p1 + theme_apa()
  }
+}
+\seealso{
+\code{\link[ggplot2:ggtheme]{ggplot2::theme_bw()}}, \code{\link[ggplot2:theme]{ggplot2::theme()}}
 }

@@ -149,3 +149,27 @@ paste_affiliations <- function(x, format) {
     paste(affiliations, collapse = "\n\n")
   }
 }
+
+#' Corresponding-Author Line
+#'
+#' Internal function. Construct corresponding-author line.
+#'
+#' @param x List. Meta data of the document as a result from [yaml::yaml.load()].
+#' @keywords internal
+
+corresponding_author_line <- function(x) {
+  # TODO: Use lua filter
+  apa_terms <- getOption("papaja.terms")
+
+  if(is.null(x$name)) stop("\nPlease provide the corresponding author's name in the documents YAML front matter. Use the 'name' element of the 'author' list.\n")
+  if(is.null(x$address)) stop("\nPlease provide the corresponding author's complete postal address in the documents YAML front matter. Use the 'address' element of the 'author' list.\n")
+  if(is.null(x$email)) stop("\nPlease provide the corresponding author's e-mail address in the documents YAML front matter. Use the 'email' element of the 'author' list.\n")
+
+  corresponding_line <- paste0(
+    apa_terms$correspondence, x$name, ", "
+    , x$address, ". "
+    , apa_terms$email, ": ", x$email
+  )
+
+  corresponding_line
+}

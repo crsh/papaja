@@ -5,16 +5,16 @@
 \alias{apa_print.lm}
 \alias{apa_print.summary.glm}
 \alias{apa_print.summary.lm}
-\title{Format statistics (APA 6th edition)}
+\title{Typeset Statistical Results from GLM}
 \usage{
-\method{apa_print}{glm}(x, est_name = NULL, ci = 0.95, in_paren = FALSE, ...)
+\method{apa_print}{glm}(x, est_name = NULL, conf.int = 0.95, in_paren = FALSE, ...)
 
 \method{apa_print}{lm}(
   x,
   est_name = NULL,
   standardized = FALSE,
-  ci = 0.95,
-  observed_predictors = TRUE,
+  conf.int = 0.95,
+  observed = TRUE,
   in_paren = FALSE,
   ...
 )
@@ -26,67 +26,65 @@
 \arguments{
 \item{x}{\code{glm} or \code{lm} object.}
 
-\item{est_name}{Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-adaptation, such as "\eqn{b^*}" instead of "b" for standardized regression coefficients) is used,
-otherwise the supplied name is used. See details.}
+\item{est_name}{Character. If \code{NULL} (the default) the name given in \code{x}
+(or a formally correct adaptation, such as "\eqn{b^*}" instead of "b" for
+standardized regression coefficients) is used. Otherwise the supplied name
+is used. See details.}
 
-\item{ci}{Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
-\code{matrix} with confidence region bounds as column names (e.g. "2.5 \%" and "97.5 \%") and
-coefficient names as row names (in the same order as they appear in \code{summary(x)$coefficients}.
+\item{conf.int}{Numeric. Either a single value (range [0, 1]) giving the
+confidence level or a two-column \code{matrix} with confidence region bounds as
+column names (e.g. \code{"2.5 \%"} and \code{"97.5 \%"}) and coefficient names as row
+names (in the same order as they appear in \code{summary(x)$coefficients}.
 See details.}
 
-\item{in_paren}{Logical. Indicates if the formatted string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum]{printnum}}
+  Arguments passed on to \code{\link[=apa_num]{apa_num}}
   \describe{
     \item{\code{}}{}
   }}
 
-\item{standardized}{Logical. Indicates if coefficients are standardized or unstandardized and leading
-zeros are omitted if appropriate. See details.}
+\item{standardized}{Logical. Indicates if coefficients were standardized
+(e.g., using \code{scale()}), and leading zeros should be omitted if
+appropriate. See details.}
 
-\item{observed_predictors}{Logical. Indicates whether predictor variables were observed. See details.}
-}
-\value{
-\code{apa_print.lm} returns a list containing the following components according to the input:
-
-   \describe{
-     \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-         value for each term.}
-     \item{\code{estimate}}{A named list of character strings giving the descriptive estimates and confidence intervals
-         for each term.} % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each term.}
-     \item{\code{table}}{A data.frame containing the complete regression table, which can be passed to \code{\link{apa_table}}.}
-   }
+\item{observed}{Logical. Indicates whether predictor variables were
+observed. See details.}
 }
 \description{
-These methods take \code{glm} and \code{lm} objects to create formatted character
-strings to report the results in accordance with APA manuscript guidelines.
+These methods take (generalized) linear model objects to create formatted
+character strings to report the results in accordance with APA manuscript
+guidelines.
 }
 \details{
-The coefficients names are sanitized to facilitate their use as list names. Parentheses
-   are omitted and other non-word characters are replaced by \code{_} (see \code{\link{sanitize_terms}}).
+The coefficient names are sanitized to facilitate their use as list names.
+Parentheses are omitted and other non-word characters are replaced by \verb{_}
+(see \code{\link[=sanitize_terms]{sanitize_terms()}}).
 
-   If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-   of freedom, are replaced with brackets.
+\code{est_name} is placed in the output string and is then passed to pandoc or
+LaTeX through \pkg{knitr}. Thus, to the extent it is supported by the
+final document type, you can pass LaTeX-markup to format the final text
+(e.g., \code{"\\\\\\\\beta"} yields \eqn{\beta}).
 
-   \code{est_name} is placed in the output string and is then passed to pandoc or LaTeX through \pkg{knitr}.
-   Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
-   text (e.g., \code{\\\\beta} yields \eqn{\beta}).
+If \code{standardized = TRUE}, \code{scale()} is removed from coefficient names
+(see examples). This option is currently ignored for \code{glm}-objects.
 
-   If \code{standardized} is \code{TRUE} "scale()" is removed from coefficients names (see examples).
-   Currently, this option is ignored for \code{glm}-objects.
+If \code{conf.int} is a single value, confidence intervals are calculated using
+\code{\link[stats:confint]{stats::confint()}}.
 
-   If \code{ci} is a single value, confidence intervals are calculated using \code{\link[stats]{confint}}.
-
-   If \code{x} is an \code{lm}-object and the \pkg{MBESS} package is available, confidence intervals for \eqn{R^2}
-   are computed using \code{\link[MBESS]{ci.R2}} to obtain a confidence region that corresponds to the
-   \eqn{\alpha}-level chosen for the confidence intervals of regression coefficients (e.g., 95\% CI or
-   \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI for \eqn{R^2}, see Steiger, 2004). If
-   \code{observed_predictors = FALSE}, it is assumed that predictors are fixed variables, i.e., "the values of the
-   [predictors] were selected a priori as part of the research design" (p. 15, Kelly, 2007); put differently, it
-   is assumed that predictors are not random.
+If \code{x} is an \code{lm} object and the \pkg{MBESS} package is available,
+confidence intervals for \eqn{R^2} are computed using \code{\link[MBESS:ci.R2]{MBESS::ci.R2()}} to
+obtain a confidence region that corresponds to the \eqn{\alpha}-level
+chosen for the confidence intervals of regression coefficients (e.g.,
+95\% CI or \eqn{\alpha = 0.05} for regression coefficients yields a 90\% CI
+for \eqn{R^2}, see Steiger, 2004). If \code{observed = FALSE}, it is assumed
+that predictors are fixed variables, i.e., "the values of the
+[predictors] were selected a priori as part of the research design"
+(p. 15, Kelly, 2007); put differently, it is assumed that predictors are
+not random.
 }
 \examples{
 # Data from Dobson (1990), p. 9.
@@ -104,6 +102,9 @@ lm_fit2 <- lm(scale(trt) ~ scale(ctl))
 
 apa_print(lm_fit2, standardized = TRUE)
 
+# It is possible to simplify the regression table with transmute_df_into_label():
+transmute_df_into_label(apa_print(lm_fit2, standardized = TRUE))
+
 
 # Dobson (1990) Page 93: Randomized Controlled Trial :
 counts <- c(18,17,15,20,10,20,25,13,12)
@@ -116,15 +117,15 @@ apa_print(glm.D93)
 }
 \references{
 Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
-   Variance and Contrast Analysis. \emph{Psychological Methods}, 9(2), 164-182.
-   doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+Variance and Contrast Analysis. \emph{Psychological Methods}, \emph{9}(2), 164-182.
+doi: \href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
 
-   Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
-   implementation. \emph{Journal of Statistical Software}, 20(8), 1-24.
-   doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
+implementation. \emph{Journal of Statistical Software}, \emph{20}(8), 1-24.
+doi: \href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
 }
 \seealso{
-\code{\link[stats]{confint}}, \code{\link[MBESS]{ci.pvaf}}
+\code{\link[stats:confint]{stats::confint()}}, \code{\link[MBESS:ci.pvaf]{MBESS::ci.pvaf()}}
 
 Other apa_print: 
 \code{\link{apa_print.BFBayesFactor}()},
@@ -133,6 +134,19 @@ Other apa_print:
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
+\code{\link{apa_print.lme}()},
+\code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

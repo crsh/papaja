@@ -2,12 +2,12 @@
 % Please edit documentation in R/variable_label.R
 \name{simple_codebook}
 \alias{simple_codebook}
-\title{Simple codebook}
+\title{Simple Codebook}
 \usage{
 simple_codebook(x, ...)
 }
 \arguments{
-\item{x}{data.frame. Data to be written.}
+\item{x}{data.frame. Data to be documented.}
 
 \item{...}{
   Arguments passed on to \code{\link[utils:write.table]{utils::write.table}}
@@ -52,11 +52,12 @@ simple_codebook(x, ...)
   }}
 }
 \description{
-Generate a simple codebook in CSV-format
+Generate a simple codebook in CSV-format from a (labelled) \code{data.frame}.
 }
 \details{
-If the \pkg{skimr} package is installed, an inline histogram is added
-  for all numeric variables.
+If the \pkg{skimr} package is installed, an in-line histogram is
+added for all numeric variables. If columns are labelled, the labelles
+are included in the codebook.
 }
 \examples{
 \dontrun{
@@ -65,5 +66,5 @@ simple_codebook(cars, file = "cars_codebook.csv")
 }
 }
 \seealso{
-\code{\link[utils]{write.csv}}
+\code{\link[utils:write.table]{utils::write.csv()}}
 }

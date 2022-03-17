@@ -1,48 +1,44 @@
-#' Format statistics (APA 6th edition)
+#' Typeset Statistical Results from Hypothesis Tests
 #'
-#' Takes \code{htest} objects from various statistical methods to create
-#' formatted character strings to report the results in accordance with APA manuscript guidelines.
+#' Takes `htest` objects from various statistical methods (e.g., [t.test()],
+#' [wilcox.test()], [cor.test()]) to create formatted character strings to
+#' report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x \code{htest} object. See details.
-#' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
-#'    supplied name is used. See details.
-#' @param est_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{r_S} instead of "rho") is used for the \emph{estimate}, otherwise the supplied name is
-#'    used. See details.
-#' @param n Numeric. Size of the sample; required when reporting \eqn{\chi^2} tests, otherwise this parameter
-#'    is ignored.
-#' @param ci Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
-#'    Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)
-#'    with attribute \code{conf.level}, e.g., when calculating bootstrapped confidence intervals.
-#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
-#' @inheritDotParams printnum
-#' @details The function should work on a wide range of \code{htest} objects. Due to the large number of functions
-#'    that produce these objects and their idiosyncrasies, the produced strings may sometimes be inaccurate. If you
-#'    experience inaccuracies you may report these \href{https://github.com/crsh/papaja/issues}{here} (please include
-#'    a reproducible example in your report!).
+#' @param x An `htest` object. See details.
+#' @param stat_name Character. If `NULL` (the default), the name given in `x`
+#'   (or a formally correct adaptation, such as \eqn{\chi^2} instead of
+#'   "x-squared") is used for the *test statistic*, otherwise the supplied name
+#'   is used. See details.
+#' @param est_name Character. If `NULL` (the default), the name given in `x`
+#'   (or a formally correct adaptation, such as \eqn{r_S} instead of "rho") is
+#'   used for the *estimate*, otherwise the supplied name is used. See details.
+#' @param n Numeric. Sample size; required when reporting \eqn{\chi^2} tests,
+#'   otherwise this parameter is ignored.
+#' @param conf.int Numeric. If \code{NULL} (the default), the function tries to
+#'   obtain confidence intervals from `x`. Other confidence intervals can be
+#'   supplied as a `vector` of length 2 (lower and upper boundary,
+#'   respectively) with attribute `conf.level` set, e.g., when calculating
+#'   bootstrapped confidence intervals.
+#' @inheritParams glue_apa_results
+#' @inheritDotParams apa_num
+#' @details
+#'   The function should work on a wide range of `htest` objects. Due to the
+#'   large number of functions that produce these objects and their
+#'   idiosyncrasies, the returned strings should be compared to the original
+#'   object. If you experience inaccuracies you may report these
+#'   [here]{https://github.com/crsh/papaja/issues} (please include
+#'   a reproducible example in your report).
 #'
-#'    \code{stat_name} and \code{est_name} are placed in the output string and are thus passed to pandoc or LaTeX through
-#'    \pkg{kntir}. Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the
-#'    final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
+#'   `stat_name` and `est_name` are placed in the output string and are thus
+#'   passed to pandoc or LaTeX through \pkg{knitr}. Thus, to the extent it is
+#'   supported by the final document type, you can pass LaTeX-markup to format
+#'   the final text (e.g., \code{\\\\tau} yields \eqn{\tau}).
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
-#'
-#' @return \code{apa_print()} returns a list containing the following components according to the input:
-#'
-#'    \describe{
-#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-#'          and \emph{p} value.}
-#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-#'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A joint character string comprised of \code{estimate} and \code{statistic}.}
-#'      \item{\code{table}}{A data.frame, which can be passed to \code{\link{apa_table}}.}
-#'    }
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples
-#' # Comparisions of central tendencies
+#' # Comparisons of central tendencies
 #' t_stat <- t.test(extra ~ group, data = sleep)
 #' apa_print(t_stat)
 #' apa_print(t_stat, stat_name = "tee")
@@ -62,7 +58,7 @@
 #' smokers  <- c(83, 90, 129, 70)
 #' patients <- c(86, 93, 136, 82)
 #' prop_stat <- prop.test(smokers, patients)
-#' apa_print(prop_stat, n = sum(patients), est_name = "\\Delta p")
+#' apa_print(prop_stat, n = sum(patients))
 #' @method apa_print htest
 #' @export
 
@@ -71,84 +67,111 @@ apa_print.htest <- function(
   , stat_name = NULL
   , est_name = NULL
   , n = NULL
-  , ci = NULL
+  , conf.int = NULL
   , in_paren = FALSE
   , ...
 ) {
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
+
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
   if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
   if(!is.null(n)) validate(n, check_class = "numeric", check_integer = TRUE, check_range = c(0, Inf), check_length = 1)
-  if(!is.null(ci)) validate(ci, check_class = "matrix", check_length = 2)
+  if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  ellipsis <- list(...)
 
-  if(is.null(stat_name) & !is.null(names(x$statistic))) {
-    stat_name <- names(x$statistic)
-    stat_name <- convert_stat_name(stat_name)
-  }
-  stat <- printnum(x$statistic)
 
-  if(!is.null(x$sample.size)) n <- x$sample.size
+  # Arrange table, i.e. coerce 'htest' to a proper data frame ----
 
-  if(!is.null(x$parameter)) {
-    # Statistic and degrees of freedom
-    parameter_names <- tolower(names(x$parameter))
-    if(length(parameter_names) == 1 && parameter_names == "df") {
-      dfdigits <- (x$parameter %%1 != 0) * 2
-      if(stat_name == "\\chi^2") {
-        if(is.null(x$sample.size) & is.null(n)) stop("Please provide the sample size to report.") # Demand sample size information if it's a Chi^2 test
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ", n = ", n, ")")
-      } else {
-        stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("df", parameter_names)], digits = dfdigits), ")")
-      }
-    } else if(length(parameter_names) == 2 && identical(parameter_names, c("num df", "denom df"))) {
-      dfdigits <- (x$parameter %%1 != 0) * 2
-      stat_name <- paste0(stat_name, "(", printnum(x$parameter[grep("num df", parameter_names)], digits = dfdigits[1]), ", ", printnum(x$parameter[grep("denom df", parameter_names)], digits = dfdigits[2]), ")")
+  if(length(x$estimate) == 2L) {
+    if(all(grepl("mean", names(x$estimate)))) {
+      # two-sample t test
+      x$estimate <- unname(diff(rev(x$estimate)))
+      names(x$estimate) <- "difference in means"
+    } else if(all(grepl("prop", names(x$estimate))) && is.null(x$null.value)){
+      # 2-sample test for **equality** of proportions
+      x$estimate <- unname(diff(rev(x$estimate)))
+      names(x$estimate) <- "difference in proportions"
+    } else {
+      x$estimate <- NULL
     }
   }
+  if(length(x$estimate) > 2L) x$estimate <- NULL
 
-  # p-value
-  p <- printp(x$p.value)
-
-  apa_res <- apa_print_container()
-  apa_res$statistic <- paste0("$", stat_name, " = ", stat, "$, $p ", add_equals(p), "$")
-  if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
-
-  # Estimate
-  if(is.null(est_name) & !is.null(names(x$estimate))) {
-    est_name <- convert_stat_name(names(x$estimate))
-  }
-
-  if(is.null(x$estimate)) {
-    est <- NULL
+  if(is.null(conf.int)) {
+    conf_int <- list(x$conf.int)
   } else {
-    if(is.null(est_name)) {
-      warning("Cannot determine name of estimate supplied in ", deparse(substitute(x)), " of class 'htest'. Estimate is omitted from output string. Please set parameter 'est_name' to obtain an estimate.")
-      est <- NULL
-    } else if(!is.null(names(x$estimate)) && est_name %in% c("\\Delta M", "\\Delta p")) {
-      est <- do.call(function(...) printnum(diff(rev(x$estimate)), ...), ellipsis)
-    } else if(length(x$estimate) == 1) {
-      if(est_name %in% c("r", "r_{\\mathrm{s}}", "\\uptau") & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
-      est <- do.call(function(...) printnum(x$estimate, ...), ellipsis)
+    conf_int <- list(conf.int)
+  }
+
+
+
+  if(is.null(x$parameter)) x$parameter <- NULL
+
+  x$conf.int    <- NULL
+  x$null.value  <- NULL
+  x$alternative <- NULL
+  x$method      <- NULL
+  x$data.name   <- NULL
+
+  x_list <- list()
+
+  for (i in names(x)) {
+    if(is.null(names(x[[i]]))) {
+      x_list[[i]] <- x[[i]]
+    } else {
+      x_list[names(x[[i]])] <- unname(x[[i]])
     }
   }
 
-  if(!is.null(est)) {
+  y <- as.data.frame(
+    x_list
+    , stringsAsFactors = FALSE
+  )
+  if(!identical(conf_int, list(NULL))) y$conf.int <- conf_int
 
-    if(is.null(ci) && !is.null(x$conf.int)) { # Use CI in x
-      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$, ", do.call(function(...) print_confint(x$conf.int, ...), ellipsis))
-    } else if(!is.null(ci)) { # Use supplied CI
-      ellipsis$margin <- 2 # Ignore margin argument passed by user
-      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$, ", do.call(function(...) print_confint(ci, ...), ellipsis))
-    } else if(is.null(ci) && is.null(x$conf.int)) { # No CI
-      apa_res$estimate <- paste0("$", est_name, " ", add_equals(est), "$")
+  # sanitize table ----
+  ellipsis$x <- canonize(y)
+
+  # Prettify table ----
+  if(any(c("cor", "rho", "tau") %in% colnames(y)) & is.null(ellipsis$gt1)) ellipsis$gt1 <- FALSE
+  x <- do.call("beautify", ellipsis)
+
+
+  # htest-specific modifications ----
+  if(is.null(n)) n <- y$sample.size
+  if("$\\chi^2$" %in% unlist(variable_labels(x))) {
+    if(is.null(n)) {
+      stop("Please provide the sample size to report.")
+    # } else {
+    #   n <- paste0(", n = ", n)
+    } else {
+      attr(x$statistic, "n") <- apa_num(as.integer(n))
     }
-
-    apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
+  } else {
+    n <- NULL
   }
-  # Do not assign if table is not a data.frame
-  # attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
-  apa_res
+
+  if(!is.null(est_name)) {
+    # todo: if estimate not in table
+    if(!("estimate" %in% colnames(x))) stop("No estimate available in results table.")
+    variable_label(x) <- c(estimate = paste0("$", est_name, "$"))
+  }
+  if(!is.null(stat_name)) {
+    # todo: if statistic not in table
+    if(!("statistic" %in% colnames(x))) stop("No statistic available in results table.")
+    variable_label(x) <- c(statistic = paste0("$", stat_name, "$"))
+  }
+
+  # Create output object ----
+  glue_apa_results(
+    x
+    , n = as.integer(n)
+    , est_glue = construct_glue(x, "estimate")
+    , stat_glue = construct_glue(x, "statistic")
+    , in_paren = in_paren
+  )
 }

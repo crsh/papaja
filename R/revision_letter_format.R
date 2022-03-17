@@ -1,8 +1,9 @@
-#' Journal revision letter
+#' Revision Letter
 #'
-#' Template for creating an journal revision letters.
+#' Template for creating a journal revision letters.
 #'
-#' @param keep_tex Logical. Logical. Keep the intermediate tex file used in the conversion to PDF.
+#' @param keep_tex Logical. Whether to keep the intermediate tex file used in
+#'   the conversion to PDF.
 #' @inheritDotParams bookdown::pdf_document2
 #'
 #' @seealso \code{\link[bookdown]{html_document2}}
@@ -46,7 +47,18 @@ revision_letter_pdf <- function(keep_tex = TRUE, ...) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
-    revision_letter_preprocessor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+    args <- revision_letter_preprocessor(metadata, input_file, runtime, knit_meta, files_dir, output_dir)
+
+    # Set citeproc = FALSE by default to invoke ampersand filter
+    if(
+      (is.null(metadata$replace_ampersands) || metadata$replace_ampersands) &&
+      (is.null(metadata$citeproc) || metadata$citeproc)
+    ) {
+      metadata$citeproc <- FALSE
+      assign("front_matter", metadata, pos = parent.frame())
+    }
+
+    args
   }
 
   revision_letter_format$pre_processor <- pre_processor
@@ -63,7 +75,9 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
      (is.null(metadata$citeproc) || metadata$citeproc)) {
 
     ## Set CSL
-    args <- set_default_csl(input_file)
+    args <- set_default_csl(input_file
+                            , version = 6
+                            , metadata = metadata)
     csl_specified <- is.null(args)
 
     ## Set ampersand filter
@@ -91,29 +105,37 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #' @param x Character. One or more quote labels.
 #' @param file Character. Path to LaTeX file from which to quote.
 #'
-#' @details Searches the LaTeX document for a labelled quotes preceeded and
-#'   followed by \code{\% <@~{#quote-label}} and \code{\% ~@>} tags in LaTeX
-#'   comments
+#' @details Searches the LaTeX document specified in `file` for labelled
+#'   quotes, i.e. paragraphs that are enclosed in `% <@~{#quote-label}` and
+#'   `% ~@>}` tags in LaTeX comments on separate lines. The labelled quote is
+#'   then inserted and rendered `asis`.
 #'
 #' @export
 
 quote_from_tex <- function(x, file) {
+  label_warning <- paste0("Labelled quote(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file)
+
   if(length(x) > 1) {
     quoted_tex <- lapply(x, quote_from_tex, file = file)
-  } else if(length(x) == 0) {
-    warning(paste0("Quote label(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file))
-    quoted_tex <- NULL
   } else {
     tex <- readLines(file)
     start <- which(grepl(paste0("% <@~{#", x, "}"), x = tex, fixed = TRUE))
-    end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
 
-    quoted_tex <- paste(
-      paste("> ", tex[(start + 1)])
-      , paste(tex[(start + 2):(end - 1)], collapse = "\n")
-      , "\n"
-      , sep = "\n"
-    )
+    if(length(start) == 0) {
+      warning(label_warning)
+      return(NULL)
+    } else if(length(start) > 1) {
+      stop(paste0("Each quote label can only be used once. ", paste0("'", x, "'", collapse = ", "), " was found ", length(start), " times."))
+    } else {
+      end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
+
+      quoted_tex <- paste(
+        paste("> ", tex[(start + 1)])
+        , paste(tex[(start + 2):(end - 1)], collapse = "\n")
+        , "\n"
+        , sep = "\n"
+      )
+    }
   }
   knitr::asis_output(quoted_tex)
 }

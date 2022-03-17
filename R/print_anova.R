@@ -1,8 +1,8 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' This function is the internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
+#' This function is the former internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
 #' of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
-#' guidelines. It is not ment to be called by the user. \emph{This function is not exported.}
+#' guidelines. It is already deprecated and will soon be defunct. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
@@ -10,7 +10,7 @@
 #'   Note that eta-squared is calculated correctly if and only if the design is balanced.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 
 #' @return
 #'    A named list containing the following components:
@@ -43,6 +43,8 @@ print_anova <- function(
   , in_paren = FALSE
 ) {
 
+  .Deprecated("print_anova() is deprecated")
+
   # When processing aovlist objects, the `(Intercept)` is kept to preserve the
   # SS_error of the intercept   # term to calculate generalized eta squared
   # correctly. This term contains NAs.
@@ -53,7 +55,8 @@ print_anova <- function(
   if(!is.null(observed)) validate(observed, check_class = "character")
   if(!is.null(es)) {
     validate(es, check_class = "character")
-    es <- sort(es, decreasing = TRUE)
+    if(length(es) > 1L) warning("Calculating more than one effect-size measure is now deprecated.")
+    es <- es[[1L]]
   }
   validate(in_paren, check_class = "logical", check_length = 1)
 
@@ -72,35 +75,36 @@ print_anova <- function(
   if(!intercept) x <- x[x$term != "(Intercept)", ]
 
   # Rounding and filling with zeros
-  x$statistic <- printnum(x$statistic, digits = 2)
-  x$p.value <- printp(x$p.value)
-  x$df <- print_df(x$df)
-  x$df_res <- print_df(x$df_res)
-  for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = FALSE)}
-  if(mse) x$mse <- printnum(x$mse, digits = 2)
+  x$statistic <- apa_num(x$statistic, digits = 2)
+  x$p.value <- apa_p(x$p.value)
+  x$df <- apa_df(x$df)
+  x$df.residual <- apa_df(x$df.residual)
+  for(i in es) {x[[i]] <- apa_num(x[[i]], digits = 3, gt1 = FALSE)}
+  if(mse) x$mse <- apa_num(x$mse, digits = 2)
 
   # Assemble table -------------------------------------------------------------
   cols <- intersect(
-    c("term", "statistic","df", "df_res", "mse", "p.value", es)
+    c("term", es, "statistic","df", "df.residual", "mse", "p.value")
     , colnames(x)
   )
   anova_table <- data.frame(x[, cols], row.names = NULL)
-  anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
+  anova_table[["term"]] <- beautify_terms(anova_table[["term"]])
 
   correction_type <- attr(x, "correction")
 
   statistic <- attr(x, "statistic")
-  if(is.null(statistic)) statistic <- "F"
-  if(is.null(anova_table$df_res)) statistic <- "chisq"
+  if(is.null(statistic)) statistic <- "statistic"
+  stat_label <- "$F$"
+  if(is.null(anova_table$df.residual)) stat_label <- "$\\Chi^2$"
 
   names(es) <- es
   renamers <- c(
-    term = "Effect"
-    , statistic = statistic   # defaults to "F" for backwards compatibility
-    , df = if(is.null(anova_table$df_res)){ "df" } else { "df1" }
-    , df_res = "df2"
-    , mse = "MSE"
-    , p.value = "p"
+    term = "term"
+    , statistic = "statistic"
+    , df = "df"
+    , df.residual = "df.residual"
+    , mse = "mse"
+    , p.value = "p.value"
     , es
   )
 
@@ -109,46 +113,47 @@ print_anova <- function(
 
   if(!is.null(correction_type) && correction_type != "none") {
     variable_label(anova_table) <- c(
-      "Effect"  = "Effect"
-      , "F"     = "$F$"
-      , "chisq" = "$\\Chi^2$"
-      , "df"    = "$\\mathit{df}"
-      , "df1"   = paste0("$\\mathit{df}_1^{", correction_type, "}$")
-      , "df2"   = paste0("$\\mathit{df}_2^{", correction_type, "}$")
-      , "p"     = "$p$"
-      , "pes"   = "$\\hat{\\eta}^2_p$"
-      , "ges"   = "$\\hat{\\eta}^2_G$"
-      , "es"    = "$\\hat{\\eta}^2$"
-      , "MSE"   = "$\\mathit{MSE}$"
+      "term"          = "Effect"
+      , "statistic"   = stat_label
+      , "df"          = paste0("$\\mathit{df}^{\\mathrm{", correction_type, "}}$")
+      , "df.residual" = paste0("$\\mathit{df}_{\\mathrm{res}}^{\\mathrm{", correction_type, "}}$")
+      , "p.value"     = "$p$"
+      , "pes"         = "$\\hat{\\eta}^2_p$"
+      , "ges"         = "$\\hat{\\eta}^2_G$"
+      , "es"          = "$\\hat{\\eta}^2$"
+      , "mse"         = "$\\mathit{MSE}$"
     )[colnames(anova_table)]
   } else {
     variable_label(anova_table) <- c(
-      "Effect"  = "Effect"
-      , "F"     = "$F$"
-      , "chisq" = "$\\Chi^2$"
-      , "df"    = "$\\mathit{df}"
-      , "df1"   = "$\\mathit{df}_1$"
-      , "df2"   = "$\\mathit{df}_2$"
-      , "p"     = "$p$"
-      , "pes"   = "$\\hat{\\eta}^2_p$"
-      , "ges"   = "$\\hat{\\eta}^2_G$"
-      , "es"    = "$\\hat{\\eta}^2$"
-      , "MSE"   = "$\\mathit{MSE}$"
+      "term"          = "Effect"
+      , "statistic"   = stat_label
+      , "df"          = "$\\mathit{df}$"
+      , "df.residual" = "$\\mathit{df}_{\\mathrm{res}}$"
+      , "p.value"     = "$p$"
+      , "pes"         = "$\\hat{\\eta}^2_p$"
+      , "ges"         = "$\\hat{\\eta}^2_G$"
+      , "es"          = "$\\hat{\\eta}^2$"
+      , "mse"         = "$\\mathit{MSE}$"
     )[colnames(anova_table)]
   }
 
+  # fix: rename effect-size column and
+  if(!is.null(es)) {
+    colnames(anova_table)[colnames(anova_table) == es] <- "estimate"
+  }
 
   # Assemble term lists --------------------------------------------------------
 
   # Concatenate character strings and return as named list
-  apa_res <- apa_print_container()
+  apa_res <- init_apa_results()
 
   apa_res$statistic <- paste0(
-    c("F" = "$F", "chisq" = "$\\Chi^2")[statistic]
+    "$"
+    , strip_math_tags(stat_label)
     , if(!is.null(x$df)) { "(" } else { NULL }
     , x$df
-    , if(!is.null(x$df_res)) { ", " } else { NULL }
-    , x$df_res
+    , if(!is.null(x$df.residual)) { ", " } else { NULL }
+    , x$df.residual
     , if(!is.null(x$df)) { ")" } else { NULL }
     , " = "
     , x$statistic
@@ -183,7 +188,7 @@ print_anova <- function(
     names(apa_res$full_result) <- names(apa_res$estimate)
     apa_res[] <- lapply(apa_res, as.list) # [] for preserving class
   }
-  apa_res$table <- sort_terms(as.data.frame(anova_table), "Effect")
+  apa_res$table <- sort_terms(as.data.frame(anova_table), "term")
   class(apa_res$table) <- c("apa_results_table", "data.frame")
   apa_res
 }

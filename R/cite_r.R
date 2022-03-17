@@ -1,33 +1,43 @@
-#' Cite R and R-packages
+#' Cite R and R Packages
 #'
-#' Creates a character string to cite R and R-packages.
+#' Creates character strings to cite R and R packages.
 #'
-#' @param file Character. The path and name of the \code{.bib}-file holding the references. If \code{NULL} only R
-#'    is cited.
-#' @param prefix Character. The prefix used for all R-package reference handles.
-#' @param footnote Logical. Indicates if packages should be cited in a footnote. Ignored if no package information
-#'    is available.
-#' @param pkgs Character. Vector of package names to cite or withhold depending on \code{withhold}.
-#' @param withhold Logical. If \code{TRUE}, \code{pkgs} constitutes a list of packages \emph{not} to cite (a blacklist).
-#'    If \code{FALSE}, \code{pkgs} constitutes a list of packages to cite (a whitelist).
+#' @param file Character. Path and name of the `.bib`-file holding the
+#'   references. If `NULL`, only R is cited.
+#' @param prefix Character. Prefix used for all R-package reference handles.
+#' @param footnote Logical. Indicates if packages should be cited in a
+#'   footnote. Ignored if no package information is available.
+#' @param pkgs Character. Vector of package names to cite or omit depending
+#'   on `omit`.
+#' @param omit Logical. If `TRUE`, `pkgs` constitutes a list of packages
+#'   *not* to cite (a blacklist). If `FALSE`, `pkgs` constitutes a list of
+#'   packages to cite (a whitelist).
+#' @param ... Additional arguments, which are currently ignored.
 #' @details
-#'    If \code{footnote = FALSE} a character string citing R and R-packages including version
-#'    numbers is returned. Otherwise a named list with the elements \code{r} and \code{pkgs} is returned. The
-#'    former element holds a character string citing R and a reference to a footnote; the latter element contains
-#'    a character string for the footnote citing R-packages. For correct rendering, the footnote string needs
-#'    to be a separate paragraph in the Markdown document.
-#' @return If \code{footnote = FALSE} a character string is returned, otherwise a named list with the elements \code{r}
-#'    and \code{pkgs}.
+#'   If `footnote = FALSE`, a character string citing R and R packages
+#'   including version numbers is returned. Otherwise a named list with the
+#'   elements `r` and `pkgs` is returned. The former element holds a character
+#'   string citing R and a reference to a footnote; the latter element contains
+#'   a character string that creates the footnote. For correct rendering, the
+#'   footnote string needs to be a separate paragraph in the R Markdown
+#'   document.
+#' @return If `footnote = FALSE` a character string is returned, otherwise a
+#'   named list with the elements `r` and `pkgs`.
 #' @seealso \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
 #' @examples cite_r()
 #' @export
 
-cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, withhold = TRUE) {
+cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, omit = TRUE, ...) {
   if(!is.null(file)) validate(file, check_class = "character", check_length = 1)
   validate(prefix, check_class = "character", check_length = 1)
   validate(footnote, check_class = "logical", check_length = 1)
   if(!is.null(pkgs)) validate(pkgs, check_class = "character")
-  validate(withhold, check_class = "logical", check_length = 1)
+
+  ellipsis <- list(...)
+  if(!is.null(ellipsis$withhold)) {
+    omit <- ellipsis$withhold
+  }
+  validate(omit, check_class = "logical", check_length = 1)
 
   r_version <- as.character(utils::packageVersion("base"))
   cite_just_r <- paste0("R [Version ", r_version, "; @", prefix, "base]")
@@ -67,13 +77,13 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   # Remove packages according to pkgs
   bib$base <- NULL
   if(!is.null(pkgs)) {
-    if(withhold) {
+    if(omit) {
       pkg_citations <- bib[!(gsub("\\_\\D", "", names(bib)) %in% pkgs)]
     } else {
       pkg_citations <- bib[gsub("\\_\\D", "", names(bib)) %in% pkgs]
     }
   } else {
-    if(withhold) {
+    if(omit) {
       pkg_citations <- bib
     } else {
       return(cite_just_r)
@@ -90,7 +100,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
   pkg_names <- names(pkg_citations)
   pkg_names <- unique(gsub("\\_\\D", "", pkg_names))
   pkg_names <- gsub("survival-book", "survival", pkg_names)
-  pkg_versions <- sapply(pkg_names, function(x) if(package_available(x)) paste0("Version ", as.character(utils::packageVersion(x)), "; ") else "")
+  pkg_versions <- sapply(pkg_names, function(x) if(package_available(x)) paste0("Version ", as.character(utils::packageVersion(x)), "\\; ") else "")
   pkg_keys <- sapply(pkg_names, function(x){
     keys <- pkg_citations[grepl(x, names(pkg_citations))]
     paste0("@", keys, collapse = "; ")
@@ -108,7 +118,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, wi
     pkg_info <- pkg_texts
   }
 
-  complete_r_citaiton <- paste0("R [Version ", r_version, "; @", r_citation, "]")
+  complete_r_citaiton <- paste0("R [Version ", r_version, "\\; @", r_citation, "]")
 
   if(footnote) {
     res <- list()

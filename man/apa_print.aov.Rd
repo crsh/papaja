@@ -10,93 +10,172 @@
 \alias{apa_print.afex_aov}
 \alias{apa_print.anova}
 \alias{apa_print.manova}
-\title{Format statistics from ANOVA (APA 6th edition)}
+\alias{apa_print.summary.manova}
+\title{Typeset Statistical Results from ANOVA}
 \usage{
-\method{apa_print}{aov}(x, ...)
+\method{apa_print}{aov}(
+  x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
+  intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
+  ...
+)
 
-\method{apa_print}{summary.aov}(x, ...)
+\method{apa_print}{summary.aov}(
+  x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
+  intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
+  ...
+)
 
-\method{apa_print}{aovlist}(x, ...)
+\method{apa_print}{aovlist}(
+  x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
+  intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
+  ...
+)
 
-\method{apa_print}{summary.aovlist}(x, ...)
+\method{apa_print}{summary.aovlist}(
+  x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
+  intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
+  ...
+)
 
 \method{apa_print}{Anova.mlm}(
   x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
   correction = getOption("papaja.sphericity_correction"),
   intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
   ...
 )
 
 \method{apa_print}{summary.Anova.mlm}(
   x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
   correction = getOption("papaja.sphericity_correction"),
   intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
   ...
 )
 
 \method{apa_print}{afex_aov}(
   x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
   correction = getOption("papaja.sphericity_correction"),
   intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
   ...
 )
 
-\method{apa_print}{anova}(x, ...)
+\method{apa_print}{anova}(
+  x,
+  estimate = getOption("papaja.estimate_anova", "ges"),
+  observed = NULL,
+  intercept = FALSE,
+  mse = TRUE,
+  in_paren = FALSE,
+  ...
+)
 
-\method{apa_print}{manova}(x, test = "Pillai", ...)
+\method{apa_print}{manova}(x, test = "Pillai", in_paren = FALSE, ...)
+
+\method{apa_print}{summary.manova}(x, in_paren = FALSE, ...)
 }
 \arguments{
-\item{x}{Output object. See details.}
+\item{x}{An object containing the results from an analysis of variance ANOVA}
 
-\item{...}{
-  Arguments passed on to \code{\link[=print_anova]{print_anova}}
-  \describe{
-    \item{\code{es}}{Character. The effect-size measure to be calculated; can be either \code{ges} for generalized eta-squared, \code{pes} for partial eta-squared or \code{es} for eta-squared.
-Note that eta-squared is calculated correctly if and only if the design is balanced.}
-    \item{\code{mse}}{Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.}
-    \item{\code{observed}}{Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.}
-    \item{\code{in_paren}}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
-  }}
+\item{estimate}{Character, function, or data frame. Determines which
+estimate of effect size is to be used. See details.}
 
-\item{correction}{Character. In the case of repeated-measures ANOVA, the type of sphericity correction to be used (\code{GG} for Greenhouse-Geisser or \code{HF} for Huyn-Feldt methods or \code{none}). Default is \code{GG}.}
+\item{observed}{Character. The names of the factors that are observed,
+i.e., not manipulated. Necessary only for calculating \emph{generalized} eta
+squared; otherwise ignored. If \code{x} is of class \code{afex_aov}, \code{observed} is
+automatically deduced from \code{x}.}
 
-\item{intercept}{Logical. Indicates if intercept test should be included in output.}
+\item{intercept}{Logical. Indicates if the intercept term should be included
+in output.}
 
-\item{test}{For MANOVA, the multivariate test statistic to be reported, see \code{\link{summary.manova}}.}
-}
-\value{
-\code{apa_print.aov} and related functions return a named list containing the following components according to the input:
+\item{mse}{Logical. Indicates if mean squared errors should be included in
+output. The default is \code{TRUE}, but this can be changed either by supplying
+a different value in the function call or by changing the global default
+via \code{options(papaja.mse = FALSE)}.}
 
-   \describe{
-     \item{\code{statistic}}{A named list of character strings giving the test statistic, parameters, and \emph{p}
-         value for each factor.}
-     \item{\code{estimate}}{A named list of character strings giving the effect size estimates for each factor.} % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full_result}}{A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.}
-     \item{\code{table}}{A data.frame containing the complete ANOVA table, which can be passed to \code{\link{apa_table}}.}
-   }
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
+
+\item{...}{Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
+
+\item{correction}{Character. For repeated-measures ANOVA, the type of
+sphericity correction to be used. Possible values are \code{"GG"} for the
+Greenhouse-Geisser method (the default), \code{"HF"} for the Huyn-Feldt method,
+or \code{"none"} for no correction.}
+
+\item{test}{Character. For MANOVA, the multivariate test statistic to be
+reported, see \code{\link[stats]{summary.manova}}.}
 }
 \description{
-These methods take objects from various R functions that calculate ANOVA to create formatted character
-strings to report the results in accordance with APA manuscript guidelines. For \code{anova}-objects from model comparisons see \code{\link{apa_print.list}}.
+These methods take objects from various R functions that calculate ANOVA to
+create formatted character strings to report the results in accordance with
+APA manuscript guidelines. For \code{anova}-objects from model comparisons see
+\code{\link{apa_print.list}}.
 }
 \details{
-The factor names are sanitized to facilitate their use as list names (see Value section). Parentheses
-   are omitted and other non-word characters are replaced by \code{_}.
+The factor names are sanitized to facilitate their use as list names (see
+Value section). Parentheses are omitted and other non-word characters are
+replaced by \verb{_}.
 
-   If \code{in_paren} is \code{TRUE} parentheses in the formatted string, such as those surrounding degrees
-   of freedom, are replaced with brackets.
+Argument \code{estimate} determines which measure of effect size is to be used:
+It is currently possible to provide one of three characters to specify the
+to-be-calculated effect size: \code{"ges"} for generalized \eqn{eta^2},
+\code{"pes"} for partial \eqn{eta^2}, and \code{"es"} for \eqn{eta^2}.
+Note that \eqn{eta^2} is calculated correctly if and only if the design is
+balanced.
+
+It is also possible to provide a \code{data.frame} with columns \code{estimate},
+\code{conf.low}, and \code{conf.high}, which allows for including custom effect-
+size measures.
+
+A third option is to provide a function from the \pkg{effectsize} package
+that will be used to calculate effect-size measures from \code{x}. If
+\pkg{effectsize} is installed (and \pkg{papaja} is loaded), this is the
+new default. This default can be changed via
+\code{options(papaja.estimate_anova = ...)}.
 }
 \examples{
    ## From Venables and Ripley (2002) p. 165.
    npk_aov <- aov(yield ~ block + N * P * K, npk)
    apa_print(npk_aov)
+
+   # Use the effectsize package to calculate partial eta-squared with
+   # confidence intervals
+   apa_print(npk_aov, estimate = effectsize::omega_squared)
 }
 \references{
 Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
-   , 37 (3), 379--384. doi:\href{https://doi.org/10.3758/BF03192707}{10.3758/BF03192707}
+, 37 (3), 379--384. doi:\href{https://doi.org/10.3758/BF03192707}{10.3758/BF03192707}
 }
 \seealso{
-\code{\link{aov}}, \code{\link[car]{Anova}}, \code{\link{apa_print.list}}
+\code{\link[=aov]{aov()}}, \code{\link[car:Anova]{car::Anova()}}, \code{\link[=apa_print.list]{apa_print.list()}}
 
 Other apa_print: 
 \code{\link{apa_print.BFBayesFactor}()},
@@ -105,6 +184,19 @@ Other apa_print:
 \code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
+\code{\link{apa_print.lme}()},
+\code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

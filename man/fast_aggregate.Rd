@@ -11,14 +11,14 @@ fast_aggregate(data, factors, dv, fun, na.rm = TRUE)
 
 \item{factors}{Character. A vector of factor names to aggregate data by.}
 
-\item{dv}{Character. The dependent variable to aggregate. All variables in \code{data} that contain this substring
+\item{dv}{Character. The dependent variable to aggregate. All variables in \code{data} that contain this character string
 will be aggregated separately.}
 
 \item{fun}{Closure. The function used for aggregation.}
 }
 \description{
 This is a convenience wrapper for aggregating your data using \pkg{dplyr} functions that tend to be much faster than the
-usual \code{aggregate} command. It is also easy to call from within a function. \emph{This function is not exported.}
+usual \code{\link[stats:aggregate]{stats::aggregate()}} command. It is also easy to call from within a function. \emph{This function is not exported.}
 }
 \examples{
 NULL

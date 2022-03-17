@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{add_effect_sizes}
 \alias{add_effect_sizes}
-\title{Effect sizes for Analysis of Variance}
+\title{Effect Sizes for Analysis of Variance}
 \usage{
 add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
 }
@@ -10,7 +10,7 @@ add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
 \item{x}{An object of class \code{apa_variance_table}.}
 
 \item{es}{Character. A vector naming all to-be-computed effect-size measures.
-Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+Currently, partial eta-squared (\code{"pes"}), generalized eta-squared
 (\code{"ges"}), and eta-squared (\code{"es"}) are supported.}
 
 \item{observed}{Character. A vector naming all factors that are observed
@@ -23,4 +23,6 @@ deviation of the grand mean from 0) be included in the calculation of eta-square
 }
 \description{
 Calculates effect-size measures for Analysis of Variance output objects.
+\emph{This function is not exported and will soon be deprecated.}
 }
+\keyword{internal}

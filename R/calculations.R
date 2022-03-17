@@ -5,16 +5,24 @@
 # x: apa_model_comp object
 # models: list of lm-objects
 
-delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
+#' @keywords internal
+
+delta_r2_ci <- function(x, models, conf.int = 0.90, R = 100, progress_bar = FALSE, ...) {
   if(!package_available("boot")) stop("Please install the package 'boot' to calculate bootstrap confidence intervals.")
 
   validate(x, check_class = "data.frame")
   validate(length(models), "length(models)", check_range = c(2, Inf))
-  validate(ci, check_range = c(0, 1))
+  validate(conf.int, check_range = c(0, 1))
 
   model_summaries <- lapply(models, summary)
   r2s <- sapply(model_summaries, function(x) x$r.squared)
   delta_r2s <- diff(r2s)
+
+  if(progress_bar) {
+    cat("Calculating confidence intervals for differences in R-squared based on", R, "bootstrap samples.\n")
+    pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3, width = min(getOption("width") - 10L, 100L))
+    count <- -length(delta_r2s) # seems to be evaluated once more than R
+  }
 
   percent_cis <- lapply(seq_along(delta_r2s), function(y) {
 
@@ -29,6 +37,12 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
         calls[[2]]$data <- bdata
         mod2 <- eval(calls[[2]])
 
+        if(progress_bar) {
+          count <<- count + 1L
+          black_hole <- utils::setTxtProgressBar(pb, value = count)
+          # print(count)
+          # print(i)
+        }
         summary(mod2)$r.squared - summary(mod1)$r.squared
       }
       , calls = list(model_summaries[[y]]$call, model_summaries[[y + 1]]$call)
@@ -36,29 +50,31 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
       , ...
     )
 
-    boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = ci, type = "perc")
+
+    boot_r2_ci <- boot::boot.ci(delta_r2_samples, conf = conf.int, type = "perc")
 
     # If difference is not significant set lower bound (closest to zero) == 0 (p. 210, Algina, Keselman & Penfield, 2007)
-    if(x[y, "p.value"] >= (1 - ci) / 2) {
+    if(x[y, "p.value"] >= (1 - conf.int) / 2) {
       lower_bound <- which(boot_r2_ci$percent[1, 4:5] == min(abs(boot_r2_ci$percent[1, 4:5])))
       boot_r2_ci$percent[1, 3 + lower_bound] <- 0
     }
 
     boot_r2_ci
   })
+  if(progress_bar) close(pb) # generic is from base R
 
   percent_cis <- t(cbind(sapply(percent_cis, function(x) x$percent))) # Reformat to one CI per line
   percent_cis <- percent_cis[, 4:5, drop = FALSE] # Preserv matrix structure
-  ci_levels <- c((1 - ci) / 2, (1 - ci) / 2 + ci) * 100
+  ci_levels <- c((1 - conf.int) / 2, (1 - conf.int) / 2 + conf.int) * 100
   colnames(percent_cis) <- paste(ci_levels, "%")
-  attr(percent_cis, "ci.level") <- ci
+  attr(percent_cis, "conf.level") <- conf.int
 
   percent_cis
 }
 
 
 
-#' Within-subjects confidence intervals
+#' Within-Subjects Confidence Intervals
 #'
 #' Calculate Cousineau-Morey within-subjects confidence intervals.
 #'
@@ -67,21 +83,21 @@ delta_r2_ci <- function(x, models, ci = 0.90, R = 100, ...) {
 #' @param factors Character. A vector of variable names that is used to stratify the data.
 #' @param dv Character. The name of the dependent variable.
 #' @param level Numeric. Defines the width of the interval. Defaults to 0.95
-#'    for 95\% confidence intervals.
-#' @param method Character. The method that is used to calculate. Actually,
+#'    for 95% confidence intervals.
+#' @param method Character. The method that is used to calculate CIs. Currently,
 #'          "Morey" and "Cousineau" are supported. Defaults to "Morey".
 #' @references
 #'    Morey, R. D. (2008). Confidence Intervals from Normalized Data: A correction to Cousineau (2005).
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, \emph{4}(2), 61--64.
+#'    *Tutorials in Quantitative Methods for Psychology*, *4*(2), 61--64.
 #'
 #'    Cousineau, D. (2005). Confidence intervals in within-subjects designs:
 #'    A simpler solution to Loftus and Masson's method.
-#'    \emph{Tutorials in Quantitative Methods for Psychology}, \emph{1}(1), 42--45.
+#'    *Tutorials in Quantitative Methods for Psychology*, *1*(1), 42--45.
 #'
 #' @return
-#'   A \code{data.frame} with addtional class \code{papaja_wsci}.
-#'   The \code{summary} method for this class returns a \code{data.frame} with
-#'   means and lower and upper limit for each cell of the design.
+#'   A `data.frame` with additional class `papaja_wsci`.
+#'   The `summary()` method for this class returns a `data.frame` with
+#'   means along lower and upper limit for each cell of the design.
 #'
 #'
 #'
@@ -202,7 +218,13 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     if(package_available("dplyr")) {
       ee <- fast_aggregate(data = dplyr::bind_rows(Morey_CI), factors = factors, dv = dv, fun = mean)
     } else {
-      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = do.call(rbind, Morey_CI), FUN = mean)
+      tmpdat <- do.call("rbind", Morey_CI)
+
+      ee <- stats::aggregate(
+        x = tmpdat[, dv, drop = FALSE]
+        , by = tmpdat[, factors, drop = FALSE]
+        , FUN = mean
+      )
     }
 
   } else {
@@ -234,9 +256,9 @@ within_subjects_conf_int <- wsci
 #' Summarize Within-Subjects Confidence Intervals
 #'
 #' Calculate upper and lower limits of within-subjects confidence intervals calculated
-#' with \code{\link{wsci}} and return them along the respective means.
+#' with [wsci()] and return them along their respective means.
 #'
-#' @param object An object of class \code{papaja_wsci}, generated with function \code{\link{wsci}}.
+#' @param object An object of class `papaja_wsci`, generated with function [wsci()].
 #' @param ... Further arguments that may be passed, currently ignored.
 #' @export
 
@@ -250,17 +272,18 @@ summary.papaja_wsci <- function(object, ...) {
   y$lower_limit <- y$mean - y$ci_diff
   y$upper_limit <- y$mean + y$ci_diff
   y$ci_diff <- NULL
+  variable_labels(y) <- Filter(Negate(is.null), variable_labels(means))
   y
 }
 
-#' Between-subjects confidence intervals
+#' Between-Subjects Confidence Intervals
 #'
 #' Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 #'
 #' @param x Numeric. A vector of observations from your dependent variable.
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
-#'    for 95\% confidence intervals.
-#' @param na.rm Logical. Specifies if missing values are removed.
+#'    for 95% confidence intervals.
+#' @param na.rm Logical. Specifies if missing values should be removed.
 #' @export
 
 conf_int <- function(x, level = 0.95, na.rm = TRUE){
@@ -290,9 +313,9 @@ conf.int <- conf_int
 ci <- conf_int
 
 
-#' Standard errors
+#' Standard Error of the Mean
 #'
-#' Calculates the standard error of the mean
+#' Calculates the standard error of the mean.
 #'
 #' @param x Numeric. A vector of observations.
 #' @param na.rm Logical. Specifies if missing values should be removed.
@@ -300,17 +323,16 @@ ci <- conf_int
 
 se <- function(x, na.rm = TRUE) {
   n <- sum(!is.na(x))
-  ee <- stats::sd(x, na.rm = na.rm) / sqrt(n)
-  return(ee)
+  stats::sd(x, na.rm = na.rm) / sqrt(n)
 }
 
 
-#' Highest density interval
+#' Highest-Density Intervals
 #'
-#' Calculates the highest density interval of a vector of values
+#' Calculates the highest-density interval of a vector of values.
 #'
 #' @param x Numeric. A vector of observations.
-#' @param level Numeric. Defines the width of the interval. Defaults to 95\% highest density intervals.
+#' @param level Numeric. Defines the width of the interval. Defaults to 95% highest-density intervals.
 
 hd_int <- function(x, level = 0.95) {
   validate(x, check_class = "numeric")
@@ -328,24 +350,27 @@ hd_int <- function(x, level = 0.95) {
 }
 
 
-#' Effect sizes for Analysis of Variance
+#' Effect Sizes for Analysis of Variance
 #'
 #' Calculates effect-size measures for Analysis of Variance output objects.
+#' *This function is not exported and will soon be deprecated.*
 #'
 #' @param x An object of class \code{apa_variance_table}.
 #' @param es Character. A vector naming all to-be-computed effect-size measures.
-#'   Currently, partial eta-quared (\code{"pes"}), generalized eta-squared
+#'   Currently, partial eta-squared (\code{"pes"}), generalized eta-squared
 #'   (\code{"ges"}), and eta-squared (\code{"es"}) are supported.
 #' @param observed Character. A vector naming all factors that are observed
 #'   (i.e., \emph{not} manipulated).
 #' @param mse Logical. Should means-squared errors be computed?
 #' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
 #'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
+#'
+#' @keywords internal
 
 add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
   # ----------------------------------------------------------------------------
   # We don't validate here because this function is intended to be used
-  # internally, validation, should have happened earlier in the processing chain.
+  # internally, validation should have happened earlier in the processing chain.
 
   # validate(x, check_class = "apa_variance_table", check_NA = FALSE)
   # validate(es, check_class = "character", check_NA = FALSE)
@@ -366,10 +391,10 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       if(!is.null(observed)) {
         obs <- rep(FALSE, nrow(x))
         for(i in observed) {
-          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x)))) {
+          if (!any(grepl(paste0("\\<", i, "\\>", collapse = "|"), x$term))) {
             stop(paste0("Observed variable not in data: ", i, collapse = " "))
           }
-          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), rownames(x))
+          obs <- obs | grepl(paste0("\\<", i, "\\>", collapse = "|"), x$term)
         }
         obs_SSn1 <- sum(x$sumsq*obs, na.rm = TRUE)
         obs_SSn2 <- x$sumsq*obs
@@ -377,7 +402,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
         obs_SSn1 <- 0
         obs_SSn2 <- 0
       }
-      x$ges <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+      x$estimate <- x$sumsq / (x$sumsq + sum(unique(x$sumsq_err)) + obs_SSn1 - obs_SSn2)
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_G$"
     }
 
     # --------------------------------------------------------------------------
@@ -394,7 +420,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       if(!intercept){
         index <- x$term!="(Intercept)"
       }
-      x$es <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      x$estimate <- x$sumsq / sum(x$sumsq[index], unique(x$sumsq_err))
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2$"
       message("Note that eta-squared is calculated correctly if and only if the design is balanced.")
     }
 
@@ -403,14 +430,21 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
     #
     # This one should be unproblematic and work in all cases.
     if("pes" %in% es) {
-      x$pes <- x$sumsq / (x$sumsq + x$sumsq_err)
+      x$estimate <- x$sumsq / (x$sumsq + x$sumsq_err)
+      tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_p$"
     }
   }
 
   # ----------------------------------------------------------------------------
   # Only calculate MSE if required (otherwise, Levene tests give an error).
   if(mse) {
-    x$mse <- x$sumsq_err / x$df_res
+    df_col <- intersect("df.residual", colnames(x))
+    if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
+      x$mse <- x$sumsq_err / x[[df_col]]
+      tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
+    } else {
+      warning("Mean-squared errors requested, but necessary information not available.")
+    }
   }
 
   x

@@ -12,17 +12,20 @@ fetch_web_refs(x, bib_name)
 \item{bib_name}{Character. The path and name of the file to be created.}
 }
 \description{
-Downloads and saves a \code{.bib}-reference file form the web, so it can be used to cite references
-in a Markdown-document using pandoc or LaTeX. \emph{This function has been defunct. Please use
-\code{\link[downloader]{download}} instead.}
+Downloads and saves a \code{.bib}-reference file form the web, so it can be
+used to cite references in a Markdown-document using pandoc or LaTeX.
+\emph{This function has been defunct. Please use \code{download} from the
+\pkg{downloader} instead.}
 }
 \details{
-If the function is called in an RMarkdown-document the file name specified as \code{bib_name}
-   can be used in the YAML header as \code{bibliography}
+If the function is called in an RMarkdown-document the file name
+specified as \code{bib_name} can be used in the YAML header as
+\code{bibliography}.
 }
 \examples{
 NULL
 }
 \seealso{
-\code{\link{cite_r}}, \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
+\code{\link{cite_r}}, \code{\link{r_refs}},
+\code{\link[knitr]{write_bib}}
 }
