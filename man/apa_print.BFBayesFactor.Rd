@@ -83,7 +83,7 @@ in favor of an order constraint relative to the unconstrained model
 \item{bf_1r}{Numeric. Same as \code{bf_r1} (see details).}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum.numeric]{printnum.numeric}}
+  Arguments passed on to \code{\link[=apa_num.numeric]{apa_num.numeric}}
   \describe{
     \item{\code{gt1}}{Logical. Indicates if the statistic can, in principle, have an
 absolute value greater than 1. If \code{FALSE}, leading zeros are

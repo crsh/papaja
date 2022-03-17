@@ -123,7 +123,7 @@ via \code{options(papaja.mse = FALSE)}.}
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
+\item{...}{Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 
 \item{correction}{Character. For repeated-measures ANOVA, the type of
 sphericity correction to be used. Possible values are \code{"GG"} for the

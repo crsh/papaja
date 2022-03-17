@@ -5,7 +5,7 @@
 #' intervals in a table or in text.
 #'
 #' @param x An object of class \code{papaja_wsci}.
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #'
 #' @evalRd apa_results_return_value()
 #'
@@ -23,10 +23,10 @@ apa_print.papaja_wsci <- function(x, ...) {
   res$estimate <- as.list(
     paste0(
       "$M = "
-      , printnum(summary_wsci$mean, ...)
+      , apa_num(summary_wsci$mean, ...)
       , "$, "
       ,
-        print_confint(
+        apa_confint(
           x = summary_wsci[, c("lower_limit", "upper_limit")]
           , conf_level = attr(x, "Confidence level")
           , ...
@@ -51,9 +51,9 @@ apa_print.papaja_wsci <- function(x, ...) {
     res$table[[i]] <- as.character(res$table[[i]], keep_label = TRUE)
   }
 
-  res$table$estimate <- printnum(summary_wsci$mean, ...)
+  res$table$estimate <- apa_num(summary_wsci$mean, ...)
   res$table$conf.int <- unlist(
-    print_interval(
+    apa_interval(
       summary_wsci[, c("lower_limit", "upper_limit"), drop = FALSE]
       , interval_type = NULL # suppresses leading NA% CI
       , ...

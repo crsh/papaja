@@ -20,7 +20,7 @@
 #' @param observed Logical. Indicates whether predictor variables were
 #'   observed. See details.
 #' @inheritParams glue_apa_results
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #' @details
 #'   The coefficient names are sanitized to facilitate their use as list names.
 #'   Parentheses are omitted and other non-word characters are replaced by `_`
@@ -149,8 +149,8 @@ apa_print.glm <- function(
 
   # Model fit
   glance_x <- broom::glance(x)
-  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", printnum(glance_x$AIC), "$")
-  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", printnum(glance_x$BIC), "$")
+  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", apa_num(glance_x$AIC), "$")
+  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", apa_num(glance_x$BIC), "$")
 
   apa_res
 }
@@ -226,10 +226,10 @@ apa_print.lm <- function(
   summary_x <- summary(x)
   glance_x <- broom::glance(x)
 
-  p <- printp(glance_x$p.value)
+  p <- apa_p(glance_x$p.value)
   p <- add_equals(p)
 
-  apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", printnum(glance_x$statistic), "$, $p ", p, "$") # glance_x$df
+  apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", apa_num(glance_x$statistic), "$, $p ", p, "$") # glance_x$df
   if(in_paren) apa_res$statistic$modelfit$r2 <- in_paren(apa_res$statistic$modelfit$r2)
 
   if(package_available("MBESS")) {
@@ -247,15 +247,15 @@ apa_print.lm <- function(
     )
 
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
-      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", print_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level, enclose_math = TRUE))
+      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", apa_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level, enclose_math = TRUE))
     }
   } else {
-    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", printnum(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
+    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
   }
 
-  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", printnum(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
-  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", printnum(glance_x$AIC), "$")
-  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", printnum(glance_x$BIC), "$")
+  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", apa_num(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
+  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", apa_num(glance_x$AIC), "$")
+  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", apa_num(glance_x$BIC), "$")
 
   apa_res$full_result$modelfit$r2 <- paste(apa_res$estimate$modelfit$r2, apa_res$statistic$modelfit$r2, sep = ", ")
 

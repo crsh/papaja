@@ -56,7 +56,7 @@
 #'   in favor of an order constraint relative to the unconstrained model
 #'   (see details). Must be on log-scale if `log = TRUE`.
 #' @param bf_1r Numeric. Same as `bf_r1` (see details).
-#' @inheritDotParams printnum.numeric -x
+#' @inheritDotParams apa_num.numeric -x
 #'
 #' @details
 #'
@@ -312,7 +312,7 @@ apa_print.BFBayesFactor <- function(
   mcmc_error_na <- all(is.na(x_canonized$mcmc.error))
 
   # error_label <- variable_label(x_canonized$mcmc.error)
-  x_canonized$mcmc.error <- print_num(x_canonized$mcmc.error, na_string = "")
+  x_canonized$mcmc.error <- apa_num(x_canonized$mcmc.error, na_string = "")
   # variable_label(x_canonized$mcmc.error) <- error_label
 
   ellipsis$x <- x_canonized
@@ -602,7 +602,7 @@ add_alternative <- function(x, range = NULL) {
       seq_along(interval_bounds)
       , function(x) {
         if(!is_inverse[x]) {
-          print_interval(
+          apa_interval(
             as.numeric(interval_bounds[[x]])
             , use_math = FALSE
           )
@@ -612,13 +612,13 @@ add_alternative <- function(x, range = NULL) {
           on_bound <- bounds %in% range
           if(any(on_bound)) {
             bounds <- sort(c(bounds[!on_bound], range[!on_bound]))
-            print_interval(
+            apa_interval(
               bounds
               , use_math = FALSE
             )
           } else {
             bounds <- list(c(range[1], bounds[1]), c(bounds[2], range[2]))
-            inverse_interval <- sapply(bounds, print_interval, use_math = FALSE)
+            inverse_interval <- sapply(bounds, apa_interval, use_math = FALSE)
             # paste0("(", paste(inverse_interval, collapse = "~\\cup~"), ")")
             paste(inverse_interval, collapse = "~\\cup~")
           }

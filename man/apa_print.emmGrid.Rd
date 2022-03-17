@@ -32,7 +32,7 @@ is provided, it is used for both.}
 \item{conf.int}{Numeric. Confidence level for confidence intervals.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum]{printnum}}
+  Arguments passed on to \code{\link[=apa_num]{apa_num}}
   \describe{
     \item{\code{}}{}
   }}

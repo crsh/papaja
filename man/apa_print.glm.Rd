@@ -42,7 +42,7 @@ parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum]{printnum}}
+  Arguments passed on to \code{\link[=apa_num]{apa_num}}
   \describe{
     \item{\code{}}{}
   }}

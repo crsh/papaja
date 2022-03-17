@@ -134,7 +134,7 @@ beautify_terms.character <- function(
 
 beautify_terms.numeric <- function(x, standardized = FALSE, ...) {
   beautify_terms(
-    printnum(x, ...)
+    apa_num(x, ...)
     , standardized = standardized
     , retain_period = TRUE
   )

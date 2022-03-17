@@ -868,7 +868,7 @@ test_that(
     )
 
     expect_true(
-      all(my_lm_emm_output$table$Sepal.Length == printnum(ats))
+      all(my_lm_emm_output$table$Sepal.Length == apa_num(ats))
     )
 
 

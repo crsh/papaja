@@ -34,7 +34,7 @@ enclosing degrees of freedom) are replaced with brackets.}
 \item{est_name}{An optional character. The label to be used for
 fixed-effects coefficients.}
 
-\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
+\item{...}{Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 }
 \description{
 These methods take objects from various R functions that calculate

@@ -20,7 +20,7 @@
 #'   respectively) with attribute `conf.level` set, e.g., when calculating
 #'   bootstrapped confidence intervals.
 #' @inheritParams glue_apa_results
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #' @details
 #'   The function should work on a wide range of `htest` objects. Due to the
 #'   large number of functions that produce these objects and their
@@ -149,7 +149,7 @@ apa_print.htest <- function(
     # } else {
     #   n <- paste0(", n = ", n)
     } else {
-      attr(x$statistic, "n") <- printnum(as.integer(n))
+      attr(x$statistic, "n") <- apa_num(as.integer(n))
     }
   } else {
     n <- NULL

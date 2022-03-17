@@ -46,16 +46,16 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
   regression_table$conf.int <- apply(
     tidy_x[, utils::tail(names(tidy_x), 2)]
     , 1
-    , function(y) do.call(function(...) print_interval(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
+    , function(y) do.call(function(...) apa_interval(x = y[utils::tail(names(y), 2)], ...), ellipsis) # Don't add "x% CI" to each line
   )
-  if(!is_glm) regression_table$df <- print_df(x$df.residual)
+  if(!is_glm) regression_table$df <- apa_df(x$df.residual)
   columns <- intersect(c("term", "estimate", "conf.int", "statistic", "df", "p.value"), colnames(regression_table))
   regression_table <- regression_table[, columns] # Change order of columns
   regression_table$term <- beautify_terms(regression_table$term, standardized = standardized)
 
-  regression_table$estimate <- do.call(function(...) printnum(regression_table$estimate, ...), ellipsis)
-  regression_table$statistic <- printnum(regression_table$statistic, digits = 2)
-  regression_table$p.value <- printp(regression_table$p.value)
+  regression_table$estimate <- do.call(function(...) apa_num(regression_table$estimate, ...), ellipsis)
+  regression_table$statistic <- apa_num(regression_table$statistic, digits = 2)
+  regression_table$p.value <- apa_p(regression_table$p.value)
 
   colnames(regression_table) <- c("term", "estimate", "conf.int", "statistic", if(!is_glm) "df" else NULL, "p.value")
 

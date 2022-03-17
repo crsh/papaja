@@ -14,7 +14,7 @@
 
 \item{test}{Function. Computes p-values (adjusted for multiple comparisons).}
 
-\item{...}{Further arguments to pass to \code{\link{printnum}} to format the estimate.}
+\item{...}{Further arguments to pass to \code{\link{apa_num}} to format the estimate.}
 
 \item{conf.int}{Numeric. If \code{NULL} (default) the function tries to obtain confidence intervals from \code{x}.
 Other confidence intervals can be supplied as a \code{vector} of length 2 (lower and upper boundary, respectively)

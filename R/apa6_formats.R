@@ -308,7 +308,7 @@ inline_numbers <- function (x) {
     printed_number <- ifelse(
       x == round(x)
       , as.character(x)
-      , printnum(x)
+      , apa_num(x)
     )
     n <- length(printed_number)
     if(n == 1) {
@@ -319,7 +319,7 @@ inline_numbers <- function (x) {
       paste(paste(printed_number[1:(n - 1)], collapse = ", "), printed_number[n], sep = ", and ")
     }
   } else if(is.integer(x)) {
-    x <- printnum(x, numerals = x > 10)
+    x <- apa_num(x, numerals = x > 10)
   } else if(is.character(x)) {
     x
   } else {

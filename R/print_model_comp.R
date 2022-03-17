@@ -76,7 +76,7 @@ print_model_comp <- function(
     apa_res$estimate <- sapply(
       seq_along(delta_r2s)
       , function(y) {
-        delta_r2_res <- printnum(delta_r2s[y], gt1 = FALSE, zero = FALSE)
+        delta_r2_res <- apa_num(delta_r2s[y], gt1 = FALSE, zero = FALSE)
         paste0("$\\Delta R^2 ", add_equals(delta_r2_res), "$")
       }
     )
@@ -86,20 +86,20 @@ print_model_comp <- function(
     model_summaries <- lapply(models, summary)
     r2s <- sapply(model_summaries, function(x) x$r.squared)
     delta_r2s <- diff(r2s)
-    delta_r2_res <- printnum(delta_r2s, gt1 = FALSE, zero = FALSE)
+    delta_r2_res <- apa_num(delta_r2s, gt1 = FALSE, zero = FALSE)
 
     apa_res$estimate <- paste0(
       "$\\Delta R^2 ", add_equals(delta_r2_res), "$, ", conf.int * 100, "\\% CI "
-      , apply(boot_r2_ci, 1, print_interval, gt1 = FALSE, enclose_math = TRUE)
+      , apply(boot_r2_ci, 1, apa_interval, gt1 = FALSE, enclose_math = TRUE)
     )
   }
 
   ## stat
   ### Rounding and filling with zeros
-  x$statistic <- printnum(x$statistic)
-  x$df <- print_df(x$df)
-  x$df.residual <- print_df(x$df.residual)
-  x$p.value <- printp(x$p.value, add_equals = TRUE)
+  x$statistic <- apa_num(x$statistic)
+  x$df <- apa_df(x$df)
+  x$df.residual <- apa_df(x$df.residual)
+  x$p.value <- apa_p(x$p.value, add_equals = TRUE)
 
   apa_res$statistic <- paste0("$F(", x[["df"]], ", ", x[["df.residual"]], ") = ", x[["statistic"]], "$, $p ", x[["p.value"]], "$")
   if(in_paren) apa_res$statistic <- in_paren(apa_res$statistic)
@@ -145,7 +145,7 @@ print_model_comp <- function(
   }
   model_diffs <- as.data.frame(model_diffs, stringsAsFactors = FALSE)
 
-  model_fits <- printnum(
+  model_fits <- apa_num(
     model_fits
     , margin = 2
     , gt1 = c(FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
@@ -166,7 +166,7 @@ print_model_comp <- function(
   colnames(model_fits) <- c(paste0("$R^2$ [", conf.int * 100, "\\% CI]"), "$F$", "$\\mathit{df}$", "$\\mathit{df}_{\\mathrm{res}}$", "$p$", "$\\mathrm{AIC}$", "$\\mathrm{BIC}$")
 
   ## Add differences in model fits
-  model_diffs <- printnum(
+  model_diffs <- apa_num(
     model_diffs
     , margin = 2
     , gt1 = c(FALSE, TRUE, TRUE)

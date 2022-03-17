@@ -38,7 +38,7 @@
 #'   in two-column PDF documents (e.g. when setting `classoption: jou`).
 #'   Otherwise ignored.
 #' @param format.args List. A named list of arguments to be passed to
-#'   \code{\link{printnum}} to format numeric values.
+#'   \code{\link{apa_num}} to format numeric values.
 #' @param merge_method Character. Determines how to merge tables if `x` is
 #'   a `list` of matrices or data frames with a common structure. Can be either
 #'   `indent` or `table_spanner`. See details.
@@ -62,7 +62,7 @@
 #'   5 cm. Similarly, to space columns equally use
 #'   `align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")`
 #'
-#' @seealso \code{\link[knitr]{kable}}, \code{\link{printnum}}
+#' @seealso \code{\link[knitr]{kable}}, \code{\link{apa_num}}
 #' @examples
 #'
 #' my_table <- t(apply(cars, 2, function(x) # Create data
@@ -660,21 +660,21 @@ apa_table.markdown <- function(
 
 #' Format numeric table cells
 #'
-#' Format all numeric cells of a table using \code{\link{printnum}}.
+#' Format all numeric cells of a table using \code{\link{apa_num}}.
 #' \emph{This function is not exported.}
 #'
 #' @param x data.frame or matrix.
-#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
+#' @param format.args List. A named list of arguments to be passed to \code{\link{apa_num}} to format numeric values.
 #'
 #' @keywords internal
-#' @seealso \code{\link{printnum}}
+#' @seealso \code{\link{apa_num}}
 #'
 #' @examples
 #' NULL
 
 format_cells <- function(x, format.args = NULL) {
   format.args$x <- x
-  do.call("printnum.data.frame", format.args)
+  do.call("apa_num.data.frame", format.args)
 }
 
 

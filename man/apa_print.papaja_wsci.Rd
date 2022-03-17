@@ -10,7 +10,7 @@
 \item{x}{An object of class \code{papaja_wsci}.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum]{printnum}}
+  Arguments passed on to \code{\link[=apa_num]{apa_num}}
   \describe{
     \item{\code{}}{}
   }}

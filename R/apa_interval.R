@@ -12,7 +12,7 @@
 #'   estimate, e.g. `CI`.
 #' @param enclose_math Logical. Indicates whether the interval should be
 #'   enclosed in `$` (i.e., a math environment).
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #'
 #' @details If possible the confidence level of the interval is inferred from
 #'   attributes of `x`. For a vector of length 2, the attribute `conf.level` is
@@ -27,18 +27,18 @@
 #'   of length 1.
 #'
 #' @keywords internal
-#' @seealso \code{\link{printnum}}
+#' @seealso \code{\link{apa_num}}
 #' @export
 #' @examples
 #' \dontrun{
-#' print_confint(1, 2, conf_level = 0.95)
-#' print_confint(c(1, 2), conf_level = 0.95)
-#' print_confint(matrix(c(1, 2), ncol = 2), conf_level = 0.95)
-#' print_confint(confint(lm(cars)))
-#' print_confint(confint(lm(cars)), digits = 3)
+#' apa_confint(1, 2, conf_level = 0.95)
+#' apa_confint(c(1, 2), conf_level = 0.95)
+#' apa_confint(matrix(c(1, 2), ncol = 2), conf_level = 0.95)
+#' apa_confint(confint(lm(cars)))
+#' apa_confint(confint(lm(cars)), digits = 3)
 #' }
 
-print_interval <- function(
+apa_interval <- function(
     x
     , ...
     , conf_level = NULL
@@ -51,21 +51,26 @@ print_interval <- function(
 
     if(!is.null(conf_level)) validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
 
-    UseMethod("print_interval", x)
+    UseMethod("apa_interval", x)
 }
 
-#' @method print_interval default
+#' @rdname apa_interval
 #' @export
 
-print_interval.default <- function(x, ...) {
+print_interval <- apa_interval
+
+#' @method apa_interval default
+#' @export
+
+apa_interval.default <- function(x, ...) {
     stop("No method for objects of class ", class(x))
 }
 
-#' @rdname print_interval
-#' @method print_interval numeric
+#' @rdname apa_interval
+#' @method apa_interval numeric
 #' @export
 
-print_interval.numeric <- function(
+apa_interval.numeric <- function(
     x
     , y = NULL
     , conf_level = NULL
@@ -81,7 +86,7 @@ print_interval.numeric <- function(
 
         if(length(x) > 1) {
             x <- matrix(c(x, y), ncol = 2)
-            res <- print_interval(x, conf_level = conf_level, enclose_math = enclose_math, interval_type = interval_type, ...)
+            res <- apa_interval(x, conf_level = conf_level, enclose_math = enclose_math, interval_type = interval_type, ...)
             return(res)
         } else {
             x <- c(x, y)
@@ -111,7 +116,7 @@ print_interval.numeric <- function(
         conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
     }
 
-    x <- printnum(x, ...)
+    x <- apa_num(x, ...)
 
     if(enclose_math) {
       interval <- paste0(
@@ -132,11 +137,11 @@ print_interval.numeric <- function(
     interval
 }
 
-#' @rdname print_interval
-#' @method print_interval matrix
+#' @rdname apa_interval
+#' @method apa_interval matrix
 #' @export
 
-print_interval.matrix <- function(
+apa_interval.matrix <- function(
     x
     , conf_level = NULL
     , interval_type = NULL
@@ -155,7 +160,7 @@ print_interval.matrix <- function(
 
     # if(nrow(x) == 1) {
     #     x <- as.vector(x)
-    #     res <- print_interval(x, conf_level = conf_level, use_math = use_math, interval_type = interval_type, ...)
+    #     res <- apa_interval(x, conf_level = conf_level, use_math = use_math, interval_type = interval_type, ...)
     #     retrun(res)
     # }
 
@@ -166,7 +171,7 @@ print_interval.matrix <- function(
         conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
     }
 
-    x <- printnum(x, ...)
+    x <- apa_num(x, ...)
 
     if(!is.null(rownames(x))) {
         terms <- sanitize_terms(rownames(x))
@@ -200,43 +205,53 @@ print_interval.matrix <- function(
     interval
 }
 
-#' @rdname print_interval
-#' @method print_interval data.frame
+#' @rdname apa_interval
+#' @method apa_interval data.frame
 #' @export
 
-print_interval.data.frame <- function(x, ...) {
+apa_interval.data.frame <- function(x, ...) {
     x <- as.matrix(x)
-    print_interval(x, ...)
+    apa_interval(x, ...)
 }
 
-#' @rdname print_interval
-#' @method print_interval list
+#' @rdname apa_interval
+#' @method apa_interval list
 #' @export
 
-print_interval.list <- function(x, ...) {
+apa_interval.list <- function(x, ...) {
   x <- as.data.frame(x)
-  print_interval(x, ...)
+  apa_interval(x, ...)
 }
 
 
-#' @rdname print_interval
+#' @rdname apa_interval
 #' @export
 
-print_confint <- function(
+apa_confint <- function(
   x
   , ...
   , interval_type = "CI"
 ) {
-  print_interval(x, interval_type = interval_type, ...)
+  apa_interval(x, interval_type = interval_type, ...)
 }
 
-#' @rdname print_interval
+#' @rdname apa_interval
 #' @export
 
-print_hdint <- function(
+print_confint <- apa_confint
+
+#' @rdname apa_interval
+#' @export
+
+apa_hdint <- function(
   x
   , ...
   , interval_type = "HDI"
 ) {
-  print_interval(x, interval_type = interval_type, ...)
+  apa_interval(x, interval_type = interval_type, ...)
 }
+
+#' @rdname apa_interval
+#' @export
+
+print_hdint <- apa_hdint

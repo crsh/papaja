@@ -35,12 +35,12 @@
 #' # Tidy and typeset output
 #' iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 #' tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
-#' tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
+#' tidy_iris_lm$p.value <- apa_p(tidy_iris_lm$p.value)
 #'
 #' glance_iris_lm <- broom::glance(iris_lm)
-#' glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
-#' glance_iris_lm$df <- printnum(as.integer(glance_iris_lm$df))
-#' glance_iris_lm$df.residual <- printnum(as.integer(glance_iris_lm$df.residual))
+#' glance_iris_lm$p.value <- apa_p(glance_iris_lm$p.value, add_equals = TRUE)
+#' glance_iris_lm$df <- apa_num(as.integer(glance_iris_lm$df))
+#' glance_iris_lm$df.residual <- apa_num(as.integer(glance_iris_lm$df.residual))
 #'
 #' # Create `apa_results`-list
 #' lm_results <- glue_apa_results(
@@ -181,14 +181,14 @@ apa_glue <- function(glue_str, ...) {
     ellipsis <- c(ellipsis, glue_str)
     if(is.null(ellipsis$.open)) ellipsis$.open <- "<<"
     if(is.null(ellipsis$.close)) ellipsis$.close <- ">>"
-    if(is.null(ellipsis$.transformer)) ellipsis$.transformer <- printnum_transformer
+    if(is.null(ellipsis$.transformer)) ellipsis$.transformer <- apa_num_transformer
 
     do.call(glue::glue_data, ellipsis)
 }
 
-printnum_transformer <- function(text, envir) {
+apa_num_transformer <- function(text, envir) {
   res <- eval(parse(text = text, keep.source = FALSE), envir)
-  printnum(res)
+  apa_num(res)
 }
 
 

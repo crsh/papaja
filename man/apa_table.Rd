@@ -143,7 +143,7 @@ in two-column PDF documents (e.g. when setting \code{classoption: jou}).
 Otherwise ignored.}
 
 \item{format.args}{List. A named list of arguments to be passed to
-\code{\link{printnum}} to format numeric values.}
+\code{\link{apa_num}} to format numeric values.}
 
 \item{merge_method}{Character. Determines how to merge tables if \code{x} is
 a \code{list} of matrices or data frames with a common structure. Can be either
@@ -199,5 +199,5 @@ apa_table(
 )
 }
 \seealso{
-\code{\link[knitr]{kable}}, \code{\link{printnum}}
+\code{\link[knitr]{kable}}, \code{\link{apa_num}}
 }

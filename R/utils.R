@@ -19,7 +19,7 @@
 #' @keywords internal
 #' @examples
 #' \dontrun{
-#' in_paren <- TRUE # Taken from printnum()
+#' in_paren <- TRUE # Taken from apa_num()
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
 #' }
@@ -195,7 +195,7 @@ canonize <- function(
 #'
 #' @param x An object created by \code{\link{canonize}}.
 #' @param standardized Logical. If TRUE the name of the function \code{scale} will be removed from term names.
-#' @param ... Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).
+#' @param ... Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).
 #' @keywords internal
 
 beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL, ...) {
@@ -207,24 +207,24 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL
 
   y <- x
 
-  # apply printnum ----
+  # apply apa_num ----
   for (i in colnames(y)) {
     if(i == "p.value") {
-      y[[i]] <- print_p(y[[i]])
+      y[[i]] <- apa_p(y[[i]])
     } else if(i %in% c("df", "df.residual", "multivariate.df", "multivariate.df.residual")) {
-      y[[i]] <- print_df(y[[i]])
+      y[[i]] <- apa_df(y[[i]])
     } else if(i == "conf.int") {
       tmp <- unlist(lapply(X = y[[i]], FUN = function(x, ...){
-        print_interval(x, use_math = use_math, ...)
+        apa_interval(x, use_math = use_math, ...)
       }, ...))
       variable_label(tmp) <- variable_label(y[[i]])
       y[[i]] <- tmp
     } else if (i == "estimate") {
       args$x <- y[[i]]
-      y[[i]] <- do.call("print_num", args)
+      y[[i]] <- do.call("apa_num", args)
     } else if (i == "statistic") {
       args_stat$x <- y[[i]]
-      y[[i]] <- do.call("print_num", args_stat)
+      y[[i]] <- do.call("apa_num", args_stat)
     } else if (i == "term"){
       y[[i]] <- beautify_terms(as.character(y[[i]]), standardized = standardized)
     } else if (i == "model") {
@@ -232,7 +232,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL
       variable_label(tmp) <- variable_label(y[[i]])
       y[[i]] <- tmp
     } else {
-      y[[i]] <- print_num(y[[i]])
+      y[[i]] <- apa_num(y[[i]])
     }
   }
 

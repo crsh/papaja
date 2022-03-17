@@ -14,7 +14,7 @@
 #' @param conf.int Numeric. Confidence level for confidence intervals.
 #' @inheritParams emmeans::summary.emmGrid
 #' @inheritParams glue_apa_results
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #' @details
 #'
 #' When p-values and confidence intervals are adjusted for multiple testing,
@@ -186,11 +186,11 @@ apa_print.summary_emm <- function(
   ## Typeset columns
   tidy_x[, factors] <- beautify_terms(tidy_x[, factors], ...)
 
-  tidy_x$estimate <- printnum(tidy_x$estimate, ...)
+  tidy_x$estimate <- apa_num(tidy_x$estimate, ...)
 
   if(ci_supplied) {
     tidy_x$conf.int <- unlist(
-      print_confint(
+      apa_confint(
         tidy_x[, c("conf.low", "conf.high")]
         , use_math = FALSE
       )
@@ -201,9 +201,9 @@ apa_print.summary_emm <- function(
   if(p_supplied) {
     if(all(tidy_x$null.value == 0)) tidy_x$null.value <- NULL
 
-    tidy_x$statistic <- printnum(tidy_x$statistic)
-    tidy_x$df <- print_df(tidy_x$df)
-    tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
+    tidy_x$statistic <- apa_num(tidy_x$statistic)
+    tidy_x$df <- apa_df(tidy_x$df)
+    tidy_x[[p_value]] <- apa_p(tidy_x[[p_value]])
   }
 
   if(!is.null(contrast_names)) tidy_x$contrast <- contrast_names

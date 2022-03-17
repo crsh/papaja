@@ -9,11 +9,11 @@ test_that(
 
     descriptives <- dplyr::summarize(
       descriptives
-        , Mean = printnum( mean(Recall) )
-        , Median = printnum( median(Recall) )
-        , SD = printnum( sd(Recall) )
-        , Min = printnum( min(Recall) )
-        , Max = printnum( max(Recall) )
+        , Mean = apa_num( mean(Recall) )
+        , Median = apa_num( median(Recall) )
+        , SD = apa_num( sd(Recall) )
+        , Min = apa_num( min(Recall) )
+        , Max = apa_num( max(Recall) )
       )
 
     expect_error(x <- capture.output(apa_table(descriptives, added_colnames = letters[1:5])))

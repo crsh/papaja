@@ -34,7 +34,7 @@
         - Fixed wrong estimate labels for interaction contrasts (reported by @shirdekel, #456).
     - `apa_print.BFBayesFactor()` and friends were previously experimental and have now been implemented properly. In the process the arguments `scientific`, `min` and `max`, `auto_invert`, `ratio_subscript`, `escape`, `evidential_boost`, and `hdi`,  have been deprecated and the `apa_print.BFBayesFactorList()` has been removed for now. The new methods support all **BayesFactor** analyses and interval null hypotheses. They also grant users more flexibility to specify what information to report.
     - `apa_print.lm()`: The argument `observed_predictors` is now deprecated and has been replaced by `observed` to improve consistency of argument names across methods.
-- `print_num()` and `print_p()` are now the preferred name for the function previously called `printnum()` and `print_p()`.
+- `apa_num()` and `apa_p()` are now the preferred name for the function previously called `printnum()` and `printp()`.
 - `variable_label()`, `variable_labels()`, and  `label_variables()` now reside in CRAN package [**tinylabels**](https://CRAN.r-project.org/package=tinylabels), which is automatically loaded when **papaja** is loaded.
 - `cite_r()` now properly escapes semicolons (reported by @marklhc, #442)
 
@@ -43,8 +43,8 @@
 - `apa_print.lme()`, `apa_print.merMod()`, `apa_print.mixed()`
 - `glue_apa_results()` and `add_glue_to_apa_results()`, see the new vignette on extending `apa_print()` (`vignette("extending_apa_print", package = "papaja")`)
 - `apa_table.apa_results()`
-- `print_interval()`, `print_confint()`, and `print_hdint()`
-- `print_df()`
+- `apa_interval()`, `apa_confint()`, and `apa_hdint()`
+- `apa_df()`
 - `transmute_into_df_label()` and `df_into_label()`
 ### Misc
 

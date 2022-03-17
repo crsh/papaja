@@ -126,43 +126,43 @@ Any new `apa_print()` method should output an object of this basic structure.
 `apa_results` do not contain numeric information.
 Rather the numeric information has been processed for printing in accordance with APA guidelines.
 There are several **papaja**-functions to facilitate the typesetting.
-`printnum()` is a flexible general purpose function that wraps `formatC()` and can be used to round, set decimal as well as thousands separators, or remove leading zeros.
+`apa_num()` is a flexible general purpose function that wraps `formatC()` and can be used to round, set decimal as well as thousands separators, or remove leading zeros.
 
-```{r printnum}
+```{r apa-num}
 x <- rnorm(3) * 1e4
-printnum(x)
+apa_num(x)
 
-printnum(x, digits = 3, big.mark = ".", decimal.mark = ",")
+apa_num(x, digits = 3, big.mark = ".", decimal.mark = ",")
 
-printnum(Inf)
+apa_num(Inf)
 ```
 
-`printp()` is a wrapper for `printnum()` that sets appropriate defaults to report *p* values in accordance with APA guidelines.
+`apa_p()` is a wrapper for `apa_num()` that sets appropriate defaults to report *p* values in accordance with APA guidelines.
 
-```{r printp}
-printp(c(0.0001, 0.05, 0.99999))
+```{r apa-p}
+apa_p(c(0.0001, 0.05, 0.99999))
 ```
 
-The internal function `print_df()` is geared towards typesetting degrees of freedom.
+The internal function `apa_df()` is geared towards typesetting degrees of freedom.
 
-```{r printdf}
-papaja:::print_df(c(12, 12.485))
+```{r apa-df}
+apa_df(c(12, 12.485))
 
-papaja:::print_df(12L)
+apa_df(12L)
 ```
 
-Finally, `print_interval()` can be used to typeset interval estimates.
+Finally, `apa_interval()` can be used to typeset interval estimates.
 
-```{r print-interval}
-print_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
+```{r apa-interval}
+apa_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
 ```
 
 Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence intervals and Bayesian highest-density intervals.
 
-```{r print-confint}
-print_confint(rnorm(2), conf_level = 0.95)
+```{r apa-confint}
+apa_confint(rnorm(2), conf_level = 0.95)
 
-print_hdint(rnorm(2), conf_level = 0.95)
+apa_hdint(rnorm(2), conf_level = 0.95)
 ```
 
 ## Typesetting model terms
@@ -216,7 +216,7 @@ The objects are often processed using `broom::tidy()`, and `broom::glance()` if 
 Once the results table has been assembled, numeric values have been typeset, and variable labels have been assigned `glue_apa_results()` can be used to create an `apa_results` object according to the above specifications.
 Consider the following example of an `lm`-object.
 First we `tidy()` and `glance()` the object to obtain tidy results.
-We than typeset all "special" numerical results, that is, all results that would not be typeset appropriately by applying `printnum()` with its default settings.
+We than typeset all "special" numerical results, that is, all results that would not be typeset appropriately by applying `apa_num()` with its default settings.
 Moreover, we combine the separate columns for lower and upper confidence interval bounds into one column `conf.int` which contains the complete confidence interval.
 
 ```{r tidy-results}
@@ -225,16 +225,16 @@ lm_fit <- lm(mpg ~ cyl + wt, mtcars)
 # Tidy and typeset output
 library("broom")
 tidy_lm_fit <- tidy(lm_fit, conf.int = TRUE)
-tidy_lm_fit$p.value <- printp(tidy_lm_fit$p.value)
-tidy_lm_fit$conf.int <- unlist(print_confint(tidy_lm_fit[, c("conf.low", "conf.high")]))
+tidy_lm_fit$p.value <- apa_p(tidy_lm_fit$p.value)
+tidy_lm_fit$conf.int <- unlist(apa_confint(tidy_lm_fit[, c("conf.low", "conf.high")]))
 
 str(tidy_lm_fit)
 
 glance_lm_fit <- glance(lm_fit)
-glance_lm_fit$r.squared <- printnum(glance_lm_fit$r.squared, gt1 = FALSE)
-glance_lm_fit$p.value <- printp(glance_lm_fit$p.value)
-glance_lm_fit$df <- papaja:::print_df(glance_lm_fit$df)
-glance_lm_fit$df.residual <- papaja:::print_df(glance_lm_fit$df.residual)
+glance_lm_fit$r.squared <- apa_num(glance_lm_fit$r.squared, gt1 = FALSE)
+glance_lm_fit$p.value <- apa_p(glance_lm_fit$p.value)
+glance_lm_fit$df <- apa_df(glance_lm_fit$df)
+glance_lm_fit$df.residual <- apa_df(glance_lm_fit$df.residual)
 
 str(glance_lm_fit)
 ```
@@ -242,7 +242,7 @@ str(glance_lm_fit)
 Next, we typeset the remaining numeric columns and assign informative variable labels:
 
 ```{r construct-apa-results-labels}
-tidy_lm_fit <- printnum(tidy_lm_fit)
+tidy_lm_fit <- apa_num(tidy_lm_fit)
 
 variable_labels(tidy_lm_fit) <- c(
   term = "Term"
@@ -252,7 +252,7 @@ variable_labels(tidy_lm_fit) <- c(
   , conf.int = "95% CI"
 )
 
-glance_lm_fit <- printnum(glance_lm_fit)
+glance_lm_fit <- apa_num(glance_lm_fit)
 
 variable_labels(glance_lm_fit) <- c(
   r.squared = "$R^2$"
