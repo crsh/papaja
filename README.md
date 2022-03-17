@@ -15,7 +15,7 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
 [![GitHub bug
 issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 [![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an
 [award-winning](https://improvingpsych.org/mission/awards/) R package
@@ -124,18 +124,16 @@ apa_lm$full_result$Sepal_Length
 
 **papaja** currently provides methods for the following object classes:
 
-| A-B                           | D-L               | L-S               | S-Z                       |
-|:------------------------------|:------------------|:------------------|:--------------------------|
-| afex_aov                      | default           | lsmobj            | summary.aovlist           |
-| anova                         | emmGrid           | manova            | summary.glht<sup>\*</sup> |
-| anova.lme                     | glht<sup>\*</sup> | merMod            | summary.glm               |
-| Anova.mlm                     | glm               | mixed             | summary.lm                |
-| aov                           | htest             | papaja_wsci       | summary.manova            |
-| aovlist                       | list              | summary_emm       | summary.ref.grid          |
-| BFBayesFactor<sup>\*</sup>    | lm                | summary.Anova.mlm |                           |
-| BFBayesFactorTop<sup>\*</sup> | lme               | summary.aov       |                           |
-
-\* Not fully tested, don’t trust blindly!
+| A-B              | D-L     | L-S               | S-Z              |
+|:-----------------|:--------|:------------------|:-----------------|
+| afex_aov         | default | lsmobj            | summary.aovlist  |
+| anova            | emmGrid | manova            | summary.glht     |
+| anova.lme        | glht    | merMod            | summary.glm      |
+| Anova.mlm        | glm     | mixed             | summary.lm       |
+| aov              | htest   | papaja_wsci       | summary.manova   |
+| aovlist          | list    | summary_emm       | summary.ref.grid |
+| BFBayesFactor    | lm      | summary.Anova.mlm |                  |
+| BFBayesFactorTop | lme     | summary.aov       |                  |
 
 ### Create tables
 
@@ -147,7 +145,7 @@ means (with standard errors).
 library("dplyr")
 npk |>
   group_by(N, P) |>
-  summarise(mean = mean(yield), se = se(yield), .groups = "drop") |>
+  summarise(mean = mean(yield), se = sd(yield) / sqrt(length(yield)), .groups = "drop") |>
   label_variables(N = "Nitrogen", P = "Phosphate", mean = "*M*", se = "*SE*") |>
   apa_table(caption = "Mean pea yield (with standard errors)")
 ```
@@ -177,12 +175,12 @@ lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris) |>
 
 Table 2. *Iris regression table.*
 
-| Predictor    |   *b* |      95% CI      |   *t* | *d**f* | *p*     |
-|:-------------|------:|:----------------:|------:|-------:|:--------|
-| Intercept    |  1.04 |  \[0.51, 1.58\]  |  3.85 |    146 | \< .001 |
-| Sepal Length |  0.61 |  \[0.48, 0.73\]  |  9.77 |    146 | \< .001 |
-| Petal Width  |  0.56 |  \[0.32, 0.80\]  |  4.55 |    146 | \< .001 |
-| Petal Length | -0.59 | \[-0.71, -0.46\] | -9.43 |    146 | \< .001 |
+| Predictor    |   *b* |      95% CI      |   *t* | *df* | *p*     |
+|:-------------|------:|:----------------:|------:|-----:|:--------|
+| Intercept    |  1.04 |  \[0.51, 1.58\]  |  3.85 |  146 | \< .001 |
+| Sepal Length |  0.61 |  \[0.48, 0.73\]  |  9.77 |  146 | \< .001 |
+| Petal Width  |  0.56 |  \[0.32, 0.80\]  |  4.55 |  146 | \< .001 |
+| Petal Length | -0.59 | \[-0.71, -0.46\] | -9.43 |  146 | \< .001 |
 
 ### Create figures
 
@@ -209,7 +207,7 @@ represent condition means, small dots represent individual participants’
 mean response time. Error bars represent 99% within-subjects confidence
 intervals.](README_files/figure-gfm/stroop-plot-1.png)
 
-If you prefer creating your plots with `ggplot2`, try `theme_apa()`.
+If you prefer `ggplot2`, try `theme_apa()`.
 
 ``` r
 library("ggplot2")
@@ -258,8 +256,8 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ## Getting help
 
-![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)
+[![StackOverflow
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 For a comprehensive introduction to **papaja**, check out the current
 draft of the [**papaja** manual](https://crsh.github.io/papaja_man/). If
@@ -273,16 +271,28 @@ example](https://stackoverflow.com/help/mcve).
 
 ## Citation
 
-Please cite **papaja** if you use it. You can for example [use
+Please cite **papaja** if you use it.
+
+    Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9999. Retrieved from https://github.com/crsh/papaja
+
+For convenience, you can [use
 `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages)
 or copy the reference information returned by `citation('papaja')` to
-your BibTeX file.
+your BibTeX file:
 
-    Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9997. Retrieved from https://github.com/crsh/papaja
+``` bibtex
+@Manual{,
+  title = {{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}},
+  author = {Frederik Aust and Marius Barth},
+  year = {2020},
+  note = {R package version 0.1.0.9999},
+  url = {https://github.com/crsh/papaja},
+}
+```
 
 ## papaja in the wild
 
-If you are interested to see how others are using **papaja**, you can
+If you are interested in seeing how others are using **papaja**, you can
 find a [collection of
 papers](http://frederikaust.com/papaja_man/published-manuscripts.html)
 and the corresponding R Markdown files in the manual.

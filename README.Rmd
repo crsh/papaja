@@ -5,7 +5,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an [award-winning](https://improvingpsych.org/mission/awards/) R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 **papaja** provides
@@ -94,12 +94,10 @@ colnames(print_classes) <- apply(print_classes, 2, function(x) {
   toupper(col_names)
 })
 print_classes[is.na(print_classes)] <- ""
-print_classes[grepl("glht|BayesFactor", print_classes)] <- paste0(print_classes[grepl("glht|BayesFactor", print_classes)], "<sup>*</sup>")
 
 knitr::kable(print_classes)
 ```
 
-\* Not fully tested, don't trust blindly!
 
 ### Create tables
 
@@ -110,7 +108,7 @@ For instance, you might want to report some condition means (with standard error
 library("dplyr")
 npk |>
   group_by(N, P) |>
-  summarise(mean = mean(yield), se = se(yield), .groups = "drop") |>
+  summarise(mean = mean(yield), se = sd(yield) / sqrt(length(yield)), .groups = "drop") |>
   label_variables(N = "Nitrogen", P = "Phosphate", mean = "*M*", se = "*SE*") |>
   apa_table(caption = "Mean pea yield (with standard errors)")
 ```
@@ -119,10 +117,10 @@ Table 1.
 *Mean pea yield (with standard errors)*
 
 ```{r echo = FALSE, message = FALSE}
-library(dplyr)
+library("dplyr")
 out <- npk %>%
   group_by(N, P) %>%
-  summarise(mean = mean(yield), se = se(yield), .groups = "drop")
+  summarise(mean = mean(yield), se = sd(yield) / sqrt(length(yield)), .groups = "drop")
 colnames(out) <- c("Nitrogen", "Phosphate", "*M*", "*SE*")
 knitr::kable(out, align = "c", digits = 2)
 ```
@@ -144,7 +142,13 @@ Table 2.
 ```{r echo = FALSE}
 out <- lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris) |>
   apa_print()
-colnames(out$table) <- variable_labels(out$table)
+
+out$table$p.value <- gsub(" ", "&nbsp;", out$table$p.value)
+
+col_labels <- unlist(variable_labels(out$table))
+col_labels["df"] <- "$df$"
+colnames(out$table) <- gsub("\\$", "*", col_labels)
+
 knitr::kable(out$table, align = "lrcrr")
 ```
 
@@ -188,7 +192,7 @@ apa_beeplot(
 )
 ```
 
-If you prefer creating your plots with `ggplot2`, try `theme_apa()`.
+If you prefer `ggplot2`, try `theme_apa()`.
 
 ```{r stroop-ggplot}
 library("ggplot2")
@@ -236,7 +240,7 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ## Getting help
 
-![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)
+[![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 For a comprehensive introduction to **papaja**, check out the current draft of the [**papaja** manual](https://crsh.github.io/papaja_man/).
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the **papaja** tag](https://t.co/Z3auyUrbTa).
@@ -245,15 +249,22 @@ If you believe you have found a bug or you want to request a new feature, [open 
 ## Citation
 
 Please cite **papaja** if you use it.
-You can for example [use `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file.
 
     `r attr(unclass(citation("papaja"))[[1]], "textVersion")`
 
-    `r print(citation("papaja"), style = "Bibtex")`
+For convenience, you can [use `cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file:
+
+~~~bibtex
+
+```{r echo = FALSE, results = "asis"}
+print(citation("papaja"), style = "Bibtex")
+```
+
+~~~
 
 ## papaja in the wild
 
-If you are interested to see how others are using **papaja**, you can find a [collection of papers](http://frederikaust.com/papaja_man/published-manuscripts.html) and the corresponding R Markdown files in the manual.
+If you are interested in seeing how others are using **papaja**, you can find a [collection of papers](http://frederikaust.com/papaja_man/published-manuscripts.html) and the corresponding R Markdown files in the manual.
 
 If you have published a paper that was written with **papaja**, please add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send us to me.
 
