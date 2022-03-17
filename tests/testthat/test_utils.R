@@ -27,7 +27,7 @@ test_that(
     y <- c( 2.6,  3.1,  2.5,  5.0,  3.6,  4.0,  5.2,  2.8,  3.8)
 
     cor_test <- cor.test(x, y)
-    apa_confint_res <- apa_confint(cor_test$conf.int, conf_level = 0.95, enclose_math = TRUE)
+    apa_confint_res <- apa_confint(cor_test$conf.int, conf.int = 0.95, enclose_math = TRUE)
     expect_is(apa_confint_res, "character")
     expect_equal(apa_confint_res, "95\\% CI $[-0.15, 0.90]$")
 

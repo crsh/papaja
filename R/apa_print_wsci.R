@@ -28,7 +28,7 @@ apa_print.papaja_wsci <- function(x, ...) {
       ,
         apa_confint(
           x = summary_wsci[, c("lower_limit", "upper_limit")]
-          , conf_level = attr(x, "Confidence level")
+          , conf.int = attr(x, "Confidence level")
           , ...
       )
     )

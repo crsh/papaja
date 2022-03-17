@@ -247,7 +247,7 @@ apa_print.lm <- function(
     )
 
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
-      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", apa_confint(c(r2_ci$Lower, r2_ci$Upper), conf_level = ci_conf_level, enclose_math = TRUE))
+      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", apa_confint(c(r2_ci$Lower, r2_ci$Upper), conf.int = ci_conf_level, enclose_math = TRUE))
     }
   } else {
     apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")

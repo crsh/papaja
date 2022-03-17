@@ -154,15 +154,15 @@ apa_df(12L)
 Finally, `apa_interval()` can be used to typeset interval estimates.
 
 ```{r apa-interval}
-apa_interval(rnorm(2), conf_level = 0.95, interval_type = "CI")
+apa_interval(rnorm(2), conf.int = 0.95, interval_type = "CI")
 ```
 
 Again, there are two wrappers that set appropriate defaults to typeset frequentist confidence intervals and Bayesian highest-density intervals.
 
 ```{r apa-confint}
-apa_confint(rnorm(2), conf_level = 0.95)
+apa_confint(rnorm(2), conf.int = 0.95)
 
-apa_hdint(rnorm(2), conf_level = 0.95)
+apa_hdint(rnorm(2), conf.int = 0.95)
 ```
 
 ## Typesetting model terms

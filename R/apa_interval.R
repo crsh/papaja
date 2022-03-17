@@ -6,7 +6,7 @@
 #' @param x Numeric. A vector (of length 2, unless `y` is also specified) with,
 #'   a two-column `matrix`, or a `data.frame`, which can coerced to a `matrix`.
 #' @param y Numeric. An optional vector of the same length as `x`.
-#' @param conf_level Numeric. Confidence level of the interval. Ignored if
+#' @param conf.int Numeric. Confidence level of the interval. Ignored if
 #'   level can be inferred from attributes of `x`, see Details.
 #' @param interval_type Character. Abbreviation indicating the type of interval
 #'   estimate, e.g. `CI`.
@@ -31,9 +31,9 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' apa_confint(1, 2, conf_level = 0.95)
-#' apa_confint(c(1, 2), conf_level = 0.95)
-#' apa_confint(matrix(c(1, 2), ncol = 2), conf_level = 0.95)
+#' apa_confint(1, 2, conf.int = 0.95)
+#' apa_confint(c(1, 2), conf.int = 0.95)
+#' apa_confint(matrix(c(1, 2), ncol = 2), conf.int = 0.95)
 #' apa_confint(confint(lm(cars)))
 #' apa_confint(confint(lm(cars)), digits = 3)
 #' }
@@ -41,7 +41,7 @@
 apa_interval <- function(
     x
     , ...
-    , conf_level = NULL
+    , conf.int = NULL
     , interval_type = NULL
     , enclose_math = FALSE
 ) {
@@ -49,7 +49,7 @@ apa_interval <- function(
     validate(enclose_math, check_class = "logical", check_length = 1)
     if(!is.null(interval_type)) validate(interval_type, check_class = "character", check_length = 1)
 
-    if(!is.null(conf_level)) validate(conf_level, check_class = "numeric", check_length = 1, check_range = c(0, 100))
+    if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 100))
 
     UseMethod("apa_interval", x)
 }
@@ -73,11 +73,15 @@ apa_interval.default <- function(x, ...) {
 apa_interval.numeric <- function(
     x
     , y = NULL
-    , conf_level = NULL
+    , conf.int = NULL
     , interval_type = NULL
     , enclose_math = FALSE
     , ...
 ) {
+    ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+    conf.int <- ellipsis_ci$conf.int
+    ellipsis <- ellipsis_ci$ellipsis
+
     # Manually construct matrix
     if(!is.null(y)) {
         sapply(y, validate, name = "y", check_class = "numeric", check_infinite = FALSE)
@@ -86,7 +90,7 @@ apa_interval.numeric <- function(
 
         if(length(x) > 1) {
             x <- matrix(c(x, y), ncol = 2)
-            res <- apa_interval(x, conf_level = conf_level, enclose_math = enclose_math, interval_type = interval_type, ...)
+            res <- apa_interval(x, conf.int = conf.int, enclose_math = enclose_math, interval_type = interval_type, ...)
             return(res)
         } else {
             x <- c(x, y)
@@ -95,39 +99,40 @@ apa_interval.numeric <- function(
 
     validate(x, check_length = 2, check_infinite = FALSE)
 
-    if(is.null(conf_level)) {
+    if(is.null(conf.int)) {
       if(!is.null(attr(x, "conf.level"))) {
-        conf_level <- attr(x, "conf.level")
+        conf.int <- attr(x, "conf.level")
       } else if(!is.null(names(x))) {
         suppressWarnings(
-          conf_level <- as.numeric(
+          conf.int <- as.numeric(
             gsub("[^.|\\d]", "", names(x), perl = TRUE)
           )
         )
-        conf_level <- if(anyNA(conf_level)) NULL else conf_level
-        if(!is.null(conf_level)) conf_level <- 100 - conf_level[1] * 2
+        conf.int <- if(anyNA(conf.int)) NULL else conf.int
+        if(!is.null(conf.int)) conf.int <- 100 - conf.int[1] * 2
       }
     }
 
-    if(is.null(interval_type)) conf_level <- NULL
+    if(is.null(interval_type)) conf.int <- NULL
 
-    if(!is.null(conf_level)) {
-        if(conf_level < 1) conf_level <- conf_level * 100
-        conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
+    if(!is.null(conf.int)) {
+        if(conf.int < 1) conf.int <- conf.int * 100
+        conf.int <- paste0(conf.int, "\\% ", interval_type, " ")
     }
 
-    x <- apa_num(x, ...)
+    ellipsis$x <- x
+    x <- do.call("apa_num", ellipsis)
 
     if(enclose_math) {
       interval <- paste0(
-          conf_level
+          conf.int
           , "$["
           , paste(strip_math_tags(x), collapse = ",\ ")
           , "]$"
       )
     } else {
       interval <- paste0(
-        conf_level
+        conf.int
         , "["
         , paste(x, collapse = ", ")
         , "]"
@@ -143,35 +148,40 @@ apa_interval.numeric <- function(
 
 apa_interval.matrix <- function(
     x
-    , conf_level = NULL
+    , conf.int = NULL
     , interval_type = NULL
     , enclose_math = FALSE
     , ...
 ) {
-    if(!is.null(colnames(x)) && is.null(conf_level)) {
+    ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+    conf.int <- ellipsis_ci$conf.int
+    ellipsis <- ellipsis_ci$ellipsis
+
+    if(!is.null(colnames(x)) && is.null(conf.int)) {
       suppressWarnings(
-        col_conf_level <- as.numeric(
+        col_conf.int <- as.numeric(
           gsub("[^.|\\d]", "", colnames(x), perl = TRUE)
         )
       )
-      col_conf_level <- if(anyNA(col_conf_level)) NULL else col_conf_level
-      if(!is.null(col_conf_level)) conf_level <- 100 - col_conf_level[1] * 2
+      col_conf.int <- if(anyNA(col_conf.int)) NULL else col_conf.int
+      if(!is.null(col_conf.int)) conf.int <- 100 - col_conf.int[1] * 2
     }
 
     # if(nrow(x) == 1) {
     #     x <- as.vector(x)
-    #     res <- apa_interval(x, conf_level = conf_level, use_math = use_math, interval_type = interval_type, ...)
+    #     res <- apa_interval(x, conf.int = conf.int, use_math = use_math, interval_type = interval_type, ...)
     #     retrun(res)
     # }
 
-    if(is.null(interval_type)) conf_level <- NULL
+    if(is.null(interval_type)) conf.int <- NULL
 
-    if(!is.null(conf_level)) {
-        if(conf_level < 1) conf_level <- conf_level * 100
-        conf_level <- paste0(conf_level, "\\% ", interval_type, " ")
+    if(!is.null(conf.int)) {
+        if(conf.int < 1) conf.int <- conf.int * 100
+        conf.int <- paste0(conf.int, "\\% ", interval_type, " ")
     }
 
-    x <- apa_num(x, ...)
+    ellipsis$x <- x
+    x <- do.call("apa_num", ellipsis)
 
     if(!is.null(rownames(x))) {
         terms <- sanitize_terms(rownames(x))
@@ -183,7 +193,7 @@ apa_interval.matrix <- function(
     if(enclose_math) {
       for(i in 1:length(terms)) {
         interval[[terms[i]]] <- paste0(
-            conf_level
+            conf.int
             , "$["
             , paste(strip_math_tags(x[i, ]), collapse = ", ")
             , "]$"
@@ -192,7 +202,7 @@ apa_interval.matrix <- function(
     } else {
       for(i in 1:length(terms)) {
         interval[[terms[i]]] <- paste0(
-          conf_level
+          conf.int
           , "["
           , paste(x[i, ], collapse = ", ")
           , "]"
