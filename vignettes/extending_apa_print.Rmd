@@ -1,9 +1,9 @@
 ---
-title: "Developing new apa_print()-methods"
+title: "Extending apa_print()"
 author: "Frederik Aust"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Developing new apa_print()-methods}
+  %\VignetteIndexEntry{Extending apa_print()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

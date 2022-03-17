@@ -9,13 +9,13 @@ Prepare APA Journal Articles<br />with R Markdown
 has not yet been a stable, usable release suitable for the
 public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 ![GitHub last commit
-(devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github&logoColor=%2523FFF)
+(devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github)
 [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
 [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja)
 [![GitHub bug
-issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%2523FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
-![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
+issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+[![StackOverflow
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an
 [award-winning](https://improvingpsych.org/mission/awards/) R package
@@ -59,7 +59,7 @@ use [TinyTex](https://yihui.name/tinytex/), which can be installed from
 within R:
 
 ``` r
-if(!"tinytex" %in% rownames(installed.packages())) install.packages("tinytex")
+if(!requireNamespace("tinytex", quietly = TRUE)) install.packages("tinytex")
 
 tinytex::install_tinytex()
 ```
@@ -76,7 +76,7 @@ repository:
 
 ``` r
 # Install remotes package if necessary
-if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
+if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 
 # Install the stable development version from GitHub
 remotes::install_github("crsh/papaja")
@@ -124,16 +124,16 @@ apa_lm$full_result$Sepal_Length
 
 **papaja** currently provides methods for the following object classes:
 
-| A-B                            | B-L                           | L-S               | S-Z                       |
-|:-------------------------------|:------------------------------|:------------------|:--------------------------|
-| afex\_aov                      | BFBayesFactorTop<sup>\*</sup> | lme               | summary.aov               |
-| anova                          | default                       | lsmobj            | summary.aovlist           |
-| anova.lme                      | emmGrid                       | manova            | summary.glht<sup>\*</sup> |
-| Anova.mlm                      | glht<sup>\*</sup>             | merMod            | summary.glm               |
-| aov                            | glm                           | mixed             | summary.lm                |
-| aovlist                        | htest                         | papaja\_wsci      | summary.manova            |
-| BFBayesFactor<sup>\*</sup>     | list                          | summary\_emm      | summary.ref.grid          |
-| BFBayesFactorList<sup>\*</sup> | lm                            | summary.Anova.mlm |                           |
+| A-B                           | D-L               | L-S               | S-Z                       |
+|:------------------------------|:------------------|:------------------|:--------------------------|
+| afex_aov                      | default           | lsmobj            | summary.aovlist           |
+| anova                         | emmGrid           | manova            | summary.glht<sup>\*</sup> |
+| anova.lme                     | glht<sup>\*</sup> | merMod            | summary.glm               |
+| Anova.mlm                     | glm               | mixed             | summary.lm                |
+| aov                           | htest             | papaja_wsci       | summary.manova            |
+| aovlist                       | list              | summary_emm       | summary.ref.grid          |
+| BFBayesFactor<sup>\*</sup>    | lm                | summary.Anova.mlm |                           |
+| BFBayesFactorTop<sup>\*</sup> | lme               | summary.aov       |                           |
 
 \* Not fully tested, don’t trust blindly!
 
@@ -177,12 +177,12 @@ lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris) |>
 
 Table 2. *Iris regression table.*
 
-| Predictor    |   *b* |      95% CI      | *t*(146) |       *p* |
-|:-------------|------:|:----------------:|---------:|----------:|
-| Intercept    |  1.04 |  \[0.51, 1.58\]  |     3.85 | &lt; .001 |
-| Sepal Length |  0.61 |  \[0.48, 0.73\]  |     9.77 | &lt; .001 |
-| Petal Width  |  0.56 |  \[0.32, 0.80\]  |     4.55 | &lt; .001 |
-| Petal Length | -0.59 | \[-0.71, -0.46\] |    -9.43 | &lt; .001 |
+| Predictor    |   *b* |      95% CI      |   *t* | *d**f* | *p*     |
+|:-------------|------:|:----------------:|------:|-------:|:--------|
+| Intercept    |  1.04 |  \[0.51, 1.58\]  |  3.85 |    146 | \< .001 |
+| Sepal Length |  0.61 |  \[0.48, 0.73\]  |  9.77 |    146 | \< .001 |
+| Petal Width  |  0.56 |  \[0.32, 0.80\]  |  4.55 |    146 | \< .001 |
+| Petal Length | -0.59 | \[-0.71, -0.46\] | -9.43 |    146 | \< .001 |
 
 ### Create figures
 
@@ -259,7 +259,7 @@ rmarkdown::render("mymanuscript.Rmd")
 ## Getting help
 
 ![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)
 
 For a comprehensive introduction to **papaja**, check out the current
 draft of the [**papaja** manual](https://crsh.github.io/papaja_man/). If
@@ -309,7 +309,9 @@ requires some disk space. [CodeOcean](https://codeocean.com/) is a
 commercial service that builds on Docker, facilitates setting up and
 sharing containers and lets you run computations in the cloud. See the
 **papaja** manual on [how to get started using **papaja** with Docker or
-CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments).
+CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments)
+and [our Docker workflow](https://github.com/crsh/papaja_docker)
+tailored for easy use with **papaja**.
 
 ## Contribute
 
@@ -345,10 +347,12 @@ APA guidelines.
     statistical tests in R according to APA guidelines
 -   [**APAstats**](https://github.com/achetverikov/APAstats): R
     functions for formatting results in APA style and other stuff
--   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
-    significances in R
 -   [**apaTables**](https://github.com/dstanley4/apaTables): Create
     American Psychological Association (APA) Style Tables
+-   [**rempsyc**](https://github.com/RemPsyc/rempsyc): Convenience
+    functions for psychology
+-   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
+    significances in R
 
 If you are looking for other journal article templates, you may be
 interested in the [**rticles**](https://github.com/rstudio/rticles)

@@ -5,7 +5,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github&logoColor=%2523FFF) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%2523FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) ![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an [award-winning](https://improvingpsych.org/mission/awards/) R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 **papaja** provides
@@ -236,7 +236,7 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ## Getting help
 
-![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
+![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow)
 
 For a comprehensive introduction to **papaja**, check out the current draft of the [**papaja** manual](https://crsh.github.io/papaja_man/).
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the **papaja** tag](https://t.co/Z3auyUrbTa).
@@ -264,7 +264,7 @@ For a brief primer on containers and virtual machines see [the supplementary mat
 [Docker](https://www.docker.com/) is the most widely used containerization approach.
 It is open source and free to use but requires some disk space.
 [CodeOcean](https://codeocean.com/) is a commercial service that builds on Docker, facilitates setting up and sharing containers and lets you run computations in the cloud.
-See the **papaja** manual on [how to get started using **papaja** with Docker or CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments).
+See the **papaja** manual on [how to get started using **papaja** with Docker or CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments) and [our Docker workflow](https://github.com/crsh/papaja_docker) tailored for easy use with **papaja**.
 
 ## Contribute
 
@@ -289,8 +289,9 @@ By now, there are a couple of R packages that provide convenience functions to f
 
 -   [**apa**](https://github.com/dgromer/apa): Format output of statistical tests in R according to APA guidelines
 -   [**APAstats**](https://github.com/achetverikov/APAstats): R functions for formatting results in APA style and other stuff
--   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of significances in R
 -   [**apaTables**](https://github.com/dstanley4/apaTables): Create American Psychological Association (APA) Style Tables
+-   [**rempsyc**](https://github.com/RemPsyc/rempsyc): Convenience functions for psychology
+-   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of significances in R
 
 If you are looking for other journal article templates, you may be interested in the [**rticles**](https://github.com/rstudio/rticles) package.
 

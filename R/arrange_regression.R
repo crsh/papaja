@@ -18,13 +18,13 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
   is_glm <- inherits(x, "glm")
 
   # Obtain the name of the test statistic
-  if(class(x)[1] == "glm") {
+  if(inherits(x, "glm", which = TRUE) == 1) {
     stat_name <- gsub(
       colnames(summary_x$coefficients)[3]
       , pattern = " value"
       , replacement = ""
     )
-  } else if(class(x) == "lm") {
+  } else if(inherits(x, "lm")) {
     stat_name <- "t"
     if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
     if(standardized) ellipsis$gt1 <- FALSE
@@ -73,10 +73,10 @@ arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
 
   class(regression_table) <- c("apa_results_table", class(regression_table))
 
-  if(class(x)[1] == "glm") {
+  if(inherits(x, "glm", which = TRUE) == 1) {
     attr(regression_table, "family") <- x$family$family
     attr(regression_table, "link") <- x$family$link
-  } else if(class(x) == "lm") {
+  } else if(inherits(x, "lm")) {
     attr(regression_table, "family") <- "gaussian"
     attr(regression_table, "link") <- "identity"
   }
