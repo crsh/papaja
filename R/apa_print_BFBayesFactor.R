@@ -482,7 +482,7 @@ bf_add_estimates.BFindepSample <- function(
     est_name <- "delta"
     estimate <- "delta"
   } else {
-    est_name <- "mean.difference"
+    est_name <- "difference.in.means"
     estimate <- colnames(posterior_samples)[grep(colnames(posterior_samples), pattern = "beta", fixed = TRUE)]
   }
 

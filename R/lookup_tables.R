@@ -154,7 +154,7 @@ lookup_labels <- c(
   , "mean"                      = "$M$"
   , "X.pseudo.median"           = "$\\mathit{Mdn}^*$"
   , "mean.of.the.differences"   = "$M_D$"
-  , "mean.difference"           = "$\\Delta M$"
+  , "mean.difference"           = "$M_D$"
   , "difference.in.location"    = "$\\Delta \\mathit{Mdn}$"
   , "difference.in.means"       = "$\\Delta M$"
   , "difference.in.proportions" = "$\\Delta \\hat\\pi$"
