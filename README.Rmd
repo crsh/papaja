@@ -249,6 +249,8 @@ You can for example [use `cite_r()`](https://crsh.github.io/papaja_man/writing.h
 
     `r attr(unclass(citation("papaja"))[[1]], "textVersion")`
 
+    `r print(citation("papaja"), style = "Bibtex")`
+
 ## papaja in the wild
 
 If you are interested to see how others are using **papaja**, you can find a [collection of papers](http://frederikaust.com/papaja_man/published-manuscripts.html) and the corresponding R Markdown files in the manual.
@@ -277,8 +279,8 @@ There are many additional analyses that we would like `apa_print()` to support.
 Any new S3/S4-methods for this function are always appreciated (e.g., `factanal`, `fa`, `lavaan`).
 For a primer on adding new `apa_print()`-methods, see the getting-started-vignette:
 
-``` r
-`vignette("add_apa_print_methods", package = "papaja")`
+```r
+vignette("extending_apa_print", package = "papaja")
 ```
 
 Before working on a contribution, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).

@@ -329,7 +329,7 @@ always appreciated (e.g., `factanal`, `fa`, `lavaan`). For a primer on
 adding new `apa_print()`-methods, see the getting-started-vignette:
 
 ``` r
-`vignette("add_apa_print_methods", package = "papaja")`
+vignette("extending_apa_print", package = "papaja")
 ```
 
 Before working on a contribution, please review our brief [contributing
