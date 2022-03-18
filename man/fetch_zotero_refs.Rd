@@ -36,10 +36,10 @@ BibTeX file. \emph{This function has been defunct. Use \code{ReadZotero()} from 
 \details{
 This function retrieves references through the Zotero web API. \code{x}
 takes a Zotero user or group ID that can be retrieved from the Zotero.org
-user or group \href{https://www.zotero.org/settings/keys}{Feeds/API settings}.
+user or group Feeds/API settings.
 An authentication key (\code{API_key}) is required to access nonpublic
 Zotero libraries. Authentication keys can also be generated in the
-Zotero.org user or group \href{https://www.zotero.org/settings/keys}{Feeds/API settings}.
+Zotero.org user or group Feeds/API settings.
 
 If the requested reference collection is larger than 100 records, multiple
 API calls are initiated because the number of retrieved records is limited

@@ -109,4 +109,3 @@ apa_confint(confint(lm(cars)), digits = 3)
 \seealso{
 \code{\link{apa_num}}
 }
-\keyword{internal}

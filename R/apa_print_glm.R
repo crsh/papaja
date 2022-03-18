@@ -53,11 +53,11 @@
 #' @references
 #'    Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
 #'    Variance and Contrast Analysis. *Psychological Methods*, *9*(2), 164-182.
-#'    doi: [10.1037/1082-989X.9.2.164](https://doi.org/10.1037/1082-989X.9.2.164)
+#'    doi: \doi{10.1037/1082-989X.9.2.164}
 #'
 #'    Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
 #'    implementation. *Journal of Statistical Software*, *20*(8), 1-24.
-#'    doi: [10.18637/jss.v020.i08](https://doi.org/10.18637/jss.v020.i08)
+#'    doi: \doi{10.18637/jss.v020.i08}
 #'
 #' @family apa_print
 #' @seealso [stats::confint()], [MBESS::ci.pvaf()]

@@ -62,14 +62,14 @@ load("../../tests/testthat/data/mixed_data.rdata")
 
 Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility in science.
 For *R* users, R Markdown has been suggested as one possible framework for reproducible analyses.
-`papaja` is a R-package in the making including a [R Markdown](http://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](http://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
+`papaja` is a R-package in the making including a [R Markdown](https://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](https://www.rstudio.com/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 The package uses the \LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to.
 Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).
 In the following I will assume you know how to use R Markdown to conduct and comment your analyses.
-If this is not the case, I recommend you familiarize yourself with [R Markdown](http://rmarkdown.rstudio.com/) first.
-I use [RStudio](http://www.rstudio.com/) to create my documents, but the general process works with any text editor.
+If this is not the case, I recommend you familiarize yourself with [R Markdown](https://rmarkdown.rstudio.com/) first.
+I use [RStudio](https://www.rstudio.com/) to create my documents, but the general process works with any text editor.
 
 
 # How to use papaja
@@ -230,11 +230,11 @@ No manuscript is complete without citation.
 In order for citations to work, you need to supply a .bib-file to the `bibliography` parameter in the YAML front matter.
 Once this is done, `[e.g., @james_1890; @bem_2011]` produces a regular citation within parentheses [e.g., @bem_2011; @james_1890].
 To cite a source in text simply omit the brackets; for example, write `@james_1890` to cite @james_1890.
-For other options see the [overview of the R Markdown citation syntax](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+For other options see the [overview of the R Markdown citation syntax](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
 
 The citation style is automatically set to APA style.
 If you need to use a different citation style, you can set in the YAML front matter by providing the `csl` parameter.
-See the [R Markdown documentation](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
+See the [R Markdown documentation](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) and [Citation Style Language](http://citationstyles.org/) for further details.
 
 If you use RStudio, I have created an [easy-to-use add-in](https://github.com/crsh/citr) that facilitates inserting citations into a document.
 The relevant references will, of course, be added to the documents reference section automatically.

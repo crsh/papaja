@@ -4,10 +4,10 @@ Prepare APA Journal Articles<br />with R Markdown
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/package=papaja)
 [![Project Status: WIP - Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
-public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
+public.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub last commit
 (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github)
 [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
@@ -23,8 +23,8 @@ that facilitates creating computationally reproducible, submission-ready
 manuscripts which conform to the American Psychological Association
 (APA) manuscript guidelines (6th Edition). **papaja** provides
 
--   an [R Markdown](http://rmarkdown.rstudio.com/) template that can be
-    used with (or without) [RStudio](http://www.rstudio.com/) to create
+-   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be
+    used with (or without) [RStudio](https://www.rstudio.com/) to create
     PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX
     class) or Word documents (using a .docx-reference file).
 -   Functions to **typeset** the results from **statistical analyses**,
@@ -32,31 +32,31 @@ manuscripts which conform to the American Psychological Association
 -   functions to create **figures** in accordance with APA guidelines.
 
 For a comprehensive introduction to **papaja**, see the current draft of
-the [manual](https://crsh.github.io/papaja_man/). If you have a specific
-question that is not answered in the manual, feel free to ask a question
-on Stack Overflow [using the **papaja** tag](https://t.co/Z3auyUrbTa).
-If you believe you have found a bug or would like to request a new
-feature, [open an issue](https://github.com/crsh/papaja/issues) on
-Github and provide a [minimal complete verifiable
+the [manual](http://frederikaust.com/papaja_man/). If you have a
+specific question that is not answered in the manual, feel free to ask a
+question on Stack Overflow [using the **papaja**
+tag](https://stackoverflow.com/questions/tagged/papaja). If you believe
+you have found a bug or would like to request a new feature, [open an
+issue](https://github.com/crsh/papaja/issues) on Github and provide a
+[minimal complete verifiable
 example](https://stackoverflow.com/help/mcve).
 
 ## Example
 
-Take a look at the [R Markdown
-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd)
-of the example manuscript in the folder `example` and the resulting
-[PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
-The example document also contains some basic instructions.
+Take a look at the [source
+file](https://github.com/crsh/papaja/blob/master/vignettes/papaja.Rmd)
+of the package vignette and the resulting
+[PDF](https://raw.githubusercontent.com/crsh/papaja/master/https://github.com/crsh/papaja/blob/master/vignettes/papaja.pdf).
+The vignette also contains some basic instructions.
 
 ## Installation
 
 To use **papaja** you need either a recent version of
-[RStudio](http://www.rstudio.com/) or
-[pandoc](http://johnmacfarlane.net/pandoc/). If you want to create PDF-
-in addition to DOCX-documents you additionally need a
-[TeX](http://de.wikipedia.org/wiki/TeX) distribution. We recommend you
-use [TinyTex](https://yihui.name/tinytex/), which can be installed from
-within R:
+[RStudio](https://www.rstudio.com/) or [pandoc](https://pandoc.org/). If
+you want to create PDF- in addition to DOCX-documents you additionally
+need a [TeX](https://en.wikipedia.org/wiki/TeX) distribution. We
+recommend you use [TinyTex](https://yihui.org/tinytex/), which can be
+installed from within R:
 
 ``` r
 if(!requireNamespace("tinytex", quietly = TRUE)) install.packages("tinytex")
@@ -68,7 +68,7 @@ You may also consider [MikTeX](http://miktex.org/) for Windows,
 [MacTeX](https://tug.org/mactex/) for Mac, or [TeX
 Live](http://www.tug.org/texlive/) for Linux. Please refer to the
 [**papaja**
-manual](https://crsh.github.io/papaja_man/introduction.html#getting-started)
+manual](http://frederikaust.com/papaja_man/introduction.html#getting-started)
 for detailed installation instructions.
 
 **papaja** is not yet available on CRAN but you can install it from this
@@ -260,11 +260,11 @@ rmarkdown::render("mymanuscript.Rmd")
 questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 For a comprehensive introduction to **papaja**, check out the current
-draft of the [**papaja** manual](https://crsh.github.io/papaja_man/). If
-you have a specific question that is not answered in the manual, feel
+draft of the [**papaja** manual](http://frederikaust.com/papaja_man/).
+If you have a specific question that is not answered in the manual, feel
 free to ask a question on Stack Overflow [using the **papaja**
-tag](https://t.co/Z3auyUrbTa). If you believe you have found a bug or
-you want to request a new feature, [open an
+tag](https://stackoverflow.com/questions/tagged/papaja). If you believe
+you have found a bug or you want to request a new feature, [open an
 issue](https://github.com/crsh/papaja/issues) on Github and provide a
 [minimal complete verifiable
 example](https://stackoverflow.com/help/mcve).
@@ -273,10 +273,10 @@ example](https://stackoverflow.com/help/mcve).
 
 Please cite **papaja** if you use it.
 
-    Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9999. Retrieved from https://github.com/crsh/papaja
+    Aust, F. & Barth, M. (2022). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9999. Retrieved from https://github.com/crsh/papaja
 
 For convenience, you can [use
-`cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages)
+`cite_r()`](http://frederikaust.com/papaja_man/writing.html#citing-r-and-its-packages)
 or copy the reference information returned by `citation('papaja')` to
 your BibTeX file:
 
@@ -284,7 +284,7 @@ your BibTeX file:
 @Manual{,
   title = {{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}},
   author = {Frederik Aust and Marius Barth},
-  year = {2020},
+  year = {2022},
   note = {R package version 0.1.0.9999},
   url = {https://github.com/crsh/papaja},
 }
@@ -319,7 +319,7 @@ requires some disk space. [CodeOcean](https://codeocean.com/) is a
 commercial service that builds on Docker, facilitates setting up and
 sharing containers and lets you run computations in the cloud. See the
 **papaja** manual on [how to get started using **papaja** with Docker or
-CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments)
+CodeOcean](http://frederikaust.com/papaja_man/tips-and-tricks.html#reproducible-software-environments)
 and [our Docker workflow](https://github.com/crsh/papaja_docker)
 tailored for easy use with **papaja**.
 

@@ -66,10 +66,10 @@ fetch_web_refs <- function(x, bib_name) {
 #' @details
 #'  This function retrieves references through the Zotero web API. `x`
 #'  takes a Zotero user or group ID that can be retrieved from the Zotero.org
-#'  user or group \href{https://www.zotero.org/settings/keys}{Feeds/API settings}.
+#'  user or group Feeds/API settings.
 #'  An authentication key (`API_key`) is required to access nonpublic
 #'  Zotero libraries. Authentication keys can also be generated in the
-#'  Zotero.org user or group \href{https://www.zotero.org/settings/keys}{Feeds/API settings}.
+#'  Zotero.org user or group Feeds/API settings.
 #'
 #'  If the requested reference collection is larger than 100 records, multiple
 #'  API calls are initiated because the number of retrieved records is limited
@@ -233,8 +233,8 @@ render_appendix <- function(
   }
 
   if(
-    is.list(rmarkdown::metadata$output) && 
-    is.list(rmarkdown::metadata$output[[1]]) && 
+    is.list(rmarkdown::metadata$output) &&
+    is.list(rmarkdown::metadata$output[[1]]) &&
     !is.null(rmarkdown::metadata$output[[1]]$citation_package)
   ) {
     citation_package_call <- paste0(

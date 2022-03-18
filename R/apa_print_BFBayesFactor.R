@@ -89,7 +89,7 @@
 #' Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian
 #'   order-restricted and point-null hypothesis tests. \emph{Statistics &
 #'   Probability Letters}, 92, 121--124. doi:
-#'   \href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
+#'   \doi{10.1016/j.spl.2014.05.010}
 #' @family apa_print
 #' @importFrom stats formula terms setNames median
 #' @keywords internal
@@ -98,6 +98,7 @@
 #'
 #' @examples
 #' # ANOVA
+#' \dontrun{
 #' data(sleep, package = "BayesFactor")
 #' bayesian_anova <- BayesFactor::anovaBF(
 #'   extra ~ group + ID
@@ -128,6 +129,7 @@
 #'   , interval = function(x) quantile(x, probs = c(0.025, 0.975))
 #'   , interval_type = "CrI"
 #' )
+#' }
 
 apa_print.BFBayesFactor <- function(
   x

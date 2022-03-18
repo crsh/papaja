@@ -26,7 +26,6 @@
 #'   multiple intervals are returned as a named `list` of `character` vectors
 #'   of length 1.
 #'
-#' @keywords internal
 #' @seealso \code{\link{apa_num}}
 #' @export
 #' @examples

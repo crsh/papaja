@@ -23,12 +23,14 @@
 #' @evalRd apa_results_return_value()
 #'
 #' @examples
+#' \dontrun{
 #'   # Fit a linear mixed model using the lme4 package
 #'   # or the lmerTest package (if dfs and p values are desired)
 #'   library(lmerTest)
 #'   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 #'   # Format statistics for fixed-effects terms (the default)
 #'   apa_print(fm1)
+#' }
 #'
 #' @family apa_print
 #' @rdname apa_print.merMod

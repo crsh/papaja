@@ -50,18 +50,9 @@ header-includes:
   - \usepackage{subfig}
   - \renewcommand*{\thesubfigure}{\MakeUppercase{\alph{subfigure}}}
   - \raggedbottom
-
-editor_options:
-  markdown:
-    wrap: "sentence"
-
-vignette: >
-  %\VignetteIndexEntry{Prepare APA Journal Articles with R Markdown}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
-(ref:abstract) **papaja** addresses computational non-reproduciblity in research reports caused by reporting errors, i.e. incomplete or incorrect reporting of the analytic procedure or analytic results. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society (6th edition). This document was written with **papaja** and provides a brief overview of the package's main features: An R Markdown template for APA-style manuscripts and helper-functions that facilitate reporting of analytic results in accordance with APA guidelines.
+(ref:abstract) **papaja** addresses computational non-reproducibility in research reports caused by reporting errors, i.e. incomplete or incorrect reporting of the analytic procedure or analytic results. The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Society (6th edition). This document was written with **papaja** and provides a brief overview of the package's main features: An R Markdown template for APA-style manuscripts and helper-functions that facilitate reporting of analytic results in accordance with APA guidelines.
 
 ```{r include = FALSE}
 library("dplyr")
@@ -78,12 +69,12 @@ Yet, non-reproducible results are widely prevalent.
 Computational reproducibility is threatened by countless sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020].
 **papaja** was designed to address these problems.
 The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Association [APA, 6th edition, @american_psychological_association_publication_2010].
-**papaja** provides [**rmarkdown**](http://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
+**papaja** provides [**rmarkdown**](https://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
 Moreover, **papaja** provides helper functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
 This document was written with **papaja** and provides a brief overview of the package's main features.
-For a comprehensive introduction and installation instructions, see the current draft of the [**papaja** manual](https://crsh.github.io/papaja_man/).[^1]
+For a comprehensive introduction and installation instructions, see the current draft of the [**papaja** manual](http://frederikaust.com/papaja_man/).[^1]
 
-[^1]: If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow using the [**papaja** tag](https://t.co/Z3auyUrbTa).
+[^1]: If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow using the [**papaja** tag](https://stackoverflow.com/questions/tagged/papaja).
     If you believe you have found a bug or would like to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 
 # The problem: Copy-paste reporting
@@ -108,7 +99,7 @@ For example, in a sample of 46 articles, two thirds of key claims could be repro
 For one in four non-reproducible results, the reproduction attempt yielded results that were no longer statistically significant, calling the original statistical inference into question.
 These figures clearly show that there is a need for efforts to improve the computational reproducibility of the published literature.
 
-Computational non-reproduciblity is, of course, multi-causal.
+Computational non-reproducibility is, of course, multi-causal.
 While there is only one way in which a research report is computationally reproducible, the is a countless number of things that can go wrong.
 Broadly speaking, there are at least four causes for non-reproducible analyses: (1) incomplete or incorrect reporting of the analytic procedure, (2) incorrect execution of the analytic procedure, (3) incorrect reporting of results, and (4) code rot, i.e., non-reproducible caused by (inadvertent) changes to the computational environment (e.g., software updates, changes to data files).
 We currently see no technical solution to the first two causes.
@@ -118,12 +109,12 @@ Code rot (4), on the other hand, can be adequately addressed by conserving the s
 Several seasoned technical solutions, such as software containers or a virtual machine, exist [@piccolo_tools_2016; @gruning_practical_2018].[^2]
 **papaja** provides a technical safeguard for correct reporting of results (3).
 
-[^2]: **papaja** can be readily combined with these tools as documented in the section on [reproducible software environments](http://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments) in the **papaja** manual.
+[^2]: **papaja** can be readily combined with these tools as documented in the section on [reproducible software environments](http://frederikaust.com/papaja_man/tips-and-tricks.html#reproducible-software-environments) in the **papaja** manual.
 
 When it comes to reporting quantitative results, most researchers engage in what we refer to as *copy-paste reporting*.
 Quantitative analyses and reporting are done in separate software.
 Thus, by necessity quantitative results are copied from the analysis software and pasted into the report.
-Copy-paste reporting underlies and contributes to several of the most common causes for computational non-reproduciblity: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
+Copy-paste reporting underlies and contributes to several of the most common causes for computational non-reproducibility: Rounding errors, incorrect labeling of statistical results, typos, and inserting results of a different analysis [pp. 12-13, @artner_reproducibility_2020].
 We are convinced that errors caused by copy-paste reporting cannot be addressed by appealing to researchers to be more careful.
 The motivation to avoid such errors should already be high because the reputational cost of errata and retractions due to non-reproducible results is substantial.
 Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report non-reproducible results [@obels_analysis_2020; @eubank_lessons_2016; @hardwicke_data_2018].
@@ -139,7 +130,7 @@ As an added benefit, dynamic documents have great potential to improve the compu
 Dynamic documents fully document the analytic procedure and establish direct links to the associated scientific claims.
 
 **papaja**, and [the software it builds on](http://frederikaust.com/papaja_man/introduction.html#document-compilation), provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA style.
-The dominant approach to creating dynamic documents in R is to use the [**rmarkdown**](http://rmarkdown.rstudio.com/) package [@xie_r_2018].
+The dominant approach to creating dynamic documents in R is to use the [**rmarkdown**](https://rmarkdown.rstudio.com/) package [@xie_r_2018].
 **papaja** provides R Markdown templates to create DOCX and PDF documents (using \LaTeX document class `apa6`).
 Moreover, **papaja** provides several functions to conveniently report analytic results according to APA guidelines.
 The remainder of this document illustrates how these functions can be used.
@@ -173,14 +164,14 @@ knitr::include_graphics("../inst/images/template_selection.png", dpi = 144)
 This document is in APA manuscript style, but other styles are available for PDF documents.
 The document style can be controlled via the `classoption` field of the YAML front matter.
 For a thesis-like style change `classoption` to `doc` or use `jou` for a more polished journal-like two-column layout.
-For a comprehensive overview of other formatting options please refer to the [**papaja** manual](http://crsh.github.io/papaja_man/r-markdown-components.html#rendering-options).
+For a comprehensive overview of other formatting options please refer to the [**papaja** manual](http://frederikaust.com/papaja_man/r-markdown-components.html#rendering-options).
 
 To create DOCX documents, the `output` field in the YAML front matter can be set to `papaja::apa6_docx`.
 Please note, however, that DOCX documents are somewhat less flexible and less polished than PDF documents.
 **papaja** builds on `pandoc` to render Markdown into PDF and DOCX documents.
 Unfortunately, `pandoc`'s capabilities are more limited for DOCX documents.
-This is why some **papaja** features are only available for PDF documents, for example, see the summary of [rendering options](http://crsh.github.io/papaja_man/r-markdown-components.html#rendering-options) in the manual.
-Also, DOCX documents require some [limited manual work](http://crsh.github.io/papaja_man/limitations.html#microsoft-word-documents) before they fully comply with APA guidelines.
+This is why some **papaja** features are only available for PDF documents, for example, see the summary of [rendering options](http://frederikaust.com/papaja_man/r-markdown-components.html#rendering-options) in the manual.
+Also, DOCX documents require some [limited manual work](http://frederikaust.com/papaja_man/limitations.html#microsoft-word-documents) before they fully comply with APA guidelines.
 The DOCX documents produced by **papaja** should, however, be suitable for collaboration with colleagues, who prefer Word over R Markdown and to prepare journal submissions.
 
 # Writing
@@ -415,12 +406,12 @@ Note that for this syntax to work chunk names cannot include underscores (i.e., 
 
 # Getting help
 
-For a comprehensive introduction to **papaja**, check out the current draft of the [**papaja** manual](https://crsh.github.io/papaja_man/).
-If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the **papaja** tag](https://t.co/Z3auyUrbTa).
+For a comprehensive introduction to **papaja**, check out the current draft of the [**papaja** manual](http://frederikaust.com/papaja_man/).
+If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the **papaja** tag](https://stackoverflow.com/questions/tagged/papaja).
 If you believe you have found a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
 
 If you are interested to see how others use **papaja**, take a look at some of the publicly available R Markdown files.
-The file used to create this document is available at the [**papaja** GitHub repository](https://github.com/crsh/papaja/blob/master/vignettes/papaja_vignette.Rmd).
+The file used to create this document is available at the [**papaja** GitHub repository](https://github.com/crsh/papaja/blob/master/vignettes/papaja.Rmd).
 Moreover, a [collection of papers](http://frederikaust.com/papaja_man/published-manuscripts.html) written with **papaja,** including the corresponding R Markdown files, is listed in the manual.
 If you have published a paper that was written with **papaja**, please add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send us to me.
 
@@ -429,7 +420,7 @@ If you have published a paper that was written with **papaja**, please add the r
 If you like **papaja** and would like to contribute, we highly appreciate any contributions to the R package or its documentation.
 Take a look at the [open issues](https://github.com/crsh/papaja/issues) if you need inspiration.
 There are many additional analyses that we would like `apa_print()` to support; new S3/S4-methods are always appreciated (e.g., for `factanal`, `fa`, `lavaan`).
-For a primer on adding new `apa_print()`-methods, see the getting-started-vignette (`vignette("add_apa_print_methods", package = "papaja")`).
+For a primer on adding new `apa_print()`-methods, see the getting-started-vignette (`vignette("extending_apa_print", package = "papaja")`).
 Before working on a contribution, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
 
 Enjoy writing.

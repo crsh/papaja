@@ -128,6 +128,7 @@ the supplied Bayes factor is correct!
 }
 \examples{
 # ANOVA
+\dontrun{
 data(sleep, package = "BayesFactor")
 bayesian_anova <- BayesFactor::anovaBF(
   extra ~ group + ID
@@ -159,11 +160,12 @@ apa_print(
   , interval_type = "CrI"
 )
 }
+}
 \references{
 Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian
 order-restricted and point-null hypothesis tests. \emph{Statistics &
 Probability Letters}, 92, 121--124. doi:
-\href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
+\doi{10.1016/j.spl.2014.05.010}
 }
 \seealso{
 Other apa_print: 

@@ -86,22 +86,22 @@ Steiger, 2004).
 Algina, J., Keselman, H. J., & Penfield, R. D. (2007).
 Confidence intervals for an effect size measure in multiple linear regression.
 \emph{Educational and Psychological Measurement}, \emph{67}(2), 207--218.
-doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
+doi: \doi{10.1177/0013164406292030}
 
 Algina, J., Keselman, H. J., & Penfield, R. D. (2010).
 Confidence intervals for squared semipartial correlation coefficients: The effect of nonnormality.
 \emph{Educational and Psychological Measurement}, \emph{70}(6), 926--940.
-doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
+doi: \doi{10.1177/0013164410379335}
 
 Steiger (2004).
 Beyond the F test: Effect size confidence intervals and tests of close fit in the analysis of variance and contrast analysis.
 \emph{Psychological Methods}, \emph{9}(2), 164--182.
-doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+doi: \doi{10.1037/1082-989X.9.2.164}
 
 Kelley, K. (2007).
 Confidence intervals for standardized effect sizes: Theory, application, and  implementation.
 \emph{Journal of Statistical Software}, \emph{20}(8), 1--24.
-doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+doi: \doi{10.18637/jss.v020.i08}
 }
 \seealso{
 \code{\link[stats:anova]{stats::anova()}}
