@@ -191,7 +191,7 @@ test_that(
 
     expect_identical(
       apa_KR$full_result$Days
-      , expected = "$F(1, 17.00) = 45.85$, $p < .001$"
+      , expected = "$F(1, 17) = 45.85$, $p < .001$"
     )
     expect_identical(
       apa_S$full_result$Days
@@ -279,9 +279,9 @@ test_that(
     expect_identical(
       object = apa_KR$statistic
       , expected = list(
-        N = "$F(1, 15.00) = 9.04$, $p = .009$"
-        , P = "$F(1, 15.00) = 0.40$, $p = .536$"
-        , N_P = "$F(1, 15.00) = 1.02$, $p = .329$"
+        N = "$F(1, 15) = 9.04$, $p = .009$"
+        , P = "$F(1, 15) = 0.40$, $p = .536$"
+        , N_P = "$F(1, 15) = 1.02$, $p = .329$"
       )
     )
     expect_identical( # KR gives same results as S in this special case

@@ -411,12 +411,14 @@ printp <- apa_p
 print_p <- apa_p
 
 
-#' Print Degrees of Freedom
+#' Typeset Degrees of Freedom
 #'
-#' This is an internal function for processing degrees of freedom. It takes care
+#' This is a function for processing degrees of freedom. It takes care
 #' that trailing digits are only printed if non-integer values are given.
 #'
-#' @keywords internal
+#' @param x Numeric. The degrees of freedom to report.
+#' @param digits Integer. The desired number of digits after the decimal point to
+#'   be used if `x` contains non-integer values.
 #' @export
 
 apa_df <- function(x, digits = 2L) {
@@ -430,13 +432,13 @@ apa_df <- function(x, digits = 2L) {
     stop("The parameter `digits` must be of length 1 or equal to length of `x`.")
   }
 
-  x_digits <- ifelse(
-    is.finite(x)
-    , as.integer(x %% 1 > 0) * digits
-    , 0L
-  )
+  if( all(round(x, digits = 0L) == round(x, digits = digits + 2L)) ) {
+    digits <- 0L
+  } else {
+    digits <- as.integer(digits)
+  }
 
-  return(apa_num(x, digits = x_digits))
+  apa_num(x, digits = digits)
 }
 
 #' @rdname apa_df

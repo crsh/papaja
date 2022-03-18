@@ -3,14 +3,19 @@
 \name{apa_df}
 \alias{apa_df}
 \alias{print_df}
-\title{Print Degrees of Freedom}
+\title{Typeset Degrees of Freedom}
 \usage{
 apa_df(x, digits = 2L)
 
 print_df(x, digits = 2L)
 }
+\arguments{
+\item{x}{Numeric. The degrees of freedom to report.}
+
+\item{digits}{Integer. The desired number of digits after the decimal point to
+be used if \code{x} contains non-integer values.}
+}
 \description{
-This is an internal function for processing degrees of freedom. It takes care
+This is a function for processing degrees of freedom. It takes care
 that trailing digits are only printed if non-integer values are given.
 }
-\keyword{internal}
