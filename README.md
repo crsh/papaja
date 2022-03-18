@@ -46,7 +46,7 @@ example](https://stackoverflow.com/help/mcve).
 Take a look at the [source
 file](https://github.com/crsh/papaja/blob/master/vignettes/papaja.Rmd)
 of the package vignette and the resulting
-[PDF](https://raw.githubusercontent.com/crsh/papaja/master/https://github.com/crsh/papaja/blob/master/vignettes/papaja.pdf).
+[PDF](https://raw.githubusercontent.com/crsh/papaja/master/vignettes/papaja.pdf).
 The vignette also contains some basic instructions.
 
 ## Installation
