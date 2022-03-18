@@ -419,12 +419,18 @@ print_p <- apa_p
 #' @param x Numeric. The degrees of freedom to report.
 #' @param digits Integer. The desired number of digits after the decimal point to
 #'   be used if `x` contains non-integer values.
+#' @param elementwise Logical. Determines whether the number of trailing digits
+#'   should be determined for each element of `x` separately (the default),
+#'   or for the complete vector `x`.
 #' @export
 
-apa_df <- function(x, digits = 2L) {
+apa_df <- function(x, digits = 2L, elementwise = TRUE) {
 
   if(is.null(x))    return(NULL)
   if(is.integer(x)) return(apa_num(x))
+
+  elementwise <- isTRUE(elementwise)
+  digits <- as.integer(digits)
 
   validate(digits, check_class = "numeric", check_NA = TRUE)
 
@@ -432,10 +438,10 @@ apa_df <- function(x, digits = 2L) {
     stop("The parameter `digits` must be of length 1 or equal to length of `x`.")
   }
 
-  if( all(round(x, digits = 0L) == round(x, digits = digits + 2L)) ) {
+  if(elementwise) {
+    digits <- as.integer(round(x, digits = 0L) != round(x, digits = digits + 2L)) * digits
+  } else if( all(round(x, digits = 0L) == round(x, digits = digits + 2L)) ) {
     digits <- 0L
-  } else {
-    digits <- as.integer(digits)
   }
 
   apa_num(x, digits = digits)

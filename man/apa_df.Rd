@@ -5,15 +5,19 @@
 \alias{print_df}
 \title{Typeset Degrees of Freedom}
 \usage{
-apa_df(x, digits = 2L)
+apa_df(x, digits = 2L, elementwise = TRUE)
 
-print_df(x, digits = 2L)
+print_df(x, digits = 2L, elementwise = TRUE)
 }
 \arguments{
 \item{x}{Numeric. The degrees of freedom to report.}
 
 \item{digits}{Integer. The desired number of digits after the decimal point to
 be used if \code{x} contains non-integer values.}
+
+\item{elementwise}{Logical. Determines whether the number of trailing digits
+should be determined for each element of \code{x} separately (the default),
+or for the complete vector \code{x}.}
 }
 \description{
 This is a function for processing degrees of freedom. It takes care

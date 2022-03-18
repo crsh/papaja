@@ -56,14 +56,14 @@ test_that(
       object = apa_lmerTest$statistic
       , expected = list(
         Intercept = "$t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$t(17.00) = 3.06$, $p = .007$"
+        , N1 = "$t(17) = 3.06$, $p = .007$"
       )
     )
     expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
         Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.29, 55.84]$, $t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17.00) = 3.06$, $p = .007$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17) = 3.06$, $p = .007$"
       )
     )
 
@@ -88,7 +88,7 @@ test_that(
 
     expect_identical( # in_paren
       object = apa_lmerTest_specialties$full_result$N1
-      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17.00] = 3.06$, $p = .007$"
+      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17] = 3.06$, $p = .007$"
     )
 
     # Test reduction of (Days | Subject) to (1 | Subject):
