@@ -170,6 +170,10 @@ that the contents is automatically broken into multiple lines. For
 example, set \code{align = "lm{5cm}l"} to limit the second column to a width of
 5 cm. Similarly, to space columns equally use
 \code{align = paste0("m{", 1/(ncol(x) + 1), "\\\\linewidth}")}
+
+Note that placement options are not supported in appendices of \code{apa6}
+documents and will be printed to the document. To omit the printed options
+set \code{placement = NULL}.
 }
 \examples{
 

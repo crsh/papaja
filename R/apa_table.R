@@ -62,6 +62,10 @@
 #'   5 cm. Similarly, to space columns equally use
 #'   `align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")`
 #'
+#'   Note that placement options are not supported in appendices of `apa6`
+#'   documents and will be printed to the document. To omit the printed options
+#'   set `placement = NULL`.
+#'
 #' @seealso \code{\link[knitr]{kable}}, \code{\link{apa_num}}
 #' @examples
 #'
@@ -315,7 +319,7 @@ apa_table.data.frame <- function(
   if(!is.null(format.args)) validate(format.args, check_class = "list")
 
   validate(escape, check_class = "logical", check_length = 1)
-  validate(placement, check_class = "character", check_length = 1)
+  if(!is.null(placement)) validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
 
   # Set defaults and rename ellipsis arguments
@@ -532,6 +536,7 @@ apa_table.latex <- function(
 
   # Print table
   place_opt <- paste0("[", placement, "]")
+  if(place_opt == "[]") place_opt <- NULL
 
   table_output <- "\n\n"
 
