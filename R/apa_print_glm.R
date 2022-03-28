@@ -211,19 +211,31 @@ apa_print.lm <- function(
       , ellipsis
     )
   )
+  summary_x <- summary(x)
+
+  x_df <- as.data.frame(summary_x$coefficients)
+  x_df$Predictor <- rownames(x_df)
+
+  canonical_table <- canonize(
+    x_df
+    , est_label = if(standardized) "b^*" else "b"
+  )
+  return(canonical_table)
+  beautiful_table <- beautify(canonical_table, standardized = standardized)
+
 
   # Concatenate character strings and return as named list
   apa_res <- glue_apa_results(
-    regression_table
-    , est_glue = construct_glue(regression_table, "estimate")
-    , stat_glue = construct_glue(regression_table, "statistic")
+    beautiful_table
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
     , in_paren = in_paren
     , est_first = TRUE
     , simplify = FALSE
   )
 
   # Model fit
-  summary_x <- summary(x)
+
   glance_x <- broom::glance(x)
 
   p <- apa_p(glance_x$p.value)
