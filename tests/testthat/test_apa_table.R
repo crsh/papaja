@@ -20,7 +20,7 @@ test_that(
 
     skip_on_cran()
     rmarkdown::render("test_apa_table.Rmd", quiet = TRUE)
-    file.remove("test_apa_table.pdf", "test_apa_table.ttt")
+    suppressWarnings(file.remove("test_apa_table.pdf", "test_apa_table.ttt"))
   }
 )
 

@@ -135,6 +135,27 @@ test_that(
   }
 )
 
+test_that(
+  "Model comparisons: Many models"
+  , {
+    models <- list(
+      lm(yield ~ N , npk)
+      , lm(yield ~ N + P, npk)
+      , lm(yield ~ N + P + K, npk)
+      , lm(yield ~ N + P + K + N:P, npk)
+      , lm(yield ~ N + P + K + N:P + N:K, npk)
+      , lm(yield ~ N + P + K + N:P + N:K + P:K, npk)
+      , lm(yield ~ N + P + K + N:P + N:K + P:K + N:P:K, npk)
+    )
+
+    apa_out <- apa_print(models, boot_samples = 0L)
+
+    expect_apa_results(
+      apa_out
+    )
+  }
+)
+
 # context("apa_print.anova() - Model comparison")
 #
 # test_that(

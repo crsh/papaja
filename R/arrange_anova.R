@@ -55,43 +55,28 @@ arrange_anova.anova <- function(x) {
   )
   resid_row <- apply(X = object, MARGIN = 1, FUN = anyNA)
 
-  # Model comparisons (lm()) ----
-  if(any(grepl("Model 1", attr(object, "heading")) & grepl("Model 2", attr(object, "heading")))) {
+  # --------------------------------------------------------------------------
+  # - stats::anova.lm()
+  # - car::leveneTest()
+  # - afex::mixed(method %in% c("KR", "S", "PB"))
+  # - lme4::summary.merMod()
+  # - lmerTest::summary.lmerModLmerTest()
 
-    x <- data.frame(array(NA, dim = c(nrow(object) - sum(resid_row), 7)), row.names = NULL) # Create empty object
-    colnames(x) <- c("term", "sumsq", "df", "sumsq_err", "df.residual", "statistic", "p.value")
+  x <- object[!resid_row, ]
 
-    x[, c("sumsq", "df", "statistic", "p.value")] <- object[!resid_row, c("Sum of Sq", "Df", "F", "Pr(>F)")]
-    x$df <- abs(x$df) # Objects give difference in Df
-    x$sumsq_err <- object[!resid_row, "RSS"]
-    x$df.residual <- pmin(object[resid_row, "Res.Df"], object[!resid_row, "Res.Df"])
-    x$term <- paste0("model", 2:nrow(object))
-
-    class(x) <- c("apa_model_comp", class(x))
-  } else {
-    # --------------------------------------------------------------------------
-    # - stats::anova.lm()
-    # - car::leveneTest()
-    # - afex::mixed(method %in% c("KR", "S", "PB"))
-    # - lme4::summary.merMod()
-    # - lmerTest::summary.lmerModLmerTest()
-
-    x <- object[!resid_row, ]
-
-    if(any(resid_row)) {
-      stopifnot(sum(resid_row) == 1)
-      x$df.residual <- object$df[resid_row]
-      x$sumsq_err <- object$sumsq[resid_row]
-    }
-
-    if(is.null(x$term)) { # if not model comparison
-      x$Effect <- rownames(object)[!resid_row]
-      rownames(x) <- NULL
-    }
-
-    class(x) <- c("apa_variance_table", class(x))
-    attr(x, "df_correction") <- "none"
+  if(any(resid_row)) {
+    stopifnot(sum(resid_row) == 1)
+    x$df.residual <- object$df[resid_row]
+    x$sumsq_err <- object$sumsq[resid_row]
   }
+
+  if(is.null(x$term)) { # if not model comparison
+    x$Effect <- rownames(object)[!resid_row]
+    rownames(x) <- NULL
+  }
+
+  class(x) <- c("apa_variance_table", class(x))
+  attr(x, "df_correction") <- "none"
   x
 }
 

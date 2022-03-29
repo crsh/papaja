@@ -112,15 +112,31 @@ apa_print.list <- function(
   names(x) <- NULL
   model_comp <- do.call(anova_fun, c(x, ellipsis))
 
-  variance_table <- arrange_anova(model_comp)
+  canonical_table <- canonize(model_comp)
+
+  attr(canonical_table, "heading") <- NULL
+
+  canonical_table$df[] <- abs(canonical_table$df)  # Objects give difference in Df
+  resid_row <- !stats::complete.cases(canonical_table)
+  canonical_table$df.residual[] <- pmin(canonical_table$df.residual, canonical_table$df.residual[resid_row])
+  canonical_table$term <- paste0("model", seq_len(nrow(canonical_table)))
+  canonical_table <- canonical_table[!resid_row, , drop = FALSE]
+  rownames(canonical_table) <- NULL
+
+
   if(!is.null(model_labels) & sum(model_labels != "") == length(model_labels)) {
-    variance_table$term <- model_labels[-1]
+    canonical_table$term <- model_labels[-1]
     names(x) <- model_labels
   } else {
-    names(x) <- paste("Model", 1:length(x))
+    names(x) <- paste("Model", seq_along(x))
   }
 
-  if("apa_model_comp" %in% class(variance_table)) { # Model comparison object
-    return(print_model_comp(variance_table, models = x, conf.int = conf.int, boot_samples = boot_samples, progress_bar = progress_bar, in_paren = in_paren))
-  }
+  print_model_comp(
+    canonical_table
+    , models = x
+    , conf.int = conf.int
+    , boot_samples = boot_samples
+    , progress_bar = progress_bar
+    , in_paren = in_paren
+  )
 }
