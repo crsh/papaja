@@ -24,6 +24,7 @@ lookup_names <- c(
   # term
   , "Effect"     = "term"
   , "Term"       = "term"
+  , "Predictor"  = "term"
   , "model.term" = "term"
   , "model"        = "model"
   # estimate
@@ -143,6 +144,7 @@ lookup_labels <- c(
   # term
   , "Effect"     = "Effect"
   , "Term"       = "Term"
+  , "Predictor"  = "Predictor"
   , "model.term" = "Term"
   , "model"        = "Model"
   , "contrast"   = "Contrast"
