@@ -55,7 +55,7 @@ print_model_comp <- function(
   , observed = TRUE
 ) {
   validate(x, check_class = "data.frame")
-  validate(x, check_class = "apa_model_comp")
+  # validate(x, check_class = "apa_model_comp")
   validate(in_paren, check_class = "logical", check_length = 1)
   validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
   if(!is.null(models)) validate(models, check_class = "list", check_length = nrow(x) + 1)
@@ -112,12 +112,15 @@ print_model_comp <- function(
 
 
   # Assemble table
-  model_summaries <- lapply(models, function(x) { # Merge b and 95% CI
+  model_summaries <- Map(x = models, name = names(models), function(x, name) { # Merge b and 95% CI
       lm_table <- apa_print(x, conf.int = conf.int + (1 - conf.int) / 2)$table[, c("term", "estimate", "conf.int"), drop = FALSE]
       lm_table[, "estimate"] <- apply(lm_table[, c("estimate", "conf.int"), drop = FALSE], MARGIN = 1, paste, collapse = " ")
-      lm_table[, c("term", "estimate"), drop = FALSE]
+      lm_table <-lm_table[, c("term", "estimate"), drop = FALSE]
+      colnames(lm_table) <- c("term", name)
+      lm_table
     }
   )
+
 
   ## Merge coefficient tables
   coef_table <- Reduce(function(...) merge(..., by = "term", all = TRUE), model_summaries)
@@ -126,7 +129,6 @@ print_model_comp <- function(
   coef_table <- coef_table[names(sort(apply(coef_table, 1, function(x) sum(is.na(x))))), ] # Sort predictors to create steps in table
   coef_table <- coef_table[c("Intercept", rownames(coef_table)[rownames(coef_table) != "Intercept"]), ] # Make Intercept first Predictor
   coef_table[is.na(coef_table)] <- ""
-  colnames(coef_table) <- names(models)
 
   ## Add model fits
   model_fits <- lapply(models, broom::glance)

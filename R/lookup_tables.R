@@ -13,8 +13,10 @@
 
 lookup_names <- c(
   # nuisance parameters
-  "Sum.Sq"    = "sumsq"
+  "Sum.Sq"      = "sumsq"
+  , "Sum.of.Sq" = "sumsq"
   , "Error.SS" = "sumsq_err"
+  , "RSS"      = "sumsq_err"
   , "Mean.Sq" = "meansq"
   , "logLik"  = "loglik"
   , "AIC"     = "AIC"
@@ -116,6 +118,7 @@ lookup_names <- c(
   , "num.df"     = "df"
   , "denom.df"   = "df.residual"
   , "den.df"     = "df.residual"
+  , "Res.Df"     = "df.residual"
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
@@ -134,7 +137,9 @@ lookup_names <- c(
 
 lookup_labels <- c(
   # nuisance parameters
-  "Sum.Sq"    = "$\\mathit{SS}$"
+  "Sum.Sq"      = "$\\mathit{SS}$"
+  , "Sum.of.Sq" = "$\\mathit{SS}$"
+  , "RSS"       = "$\\mathit{SS}_{\\mathrm{res}}$"
   , "Mean.Sq" = "$\\mathit{MS}$"
   , "logLik"  = "$\\ln L$"
   , "AIC"     = "$\\mathit{AIC}$"
@@ -231,6 +236,7 @@ lookup_labels <- c(
   , "num.df"     = "$\\mathit{df}$"
   , "denom.df"   = "$\\mathit{df}_{\\mathrm{res}}$"
   , "den.df"     = "$\\mathit{df}_{\\mathrm{res}}$"
+  , "Res.Df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   # p.value
   , "p.value"     = "$p$"
   , "Pr...t.."    = "$p$"
