@@ -323,3 +323,23 @@ render_appendix <- function(
 
   return(invisible(0))
 }
+
+#' Create a Regression Table
+#'
+#' These methods take \code{glm} or \code{lm} objects to create
+#' a data frame containing a regression table.
+#' *This function has been defunct. It is
+#' no longer needed.*
+#'
+#' @param x \code{glm} or \code{lm} object. See details.
+#' @inheritParams apa_print.glm
+#'
+#' @return
+#'    \code{data.frame} of class \code{apa_regression_table}.
+#'
+#' @keywords internal
+
+arrange_regression <- function(x, est_name, standardized, conf.int, ...) {
+  .Defunct(msg = "arrange_regression() is defunct because it is no longer needed.")
+  invisible(NULL)
+}

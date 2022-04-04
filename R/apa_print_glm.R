@@ -89,73 +89,6 @@
 #' glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
 #'
 #' apa_print(glm.D93)
-#' @method apa_print glm
-#' @export
-
-apa_print.glm <- function(
-  x
-  , est_name = NULL
-  , conf.int = 0.95
-  , in_paren = FALSE
-  , ...
-) {
-  ellipsis_ci <- deprecate_ci(conf.int, ...)
-  ellipsis <- ellipsis_ci$ellipsis
-  conf.int <- ellipsis_ci$conf.int
-
-  validate(x, check_class = "glm")
-
-  if(!is.null(est_name)) validate(est_name, check_class = "character", check_length = 1)
-
-    if(!is.null(conf.int)) {
-    if(length(conf.int) == 1) {
-      validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))
-      conf.int <- suppressMessages({stats::confint(x, level = conf.int)})
-    } else {
-      validate(conf.int, check_class = "matrix")
-      sapply(conf.int, validate, check_class = "numeric")
-    }
-  } else validate(conf.int)
-  validate(in_paren, check_class = "logical", check_length = 1)
-
-  ellipsis <- list(...)
-
-  if(is.null(est_name)) est_name <- "b"
-
-  if(is.matrix(conf.int)) {
-    conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(conf.int), perl = TRUE))
-    conf_level <- 100 - conf_level[1] * 2
-  } else {
-    conf_level <- 100 * conf.int
-  }
-
-  regression_table <- arrange_regression(
-    x
-    , est_name = est_name
-    , standardized = FALSE
-    , conf.int = conf.int
-    , ...
-  )
-
-  # Concatenate character strings and return as named list
-  apa_res <- glue_apa_results(
-    regression_table
-    , est_glue = construct_glue(regression_table, "estimate")
-    , stat_glue = construct_glue(regression_table, "statistic")
-    , in_paren = in_paren
-    , est_first = TRUE
-    , simplify = FALSE
-  )
-
-  # Model fit
-  glance_x <- broom::glance(x)
-  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", apa_num(glance_x$AIC), "$")
-  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", apa_num(glance_x$BIC), "$")
-
-  apa_res
-}
-
-
 #' @rdname apa_print.glm
 #' @method apa_print lm
 #' @export
@@ -189,47 +122,77 @@ apa_print.lm <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
 
 
-  if(is.null(est_name)) if(standardized) est_name <- "b^*" else est_name <- "b"
+  if(is.null(est_name)) {
+    if(standardized) est_name <- "$b^*$" else est_name <- "$b$"
+  } else {
+    est_name <- paste0("$", strip_math_tags(est_name), "$")
+  }
   if(standardized) ellipsis$gt1 <- FALSE
 
   if(is.matrix(conf.int)) {
     conf_level <- as.numeric(gsub("[^.|\\d]", "", colnames(conf.int), perl = TRUE))
     conf_level <- 100 - conf_level[1] * 2
+    confint_out <- conf.int
   } else {
     conf_level <- 100 * conf.int
+    confint_out <- stats::confint(x, level = conf.int)
   }
 
-  regression_table <- do.call(
-    "arrange_regression"
-    , c(
-      list(
-        x = x
-        , est_name = est_name
-        , standardized = standardized
-        , conf.int = conf.int
-      )
-      , ellipsis
-    )
+  is_glm <- inherits(x, "glm")
+  summary_x <- summary(x)
+
+  x_df <- as.data.frame(summary_x$coefficients)
+  x_df$Predictor <- rownames(x_df)
+  x_df$conf.int <- Map(
+    confint_out[, 1L]
+    , confint_out[, 2L]
+    , f = list
   )
+  attr(x_df$conf.int, "conf.level") <- conf_level / 100
+  if(!is_glm) x_df$df <- stats::df.residual(x)
+
+  canonical_table <- canonize(
+    x_df
+    , est_label = est_name
+    , stat_label = if(is_glm) gsub(colnames(x_df)[3L], pattern = " value", replacement = "", fixed = TRUE) else "t"
+  )
+  beautiful_table <- do.call("beautify", c(ellipsis, list(x = canonical_table, standardized = standardized)))
 
   # Concatenate character strings and return as named list
   apa_res <- glue_apa_results(
-    regression_table
-    , est_glue = construct_glue(regression_table, "estimate")
-    , stat_glue = construct_glue(regression_table, "statistic")
+    beautiful_table
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
     , in_paren = in_paren
     , est_first = TRUE
     , simplify = FALSE
   )
 
-  # Model fit
-  summary_x <- summary(x)
-  glance_x <- broom::glance(x)
+  # Add model fit ----
 
-  p <- apa_p(glance_x$p.value)
+  if(!is_glm) {
+
+  p <- apa_p(
+    stats::pf(
+      q = summary_x$fstatistic[[1L]]
+      , df1 = summary_x$fstatistic[[2L]]
+      , df2 = summary_x$fstatistic[[3L]]
+      , lower.tail = FALSE
+    )
+  )
   p <- add_equals(p)
 
-  apa_res$statistic$modelfit$r2 <- paste0("$F(", summary_x$fstatistic[2], ", ", glance_x$df.residual, ") = ", apa_num(glance_x$statistic), "$, $p ", p, "$") # glance_x$df
+  apa_res$statistic$modelfit$r2 <- paste0(
+    "$F("
+    , apa_df(summary_x$fstatistic[[2L]])
+    , ", "
+    , apa_df(summary_x$fstatistic[[3L]])
+    , ") = "
+    , apa_num(summary_x$fstatistic[[1L]])
+    , "$, $p "
+    , p
+    , "$"
+  )
   if(in_paren) apa_res$statistic$modelfit$r2 <- in_paren(apa_res$statistic$modelfit$r2)
 
   if(package_available("MBESS")) {
@@ -239,28 +202,37 @@ apa_print.lm <- function(
     # See also http://daniellakens.blogspot.de/2014/06/calculating-confidence-intervals-for.html
 
     r2_ci <- MBESS::ci.R2(
-      R2 = glance_x$r.squared
-      , df.1 = summary_x$fstatistic[2] # glance_x$df
-      , df.2 = summary_x$fstatistic[3]
+      R2 = summary_x$r.squared
+      , df.1 = summary_x$fstatistic[[2L]] # glance_x$df
+      , df.2 = summary_x$fstatistic[[3L]]
       , conf.level = ci_conf_level / 100
       , Random.Predictors = observed
     )
 
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
-      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", apa_confint(c(r2_ci$Lower, r2_ci$Upper), conf.int = ci_conf_level, enclose_math = TRUE))
+      apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(summary_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", apa_confint(c(r2_ci$Lower, r2_ci$Upper), conf.int = ci_conf_level, enclose_math = TRUE))
     }
   } else {
-    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(glance_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
+    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(summary_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
   }
 
-  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", apa_num(glance_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
-  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", apa_num(glance_x$AIC), "$")
-  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", apa_num(glance_x$BIC), "$")
+  apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", apa_num(summary_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
+  }
+  apa_res$estimate$modelfit$aic <- paste0("$\\mathrm{AIC} = ", apa_num(stats::AIC(x)), "$")
+  apa_res$estimate$modelfit$bic <- paste0("$\\mathrm{BIC} = ", apa_num(stats::BIC(x)), "$")
 
-  apa_res$full_result$modelfit$r2 <- paste(apa_res$estimate$modelfit$r2, apa_res$statistic$modelfit$r2, sep = ", ")
+  if(!is_glm) {
+    apa_res$full_result$modelfit$r2 <- paste(apa_res$estimate$modelfit$r2, apa_res$statistic$modelfit$r2, sep = ", ")
+  }
 
   apa_res
 }
+
+# for backward compatibility, we also export apa_print.glm() (it used to be a separate method)
+#' @rdname apa_print.glm
+#' @export
+apa_print.glm <- apa_print.lm
+
 
 
 #' @rdname apa_print.glm
@@ -285,27 +257,3 @@ apa_print.summary.lm <- function(x, ...) {
   x <- eval.parent(x$call, n = 1)
   apa_print(x, ...)
 }
-
-
-# apa_glm_res <- function(x, in_paren, conf_level) {
-#   apa_res <- init_apa_results()
-#
-#   apa_res$statistic <- apply(x[, -1], 1, function(y) {
-#     y["p.value"] <- add_equals(y["p.value"])
-#
-#     stat <- paste0("$", svl(x$statistic), " = ",  y["statistic"], "$, $p ", y["p.value"], "$")
-#     if(in_paren) stat <- in_paren(stat)
-#     stat
-#   })
-#
-#   apa_res$estimate <- apply(x[, -1], 1, function(y) {
-#     paste0("$", svl(x$estimate), " = ", y["estimate"], "$, ", conf_level, "\\% CI $", strip_math_tags(y["conf.int"]), "$")
-#   })
-#
-#   apa_res$full_result <- paste(apa_res$estimate, apa_res$statistic, sep = ", ")
-#   apa_res[] <- lapply(apa_res, as.list) # preserve class by using []
-#
-#   apa_res$table <- sort_terms(as.data.frame(x), "term")
-#   class(apa_res$table) <- c("apa_results_table", "data.frame")
-#   apa_res
-# }
