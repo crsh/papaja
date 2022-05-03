@@ -1,0 +1,44 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.1.0
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "papaja" in publications use:'
+type: software
+license: MIT
+title: 'papaja: Prepare American Psychological Association Journal Articles with R
+  Markdown'
+version: 0.2.0
+abstract: Tools to create dynamic, submission-ready manuscripts, which conform to
+  American Psychological Association manuscript guidelines. We provide R Markdown
+  document formats for manuscripts (PDF and Word) and revision letters (PDF). Helper
+  functions facilitate reporting statistical analyses or create publication-ready
+  tables and plots.
+authors:
+- family-names: Aust
+  given-names: Frederik
+  email: frederik.aust@uni-koeln.de
+  orcid: https://orcid.org/0000-0003-4900-788X
+- family-names: Barth
+  given-names: Marius
+  email: marius.barth@uni-koeln.de
+  orcid: https://orcid.org/0000-0002-3421-6665
+preferred-citation:
+  type: manual
+  title: 'papaja: Prepare reproducible APA journal articles with R Markdown'
+  authors:
+  - family-names: Aust
+    given-names: Frederik
+  - family-names: Barth
+    given-names: Marius
+  year: '2022'
+  url: https://github.com/crsh/papaja
+repository-code: https://github.com/crsh/papaja
+url: https://github.com/crsh/papaja
+date-released: '2022-03-18'
+contact:
+- family-names: Aust
+  given-names: Frederik
+  email: frederik.aust@uni-koeln.de
+  orcid: https://orcid.org/0000-0003-4900-788X

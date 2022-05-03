@@ -143,7 +143,7 @@ in two-column PDF documents (e.g. when setting \code{classoption: jou}).
 Otherwise ignored.}
 
 \item{format.args}{List. A named list of arguments to be passed to
-\code{\link{printnum}} to format numeric values.}
+\code{\link{apa_num}} to format numeric values.}
 
 \item{merge_method}{Character. Determines how to merge tables if \code{x} is
 a \code{list} of matrices or data frames with a common structure. Can be either
@@ -170,6 +170,10 @@ that the contents is automatically broken into multiple lines. For
 example, set \code{align = "lm{5cm}l"} to limit the second column to a width of
 5 cm. Similarly, to space columns equally use
 \code{align = paste0("m{", 1/(ncol(x) + 1), "\\\\linewidth}")}
+
+Note that placement options are not supported in appendices of \code{apa6}
+documents and will be printed to the document. To omit the printed options
+set \code{placement = NULL}.
 }
 \examples{
 
@@ -199,5 +203,5 @@ apa_table(
 )
 }
 \seealso{
-\code{\link[knitr]{kable}}, \code{\link{printnum}}
+\code{\link[knitr]{kable}}, \code{\link{apa_num}}
 }

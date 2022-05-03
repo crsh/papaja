@@ -20,7 +20,7 @@
 #'   respectively) with attribute `conf.level` set, e.g., when calculating
 #'   bootstrapped confidence intervals.
 #' @inheritParams glue_apa_results
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #' @details
 #'   The function should work on a wide range of `htest` objects. Due to the
 #'   large number of functions that produce these objects and their
@@ -71,7 +71,9 @@ apa_print.htest <- function(
   , in_paren = FALSE
   , ...
 ) {
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   validate(x, check_class = "htest")
   if(!is.null(stat_name)) validate(stat_name, check_class = "character", check_length = 1)
@@ -80,7 +82,7 @@ apa_print.htest <- function(
   if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 2)
   validate(in_paren, check_class = "logical", check_length = 1)
 
-  ellipsis <- list(...)
+
 
   # Arrange table, i.e. coerce 'htest' to a proper data frame ----
 
@@ -147,7 +149,7 @@ apa_print.htest <- function(
     # } else {
     #   n <- paste0(", n = ", n)
     } else {
-      attr(x$statistic, "n") <- printnum(as.integer(n))
+      attr(x$statistic, "n") <- apa_num(as.integer(n))
     }
   } else {
     n <- NULL

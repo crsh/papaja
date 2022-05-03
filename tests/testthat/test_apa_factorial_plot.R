@@ -78,7 +78,8 @@ test_that(
     data <- npk
     out <- apa_factorial_plot(data = data, id = "block", dv = "yield", level = .75)
     data$block <- as.factor(data$block)
-    aggregated <- aggregate(formula = yield ~ block, data = data, FUN = mean)
+
+    aggregated <- aggregate(yield ~ block, data = data, FUN = mean)
     variable_label(aggregated) <- c(block = "block", "yield" = "yield")
 
     tendency <- mean(aggregated$yield)
@@ -95,6 +96,62 @@ test_that(
   }
 )
 
+test_that(
+  "apa_factorial_plot.default(): Inherit customizations"
+  , {
+    out <- apa_factorial_plot(
+      data = npk
+      , id = "block"
+      , dv = "yield"
+      , factors = c("N", "P")
+      , main = expression("test"~italic(T))
+      , plot = c("points", "swarms", "lines", "error_bars")
+      , args_points = list(pch = c(22, 23), bg = c("#FF0000", "#00FF00"), cex = c(0.99, .98), col = c("#0F0F0F", "#F0F0F0"))
+      , args_swarm = list(cex = 2)
+      , args_lines = list(col = c("#FF3766", "blue"), lwd = c(1, 3), lty = c(13, 14, 15))
+      , args_error_bars = list(col = "#FF6637")
+    )
+
+    expect_identical(
+      object = out$args$args_swarm$cex
+      , expected = c(2)
+      )
+    expect_identical(
+      object = out$args$args_swarm$pch
+      , expected = c(22, 23)
+    )
+    expect_identical(
+      object = out$args$args_lines$col
+      , expected = c("#FF3766", "blue")
+    )
+    expect_identical(
+      object = out$args$args_lines$lwd
+      , expected = c(1, 3)
+    )
+    expect_identical(
+      object = out$args$args_error_bars$col
+      , expected = "#FF6637"
+    )
+    expect_identical(
+      object = out$args$args_title$main
+      , expected = expression("test"~italic(T))
+    )
+    expect_identical(
+      object = out$args$args_legend
+      , expected = list(
+        title = "P"
+        , x = "topright"
+        , legend = c("0", "1")
+        , pch = c(22, 23)
+        , lty = c(13, 14, 15)
+        , bty = "n"
+        , pt.bg = c("#FF0000", "#00FF00")
+        , col = c("#0F0F0F", "#F0F0F0")
+        , pt.cex = c(.99, .98)
+      )
+    )
+  }
+)
 
 
 

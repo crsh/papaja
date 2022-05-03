@@ -123,7 +123,7 @@ via \code{options(papaja.mse = FALSE)}.}
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
 
-\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
+\item{...}{Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 
 \item{correction}{Character. For repeated-measures ANOVA, the type of
 sphericity correction to be used. Possible values are \code{"GG"} for the
@@ -172,7 +172,7 @@ new default. This default can be changed via
 }
 \references{
 Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. \emph{Behavior Research Methods}
-, 37 (3), 379--384. doi:\href{https://doi.org/10.3758/BF03192707}{10.3758/BF03192707}
+, 37 (3), 379--384. doi: \doi{10.3758/BF03192707}
 }
 \seealso{
 \code{\link[=aov]{aov()}}, \code{\link[car:Anova]{car::Anova()}}, \code{\link[=apa_print.list]{apa_print.list()}}
@@ -181,10 +181,10 @@ Other apa_print:
 \code{\link{apa_print.BFBayesFactor}()},
 \code{\link{apa_print.emmGrid}()},
 \code{\link{apa_print.glht}()},
-\code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
 \code{\link{apa_print.lme}()},
+\code{\link{apa_print.lm}()},
 \code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
@@ -197,6 +197,6 @@ Other apa_print:
 \item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
 \item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
 
-Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
 
 }

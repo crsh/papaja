@@ -4,15 +4,18 @@
 %
 \documentclass[
   english,
-  man]{apa6}
+  man,floatsintext]{apa6}
+\title{The title}
+\author{First Author\textsuperscript{1} \& Ernst-August Doelle\textsuperscript{1,2}}
+\date{}
+
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
-  \usepackage{amssymb}
 \else % if luatex or xetex
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
@@ -126,9 +129,9 @@
 
 % Create new environments so endfloat can handle them
 % \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
-\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+%   {\begin{landscape}\centering\begin{threeparttable}}
+%   {\end{threeparttable}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\centering\begin{ThreePartTable}}{\end{ThreePartTable}\end{landscape}}
 
 % Enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
@@ -166,33 +169,36 @@
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
 \makeatother
-\shorttitle{Title}
-\keywords{keywords\newline\indent Word count: X}
-\DeclareDelayedFloatFlavor{ThreePartTable}{table}
-\DeclareDelayedFloatFlavor{lltable}{table}
-\DeclareDelayedFloatFlavor*{longtable}{table}
+
+\usepackage{xpatch}
 \makeatletter
-\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
-\makeatother
+\xapptocmd\appendix
+  {\xapptocmd\section
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {}{\InnerPatchFailed}%
+  }
+{}{\PatchFailed}
+\keywords{keywords\newline\indent Word count: X}
 \usepackage{lineno}
 
 \linenumbers
 \usepackage{csquotes}
-\ifxetex
+\ifXeTeX
   % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
   \usepackage{polyglossia}
   \setmainlanguage[]{english}
 \else
-  \usepackage[shorthands=off,main=english]{babel}
+  \usepackage[main=english]{babel}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 \fi
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
-\title{The title}
-\author{First Author\textsuperscript{1} \& Ernst-August Doelle\textsuperscript{1,2}}
-\date{}
 
+\shorttitle{Title}
 
 \authornote{
 
@@ -202,7 +208,7 @@ Correspondence concerning this article should be addressed to First Author, Post
 
 \affiliation{\vspace{0.5cm}\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
 
-\abstract{
+\abstract{%
 Enter abstract here (note the indentation, if you start a new paragraph).
 }
 
@@ -223,11 +229,12 @@ Enter abstract here (note the indentation, if you start a new paragraph).
 \NormalTok{  , }\AttributeTok{caption =} \StringTok{"0 Single row table."}
 \NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
 \NormalTok{  , }\AttributeTok{small =} \ConstantTok{TRUE}
+\NormalTok{  , }\AttributeTok{placement =} \ConstantTok{NULL}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{table}[tbp]
+\begin{table}
 
 \begin{center}
 \begin{threeparttable}
@@ -1030,11 +1037,11 @@ Jo &  &  & \\ \midrule
 \toprule
 Predictor & \multicolumn{1}{c}{$b$} & \multicolumn{1}{c}{95\% CI} & \multicolumn{1}{c}{$z$} & \multicolumn{1}{c}{$p$}\\
 \midrule
-Intercept & 3.04 & [2.70, 3.37] & 17.81 & < .001\\
-Outcome2 & -0.45 & [-0.86, -0.06] & -2.25 & .025\\
-Outcome3 & -0.29 & [-0.68, 0.08] & -1.52 & .128\\
-Treatment2 & 0.00 & [-0.39, 0.39] & 0.00 & > .999\\
-Treatment3 & 0.00 & [-0.39, 0.39] & 0.00 & > .999\\
+Intercept & 3.04 & {}[2.70, 3.37] & 17.81 & < .001\\
+Outcome2 & -0.45 & {}[-0.86, -0.06] & -2.25 & .025\\
+Outcome3 & -0.29 & {}[-0.68, 0.08] & -1.52 & .128\\
+Treatment2 & 0.00 & {}[-0.39, 0.39] & 0.00 & > .999\\
+Treatment3 & 0.00 & {}[-0.39, 0.39] & 0.00 & > .999\\
 \bottomrule
 \end{tabular}
 

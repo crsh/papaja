@@ -37,5 +37,19 @@ add_custom_effect_sizes.function <- function(estimate, .x = NULL, observed = NUL
 
   if(is.null(.x)) stop("Cannot apply custom effect-size function to this class of object.", call. = FALSE)
 
-  add_custom_effect_sizes(estimate = estimate(.x, observed = observed), .x = .x, ...)
+  estimate_formals <- names(formals(estimate))
+  # print(estimate_formals)
+  if(any(estimate_formals == "observed")) {
+    add_custom_effect_sizes(estimate = estimate(.x, observed = observed), .x = .x, ...)
+  } else if(any(estimate_formals == "generalized")) {
+    add_custom_effect_sizes(estimate = estimate(.x, generalized = observed), .x = .x, ...)
+  } else if (!is.null(observed)) {
+    warning(
+      "Some terms have been specified as being observed, but the provided effect-size function does not seem to support observed terms."
+      , call. = FALSE
+    )
+    add_custom_effect_sizes(estimate = estimate(.x), .x = .x, ...)
+  } else {
+    add_custom_effect_sizes(estimate = estimate(.x), .x = .x, ...)
+  }
 }

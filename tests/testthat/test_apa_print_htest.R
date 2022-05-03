@@ -53,14 +53,14 @@ test_that(
     expect_apa_results(
       t_test_output
       , labels = list(
-        estimate = "$M_\\Delta$"
+        estimate = "$M_D$"
         , conf.int = "95\\% CI"
         , statistic = "$t$"
         , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
     )
-    expect_identical(t_test_output$full, "$M_\\Delta = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
+    expect_identical(t_test_output$full, "$M_D = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
 
     t_test <- t.test(sleep$extra, mu = 0)
     t_test_output <- apa_print(t_test)
@@ -276,7 +276,7 @@ test_that(
     expect_apa_results(
       two_sample_prop_test_output
       , labels = list(
-        estimate    = "\\Delta \\hat\\pi"
+        estimate    = "$\\Delta \\hat\\pi$"
         , conf.int  = "95\\% CI"
         , statistic = "$\\chi^2$"
         , df        ="$\\mathit{df}$"
@@ -286,7 +286,7 @@ test_that(
 
     expect_identical(
       attr(two_sample_prop_test_output$table$statistic, "n")
-      , printnum(as.integer(sum(patients[3:4])))
+      , apa_num(as.integer(sum(patients[3:4])))
     )
   }
 )
@@ -420,5 +420,16 @@ test_that(
 
     expect_error(apa_print(degenerate, est_name = "M"), "No estimate available in results table.")
     expect_error(apa_print(degenerate, stat_name = "t"), "No statistic available in results table.")
+  }
+)
+
+test_that(
+  "Deprecated 'ci' argument"
+  , {
+    expect_warning(
+      apa_print(t.test(yield ~ N, npk), ci = c(1, 2))
+      , regexp = "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
   }
 )

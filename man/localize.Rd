@@ -2,7 +2,7 @@
 % Please edit documentation in R/lookup_tables.R
 \name{localize}
 \alias{localize}
-\title{Lookup Table for Genearted Words and Phrases}
+\title{Lookup Table for Generated Words and Phrases}
 \usage{
 localize(x)
 }

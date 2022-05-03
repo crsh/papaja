@@ -10,7 +10,7 @@
 \details{
 \code{papaja} provides
 \itemize{
-\item an \href{http://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{http://www.rstudio.com/}{RStudio} to create PDF documents (using the \href{http://www.ctan.org/pkg/apa6}{apa6} LaTeX class) or Word documents (using a .docx-reference file).
+\item an \href{https://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{https://www.rstudio.com/}{RStudio} to create PDF documents (using the \href{http://www.ctan.org/pkg/apa6}{apa6} LaTeX class) or Word documents (using a .docx-reference file).
 \item Functions to \emph{typeset} the results from \emph{statistical analyses} (e.g., \code{\link[=apa_print]{apa_print()}}),
 \item functions to create \emph{tables} (\code{\link[=apa_table]{apa_table()}}), and
 \item functions to create \emph{figures} in accordance with APA guidelines (e.g., \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}).
@@ -19,21 +19,21 @@
 \section{System requirements}{
 
 To use \code{papaja} you need either an up-to-date version of
-\href{http://www.rstudio.com/}{RStudio} or
-\href{http://johnmacfarlane.net/pandoc/}{pandoc}. If you want to create PDF-
+\href{https://www.rstudio.com/}{RStudio} or
+\href{https://pandoc.org/}{pandoc}. If you want to create PDF-
 in addition to DOCX-documents you additionally need a
-\href{http://de.wikipedia.org/wiki/TeX}{TeX} distribution. We recommend
-\href{https://yihui.name/tinytex/}{TinyTex}, which can be installed from within
+\href{https://en.wikipedia.org/wiki/TeX}{TeX} distribution. We recommend
+\href{https://yihui.org/tinytex/}{TinyTex}, which can be installed from within
 R via the \pkg{tinytex} package.
 
-Please refer to the \href{https://crsh.github.io/papaja_man/introduction.html#getting-started}{\code{papaja} manual}
+Please refer to the \href{http://frederikaust.com/papaja_man/introduction.html#getting-started}{\code{papaja} manual}
 for detailed installation instructions.
 }
 
 \section{Getting help}{
 
-For a comprehensive introduction to \code{papaja}, see the current draft of the \href{https://crsh.github.io/papaja_man/}{manual}.
-If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow \href{https://t.co/Z3auyUrbTa}{using the \code{papaja} tag}.
+For a comprehensive introduction to \code{papaja}, see the current draft of the \href{http://frederikaust.com/papaja_man/}{manual}.
+If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow \href{https://stackoverflow.com/questions/tagged/papaja}{using the \code{papaja} tag}.
 If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.
 }
 

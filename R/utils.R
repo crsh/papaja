@@ -19,7 +19,7 @@
 #' @keywords internal
 #' @examples
 #' \dontrun{
-#' in_paren <- TRUE # Taken from printnum()
+#' in_paren <- TRUE # Taken from apa_num()
 #' validate(in_paren, check_class = "logical", check_length = 1)
 #' validate(in_paren, check_class = "numeric", check_length = 1)
 #' }
@@ -105,7 +105,7 @@ init_apa_results <- function(){
 
 #' Transform to a Canonical Table
 #'
-#' Internal function that puts a data frame into a canonical structure by 
+#' Internal function that puts a data frame into a canonical structure by
 #' renaming and labelling columns.
 #'
 #' @param x          A data frame.
@@ -118,6 +118,7 @@ canonize <- function(
   x
   , stat_label = NULL
   , est_label = NULL
+  , interval_type = "CI"
 ) {
 
   # args <- list(...)
@@ -133,22 +134,7 @@ canonize <- function(
     , "statistic"    = stat_label
   )
 
-  if(!is.null(x$conf.int)) {
-    conf_level <- attr(x$conf.int, "conf.level")
-    if(is.null(conf_level)) {
-      conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
-    }
-
-    conf_label <- paste0(
-      if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
-      , "CI"
-    )
-
-    new_labels <- c(new_labels, "conf.int" = conf_label)
-  }
-
   colnames(x) <- make.names(colnames(x))
-
   names_in_lookup_names <- colnames(x) %in% names(lookup_names)
 
   warning_unexpected <- "\nThis implies that your output object was not fully understood by `apa_print()`.
@@ -163,6 +149,28 @@ canonize <- function(
   variable_labels(x) <- new_labels[intersect(colnames(x), names(new_labels))]
   colnames(x)[names_in_lookup_names] <- lookup_names[colnames(x)[names_in_lookup_names]]
 
+  if(!is.null(x$conf.int)) {
+    conf_level <- attr(x$conf.int, "conf.level")
+    if(is.null(conf_level)) {
+      conf_level <- attr(x$conf.int, "conf.level") <- attr(x$conf.int[[1]], "conf.level")
+    }
+    if(is.null(conf_level) && !is.null(names(x$conf.int[[1]]))) {
+      suppressWarnings(
+        conf_level <- as.numeric(
+          gsub("[^.|\\d]", "", names(x$conf.int[[1]]), perl = TRUE)
+        )
+      )
+      conf_level <- if(anyNA(conf_level)) NULL else conf_level
+      if(!is.null(conf_level)) conf_level <- (100 - conf_level[1] * 2) / 100
+    }
+
+    conf_label <- paste0(
+      if(!is.null(conf_level)) paste0(conf_level * 100, "\\% ")
+      , interval_type
+    )
+
+    variable_labels(x) <- c("conf.int" = conf_label)
+  }
 
   # Adjust labels if dfs were corrected ----
   # - Hierarchical Linear Models: Kenward-Roger and Satterthwaite
@@ -187,10 +195,10 @@ canonize <- function(
 #'
 #' @param x An object created by \code{\link{canonize}}.
 #' @param standardized Logical. If TRUE the name of the function \code{scale} will be removed from term names.
-#' @param ... Further arguments that may be passed to \code{\link{printnum}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).
+#' @param ... Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).
 #' @keywords internal
 
-beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
+beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL, ...) {
 
   validate(x, check_class = "data.frame", check_infinite = FALSE)
   validate(standardized, check_class = "logical", check_length = 1L) # we could vectorize here!
@@ -199,35 +207,45 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, ...) {
 
   y <- x
 
-  # apply printnum ----
+  # apply apa_num ----
   for (i in colnames(y)) {
     if(i == "p.value") {
-      y[[i]] <- printp(y[[i]])
+      y[[i]] <- apa_p(y[[i]])
     } else if(i %in% c("df", "df.residual", "multivariate.df", "multivariate.df.residual")) {
-      y[[i]] <- print_df(y[[i]])
+      y[[i]] <- apa_df(y[[i]])
     } else if(i == "conf.int") {
       tmp <- unlist(lapply(X = y[[i]], FUN = function(x, ...){
-        print_interval(x, use_math = use_math, ...)
+        apa_interval(x, use_math = use_math, ...)
       }, ...))
       variable_label(tmp) <- variable_label(y[[i]])
       y[[i]] <- tmp
-    } else if (i == "estimate"){
+    } else if (i == "estimate") {
       args$x <- y[[i]]
-      y[[i]] <- do.call("printnum", args)
+      y[[i]] <- do.call("apa_num", args)
+    } else if (i == "statistic") {
+      args_stat$x <- y[[i]]
+      y[[i]] <- do.call("apa_num", args_stat)
     } else if (i == "term"){
       y[[i]] <- beautify_terms(as.character(y[[i]]), standardized = standardized)
+    } else if (i == "model") {
+      tmp <- beautify_model(as.character(y[[i]]), standardized = standardized)
+      variable_label(tmp) <- variable_label(y[[i]])
+      y[[i]] <- tmp
     } else {
-      y[[i]] <- printnum(y[[i]])
+      y[[i]] <- apa_num(y[[i]])
     }
   }
 
   # rearrange ----
   y <- sort_columns(y)
 
-  if(!is.null(y$term)) {
-    perm <- term_order(y$term)
+  identifier <- intersect(colnames(y), c("term", "model"))
+  stopifnot(length(identifier) <= 1L)
+
+  if(length(identifier) > 0) {
+    perm <- term_order(y[[identifier]])
     y <- y[perm, , drop = FALSE]
-    attr(y, "sanitized_term_names") <- sanitize_terms(unlabel(x$term)[perm])
+    attr(y, "sanitized_term_names") <- sanitize_terms(unlabel(x[[identifier]])[perm], standardized = standardized)
   }
 
   rownames(y) <- NULL
@@ -287,7 +305,7 @@ sort_columns <- function(x) {
   se <- NULL
   if(!any(colnames(x) == "conf.int")) se <- "std.error"
 
-  ordered_cols <- intersect(c("term", "estimate", "conf.int", se, multivariate, "statistic", "df", "df.residual", "mse", "p.value"), colnames(x))
+  ordered_cols <- intersect(c("model", "term", "estimate", "conf.int", se, "alternative", multivariate, "statistic", "df", "df.residual", "mse", "p.value", "mcmc.error"), colnames(x))
   x[, ordered_cols, drop = FALSE]
 }
 
@@ -449,7 +467,7 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
 #' @return Logical. Is the specified package installed?
 #' @keywords internal
 
-package_available <- function(x) x %in% rownames(utils::installed.packages())
+package_available <- function(x) requireNamespace(x, quietly = TRUE)
 
 no_method <- function(x) {
   stop(

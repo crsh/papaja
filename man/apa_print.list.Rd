@@ -86,22 +86,22 @@ Steiger, 2004).
 Algina, J., Keselman, H. J., & Penfield, R. D. (2007).
 Confidence intervals for an effect size measure in multiple linear regression.
 \emph{Educational and Psychological Measurement}, \emph{67}(2), 207--218.
-doi:\href{https://doi.org/10.1177/0013164406292030}{10.1177/0013164406292030}
+doi: \doi{10.1177/0013164406292030}
 
 Algina, J., Keselman, H. J., & Penfield, R. D. (2010).
 Confidence intervals for squared semipartial correlation coefficients: The effect of nonnormality.
 \emph{Educational and Psychological Measurement}, \emph{70}(6), 926--940.
-doi:\href{https://doi.org/10.1177/0013164410379335}{10.1177/0013164410379335}
+doi: \doi{10.1177/0013164410379335}
 
 Steiger (2004).
 Beyond the F test: Effect size confidence intervals and tests of close fit in the analysis of variance and contrast analysis.
 \emph{Psychological Methods}, \emph{9}(2), 164--182.
-doi:\href{https://doi.org/10.1037/1082-989X.9.2.164}{10.1037/1082-989X.9.2.164}
+doi: \doi{10.1037/1082-989X.9.2.164}
 
 Kelley, K. (2007).
 Confidence intervals for standardized effect sizes: Theory, application, and  implementation.
 \emph{Journal of Statistical Software}, \emph{20}(8), 1--24.
-doi:\href{https://doi.org/10.18637/jss.v020.i08}{10.18637/jss.v020.i08}
+doi: \doi{10.18637/jss.v020.i08}
 }
 \seealso{
 \code{\link[stats:anova]{stats::anova()}}
@@ -111,9 +111,9 @@ Other apa_print:
 \code{\link{apa_print.aov}()},
 \code{\link{apa_print.emmGrid}()},
 \code{\link{apa_print.glht}()},
-\code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.lme}()},
+\code{\link{apa_print.lm}()},
 \code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
@@ -126,6 +126,6 @@ Other apa_print:
 \item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
 \item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
 
-Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
 
 }

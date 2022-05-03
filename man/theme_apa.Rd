@@ -18,12 +18,6 @@ adjusted relative to this.}
 \pkg{ggplot2} theme with a white panel background, no grid lines, large axis
 and legend titles, and increased text padding for better readability.
 }
-\section{Visual example}{
-
-
-\figure{theme_apa.png}
-}
-
 \examples{
  \dontrun{
    # Copied from ?ggtheme

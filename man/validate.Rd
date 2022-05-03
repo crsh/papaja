@@ -47,7 +47,7 @@ This function can be used to validate the input to functions.
 }
 \examples{
 \dontrun{
-in_paren <- TRUE # Taken from printnum()
+in_paren <- TRUE # Taken from apa_num()
 validate(in_paren, check_class = "logical", check_length = 1)
 validate(in_paren, check_class = "numeric", check_length = 1)
 }

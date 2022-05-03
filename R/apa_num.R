@@ -29,29 +29,34 @@
 #'   `data.frame`, the vectors specify the formatting of either rows or columns
 #'   according to the value of `margin`.
 #' @examples
-#' printnum(1/3)
-#' printnum(1/3, gt1 = FALSE)
-#' printnum(1/3, digits = 5)
+#' apa_num(1/3)
+#' apa_num(1/3, gt1 = FALSE)
+#' apa_num(1/3, digits = 5)
 #'
-#' printnum(0)
-#' printnum(0, zero = FALSE)
-#' @rdname printnum
+#' apa_num(0)
+#' apa_num(0, zero = FALSE)
+#' @rdname apa_num
 #' @export
 
-printnum <- function(x, ...) {
-  UseMethod("printnum", x)
+apa_num <- function(x, ...) {
+  UseMethod("apa_num", x)
 }
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-print_num <- printnum
+printnum <- apa_num
 
-
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
+print_num <- apa_num
+
+
+#' @rdname apa_num
+#' @export
+
+apa_num.default <- function(x, na_string = getOption("papaja.na_string"), ...) {
   if(is.null(x)) stop("The parameter 'x' is NULL. Please provide a value for 'x'")
 
   x <- as.character(x)
@@ -62,24 +67,24 @@ printnum.default <- function(x, na_string = getOption("papaja.na_string"), ...) 
 }
 
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.list <- function(x, ...) {
-  lapply(x, printnum, ...)
+apa_num.list <- function(x, ...) {
+  lapply(x, apa_num, ...)
 }
 
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string = "no", na_string = getOption("papaja.na_string"), ...) {
+apa_num.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string = "no", na_string = getOption("papaja.na_string"), ...) {
   validate(x, check_integer = TRUE, check_NA = FALSE)
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
   validate(na_string, check_class = "character", check_length = 1)
 
-  # Prevent partial matching through printnum.data.frame()
+  # Prevent partial matching through apa_num.data.frame()
   system_call <- sys.call()
   if(!is.null(system_call[["zero"]]) && is.null(system_call[["zero_string"]])) zero_string <- "no"
   validate(zero_string, check_class = "character", check_length = 1)
@@ -169,10 +174,10 @@ printnum.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string
 }
 
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.numeric <- function(
+apa_num.numeric <- function(
   x
   , gt1 = TRUE
   , zero = TRUE
@@ -291,10 +296,10 @@ printnum.numeric <- function(
 
 
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.data.frame <- function(
+apa_num.data.frame <- function(
   x
   , margin = 2
   , ... # cleverly recycle (column-wise) over all possible parameters
@@ -304,10 +309,10 @@ printnum.data.frame <- function(
     ellipsis <- list(...)
     ellipsis$x <- x
     ellipsis$margin <- margin
-    x_out <- do.call("printnum.matrix", ellipsis)
+    x_out <- do.call("apa_num.matrix", ellipsis)
   } else {
     x_out <- mapply(
-      FUN = printnum
+      FUN = apa_num
       , x = x
       , ...
       , SIMPLIFY = FALSE
@@ -325,10 +330,10 @@ printnum.data.frame <- function(
   x_out
 }
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.matrix <- function(
+apa_num.matrix <- function(
   x
   , margin = 2
   , ...
@@ -341,7 +346,7 @@ printnum.matrix <- function(
     , MARGIN = (3 - margin) # Parameters are applied according to margin
     , FUN = function(x) {
       ellipsis$x <- x
-      do.call("printnum", ellipsis)
+      do.call("apa_num", ellipsis)
     }
     # Inception!
   )
@@ -357,11 +362,11 @@ printnum.matrix <- function(
 }
 
 
-#' @rdname printnum
+#' @rdname apa_num
 #' @export
 
-printnum.tiny_labelled <-function(x, ...){
-  x_out <- NextMethod("printnum")
+apa_num.tiny_labelled <-function(x, ...){
+  x_out <- NextMethod("apa_num")
   variable_label(x_out) <- variable_label(x)
   x_out
 }
@@ -369,23 +374,23 @@ printnum.tiny_labelled <-function(x, ...){
 
 #' Prepare Numeric Values for Printing as p value
 #'
-#' Convenience wrapper for \code{\link{printnum}} to print \emph{p} values.
+#' Convenience wrapper for \code{\link{apa_num}} to print \emph{p} values.
 #'
 #' @param x Numeric. The \emph{p} value(s) to report.
 #' @param digits Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.
-#' @inheritParams printnum.numeric
+#' @inheritParams apa_num.numeric
 #' @examples
-#' print_p(0.05)
-#' print_p(0.0005)
-#' print_p(0.99999999)
-#' print_p(c(.001, 0), add_equals = TRUE)
+#' apa_p(0.05)
+#' apa_p(0.0005)
+#' apa_p(0.99999999)
+#' apa_p(c(.001, 0), add_equals = TRUE)
 #' @export
 
-print_p <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
+apa_p <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   validate(x, check_class = "numeric", check_range = c(0, 1), check_NA = FALSE)
   validate(digits, check_class = "numeric")
 
-  printnum(
+  apa_num(
     x
     , digits = digits
     , gt1 = FALSE
@@ -395,24 +400,37 @@ print_p <- function(x, digits = 3L, na_string = "", add_equals = FALSE) {
   )
 }
 
-#' @rdname print_p
+#' @rdname apa_p
 #' @export
 
-printp <- print_p
+printp <- apa_p
+
+#' @rdname apa_p
+#' @export
+
+print_p <- apa_p
 
 
-#' Print Degrees of Freedom
+#' Typeset Degrees of Freedom
 #'
-#' This is an internal function for processing degrees of freedom. It takes care
+#' This is a function for processing degrees of freedom. It takes care
 #' that trailing digits are only printed if non-integer values are given.
 #'
-#' @keywords internal
+#' @param x Numeric. The degrees of freedom to report.
+#' @param digits Integer. The desired number of digits after the decimal point to
+#'   be used if `x` contains non-integer values.
+#' @param elementwise Logical. Determines whether the number of trailing digits
+#'   should be determined for each element of `x` separately (the default),
+#'   or for the complete vector `x`.
 #' @export
 
-print_df <- function(x, digits = 2L) {
+apa_df <- function(x, digits = 2L, elementwise = TRUE) {
 
   if(is.null(x))    return(NULL)
-  if(is.integer(x)) return(printnum(x))
+  if(is.integer(x)) return(apa_num(x))
+
+  elementwise <- isTRUE(elementwise)
+  digits <- as.integer(digits)
 
   validate(digits, check_class = "numeric", check_NA = TRUE)
 
@@ -420,14 +438,19 @@ print_df <- function(x, digits = 2L) {
     stop("The parameter `digits` must be of length 1 or equal to length of `x`.")
   }
 
-  x_digits <- ifelse(
-    is.finite(x)
-    , as.integer(x %% 1 > 0) * digits
-    , 0L
-  )
+  if(elementwise) {
+    digits <- as.integer(round(x, digits = 0L) != round(x, digits = digits + 2L)) * digits
+  } else if( all(round(x, digits = 0L) == round(x, digits = digits + 2L)) ) {
+    digits <- 0L
+  }
 
-  return(printnum(x, digits = x_digits))
+  apa_num(x, digits = digits)
 }
+
+#' @rdname apa_df
+#' @export
+
+print_df <- apa_df
 
 
 #' Typeset scientific notation
@@ -446,3 +469,59 @@ print_scientific <- function(x) {
   x <- gsub("e\\-0?(\\d+)$", " \\\\times 10\\^\\{-\\1\\}", x)
   x
 }
+
+# print_bf <- function(
+#   x
+#   , ratio_subscript = "10"
+#   , auto_invert = FALSE
+#   , escape = TRUE
+#   , scientific = TRUE
+#   , nonscientific_range = c(min = 1/1000, max = 1000)
+#   , log = FALSE
+#   , use_math = FALSE
+#   , ...
+# ) {
+#   validate(x, check_class = "numeric", check_NA = TRUE, check_infinite = FALSE)
+#   validate(ratio_subscript, check_class = "character", check_length = 1)
+#   validate(auto_invert, check_class = "logical", check_length = 1)
+#   validate(scientific, check_class = "logical", check_length = 1)
+#   validate(nonscientific_range, check_class = "numeric", check_length = 2)
+#   validate(log, check_class = "logical", check_length = 1)
+
+#   ellipsis <- list(...)
+#   ellipsis$x <- x
+#   ellipsis$use_math <- use_math
+
+#   if(auto_invert) {
+#     to_invert <- ellipsis$x < 1
+#     ellipsis$x[to_invert] <- 1 / ellipsis$x[to_invert]
+
+#     ratio_subscript <- rep(ratio_subscript, length(x))
+#     ratio_subscript[to_invert] <- invert_subscript(ratio_subscript)
+#   }
+
+#   if(escape) {
+#     ratio_subscript <- paste0("\\textrm{", escape_latex(ratio_subscript), "}")
+#   }
+
+#   if(scientific & (ellipsis$x > nonscientific_range["max"] - 1 | ellipsis$x < nonscientific_range["min"])) {
+#     ellipsis$format <- "e"
+#     if(is.null(ellipsis$digits)) ellipsis$digits <- 2
+
+#     bf <- do.call("apa_num", ellipsis)
+#     bf <- print_scientific(bf)
+#   } else {
+#     if(is.null(ellipsis$zero)) ellipsis$zero <- FALSE
+#     bf <- do.call("apa_num", ellipsis)
+#   }
+
+#   bf_name <- if(!log) "BF" else "\\log BF"
+
+#   bf <- paste0("$\\mathrm{", bf_name, "}_{", ratio_subscript, "} ", add_equals(bf), "$")
+#   bf
+# }
+
+# invert_subscript <- function(x) {
+#   seperator <- if(nchar(x) == 2) "" else "/"
+#   paste0(rev(unlist(strsplit(x, seperator))), collapse = seperator)
+# }

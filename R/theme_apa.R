@@ -8,10 +8,6 @@
 #' @param base_family Character. Base font family.
 #' @param box Logical. Indicates whether to draw a black panel border.
 #'
-#' @section Visual example:
-#'
-#' \figure{theme_apa.png}
-#'
 #' @seealso [ggplot2::theme_bw()], [ggplot2::theme()]
 #'
 #' @export

@@ -27,7 +27,7 @@ substitution.}
 \code{statistics}-, and \code{full_result} sub-lists, if multiple estimates or
 statistics are glued. Defaults to \code{attr(x, "sanitized_term_names")}.}
 
-\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
+\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expression
 string(s) to format. Multiple inputs are concatenated together before formatting.
 Named arguments are taken to be temporary variables available for substitution.}
 
@@ -67,12 +67,12 @@ strings and create a new or extend an existing \code{apa_results} object.
 # Tidy and typeset output
 iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
-tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
+tidy_iris_lm$p.value <- apa_p(tidy_iris_lm$p.value)
 
 glance_iris_lm <- broom::glance(iris_lm)
-glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
-glance_iris_lm$df <- printnum(as.integer(glance_iris_lm$df))
-glance_iris_lm$df.residual <- printnum(as.integer(glance_iris_lm$df.residual))
+glance_iris_lm$p.value <- apa_p(glance_iris_lm$p.value, add_equals = TRUE)
+glance_iris_lm$df <- apa_num(as.integer(glance_iris_lm$df))
+glance_iris_lm$df.residual <- apa_num(as.integer(glance_iris_lm$df.residual))
 
 # Create `apa_results`-list
 lm_results <- glue_apa_results(

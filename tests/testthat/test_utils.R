@@ -21,35 +21,35 @@ test_that(
 
 
 test_that(
-  "print_confint()"
+  "apa_confint()"
   , {
     x <- c(44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1)
     y <- c( 2.6,  3.1,  2.5,  5.0,  3.6,  4.0,  5.2,  2.8,  3.8)
 
     cor_test <- cor.test(x, y)
-    apa_confint <- print_confint(cor_test$conf.int, conf_level = 0.95, enclose_math = TRUE)
-    expect_is(apa_confint, "character")
-    expect_equal(apa_confint, "95\\% CI $[-0.15, 0.90]$")
+    apa_confint_res <- apa_confint(cor_test$conf.int, conf.int = 0.95, enclose_math = TRUE)
+    expect_is(apa_confint_res, "character")
+    expect_equal(apa_confint_res, "95\\% CI $[-0.15, 0.90]$")
 
-    apa_confint <- print_confint(cor_test$conf.int, gt1 = FALSE, enclose_math = TRUE)
-    expect_equal(apa_confint, "95\\% CI $[-.15, .90]$")
+    apa_confint_res <- apa_confint(cor_test$conf.int, gt1 = FALSE, enclose_math = TRUE)
+    expect_equal(apa_confint_res, "95\\% CI $[-.15, .90]$")
 
-    apa_confint <- print_confint(cor_test$conf.int, enclose_math = TRUE)
-    expect_equal(apa_confint, "95\\% CI $[-0.15, 0.90]$")
+    apa_confint_res <- apa_confint(cor_test$conf.int, enclose_math = TRUE)
+    expect_equal(apa_confint_res, "95\\% CI $[-0.15, 0.90]$")
 
-    apa_confint <- print_confint(c(1, 2), enclose_math = TRUE)
-    expect_equal(apa_confint, "$[1.00, 2.00]$")
+    apa_confint_res <- apa_confint(c(1, 2), enclose_math = TRUE)
+    expect_equal(apa_confint_res, "$[1.00, 2.00]$")
 
     conf_int <- confint(lm(x ~ y))
-    apa_confint <- print_confint(conf_int, enclose_math = TRUE)
+    apa_confint_res <- apa_confint(conf_int, enclose_math = TRUE)
 
-    expect_is(apa_confint, "list")
-    expect_equal(length(apa_confint), nrow(conf_int))
-    expect_equal(names(apa_confint), c("Intercept", "y"))
-    expect_equal(apa_confint$Intercept, "95\\% CI $[19.52, 51.78]$")
-    expect_equal(apa_confint$y, "95\\% CI $[-0.95, 7.67]$")
+    expect_is(apa_confint_res, "list")
+    expect_equal(length(apa_confint_res), nrow(conf_int))
+    expect_equal(names(apa_confint_res), c("Intercept", "y"))
+    expect_equal(apa_confint_res$Intercept, "95\\% CI $[19.52, 51.78]$")
+    expect_equal(apa_confint_res$y, "95\\% CI $[-0.95, 7.67]$")
 
-    print_confint(c(-Inf, 0), enclose_math = TRUE)
+    apa_confint(c(-Inf, 0), enclose_math = TRUE)
 
 
   }

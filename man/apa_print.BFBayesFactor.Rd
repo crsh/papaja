@@ -3,63 +3,87 @@
 \name{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactor}
 \alias{apa_print.BFBayesFactorTop}
-\alias{apa_print.BFBayesFactorList}
 \title{Typeset Bayes Factors}
 \usage{
 \method{apa_print}{BFBayesFactor}(
   x,
+  stat_name = NULL,
+  est_name = NULL,
+  subscript = NULL,
+  escape_subscript = FALSE,
+  scientific_threshold = NULL,
+  reciprocal = FALSE,
+  log = FALSE,
+  mcmc_error = any(x@bayesFactor$error > 0.05),
   iterations = 10000,
-  central_tendency = median,
-  hdi = 0.95,
   standardized = FALSE,
-  ratio_subscript = "10",
-  auto_invert = FALSE,
-  scientific = TRUE,
-  max = 1000,
-  min = 1/max,
-  evidential_boost = NULL,
+  central_tendency = median,
+  interval = hd_int,
+  interval_type = "HDI",
+  bf_r1 = NULL,
+  bf_1r = NULL,
   ...
 )
 
-\method{apa_print}{BFBayesFactorTop}(x, ...)
-
-\method{apa_print}{BFBayesFactorList}(x, ...)
+\method{apa_print}{BFBayesFactorTop}(x, reciprocal = FALSE, ...)
 }
 \arguments{
 \item{x}{Output object. See details.}
 
+\item{stat_name}{Character. If \code{NULL} (the default), the name given in \code{x}
+is used for the \emph{test statistic}, otherwise the supplied name is used.
+See details.}
+
+\item{est_name}{Character. If \code{NULL} (the default), the name given in \code{x}
+(or a formally correct adaptation) is used for the \emph{estimate}, otherwise
+the supplied name is used. See details.}
+
+\item{subscript}{Character. Index used to specify the model comparison for
+the Bayes factors, e.g., \code{"+0"} yields \eqn{BF_{+0}}. If \code{NULL} default to
+"10".}
+
+\item{escape_subscript}{Logical. If \code{TRUE} special LaTeX characters, such as
+\code{\%} or \code{_}, in \code{subscript} are escaped.}
+
+\item{scientific_threshold}{Numeric. Named vector of length 2 taking the form
+\code{c(min = 1/10, max = 1e6)}. Bayes factors that exceed these thresholds will
+be printed in scientific notation.}
+
+\item{reciprocal}{Logical. If \code{TRUE} the reciprocal of all Bayes factors is
+taken before results are formatted. The advantage over specifying
+\code{x = t(x)} is that the default (\emph{only} the default) index specifying the
+model comparison is automatically reversed, see \code{subscript}.}
+
+\item{log}{Logical. If \code{TRUE} the logarithm of the Bayes factor is reported.}
+
+\item{mcmc_error}{Logical. If \code{TRUE} estimation error of the Bayes factor(s)
+is reported.}
+
 \item{iterations}{Numeric. Number of iterations of the MCMC sampler to
 estimate HDIs from the posterior.}
-
-\item{central_tendency}{Function to calculate central tendency of MCMC
-samples to obtain a point estimate from the posterior.}
-
-\item{hdi}{Numeric. A single value (range [0, 1]) giving the credibility
-level of the HDI.}
 
 \item{standardized}{Logical. Whether to return standardized or
 unstandardized effect size estimates.}
 
-\item{ratio_subscript}{Character. A brief description of the model
-comparison, in the form of \code{"M1/M2"}.}
+\item{central_tendency}{Function to calculate central tendency of MCMC
+samples to obtain a point estimate from the posterior.}
 
-\item{auto_invert}{Logical. Indicates whether the Bayes factor should be
-inverted (including \code{ratio_subscript}) if it is less than 1.}
+\item{interval}{Function to calculate an interval estimate of MCMC
+samples from the posterior. The returned object must be either a named
+vector or matrix with (column) names giving the interval bounds
+(e.g., \verb{2.5\%} and \verb{97.5\%}) or with an attribute \code{conf.level} (e.g., \code{0.95}).}
 
-\item{scientific}{Logical. Indicates whether to use scientific notation.}
+\item{interval_type}{Character. Used to specify the type of interval in the
+formatted text.}
 
-\item{max}{Numeric. Upper limit of the Bayes factor before switching to
-scientific notation.}
+\item{bf_r1}{Numeric. Vector of the same length as \code{x} giving Bayes factors
+in favor of an order constraint relative to the unconstrained model
+(see details). Must be on log-scale if \code{log = TRUE}.}
 
-\item{min}{Numeric. Lower limit of the Bayes factor before switching to
-scientific notation.}
-
-\item{evidential_boost}{Numeric. Vector of the same length as \code{x}
-containing evidential boost factors for the corresponding models
-(see details).}
+\item{bf_1r}{Numeric. Same as \code{bf_r1} (see details).}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum.numeric]{printnum.numeric}}
+  Arguments passed on to \code{\link[=apa_num.numeric]{apa_num.numeric}}
   \describe{
     \item{\code{gt1}}{Logical. Indicates if the statistic can, in principle, have an
 absolute value greater than 1. If \code{FALSE}, leading zeros are
@@ -76,44 +100,82 @@ prepended with an \code{=}.}
 \description{
 These methods take result objects from the \pkg{BayesFactor} package to
 create formatted character strings to report the results in accordance with
-APA manuscript guidelines. \emph{These methods are not properly tested and should
-be considered experimental.}
+APA manuscript guidelines.
 }
 \details{
-For models with order restrictions, evidential boosts can be calculated
-based on the prior and posterior odds of the restriction
-(e.g., Morey & Wagenmakers, 2014). If evidential boost factors are passed
-to \code{evidential_boost} they are multiplied with the corresponding Bayes
-factor before the results are formatted.
+\code{stat_name} and \code{est_name} are placed in the output string and are
+thus passed to pandoc or LaTeX through \pkg{knitr}. To the extent it is
+supported by the final document type, you can pass LaTeX-markup to format
+the final text (e.g., \code{M_\\Delta} yields \eqn{M_\Delta}).
+
+For models with order constraint, the evidence for the order constraint
+relative to the null model can be obtained by multiplying the
+Bayes factor \eqn{BF_{r1}} for the order constraint relative to the
+unconstrained model (\code{bf_r1}) with the Bayes factor \eqn{BF_{10}} for the
+unconstrained model relative to the null model,
+
+\deqn{\frac{p(y \mid {\cal M}_r)}{p(y \mid {\cal M}_0)} = \frac{p(y \mid {\cal M}_r)}{p(y \mid {\cal M}_1)} \times \frac{p(y \mid {\cal M}_1)}{p(y \mid {\cal M}_0)}}.
+
+\eqn{BF_{r1}} can be calculated from the prior and posterior odds of the
+order constraint (e.g., Morey & Wagenmakers, 2014). If \code{bf_r1} (or
+\code{bf_1r}) is specified they are multiplied with the corresponding Bayes
+factor supplied in \code{x} before the reciprocal is taken and the results are
+formatted. Note, that it is not possible to determine whether \code{x} gives
+\eqn{BF_{10}} or \eqn{BF_{01}} and, hence, \code{bf_r1} and \code{bf_1r} are treated
+identically; the different argument names only serve to ensure the
+expressiveness of the code. It is the user's responsibility to ensure that
+the supplied Bayes factor is correct!
 }
 \examples{
+# ANOVA
 \dontrun{
-data(sleep)
-bayesian_anova <- anovaBF(
+data(sleep, package = "BayesFactor")
+bayesian_anova <- BayesFactor::anovaBF(
   extra ~ group + ID
   , data = sleep
   , whichRandom = "ID"
-  , progress=FALSE
+  , progress = FALSE
 )
 
-apa_print(bayesian_anova)
+# Paired t-test
+ttest_paired <- BayesFactor::ttestBF(
+  x = sleep$extra[sleep$group == 1]
+  , y = sleep$extra[sleep$group == 2]
+  , paired = TRUE
+)
+
+# Results for paired t-tests are indistinguishable
+# from one-sample t-tests. We therefore specify the
+# appropriate `est_name` manually.
+apa_print(
+  ttest_paired
+  , est_name = "M_D"
+  , iterations = 1000
+)
+
+apa_print(
+  ttest_paired
+  , iterations = 1000
+  , interval = function(x) quantile(x, probs = c(0.025, 0.975))
+  , interval_type = "CrI"
+)
 }
 }
 \references{
 Morey, R. D., & Wagenmakers, E.-J. (2014). Simple relation between Bayesian
 order-restricted and point-null hypothesis tests. \emph{Statistics &
 Probability Letters}, 92, 121--124. doi:
-\href{https://doi.org/10.1016/j.spl.2014.05.010}{10.1016/j.spl.2014.05.010}
+\doi{10.1016/j.spl.2014.05.010}
 }
 \seealso{
 Other apa_print: 
 \code{\link{apa_print.aov}()},
 \code{\link{apa_print.emmGrid}()},
 \code{\link{apa_print.glht}()},
-\code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
 \code{\link{apa_print.lme}()},
+\code{\link{apa_print.lm}()},
 \code{\link{apa_print.merMod}()},
 \code{\link{apa_print}()}
 }
@@ -127,6 +189,6 @@ Other apa_print:
 \item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
 \item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
 
-Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t(23)$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
 
 }

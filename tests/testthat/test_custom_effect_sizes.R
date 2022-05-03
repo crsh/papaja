@@ -73,8 +73,8 @@ test_that(
     )
 
     # Anova.mlm (Type-3 again, but only partial eta-squared available)
-    Anova.mlm_out    <- expect_warning(apa_print(afex_out$Anova))
-    Anova.mlm_out_df <- expect_warning(apa_print(afex_out$Anova, es = ges(afex_out$Anova)))
+    Anova.mlm_out    <- apa_print(afex_out$Anova) # expect_warning(): seems like warnings came from within the effectsize package
+    Anova.mlm_out_df <- apa_print(afex_out$Anova, es = ges(afex_out$Anova))# expect_warning(): seems like warnings came from within the effectsize package
 
     expect_identical(
       Anova.mlm_out

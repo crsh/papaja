@@ -4,7 +4,8 @@
     <title>American Psychological Association 7th edition</title>
     <title-short>APA</title-short>
     <id>http://www.zotero.org/styles/apa-no-disambiguation</id>
-    <link href="http://www.zotero.org/styles/apa-no-disambiguation" rel="self"/>n    <link href="http://www.zotero.org/styles/apa" rel="template"/>
+    <link href="http://www.zotero.org/styles/apa-no-disambiguation" rel="self"/>
+    <link href="http://www.zotero.org/styles/apa" rel="template"/>
     <link href="http://www.zotero.org/styles/apa-no-disambiguation-6th-edition" rel="template"/>
     <link href="https://apastyle.apa.org/style-grammar-guidelines/references/examples" rel="documentation"/>
     <author>
@@ -14,7 +15,7 @@
     <category citation-format="author-date"/>
     <category field="psychology"/>
     <category field="generic-base"/>
-    <updated>2019-12-04T13:09:49+00:00</updated>
+    <updated>2022-01-31T14:30:00+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
@@ -387,7 +388,7 @@
       <if type="bill legal_case legislation treaty" match="any">
         <text macro="title-intext"/>
       </if>
-      <else-if type="interview personal_communication">
+      <else-if type="interview personal_communication" match="any">
         <choose>
           <!-- These variables indicate that the letter is retrievable by the reader. 
                 If not, then use the APA in-text-only personal communication format -->
@@ -481,16 +482,15 @@
             </group>
           </else-if>
           <else>
-            <group>
-              <text term="no date" form="short"/>
-              <text variable="year-suffix" prefix="-"/>
-            </group>
+            <text term="no date" form="short"/>
+            <text variable="year-suffix" prefix="-"/>
           </else>
         </choose>
       </group>
     </group>
   </macro>
   <macro name="date-sort-group">
+    <!-- APA sorts 1. no-date items, 2. items with dates, 3. in-press (status) items -->
     <choose>
       <if variable="issued">
         <text value="1"/>
@@ -504,22 +504,7 @@
     </choose>
   </macro>
   <macro name="date-sort-date">
-    <choose>
-      <if type="article-magazine article-newspaper broadcast interview pamphlet personal_communication post post-weblog speech treaty webpage" match="any">
-        <date variable="issued" form="numeric"/>
-      </if>
-      <else-if type="paper-conference">
-        <!-- Capture 'speech' stored as 'paper-conference' -->
-        <choose>
-          <if variable="collection-editor editor editorial-director issue page volume" match="none">
-            <date variable="issued" form="numeric"/>
-          </if>
-        </choose>
-      </else-if>
-      <else>
-        <date variable="issued" form="numeric"/>
-      </else>
-    </choose>
+    <date variable="issued" form="numeric"/>
   </macro>
   <macro name="date-intext">
     <choose>
@@ -543,7 +528,7 @@
             </choose>
             <group>
               <choose>
-                <if type="interview personal_communication">
+                <if type="interview personal_communication" match="any">
                   <choose>
                     <if variable="archive container-title DOI publisher URL" match="none">
                       <!-- These variables indicate that the communication is retrievable by the reader. 
@@ -611,7 +596,7 @@
       </else-if>
       <else>
         <choose>
-          <if type="article-journal article-magazine article-newspaper post-weblog review review-book">
+          <if type="article-journal article-magazine article-newspaper post-weblog review review-book" match="any">
             <text variable="title" font-style="italic"/>
           </if>
           <else-if type="paper-conference">
@@ -728,7 +713,7 @@
             </group>
           </group>
         </if>
-        <else-if type="post webpage">
+        <else-if type="post webpage" match="any">
           <!-- For post webpage, container-title is treated as publisher -->
           <group delimiter="; ">
             <text macro="secondary-contributors"/>
@@ -1508,7 +1493,7 @@
             </if>
           </choose>
         </if>
-        <else-if type="post webpage">
+        <else-if type="post webpage" match="any">
           <!-- For websites, treat container title like publisher -->
           <group delimiter="; ">
             <text variable="container-title" text-case="title"/>
@@ -1860,7 +1845,7 @@
       <text variable="locator"/>
     </group>
   </macro>
-  <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="true" disambiguate-add-names="true"  collapse="year" >
+  <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="true" disambiguate-add-names="true"  collapse="year" givenname-disambiguation-rule="primary-name-with-initials">
     <sort>
       <key macro="author-bib" names-min="3" names-use-first="1"/>
       <key macro="date-sort-group"/>

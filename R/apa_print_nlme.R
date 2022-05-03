@@ -33,15 +33,12 @@ apa_print.lme <- function(
   , ...
 ) {
 
-  ellipsis <- list(...)
 
   # Input validation and processing ----
+  ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
-  if(!is.null(ellipsis$args)) {
-    warning("Argument 'args_confint' has been deprecated. Please use 'conf.int' instead.")
-    conf.int <- ellipsis$args
-    ellipsis$args_confint <- NULL
-  }
 
   if(is.list(conf.int)) {
     validate(conf.int, check_class = "list")
@@ -71,7 +68,7 @@ apa_print.lme <- function(
     , make.names = TRUE
   )
 
-  args_confint <- defaults(
+  conf.int <- defaults(
     conf.int
     , set = list(
       object = x
@@ -84,7 +81,7 @@ apa_print.lme <- function(
 
   # Add confidence intervals ----
   confidence_intervals <-
-    do.call(nlme::intervals, args_confint)
+    do.call(nlme::intervals, conf.int)
 
   res_table$conf.int <- unlist(
     apply(X = confidence_intervals$fixed, MARGIN = 1, FUN = function(x) {
@@ -93,7 +90,7 @@ apa_print.lme <- function(
     , recursive = FALSE
   )
 
-  attr(res_table$conf.int, "conf.level") <- args_confint$level
+  attr(res_table$conf.int, "conf.level") <- conf.int$level
 
   res_table$Term <- rownames(res_table)
   rownames(res_table) <- NULL

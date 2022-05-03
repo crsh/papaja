@@ -2,7 +2,7 @@
 #'
 #' Takes various \pkg{emmeans} objects to create formatted character strings to
 #' report the results in accordance with APA manuscript guidelines.
-#' \emph{\pkg{emmeans} supports a wide range of analysis, not all
+#' \emph{\pkg{emmeans} supports a wide range of analyses, not all
 #' of which are currently (fully) supported. Proceed with caution.}
 #'
 #' @param x Object
@@ -11,10 +11,10 @@
 #' \pkg{emmeans}.
 #' @param contrast_names Character. An optional vector of names to label the
 #' calculated contrasts.
-#' @param conf.level Numeric. Confidence level for confidence intervals.
+#' @param conf.int Numeric. Confidence level for confidence intervals.
 #' @inheritParams emmeans::summary.emmGrid
 #' @inheritParams glue_apa_results
-#' @inheritDotParams printnum
+#' @inheritDotParams apa_num
 #' @details
 #'
 #' When p-values and confidence intervals are adjusted for multiple testing,
@@ -35,17 +35,34 @@
 #'
 #' @family apa_print
 #' @examples
-#'    NULL
+#'   # From the emmeans manual:
+#'   library(emmeans)
+#'   warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
+#'   warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#'   warp.contr <- contrast(warp.emm, "poly")
+#'
+#'   apa_print(warp.contr)
+#'
+#'   # In this example, because degrees of freedom are equal across all rows
+#'   # of the output, it is possible to move that information to the variable
+#'   # labels. This is useful if a compact results table is required:
+#'
+#'   df_into_label(apa_print(warp.contr))
+#'
 #' @method apa_print emmGrid
 #' @export
 
-apa_print.emmGrid <- function(x, infer = TRUE, conf.level = 0.95, ...) {
-  ellipsis <- list(...)
+apa_print.emmGrid <- function(x, infer = TRUE, conf.int = 0.95, ...) {
+
+  ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+  conf.int <- ellipsis_ci$conf.int
+  ellipsis <- ellipsis_ci$ellipsis
+
   if(is.null(ellipsis$est_name)) {
     ellipsis$est_name <- est_name_from_call(x)
   }
 
-  ellipsis$x <- summary(x, infer = infer, level = conf.level)
+  ellipsis$x <- summary(x, infer = infer, level = conf.int)
 
   # Add family size, because it gets lost otherwise
   famSize <- attr(x, "misc")$famSize
@@ -169,11 +186,11 @@ apa_print.summary_emm <- function(
   ## Typeset columns
   tidy_x[, factors] <- beautify_terms(tidy_x[, factors], ...)
 
-  tidy_x$estimate <- printnum(tidy_x$estimate, ...)
+  tidy_x$estimate <- apa_num(tidy_x$estimate, ...)
 
   if(ci_supplied) {
     tidy_x$conf.int <- unlist(
-      print_confint(
+      apa_confint(
         tidy_x[, c("conf.low", "conf.high")]
         , use_math = FALSE
       )
@@ -184,9 +201,9 @@ apa_print.summary_emm <- function(
   if(p_supplied) {
     if(all(tidy_x$null.value == 0)) tidy_x$null.value <- NULL
 
-    tidy_x$statistic <- printnum(tidy_x$statistic)
-    tidy_x$df <- print_df(tidy_x$df)
-    tidy_x[[p_value]] <- printp(tidy_x[[p_value]])
+    tidy_x$statistic <- apa_num(tidy_x$statistic)
+    tidy_x$df <- apa_df(tidy_x$df)
+    tidy_x[[p_value]] <- apa_p(tidy_x[[p_value]])
   }
 
   if(!is.null(contrast_names)) tidy_x$contrast <- contrast_names
@@ -214,21 +231,15 @@ apa_print.summary_emm <- function(
     if(all(tidy_x$df == "$\\infty$")) {
       test_stat <- "z"
       tidy_x$df <- NULL
-    } else if(!multiple_df) {
-      test_stat <- paste0("t(", unique(tidy_x$df), ")")
-      tidy_x$df <- NULL
     } else {
       test_stat <- "t"
+      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
 
     tidy_x_labels <- c(tidy_x_labels, statistic = paste0("$", test_stat, "$"))
 
     if("null.value" %in% names(tidy_x)) {
       tidy_x_labels <- c(tidy_x_labels, null.value = "$\\theta_0$")
-    }
-
-    if(multiple_df) { # Put df in column heading
-      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
 
     variable_labels(tidy_x[[p_value]]) <- switch(

@@ -75,12 +75,12 @@ print_anova <- function(
   if(!intercept) x <- x[x$term != "(Intercept)", ]
 
   # Rounding and filling with zeros
-  x$statistic <- printnum(x$statistic, digits = 2)
-  x$p.value <- printp(x$p.value)
-  x$df <- print_df(x$df)
-  x$df.residual <- print_df(x$df.residual)
-  for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = FALSE)}
-  if(mse) x$mse <- printnum(x$mse, digits = 2)
+  x$statistic <- apa_num(x$statistic, digits = 2)
+  x$p.value <- apa_p(x$p.value)
+  x$df <- apa_df(x$df)
+  x$df.residual <- apa_df(x$df.residual)
+  for(i in es) {x[[i]] <- apa_num(x[[i]], digits = 3, gt1 = FALSE)}
+  if(mse) x$mse <- apa_num(x$mse, digits = 2)
 
   # Assemble table -------------------------------------------------------------
   cols <- intersect(

@@ -16,3 +16,5 @@
 ^\.github$
 ^\.vscode$
 ^update_csl.sh$
+^CITATION\.cff$
+^vignettes/papaja.Rmd$

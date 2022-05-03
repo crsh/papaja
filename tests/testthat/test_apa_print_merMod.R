@@ -56,14 +56,14 @@ test_that(
       object = apa_lmerTest$statistic
       , expected = list(
         Intercept = "$t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$t(17.00) = 3.06$, $p = .007$"
+        , N1 = "$t(17) = 3.06$, $p = .007$"
       )
     )
     expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
         Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.29, 55.84]$, $t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17.00) = 3.06$, $p = .007$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17) = 3.06$, $p = .007$"
       )
     )
 
@@ -88,7 +88,7 @@ test_that(
 
     expect_identical( # in_paren
       object = apa_lmerTest_specialties$full_result$N1
-      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17.00] = 3.06$, $p = .007$"
+      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17] = 3.06$, $p = .007$"
     )
 
     # Test reduction of (Days | Subject) to (1 | Subject):
@@ -127,7 +127,8 @@ test_that(
 
     expect_warning(
       apa_print(gm1, args_confint = list(level = .90))
-      , "Argument 'args_confint' has been deprecated. Please use 'conf.int' instead."
+      , "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
 
     expect_apa_results(
@@ -190,7 +191,7 @@ test_that(
 
     expect_identical(
       apa_KR$full_result$Days
-      , expected = "$F(1, 17.00) = 45.85$, $p < .001$"
+      , expected = "$F(1, 17) = 45.85$, $p < .001$"
     )
     expect_identical(
       apa_S$full_result$Days
@@ -278,9 +279,9 @@ test_that(
     expect_identical(
       object = apa_KR$statistic
       , expected = list(
-        N = "$F(1, 15.00) = 9.04$, $p = .009$"
-        , P = "$F(1, 15.00) = 0.40$, $p = .536$"
-        , N_P = "$F(1, 15.00) = 1.02$, $p = .329$"
+        N = "$F(1, 15) = 9.04$, $p = .009$"
+        , P = "$F(1, 15) = 0.40$, $p = .536$"
+        , N_P = "$F(1, 15) = 1.02$, $p = .329$"
       )
     )
     expect_identical( # KR gives same results as S in this special case
@@ -343,6 +344,20 @@ test_that(
         , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
+    )
+  }
+)
+
+test_that(
+  "Deprecated 'args_confint' argument"
+  , {
+    data(sleepstudy, package = "lme4")
+    fm1 <- lme4::lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+
+    expect_warning(
+      apa_print(fm1, args_confint = list(level = .99, method = "profile"))
+      , regexp = "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
   }
 )

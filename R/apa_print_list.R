@@ -53,22 +53,22 @@
 #'    Algina, J., Keselman, H. J., & Penfield, R. D. (2007).
 #'    Confidence intervals for an effect size measure in multiple linear regression.
 #'    *Educational and Psychological Measurement*, *67*(2), 207--218.
-#'    doi:[10.1177/0013164406292030](https://doi.org/10.1177/0013164406292030)
+#'    doi: \doi{10.1177/0013164406292030}
 #'
 #'    Algina, J., Keselman, H. J., & Penfield, R. D. (2010).
 #'    Confidence intervals for squared semipartial correlation coefficients: The effect of nonnormality.
 #'    *Educational and Psychological Measurement*, *70*(6), 926--940.
-#'    doi:[10.1177/0013164410379335](https://doi.org/10.1177/0013164410379335)
+#'    doi: \doi{10.1177/0013164410379335}
 #'
 #'    Steiger (2004).
 #'    Beyond the F test: Effect size confidence intervals and tests of close fit in the analysis of variance and contrast analysis.
 #'    *Psychological Methods*, *9*(2), 164--182.
-#'    doi:[10.1037/1082-989X.9.2.164](https://doi.org/10.1037/1082-989X.9.2.164)
+#'    doi: \doi{10.1037/1082-989X.9.2.164}
 #'
 #'    Kelley, K. (2007).
 #'    Confidence intervals for standardized effect sizes: Theory, application, and  implementation.
 #'    *Journal of Statistical Software*, *20*(8), 1--24.
-#'    doi:[10.18637/jss.v020.i08](https://doi.org/10.18637/jss.v020.i08)
+#'    doi: \doi{10.18637/jss.v020.i08}
 #'
 #' @family apa_print
 #' @seealso [stats::anova()]
@@ -93,7 +93,9 @@ apa_print.list <- function(
   , ...
 ) {
 
-  deprecate_ci(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   if(length(x) == 1) apa_print(x[[1]]) else {
     if(class(x[[1]]) != "lm") stop("Currently, only model comparisons for 'lm' objects are supported.")
@@ -108,17 +110,33 @@ apa_print.list <- function(
 
   # Compare models
   names(x) <- NULL
-  model_comp <- do.call(anova_fun, x, ...)
+  model_comp <- do.call(anova_fun, c(x, ellipsis))
 
-  variance_table <- arrange_anova(model_comp)
+  canonical_table <- canonize(model_comp)
+
+  attr(canonical_table, "heading") <- NULL
+
+  canonical_table$df[] <- abs(canonical_table$df)  # Objects give difference in Df
+  resid_row <- !stats::complete.cases(canonical_table)
+  canonical_table$df.residual[] <- pmin(canonical_table$df.residual, canonical_table$df.residual[resid_row])
+  canonical_table$term <- paste0("model", seq_len(nrow(canonical_table)))
+  canonical_table <- canonical_table[!resid_row, , drop = FALSE]
+  rownames(canonical_table) <- NULL
+
+
   if(!is.null(model_labels) & sum(model_labels != "") == length(model_labels)) {
-    variance_table$term <- model_labels[-1]
+    canonical_table$term <- model_labels[-1]
     names(x) <- model_labels
   } else {
-    names(x) <- paste("Model", 1:length(x))
+    names(x) <- paste("Model", seq_along(x))
   }
 
-  if("apa_model_comp" %in% class(variance_table)) { # Model comparison object
-    return(print_model_comp(variance_table, models = x, conf.int = conf.int, boot_samples = boot_samples, progress_bar = progress_bar, in_paren = in_paren))
-  }
+  print_model_comp(
+    canonical_table
+    , models = x
+    , conf.int = conf.int
+    , boot_samples = boot_samples
+    , progress_bar = progress_bar
+    , in_paren = in_paren
+  )
 }

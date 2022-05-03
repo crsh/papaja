@@ -1,32 +1,62 @@
-# papaja (upcoming)
+# papaja 0.1.0.9999
 
 ### Template
 
 - Fixed bugs that occurred when using unicode characters in an appendix file (reported by @mschrein, #446 and @kalenkovich, #353).
+- Level 4 and 5 headings are now displayed correctly (reported by @jamesrrae, #292).
+- E-mail addresses are no longer required metadata (requested by @sbw78, #437).
+- Special characters are now displayed correctly in appendices (reported by @mschrein, #446)
+- Theorems are now numbered correctly (reported by @shirdekel, #447).
+- The Lua-filter that parses the document metadata has been improved to be more robust (see #225).
+- Markdown formatting now works for `shorttitle` and `leftheader`.
+- It is now possible to specify bibliography, appendix, and CSL files (reported by @shirdekel, #482).
+- Appendices can and should now be specified using the standard **bookdown** syntax (see #496 by @pablobernabeu and #484 by @shirdekel)
+- Abstract is no longer indented (reported by @AdrienWitt, #510)
 
 
 ### Existing functions
 
 - `apa_print()`
     - Output now always contains a `$table` element (as suggested in #324 by @Kalif-Vaughn)
-    - Column names of `$table` element are now standardized following the `broom` glossary (e.g., `term`, `estimate`, `conf.int`, `statistic`, `df`, `df.residual`, `p.value`, see https://www.tidymodels.org/learn/develop/broom/#glossary).
+    - Column names of `$table` element are now standardized following the [**broom** glossary](https://www.tidymodels.org/learn/develop/broom/#glossary)) (e.g., `term`, `estimate`, `conf.int`, `statistic`, `df`, `df.residual`, `p.value`).
         - To maintain backwards compatibility, it is possible to access columns with aliases (for instance, it is possible to write `output$table$F` and obtain `output$table$statistic`, see #364).
         - Table columns are labelled (e.g., `"\\hat{\\eta}^2_G"`, `"$F$", "$p$`, ...) for creating tables via `apa_table()`.
-    - Added a new argument `estimate` to ANOVA-methods, which accepts a character string (`"ges"`, `"pes"`, and `"es"`; primarily for backward compatibility), a data frame (with columns `estimate`, `conf.low`, and `conf.high`), or a function to determine which measure of effect size is to be reported. If a function is supplied, it should take the ANOVA-object as input and return a data frame with columns `estimate`, `conf.low`, and `conf.high`. Currently, output from the [`{effectsize}`](https://CRAN.r-project.org/package=effectsize) package is supported. By default, if `{effectsize}` is installed, generalized eta-squared (point estimate and confidence interval) will be calculated. Otherwise, only the point estimate will be calculated as before.
-    - Argument `es` is now deprecated, but because it is a partial match with `estimate`, old code using `es = "ges"`, `es = "pes"` or `es = "es"` will still work and yield the same results.
+    - The arguments `ci`, `conf_level`, and `args_confint` used for some methods are now depreceated and has been replaced by `conf.int`, which is now used consistently across methods.
+    - Returned tables now consistently have a column for degrees of freedom if applicable. If the degrees of freedom are constant, the column can be removed and degrees of freedom added to the variable label of the test statistic column using the new function `transmute_df_into_label()`.
+    - `apa_print.aov()` and friends
+        -  Added a new argument `estimate` to ANOVA-methods, which accepts a character string (`"ges"`, `"pes"`, and `"es"`; primarily for backward compatibility), a data frame (with columns `estimate`, `conf.low`, and `conf.high`), or a function to determine which measure of effect size is to be reported. If a function is supplied, it should take the ANOVA object as input and return a data frame with columns `estimate`, `conf.low`, and `conf.high`. Currently, output from the [**effectsize**](https://CRAN.r-project.org/package=effectsize) package is supported. By default, if **effectsize** is installed, generalized eta-squared (point estimate and confidence interval) will be calculated. Otherwise, only the point estimate will be calculated as before.
+        -  It is now ensured for all cases that names of reporting strings and ordering of terms in table is consistent (reported by @pthomasi)
+        - Argument `es` is now deprecated, but because it is a partial match with `estimate`, old code using `es = "ges"`, `es = "pes"` or `es = "es"` will still work and yield the same results.
     - `apa_print.list()`: Added progress bars for bootstrapped model comparisons.
     - `apa_print.emmGrid()` and friends
         - Extended support for additional link functions and output, e.g. (`emmeans::joint_tests()`, #200, PR #476)
-        - Adjusted p-values, confidence intervals, and families of tests are now marked as such (see `?apa_print.emmGrid`; #200, PR #476)
+        - Adjusted *p* values, confidence intervals, and families of tests are now marked as such (see `?apa_print.emmGrid`; #200, PR #476)
         - Fixed wrong estimate labels for interaction contrasts (reported by @shirdekel, #456).
-    - `variable_label()`, `variable_labels()`, and  `label_variables()` now reside in CRAN package [`{tinylabels}`](https://CRAN.r-project.org/package=tinylabels), which is automatically loaded when `{papaja}` is loaded.
+    - `apa_print.BFBayesFactor()` and friends were previously experimental and have now been implemented properly. In the process the arguments `scientific`, `min` and `max`, `auto_invert`, `ratio_subscript`, `escape`, `evidential_boost`, and `hdi` have been deprecated and the `apa_print.BFBayesFactorList()` has been removed for now. The new methods support all **BayesFactor** analyses and interval null hypotheses. They also grant users more flexibility to specify what information to report.
+    - `apa_print.lm()`: The argument `observed_predictors` is now deprecated and has been replaced by `observed` to improve consistency of argument names across methods.
+- `apa_num()` and `apa_p()` are now the preferred name for the function previously called `printnum()` and `printp()`.
+- `variable_label()`, `variable_labels()`, and  `label_variables()` now reside in CRAN package [**tinylabels**](https://CRAN.r-project.org/package=tinylabels), which is automatically loaded when **papaja** is loaded.
+- `cite_r()` now properly escapes semicolons (reported by @marklhc, #442)
 
+### New functions
+
+- `apa_print.lme()`, `apa_print.merMod()`, `apa_print.mixed()`
+- `glue_apa_results()` and `add_glue_to_apa_results()`, see the new vignette on extending `apa_print()` (`vignette("extending_apa_print", package = "papaja")`)
+- `apa_table.apa_results()`
+- `apa_interval()`, `apa_confint()`, and `apa_hdint()`
+- `apa_df()`
+- `transmute_df_into_label()` and `df_into_label()`
+### Misc
+
+- papaja now depends on
+    - **tinylabels**
+    - **rmdfiltr** (>= 0.1.3; see #427 by @jrennstich)
 
 # papaja 0.1.0.9997
 
 ### Template
 
-- New author metadata field `role` automatically adds contributor ship roles (e.g. CRedit, https://casrai.org/credit/) to the author note. #375
+- New author metadata field `role` automatically adds contributor ship roles (e.g. [CRedit](https://casrai.org/credit/)) to the author note. #375
 - `apa6_pdf()`
     - Now relies on a Lua-filter to process metadata, which should resolve many encoding related problems (e.g., reported by @arcaldwell49, @dcbrh, and @DominiqueMakowski among others; #350, #357, #360)
     - Numbering of title is now disabled when `numbersections: true`
@@ -70,10 +100,10 @@
 
 ### Misc
 
-- `papaja` now depends on
+- **papaja** now depends on
     - `R` >= 3.6
     - `pandoc` >= 2.0
-    - `rmdfiltr` (>= 0.1.2) explicitly
+    - **rmdfiltr** (>= 0.1.2) explicitly
 - New `label_quotes.lua` filter to insert excerpts in revision letter; also see `quote_from_tex()`
 
 # papaja 0.1.0.9942
@@ -99,7 +129,7 @@
     - Returns an object of class `knit_asis`; it's no longer necessary to set the chunk option `results = "asis"` for tables to be rendered (#280)
     - Column headings are repeated when long tables span multiple pages (suggested by @mischavk, #289)
     - Fixed bug that cause issues with the rendering of tables in Word documents (reported by @mdanka, #301)
-    - In PDF files `&` in cells are automatically escaped ()
+    - In PDF files `&` in cells are automatically escaped
 - `apa_print()`
     - Output is now of class `apa_results`
 - `apa_print-htest()`
@@ -183,7 +213,7 @@ Experimental:
 ### Misc
 
 - Improved support for labelled variables in `printnum()`-methods
-- Renamed `labelled` class to `papaja_labelled` to avoid problems due to conflicting implementations of `labelled` in the `haven` and `Hmisc` packages (see tidyverse/haven#329; first reported by @andreifoldes, #199)
+- Renamed `labelled` class to `papaja_labelled` to avoid problems due to conflicting implementations of `labelled` in the **haven** and **Hmisc** packages (see tidyverse/haven#329; first reported by @andreifoldes, #199)
 - Author affiliations can now also be provided without `id`
 - New experimental revision letter template
 - Fixes various encoding problems on Windows (reported by @SongchaoChen, #139, @peter1328, #159, and @mdingemanse, #209)
@@ -214,7 +244,7 @@ Experimental:
 
 ### Misc
 
-- `papaja` now depends on `bookdown` 0.6 to resolve compatibility issues with `pandoc` 2.0 (reported by @ericpgreen, #170)
+- **papaja** now depends on **bookdown** 0.6 to resolve compatibility issues with `pandoc` 2.0 (reported by @ericpgreen, #170)
 
 
 
@@ -329,7 +359,7 @@ Experimental:
 # papaja 0.1.0.9456
 
 ### Template
-- `apa6_pdf` and `apa6_word` now adapt `pdf_document2()` and `word_document2()` from the `bookdown` package. This enables the use of `bookdown` cross-referencing syntax including automatically generated table and figure labels as detailed [here](https://bookdown.org/yihui/bookdown/cross-references.html) (see #2).
+- `apa6_pdf` and `apa6_word` now adapt `pdf_document2()` and `word_document2()` from the **bookdown** package. This enables the use of **bookdown** cross-referencing syntax including automatically generated table and figure labels as detailed [here](https://bookdown.org/yihui/bookdown/cross-references.html) (see #2).
 - LaTeX
     - If `numbersections: true` numbering now starts at the body of the text. The abstract is no longer a numbered heading (reported by @lnalborczyk, #85)
     - New option `footnotelist` to create list of footnotes at the end of the document (see #74)

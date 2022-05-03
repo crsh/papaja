@@ -4,18 +4,18 @@ Prepare APA Journal Articles<br />with R Markdown
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/web/packages/papaja/index.html)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/package=papaja)
 [![Project Status: WIP - Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
-public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
+public.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub last commit
-(devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github&logoColor=%2523FFF)
+(devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github)
 [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
 [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja)
 [![GitHub bug
-issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github&logoColor=%2523FFF)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
-![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
+issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+[![StackOverflow
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an
 [award-winning](https://improvingpsych.org/mission/awards/) R package
@@ -23,8 +23,8 @@ that facilitates creating computationally reproducible, submission-ready
 manuscripts which conform to the American Psychological Association
 (APA) manuscript guidelines (6th Edition). **papaja** provides
 
--   an [R Markdown](http://rmarkdown.rstudio.com/) template that can be
-    used with (or without) [RStudio](http://www.rstudio.com/) to create
+-   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be
+    used with (or without) [RStudio](https://www.rstudio.com/) to create
     PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX
     class) or Word documents (using a .docx-reference file).
 -   Functions to **typeset** the results from **statistical analyses**,
@@ -32,34 +32,34 @@ manuscripts which conform to the American Psychological Association
 -   functions to create **figures** in accordance with APA guidelines.
 
 For a comprehensive introduction to **papaja**, see the current draft of
-the [manual](https://crsh.github.io/papaja_man/). If you have a specific
-question that is not answered in the manual, feel free to ask a question
-on Stack Overflow [using the **papaja** tag](https://t.co/Z3auyUrbTa).
-If you believe you have found a bug or would like to request a new
-feature, [open an issue](https://github.com/crsh/papaja/issues) on
-Github and provide a [minimal complete verifiable
+the [manual](http://frederikaust.com/papaja_man/). If you have a
+specific question that is not answered in the manual, feel free to ask a
+question on Stack Overflow [using the **papaja**
+tag](https://stackoverflow.com/questions/tagged/papaja). If you believe
+you have found a bug or would like to request a new feature, [open an
+issue](https://github.com/crsh/papaja/issues) on Github and provide a
+[minimal complete verifiable
 example](https://stackoverflow.com/help/mcve).
 
 ## Example
 
-Take a look at the [R Markdown
-file](https://github.com/crsh/papaja/blob/master/inst/example/example.rmd)
-of the example manuscript in the folder `example` and the resulting
-[PDF](https://raw.githubusercontent.com/crsh/papaja/master/inst/example/example.pdf).
-The example document also contains some basic instructions.
+Take a look at the [source
+file](https://github.com/crsh/papaja/blob/master/vignettes/papaja.Rmd)
+of the package vignette and the resulting
+[PDF](https://raw.githubusercontent.com/crsh/papaja/master/vignettes/papaja.pdf).
+The vignette also contains some basic instructions.
 
 ## Installation
 
 To use **papaja** you need either a recent version of
-[RStudio](http://www.rstudio.com/) or
-[pandoc](http://johnmacfarlane.net/pandoc/). If you want to create PDF-
-in addition to DOCX-documents you additionally need a
-[TeX](http://de.wikipedia.org/wiki/TeX) distribution. We recommend you
-use [TinyTex](https://yihui.name/tinytex/), which can be installed from
-within R:
+[RStudio](https://www.rstudio.com/) or [pandoc](https://pandoc.org/). If
+you want to create PDF- in addition to DOCX-documents you additionally
+need a [TeX](https://en.wikipedia.org/wiki/TeX) distribution. We
+recommend you use [TinyTex](https://yihui.org/tinytex/), which can be
+installed from within R:
 
 ``` r
-if(!"tinytex" %in% rownames(installed.packages())) install.packages("tinytex")
+if(!requireNamespace("tinytex", quietly = TRUE)) install.packages("tinytex")
 
 tinytex::install_tinytex()
 ```
@@ -68,7 +68,7 @@ You may also consider [MikTeX](http://miktex.org/) for Windows,
 [MacTeX](https://tug.org/mactex/) for Mac, or [TeX
 Live](http://www.tug.org/texlive/) for Linux. Please refer to the
 [**papaja**
-manual](https://crsh.github.io/papaja_man/introduction.html#getting-started)
+manual](http://frederikaust.com/papaja_man/introduction.html#getting-started)
 for detailed installation instructions.
 
 **papaja** is not yet available on CRAN but you can install it from this
@@ -76,7 +76,7 @@ repository:
 
 ``` r
 # Install remotes package if necessary
-if(!"remotes" %in% rownames(installed.packages())) install.packages("remotes")
+if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 
 # Install the stable development version from GitHub
 remotes::install_github("crsh/papaja")
@@ -124,18 +124,16 @@ apa_lm$full_result$Sepal_Length
 
 **papaja** currently provides methods for the following object classes:
 
-| A-B                            | B-L                           | L-S               | S-Z                       |
-|:-------------------------------|:------------------------------|:------------------|:--------------------------|
-| afex\_aov                      | BFBayesFactorTop<sup>\*</sup> | lme               | summary.aov               |
-| anova                          | default                       | lsmobj            | summary.aovlist           |
-| anova.lme                      | emmGrid                       | manova            | summary.glht<sup>\*</sup> |
-| Anova.mlm                      | glht<sup>\*</sup>             | merMod            | summary.glm               |
-| aov                            | glm                           | mixed             | summary.lm                |
-| aovlist                        | htest                         | papaja\_wsci      | summary.manova            |
-| BFBayesFactor<sup>\*</sup>     | list                          | summary\_emm      | summary.ref.grid          |
-| BFBayesFactorList<sup>\*</sup> | lm                            | summary.Anova.mlm |                           |
-
-\* Not fully tested, don’t trust blindly!
+| A-B              | D-L     | L-S               | S-Z              |
+|:-----------------|:--------|:------------------|:-----------------|
+| afex_aov         | default | lsmobj            | summary.aovlist  |
+| anova            | emmGrid | manova            | summary.glht     |
+| anova.lme        | glht    | merMod            | summary.glm      |
+| Anova.mlm        | glm     | mixed             | summary.lm       |
+| aov              | htest   | papaja_wsci       | summary.manova   |
+| aovlist          | list    | summary_emm       | summary.ref.grid |
+| BFBayesFactor    | lm      | summary.Anova.mlm |                  |
+| BFBayesFactorTop | lme     | summary.aov       |                  |
 
 ### Create tables
 
@@ -147,7 +145,7 @@ means (with standard errors).
 library("dplyr")
 npk |>
   group_by(N, P) |>
-  summarise(mean = mean(yield), se = se(yield), .groups = "drop") |>
+  summarise(mean = mean(yield), se = sd(yield) / sqrt(length(yield)), .groups = "drop") |>
   label_variables(N = "Nitrogen", P = "Phosphate", mean = "*M*", se = "*SE*") |>
   apa_table(caption = "Mean pea yield (with standard errors)")
 ```
@@ -177,12 +175,12 @@ lm(Sepal.Width ~ Sepal.Length + Petal.Width + Petal.Length, data = iris) |>
 
 Table 2. *Iris regression table.*
 
-| Predictor    |   *b* |      95% CI      | *t*(146) |       *p* |
-|:-------------|------:|:----------------:|---------:|----------:|
-| Intercept    |  1.04 |  \[0.51, 1.58\]  |     3.85 | &lt; .001 |
-| Sepal Length |  0.61 |  \[0.48, 0.73\]  |     9.77 | &lt; .001 |
-| Petal Width  |  0.56 |  \[0.32, 0.80\]  |     4.55 | &lt; .001 |
-| Petal Length | -0.59 | \[-0.71, -0.46\] |    -9.43 | &lt; .001 |
+| Predictor    |   *b* |      95% CI      |   *t* | *df* | *p*     |
+|:-------------|------:|:----------------:|------:|-----:|:--------|
+| Intercept    |  1.04 |  \[0.51, 1.58\]  |  3.85 |  146 | \< .001 |
+| Sepal Length |  0.61 |  \[0.48, 0.73\]  |  9.77 |  146 | \< .001 |
+| Petal Width  |  0.56 |  \[0.32, 0.80\]  |  4.55 |  146 | \< .001 |
+| Petal Length | -0.59 | \[-0.71, -0.46\] | -9.43 |  146 | \< .001 |
 
 ### Create figures
 
@@ -209,7 +207,7 @@ represent condition means, small dots represent individual participants’
 mean response time. Error bars represent 99% within-subjects confidence
 intervals.](README_files/figure-gfm/stroop-plot-1.png)
 
-If you prefer creating your plots with `ggplot2`, try `theme_apa()`.
+If you prefer `ggplot2`, try `theme_apa()`.
 
 ``` r
 library("ggplot2")
@@ -258,31 +256,43 @@ rmarkdown::render("mymanuscript.Rmd")
 
 ## Getting help
 
-![StackOverflow
-questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=%20Questions&logo=stackoverflow&logoColor=%2523FFF)
+[![StackOverflow
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 For a comprehensive introduction to **papaja**, check out the current
-draft of the [**papaja** manual](https://crsh.github.io/papaja_man/). If
-you have a specific question that is not answered in the manual, feel
+draft of the [**papaja** manual](http://frederikaust.com/papaja_man/).
+If you have a specific question that is not answered in the manual, feel
 free to ask a question on Stack Overflow [using the **papaja**
-tag](https://t.co/Z3auyUrbTa). If you believe you have found a bug or
-you want to request a new feature, [open an
+tag](https://stackoverflow.com/questions/tagged/papaja). If you believe
+you have found a bug or you want to request a new feature, [open an
 issue](https://github.com/crsh/papaja/issues) on Github and provide a
 [minimal complete verifiable
 example](https://stackoverflow.com/help/mcve).
 
 ## Citation
 
-Please cite **papaja** if you use it. You can for example [use
-`cite_r()`](https://crsh.github.io/papaja_man/writing.html#citing-r-and-its-packages)
-or copy the reference information returned by `citation('papaja')` to
-your BibTeX file.
+Please cite **papaja** if you use it.
 
-    Aust, F. & Barth, M. (2020). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9997. Retrieved from https://github.com/crsh/papaja
+    Aust, F. & Barth, M. (2022). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9999. Retrieved from https://github.com/crsh/papaja
+
+For convenience, you can [use
+`cite_r()`](http://frederikaust.com/papaja_man/writing.html#citing-r-and-its-packages)
+or copy the reference information returned by `citation('papaja')` to
+your BibTeX file:
+
+``` bibtex
+@Manual{,
+  title = {{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}},
+  author = {Frederik Aust and Marius Barth},
+  year = {2022},
+  note = {R package version 0.1.0.9999},
+  url = {https://github.com/crsh/papaja},
+}
+```
 
 ## papaja in the wild
 
-If you are interested to see how others are using **papaja**, you can
+If you are interested in seeing how others are using **papaja**, you can
 find a [collection of
 papers](http://frederikaust.com/papaja_man/published-manuscripts.html)
 and the corresponding R Markdown files in the manual.
@@ -309,7 +319,9 @@ requires some disk space. [CodeOcean](https://codeocean.com/) is a
 commercial service that builds on Docker, facilitates setting up and
 sharing containers and lets you run computations in the cloud. See the
 **papaja** manual on [how to get started using **papaja** with Docker or
-CodeOcean](https://crsh.github.io/papaja_man/tips-and-tricks.html#reproducible-software-environments).
+CodeOcean](http://frederikaust.com/papaja_man/tips-and-tricks.html#reproducible-software-environments)
+and [our Docker workflow](https://github.com/crsh/papaja_docker)
+tailored for easy use with **papaja**.
 
 ## Contribute
 
@@ -327,7 +339,7 @@ always appreciated (e.g., `factanal`, `fa`, `lavaan`). For a primer on
 adding new `apa_print()`-methods, see the getting-started-vignette:
 
 ``` r
-`vignette("add_apa_print_methods", package = "papaja")`
+vignette("extending_apa_print", package = "papaja")
 ```
 
 Before working on a contribution, please review our brief [contributing
@@ -345,10 +357,12 @@ APA guidelines.
     statistical tests in R according to APA guidelines
 -   [**APAstats**](https://github.com/achetverikov/APAstats): R
     functions for formatting results in APA style and other stuff
--   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
-    significances in R
 -   [**apaTables**](https://github.com/dstanley4/apaTables): Create
     American Psychological Association (APA) Style Tables
+-   [**rempsyc**](https://github.com/RemPsyc/rempsyc): Convenience
+    functions for psychology
+-   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
+    significances in R
 
 If you are looking for other journal article templates, you may be
 interested in the [**rticles**](https://github.com/rstudio/rticles)

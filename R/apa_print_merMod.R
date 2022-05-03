@@ -23,12 +23,14 @@
 #' @evalRd apa_results_return_value()
 #'
 #' @examples
+#' \dontrun{
 #'   # Fit a linear mixed model using the lme4 package
 #'   # or the lmerTest package (if dfs and p values are desired)
 #'   library(lmerTest)
 #'   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 #'   # Format statistics for fixed-effects terms (the default)
 #'   apa_print(fm1)
+#' }
 #'
 #' @family apa_print
 #' @rdname apa_print.merMod
@@ -45,13 +47,9 @@ apa_print.merMod <- function(
 ) {
 
   # Input validation and processing ----
-  ellipsis <- list(...)
-
-  if(!is.null(ellipsis$args)) {
-    warning("Argument 'args_confint' has been deprecated. Please use 'conf.int' instead.")
-    conf.int <- ellipsis$args
-    ellipsis$args_confint <- NULL
-  }
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
   if(is.list(conf.int)) {
     validate(conf.int, check_class = "list")

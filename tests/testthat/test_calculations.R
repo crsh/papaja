@@ -143,6 +143,12 @@ test_that(
     SS_car <- c(3164.0625, 76.5625, 5.0625, 0.0625, 311.25)
     es_car <- SS_car / sum(SS_car)
 
+    es_car_with <- SS_car[1:4] / sum(SS_car)
+    es_car_without <- SS_car[2:4] / sum(SS_car[2:5])
+    tinylabels::variable_label(es_car_with) <-
+      tinylabels::variable_label(es_car_without) <- "$\\hat{\\eta}^2$"
+
+
     pes_afex <- c(0.910439708659293, 0.197421434327156, 0.016004742145821, 0.000200762899016262)
     tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
 
@@ -154,15 +160,15 @@ test_that(
     # Eta-squared
     with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = TRUE)
     expect_identical(
-      object = tinylabels::unlabel(with_intercept$estimate)
+      object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[1:4] / sum(SS_car)
+      , expected = es_car_with
     )
     without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
-      object = tinylabels::unlabel(without_intercept$estimate)
+      object = without_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[2:4]/sum(SS_car[2:5])
+      , expected = es_car_without
     )
 
 
@@ -219,6 +225,11 @@ test_that(
     SS_car <- c(4177.2, 30.0000000000001, 9.80000000000002, 1.40000000000001)
     SS_err <- c(349.133333333333, 16.3333333333333, 26.8666666666667, 19.2666666666667)
 
+    es_with_intercept <- SS_car/sum(c(SS_car, SS_err))
+    es_without_intercept <- SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+    tinylabels::variable_label(es_with_intercept) <-
+      tinylabels::variable_label(es_without_intercept) <- "$\\hat{\\eta}^2$"
+
     pes_afex <- c(0.922866190441122, 0.64748201438849, 0.267272727272728, 0.0677419354838713)
     ges_afex <- c(0.910303347280335, 0.0679347826086958, 0.0232558139534884, 0.00338983050847459)
     tinylabels::variable_label(pes_afex) <- "$\\hat{\\eta}^2_p$"
@@ -228,14 +239,14 @@ test_that(
     with_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = TRUE)
     without_intercept <- papaja:::add_effect_sizes(apa_variance_table, es = "es", intercept = FALSE)[2:4, ]
     expect_equal(
-      object = tinylabels::unlabel(with_intercept$estimate)
+      object = with_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car/sum(c(SS_car, SS_err))
+      , expected = es_with_intercept
     )
     expect_equal(
-      object = tinylabels::unlabel(without_intercept$estimate)
+      object = without_intercept$estimate
       # Expectation calculated via sums of squares from car
-      , expected = SS_car[2:4]/sum(c(SS_car[2:4], SS_err))
+      , expected = es_without_intercept
     )
 
     # Partial eta-squared ----
@@ -270,7 +281,7 @@ test_that(
 test_that(
   "Within-subjects confidence intervals: Cousineau vs. Morey method"
   , {
-    aggregated_data <- stats::aggregate(formula = yield ~ N + block, data = npk, FUN = mean)
+    aggregated_data <- stats::aggregate(yield ~ N + block, data = npk, FUN = mean)
     object_1 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Cousineau", level = .98)
     object_2 <- wsci(data = aggregated_data, id = "block", dv = "yield", factors = c("N"), method = "Morey", level = .98)
 
@@ -289,7 +300,7 @@ test_that(
           , `Subject identifier` = "block"
           , `Confidence level` = 0.98
           , Method = "Cousineau"
-          , means = aggregate(formula = yield ~ N, data = aggregated_data, FUN = mean)
+          , means = aggregate(yield ~ N, data = aggregated_data, FUN = mean)
       )
     )
     expect_identical(
@@ -305,14 +316,14 @@ test_that(
     # Implicit NAs
     data <- npk
     data$yield[2] <- NA
-    aggregated <- stats::aggregate(formula = yield ~ N + P + block, data = data, FUN = mean)
+    aggregated <- stats::aggregate(yield ~ N + P + block, data = data, FUN = mean)
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))
       , "Because of incomplete data, the following cases were removed from calculation of within-subjects confidence intervals:\nblock: 1"
     )
     # Explicit NAs
     data <- npk
-    aggregated <- stats::aggregate(formula = yield ~ N + P + block, data = data, FUN = mean)
+    aggregated <- stats::aggregate(yield ~ N + P + block, data = data, FUN = mean)
     aggregated$yield[5] <- NA
     expect_warning(
       wsci(data = aggregated, id = "block", dv = "yield", factors = c("N", "P"))

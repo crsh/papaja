@@ -17,7 +17,11 @@ test_that(
     # Main effect ------------------------------------------------------
 
     tw_me_emm <- emmeans::emmeans(tw_rm, ~ Valence)
-    tw_me_emm_output <- apa_print(tw_me_emm)
+    tw_me_emm_output <- expect_warning(
+      apa_print(tw_me_emm, conf.l = .95)
+      , regexp = "Using argument 'conf.level' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
 
     expect_apa_results(
       tw_me_emm_output
@@ -25,7 +29,8 @@ test_that(
         Valence = "Valence"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(4.63)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = levels(tw_rm_data$Valence)
@@ -62,7 +67,7 @@ test_that(
       )
     )
     expect_identical(
-      tw_me_lsm_output$table[, c("Valence", "estimate", "statistic", "p.value")]
+      tw_me_lsm_output$table[, c("Valence", "estimate", "statistic", "df", "p.value")]
       , tw_me_emm_p_output$table
     )
 
@@ -118,7 +123,8 @@ test_that(
         , Valence = "Valence"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(5.52)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = term_names
@@ -161,7 +167,8 @@ test_that(
         , Valence = "Valence"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(5.52)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = term_names
@@ -304,7 +311,8 @@ test_that(
         contrast = "Contrast"
         , estimate = "$\\Delta M$"
         , conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$"
-        , statistic = "$t(8)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , adj.p.value = "$p_\\mathrm{\\scriptsize Tukey(3)}$"
       )
       , term_names = c("Neg_Neu", "Neg_Pos", "Neu_Pos")
@@ -438,6 +446,7 @@ test_that(
       , term_names = names(tw_rm_output$estimate)
     )
 
+
     expect_apa_term(
       emm_aov_output
       , term = "Task"
@@ -474,7 +483,7 @@ test_that(
     # Ensure proper sorting of terms
     load("data/mixed_data.rdata")
     unsorted_aov <- afex::aov_4(formula = Recall ~ Gender * Dosage * (Task * Valence |Subject), data = mixed_data, fun_aggregate = mean)
-    
+
     unsorted_emm <- emmeans::joint_tests(unsorted_aov, by = "Gender")
     apa_out <- apa_print(unsorted_emm)
 
@@ -488,7 +497,7 @@ test_that(
         , df.residual = "$\\mathit{df}_{\\mathrm{res}}$"
         , p.value = "$p$"
       )
-      , term_names = papaja:::sanitize_terms(paste(unlabel(gsub(apa_out$table$term, pattern =  " $\\times$ ", replacement = "_", fixed = TRUE)), apa_out$table$Gender, sep = "_")) 
+      , term_names = papaja:::sanitize_terms(paste(unlabel(gsub(apa_out$table$term, pattern =  " $\\times$ ", replacement = "_", fixed = TRUE)), apa_out$table$Gender, sep = "_"))
       , table_terms = beautify_terms(data.frame(unsorted_emm)$model.term)
     )
   }
@@ -845,7 +854,8 @@ test_that(
         Sepal.Length = "Sepal.Length"
         , estimate = "$M$"
         , conf.int = "95\\% CI"
-        , statistic = "$t(146)$"
+        , statistic = "$t$"
+        , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
       , term_names = c("X1000", "X2000", "X3000")
@@ -859,7 +869,7 @@ test_that(
     )
 
     expect_true(
-      all(my_lm_emm_output$table$Sepal.Length == printnum(ats))
+      all(my_lm_emm_output$table$Sepal.Length == apa_num(ats))
     )
 
 
