@@ -5,7 +5,7 @@
 #'
 #' @param x An object of class `formula` or `data.frame`
 #' @rdname apa_plot
-#' @keywords internal
+#' @export
 
 apa_plot <- function(x, ...) {
   UseMethod("apa_plot")
@@ -47,7 +47,7 @@ apa_plot <- function(x, ...) {
 #' @inheritParams formula_processor
 #' @rdname apa_plot
 #' @method apa_plot formula
-#' @keywords internal
+#' @export
 
 apa_plot.formula <- function(formula, data, ...) {
   formula_processor(formula = formula, data = data, .fun = apa_plot, ...)
@@ -94,7 +94,7 @@ formula_processor <- function(formula, data, .fun, ...) {
 
 #' @rdname apa_plot
 #' @method apa_plot data.frame
-#' @keywords internal
+#' @export
 
 apa_plot.data.frame <- function(
   data
@@ -115,7 +115,6 @@ apa_plot.data.frame <- function(
   ellipsis <- list(...)
 
   validate(jit, check_class = "numeric")
-
 
   # Sanitize data --------------------------------------------------------------
 

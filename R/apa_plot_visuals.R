@@ -438,7 +438,6 @@ x_axis.apa_plot <- function(x, ...) {
 .x_axis <- function(...) {
   x <- evalq(x, parent.frame(1L))
   args_bars <- inherit_args(x, creator = "bars")
-  print(args_bars)
 
   factors <- x$input$factors
 
