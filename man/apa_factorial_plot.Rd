@@ -55,9 +55,7 @@ apa_factorial_plot(data, ...)
 \item{...}{
   Arguments passed on to \code{\link[graphics:plot.window]{graphics::plot.window}}
   \describe{
-    \item{\code{xlim}}{numeric vectors of length 2, giving the x and y
-    coordinates ranges.}
-    \item{\code{ylim}}{numeric vectors of length 2, giving the x and y
+    \item{\code{xlim,ylim}}{numeric vectors of length 2, giving the x and y
     coordinates ranges.}
     \item{\code{log}}{character; indicating which axes should be in log scale.}
     \item{\code{asp}}{numeric, giving the \bold{asp}ect ratio y/x,
