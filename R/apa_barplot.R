@@ -10,6 +10,11 @@
 #' @examples
 #'
 #' apa_barplot(
+#'   formula = yield ~ N + P + (1|block)
+#'   , data = npk
+#' )
+#'
+#' apa_barplot(
 #'    data = npk
 #'    , id = "block"
 #'    , dv = "yield"
@@ -42,6 +47,7 @@ apa_barplot <- function(x, ...){
   UseMethod("apa_barplot")
 }
 
+#' @rdname apa_barplot
 #' @export
 apa_barplot.formula <- function(formula, data, ...) {
   formula_processor(formula = formula, data = data, .fun = apa_barplot, ...)

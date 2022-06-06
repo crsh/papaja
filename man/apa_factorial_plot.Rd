@@ -7,7 +7,7 @@
 \alias{apa_factorial_plot.afex_aov}
 \title{Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
-apa_factorial_plot(data, ...)
+apa_factorial_plot(x, ...)
 
 \method{apa_factorial_plot}{formula}(formula, data, ...)
 
@@ -50,8 +50,6 @@ apa_factorial_plot(data, ...)
 )
 }
 \arguments{
-\item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
-
 \item{...}{
   Arguments passed on to \code{\link[graphics:plot.window]{graphics::plot.window}}
   \describe{
@@ -66,6 +64,8 @@ apa_factorial_plot(data, ...)
 of a \code{~} operator, and factors on the right. A vertical bar (\code{|}) can be used to
 specify an additional subject identifier, which must be provided if an additional
 aggregation step is necessary. See the examples section for details.}
+
+\item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 
 \item{id}{Character. Variable name that identifies subjects.}
 

@@ -2,11 +2,14 @@
 % Please edit documentation in R/apa_lineplot.R
 \name{apa_lineplot}
 \alias{apa_lineplot}
+\alias{apa_lineplot.formula}
 \alias{apa_lineplot.default}
 \alias{apa_lineplot.afex_aov}
 \title{Line Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
 apa_lineplot(x, ...)
+
+\method{apa_lineplot}{formula}(formula, data, ...)
 
 \method{apa_lineplot}{default}(
   data,
@@ -48,6 +51,11 @@ apa_lineplot(x, ...)
   \describe{
     \item{\code{}}{}
   }}
+
+\item{formula}{A two-sided formula specifying the dependent variable on the left
+of a \code{~} operator, and factors on the right. A vertical bar (\code{|}) can be used to
+specify an additional subject identifier, which must be provided if an additional
+aggregation step is necessary. See the examples section for details.}
 
 \item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 
@@ -135,6 +143,12 @@ These calls can be customized by setting the respective parameters \verb{args_**
 }
 }
 \examples{
+
+apa_lineplot(
+  formula = yield ~ N + P + (1|block)
+  , data = npk
+)
+
 apa_lineplot(
    data = npk
    , id = "block"

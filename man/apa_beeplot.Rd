@@ -135,6 +135,7 @@ These calls can be customized by setting the respective parameters \verb{args_**
 }
 }
 \examples{
+
 apa_beeplot(
   formula = yield ~ (N | block)
   , data = npk

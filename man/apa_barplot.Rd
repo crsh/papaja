@@ -134,6 +134,11 @@ These calls can be customized by setting the respective parameters \verb{args_**
 \examples{
 
 apa_barplot(
+  formula = yield ~ N + P + (1|block)
+  , data = npk
+)
+
+apa_barplot(
    data = npk
    , id = "block"
    , dv = "yield"

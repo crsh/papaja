@@ -86,8 +86,8 @@
 #' )
 #' @export
 
-apa_factorial_plot <-function(data, ...){
-  UseMethod("apa_factorial_plot", data)
+apa_factorial_plot <-function(x, ...){
+  UseMethod("apa_factorial_plot")
 }
 
 #' @rdname apa_factorial_plot
@@ -130,6 +130,7 @@ apa_factorial_plot.default <- function(
   , main = NULL
   , ...
 ){
+
   # Data validation:
   validate(data, check_class = "data.frame", check_NA = FALSE)
   validate(id, check_class="character", check_length = 1)

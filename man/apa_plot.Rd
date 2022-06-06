@@ -70,3 +70,4 @@ apa_plot(yield ~ (N * P * K| block), data = npk) |>
  }
 
 }
+\keyword{internal}
