@@ -2,11 +2,14 @@
 % Please edit documentation in R/apa_barplot.R
 \name{apa_barplot}
 \alias{apa_barplot}
+\alias{apa_barplot.formula}
 \alias{apa_barplot.default}
 \alias{apa_barplot.afex_aov}
 \title{Bar Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
 apa_barplot(x, ...)
+
+\method{apa_barplot}{formula}(formula, data, ...)
 
 \method{apa_barplot}{default}(
   data,
@@ -47,6 +50,11 @@ apa_barplot(x, ...)
   \describe{
     \item{\code{}}{}
   }}
+
+\item{formula}{A two-sided formula specifying the dependent variable on the left
+of a \code{~} operator, and factors on the right. A vertical bar (\code{|}) can be used to
+specify an additional subject identifier, which must be provided if an additional
+aggregation step is necessary. See the examples section for details.}
 
 \item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 

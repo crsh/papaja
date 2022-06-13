@@ -231,6 +231,8 @@ apa_factorial_plot.default <- function(
     }
   }
 
+  args_title$xlab <- xlab
+  args_title$ylab <- ylab
   args_title$main <- main
 
   args_x_axis$x <- do.call("apa_plot.data.frame", ellipsis)

@@ -2,11 +2,14 @@
 % Please edit documentation in R/apa_beeplot.R
 \name{apa_beeplot}
 \alias{apa_beeplot}
+\alias{apa_beeplot.formula}
 \alias{apa_beeplot.default}
 \alias{apa_beeplot.afex_aov}
 \title{Bee-swarm Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
 apa_beeplot(x, ...)
+
+\method{apa_beeplot}{formula}(formula, data, ...)
 
 \method{apa_beeplot}{default}(
   data,
@@ -48,6 +51,11 @@ apa_beeplot(x, ...)
   \describe{
     \item{\code{}}{}
   }}
+
+\item{formula}{A two-sided formula specifying the dependent variable on the left
+of a \code{~} operator, and factors on the right. A vertical bar (\code{|}) can be used to
+specify an additional subject identifier, which must be provided if an additional
+aggregation step is necessary. See the examples section for details.}
 
 \item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 
