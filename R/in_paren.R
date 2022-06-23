@@ -5,9 +5,10 @@
 #' degrees of freedom) for reporting within parentheses.
 #'
 #' @param x Character. Single character or list of characters.
-#' @return An object of the same type as `x`.
+#' @return An object of the same type as `x`, where all parentheses have been
+#'   replaced by brackets.
 #'
-#' @seealso apa_print
+#' @seealso [apa_print()]
 #' @examples
 #' t_stat <- t.test(extra ~ group, data = sleep)
 #' t_test_res <- apa_print(t_stat)

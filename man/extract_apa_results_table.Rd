@@ -39,6 +39,10 @@
     \code{\link[base]{drop}} for further details.
   }
 }
+\value{
+A (vector of) character values as extracted from an object of class
+\code{apa_results_table}.
+}
 \description{
 \emph{These methods are only defined for backward compatibility with older
 versions of \pkg{papaja}}. In the past, the column names of\code{apa_results_table}s

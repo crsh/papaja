@@ -57,7 +57,7 @@ enclosing degrees of freedom) are replaced with brackets.}
 available from the model object.}
 }
 \value{
-Returns a list of class \code{apa_results}
+Returns a list of class \code{apa_results}, see \code{\link[=apa_print]{apa_print()}}.
 }
 \description{
 Typeset the contents of an object according to the specified expression
@@ -93,7 +93,7 @@ add_glue_to_apa_results(
         , aic = ""
     )
     , stat_glue = c(
-        r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<papaja:::add_equals(p.value)>>$"
+        r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<add_equals(p.value)>>$"
         , aic = "$\\\\mathrm{AIC} = <<AIC>>$"
     )
 )

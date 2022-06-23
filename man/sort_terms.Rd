@@ -12,7 +12,7 @@ sort_terms(x, colname)
 \item{colname}{Character. Column name of the \code{data.frame} containing the terms to sort.}
 }
 \value{
-Returns the same data.frame with reordered rows.
+Returns the same \code{data.frame} with reordered rows.
 }
 \description{
 Sort rows in ANOVA or regression tables produced by \code{\link[=apa_print]{apa_print()}}
@@ -24,4 +24,3 @@ npk_aov <- aov(yield ~ block + N * P * K, npk)
 npk_aov_results <- apa_print(npk_aov)
 sort_terms(npk_aov_results$table, "term")
 }
-\keyword{internal}

@@ -43,15 +43,7 @@ This function is the former internal workhorse of the \code{apa_print}-family fo
 of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
 guidelines. It is already deprecated and will soon be defunct. \emph{This function is not exported.}
 }
-\examples{
- \dontrun{
-   ## From Venables and Ripley (2002) p. 165.
-   npk_aov <- aov(yield ~ block + N * P * K, npk)
-   anova_table <- arrange_anova(summary(npk_aov))
-   print_anova(anova_table)
- }
-}
 \seealso{
-\code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
+\code{\link[=arrange_anova]{arrange_anova()}}, \code{\link[=apa_print.aov]{apa_print.aov()}}
 }
 \keyword{internal}

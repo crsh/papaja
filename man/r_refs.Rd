@@ -39,6 +39,9 @@ citations (based on \code{\link[knitr]{write_bib}}).}
 
 \item{x}{Character. Names of packages to include in bibliography.}
 }
+\value{
+Invisibly returns the bibliography written to \code{file}.
+}
 \description{
 Creates a \code{.bib}-reference file for the installed R version and R-packages,
 so they can be cited in an R Markdown-document.
@@ -66,9 +69,6 @@ reference is used. If multiple references of the preferred type are given
 all of them are cited. Finally, if no \code{CITATION} file exists a reference
 is generated from the \code{DESCRIPTION} file by \code{\link[utils]{citation}}.
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toLatex}}
+\code{\link[=cite_r]{cite_r()}}, \code{\link[knitr:write_bib]{knitr::write_bib()}}, \code{\link[utils:citation]{utils::citation()}}, \code{\link[utils:toLatex]{utils::toLatex()}}
 }

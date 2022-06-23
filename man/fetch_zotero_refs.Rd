@@ -61,11 +61,8 @@ Zotero web API calls can be slow, especially for large reference
 collections. If available, this function will use the
 \pkg{downloader}-package, which speeds up reference downloads considerably.
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{r_refs}}, \code{\link{cite_r}}
+\code{\link[=cite_r]{cite_r()}}, \code{\link[=r_refs]{r_refs()}}
 }
 \author{
 Christoph Stahl, Frederik Aust

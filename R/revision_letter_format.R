@@ -6,8 +6,8 @@
 #'   the conversion to PDF.
 #' @inheritDotParams bookdown::pdf_document2
 #'
-#' @seealso \code{\link[bookdown]{html_document2}}
-#' @examples NULL
+#' @seealso [bookdown::html_document2()]
+#' @inherit apa6_pdf return
 #' @export
 
 
@@ -109,7 +109,8 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #'   quotes, i.e. paragraphs that are enclosed in `% <@~{#quote-label}` and
 #'   `% ~@>}` tags in LaTeX comments on separate lines. The labelled quote is
 #'   then inserted and rendered `asis`.
-#'
+#' @return A character vector of LaTeX document text of class \code{knit_asis},
+#'   see [knitr::asis_output()].
 #' @export
 
 quote_from_tex <- function(x, file) {

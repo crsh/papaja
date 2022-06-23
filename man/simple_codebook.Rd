@@ -51,6 +51,9 @@ simple_codebook(x, ...)
     be re-encoded as they are written.  See \code{\link{file}}.}
   }}
 }
+\value{
+Returns \code{NULL} invisibly.
+}
 \description{
 Generate a simple codebook in CSV-format from a (labelled) \code{data.frame}.
 }
@@ -60,10 +63,8 @@ added for all numeric variables. If columns are labelled, the labelles
 are included in the codebook.
 }
 \examples{
-\dontrun{
 variable_labels(cars) <- c(speed = "Speed [ft/s]", dist = "Distance traveled [m]")
-simple_codebook(cars, file = "cars_codebook.csv")
-}
+simple_codebook(cars, file = file.path(tempdir(), "cars_codebook.csv"))
 }
 \seealso{
 \code{\link[utils:write.table]{utils::write.csv()}}

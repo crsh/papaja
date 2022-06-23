@@ -43,6 +43,12 @@ Found the following (possibly) invalid URLs:
 
 All DOIs/URLs are correct. Maybe the sites are blocking non-human traffic?
 
+This is a resubmission. In response to the reviewer comments I have
+
+- added missing value sections to .Rd files (sorry for overlooking these the during the first revision)
+
+Thanks for the thorough review and constructive comments.
+
 ## Downstream dependencies
 
 There are no downstream dependencies.

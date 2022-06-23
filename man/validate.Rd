@@ -45,11 +45,4 @@ validate(
 This function can be used to validate the input to functions.
 \emph{This function is not exported.}
 }
-\examples{
-\dontrun{
-in_paren <- TRUE # Taken from apa_num()
-validate(in_paren, check_class = "logical", check_length = 1)
-validate(in_paren, check_class = "numeric", check_length = 1)
-}
-}
 \keyword{internal}

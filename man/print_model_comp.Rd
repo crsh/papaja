@@ -32,41 +32,12 @@ enclosing degrees of freedom) are replaced with brackets.}
 \item{observed}{Logical. Indicates whether predictor variables were
 observed. See details.}
 }
-\value{
-A named list (with additional class \code{apa_results}) containing the following components:
-
-\describe{
-\item{\code{statistic}}{
-A named list of character strings giving the test statistic, parameters, and \emph{p} value for each factor.
-}
-\item{\code{estimate}}{
-A named list of character strings giving the effect size estimates for each factor,
-either in units of the analyzed scale or as standardized effect size.
-}
-\item{\code{full_result}}{
-A named list of character strings comprised of \code{estimate} and \code{statistic} for each factor.
-}
-\item{\code{table}}{
-A data.frame containing the complete comparison table, which can be passed to \code{\link[=apa_table]{apa_table()}}.
-}
-}
-}
 \description{
 This function is the workhorse of the \link[=apa_print.list]{apa_print()} method
 for model comparisons. It takes a data frame of class \code{apa_model_comp} and
 produces strings to report the results in accordance with APA manuscript
 guidelines.
 \emph{This function is not exported.}
-}
-\examples{
- \dontrun{
-   mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-   mod2 <- update(mod1, formula = . ~ . + Petal.Length)
-   mod3 <- update(mod2, formula = . ~ . + Petal.Width)
-
-   # No bootstrapped Delta R^2 CI
-   print_model_comp(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
- }
 }
 \seealso{
 \code{\link[=arrange_anova]{arrange_anova()}}, \code{\link[=apa_print.aov]{apa_print.aov()}}

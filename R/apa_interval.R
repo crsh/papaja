@@ -26,16 +26,14 @@
 #'   multiple intervals are returned as a named `list` of `character` vectors
 #'   of length 1.
 #'
-#' @seealso \code{\link{apa_num}}
+#' @seealso [apa_num()]
 #' @export
 #' @examples
-#' \dontrun{
 #' apa_confint(1, 2, conf.int = 0.95)
 #' apa_confint(c(1, 2), conf.int = 0.95)
 #' apa_confint(matrix(c(1, 2), ncol = 2), conf.int = 0.95)
 #' apa_confint(confint(lm(cars)))
 #' apa_confint(confint(lm(cars)), digits = 3)
-#' }
 
 apa_interval <- function(
     x

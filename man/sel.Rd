@@ -16,7 +16,4 @@ If a \code{list} holds vectors of parameter values, this function extracts the i
 a new \code{list} with these values. Especially helpful if a function is called repeatedly via \code{do.call} with different
 parameter values from within a function.
 }
-\examples{
-NULL
-}
 \keyword{internal}

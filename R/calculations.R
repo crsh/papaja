@@ -19,9 +19,11 @@ delta_r2_ci <- function(x, models, conf.int = 0.90, R = 100, progress_bar = FALS
   delta_r2s <- diff(r2s)
 
   if(progress_bar) {
+    boot_env <- environment()
+
     cat("Calculating confidence intervals for differences in R-squared based on", R, "bootstrap samples.\n")
     pb <- utils::txtProgressBar(min = 0, max = R * length(delta_r2s), style = 3, width = min(getOption("width") - 10L, 100L))
-    count <- -length(delta_r2s) # seems to be evaluated once more than R
+    boot_env$count <- -length(delta_r2s) # seems to be evaluated once more than R
   }
 
   percent_cis <- lapply(seq_along(delta_r2s), function(y) {
@@ -38,8 +40,8 @@ delta_r2_ci <- function(x, models, conf.int = 0.90, R = 100, progress_bar = FALS
         mod2 <- eval(calls[[2]])
 
         if(progress_bar) {
-          count <<- count + 1L
-          black_hole <- utils::setTxtProgressBar(pb, value = count)
+          boot_env$count <- boot_env$count + 1L
+          black_hole <- utils::setTxtProgressBar(pb, value = boot_env$count)
           # print(count)
           # print(i)
         }
@@ -172,31 +174,37 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
   # split by between-subjects factors ----
   if (is.null(between)) {
     splitted <- list(data)
-  } else if(length(between)>1){
+  } else if(length(between) > 1) {
     splitted <- split(data, f=as.list(data[, c(between)]), sep = ":")
-  } else if (length(between)==1) {
-    splitted <- split(data, f=data[, c(between)])
+  } else if (length(between) == 1) {
+    splitted <- split(data, f = data[, c(between)])
   }
 
   if(!is.null(within)) {
 
-    Morey_CI <- lapply(X = splitted, FUN = function(x){
+    if(method != "Cousineau") {
+      if(method != "Morey") {
+        warning("Method '", method, "' not supported. Defaulting to 'Morey'.")
+        method <- "Morey"
+      }
+    }
+
+    Morey_CI <- lapply(X = splitted, FUN = function(x) {
       y <- tapply(x[[dv]], as.list(x[, c(id, within)]), FUN = as.numeric) # transform to matrix
       z <- y - rowMeans(y, na.rm = TRUE) + mean(y, na.rm = TRUE) # normalise
       CI <- apply(z, MARGIN = (1:(length(within)+1))[-1], FUN = conf_int, level) # calculate CIs for each condition
 
       # Morey correction
-      if(method=="Morey"){
-        M <- prod(apply(X = as.matrix(x[, within, drop = FALSE]), MARGIN = 2, FUN = function(x){nlevels(as.factor(x))}))
+      if(method == "Morey") {
+        M <- prod(apply(X = as.matrix(x[, within, drop = FALSE]), MARGIN = 2, FUN = function(x) { nlevels(as.factor(x)) }))
         Morey_CI <- CI * sqrt(M/(M-1))
       } else {
-        method <<- "Cousineau"
         Morey_CI <- CI
       }
 
       # reshape to data.frame
       Morey_CI <- as.data.frame(as.table(Morey_CI))
-      if(length(within)==1){
+      if(length(within) == 1) {
         colnames(Morey_CI)[colnames(Morey_CI)=="Var1"] <- within
       }
       colnames(Morey_CI)[colnames(Morey_CI)=="Freq"] <- dv
@@ -209,7 +217,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
     } else {
       names <- strsplit(names(Morey_CI), split = ":")
       for (i in 1:length(Morey_CI)) {
-        for ( j in 1:length(between)){
+        for (j in 1:length(between)) {
           Morey_CI[[i]][[between[j]]] <- names[[i]][j]
         }
       }
@@ -260,6 +268,8 @@ within_subjects_conf_int <- wsci
 #'
 #' @param object An object of class `papaja_wsci`, generated with function [wsci()].
 #' @param ... Further arguments that may be passed, currently ignored.
+#' @return A `data.frame` containing means as well as lower and upper confidence
+#'   bounds for each cell of the design.
 #' @export
 
 summary.papaja_wsci <- function(object, ...) {
@@ -284,9 +294,11 @@ summary.papaja_wsci <- function(object, ...) {
 #' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to 0.95
 #'    for 95% confidence intervals.
 #' @param na.rm Logical. Specifies if missing values should be removed.
+#' @return Returns a single numeric value, the deviation of the symmetric
+#'   confidence bounds from the mean based on the t distribution.
 #' @export
 
-conf_int <- function(x, level = 0.95, na.rm = TRUE){
+conf_int <- function(x, level = 0.95, na.rm = TRUE) {
   validate(x, check_class = "numeric", check_NA = FALSE)
   validate(level, check_class = "numeric", check_length = 1, check_range = c(0, 1))
 
@@ -319,6 +331,7 @@ ci <- conf_int
 #'
 #' @param x Numeric. A vector of observations.
 #' @param na.rm Logical. Specifies if missing values should be removed.
+#' @return The standard error of the mean as numeric vector of length 1.
 #' @export
 
 se <- function(x, na.rm = TRUE) {

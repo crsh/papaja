@@ -15,7 +15,8 @@
 #'   function additionally creates a title page and adds the abstract. You
 #'   should, therefore, always call `apa_prepare_doc` at the very
 #'   beginning of the R Markdown document.
-#' @seealso \code{\link{apa6_word}}
+#' @seealso [apa6_docx()]
+#' @return Returns `NULL` invisibly.
 #' @export
 
 apa_prepare_doc <- function() {
@@ -38,9 +39,8 @@ apa_prepare_doc <- function() {
 #'   If the function is called in an RMarkdown-document the file name
 #'   specified as \code{bib_name} can be used in the YAML header as
 #'   \code{bibliography}.
-#' @seealso \code{\link{cite_r}}, \code{\link{r_refs}},
-#'   \code{\link[knitr]{write_bib}}
-#' @examples NULL
+#' @return Returns `NULL` invisibly.
+#' @seealso [cite_r()], [r_refs()], [knitr::write_bib()]
 #' @export
 
 fetch_web_refs <- function(x, bib_name) {
@@ -94,9 +94,7 @@ fetch_web_refs <- function(x, bib_name) {
 #' @author Christoph Stahl, Frederik Aust
 #' @return Returns \code{bib_name} invisibly.
 #'
-#' @seealso \code{\link{r_refs}}, \code{\link{cite_r}}
-#'
-#' @examples NULL
+#' @seealso [cite_r()], [r_refs()]
 
 fetch_zotero_refs <- function(
   x
@@ -195,6 +193,7 @@ prettify_terms <- function(...) {
 #'   If \code{render_appendix} is called form an R Markdown document with a
 #'   target document type other than a PDF file, a markdown fragment is
 #'   included.
+#' @return Returns `NULL` invisibly.
 #' @keywords internal
 #' @export
 
@@ -321,7 +320,7 @@ render_appendix <- function(
     cat(c("", md_fragment), sep = "\n")
   }
 
-  return(invisible(0))
+  return(invisible(NULL))
 }
 
 #' Create a Regression Table

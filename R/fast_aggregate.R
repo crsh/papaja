@@ -9,7 +9,6 @@
 #'    will be aggregated separately.
 #' @param fun Closure. The function used for aggregation.
 #' @keywords internal
-#' @examples NULL
 
 fast_aggregate <- function(data, factors, dv, fun, na.rm = TRUE) {
   # subset: this is a bit faster than subset.data.frame

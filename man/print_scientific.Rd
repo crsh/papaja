@@ -12,7 +12,4 @@ print_scientific(x)
 \description{
 Typesets scientific notation of numbers into properly typeset math strings.
 }
-\examples{
-papaja:::print_scientific("1.25e+04")
-}
 \keyword{internal}

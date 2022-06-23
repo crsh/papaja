@@ -18,3 +18,5 @@
 ^update_csl.sh$
 ^CITATION\.cff$
 ^vignettes/papaja.Rmd$
+^vignettes/papaja.tex$
+^CRAN-SUBMISSION$

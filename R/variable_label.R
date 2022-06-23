@@ -100,15 +100,13 @@ label_range <- function(y) {
 #' @details If the \pkg{skimr} package is installed, an in-line histogram is
 #'   added for all numeric variables. If columns are labelled, the labelles
 #'   are included in the codebook.
-#'
+#' @return Returns `NULL` invisibly.
 #' @seealso [utils::write.csv()]
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' variable_labels(cars) <- c(speed = "Speed [ft/s]", dist = "Distance traveled [m]")
-#' simple_codebook(cars, file = "cars_codebook.csv")
-#' }
+#' simple_codebook(cars, file = file.path(tempdir(), "cars_codebook.csv"))
 
 simple_codebook <- function(x, ...) {
   tidied_labels <- tidy_variable_lables(x)

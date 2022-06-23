@@ -98,7 +98,7 @@ apa_print.list <- function(
   conf.int <- ellipsis_ci$conf.int
 
   if(length(x) == 1) apa_print(x[[1]]) else {
-    if(class(x[[1]]) != "lm") stop("Currently, only model comparisons for 'lm' objects are supported.")
+    if(!is(x[[1]], "lm")) stop("Currently, only model comparisons for 'lm' objects are supported.")
   }
 
   validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 1))

@@ -6,9 +6,9 @@
 #' here.
 #'
 #' @rdname lookup_tables
-#' @examples
-#'   papaja:::lookup_names[["mean.of.x"]]
-#'   papaja:::lookup_labels[["mean.of.x"]]
+# #' @examples
+# #'   papaja:::lookup_names[["mean.of.x"]]
+# #'   papaja:::lookup_labels[["mean.of.x"]]
 #' @keywords internal
 
 lookup_names <- c(
@@ -258,8 +258,8 @@ lookup_labels <- c(
 #' corresponding name. This function returns the proper names for these indices.
 #'
 #' @rdname lookup_tables
-#' @examples
-#'   papaja:::lookup_adjust_names("fdr")
+# #' @examples
+# #'   papaja:::lookup_adjust_names("fdr")
 #' @keywords internal
 
 lookup_adjust_names <- function(x) {

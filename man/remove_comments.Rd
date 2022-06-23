@@ -11,6 +11,9 @@ remove_comments(x, file)
 
 \item{file}{Character. Name of the new R Markdown file without comments.}
 }
+\value{
+No return value, called to write text to \code{file}.
+}
 \description{
 Removes markdown comments from an R Markdown file.
 }

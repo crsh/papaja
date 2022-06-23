@@ -47,7 +47,7 @@ By default, \emph{Wald} confidence intervals are calculated, but this may
 change in the future.
 }
 \examples{
-\dontrun{
+\donttest{
   # Fit a linear mixed model using the lme4 package
   # or the lmerTest package (if dfs and p values are desired)
   library(lmerTest)

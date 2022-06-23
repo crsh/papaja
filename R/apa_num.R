@@ -28,6 +28,12 @@
 #'   `x` exceeds the length of the parameter vectors. If `x` is a `matrix` or
 #'   `data.frame`, the vectors specify the formatting of either rows or columns
 #'   according to the value of `margin`.
+#'
+#'   We recommend to use `apa_num()`, rather than `printnum()` or `print_num()`,
+#'   which are aliases kept only for backward compatibility.
+#' @return An object of the same class as `x` with all numeric values converted
+#'   to character.
+#' @seealso [apa_p()], [apa_df()]
 #' @examples
 #' apa_num(1/3)
 #' apa_num(1/3, gt1 = FALSE)
@@ -379,6 +385,8 @@ apa_num.tiny_labelled <-function(x, ...){
 #' @param x Numeric. The \emph{p} value(s) to report.
 #' @param digits Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.
 #' @inheritParams apa_num.numeric
+#' @inherit apa_num return
+#' @seealso [apa_num()], [apa_df()]
 #' @examples
 #' apa_p(0.05)
 #' apa_p(0.0005)
@@ -422,6 +430,10 @@ print_p <- apa_p
 #' @param elementwise Logical. Determines whether the number of trailing digits
 #'   should be determined for each element of `x` separately (the default),
 #'   or for the complete vector `x`.
+#' @inherit apa_num return
+#' @seealso [apa_num()], [apa_p()]
+#' @examples
+#' apa_df(c(1, 1.23151))
 #' @export
 
 apa_df <- function(x, digits = 2L, elementwise = TRUE) {
@@ -460,8 +472,8 @@ print_df <- apa_df
 #' @param x Character.
 #' @keywords internal
 #'
-#' @examples
-#' papaja:::print_scientific("1.25e+04")
+# #' @examples
+# #' papaja:::print_scientific("1.25e+04")
 
 print_scientific <- function(x) {
   x <- gsub("e\\+00$", "", x)

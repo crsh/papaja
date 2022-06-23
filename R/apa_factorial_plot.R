@@ -37,7 +37,7 @@
 #' @param ylab Character or expression. Label for *y* axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
-#' @return A (nested) list of plot options. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
+#' @return A named (nested) list of plot options including raw and derived data. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
 #' @inheritDotParams graphics::plot.window
 #' @details
 #'    The measure of dispersion can be either [conf_int()] for between-subjects confidence intervals, [se()] for standard errors,
@@ -392,7 +392,9 @@ apa_factorial_plot.default <- function(
     output$args <- do.call("apa_factorial_plot_single", ellipsis)
   }
 
-  old.mfrow <- par("mfrow") # Save original plot architecture
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   ## Three factors
 
 
@@ -449,7 +451,6 @@ apa_factorial_plot.default <- function(
 
       output$args[[paste0("plot", i)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
     }
-    par(mfrow=old.mfrow)
   }
 
   ## Four factors
@@ -495,7 +496,6 @@ apa_factorial_plot.default <- function(
         output$args[[paste0("plot", i, j)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
       }
     }
-    par(mfrow=old.mfrow)
   }
   invisible(output)
 }

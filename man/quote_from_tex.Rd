@@ -11,6 +11,10 @@ quote_from_tex(x, file)
 
 \item{file}{Character. Path to LaTeX file from which to quote.}
 }
+\value{
+A character vector of LaTeX document text of class \code{knit_asis},
+see \code{\link[knitr:asis_output]{knitr::asis_output()}}.
+}
 \description{
 Includes a labelled quote from a LaTeX document 'asis'.
 }

@@ -149,6 +149,10 @@ Otherwise ignored.}
 a \code{list} of matrices or data frames with a common structure. Can be either
 \code{indent} or \code{table_spanner}. See details.}
 }
+\value{
+A character vector of the table source code of class \code{knit_asis}, see
+\code{\link[knitr:asis_output]{knitr::asis_output()}}.
+}
 \description{
 Formats matrices and data frames to report them as tables in R Markdown
 documents according to APA guidelines.
@@ -203,5 +207,5 @@ apa_table(
 )
 }
 \seealso{
-\code{\link[knitr]{kable}}, \code{\link{apa_num}}
+\code{\link[knitr:kable]{knitr::kable()}}, \code{\link[=apa_num]{apa_num()}}
 }

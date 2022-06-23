@@ -10,7 +10,8 @@ in_paren(x)
 \item{x}{Character. Single character or list of characters.}
 }
 \value{
-An object of the same type as \code{x}.
+An object of the same type as \code{x}, where all parentheses have been
+replaced by brackets.
 }
 \description{
 Takes a single character or a list of characters and replaces parentheses
@@ -24,5 +25,5 @@ in_paren(t_test_res$stat)
 in_paren(t_test_res[1:3])
 }
 \seealso{
-apa_print
+\code{\link[=apa_print]{apa_print()}}
 }

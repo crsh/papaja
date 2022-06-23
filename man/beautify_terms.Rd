@@ -21,14 +21,25 @@ beautify_terms(x, ...)
 \arguments{
 \item{x}{Character. Vector of term names to be prettified.}
 
+\item{...}{Additional arguments passed to \code{\link[=apa_num]{apa_num()}}, for numeric values in
+\code{x}, ignored otherwise.}
+
 \item{standardized}{Logical. If \code{TRUE}, the name of the function \code{\link[=scale]{scale()}} will be
 removed from term names.}
+
+\item{retain_period}{Logical. If \code{TRUE}, any periods in term names will be
+retained, otherwise they will be replaced by a space.}
+}
+\value{
+A character vector or \code{data.frame} (if \code{x} is a \code{data.frame})
+containing term names modified for nicer printing.
 }
 \description{
 Remove parentheses, replace colons with \code{$\\times$}.
 Useful to prettify term names in \code{\link[=apa_print]{apa_print()}} tables.
 }
 \examples{
-NULL
+beautify_terms("a:b")
+beautify_terms("scale(x)", standardized = TRUE)
+beautify_terms("snake_case")
 }
-\keyword{internal}

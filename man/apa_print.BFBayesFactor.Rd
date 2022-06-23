@@ -128,7 +128,7 @@ the supplied Bayes factor is correct!
 }
 \examples{
 # ANOVA
-\dontrun{
+\donttest{
 data(sleep, package = "BayesFactor")
 bayesian_anova <- BayesFactor::anovaBF(
   extra ~ group + ID
@@ -180,7 +180,6 @@ Other apa_print:
 \code{\link{apa_print}()}
 }
 \concept{apa_print}
-\keyword{internal}
 \value{
 \code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
 

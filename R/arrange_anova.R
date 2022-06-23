@@ -23,13 +23,13 @@
 #'
 #' @keywords internal
 #' @seealso [print_anova()], [print_model_comp()]
-#' @examples
-#'  \dontrun{
-#'    ## From Venables and Ripley (2002) p. 165.
-#'    npk_aov <- aov(yield ~ block + N * P * K, npk)
-#'    arrange_anova(summary(npk_aov))
-#'  }
-#'
+# #' @examples
+# #'  \dontrun{
+# #'    ## From Venables and Ripley (2002) p. 165.
+# #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
+# #'    arrange_anova(summary(npk_aov))
+# #'  }
+
 
 arrange_anova <- function(x, ...) {
   UseMethod("arrange_anova")

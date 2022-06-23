@@ -9,9 +9,14 @@ add_equals(x)
 \arguments{
 \item{x}{A character vector.}
 }
+\value{
+Character vector
+}
 \description{
 This is an internal function that prepends every element of a character
 vector with an 'equals' sign if the respective element does not contain one
 of \code{c("=", "<", ">")}.
 }
-\keyword{internal}
+\examples{
+add_equals(c("42", "<= 42", "> 42", "= 42"))
+}

@@ -34,15 +34,13 @@ escape_latex <- function (x, newlines = FALSE, spaces = FALSE) {
 #' @param x Character. Vector of term names to be sanitized.
 #' @param standardized Logical. If `TRUE`, the name of the function [[scale()]] will be
 #'    removed from term names.
-#'
-#' @keywords internal
+#' @return An object of the same class as `x` containing sanitized term names as
+#'    characters.
 #' @export
 #' @examples
-#' \dontrun{
-#' sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
-#' }
+#'   sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 
-sanitize_terms <- function(x, ...) {
+sanitize_terms <- function(x, standardized = FALSE) {
   UseMethod("sanitize_terms", x)
 }
 
@@ -50,7 +48,7 @@ sanitize_terms <- function(x, ...) {
 #' @method sanitize_terms character
 #' @export
 
-sanitize_terms.character <- function(x, standardized = FALSE, ...) {
+sanitize_terms.character <- function(x, standardized = FALSE) {
   if(standardized) x <- gsub("scale\\(", "z_", x)   # Remove scale()
   x <- gsub("\\(|\\)|`", "", x)                     # Remove parentheses and backticks
   x <- gsub("\\.0+$", "", x)                        # Remove trailing 0-digits
@@ -64,24 +62,24 @@ sanitize_terms.character <- function(x, standardized = FALSE, ...) {
 #' @method sanitize_terms factor
 #' @export
 
-sanitize_terms.factor <- function(x, ...) {
-  factor(sanitize_terms(as.character(x)))
+sanitize_terms.factor <- function(x, standardized = FALSE) {
+  factor(sanitize_terms(as.character(x, standardized)))
 }
 
 #' @rdname sanitize_terms
 #' @method sanitize_terms data.frame
 #' @export
 
-sanitize_terms.data.frame <- function(x, ...) {
-  as.data.frame(lapply(x, sanitize_terms, ...), stringsAsFactors = FALSE)
+sanitize_terms.data.frame <- function(x, standardized = FALSE) {
+  as.data.frame(lapply(x, sanitize_terms, standardized), stringsAsFactors = FALSE)
 }
 
 #' @rdname sanitize_terms
 #' @method sanitize_terms list
 #' @export
 
-sanitize_terms.list <- function(x, ...) {
-  lapply(x, sanitize_terms, ...)
+sanitize_terms.list <- function(x, standardized = FALSE) {
+  lapply(x, sanitize_terms, standardized)
 }
 
 
@@ -93,10 +91,17 @@ sanitize_terms.list <- function(x, ...) {
 #' @param x Character. Vector of term names to be prettified.
 #' @param standardized Logical. If `TRUE`, the name of the function [scale()] will be
 #'    removed from term names.
+#' @param retain_period Logical. If `TRUE`, any periods in term names will be
+#'    retained, otherwise they will be replaced by a space.
+#' @param ... Additional arguments passed to [apa_num()], for numeric values in
+#'    `x`, ignored otherwise.
 #'
+#' @return A character vector or `data.frame` (if `x` is a `data.frame`)
+#'   containing term names modified for nicer printing.
 #' @examples
-#' NULL
-#' @keywords internal
+#' beautify_terms("a:b")
+#' beautify_terms("scale(x)", standardized = TRUE)
+#' beautify_terms("snake_case")
 #' @export
 
 beautify_terms <- function(x, ...) {
@@ -118,7 +123,7 @@ beautify_terms.character <- function(
   x <- gsub('.+\\$|.+\\[\\["|"\\]\\]|.+\\[.*,\\s*"|"\\s*\\]', "", x) # Remove data.frame names
   x <- gsub("\\_", " ", x)                        # Remove underscores
   if(!retain_period) x <- gsub("\\.", " ", x)
-  
+
   for (i in seq_along(x)) {
     x2 <- unlist(strsplit(x[i], split = ":"))
     x2 <- capitalize(x2)
@@ -171,14 +176,16 @@ beautify_model <- function(x, ...) {
 #' Add Equals Where Necessary
 #'
 #' This is an internal function that prepends every element of a character
-#' vector with an 'equals' sign if the respective element does not contain one 
+#' vector with an 'equals' sign if the respective element does not contain one
 #' of `c("=", "<", ">")`.
 #'
 #' @param x A character vector.
-#'
-#' @keywords internal
+#' @return Character vector
+#' @examples
+#' add_equals(c("42", "<= 42", "> 42", "= 42"))
+#' @export
 
-add_equals <-function(x) {
+add_equals <- function(x) {
 
   validate(x, check_class = "character")
 

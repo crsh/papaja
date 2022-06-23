@@ -20,6 +20,10 @@ for 95\% confidence intervals.}
 
 \item{na.rm}{Logical. Specifies if missing values should be removed.}
 }
+\value{
+Returns a single numeric value, the deviation of the symmetric
+confidence bounds from the mean based on the t distribution.
+}
 \description{
 Calculates the deviation that is needed to construct confidence intervals for a vector of observations.
 }

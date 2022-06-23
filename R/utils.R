@@ -17,12 +17,12 @@
 #'
 #' @importFrom methods is
 #' @keywords internal
-#' @examples
-#' \dontrun{
-#' in_paren <- TRUE # Taken from apa_num()
-#' validate(in_paren, check_class = "logical", check_length = 1)
-#' validate(in_paren, check_class = "numeric", check_length = 1)
-#' }
+# #' @examples
+# #' \dontrun{
+# #' in_paren <- TRUE # Taken from apa_num()
+# #' validate(in_paren, check_class = "logical", check_length = 1)
+# #' validate(in_paren, check_class = "numeric", check_length = 1)
+# #' }
 
 validate <- function(
   x
@@ -262,8 +262,7 @@ beautify <- function(x, standardized = FALSE, use_math = FALSE, args_stat = NULL
 #' @param x       A data frame. For example, the table element produced by [apa_print()].
 #' @param colname Character. Column name of the \code{data.frame} containing the terms to sort.
 #'
-#' @return Returns the same data.frame with reordered rows.
-#' @keywords internal
+#' @return Returns the same `data.frame` with reordered rows.
 #' @export
 #'
 #' @examples
@@ -427,8 +426,6 @@ complete_observations <- function(data, id, within, dv) {
 #' @param i Integer. The i-th element of each vector that is to be extracted.
 #'
 #' @keywords internal
-#' @examples
-#' NULL
 
 sel <- function(x, i){
   x <- x[(i-1)%%length(x)+1]

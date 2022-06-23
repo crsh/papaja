@@ -19,8 +19,11 @@ test_that(
     expect_error(x <- capture.output(apa_table(descriptives, added_colnames = letters[1:5])))
 
     skip_on_cran()
-    rmarkdown::render("test_apa_table.Rmd", quiet = TRUE)
-    suppressWarnings(file.remove("test_apa_table.pdf", "test_apa_table.ttt"))
+    rmarkdown::render(
+      "test_apa_table.Rmd"
+      , output_dir = tempdir()
+      , quiet = TRUE
+    )
   }
 )
 

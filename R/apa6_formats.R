@@ -25,8 +25,8 @@
 #'   When creating PDF documents the output device for figures defaults to
 #'   \code{c("pdf", "png")}, so that each figure is saved in all four formats
 #'   at a resolution of 300 dpi.
-#' @seealso [bookdown::pdf_document2], [bookdown::word_document2]
-#' @examples NULL
+#' @return R Markdown output format to pass to [rmarkdown::render()]
+#' @seealso [bookdown::pdf_document2()], [bookdown::word_document2()]
 #' @export
 
 apa6_pdf <- function(
@@ -83,14 +83,14 @@ apa6_pdf <- function(
   config$knitr$opts_chunk$dpi <- 300
   config$clean_supporting <- FALSE # Always keep images files
 
-  config$pre_knit <- function(input, ...) { modify_input_file(input=input) }
+  config$pre_knit <- function(input, ...) { modify_input_file(input = input) }
 
   ## Overwrite preprocessor to set CSL defaults
   saved_files_dir <- NULL
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  config$pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
+  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
@@ -108,7 +108,7 @@ apa6_pdf <- function(
     args
   }
 
-  config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
+  post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
     output_text <- readLines(output_file, encoding = "UTF-8")
 
@@ -167,6 +167,9 @@ apa6_pdf <- function(
     assign("number_sections", number_sections, envir = pp_env)
     bookdown_post_processor(metadata = metadata, input = input_file, output = output_file, clean = clean, verbose = verbose)
   }
+
+  config$pre_processor <- pre_processor
+  config$post_processor <- post_processor
 
   config
 }
@@ -227,7 +230,7 @@ apa6_docx <- function(
 
   # Preprocessor functions are adaptations from the RMarkdown package
   # (https://github.com/rstudio/rmarkdown/blob/master/R/pdf_document.R)
-  config$pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
+  pre_processor <- function(metadata, input_file, runtime, knit_meta, files_dir, output_dir, from = .from) {
     # save files dir (for generating intermediates)
     saved_files_dir <<- files_dir
 
@@ -250,7 +253,7 @@ apa6_docx <- function(
     args
   }
 
-  config$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
+  post_processor <- function(metadata, input_file, output_file, clean, verbose) {
 
     # Add correct running head
     docx_files <- zip::zip_list(zipfile = output_file)$filename
@@ -281,6 +284,9 @@ apa6_docx <- function(
       , include_directories = FALSE
     )
   }
+
+  config$pre_processor <- pre_processor
+  config$post_processor <- post_processor
 
   config
 }

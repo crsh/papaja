@@ -51,5 +51,5 @@ document.
 cite_r()
 }
 \seealso{
-\code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
+\code{\link[=r_refs]{r_refs()}}, \code{\link[knitr:write_bib]{knitr::write_bib()}}
 }

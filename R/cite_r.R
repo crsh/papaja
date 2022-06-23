@@ -23,7 +23,7 @@
 #'   document.
 #' @return If `footnote = FALSE` a character string is returned, otherwise a
 #'   named list with the elements `r` and `pkgs`.
-#' @seealso \code{\link{r_refs}}, \code{\link[knitr]{write_bib}}
+#' @seealso [r_refs()], [knitr::write_bib()]
 #' @examples cite_r()
 #' @export
 

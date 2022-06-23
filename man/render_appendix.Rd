@@ -41,6 +41,9 @@ citations) as part of the conversion.}
 supplied, defaults to the common base directory of \code{input}.}
   }}
 }
+\value{
+Returns \code{NULL} invisibly.
+}
 \description{
 This function renders an R Markdown document \emph{without} YAML header to a TeX
 fragment inside an \code{appendix} environment, or to a markdown fragment (for

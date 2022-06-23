@@ -13,36 +13,17 @@
 #' @param progress_bar Logical. Determines whether a progress bar is printed while bootstrapping.
 #' @inheritParams glue_apa_results
 #' @inheritParams apa_print.glm
-#' @return
-#'    A named list (with additional class `apa_results`) containing the following components:
-#'
-#'    \describe{
-#'      \item{`statistic`}{
-#'        A named list of character strings giving the test statistic, parameters, and *p* value for each factor.
-#'      }
-#'      \item{`estimate`}{
-#'        A named list of character strings giving the effect size estimates for each factor,
-#'        either in units of the analyzed scale or as standardized effect size.
-#'      }
-#'      \item{`full_result`}{
-#'        A named list of character strings comprised of `estimate` and `statistic` for each factor.
-#'      }
-#'      \item{`table`}{
-#'        A data.frame containing the complete comparison table, which can be passed to [apa_table()].
-#'      }
-#'    }
-#'
 #' @keywords internal
 #' @seealso [arrange_anova()], [apa_print.aov()]
-#' @examples
-#'  \dontrun{
-#'    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#'    mod2 <- update(mod1, formula = . ~ . + Petal.Length)
-#'    mod3 <- update(mod2, formula = . ~ . + Petal.Width)
-#'
-#'    # No bootstrapped Delta R^2 CI
-#'    print_model_comp(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
-#'  }
+# #' @examples
+# #'  \dontrun{
+# #'    mod1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+# #'    mod2 <- update(mod1, formula = . ~ . + Petal.Length)
+# #'    mod3 <- update(mod2, formula = . ~ . + Petal.Width)
+# #'
+# #'    # No bootstrapped Delta R^2 CI
+# #'    print_model_comp(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
+# #'  }
 
 
 print_model_comp <- function(

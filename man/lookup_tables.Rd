@@ -7,11 +7,9 @@
 \alias{lookup_adjust_names}
 \title{Lookup Tables for Column Names and Variable Labels}
 \format{
+An object of class \code{character} of length 107.
 
-An object of class \code{character} of length 106.
-
-An object of class \code{character} of length 101.
-
+An object of class \code{character} of length 102.
 }
 \usage{
 lookup_names
@@ -30,10 +28,5 @@ here.
 inferential statistics adjusted for multiple comparisons. To make these
 adjustments transparent the statistics get an index with the
 corresponding name. This function returns the proper names for these indices.
-}
-\examples{
-  papaja:::lookup_names[["mean.of.x"]]
-  papaja:::lookup_labels[["mean.of.x"]]
-  papaja:::lookup_adjust_names("fdr")
 }
 \keyword{internal}

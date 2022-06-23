@@ -15,10 +15,7 @@ format_cells(x, format.args = NULL)
 Format all numeric cells of a table using \code{\link{apa_num}}.
 \emph{This function is not exported.}
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{apa_num}}
+\code{\link[=apa_num]{apa_num()}}
 }
 \keyword{internal}

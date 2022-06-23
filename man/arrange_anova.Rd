@@ -42,14 +42,6 @@ Currently, methods for the following objects are available:
 \item Anova.mlm
 }
 }
-\examples{
- \dontrun{
-   ## From Venables and Ripley (2002) p. 165.
-   npk_aov <- aov(yield ~ block + N * P * K, npk)
-   arrange_anova(summary(npk_aov))
- }
-
-}
 \seealso{
 \code{\link[=print_anova]{print_anova()}}, \code{\link[=print_model_comp]{print_model_comp()}}
 }

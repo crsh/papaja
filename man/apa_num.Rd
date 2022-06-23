@@ -180,6 +180,10 @@ prepended with an \code{=}.}
 is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
 See \code{\link[=apply]{apply()}}.}
 }
+\value{
+An object of the same class as \code{x} with all numeric values converted
+to character.
+}
 \description{
 Converts numerical values to character strings for printing and reporting.
 }
@@ -189,6 +193,9 @@ element of the vector is formatted. Parameters are recycled if length of
 \code{x} exceeds the length of the parameter vectors. If \code{x} is a \code{matrix} or
 \code{data.frame}, the vectors specify the formatting of either rows or columns
 according to the value of \code{margin}.
+
+We recommend to use \code{apa_num()}, rather than \code{printnum()} or \code{print_num()},
+which are aliases kept only for backward compatibility.
 }
 \examples{
 apa_num(1/3)
@@ -197,4 +204,7 @@ apa_num(1/3, digits = 5)
 
 apa_num(0)
 apa_num(0, zero = FALSE)
+}
+\seealso{
+\code{\link[=apa_p]{apa_p()}}, \code{\link[=apa_df]{apa_df()}}
 }

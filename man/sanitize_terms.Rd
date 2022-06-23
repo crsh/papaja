@@ -8,15 +8,15 @@
 \alias{sanitize_terms.list}
 \title{Sanitize Term Names}
 \usage{
-sanitize_terms(x, ...)
+sanitize_terms(x, standardized = FALSE)
 
-\method{sanitize_terms}{character}(x, standardized = FALSE, ...)
+\method{sanitize_terms}{character}(x, standardized = FALSE)
 
-\method{sanitize_terms}{factor}(x, ...)
+\method{sanitize_terms}{factor}(x, standardized = FALSE)
 
-\method{sanitize_terms}{data.frame}(x, ...)
+\method{sanitize_terms}{data.frame}(x, standardized = FALSE)
 
-\method{sanitize_terms}{list}(x, ...)
+\method{sanitize_terms}{list}(x, standardized = FALSE)
 }
 \arguments{
 \item{x}{Character. Vector of term names to be sanitized.}
@@ -24,13 +24,14 @@ sanitize_terms(x, ...)
 \item{standardized}{Logical. If \code{TRUE}, the name of the function [\code{\link[=scale]{scale()}}] will be
 removed from term names.}
 }
+\value{
+An object of the same class as \code{x} containing sanitized term names as
+characters.
+}
 \description{
 Remove characters from term names that will be difficult to address using the \code{$}-operator.
 \emph{This function is not exported.}
 }
 \examples{
-\dontrun{
-sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
+  sanitize_terms(c("(Intercept)", "Factor A", "Factor B", "Factor A:Factor B", "scale(FactorA)"))
 }
-}
-\keyword{internal}

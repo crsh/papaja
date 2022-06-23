@@ -14,12 +14,15 @@ adjusted relative to this.}
 
 \item{box}{Logical. Indicates whether to draw a black panel border.}
 }
+\value{
+Object of class \code{theme} and \code{gg}, see \code{\link[ggplot2:theme]{ggplot2::theme()}}.
+}
 \description{
 \pkg{ggplot2} theme with a white panel background, no grid lines, large axis
 and legend titles, and increased text padding for better readability.
 }
 \examples{
- \dontrun{
+ \donttest{
    # Copied from ?ggtheme
    mtcars2 <- within(mtcars, {
    vs <- factor(vs, labels = c("V-shaped", "Straight"))
@@ -28,6 +31,7 @@ and legend titles, and increased text padding for better readability.
    gear <- factor(gear)
    })
 
+   library("ggplot2")
    p1 <- ggplot(mtcars2) +
      geom_point(aes(x = wt, y = mpg, colour = gear)) +
      labs(

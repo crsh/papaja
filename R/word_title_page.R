@@ -5,7 +5,7 @@
 #'
 #' @param x List. Meta data of the document as a result from \code{\link[yaml]{yaml.load}}.
 #' @keywords internal
-#' @seealso \code{\link{apa6_word}}
+#' @seealso [apa6_docx()]
 
 word_title_page <- function(x) {
   # Create title page and abstract

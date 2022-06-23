@@ -35,8 +35,8 @@
 #'   reference is used. If multiple references of the preferred type are given
 #'   all of them are cited. Finally, if no `CITATION` file exists a reference
 #'   is generated from the `DESCRIPTION` file by \code{\link[utils]{citation}}.
-#' @seealso \code{\link{cite_r}}, \code{\link[knitr]{write_bib}}, \code{\link[utils]{citation}}, \code{\link[utils]{toLatex}}
-#' @examples NULL
+#' @return Invisibly returns the bibliography written to `file`.
+#' @seealso [cite_r()], [knitr::write_bib()], [utils::citation()], [utils::toLatex()]
 #' @export
 
 r_refs <- function(file, append = TRUE, prefix = "R-", type_pref = c("Article", "Book"), tweak = TRUE) {

@@ -8,12 +8,12 @@
 #' @param base_family Character. Base font family.
 #' @param box Logical. Indicates whether to draw a black panel border.
 #'
+#' @return Object of class `theme` and `gg`, see [ggplot2::theme()].
 #' @seealso [ggplot2::theme_bw()], [ggplot2::theme()]
-#'
 #' @export
 #'
 #' @examples
-#'  \dontrun{
+#'  \donttest{
 #'    # Copied from ?ggtheme
 #'    mtcars2 <- within(mtcars, {
 #'    vs <- factor(vs, labels = c("V-shaped", "Straight"))
@@ -22,6 +22,7 @@
 #'    gear <- factor(gear)
 #'    })
 #'
+#'    library("ggplot2")
 #'    p1 <- ggplot(mtcars2) +
 #'      geom_point(aes(x = wt, y = mpg, colour = gear)) +
 #'      labs(

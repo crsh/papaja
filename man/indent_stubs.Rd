@@ -18,10 +18,7 @@ indent. Names of list elements will be used as titles for indented sections.}
 Indents stubs by line and adds section headings
 \emph{This function is not exported.}
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{apa_table}}
+\code{\link[=apa_table]{apa_table()}}
 }
 \keyword{internal}

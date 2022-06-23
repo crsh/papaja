@@ -11,6 +11,10 @@
 
 \item{...}{Further arguments that may be passed, currently ignored.}
 }
+\value{
+A \code{data.frame} containing means as well as lower and upper confidence
+bounds for each cell of the design.
+}
 \description{
 Calculate upper and lower limits of within-subjects confidence intervals calculated
 with \code{\link[=wsci]{wsci()}} and return them along their respective means.

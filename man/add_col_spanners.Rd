@@ -19,10 +19,7 @@ add_col_spanners(table_lines, col_spanners, n_cols, add_group_midrules = TRUE)
 Takes a named list of containing column numbers to group with a heading
 \emph{This function is not exported.}
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{apa_table}}
+\code{\link[=apa_table]{apa_table()}}
 }
 \keyword{internal}

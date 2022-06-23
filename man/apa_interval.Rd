@@ -98,14 +98,12 @@ If \code{x} is a \code{matrix} or \code{data.frame} the row names are used as na
 the returned \code{list} of intervals.
 }
 \examples{
-\dontrun{
 apa_confint(1, 2, conf.int = 0.95)
 apa_confint(c(1, 2), conf.int = 0.95)
 apa_confint(matrix(c(1, 2), ncol = 2), conf.int = 0.95)
 apa_confint(confint(lm(cars)))
 apa_confint(confint(lm(cars)), digits = 3)
 }
-}
 \seealso{
-\code{\link{apa_num}}
+\code{\link[=apa_num]{apa_num()}}
 }

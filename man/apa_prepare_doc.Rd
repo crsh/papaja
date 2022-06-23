@@ -6,6 +6,9 @@
 \usage{
 apa_prepare_doc()
 }
+\value{
+Returns \code{NULL} invisibly.
+}
 \description{
 Prepares objects to be used in the rendering process and creates title page
 and abstract for MS Word documents. \emph{This function has been defunct. It is
@@ -25,5 +28,5 @@ should, therefore, always call \code{apa_prepare_doc} at the very
 beginning of the R Markdown document.
 }
 \seealso{
-\code{\link{apa6_word}}
+\code{\link[=apa6_docx]{apa6_docx()}}
 }

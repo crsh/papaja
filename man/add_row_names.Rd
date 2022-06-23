@@ -17,10 +17,7 @@ add_row_names(x, added_stub_head, force = FALSE)
 Adds row names as the first column of the table and sets \code{row.name} attribute to \code{NULL}.
 \emph{This function is not exported.}
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{apa_table}}
+\code{\link[=apa_table]{apa_table()}}
 }
 \keyword{internal}

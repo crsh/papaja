@@ -10,6 +10,10 @@
 #' @param check_df Logical. If TRUE (the default), checks if degrees-of-freedom-columns contain non-integer values.
 #' @param ... further arguments passed from an to other methods
 #'
+#' @return An object of the same class as `x`, where a redundant column with
+#'   degrees of freedom has been incorporated into the column label of the column
+#'   `statistic`.
+#'
 #' @examples
 #'   apa_out <- apa_print(aov(yield ~ N * P, npk))
 #'

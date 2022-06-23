@@ -100,7 +100,7 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
 }
 \value{
-A (nested) list of plot options. \emph{Note that the structure of the return value is about to change in a forthcoming release of papaja.}
+A named (nested) list of plot options including raw and derived data. \emph{Note that the structure of the return value is about to change in a forthcoming release of papaja.}
 }
 \description{
 Create one or more beeswarm plots from a \code{data.frame} containing data from

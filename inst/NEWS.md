@@ -1,3 +1,10 @@
+# papaja 0.1.0
+
+Initial CRAN release
+
+- Some improvements to documentation, i.e. documentation of return values, removed examples for internal functions (as per CRAN request), use `\donttest{}` instead of `\dontrun{}`.
+- `add_equals()` is now an exported function.
+
 # papaja 0.1.0.9999
 
 ### Template

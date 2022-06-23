@@ -28,7 +28,7 @@
 #'    available from the model object.
 #' @inheritParams glue::glue
 #'
-#' @return Returns a list of class `apa_results`
+#' @return Returns a list of class `apa_results`, see [apa_print()].
 #' @export
 #'
 #' @examples
@@ -61,7 +61,7 @@
 #'         , aic = ""
 #'     )
 #'     , stat_glue = c(
-#'         r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<papaja:::add_equals(p.value)>>$"
+#'         r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<add_equals(p.value)>>$"
 #'         , aic = "$\\mathrm{AIC} = <<AIC>>$"
 #'     )
 #' )

@@ -117,7 +117,7 @@ lm_fit_apa$table$statistic
 ```
 
 Variable labels are automatically used by `apa_table()` and plotting functions from the `apa_factorial_plot()`-family to create sensible default labels.
-If a label is enveloped in `$` it may contain LaTeX math syntax, which is automatically converted to R expressions using [`latex2exp`](https://cran.r-project.org/package=latex2exp) for plotting.
+If a label is enveloped in `$` it may contain LaTeX math syntax, which is automatically converted to R expressions using [**latex2exp**](https://cran.r-project.org/package=latex2exp) for plotting.
 
 Any new `apa_print()` method should output an object of this basic structure.
 

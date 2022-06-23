@@ -14,6 +14,6 @@ Creates text for the title and abstract page for MS Word documents.
 \emph{This function is not exported.}
 }
 \seealso{
-\code{\link{apa6_word}}
+\code{\link[=apa6_docx]{apa6_docx()}}
 }
 \keyword{internal}

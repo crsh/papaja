@@ -22,6 +22,10 @@ print_p(x, digits = 3L, na_string = "", add_equals = FALSE)
 \item{add_equals}{Logical. Indicates if the output string should be
 prepended with an \code{=}.}
 }
+\value{
+An object of the same class as \code{x} with all numeric values converted
+to character.
+}
 \description{
 Convenience wrapper for \code{\link{apa_num}} to print \emph{p} values.
 }
@@ -30,4 +34,7 @@ apa_p(0.05)
 apa_p(0.0005)
 apa_p(0.99999999)
 apa_p(c(.001, 0), add_equals = TRUE)
+}
+\seealso{
+\code{\link[=apa_num]{apa_num()}}, \code{\link[=apa_df]{apa_df()}}
 }

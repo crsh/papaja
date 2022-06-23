@@ -16,12 +16,12 @@ the conversion to PDF.}
     \item{\code{}}{}
   }}
 }
+\value{
+R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}
+}
 \description{
 Template for creating a journal revision letters.
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link[bookdown]{html_document2}}
+\code{\link[bookdown:html_document2]{bookdown::html_document2()}}
 }

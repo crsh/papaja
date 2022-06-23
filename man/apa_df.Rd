@@ -19,7 +19,17 @@ be used if \code{x} contains non-integer values.}
 should be determined for each element of \code{x} separately (the default),
 or for the complete vector \code{x}.}
 }
+\value{
+An object of the same class as \code{x} with all numeric values converted
+to character.
+}
 \description{
 This is a function for processing degrees of freedom. It takes care
 that trailing digits are only printed if non-integer values are given.
+}
+\examples{
+apa_df(c(1, 1.23151))
+}
+\seealso{
+\code{\link[=apa_num]{apa_num()}}, \code{\link[=apa_p]{apa_p()}}
 }

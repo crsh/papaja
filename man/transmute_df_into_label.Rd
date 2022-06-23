@@ -23,6 +23,11 @@ or the \code{table} component of such objects.}
 
 \item{...}{further arguments passed from an to other methods}
 }
+\value{
+An object of the same class as \code{x}, where a redundant column with
+degrees of freedom has been incorporated into the column label of the column
+\code{statistic}.
+}
 \description{
 Takes the output from \code{\link[=apa_print]{apa_print()}} methods and modifies the results table
 by transmuting information about degrees of freedom into the variable labels of

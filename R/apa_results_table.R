@@ -67,6 +67,8 @@ print.apa_results_table <- function(x, ...) {
 #'
 #' @inheritParams base::Extract
 #' @rdname extract_apa_results_table
+#' @return A (vector of) character values as extracted from an object of class
+#'   `apa_results_table`.
 #' @export
 
 `$.apa_results_table` <- function(x, name) {

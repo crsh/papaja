@@ -23,7 +23,7 @@
 #' @evalRd apa_results_return_value()
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   # Fit a linear mixed model using the lme4 package
 #'   # or the lmerTest package (if dfs and p values are desired)
 #'   library(lmerTest)

@@ -43,6 +43,8 @@
 #'   a `list` of matrices or data frames with a common structure. Can be either
 #'   `indent` or `table_spanner`. See details.
 #' @inheritDotParams knitr::kable
+#' @return A character vector of the table source code of class `knit_asis`, see
+#'   [knitr::asis_output()].
 #'
 #' @details
 #'   When using `apa_table`, the type of the output (LaTeX or Word) is
@@ -66,7 +68,7 @@
 #'   documents and will be printed to the document. To omit the printed options
 #'   set `placement = NULL`.
 #'
-#' @seealso \code{\link[knitr]{kable}}, \code{\link{apa_num}}
+#' @seealso [knitr::kable()], [apa_num()]
 #' @examples
 #'
 #' my_table <- t(apply(cars, 2, function(x) # Create data
@@ -672,10 +674,7 @@ apa_table.markdown <- function(
 #' @param format.args List. A named list of arguments to be passed to \code{\link{apa_num}} to format numeric values.
 #'
 #' @keywords internal
-#' @seealso \code{\link{apa_num}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_num()]
 
 format_cells <- function(x, format.args = NULL) {
   format.args$x <- x
@@ -692,10 +691,7 @@ format_cells <- function(x, format.args = NULL) {
 #' @param added_stub_head Character. Used as stub head (name of first column).
 #' @param force Logical. Should row names be added even if they are the numbers 1:nrow(x)?
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 add_row_names <- function(x, added_stub_head, force = FALSE) {
   if(!is.null(rownames(x)) && (all(rownames(x) != 1:nrow(x))) || force) {
@@ -727,10 +723,7 @@ add_row_names <- function(x, added_stub_head, force = FALSE) {
 #'    indent. Names of list elements will be used as titles for indented sections.
 #' @param filler Character. Symbols used to indent stubs.
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 indent_stubs <- function(x, lines, filler = "\ \ \ ") {
   # x <- lapply(x, function(y) default_label(data.frame(y, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)))
@@ -768,10 +761,7 @@ indent_stubs <- function(x, lines, filler = "\ \ \ ") {
 #' @param n_cols Numeric. Number of columns of the table.
 #' @param add_group_midrules Logical.Determines whether group midrules are added.
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 add_col_spanners <- function(table_lines, col_spanners, n_cols, add_group_midrules = TRUE) {
 
@@ -863,10 +853,7 @@ remove_excess_table_spanner_columns <- function(x) {
 #'    element.
 #' @param added_stub_head Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 merge_tables <- function(x, empty_cells, row_names, added_stub_head) {
 

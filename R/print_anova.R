@@ -24,14 +24,14 @@
 #'    }
 #'
 #' @keywords internal
-#' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
-#' @examples
-#'  \dontrun{
-#'    ## From Venables and Ripley (2002) p. 165.
-#'    npk_aov <- aov(yield ~ block + N * P * K, npk)
-#'    anova_table <- arrange_anova(summary(npk_aov))
-#'    print_anova(anova_table)
-#'  }
+#' @seealso [arrange_anova()], [apa_print.aov()]
+# #' @examples
+# #'  \dontrun{
+# #'    ## From Venables and Ripley (2002) p. 165.
+# #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
+# #'    anova_table <- arrange_anova(summary(npk_aov))
+# #'    print_anova(anova_table)
+# #'  }
 
 
 print_anova <- function(

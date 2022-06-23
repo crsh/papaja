@@ -11,7 +11,7 @@ public.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repos
 ![GitHub last commit
 (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github)
 [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
-[![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://codecov.io/gh/crsh/papaja)
+[![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://app.codecov.io/gh/crsh/papaja)
 [![GitHub bug
 issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 [![StackOverflow
@@ -71,10 +71,13 @@ Live](http://www.tug.org/texlive/) for Linux. Please refer to the
 manual](http://frederikaust.com/papaja_man/introduction.html#getting-started)
 for detailed installation instructions.
 
-**papaja** is not yet available on CRAN but you can install it from this
-repository:
+**papaja** is available on CRAN but you can also install it from the
+GitHub repository:
 
 ``` r
+# Install latest CRAN release
+install.packages("papaja")
+
 # Install remotes package if necessary
 if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 
@@ -281,6 +284,7 @@ or copy the reference information returned by `citation('papaja')` to
 your BibTeX file:
 
 ``` bibtex
+
 @Manual{,
   title = {{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}},
   author = {Frederik Aust and Marius Barth},

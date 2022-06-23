@@ -92,13 +92,12 @@
 #'   \doi{10.1016/j.spl.2014.05.010}
 #' @family apa_print
 #' @importFrom stats formula terms setNames median
-#' @keywords internal
 #' @method apa_print BFBayesFactor
 #' @export
 #'
 #' @examples
 #' # ANOVA
-#' \dontrun{
+#' \donttest{
 #' data(sleep, package = "BayesFactor")
 #' bayesian_anova <- BayesFactor::anovaBF(
 #'   extra ~ group + ID
@@ -352,7 +351,6 @@ apa_print.BFBayesFactor <- function(
 
 
 #' @rdname apa_print.BFBayesFactor
-#' @keywords internal
 #' @method apa_print BFBayesFactorTop
 #' @export
 
