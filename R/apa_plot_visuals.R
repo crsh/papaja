@@ -171,7 +171,7 @@ points.apa_plot <- function(x, ...) {
         x = x$x
         , y = extract(x$y[[x$input$dv]], 2L)
         , pch = c(21:25, 1:20)[seq_len(n_colors)]
-        , col = "black"
+        , col = rep("black", nlevels(x$y[[ factors [[1L]] ]]))
         , bg = bg_colors
         , lwd = par("lwd")
       )
@@ -181,7 +181,93 @@ points.apa_plot <- function(x, ...) {
 }
 
 
+#' Violins
+#'
+#' Add
+#'
+#' @export
 
+violins <- function(x, ...) {
+  UseMethod("violins", x)
+}
+
+
+
+#' @export
+
+violins.apa_plot_list <- function(x, ...) {
+  x$plots <- lapply(x$plots, FUN = violins, ...)
+  x
+}
+
+
+#' @export
+
+violins.apa_plot <- function(x, ...) {
+
+  tmp <- modify_or_add(x, "violins", ...)
+  ellipsis <- tmp$ellipsis
+
+  x$visuals[[tmp$idx]] <- list(
+    .f = ".violins"
+    , .creator = "violins"
+    , args = tmp$ellipsis
+  )
+  x
+}
+
+#' @keywords internal
+
+.violins <- function(...) {
+
+  x <- evalq(x, parent.frame(1L))
+
+  args_points <- defaults(
+    inherit_args(x, creator = "points")
+    , set.if.null = list(
+      cex = par("cex")
+    )
+  )
+
+
+  tmp <- modify_or_add(x, "violins", ...)
+
+  args_violins <- defaults(
+    tmp$ellipsis
+    , set.if.null = list(
+      border = args_points$col
+      , col = brighten(args_points$bg, factor = .9)
+      , bw = "SJ"
+    )
+  )
+
+  factors <- x$input$factors
+  args_violins$col     <- rep(args_violins$col    , times = nlevels(x$y[[ factors[[1L]] ]]))
+  args_violins$border  <- rep(args_violins$border , times = nlevels(x$y[[ factors[[1L]] ]]))
+
+  splitted_y <- split(x$y_agg[[ x$input$dv ]], f = x$y_agg[, rev(factors[-c(3, 4)]), drop = FALSE])
+
+  densities <- lapply(
+    X = splitted_y
+    , FUN = density
+    , bw = args_violins$bw
+  )
+
+  max_y <- function(x) {
+    max(x$y)
+  }
+
+  max_density <- max(sapply(X = densities, max_y)) * 4
+
+  for (i in seq_along(densities)) {
+    polygon(
+      x = x$x[[i]] + c(densities[[i]]$y, rev(-densities[[i]]$y)) / max_density
+      , y = c(densities[[i]]$x, rev(densities[[i]]$x))# / max_density
+      , col = args_violins$col[i]
+      , border = args_violins$border[i]
+    )
+  }
+}
 
 
 
@@ -521,85 +607,147 @@ annotation <- function(x, ...) {
 }
 
 #' @export
-annotation.apa_plot_list <- function(x, main = NULL, ...) {
+annotation.apa_plot_list <- function(x, ...) {
 
-  z <- x$plots[[1]]
-  factors <- z$input$factors
+  x$plots <- lapply(x$plots, annotation, ...)
+  return(x)
 
-  if(length(factors) > 0L) {
-    xlab <- variable_label(z$y[[factors[[1L]]]])
-  } else {
-    xlab <- ""
-  }
-
-  if(length(factors) > 2L) {
-    nlevels_fct3 <- nlevels(z$y[[ factors[[3L]] ]])
-    inbetween_labels <- character(nlevels_fct3 - 1L)
-  } else {
-    inbetween_labels <- character(0L)
-  }
-
-  ellipsis <- defaults(
-    list(...)
-    , set.if.null = list(
-      xlab = xlab
-      , ylab =  c(
-        variable_label(z$y[[z$input$dv]][[1L]])
-        , inbetween_labels
-      )
-    )
-  )
-
-  if(is.null(main) && length(factors) > 2L) {
-    #   , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
-
-    if(length(factors) == 3L) {
-      main <- Map(
-        f = list
-        , list(variable_label(z$y[[factors[[3L]]]]))
-        , ": "
-        , levels(z$y[[factors[[3L]]]])
-      )
-    } else {
-      main <- Map(
-        f = list
-        , list(variable_label(z$y[[ factors[[3L]] ]]))
-        , ": "
-        , levels(z$y[[ factors[[3L]] ]])
-        , " & "
-        , list(variable_label(z$y[[ factors[[4L]] ]]))
-        , ": "
-        , rep(levels(z$y[[ factors[[4L]] ]]), each = nlevels(z$y[[factors[[3L]]]]))
-      )
-    }
-    main <- lapply(main, combine_plotmath)
-  }
+  # # same-length arguments
+  # ellipsis <- lapply(
+  #   X = list(...)
+  #   , FUN = rep
+  #   , length.out = length(x$plots)
+  # )
+  # for (i in seq_along(ellipsis)) {
+  #   ellipsis[[i]]$x <- x$plots[[i]]
+  #   ellipsis[[i]]$.creator <- "annotation"
+  # }
+  #
+  # tmp <- Map(
+  #   f = do.call
+  #   , what = "modify_or_add"
+  #   , args = ellipsis
+  #   , quote = TRUE
+  # )
+  # print(tmp)
 
 
-  # same-length arguments
-  ellipsis <- lapply(
-    X = ellipsis
-    , FUN = rep
-    , length.out = length(x$plots)
-  )
-  ellipsis$x = x$plots
-  ellipsis$main <- main
 
-  # length-one argument to Map()
-  ellipsis$f = annotation
 
-  x$plots <- do.call(
-    what = "Map"
-    , args = ellipsis
-    , quote = TRUE
-  )
-  x
+
+
+
+
+
+  # x$plots <- Map(
+  #   f = do.call
+  #   , what = rep("annotation", length(x$plots))
+  #   , quote = rep(TRUE, length(x$plots))
+  #   , args = ellipsis
+  # )
+
+  # x$plots <- do.call(
+  #   what = "an"
+  #   , args = ellipsis
+  #   , quote = TRUE
+  # )
 }
 
 #' @export
 annotation.apa_plot <- function(x, ...) {
 
   tmp <- modify_or_add(x, "annotation", ...)
+
+  # # Set friendly defaults for xlab, ylab, and main ----
+  if( is.null(tmp$ellipsis$xlab) ) {
+    if(length(x$input$factors) == 0L ) {
+      tmp$ellipsis$xlab <- character(1L)
+    } else {
+      tmp$ellipsis$xlab <- variable_label(x$y_agg[[ x$input$factors[[1L]] ]])
+    }
+  }
+
+  factors <- x$input$factors
+
+
+  if( length(factors) < 3L ) {
+    if( is.null(tmp$ellipsis$ylab) ) {
+      tmp$ellipsis$ylab <- variable_label(x$y_agg[[ x$input$dv ]])
+    } else {
+      # nothing
+    }
+  } else {
+    fct3_level <- unique(as.character(x$y_agg[[ x$input$factors[[3L]]]]))
+    i <- which(fct3_level == levels(x$y_agg[[ x$input$factors[[3L]] ]]))
+    if( length(tmp$ellipsis$ylab) > 1L ) {
+        tmp$ellipsis$ylab <- rep(tmp$ellipsis$ylab, length.out = i)[[i]]
+    } else {
+      is_leftmost <- i == 1L
+      if( is_leftmost ) {
+        if( length(tmp$ellipsis$ylab) == 0L) tmp$ellipsis$ylab <- variable_label(x$y_agg[[ x$input$dv ]])
+      } else {
+        tmp$ellipsis$ylab <- character(1L)
+      }
+    }
+  }
+
+  # main title
+  if(is.null(tmp$ellipsis$main) && length(factors) > 2L) {
+    #   , main = combine_plotmath(list(tmp_main, variable_label(data[[factors[3]]]), ": ", i, " & ", variable_label(data[[factors[4]]]), ": ", j))
+
+    if(length(factors) == 3L) {
+      tmp$ellipsis$main <- combine_plotmath(
+        list(variable_label(x$y_agg[[factors[[3L]]]])
+        , ": "
+        , levels(x$y_agg[[factors[[3L]]]])[[i]]
+        )
+      )
+    } else { # length(factors) == 4L
+      fct4_level <- unique(as.character(x$y_agg[[ x$input$factors[[4L]]]]))
+      j <- which(fct4_level == levels(x$y_agg[[ x$input$factors[[4L]] ]]))
+      tmp$ellipsis$main <- combine_plotmath(
+        list(
+          variable_label(x$y_agg[[ factors[[3L]] ]])
+          , ": "
+          , levels(x$y_agg[[ factors[[3L]] ]])[[i]]
+          , " & "
+          , variable_label(x$y_agg[[ factors[[4L]] ]])
+          , ": "
+          , levels(x$y_agg[[ factors[[4L]] ]])[[j]]
+        )
+      )
+    }
+    # ellipsis$main <- lapply(main, combine_plotmath)
+  }
+
+  # if( is.null(tmp$ellipsis$ylab) ) {
+  #   if( length(x$input$factors) < 3L ) {
+  #     is_leftmost <- TRUE
+  #   } else {
+  #     is_leftmost <- x$fct3_level == levels(x$y[[ x$input$factors[[3L]] ]])[[1L]]
+  #   }
+  #   if( is_leftmost ) {
+  #     tmp$ellipsis$ylab <-  variable_label(x$y_agg[[ x$input$dv ]])
+  #   } else {
+  #     tmp$ellipsis$ylab <- character(1L)
+  #   }
+  # } else {
+  #   if( length(x$input$factors) < 3L ) {
+  #     is_leftmost <- x$fct3_level == levels(x$y[[ x$input$factors[[3L]] ]])[[1L]]
+  #     if(length(tmp$ellipsis$ylab) == 1L && !is_leftmost) tmp$ellipsis$ylab <- character(1L)
+  #   }
+  # }
+
+
+  # if (length)
+#   tmp$ellipsis <- defaults(
+#     tmp$ellisis
+#     , set.if.null = list(
+#       ylab = variable_label(x$y[[x$input$dv]][[1L]])
+#     )
+#   )
+
+
 
   x$visuals[[tmp$idx]] <- list(
     .f = "title"
