@@ -34,12 +34,20 @@ test_that(
     )
 
     expect_identical(
-      object = apa_with_df$estimate
-      , expected = list(
-        N = "$\\hat{\\eta}^2_G = .224$, 90\\% CI $[.017, .460]$"
-        , P = "$\\hat{\\eta}^2_G = .013$, 90\\% CI $[.000, .181]$"
-        , N_P = "$\\hat{\\eta}^2_G = .031$, 90\\% CI $[.000, .229]$"
-      )
+      !!names(apa_with_df$estimate)
+      , !!c("N", "P", "N_P")
+    )
+    expect_identical(
+      !!apa_with_df$estimate$N
+      , "$\\hat{\\eta}^2_G = .224$, 90\\% CI $[.017, .460]$"
+    )
+    expect_identical(
+      !!apa_with_df$estimate$P
+      , "$\\hat{\\eta}^2_G = .013$, 90\\% CI $[.000, .181]$"
+    )
+    expect_identical(
+      !!apa_with_df$estimate$N_P
+      , "$\\hat{\\eta}^2_G = .031$, 90\\% CI $[.000, .229]$"
     )
 
     expect_identical(
