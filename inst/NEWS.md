@@ -1,3 +1,7 @@
+# papaja 0.1.1
+
+- Maintenance update: Adjuted unit tests to avoid removal from CRAN
+
 # papaja 0.1.0
 
 Initial CRAN release
@@ -63,7 +67,7 @@ Initial CRAN release
 
 ### Template
 
-- New author metadata field `role` automatically adds contributor ship roles (e.g. [CRedit](https://casrai.org/credit/)) to the author note. #375
+- New author metadata field `role` automatically adds contributor ship roles (e.g. [CRedit](https://credit.niso.org/)) to the author note. #375
 - `apa6_pdf()`
     - Now relies on a Lua-filter to process metadata, which should resolve many encoding related problems (e.g., reported by @arcaldwell49, @dcbrh, and @DominiqueMakowski among others; #350, #357, #360)
     - Numbering of title is now disabled when `numbersections: true`

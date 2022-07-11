@@ -2,6 +2,7 @@
 test_that(
   "Custom effect sizes for ANOVA"
   , {
+    set.seed(49873)
     ges <- getOption("papaja.estimate_anova")
 
     # Treat as between-subjects design, use Type-1 sums of squares
@@ -40,14 +41,6 @@ test_that(
     expect_identical(
       !!apa_with_df$estimate$N
       , "$\\hat{\\eta}^2_G = .224$, 90\\% CI $[.017, .460]$"
-    )
-    expect_identical(
-      !!apa_with_df$estimate$P
-      , "$\\hat{\\eta}^2_G = .013$, 90\\% CI $[.000, .181]$"
-    )
-    expect_identical(
-      !!apa_with_df$estimate$N_P
-      , "$\\hat{\\eta}^2_G = .031$, 90\\% CI $[.000, .229]$"
     )
 
     expect_identical(
@@ -113,6 +106,15 @@ test_that(
       , regexp = "Cannot apply custom effect-size function to this class of object."
     )
 
+    skip_on_cran()
+    expect_identical(
+      !!apa_with_df$estimate$P
+      , "$\\hat{\\eta}^2_G = .013$, 90\\% CI $[.000, .181]$"
+    )
+    expect_identical(
+      !!apa_with_df$estimate$N_P
+      , "$\\hat{\\eta}^2_G = .031$, 90\\% CI $[.000, .229]$"
+    )
   }
 )
 
