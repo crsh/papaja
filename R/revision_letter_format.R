@@ -120,7 +120,7 @@ quote_from_tex <- function(x, file) {
     quoted_tex <- lapply(x, quote_from_tex, file = file)
   } else {
     tex <- readLines(file)
-    start <- which(grepl(paste0("% <@~{#", x, "}"), x = tex, fixed = TRUE))
+    start <- which(grepl(paste0("<@~\\{#", x, "\\}"), x = tex))
 
     if(length(start) == 0) {
       warning(label_warning)
@@ -128,11 +128,11 @@ quote_from_tex <- function(x, file) {
     } else if(length(start) > 1) {
       stop(paste0("Each quote label can only be used once. ", paste0("'", x, "'", collapse = ", "), " was found ", length(start), " times."))
     } else {
-      end <- which(grepl("% ~@>", x = tex[start:length(tex)], fixed = TRUE))[1] + start - 1
+      end <- which(grepl("~@>", x = tex[start:length(tex)]))[1] + start - 1
 
       quoted_tex <- paste(
-        paste("> ", tex[(start + 1)])
-        , paste(tex[(start + 2):(end - 1)], collapse = "\n")
+        paste("> ", tex[(start + 2)])
+        , paste(tex[(start + 3):(end - 1)], collapse = "\n")
         , "\n"
         , sep = "\n"
       )
