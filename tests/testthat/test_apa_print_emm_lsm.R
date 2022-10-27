@@ -134,7 +134,7 @@ test_that(
       tw_int_emm_output
       , term = "Neg_Cued"
       , estimate = "$M = 11.80$, 95\\% CI $[7.17, 16.43]$"
-      , statistic = "$t(5.52) = 6.37$, $p = .001$"
+      , statistic = "$t(5.52) = 6.37$, $p < .001$"
     )
 
     # Alternative calls
