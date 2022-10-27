@@ -392,8 +392,10 @@ apa_factorial_plot.default <- function(
     output$args <- do.call("apa_factorial_plot_single", ellipsis)
   }
 
+  if(length(factors) > 2L) {
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
+  }
 
   ## Three factors
 
