@@ -1,11 +1,13 @@
 ---
-title       : "Manuscript title"
-authors     : "First Author & Second Author"
-journal     : "Journal title"
-manuscript  : "Manuscript number"
+title          : "Manuscript title"
+authors        : "First Author & Second Author"
+journal        : "Journal title"
+manuscript-id  : "Manuscript number"
+manuscript-src : "headings"
 
-class       : "draft"
-output      : papaja::revision_letter_pdf
+cutout-quotes  : true
+class          : "draft"
+output         : papaja::revision_letter_pdf
 ---
 
 Dear Dr. Editor,
@@ -16,8 +18,9 @@ In the following we address your and each reviewers' concerns point-by-point.
 
 # Reviewer \#1
 
-\RC
+:::reviewer
 This is a reviewer comment
+:::
 
 This is our response
 
@@ -26,9 +29,12 @@ This is our response
 \Easy
 
 
-\RC{This is the first paragraph of a long reviewer comment
+:::reviewer
+\label{pt:foo}
+This is a reviewer comment
 
-This is the second paragraph}
+Still a comment
+:::
 
 This is our response.
 
@@ -39,10 +45,11 @@ This is our response.
 \Medium
 
 
-\RC
+:::reviewer
 This is a reviewer comment
+:::
 
-This is our response
+This is our response. Also see RC \@ref(pt:foo)
 
 \Assignment{First Author}
 \Done
@@ -51,9 +58,16 @@ This is our response
 \NotEstimated
 
 
-\newpage
+# Reviewer 2
 
-# References
+:::reviewer
+This is a reviewer comment
+:::
+
+This is our response
+
+
+# References {-}
 
 ::: {#refs custom-style="Bibliography"}
 :::

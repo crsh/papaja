@@ -2,20 +2,33 @@
 #'
 #' Template for creating a journal revision letters.
 #'
-#' @param keep_tex Logical. Whether to keep the intermediate tex file used in
-#'   the conversion to PDF.
-#' @inheritDotParams bookdown::pdf_document2
+#' @details This document format is adapted from by the
+#'   [revision letter template](https://github.com/mschroen/review_response_letter)
+#'   by Martin Schrön.
 #'
-#' @seealso [bookdown::html_document2()]
+#'   It is possible to reference sections, figures, or tables in the revised
+#'   manuscript, either by their number or by page. To do so, specify a path
+#'   to the revised manuscript (omitting the file extension) in the YAML
+#'   front matter (i.e., `manuscript-src: file_name`) and ensure that
+#'   you retain the `aux` file when rendering the revised manuscript. To do
+#'   so, set the following option in a code chunk of the revised manuscript:
+#'   `options(tinytex.clean = FALSE)`. To reference section, figure, or
+#'   table numbers it is possible to use LaTeX (i.e., `\ref{label}`) or
+#'   \pkg{bookdown} cross-referencing syntax (i.e., `\@ref(label)`). To
+#'   reference the corresponding page numbers you must use the LaTeX syntax
+#'   (i.e., `\pageref{label}`).
+#'
+#'   To quote entire paragraphs directly from the revised manuscript see
+#'   [`quote_from_tex()`].
+#'
+#' @inheritDotParams bookdown::pdf_document2
+#' @seealso [bookdown::pdf_document2()]]
 #' @inherit apa6_pdf return
 #' @export
 
 
-revision_letter_pdf <- function(keep_tex = TRUE, ...) {
-  validate(keep_tex, check_class = "logical", check_length = 1)
-
+revision_letter_pdf <- function(...) {
   ellipsis <- list(...)
-  ellipsis$keep_tex <- keep_tex
 
   if(!is.null(ellipsis$template)) ellipsis$template <- NULL
 
@@ -93,6 +106,11 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 
   ## Set additional lua filters
   args <- rmdfiltr::add_wordcount_filter(args, error = FALSE)
+  rc_filter <- system.file(
+    "lua", "reviewer_comment.lua"
+    , package = "papaja"
+  )
+  args <- rmdfiltr::add_custom_filter(args, filter_path = rc_filter, lua = TRUE)
 
   args
 }
@@ -107,13 +125,16 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #'
 #' @details Searches the LaTeX document specified in `file` for labelled
 #'   quotes, i.e. paragraphs that are enclosed in `% <@~{#quote-label}` and
-#'   `% ~@>}` tags in LaTeX comments on separate lines. The labelled quote is
-#'   then inserted and rendered `asis`.
+#'   `% ~@>` tags in LaTeX comments on separate lines. The labelled quote is
+#'   then inserted and rendered `asis`. To use labelled quote-tags in a
+#'   [`apa6_pdf()`]-document, set the YAML front matter options
+#'   `quote_labels: true`.
+#'
 #' @return A character vector of LaTeX document text of class \code{knit_asis},
 #'   see [knitr::asis_output()].
 #' @export
 
-quote_from_tex <- function(x, file) {
+quote_from_tex <- function(x, file = paste0(rmarkdown::metadata[["manuscript-file"]], ".tex")) {
   label_warning <- paste0("Labelled quote(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file)
 
   if(length(x) > 1) {
