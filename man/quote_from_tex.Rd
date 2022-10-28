@@ -4,7 +4,10 @@
 \alias{quote_from_tex}
 \title{Quote from TeX document}
 \usage{
-quote_from_tex(x, file)
+quote_from_tex(
+  x,
+  file = paste0(rmarkdown::metadata[["manuscript-file"]], ".tex")
+)
 }
 \arguments{
 \item{x}{Character. One or more quote labels.}
@@ -21,6 +24,8 @@ Includes a labelled quote from a LaTeX document 'asis'.
 \details{
 Searches the LaTeX document specified in \code{file} for labelled
 quotes, i.e. paragraphs that are enclosed in \verb{\% <@~\{#quote-label\}} and
-\verb{\% ~@>\}} tags in LaTeX comments on separate lines. The labelled quote is
-then inserted and rendered \code{asis}.
+\verb{\% ~@>} tags in LaTeX comments on separate lines. The labelled quote is
+then inserted and rendered \code{asis}. To use labelled quote-tags in a
+\code{\link[=apa6_pdf]{apa6_pdf()}}-document, set the YAML front matter options
+\code{quote_labels: true}.
 }

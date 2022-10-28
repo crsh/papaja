@@ -62,7 +62,7 @@ print.apa_results_table <- function(x, ...) {
 #' compatibility, it is still possible to extract columns with the old columns names,
 #' because we here provide *aliased* indexing. Note that aliased indexing will be
 #' defunct in a future release of \pkg{papaja}.
-#'
+#' @param x Object from which to extract element(s).
 #' @param i,j,... Indices specifying elements to extract. See [base::Extract()] for details.
 #'
 #' @inheritParams base::Extract
