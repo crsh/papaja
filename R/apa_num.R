@@ -230,9 +230,6 @@ apa_num.numeric <- function(
   is_scientific <- rep(tolower(ellipsis$format), length.out = length_x) %in% c("e", "g", "fg")
 
   ten_power_digits <- 10^digits
-  x[!is_scientific] <- 0 + round(x[!is_scientific] * ten_power_digits[!is_scientific]) / ten_power_digits[!is_scientific]
-
-
 
   if(any(not_zero)) {
 
@@ -244,6 +241,8 @@ apa_num.numeric <- function(
 
     prepend[abs_too_small] <- ifelse(is_negative[abs_too_small], "> ", "< ")
   }
+
+  x[!is_scientific] <- 0 + round(x[!is_scientific] * ten_power_digits[!is_scientific]) / ten_power_digits[!is_scientific]
 
   if(any(not_gt1)) {
     if(any(not_gt1 & abs(x) > 1, na.rm = TRUE)) warning("You specified gt1 = FALSE, but passed absolute value(s) that exceed 1.")
