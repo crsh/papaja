@@ -136,18 +136,6 @@ print_num(x, ...)
     \item{\code{zero.print}}{logical, character string or \code{NULL} specifying
     if and how \emph{zeros} should be formatted specially.  Useful for
     pretty printing \sQuote{sparse} objects.}
-    \item{\code{replace.zero}}{logical; if \code{zero.print} is a
-    character string, indicates if the exact zero entries in \code{x}
-    should be simply replaced by \code{zero.print}.  Otherwise,
-    depending on the widths of the respective strings, the (formatted)
-    zeroes are \emph{partly} replaced by \code{zero.print} and then
-    padded with \code{" "} to the right were applicable.  In that case
-    (false \code{replace[.zero]}), if the \code{zero.print} string does
-    not fit, a warning is produced (if \code{warn.non.fitting} is true).
-
-    This works via \code{prettyNum()}, which calls \code{.format.zeros(*,
-    replace=replace.zero)} three times in this case, see the \sQuote{Details}.
-  }
     \item{\code{drop0trailing}}{logical, indicating if trailing zeros,
     i.e., \code{"0"} \emph{after} the decimal mark, should be removed;
     also drops \code{"e+00"} in exponential formats.  This is simply passed

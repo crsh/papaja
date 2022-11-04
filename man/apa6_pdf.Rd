@@ -73,11 +73,11 @@ at a resolution of 300 dpi.
 }
 \section{Functions}{
 \itemize{
-\item \code{apa6_word}: Format to create .docx-files. Alias of \code{apa6_docx}.
+\item \code{apa6_word()}: Format to create .docx-files. Alias of \code{apa6_docx}.
 
-\item \code{apa6_doc}: Format to create .docx-files. Alias of \code{apa6_docx}.
+\item \code{apa6_doc()}: Format to create .docx-files. Alias of \code{apa6_docx}.
+
 }}
-
 \seealso{
 \code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}, \code{\link[bookdown:html_document2]{bookdown::word_document2()}}
 }

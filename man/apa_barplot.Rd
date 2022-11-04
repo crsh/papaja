@@ -6,7 +6,7 @@
 \alias{apa_barplot.afex_aov}
 \title{Bar Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
-apa_barplot(data, ...)
+apa_barplot(x, ...)
 
 \method{apa_barplot}{default}(
   data,
@@ -42,13 +42,13 @@ apa_barplot(data, ...)
 )
 }
 \arguments{
-\item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
-
 \item{...}{
   Arguments passed on to \code{\link[=apa_factorial_plot]{apa_factorial_plot}}
   \describe{
     \item{\code{}}{}
   }}
+
+\item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 
 \item{id}{Character. Variable name that identifies subjects.}
 
@@ -132,6 +132,11 @@ These calls can be customized by setting the respective parameters \verb{args_**
 }
 }
 \examples{
+apa_barplot(
+  formula = yield ~ (N + P|block)
+  , data = npk
+)
+
 
 apa_barplot(
    data = npk

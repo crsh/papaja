@@ -903,10 +903,11 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 #' @export
 
 apa_factorial_plot.afex_aov <- function(
-  data
+  x
   , tendency = mean
   , dispersion = conf_int
   , fun_aggregate = mean
+  , data = x
   , ...
 ){
 
@@ -947,8 +948,6 @@ apa_factorial_plot.afex_aov <- function(
   do.call("apa_factorial_plot.default", ellipsis)
 }
 
-#' @rdname apa_factorial_plot
-#' @method apa_factorial_plot formula
 #' @export
 
 apa_factorial_plot.formula <- function(formula, data, ...) {

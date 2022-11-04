@@ -6,7 +6,7 @@
 \alias{apa_lineplot.afex_aov}
 \title{Line Plots for Factorial Designs that Conform to APA Guidelines}
 \usage{
-apa_lineplot(data, ...)
+apa_lineplot(x, ...)
 
 \method{apa_lineplot}{default}(
   data,
@@ -43,13 +43,13 @@ apa_lineplot(data, ...)
 )
 }
 \arguments{
-\item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
-
 \item{...}{
   Arguments passed on to \code{\link[=apa_factorial_plot]{apa_factorial_plot}}
   \describe{
     \item{\code{}}{}
   }}
+
+\item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 
 \item{id}{Character. Variable name that identifies subjects.}
 
@@ -135,6 +135,11 @@ These calls can be customized by setting the respective parameters \verb{args_**
 }
 }
 \examples{
+apa_lineplot(
+  formula = yield ~ K + (N + P|block)
+  , data = npk
+)
+
 apa_lineplot(
    data = npk
    , id = "block"
