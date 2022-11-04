@@ -38,6 +38,7 @@
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
 #' @return A named (nested) list of plot options including raw and derived data. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
+#' @inherit formula_processor
 #' @inheritDotParams graphics::plot.window
 #' @details
 #'    The measure of dispersion can be either [conf_int()] for between-subjects confidence intervals, [se()] for standard errors,
@@ -68,6 +69,13 @@
 #'
 #' @family plots for factorial designs
 #' @examples
+#' # Use the formula method
+#' apa_factorial_plot(
+#'   formula = yield ~ (N + P | block)
+#'   , data = npk
+#'   , plot = c("error_bars", "points", "swarms")
+#' )
+#'
 #' apa_factorial_plot(
 #'   data = npk
 #'   , id = "block"
@@ -80,8 +88,8 @@
 #' @export
 
 
-apa_factorial_plot <-function(data, ...){
-  UseMethod("apa_factorial_plot", data)
+apa_factorial_plot <-function(x, ...){
+  UseMethod("apa_factorial_plot")
 }
 
 #' @rdname apa_factorial_plot
@@ -938,3 +946,12 @@ apa_factorial_plot.afex_aov <- function(
   )
   do.call("apa_factorial_plot.default", ellipsis)
 }
+
+#' @rdname apa_factorial_plot
+#' @method apa_factorial_plot formula
+#' @export
+
+apa_factorial_plot.formula <- function(formula, data, ...) {
+  formula_processor(formula = formula, data = data, .fun = apa_factorial_plot, ...)
+}
+

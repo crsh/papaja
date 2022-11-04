@@ -8,6 +8,11 @@
 #' @family plots for factorial designs
 #'
 #' @examples
+#' apa_barplot(
+#'   formula = yield ~ (N + P|block)
+#'   , data = npk
+#' )
+#'
 #'
 #' apa_barplot(
 #'    data = npk
@@ -38,8 +43,8 @@
 #' @rdname apa_barplot
 #' @export
 
-apa_barplot <- function(data, ...){
-  UseMethod("apa_barplot", data)
+apa_barplot <- function(x, ...){
+  UseMethod("apa_barplot")
 }
 
 #' @rdname apa_barplot

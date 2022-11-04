@@ -105,3 +105,40 @@ tex_conv <- function(x, latex2exp = package_available("latex2exp")){
     as.expression("")[[1]]
   }
 }
+
+
+#' Formula Interface for Plot Functions
+#'
+#' This is an internal function that ensures consistent processing of formulae
+#' in plotting functions.
+#'
+#' @param formula A two-sided formula specifying the dependent variable on the left
+#'   of a `~` operator, and factors on the right. A vertical bar (`|`) can be used to
+#'   specify an additional subject identifier, which must be provided if an additional
+#'   aggregation step is necessary. See the examples section for details.
+#' @param data A data frame (or list) from which the variables in `formula` should be taken.
+#' @keywords internal
+
+formula_processor <- function(formula, data, .fun, ...) {
+  if(length(formula) < 3L) stop("Please provide a formula with both left- and right-hand side variables.", call. = FALSE)
+
+  lhs <- all.vars(formula[[2L]])
+  rhs <- all.vars(formula[[3L]])
+
+  deparsed_terms <- lapply(formula[[3L]], deparse)
+  bar_term <- grep(deparsed_terms, pattern = "|", fixed = TRUE)
+
+  if(length(bar_term) != 1L) stop("Please provide one and only one id variable.", call. = FALSE)
+  all_rhs <- all.vars(formula[[3L]])
+
+  split_bar_term <- strsplit(deparsed_terms[[bar_term]], split = "|", fixed = TRUE)[[1L]][[2L]]
+  id_var <- gsub(split_bar_term, pattern = ")| ", replacement = "")
+
+  .fun(
+    data = data
+    , dv = lhs
+    , id = id_var
+    , factors = setdiff(all_rhs, id_var)
+    , ...
+  )
+}

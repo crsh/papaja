@@ -8,6 +8,11 @@
 #' @family plots for factorial designs
 #' @examples
 #' apa_beeplot(
+#'   formula = yield ~ (N + P| block)
+#'   , data = npk
+#' )
+#'
+#' apa_beeplot(
 #'    data = npk
 #'    , id = "block"
 #'    , dv = "yield"
@@ -37,8 +42,8 @@
 #' @rdname apa_beeplot
 #' @export
 
-apa_beeplot <- function(data, ...) {
-  UseMethod("apa_beeplot", data)
+apa_beeplot <- function(x, ...) {
+  UseMethod("apa_beeplot")
 }
 
 

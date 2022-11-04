@@ -9,6 +9,11 @@
 #' @family plots for factorial designs
 #' @examples
 #' apa_lineplot(
+#'   formula = yield ~ K + (N + P|block)
+#'   , data = npk
+#' )
+#'
+#' apa_lineplot(
 #'    data = npk
 #'    , id = "block"
 #'    , dv = "yield"
@@ -39,8 +44,8 @@
 #' @rdname apa_lineplot
 #' @export
 
-apa_lineplot <- function(data, ...){
-  UseMethod("apa_lineplot", data)
+apa_lineplot <- function(x, ...){
+  UseMethod("apa_lineplot")
 }
 
 
