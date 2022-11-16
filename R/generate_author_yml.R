@@ -34,8 +34,24 @@ generate_author_yml <- function(
            , corres_address
            , corres_email
 ) {
+
+    validate(affiliations, check_class = "list", check_NA = TRUE)
+    validate(researchers, check_class = "list", check_NA = TRUE)
+    validate(corres_name, check_class = "character", check_length = 1L)
+    validate(corres_email, check_class = "character", check_length = 1L)
+
     if (any(!unlist(researchers) %in% names(affiliations)))
       stop("Some affiliation codes listed for researchers are not listed under affiliations")
+
+    if(length(unique(names(researchers))) != length(names(researchers)))
+      stop("All researcher names must be unique")
+
+    if(length(unique(names(affiliations))) != length(names(affiliations)))
+      stop("All affiliation object names must be unique")
+
+    if(length(unique(unlist(affiliations))) != length(unlist(affiliations)))
+      stop("All affiliations must be unique")
+
     if (!corres_name %in% names(researchers))
       stop("The corresponding author is not listed as a researcher")
     if(any(sapply(affiliations, length) != 1))
