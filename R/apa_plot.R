@@ -5,7 +5,7 @@
 #'
 #' @param x An object of class `formula` or `data.frame`
 #' @rdname apa_plot
-#' @keywords internal
+#' @export
 
 apa_plot <- function(x, ...) {
   UseMethod("apa_plot")
@@ -44,7 +44,7 @@ apa_plot <- function(x, ...) {
 #' @inheritParams formula_processor
 #' @rdname apa_plot
 #' @method apa_plot formula
-#' @keywords internal
+#' @export
 
 apa_plot.formula <- function(formula, data, ...) {
   formula_processor(formula = formula, data = data, .fun = apa_plot, ...)
@@ -78,6 +78,10 @@ formula_processor <- function(formula, data, .fun, ...) {
 
   split_bar_term <- strsplit(deparsed_terms[[bar_term]], split = "|", fixed = TRUE)[[1L]][[2L]]
   id_var <- gsub(split_bar_term, pattern = ")| ", replacement = "")
+
+  if(missing(data)) {
+    data <- as.data.frame(mget(c(lhs, all_rhs), envir = parent.frame(2)))
+  }
 
   .fun(
     data = data
