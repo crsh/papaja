@@ -70,11 +70,11 @@ at a resolution of 300 dpi.
 }
 \section{Functions}{
 \itemize{
-\item \code{apa6_word}: Format to create .docx-files. Alias of \code{apa6_docx}.
+\item \code{apa6_word()}: Format to create .docx-files. Alias of \code{apa6_docx}.
 
-\item \code{apa6_doc}: Format to create .docx-files. Alias of \code{apa6_docx}.
+\item \code{apa6_doc()}: Format to create .docx-files. Alias of \code{apa6_docx}.
+
 }}
-
 \examples{
 NULL
 }

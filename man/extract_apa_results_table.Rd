@@ -13,10 +13,6 @@
 \method{[}{apa_results_table}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
-\item{x}{
-    object from which to extract element(s) or in which to replace element(s).
-  }
-
 \item{name}{
     A literal character string or a \link[base]{name} (possibly \link[base]{backtick}
     quoted).  For extraction, this is normally (see under
