@@ -141,7 +141,7 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 #     ifelse(all(rowSums(table(data[[id]], data[[x]]))==1), "between", "within")
 #   }))
 
-  test <- tapply(data[[dv]], as.list(data[, c(id, within)]), FUN = function(x){sum(!is.na(x))})
+  test <- tapply(data[[dv]], as.list(data[, c(id, within), drop = FALSE]), FUN = function(x){sum(!is.na(x))})
 
   if(any(test > 1, na.rm = TRUE)){
     stop("More than one observation per cell. Ensure you aggregated multiple observations per participant/within-subjects condition combination.")
@@ -172,27 +172,26 @@ wsci <- function(data, id, factors, dv, level = .95, method = "Morey") {
 
 
   # split by between-subjects factors ----
-  if (is.null(between)) {
+  if( length(between) > 0L) {
+    splitted <- split(data, f = data[, between, drop = FALSE], sep = ":")
+  } else {
     splitted <- list(data)
-  } else if(length(between) > 1) {
-    splitted <- split(data, f=as.list(data[, c(between)]), sep = ":")
-  } else if (length(between) == 1) {
-    splitted <- split(data, f = data[, c(between)])
   }
+
 
   if(!is.null(within)) {
 
     if(method != "Cousineau") {
       if(method != "Morey") {
-        warning("Method '", method, "' not supported. Defaulting to 'Morey'.")
+        warning("Method ", encodeString(method, quote = "'"), " not supported. Defaulting to 'Morey'.")
         method <- "Morey"
       }
     }
 
     Morey_CI <- lapply(X = splitted, FUN = function(x) {
-      y <- tapply(x[[dv]], as.list(x[, c(id, within)]), FUN = as.numeric) # transform to matrix
+      y <- tapply(x[[dv]], as.list(x[, c(id, within), drop = FALSE]), FUN = as.numeric) # transform to matrix
       z <- y - rowMeans(y, na.rm = TRUE) + mean(y, na.rm = TRUE) # normalise
-      CI <- apply(z, MARGIN = (1:(length(within)+1))[-1], FUN = conf_int, level) # calculate CIs for each condition
+      CI <- apply(z, MARGIN = seq_along(within) + 1L, FUN = conf_int, level) # calculate CIs for each condition
 
       # Morey correction
       if(method == "Morey") {
