@@ -473,14 +473,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
   # if(!is.null(metadata$leftheader)) {
   #   header_includes <- c(header_includes, paste0("\\leftheader{", escape_latex(metadata$leftheader), "}"))
   # }
-
-  if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
-    keywords <- paste(unlist(metadata$keywords), collapse = ", ")
-    if(!is.null(metadata$wordcount)) {
-      keywords <- paste0(keywords, "\\newline\\indent Word count: ", metadata$wordcount)
-    }
-    header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
-  }
+#
+#   if(!is.null(metadata$keywords) || !is.null(metadata$wordcount)) {
+#     keywords <- paste(unlist(metadata$keywords), collapse = ", ")
+#     if(!is.null(metadata$wordcount)) {
+#       keywords <- paste0(keywords, "\\newline\\indent Word count: ", metadata$wordcount)
+#     }
+#     header_includes <- c(header_includes, paste0("\\keywords{", keywords, "}"))
+#   }
 
   ## Manuscript and table formatting
   if(

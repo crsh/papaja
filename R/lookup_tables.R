@@ -306,7 +306,7 @@ localize <- function(x) {
       , email = "E-mail"
     )
     , german = list(
-      author_note = "Anmerkung des Autors"
+      author_note = "Anmerkung der Autoren"
       , abstract = "Zusammenfassung"
       , keywords = "Schl\u00fcsselw\u00f6rter"
       , word_count = "Wortanzahl"

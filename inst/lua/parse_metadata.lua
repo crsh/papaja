@@ -295,6 +295,36 @@ end
 -- end
 
 
+local lang_tag = nil
+
+local keyword_dictionary = {
+  en = "Keywords",
+  de = "Schlagwörter",
+  nl = "Trefwoorden"
+}
+
+local wordcount_dictionary = {
+  en = "Word count",
+  de = "Wortanzahl",
+  nl = "Aantal woorden"
+}
+
+function get_lang_tag (meta)
+  if meta.lang then
+    lang_tag = string.gsub(pandoc.utils.stringify(meta.lang), "-%a+", "")
+  else
+    -- Default to English if not otherwise specified
+    lang_tag = "en"
+  end
+
+  -- Default to English if translation is unavailable
+  if not keyword_dictionary[lang_tag] then
+    print("\nWarning in parse_metadata.lua:\n  Translation unavailable, defaulting to English. Did you use a valid BCP 47 language tag (e.g. 'en-US' or 'nl-NL')? If so, request additional languages at <https://github.com/crsh/papaja>. \n\n")
+    lang_tag = "en"
+  end
+
+  return lang_tag
+end
 
 
 --- Create raw LaTeX environments from metadata fields
@@ -404,6 +434,23 @@ function Pandoc (document)
     meta.author = FORMAT == "latex"
       and pandoc.MetaInlines({pandoc.RawInline("latex", "\\phantom{0}")})
       or nil
+  end
+
+  --Modify abstract to include word count and keywords
+  lang = get_lang_tag(meta)
+  if meta.abstract ~= nil then
+    local keywords_wordcount_str = ""
+    if meta.keywords ~=nil then
+      keywords_wordcount_str = keywords_wordcount_str .. "\\indent \\textit{" .. keyword_dictionary[lang_tag] .. "}: " .. pandoc.utils.stringify(meta.keywords)
+      if meta.wordcount ~=nil then
+        keywords_wordcount_str = keywords_wordcount_str .. " \\newline "
+      end
+    end
+    if meta.wordcount ~=nil then
+      keywords_wordcount_str = keywords_wordcount_str .. "\\indent " .. wordcount_dictionary[lang_tag] .. ": " .. pandoc.utils.stringify(meta.wordcount)
+    end
+    local keywords_wordcount = pandoc.RawBlock("latex", keywords_wordcount_str)
+    table.insert(meta.abstract, keywords_wordcount)
   end
 
   return pandoc.Pandoc(blocks, meta)
