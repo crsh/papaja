@@ -11,18 +11,29 @@ function Header (elem)
 end
 
 function Image (img)
-  if img.caption[1] ~= nil then
-    img.caption[1] = pandoc.Emph(img.caption[1])
-    img.caption[3] = pandoc.Emph(string.gsub(pandoc.utils.stringify(img.caption[3]), ":", ".  "))
+  local caption = img.caption
+
+  if caption[1] ~= nil then
+    caption[1] = pandoc.Emph(caption[1])
+    caption[3] = pandoc.Emph(string.gsub(pandoc.utils.stringify(caption[3]), ":", ".  "))
   end
   return img
 end
 
--- function Table (table)
---   print(pandoc.utils.stringify(table.caption))
---   if table.caption[1] ~= nil then
---     print(pandoc.utils.stringify(table.caption))
---     table.caption[3] = pandoc.Emph(string.gsub(img.caption[3].c, ":", ""))
---   end
---   return table
--- end
+function Table (tbl)
+  local caption = tbl.caption.long[1].content
+
+ if caption[1] ~= nil then
+    caption[3] = pandoc.Str(string.gsub(pandoc.utils.stringify(caption[3]), ":", ""))
+    caption[4] = pandoc.LineBreak()
+
+    for i = 5, (#caption) do
+      caption[i] = pandoc.Emph(caption[i])
+    end
+ end
+
+ tbl.caption.long[1].content = caption
+
+ return tbl
+end
+
