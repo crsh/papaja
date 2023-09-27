@@ -48,6 +48,9 @@ document (typically created using the \code{\link[rmarkdown]{includes}} function
 \code{\link[bookdown]{pdf_document2}} or
 \code{\link[bookdown]{word_document2}}.}
 }
+\value{
+R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}.
+}
 \description{
 Template for creating an article according to APA guidelines (6th edition)
 in PDF or DOCX format.
@@ -75,9 +78,6 @@ at a resolution of 300 dpi.
 \item \code{apa6_doc()}: Format to create .docx-files. Alias of \code{apa6_docx}.
 
 }}
-\examples{
-NULL
-}
 \seealso{
-\link[bookdown:html_document2]{bookdown::pdf_document2}, \link[bookdown:html_document2]{bookdown::word_document2}
+\code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}, \code{\link[bookdown:html_document2]{bookdown::word_document2()}}
 }
