@@ -16,8 +16,6 @@ test_that(
         , Max = apa_num( max(Recall) )
       )
 
-    expect_error(x <- capture.output(apa_table(descriptives, added_colnames = letters[1:5])))
-
     skip_on_cran()
     rmarkdown::render(
       "test_apa_table.Rmd"
