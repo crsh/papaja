@@ -53,7 +53,7 @@ test_that(
           rmarkdown::render(
             input = input_path,
             output_file = output_path,
-            quiet = TRUE,
+            quiet = TRUE
           )
         )
         , silent = TRUE
