@@ -33,23 +33,39 @@ add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, interc
 }
 
 
-add_custom_effect_sizes.function <- function(estimate, .x = NULL, observed = NULL, ...) {
+add_custom_effect_sizes.function <- function(estimate, canonical_table, intercept = FALSE, .x = NULL, observed = NULL, ...) {
 
   if(is.null(.x)) stop("Cannot apply custom effect-size function to this class of object.", call. = FALSE)
 
   estimate_formals <- names(formals(estimate))
-  # print(estimate_formals)
-  if(any(estimate_formals == "observed")) {
-    add_custom_effect_sizes(estimate = estimate(.x, observed = observed), .x = .x, ...)
-  } else if(any(estimate_formals == "generalized")) {
-    add_custom_effect_sizes(estimate = estimate(.x, generalized = observed), .x = .x, ...)
-  } else if (!is.null(observed)) {
-    warning(
-      "Some terms have been specified as being observed, but the provided effect-size function does not seem to support observed terms."
-      , call. = FALSE
-    )
-    add_custom_effect_sizes(estimate = estimate(.x), .x = .x, ...)
-  } else {
-    add_custom_effect_sizes(estimate = estimate(.x), .x = .x, ...)
+
+  estimate_args <- list(
+    .x
+  )
+
+  if(length(observed)) {
+    if(any(estimate_formals == "observed"))    estimate_args$observed    <- observed
+    if(any(estimate_formals == "generalized")) estimate_args$generalized <- observed
+
+    # warnings
+    if(!any(estimate_formals == "observed") & !any(estimate_formals == "generalized")) {
+      warning(
+        "Some terms have been specified as being observed, but the provided effect-size function does not seem to support observed terms."
+        , call. = FALSE
+      )
+    }
   }
+
+  if(isTRUE(intercept) & any(estimate_formals == "include_intercept")) {
+    estimate_args$include_intercept <- TRUE
+    message("Turning on intercept")
+  }
+
+
+  add_custom_effect_sizes(
+    estimate = do.call(what = estimate, args = estimate_args)
+    , canonical_table = canonical_table
+    , .x = .x
+    , ...
+  )
 }

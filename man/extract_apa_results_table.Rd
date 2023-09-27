@@ -13,6 +13,8 @@
 \method{[}{apa_results_table}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
+\item{x}{Object from which to extract element(s).}
+
 \item{name}{
     A literal character string or a \link[base]{name} (possibly \link[base]{backtick}
     quoted).  For extraction, this is normally (see under
@@ -34,6 +36,10 @@
     only works for extracting elements, not for the replacement.  See
     \code{\link[base]{drop}} for further details.
   }
+}
+\value{
+A (vector of) character values as extracted from an object of class
+\code{apa_results_table}.
 }
 \description{
 \emph{These methods are only defined for backward compatibility with older
