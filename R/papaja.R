@@ -37,4 +37,4 @@
 #' @docType package
 #' @name papaja
 
-NULL
+"_PACKAGE"

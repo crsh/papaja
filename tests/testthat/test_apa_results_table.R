@@ -1,6 +1,4 @@
 
-
-
 test_that(
   "Extraction methods for apa_results_table"
   , {
@@ -101,7 +99,15 @@ test_that(
 test_that(
   "print.apa_results_table()"
   , {
-    x <- apa_print(t.test(yield ~ N, npk, paired = TRUE))$table
+    with(
+      npk
+      , t.test(
+        yield[N == "1"]
+        , yield[N == "2"]
+        , paired = TRUE
+      )
+    )
+    x <- apa_print()$table
 
     print_apa_results_table <- capture_output(print(x))
     expect_identical(
