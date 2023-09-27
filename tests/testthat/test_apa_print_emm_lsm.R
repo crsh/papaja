@@ -310,10 +310,10 @@ test_that(
       , labels = list(
         contrast = "Contrast"
         , estimate = "$\\Delta M$"
-        , conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$"
+        , conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Tukey(3)}$"
         , statistic = "$t$"
         , df = "$\\mathit{df}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Tukey(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Tukey(3)}$"
       )
       , term_names = c("Neg_Neu", "Neg_Pos", "Neu_Pos")
     )
@@ -321,8 +321,8 @@ test_that(
     expect_apa_term(
       tw_me_pairs_emm_output
       , term = "Neg_Neu"
-      , estimate = "$\\Delta M = -1.10$, $95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$ $[-3.44, 1.24]$"
-      , statistic = "$t(8) = -1.34$, $p_\\mathrm{\\scriptsize Tukey(3)} = .413$"
+      , estimate = "$\\Delta M = -1.10$, $95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Tukey(3)}$ $[-3.44, 1.24]$"
+      , statistic = "$t(8) = -1.34$, $p_\\mathrm{\\scriptstyle Tukey(3)} = .413$"
     )
 
     ## Custom contrast names
@@ -670,8 +670,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_bonf_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Bonferroni(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Bonferroni(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Bonferroni(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Bonferroni(3)}$"
       )
     )
 
@@ -680,8 +680,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_tukey_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Tukey(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Tukey(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Tukey(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Tukey(3)}$"
       )
     )
 
@@ -690,8 +690,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_holm_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Bonferroni(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Holm(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Bonferroni(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Holm(3)}$"
       )
     )
 
@@ -700,8 +700,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_fdr_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Bonferroni(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize FDR(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Bonferroni(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle FDR(3)}$"
       )
     )
 
@@ -710,8 +710,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_dun_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Dunnett(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Dunnett(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Dunnett(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Dunnett(3)}$"
       )
     )
 
@@ -720,8 +720,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_scheffe_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Scheff\\'e(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Scheff\\'e(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Scheff\\'e(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Scheff\\'e(3)}$"
       )
     )
 
@@ -730,8 +730,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_scheffe_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Scheff\\'e(3)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Scheff\\'e(3)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Scheff\\'e(3)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Scheff\\'e(3)}$"
       )
     )
 
@@ -740,8 +740,8 @@ test_that(
     expect_equal(
       variable_label(ow_me_emm_scheffe_res$table[, c("conf.int", "adj.p.value")])
       , list(
-        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize Scheff\\'e(2)}$"
-        , adj.p.value = "$p_\\mathrm{\\scriptsize Scheff\\'e(2)}$"
+        conf.int = "$95\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle Scheff\\'e(2)}$"
+        , adj.p.value = "$p_\\mathrm{\\scriptstyle Scheff\\'e(2)}$"
       )
     )
 
