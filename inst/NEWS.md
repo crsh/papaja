@@ -1,3 +1,5 @@
+- Fixes incorrect running head in DOCX documents on pages > 2 (reported by @LisaSpitzer, [#561](https://github.com/crsh/papaja/issues/561))
+
 # papaja 0.1.1
 
 - Maintenance update: Adjuted unit tests to avoid removal from CRAN
