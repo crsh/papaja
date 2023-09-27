@@ -310,11 +310,11 @@ test_that(
     group<-c("intervention", "control","control","intervention","control")
 
     library("dplyr")
-    df<-data.frame(participant,group) %>%
+    df <- data.frame(participant,group) %>%
       group_by(participant,group) %>%
-      summarise(session=c("t1","t2","t3","t4")) %>%
+      reframe(session=c("t1","t2","t3","t4")) %>%
       group_by(participant, group, session) %>%
-      summarise(task=c("a","b")) %>%
+      reframe(task=c("a","b")) %>%
       ungroup() %>%
       mutate(errors=floor(runif(n=40,min=0,max=30)))
 

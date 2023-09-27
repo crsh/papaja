@@ -38,7 +38,7 @@ Suggests:
   beeswarm,
   boot,
   car,
-  dplyr,
+  dplyr (>= 1.1.0),
   effectsize (>= 0.4.4),
   emmeans,
   ggforce,
