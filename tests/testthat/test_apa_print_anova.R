@@ -473,5 +473,20 @@ test_that(
   }
 )
 
+test_that(
+  "Show MSE if explicitly requested"
+  , {
+    out <- apa_print(
+      afex::aov_4(
+        formula = yield ~ (N | block)
+        , data = npk
+        , mse = TRUE
+        , fun_aggregate = mean
+      )
+      , estimate = "ges"
+    )
+  }
+)
+
 # restore previous options
  options(op)

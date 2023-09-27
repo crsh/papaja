@@ -447,18 +447,21 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
     }
   }
 
-  # ----------------------------------------------------------------------------
-  # Only calculate MSE if required (otherwise, Levene tests give an error).
-  if(mse) {
-    df_col <- intersect("df.residual", colnames(x))
-    if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
-      x$mse <- x$sumsq_err / x[[df_col]]
-      tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
-    } else {
-      warning("Mean-squared errors requested, but necessary information not available.")
-    }
-  }
+  if(mse) x <- add_mse(x)
 
   x
 }
 
+
+#' @keywords internal
+
+add_mse <- function(x) {
+  df_col <- intersect("df.residual", colnames(x))
+  if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
+    x$mse <- x$sumsq_err / x[[df_col]]
+    tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
+  } else {
+    warning("Mean-squared errors requested, but necessary information not available.")
+  }
+  x
+}

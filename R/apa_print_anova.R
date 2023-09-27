@@ -172,10 +172,10 @@ apa_print.summary.aovlist <- function(
     canonical_table = canonical_table
     , .x = .x
     , estimate = estimate
-    , mse = mse
     , observed = observed
     , intercept = intercept
   )
+  if(isTRUE(mse)) canonical_table <- add_mse(canonical_table)
 
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 
@@ -263,11 +263,11 @@ apa_print.summary.Anova.mlm <- function(
   canonical_table <- add_custom_effect_sizes(
     canonical_table
     , estimate = estimate
-    , mse = mse
     , observed = observed
     , intercept = intercept
     , .x = .x
   )
+  if(isTRUE(mse)) canonical_table <- add_mse(canonical_table)
 
   # Remove intercept if the user doesn't want it:
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
@@ -489,11 +489,11 @@ apa_print.anova <- function(
   canonical_table <- add_custom_effect_sizes(
     estimate = estimate
     , canonical_table = canonical_table
-    , mse = mse
     , observed = observed
     , intercept = intercept
     , .x = .x
   )
+  if(isTRUE(mse)) canonical_table <- add_mse(canonical_table)
 
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 
