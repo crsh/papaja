@@ -1,6 +1,11 @@
+# Upcoming release
+
+- Degrees of freedom are now (as a new default) reported without a comma as a big mark, resolves #559 reported by @Fritz-theCat.
+
+
 # papaja 0.1.1
 
-- Maintenance update: Adjuted unit tests to avoid removal from CRAN
+- Maintenance update: Adjusted unit tests to avoid removal from CRAN
 
 # papaja 0.1.0
 

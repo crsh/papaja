@@ -268,3 +268,19 @@ test_that(
     )
   }
 )
+
+test_that(
+  "apa_df() respects big.mark"
+  , {
+    # default
+    expect_identical(
+      apa_df(1e4)
+      , "10000"
+    )
+    # with other argument
+    expect_identical(
+      apa_df(1e4, big.mark = "{,}")
+      , "10{,}000"
+    )
+  }
+)
