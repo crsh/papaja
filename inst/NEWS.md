@@ -1,6 +1,6 @@
 # papaja 0.1.1
 
-- Maintenance update: Adjuted unit tests to avoid removal from CRAN
+- Maintenance update: Adjusted unit tests to avoid removal from CRAN
 
 # papaja 0.1.0
 
