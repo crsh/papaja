@@ -3,6 +3,7 @@
 \docType{package}
 \name{papaja}
 \alias{papaja}
+\alias{papaja-package}
 \title{Prepare APA Journal Articles with R Markdown}
 \description{
 \code{papaja} is an \href{https://improvingpsych.org/mission/awards/}{award-winning} R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
@@ -48,3 +49,28 @@ Marius Barth (marius.barth at uni-koeln.de).
 Frederik Aust (frederik.aust at uni-koeln.de).
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/crsh/papaja}
+  \item Report bugs at \url{https://github.com/crsh/papaja/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Frederik Aust \email{frederik.aust@uni-koeln.de} (\href{https://orcid.org/0000-0003-4900-788X}{ORCID})
+
+Authors:
+\itemize{
+  \item Marius Barth \email{marius.barth@uni-koeln.de} (\href{https://orcid.org/0000-0002-3421-6665}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Birk Diedenhofen \email{mail@birkdiedenhofen.de} [contributor]
+  \item Christoph Stahl \email{christoph.stahl@uni-koeln.de} [contributor]
+  \item Joseph V. Casillas \email{joseph.casillas@rutgers.edu} [contributor]
+  \item Rudolf Siegel \email{rudolf.siegel@uni-saarland.de} [contributor]
+}
+
+}
