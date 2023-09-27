@@ -14,7 +14,7 @@
   )
 
   if(package_available("effectsize")) {
-    effectsize_eta_squared <- function(x, observed = NULL, include_intercept = TRUE, ...) {
+    effectsize_eta_squared <- function(x, observed = NULL, include_intercept = FALSE, ...) {
 
       if(is.null(observed)) {
         generalized <- character(0L)
@@ -33,11 +33,12 @@
     op_papaja$papaja.estimate_anova <- effectsize_eta_squared
 
     # Revert to using a two-sided 90% CI to provide additional information for
-    # testing minaml effects (Steiger, 2004).
+    # testing minimal effects (Steiger, 2004).
     if(utils::packageVersion("effectsize") >= "0.5") {
       op_papaja$papaja.estimate_anova <- function(
         ...
         , observed = NULL
+        , include_intercept = FALSE
         , alternative = "two.sided"
         , ci = 0.9
       ) {
@@ -46,6 +47,7 @@
           , observed = observed
           , alternative = alternative
           , ci = ci
+          , include_intercept = include_intercept
         )
       }
     }
