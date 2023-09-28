@@ -10,7 +10,7 @@ has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub last commit
 (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github)
-[![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions)
+[![R-CMD-check](https://github.com/crsh/papaja/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/crsh/papaja/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://app.codecov.io/gh/crsh/papaja)
 [![GitHub bug
 issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
