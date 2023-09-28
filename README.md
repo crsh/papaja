@@ -23,13 +23,13 @@ that facilitates creating computationally reproducible, submission-ready
 manuscripts which conform to the American Psychological Association
 (APA) manuscript guidelines (6th Edition). **papaja** provides
 
--   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be
-    used with (or without) [RStudio](https://www.rstudio.com/) to create
-    PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX
-    class) or Word documents (using a .docx-reference file).
--   Functions to **typeset** the results from **statistical analyses**,
--   functions to create **tables**, and
--   functions to create **figures** in accordance with APA guidelines.
+- an [R Markdown](https://rmarkdown.rstudio.com/) template that can be
+  used with (or without) [RStudio](https://www.rstudio.com/) to create
+  PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX
+  class) or Word documents (using a .docx-reference file).
+- Functions to **typeset** the results from **statistical analyses**,
+- functions to create **tables**, and
+- functions to create **figures** in accordance with APA guidelines.
 
 For a comprehensive introduction to **papaja**, see the current draft of
 the [manual](http://frederikaust.com/papaja_man/). If you have a
@@ -66,7 +66,7 @@ tinytex::install_tinytex()
 
 You may also consider [MikTeX](http://miktex.org/) for Windows,
 [MacTeX](https://tug.org/mactex/) for Mac, or [TeX
-Live](http://www.tug.org/texlive/) for Linux. Please refer to the
+Live](https://tug.org/texlive/) for Linux. Please refer to the
 [**papaja**
 manual](http://frederikaust.com/papaja_man/introduction.html#getting-started)
 for detailed installation instructions.
@@ -93,7 +93,12 @@ remotes::install_github("crsh/papaja@devel")
 Once **papaja** is installed, you can select the APA template when
 creating a new R Markdown file through the RStudio menus.
 
-![APA template selection dialog](inst/images/template_selection.png)
+<figure>
+<img src="inst/images/template_selection.png"
+alt="APA template selection dialog" />
+<figcaption aria-hidden="true">APA template selection
+dialog</figcaption>
+</figure>
 
 To add citations, specify your bibliography-file in the YAML front
 matter of the document (`bibliography: my.bib`) and start citing (for
@@ -205,10 +210,14 @@ apa_beeplot(
 )
 ```
 
-![Response times from a simulated Stroop experiment. Large dots
-represent condition means, small dots represent individual participants’
-mean response time. Error bars represent 99% within-subjects confidence
-intervals.](README_files/figure-gfm/stroop-plot-1.png)
+<figure>
+<img src="README_files/figure-gfm/stroop-plot-1.png"
+alt="Response times from a simulated Stroop experiment. Large dots represent condition means, small dots represent individual participants’ mean response time. Error bars represent 99% within-subjects confidence intervals." />
+<figcaption aria-hidden="true">Response times from a simulated Stroop
+experiment. Large dots represent condition means, small dots represent
+individual participants’ mean response time. Error bars represent 99%
+within-subjects confidence intervals.</figcaption>
+</figure>
 
 If you prefer `ggplot2`, try `theme_apa()`.
 
@@ -276,7 +285,7 @@ example](https://stackoverflow.com/help/mcve).
 
 Please cite **papaja** if you use it.
 
-    Aust, F. & Barth, M. (2022). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.0.9999. Retrieved from https://github.com/crsh/papaja
+    Aust, F. & Barth, M. (2022). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.1.9001. Retrieved from https://github.com/crsh/papaja
 
 For convenience, you can [use
 `cite_r()`](http://frederikaust.com/papaja_man/writing.html#citing-r-and-its-packages)
@@ -289,7 +298,7 @@ your BibTeX file:
   title = {{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}},
   author = {Frederik Aust and Marius Barth},
   year = {2022},
-  note = {R package version 0.1.0.9999},
+  note = {R package version 0.1.1.9001},
   url = {https://github.com/crsh/papaja},
 }
 ```
@@ -357,16 +366,16 @@ By now, there are a couple of R packages that provide convenience
 functions to facilitate the reporting of statistics in accordance with
 APA guidelines.
 
--   [**apa**](https://github.com/dgromer/apa): Format output of
-    statistical tests in R according to APA guidelines
--   [**APAstats**](https://github.com/achetverikov/APAstats): R
-    functions for formatting results in APA style and other stuff
--   [**apaTables**](https://github.com/dstanley4/apaTables): Create
-    American Psychological Association (APA) Style Tables
--   [**rempsyc**](https://github.com/RemPsyc/rempsyc): Convenience
-    functions for psychology
--   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
-    significances in R
+- [**apa**](https://github.com/dgromer/apa): Format output of
+  statistical tests in R according to APA guidelines
+- [**APAstats**](https://github.com/achetverikov/APAstats): R functions
+  for formatting results in APA style and other stuff
+- [**apaTables**](https://github.com/dstanley4/apaTables): Create
+  American Psychological Association (APA) Style Tables
+- [**rempsyc**](https://github.com/RemPsyc/rempsyc): Convenience
+  functions for psychology
+- [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
+  significances in R
 
 If you are looking for other journal article templates, you may be
 interested in the [**rticles**](https://github.com/rstudio/rticles)
