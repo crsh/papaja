@@ -2,6 +2,7 @@
 % Please edit documentation in R/apa_table.R
 \name{apa_table}
 \alias{apa_table}
+\alias{apa_table.default}
 \alias{apa_table.apa_results_table}
 \alias{apa_table.apa_results}
 \alias{apa_table.matrix}
@@ -10,6 +11,8 @@
 \title{Prepare Table for Printing and Reporting}
 \usage{
 apa_table(x, ...)
+
+\method{apa_table}{default}(x, ...)
 
 \method{apa_table}{apa_results_table}(x, escape = FALSE, ...)
 
@@ -76,11 +79,11 @@ apa_table(x, ...)
   \describe{
     \item{\code{format}}{A character string. Possible values are \code{latex},
 \code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
-simple tables), and \code{rst}. The value of this argument will be
-automatically determined if the function is called within a \pkg{knitr}
-document. The \code{format} value can also be set in the global option
-\code{knitr.table.format}. If \code{format} is a function, it must return a
-character string.}
+simple tables), \code{rst}, and \code{jira}. The value of this argument
+will be automatically determined if the function is called within a
+\pkg{knitr} document. The \code{format} value can also be set in the global
+option \code{knitr.table.format}. If \code{format} is a function, it must
+return a character string.}
     \item{\code{digits}}{Maximum number of digits for numeric columns, passed to
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
 the number of digits for individual columns.}

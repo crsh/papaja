@@ -28,7 +28,7 @@ default_label.default <- function(x, ...) no_method(x)
 #' @rdname default_label
 #' @keywords internal
 
-default_label.data.frame <- function(x) {
+default_label.data.frame <- function(x, ...) {
 
   x_out <- as.data.frame.list(
     x = mapply(

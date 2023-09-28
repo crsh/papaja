@@ -27,6 +27,7 @@ MacTeX
 Masson's
 MikTeX
 Morey
+ORCID
 Pandoc's
 Penfield
 RMarkdown
@@ -34,6 +35,7 @@ RStudio
 RStudio's
 Ritchie
 Scheffé
+Schrön
 StackOverflow
 Steiger
 Stroop
@@ -51,6 +53,7 @@ aovlist
 apa
 apaTables
 asis
+assertthat
 aust
 barth
 beeswarm
@@ -62,6 +65,7 @@ codebook
 codecov
 crsh
 de
+df
 docx
 doi
 dplyr
@@ -99,6 +103,7 @@ pandoc
 parindent
 participants’
 priori
+rempsy
 reportable
 reproducibility
 rowwise
@@ -111,7 +116,9 @@ sigr
 sphericity
 spl
 tex
+tinylabels
 th
 wsci
 xtable
 yaml
+yml

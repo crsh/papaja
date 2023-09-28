@@ -5,19 +5,19 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)]( https://cran.r-project.org/package=papaja) [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub last commit (devel)](https://img.shields.io/github/last-commit/crsh/papaja/devel?label=Last%20commit&logo=github) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://app.codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
+[![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)]( https://cran.r-project.org/package=papaja) [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub last commit (main)](https://img.shields.io/github/last-commit/crsh/papaja/main?label=Last%20commit&logo=github) [![R-CMD-check](https://github.com/crsh/papaja/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/crsh/papaja/actions) [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://app.codecov.io/gh/crsh/papaja) [![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug) [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an [award-winning](https://improvingpsych.org/mission/awards/) R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 **papaja** provides
 
--   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](https://www.rstudio.com/) to create PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
+-   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](https://posit.co/) to create PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
 -   Functions to **typeset** the results from **statistical analyses**,
 -   functions to create **tables**, and
 -   functions to create **figures** in accordance with APA guidelines.
 
-For a comprehensive introduction to **papaja**, see the current draft of the [manual](http://frederikaust.com/papaja_man/).
+For a comprehensive introduction to **papaja**, see the current draft of the [manual](https://frederikaust.com/papaja_man/).
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the **papaja** tag](https://stackoverflow.com/questions/tagged/papaja).
-If you believe you have found a bug or would like to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
+If you believe you have found a bug or would like to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/minimal-reproducible-example).
 
 ## Example
 
@@ -26,7 +26,7 @@ The vignette also contains some basic instructions.
 
 ## Installation
 
-To use **papaja** you need either a recent version of [RStudio](https://www.rstudio.com/) or [pandoc](https://pandoc.org/).
+To use **papaja** you need either a recent version of [RStudio](https://posit.co/) or [pandoc](https://pandoc.org/).
 If you want to create PDF- in addition to DOCX-documents you additionally need a [TeX](https://en.wikipedia.org/wiki/TeX) distribution.
 We recommend you use [TinyTex](https://yihui.org/tinytex/), which can be installed from within R:
 
@@ -36,8 +36,8 @@ if(!requireNamespace("tinytex", quietly = TRUE)) install.packages("tinytex")
 tinytex::install_tinytex()
 ```
 
-You may also consider [MikTeX](http://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](https://tug.org/texlive/) for Linux.
-Please refer to the [**papaja** manual](http://frederikaust.com/papaja_man/introduction.html#getting-started) for detailed installation instructions.
+You may also consider [MikTeX](https://miktex.org/) for Windows, [MacTeX](https://tug.org/mactex/) for Mac, or [TeX Live](https://tug.org/texlive/) for Linux.
+Please refer to the [**papaja** manual](https://frederikaust.com/papaja_man/introduction.html#getting-started) for detailed installation instructions.
 
 **papaja** is available on CRAN but you can also install it from the GitHub repository:
 
@@ -50,9 +50,6 @@ if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 
 # Install the stable development version from GitHub
 remotes::install_github("crsh/papaja")
-
-# Install the latest development snapshot from GitHub
-remotes::install_github("crsh/papaja@devel")
 ```
 
 ## Usage
@@ -108,11 +105,22 @@ knitr::kable(print_classes)
 For instance, you might want to report some condition means (with standard errors).
 
 ```{r message = FALSE, eval = FALSE}
-library("dplyr")
 npk |>
-  group_by(N, P) |>
-  summarise(mean = mean(yield), se = sd(yield) / sqrt(length(yield)), .groups = "drop") |>
-  label_variables(N = "Nitrogen", P = "Phosphate", mean = "*M*", se = "*SE*") |>
+  # Summarize data
+  dplyr::group_by(N, P) |>
+  dplyr::summarise(
+    mean = mean(yield)
+    , se = sd(yield) / sqrt(length(yield))
+    , .groups = "drop"
+  ) |>
+  # Label columns 
+  label_variables(
+    N = "Nitrogen"
+    , P = "Phosphate"
+    , mean = "*M*"
+    , se = "*SE*"
+  ) |>
+  # Print table
   apa_table(caption = "Mean pea yield (with standard errors)")
 ```
 
@@ -245,9 +253,9 @@ rmarkdown::render("mymanuscript.Rmd")
 
 [![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
-For a comprehensive introduction to **papaja**, check out the current draft of the [**papaja** manual](http://frederikaust.com/papaja_man/).
+For a comprehensive introduction to **papaja**, check out the current draft of the [**papaja** manual](https://frederikaust.com/papaja_man/).
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow [using the **papaja** tag](https://stackoverflow.com/questions/tagged/papaja).
-If you believe you have found a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/mcve).
+If you believe you have found a bug or you want to request a new feature, [open an issue](https://github.com/crsh/papaja/issues) on Github and provide a [minimal complete verifiable example](https://stackoverflow.com/help/minimal-reproducible-example).
 
 ## Citation
 
@@ -255,7 +263,7 @@ Please cite **papaja** if you use it.
 
     `r attr(unclass(citation("papaja"))[[1]], "textVersion")`
 
-For convenience, you can [use `cite_r()`](http://frederikaust.com/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file:
+For convenience, you can [use `cite_r()`](https://frederikaust.com/papaja_man/writing.html#citing-r-and-its-packages) or copy the reference information returned by `citation('papaja')` to your BibTeX file:
 
 ~~~bibtex
 
@@ -267,7 +275,7 @@ print(citation("papaja"), style = "Bibtex")
 
 ## papaja in the wild
 
-If you are interested in seeing how others are using **papaja**, you can find a [collection of papers](http://frederikaust.com/papaja_man/published-manuscripts.html) and the corresponding R Markdown files in the manual.
+If you are interested in seeing how others are using **papaja**, you can find a [collection of papers](https://frederikaust.com/papaja_man/published-manuscripts.html) and the corresponding R Markdown files in the manual.
 
 If you have published a paper that was written with **papaja**, please add the reference to the [public Zotero group](https://www.zotero.org/groups/2202906/papaja) yourself or send us to me.
 
@@ -280,7 +288,7 @@ For a brief primer on containers and virtual machines see [the supplementary mat
 [Docker](https://www.docker.com/) is the most widely used containerization approach.
 It is open source and free to use but requires some disk space.
 [CodeOcean](https://codeocean.com/) is a commercial service that builds on Docker, facilitates setting up and sharing containers and lets you run computations in the cloud.
-See the **papaja** manual on [how to get started using **papaja** with Docker or CodeOcean](http://frederikaust.com/papaja_man/tips-and-tricks.html#reproducible-software-environments) and [our Docker workflow](https://github.com/crsh/papaja_docker) tailored for easy use with **papaja**.
+See the **papaja** manual on [how to get started using **papaja** with Docker or CodeOcean](https://frederikaust.com/papaja_man/tips-and-tricks.html#reproducible-software-environments) and [our Docker workflow](https://github.com/crsh/papaja_docker) tailored for easy use with **papaja**.
 
 ## Contribute
 
@@ -297,7 +305,7 @@ For a primer on adding new `apa_print()`-methods, see the getting-started-vignet
 vignette("extending_apa_print", package = "papaja")
 ```
 
-Before working on a contribution, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md).
+Before working on a contribution, please review our brief [contributing guidelines](https://github.com/crsh/papaja/blob/main/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/crsh/papaja/blob/main/CODE_OF_CONDUCT.md).
 
 ## Related R packages
 
@@ -314,5 +322,8 @@ If you are looking for other journal article templates, you may be interested in
 ## Package dependencies
 
 ```{r dep-plot, echo = FALSE, fig.width = 10, fig.height = 9, message = FALSE, warning = FALSE}
-depgraph::plot_dependency_graph()
+depgraph::plot_dependency_graph(
+  pkg = "."
+  , repos = "https://cran.rstudio.com/"
+)
 ```

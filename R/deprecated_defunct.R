@@ -107,14 +107,6 @@ fetch_zotero_refs <- function(
   return(invisible(NULL))
 }
 
-
-apa_table.word <- function(x, ...) {
-  .Deprecated(msg = "'apa_table.word' is deprecated as of version 0.1.0.9793 because it was more accurately renamed to 'apa_table.markdown'.")
-
-  apa_table.markdown(x, ...)
-}
-
-
 deprecate_ci <- function(conf.int, ...) {
   x <- list(...)
 
@@ -157,7 +149,7 @@ prettify_terms <- function(...) {
 }
 
 
-#' Render Appendix
+#' Render Appendix (defunct)
 #'
 #' This function renders an R Markdown document *without* YAML header to a TeX
 #' fragment inside an `appendix` environment, or to a markdown fragment (for
@@ -323,7 +315,7 @@ render_appendix <- function(
   return(invisible(NULL))
 }
 
-#' Create a Regression Table
+#' Create a Regression Table (defunct)
 #'
 #' These methods take \code{glm} or \code{lm} objects to create
 #' a data frame containing a regression table.

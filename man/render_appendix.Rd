@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_defunct.R
 \name{render_appendix}
 \alias{render_appendix}
-\title{Render Appendix}
+\title{Render Appendix (defunct)}
 \usage{
 render_appendix(
   x,
