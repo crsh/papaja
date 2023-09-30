@@ -1,4 +1,9 @@
 
+# Upcoming release
+
+- For ANOVA methods, *MSE*s are again returned if requested by the user (reported by @Sashpta, [#562](https://github.com/crsh/papaja/issues/562)). The global default for reporting *MSE*s now depends on the [**effectsize**](https://CRAN.r-project.org/package=effectsize) package: If **effectsize** is installed, the default for reporting *MSE*s is `FALSE`, if **effectsize** is not installed, the default is `TRUE`.
+
+
 # papaja 0.1.2
 
 - Degrees of freedom are now (as a new default) reported without a comma as a big mark (reported by @Fritz-theCat, [#559](https://github.com/crsh/papaja/issues/559)).
