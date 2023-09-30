@@ -1,4 +1,6 @@
 
+options(papaja.mse = TRUE)
+
 test_that(
   "transmute_df_into_label()"
   , {

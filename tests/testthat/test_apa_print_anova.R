@@ -4,7 +4,7 @@ context("apa_print() for ANOVA")
 
 # Use our own effect-size function for these tests
 # Custom effect sizes via the 'effectsize' package are tested elsewhere
-op <- options(papaja.estimate_anova = "ges")
+op <- options(papaja.estimate_anova = "ges", papaja.mse = TRUE)
 
 test_that(
   "One-way between ANOVA"
@@ -474,17 +474,40 @@ test_that(
 )
 
 test_that(
-  "Show MSE if explicitly requested"
+  "Suppress MSE if requested"
   , {
+    npk$id <- seq_len(nrow(npk))
+    out <- apa_print(
+      afex::aov_4(
+        formula = yield ~ N + (1 | id)
+        , data = npk
+        , fun_aggregate = mean
+      )
+      , estimate = "ges"
+      , mse = FALSE
+    )
+
+    expect_identical(
+      colnames(out$table)
+      , c("term", "estimate", "statistic", "df", "df.residual", "p.value")
+    )
+
     out <- apa_print(
       afex::aov_4(
         formula = yield ~ (N | block)
         , data = npk
-        , mse = TRUE
         , fun_aggregate = mean
       )
       , estimate = "ges"
+      , mse = FALSE
     )
+
+    expect_identical(
+      colnames(out$table)
+      , c("term", "estimate", "statistic", "df", "df.residual", "p.value")
+    )
+
+
   }
 )
 

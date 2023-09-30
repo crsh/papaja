@@ -67,9 +67,10 @@ print_anova <- function(
     x = x
     , es = es
     , observed = observed
-    , mse = mse
+    # , mse = mse # this is how we used to add MSE before adding add_mse() as a separate function
     , intercept = intercept
   )
+  if(isTRUE(mse)) x <- add_mse(x)
 
   # Remove intercept if the user doesn't want it:
   if(!intercept) x <- x[x$term != "(Intercept)", ]
