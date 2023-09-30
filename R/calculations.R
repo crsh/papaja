@@ -452,9 +452,8 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, intercept = FALSE) 
 #' @keywords internal
 
 add_mse <- function(x) {
-  df_col <- intersect("df.residual", colnames(x))
-  if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
-    x$mse <- x$sumsq_err / x[[df_col]]
+  if(!is.null(x$sumsq_err) & !is.null(x$df.residual)) {
+    x$mse <- x$sumsq_err / x$df.residual
     tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
   } else {
     warning("Mean-squared errors requested, but necessary information not available.")
