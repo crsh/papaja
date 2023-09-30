@@ -4,7 +4,7 @@
 \alias{add_effect_sizes}
 \title{Effect Sizes for Analysis of Variance}
 \usage{
-add_effect_sizes(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE)
+add_effect_sizes(x, es = "ges", observed = NULL, intercept = FALSE)
 }
 \arguments{
 \item{x}{An object of class \code{apa_variance_table}.}
@@ -15,8 +15,6 @@ Currently, partial eta-squared (\code{"pes"}), generalized eta-squared
 
 \item{observed}{Character. A vector naming all factors that are observed
 (i.e., \emph{not} manipulated).}
-
-\item{mse}{Logical. Should means-squared errors be computed?}
 
 \item{intercept}{Logical. Should the sum of squares of the intercept (i.e., the
 deviation of the grand mean from 0) be included in the calculation of eta-squared?}

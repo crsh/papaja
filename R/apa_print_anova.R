@@ -19,7 +19,7 @@
 #'   It is `FALSE` if the \pkg{effectsize} package is installed and `TRUE` if it
 #'   is not installed. This can be changed either by supplying a different value
 #'   in the function call or by changing the global default via
-#'   `options(papaja.mse = FALSE)`.
+#'   `options(papaja.mse = ...)`.
 #' @param observed Character. The names of the factors that are observed,
 #'   i.e., not manipulated. Necessary only for calculating *generalized* eta
 #'   squared; otherwise ignored. If `x` is of class `afex_aov`, `observed` is
@@ -32,9 +32,9 @@
 #'
 #'   Argument `estimate` determines which measure of effect size is to be used:
 #'   It is currently possible to provide one of three characters to specify the
-#'   to-be-calculated effect size: \code{"ges"} for generalized \eqn{eta^2},
-#'   \code{"pes"} for partial \eqn{eta^2}, and \code{"es"} for \eqn{eta^2}.
-#'   Note that \eqn{eta^2} is calculated correctly if and only if the design is
+#'   to-be-calculated effect size: `"ges"` for generalized \eqn{\eta^2},
+#'   \code{"pes"} for partial \eqn{\eta^2}, and `"es"` for \eqn{\eta^2}.
+#'   Note that \eqn{\eta^2} is calculated correctly if and only if the design is
 #'   balanced.
 #'
 #'   It is also possible to provide a `data.frame` with columns `estimate`,
