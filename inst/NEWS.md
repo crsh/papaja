@@ -1,6 +1,12 @@
+
+# papaja 0.1.2
+
+- Degrees of freedom are now (as a new default) reported without a comma as a big mark (reported by @Fritz-theCat, [#559](https://github.com/crsh/papaja/issues/559)).
+- Fixes incorrect running head in DOCX documents on pages > 2 (reported by @LisaSpitzer, [#561](https://github.com/crsh/papaja/issues/561)).
+
 # papaja 0.1.1
 
-- Maintenance update: Adjuted unit tests to avoid removal from CRAN
+- Maintenance update: Adjusted unit tests to avoid removal from CRAN
 
 # papaja 0.1.0
 

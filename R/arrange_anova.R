@@ -44,7 +44,7 @@ arrange_anova.default <- function(x, ...) {
 #' @rdname arrange_anova
 #' @method arrange_anova anova
 
-arrange_anova.anova <- function(x) {
+arrange_anova.anova <- function(x, ...) {
 
   # .Deprecated("arrange_anova.anova() is deprecated")
 
@@ -84,7 +84,7 @@ arrange_anova.anova <- function(x) {
 #' @rdname arrange_anova
 #' @method arrange_anova summary.aov
 
-arrange_anova.summary.aov <- function(x) {
+arrange_anova.summary.aov <- function(x, ...) {
 
   variance_table <- broom::tidy(x[[1]])
   variance_table <- as.data.frame(variance_table)
@@ -116,7 +116,7 @@ arrange_anova.summary.aov <- function(x) {
   variance_table
 }
 
-arrange_anova.summary.aovlist <- function(x) {
+arrange_anova.summary.aovlist <- function(x, ...) {
   x <- lapply(x, arrange_anova.summary.aov)
   variance_table <- do.call("rbind", x)
   rownames(variance_table) <- NULL
@@ -130,7 +130,7 @@ arrange_anova.summary.aovlist <- function(x) {
 #' @rdname arrange_anova
 #' @method arrange_anova summary.Anova.mlm
 
-arrange_anova.summary.Anova.mlm <- function(x, correction = "GG") {
+arrange_anova.summary.Anova.mlm <- function(x, correction = "GG", ...) {
   validate(correction, check_class = "character", check_length = 1)
 
   # univariate.tests is NULL if the object comes from a MANOVA

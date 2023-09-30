@@ -17,7 +17,7 @@
 #'   \href{ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf}{documentation}
 #'   to find out about class options such as paper size or draft watermarks.
 #'
-#'   Please refer to the \href{http://frederikaust.com/papaja_man/r-markdown-components.html#yaml-front-matter}{\pkg{papaja} online-manual}
+#'   Please refer to the \href{https://frederikaust.com/papaja_man/r-markdown-components.html#yaml-front-matter}{\pkg{papaja} online-manual}
 #'   for additional information on available YAML front matter settings.
 #'   Note that the available settings for DOCX documents are more limited
 #'   than for PDF documents.

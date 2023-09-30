@@ -10,7 +10,7 @@ default_label(x, ...)
 
 \method{default_label}{default}(x, ...)
 
-\method{default_label}{data.frame}(x)
+\method{default_label}{data.frame}(x, ...)
 }
 \arguments{
 \item{x}{A \code{data.frame}}

@@ -101,6 +101,9 @@ apa_table <- function(x, ...) {
   UseMethod("apa_table", x)
 }
 
+#' @rdname apa_table
+#' @export
+
 apa_table.default <- function(x, ...) no_method(x)
 
 
@@ -385,7 +388,7 @@ apa_table.data.frame <- function(
     }
 
     do.call(
-      function(...) apa_table.latex(
+      function(...) apa_table_latex(
         x = prep_table
         , caption = caption
         , note = note
@@ -401,7 +404,7 @@ apa_table.data.frame <- function(
     )
   } else {
     do.call(
-      function(...) apa_table.markdown(
+      function(...) apa_table_markdown(
         x = prep_table
         , caption = caption
         , note = note
@@ -413,7 +416,7 @@ apa_table.data.frame <- function(
 }
 
 
-apa_table.latex <- function(
+apa_table_latex <- function(
   x
   , caption = NULL
   , note = NULL
@@ -612,8 +615,7 @@ apa_table.latex <- function(
   # cat("\n\n")
 }
 
-
-apa_table.markdown <- function(
+apa_table_markdown <- function(
   x
   , caption = NULL
   , note = NULL

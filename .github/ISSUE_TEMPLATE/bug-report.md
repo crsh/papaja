@@ -13,7 +13,7 @@ If you think you have found a bug, please ensure your bug report includes all of
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-A [minimal complete verifiable example](https://stackoverflow.com/help/mcve) and the error message if applicable.
+A [minimal complete verifiable example](https://stackoverflow.com/help/minimal-reproducible-example) and the error message if applicable.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.

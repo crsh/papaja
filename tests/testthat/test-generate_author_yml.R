@@ -42,29 +42,28 @@ test_that(
 
     rmd <- paste(rmd, collapse = "\n")
 
-    input_path <- tempfile(fileext = ".Rmd")
-    write(rmd, file = input_path)
+    input_file <- tempfile(fileext = ".Rmd")
+    write(rmd, file = input_file)
 
-    output_path <- tempfile(fileext = ".pdf")
+    output_file <- gsub(input_file, pattern = "\\.Rmd$", replacement = ".pdf")
 
     suppressWarnings(
       try(
         capture.output(
           rmarkdown::render(
-            input = input_path,
-            output_file = output_path,
-            quiet = TRUE,
+            input = input_file,
+            quiet = TRUE
           )
         )
         , silent = TRUE
       )
     )
 
-    expect_true(file.exists(output_path))
+    expect_true(file.exists(output_file))
 
     # Clean up
-    file.remove(input_path)
-    file.remove(output_path)
+    file.remove(input_file)
+    file.remove(output_file)
 
   }
 )
