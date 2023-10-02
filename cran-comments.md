@@ -22,8 +22,6 @@ New submission
 
 Package was archived on CRAN
 
-Version contains large components (0.1.1.9001)
-
 CRAN repository db overrides:
   X-CRAN-Comment: Archived on 2023-09-26 as check issues were not corrected in time.
 
@@ -37,6 +35,6 @@ Found the following (possibly) invalid URLs:
 
 ## Comments
 
-This is a resubmission, to address a Apple M1 issue (https://cran-archive.r-project.org/web/checks/2023/2023-09-26_check_results_papaja.html)
+This is a resubmission, to address the invalid use of 'paired' in formula method of t.test() and wilcoxon.test() (https://cran-archive.r-project.org/web/checks/2023/2023-09-26_check_results_papaja.html)
 
 All URLs are correct. Maybe the sites are blocking non-human traffic?
