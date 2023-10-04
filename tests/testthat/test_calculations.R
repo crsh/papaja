@@ -361,3 +361,10 @@ test_that(
     expect_message(conf_int(NA), "Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
   }
 )
+
+test_that(
+  "add_mse(): Warn if information is not sufficient"
+  , {
+    expect_warning(papaja:::add_mse(data.frame()))
+  }
+)

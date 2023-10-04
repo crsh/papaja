@@ -15,9 +15,11 @@
 #' @param estimate Character, function, or data frame. Determines which
 #'   estimate of effect size is to be used. See details.
 #' @param mse Logical. Indicates if mean squared errors should be included in
-#'   output. The default is `TRUE`, but this can be changed either by supplying
-#'   a different value in the function call or by changing the global default
-#'   via `options(papaja.mse = FALSE)`.
+#'   output. The default is taken from the global option `getOption("papaja.mse")`.
+#'   It is `FALSE` if the \pkg{effectsize} package is installed and `TRUE` if it
+#'   is not installed. This can be changed either by supplying a different value
+#'   in the function call or by changing the global default via
+#'   `options(papaja.mse = ...)`.
 #' @param observed Character. The names of the factors that are observed,
 #'   i.e., not manipulated. Necessary only for calculating *generalized* eta
 #'   squared; otherwise ignored. If `x` is of class `afex_aov`, `observed` is
@@ -30,9 +32,9 @@
 #'
 #'   Argument `estimate` determines which measure of effect size is to be used:
 #'   It is currently possible to provide one of three characters to specify the
-#'   to-be-calculated effect size: \code{"ges"} for generalized \eqn{eta^2},
-#'   \code{"pes"} for partial \eqn{eta^2}, and \code{"es"} for \eqn{eta^2}.
-#'   Note that \eqn{eta^2} is calculated correctly if and only if the design is
+#'   to-be-calculated effect size: `"ges"` for generalized \eqn{\eta^2},
+#'   \code{"pes"} for partial \eqn{\eta^2}, and `"es"` for \eqn{\eta^2}.
+#'   Note that \eqn{\eta^2} is calculated correctly if and only if the design is
 #'   balanced.
 #'
 #'   It is also possible to provide a `data.frame` with columns `estimate`,
@@ -69,7 +71,7 @@ apa_print.aov <- function(
   , estimate = getOption("papaja.estimate_anova", "ges")
   , observed = NULL
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -95,7 +97,7 @@ apa_print.summary.aov <- function(
   , estimate = getOption("papaja.estimate_anova", "ges")
   , observed = NULL
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -120,7 +122,7 @@ apa_print.aovlist <- function(
   , estimate = getOption("papaja.estimate_anova", "ges")
   , observed = NULL
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -146,7 +148,7 @@ apa_print.summary.aovlist <- function(
   , estimate = getOption("papaja.estimate_anova", "ges")
   , observed = NULL
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -172,10 +174,10 @@ apa_print.summary.aovlist <- function(
     canonical_table = canonical_table
     , .x = .x
     , estimate = estimate
-    , mse = mse
     , observed = observed
     , intercept = intercept
   )
+  if(isTRUE(mse)) canonical_table <- add_mse(canonical_table)
 
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 
@@ -211,7 +213,7 @@ apa_print.Anova.mlm <- function(
   , observed = NULL
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -245,7 +247,7 @@ apa_print.summary.Anova.mlm <- function(
   , observed = NULL
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -263,11 +265,12 @@ apa_print.summary.Anova.mlm <- function(
   canonical_table <- add_custom_effect_sizes(
     canonical_table
     , estimate = estimate
-    , mse = mse
     , observed = observed
     , intercept = intercept
     , .x = .x
   )
+  if(isTRUE(mse)) canonical_table <- add_mse(canonical_table)
+
 
   # Remove intercept if the user doesn't want it:
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
@@ -305,7 +308,7 @@ apa_print.afex_aov <- function(
   , observed = NULL
   , correction = getOption("papaja.sphericity_correction")
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   , ...
 ) {
@@ -374,7 +377,7 @@ apa_print.anova <- function(
   , estimate = getOption("papaja.estimate_anova", "ges")
   , observed = NULL
   , intercept = FALSE
-  , mse = TRUE
+  , mse = getOption("papaja.mse", TRUE)
   , in_paren = FALSE
   # , conf.int = 0.95
   , ...
@@ -489,11 +492,11 @@ apa_print.anova <- function(
   canonical_table <- add_custom_effect_sizes(
     estimate = estimate
     , canonical_table = canonical_table
-    , mse = mse
     , observed = observed
     , intercept = intercept
     , .x = .x
   )
+  if(isTRUE(mse)) canonical_table <- add_mse(canonical_table)
 
   if(!intercept) canonical_table <- canonical_table[canonical_table$term != "(Intercept)", , drop = FALSE]
 

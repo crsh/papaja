@@ -373,13 +373,12 @@ hd_int <- function(x, level = 0.95) {
 #'   (\code{"ges"}), and eta-squared (\code{"es"}) are supported.
 #' @param observed Character. A vector naming all factors that are observed
 #'   (i.e., \emph{not} manipulated).
-#' @param mse Logical. Should means-squared errors be computed?
 #' @param intercept Logical. Should the sum of squares of the intercept (i.e., the
 #'   deviation of the grand mean from 0) be included in the calculation of eta-squared?
 #'
 #' @keywords internal
 
-add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, intercept = FALSE) {
+add_effect_sizes <- function(x, es = "ges", observed = NULL, intercept = FALSE) {
   # ----------------------------------------------------------------------------
   # We don't validate here because this function is intended to be used
   # internally, validation should have happened earlier in the processing chain.
@@ -446,19 +445,18 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, mse = TRUE, interce
       tinylabels::variable_label(x$estimate) <- "$\\hat{\\eta}^2_p$"
     }
   }
-
-  # ----------------------------------------------------------------------------
-  # Only calculate MSE if required (otherwise, Levene tests give an error).
-  if(mse) {
-    df_col <- intersect("df.residual", colnames(x))
-    if(!is.null(x$sumsq_err) & !is.null(x[[df_col]])) {
-      x$mse <- x$sumsq_err / x[[df_col]]
-      tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
-    } else {
-      warning("Mean-squared errors requested, but necessary information not available.")
-    }
-  }
-
   x
 }
 
+
+#' @keywords internal
+
+add_mse <- function(x) {
+  if(!is.null(x$sumsq_err) & !is.null(x$df.residual)) {
+    x$mse <- x$sumsq_err / x$df.residual
+    tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
+  } else {
+    warning("Mean-squared errors requested, but necessary information not available.")
+  }
+  x
+}
