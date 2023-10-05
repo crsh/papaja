@@ -14,7 +14,7 @@ revision_letter_pdf(...)
   }}
 }
 \value{
-R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}
+R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}.
 }
 \description{
 Template for creating a journal revision letters.

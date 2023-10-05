@@ -9,11 +9,11 @@
 \usage{
 arrange_anova(x, ...)
 
-\method{arrange_anova}{anova}(x)
+\method{arrange_anova}{anova}(x, ...)
 
-\method{arrange_anova}{summary.aov}(x)
+\method{arrange_anova}{summary.aov}(x, ...)
 
-\method{arrange_anova}{summary.Anova.mlm}(x, correction = "GG")
+\method{arrange_anova}{summary.Anova.mlm}(x, correction = "GG", ...)
 }
 \arguments{
 \item{x}{Output object. See details.}

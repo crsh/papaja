@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_defunct.R
 \name{arrange_regression}
 \alias{arrange_regression}
-\title{Create a Regression Table}
+\title{Create a Regression Table (defunct)}
 \usage{
 arrange_regression(x, est_name, standardized, conf.int, ...)
 }

@@ -101,6 +101,9 @@ apa_table <- function(x, ...) {
   UseMethod("apa_table", x)
 }
 
+#' @rdname apa_table
+#' @export
+
 apa_table.default <- function(x, ...) no_method(x)
 
 
@@ -385,7 +388,7 @@ apa_table.data.frame <- function(
     }
 
     do.call(
-      function(...) apa_table.latex(
+      function(...) apa_table_latex(
         x = prep_table
         , caption = caption
         , note = note
@@ -401,7 +404,7 @@ apa_table.data.frame <- function(
     )
   } else {
     do.call(
-      function(...) apa_table.markdown(
+      function(...) apa_table_markdown(
         x = prep_table
         , caption = caption
         , note = note
@@ -413,7 +416,7 @@ apa_table.data.frame <- function(
 }
 
 
-apa_table.latex <- function(
+apa_table_latex <- function(
   x
   , caption = NULL
   , note = NULL
@@ -612,8 +615,7 @@ apa_table.latex <- function(
   # cat("\n\n")
 }
 
-
-apa_table.markdown <- function(
+apa_table_markdown <- function(
   x
   , caption = NULL
   , note = NULL
@@ -630,38 +632,24 @@ apa_table.markdown <- function(
   table_output <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
-  caption <- paste0("*", caption, "*")
+  # This uses pandoc syntax (start line with "Table:") to define a "proper"
+  # table caption, which will receive a table caption style in DOCX
   current_chunk <- knitr::opts_current$get("label")
-  if(!is.null(current_chunk)) caption <- paste0("<caption>(\\#tab:", current_chunk, ")</caption>\n\n<div custom-style='Table Caption'>", caption, "</div>\n\n")
-
-  # Print table
-  # cat("<caption>")
-  # cat(apa_terms$table, ". ", sep = "")
-  # cat(caption)
-  # cat("</caption>\n")
-
-  # print(res_table)
+  if(!is.null(current_chunk)) caption <- paste0("Table: (\\#tab:", current_chunk, ") ", caption, "\n\n")
 
   table_output <- c(caption, table_output)
 
   if(!is.null(note)) {
-    # cat("\n")
-    # cat("<center>")
-    # cat("*", apa_terms$note, ".* ", note, sep = "")
-    # cat("</center>")
-    # cat("\n\n\n\n")
 
     table_output <- c(
       table_output
-      , "\n<div custom-style='Compact'>"
+      , "\n<div custom-style='table-note'>"
       , paste0("*", apa_terms$note, ".* ", note)
       , "</div>\n\n&nbsp;\n\n"
     )
   }
 
   knitr::asis_output(paste(table_output, collapse = "\n"))
-  # table_output <- knitr::asis_output(table_output)
-  # table_output
 }
 
 

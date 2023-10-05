@@ -3,6 +3,7 @@
 \docType{package}
 \name{papaja}
 \alias{papaja}
+\alias{papaja-package}
 \title{Prepare APA Journal Articles with R Markdown}
 \description{
 \code{papaja} is an \href{https://improvingpsych.org/mission/awards/}{award-winning} R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
@@ -10,7 +11,7 @@
 \details{
 \code{papaja} provides
 \itemize{
-\item an \href{https://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{https://www.rstudio.com/}{RStudio} to create PDF documents (using the \href{https://ctan.org/pkg/apa6}{apa6} LaTeX class) or Word documents (using a .docx-reference file).
+\item an \href{https://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{https://posit.co/}{RStudio} to create PDF documents (using the \href{https://ctan.org/pkg/apa6}{apa6} LaTeX class) or Word documents (using a .docx-reference file).
 \item Functions to \emph{typeset} the results from \emph{statistical analyses} (e.g., \code{\link[=apa_print]{apa_print()}}),
 \item functions to create \emph{tables} (\code{\link[=apa_table]{apa_table()}}), and
 \item functions to create \emph{figures} in accordance with APA guidelines (e.g., \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}).
@@ -19,22 +20,22 @@
 \section{System requirements}{
 
 To use \code{papaja} you need either an up-to-date version of
-\href{https://www.rstudio.com/}{RStudio} or
+\href{https://posit.co/}{RStudio} or
 \href{https://pandoc.org/}{pandoc}. If you want to create PDF-
 in addition to DOCX-documents you additionally need a
 \href{https://en.wikipedia.org/wiki/TeX}{TeX} distribution. We recommend
 \href{https://yihui.org/tinytex/}{TinyTex}, which can be installed from within
 R via the \pkg{tinytex} package.
 
-Please refer to the \href{http://frederikaust.com/papaja_man/introduction.html#getting-started}{\code{papaja} manual}
+Please refer to the \href{https://frederikaust.com/papaja_man/introduction.html#getting-started}{\code{papaja} manual}
 for detailed installation instructions.
 }
 
 \section{Getting help}{
 
-For a comprehensive introduction to \code{papaja}, see the current draft of the \href{http://frederikaust.com/papaja_man/}{manual}.
+For a comprehensive introduction to \code{papaja}, see the current draft of the \href{https://frederikaust.com/papaja_man/}{manual}.
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow \href{https://stackoverflow.com/questions/tagged/papaja}{using the \code{papaja} tag}.
-If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.
+If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/minimal-reproducible-example}{minimal complete verifiable example}.
 }
 
 \section{Authors}{
@@ -48,3 +49,28 @@ Marius Barth (marius.barth at uni-koeln.de).
 Frederik Aust (frederik.aust at uni-koeln.de).
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/crsh/papaja}
+  \item Report bugs at \url{https://github.com/crsh/papaja/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Frederik Aust \email{frederik.aust@uni-koeln.de} (\href{https://orcid.org/0000-0003-4900-788X}{ORCID})
+
+Authors:
+\itemize{
+  \item Marius Barth \email{marius.barth@uni-koeln.de} (\href{https://orcid.org/0000-0002-3421-6665}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Birk Diedenhofen \email{mail@birkdiedenhofen.de} [contributor]
+  \item Christoph Stahl \email{christoph.stahl@uni-koeln.de} [contributor]
+  \item Joseph V. Casillas \email{joseph.casillas@rutgers.edu} [contributor]
+  \item Rudolf Siegel \email{rudolf.siegel@uni-saarland.de} [contributor]
+}
+
+}

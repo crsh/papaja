@@ -48,9 +48,11 @@ word_title_page <- function(x) {
 
     if(length(author_note) > 0) {
       author_note <- c(
-        "<div custom-style='Author'>", apa_terms$author_note, "</div>"
+        "<div custom-style='authornote-title'>", apa_terms$author_note, "</div>"
         , "\n"
+        , "<div custom-style='authornote'>"
         , paste(author_note, collapse = "\n\n")
+        , "</div>"
       )
     }
 
@@ -78,7 +80,6 @@ word_title_page <- function(x) {
 
   c(
     author_information
-    , "\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n"
     , author_note
     , "\n"
     , ifelse(is.null(x$abstract), "", abstract)

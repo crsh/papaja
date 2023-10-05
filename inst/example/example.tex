@@ -6,16 +6,19 @@
 \documentclass[
   man,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -34,20 +37,6 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={How to use papaja: An Example Manuscript Including Basic Instructions},
-  pdfauthor={Frederik Aust1},
-  pdflang={en-EN},
-  pdfkeywords={APA style, knitr, R, R markdown, papaja},
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={Blue},
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -59,13 +48,13 @@
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\BuiltInTok}[1]{#1}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
@@ -73,7 +62,7 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\ImportTok}[1]{#1}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
@@ -82,7 +71,7 @@
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
 \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
@@ -114,24 +103,28 @@
   \let\oldsubparagraph\subparagraph
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+% avoid brackets around text for \cite:
+\makeatletter
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+\newlength{\cslentryspacing}
+\setlength{\cslentryspacing}{0em}
+\usepackage{enumitem}
+\newlist{CSLReferences}{itemize}{1}
+\setlist[CSLReferences]{label={},
+  leftmargin=\cslhangindent,
+  itemindent=-1\cslhangindent,
+  parsep=\parskip,
+  itemsep=\cslentryspacing}
 \usepackage{calc}
 \newcommand{\CSLBlock}[1]{#1\hfill\break}
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
@@ -190,13 +183,13 @@
   {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-% \usepackage{etoolbox}
 \makeatletter
-\patchcmd{\HyOrg@maketitle}
+\usepackage{etoolbox}
+\patchcmd{\maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
-\patchcmd{\HyOrg@maketitle}
+\patchcmd{\maketitle}
   {\section{\protect\normalfont{\@title}}}
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
@@ -218,6 +211,20 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={How to use papaja: An Example Manuscript Including Basic Instructions},
+  pdfauthor={Frederik Aust1},
+  pdflang={en-EN},
+  pdfkeywords={APA style, knitr, R, R markdown, papaja},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{How to use \texttt{papaja}: An Example Manuscript Including Basic Instructions}
 \author{Frederik Aust\textsuperscript{1}}
@@ -250,22 +257,20 @@ to Word documents currently supports only a limited set of features.
 \begin{document}
 \maketitle
 
-\hypertarget{what-is-papaja}{%
-\section{What is papaja?}\label{what-is-papaja}}
+\section{What is papaja?}\label{what-is-papaja}
 
 Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility in science.
 For \emph{R} users, R Markdown has been suggested as one possible framework for reproducible analyses.
-\texttt{papaja} is a R-package in the making including a \href{https://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{https://www.rstudio.com/}{RStudio} to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
+\texttt{papaja} is a R-package in the making including a \href{https://rmarkdown.rstudio.com/}{R Markdown} template that can be used with (or without) \href{https://posit.co/}{RStudio} to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 The package uses the \LaTeX document class \href{http://www.ctan.org/pkg/apa6}{apa6} and a .docx-reference file, so you can create PDF documents, or Word documents if you have to.
 Moreover, \texttt{papaja} supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).
 In the following I will assume you know how to use R Markdown to conduct and comment your analyses.
 If this is not the case, I recommend you familiarize yourself with \href{https://rmarkdown.rstudio.com/}{R Markdown} first.
-I use \href{https://www.rstudio.com/}{RStudio} to create my documents, but the general process works with any text editor.
+I use \href{https://posit.co/}{RStudio} to create my documents, but the general process works with any text editor.
 
-\hypertarget{how-to-use-papaja}{%
-\section{How to use papaja}\label{how-to-use-papaja}}
+\section{How to use papaja}\label{how-to-use-papaja}
 
 Once you have installed \texttt{papaja} and all other \href{https://github.com/crsh/papaja\#requirements}{required software}, you can select the APA template when creating a new R Markdown file through the RStudio menus, see Figure~\ref{fig:menu}.
 When you click RStudio's \emph{Knit} button (see Figure~\ref{fig:knit}), \texttt{papaja}, \texttt{bookdown}, \texttt{rmarkdown,} and \texttt{knitr} work together to create an APA conform manuscript that includes both your text and the output of any embedded R code chunks within the manuscript.
@@ -274,7 +279,7 @@ When you click RStudio's \emph{Knit} button (see Figure~\ref{fig:knit}), \texttt
 
 \begin{figure}
 
-{\centering \includegraphics[width=5.19in]{../images/template_selection} 
+{\centering \includegraphics[width=5.69in]{../images/template_selection} 
 
 }
 
@@ -292,8 +297,7 @@ When you click RStudio's \emph{Knit} button (see Figure~\ref{fig:knit}), \texttt
 \caption{The Knit button in the RStudio.}\label{fig:knit}
 \end{figure}
 
-\hypertarget{printing-r-output}{%
-\subsection{Printing R output}\label{printing-r-output}}
+\subsection{Printing R output}\label{printing-r-output}
 
 Any output from R is included as you usually would using R Markdown.
 By default the R code will not be displayed in the final documents.
@@ -319,8 +323,7 @@ For example, to include summary statistics of your data you could use the follow
 
 But, surely, this is not what you want your submission to look like.
 
-\hypertarget{print-tables}{%
-\subsubsection{Print tables}\label{print-tables}}
+\subsubsection{Print tables}\label{print-tables}
 
 For prettier tables, I suggest you try \texttt{apa\_table()}, which builds on \texttt{knitr}'s \texttt{kable()}, and \texttt{apa\_num()}, which can be used to properly round and report numbers.
 
@@ -388,8 +391,7 @@ To place tables and figures in your text instead, set the \texttt{figsintext} pa
 The bottom line is, Word documents will be less polished than PDF.
 The resulting documents should suffice to enable collaboration with Wordy colleagues and prepare a journal submission with limited manual labor.
 
-\hypertarget{embed-plots}{%
-\subsubsection{Embed plots}\label{embed-plots}}
+\subsubsection{Embed plots}\label{embed-plots}
 
 As usual in R Markdown, you can embed R-generated plots into your document, see Figure~\ref{fig:beeplot}.
 
@@ -419,8 +421,7 @@ As usual in R Markdown, you can embed R-generated plots into your document, see 
 
 Again, as required by the APA guidelines, figures are deferred to the final pages of the document unless you set \texttt{figsintext} to \texttt{yes}.
 
-\hypertarget{referencing-figures-and-tables}{%
-\subsubsection{Referencing figures and tables}\label{referencing-figures-and-tables}}
+\subsubsection{Referencing figures and tables}\label{referencing-figures-and-tables}
 
 \texttt{papaja} builds on the \texttt{bookdown} package, which provides limited cross-referencing capabilities within documents.
 By default you can insert figure and table numbers into the text using \texttt{\textbackslash{}@ref(fig:chunk-name)} for figures or \texttt{\textbackslash{}@ref(tab:chunk-name)} for tables.
@@ -430,8 +431,7 @@ See the \href{https://bookdown.org/yihui/bookdown/cross-references.html}{great b
 Cross-referencing is currently not available for equations in \texttt{bookdown}.
 However, as anywhere in R Markdown documents you can use \LaTeX commands if the functionality is not provided by \texttt{rmarkdown}/\texttt{bookdown} and you don't need to create Word documents.
 
-\hypertarget{report-statistical-analyses}{%
-\subsubsection{Report statistical analyses}\label{report-statistical-analyses}}
+\subsubsection{Report statistical analyses}\label{report-statistical-analyses}
 
 \texttt{apa\_print()} will help you report the results of your statistical analyses.
 The function will format the contents of R objects and produce readily reportable text.
@@ -513,8 +513,7 @@ Dosage $\times$ Task $\times$ Valence & .049 & 0.39 & 2.69 & 20.20 & 2.67 & .743
 
 \end{table}
 
-\hypertarget{citations}{%
-\subsection{Citations}\label{citations}}
+\subsection{Citations}\label{citations}
 
 No manuscript is complete without citation.
 In order for citations to work, you need to supply a .bib-file to the \texttt{bibliography} parameter in the YAML front matter.
@@ -545,10 +544,9 @@ That's why papaja makes citing R and its packages easy:
 
 \texttt{r\_refs()} creates a BibTeX file containing citations for R and all currently loaded packages.
 \texttt{cite\_r()} takes these citations and turns them into readily reportable text.
-\texttt{my\_citation} now contains the following text that you can use in your document: R (Version 4.1.2; R Core Team, 2015) and the R-packages \emph{afex} (Version 1.0.1; Singmann, Bolker, Westfall, \& Aust, 2016), \emph{bindrcpp} (Müller, 2017), \emph{boot} (Version 1.3.28; Davison \& Hinkley, 1997), \emph{broom} (Version 0.7.12; Robinson, 2016), \emph{dplyr} (Version 1.0.8; Wickham \& Francois, 2016), \emph{emmeans} (Version 1.7.2; R. Lenth, 2018), \emph{estimability} (Version 1.3; R. V. Lenth, 2015), \emph{knitr} (Version 1.37; Xie, 2015), \emph{lme4} (Version 1.1.28; Bates, Mächler, Bolker, \& Walker, 2015), \emph{lsmeans} (Version 2.30.0; R. V. Lenth, 2016), \emph{Matrix} (Version 1.3.4; Bates \& Maechler, 2016), \emph{MBESS} (Version 4.9.0; Kelley, 2016), \emph{papaja} (Version 0.2.0; Aust \& Barth, 2015), \emph{reshape2} (Version 1.4.4; Wickham, 2007), \emph{rmarkdown} (Version 2.13; Allaire et al., 2016), \emph{testthat} (Version 3.1.2; Wickham, 2011), and \emph{tinylabels} (Version 0.2.3; Barth, 2022)
+\texttt{my\_citation} now contains the following text that you can use in your document: R (Version 4.3.1; R Core Team, 2015) and the R-packages \emph{afex} (Version 1.3.0; Singmann, Bolker, Westfall, \& Aust, 2016), \emph{bindrcpp} (Müller, 2017), \emph{boot} (Version 1.3.28.1; Davison \& Hinkley, 1997), \emph{broom} (Version 1.0.5; Robinson, 2016), \emph{dplyr} (Version 1.1.2; Wickham \& Francois, 2016), \emph{emmeans} (Version 1.8.6; R. Lenth, 2018), \emph{estimability} (Version 1.4.1; R. V. Lenth, 2015), \emph{knitr} (Version 1.43.7; Xie, 2015), \emph{lme4} (Version 1.1.33; Bates, Mächler, Bolker, \& Walker, 2015), \emph{lsmeans} (R. V. Lenth, 2016), \emph{Matrix} (Version 1.5.4.1; Bates \& Maechler, 2016), \emph{MBESS} (Version 4.9.2; Kelley, 2016), \emph{papaja} (Version 0.1.2; Aust \& Barth, 2015), \emph{reshape2} (Version 1.4.4; Wickham, 2007), \emph{rmarkdown} (Version 2.25; Allaire et al., 2016), \emph{testthat} (Version 3.1.10; Wickham, 2011), and \emph{tinylabels} (Version 0.2.3; Barth, 2022)
 
-\hypertarget{math}{%
-\subsection{Math}\label{math}}
+\subsection{Math}\label{math}
 
 If you need to report formulas, you can use the flexible \LaTeX syntax (it will work in Word documents, too).
 Inline math must be enclosed in \texttt{\$} or \texttt{\textbackslash{}(} and \texttt{\textbackslash{})} and the result will look like this: \(d' = z(H) - z(FA)\).
@@ -558,8 +556,7 @@ For larger formulas displayed equations are more appropriate; they are enclosed 
 d' = \frac{\mu_{old} - \mu_{new}}{\sqrt{0.5(\sigma^2_{old} + \sigma^2_{new})}}.
 \]
 
-\hypertarget{document-options}{%
-\subsection{Document options}\label{document-options}}
+\subsection{Document options}\label{document-options}
 
 This text is set as manuscript.
 If you want a thesis-like document you can change the \texttt{class} in the YAML front matter from \texttt{man} to \texttt{doc}.
@@ -570,8 +567,7 @@ When creating PDF documents, line numbering can be activated by setting the \tex
 Moreover, you can create lists of figure or table captions at the end of the document by setting \texttt{figurelist} or \texttt{tablelist} to \texttt{yes}, respectively.
 These option have no effect on Word documents.
 
-\hypertarget{last-words}{%
-\subsection{Last words}\label{last-words}}
+\subsection{Last words}\label{last-words}
 
 That's all I have; enjoy writing your manuscript.
 If you have any trouble or ideas for improvements, open an \href{https://github.com/crsh/papaja/issues}{issue} on GitHub or open a pull request.
@@ -579,72 +575,72 @@ If you want to contribute, take a look at the \href{https://github.com/crsh/papa
 Other than that, there are many output objects from analysis methods that we would like \texttt{apa\_print()} to support.
 Any new S3/S4-method for this function are always appreciated (e.g., \texttt{factanal}, \texttt{fa}, \texttt{lavaan}, \texttt{lmer}, or \texttt{glmer}).
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.5in}
 
-\hypertarget{refs}{}
-\begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-R-rmarkdown}{}}%
+\phantomsection\label{refs}
+\setlength{\cslentryspacing}{0em}
+\begin{CSLReferences}
+\bibitem[\citeproctext]{ref-R-rmarkdown}
 Allaire, J., Cheng, J., Xie, Y., McPherson, J., Chang, W., Allen, J., \ldots{} Hyndman, R. (2016). \emph{Rmarkdown: Dynamic documents for r}. Retrieved from \url{https://CRAN.R-project.org/package=rmarkdown}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-papaja}{}}%
+\bibitem[\citeproctext]{ref-R-papaja}
 Aust, F., \& Barth, M. (2015). \emph{Papaja: Create APA manuscripts with RMarkdown}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-tinylabels}{}}%
+\bibitem[\citeproctext]{ref-R-tinylabels}
 Barth, M. (2022). \emph{{tinylabels}: Lightweight variable labels}. Retrieved from \url{https://cran.r-project.org/package=tinylabels}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-lme4}{}}%
+\bibitem[\citeproctext]{ref-R-lme4}
 Bates, D., Mächler, M., Bolker, B., \& Walker, S. (2015). Fitting linear mixed-effects models using {lme4}. \emph{Journal of Statistical Software}, \emph{67}(1), 1--48. \url{https://doi.org/10.18637/jss.v067.i01}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-Matrix}{}}%
+\bibitem[\citeproctext]{ref-R-Matrix}
 Bates, D., \& Maechler, M. (2016). \emph{Matrix: Sparse and dense matrix classes and methods}. Retrieved from \url{https://CRAN.R-project.org/package=Matrix}
 
-\leavevmode\vadjust pre{\hypertarget{ref-bem_2011}{}}%
+\bibitem[\citeproctext]{ref-bem_2011}
 Bem, D. J. (2011). Feeling the future: Experimental evidence for anomalous retroactive influences on cognition and affect. \emph{Journal of Personality and Social Psychology}, \emph{100}(3), 407---425. \url{https://doi.org/10.1037/a0021524}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-boot}{}}%
+\bibitem[\citeproctext]{ref-R-boot}
 Davison, A. C., \& Hinkley, D. V. (1997). \emph{Bootstrap methods and their applications}. Cambridge: Cambridge University Press. Retrieved from \url{http://statwww.epfl.ch/davison/BMA/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-james_1890}{}}%
+\bibitem[\citeproctext]{ref-james_1890}
 James, W. (1890). \emph{The principles of psychology}. Holt: New York.
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-MBESS}{}}%
+\bibitem[\citeproctext]{ref-R-MBESS}
 Kelley, K. (2016). \emph{MBESS: The MBESS r package}. Retrieved from \url{https://CRAN.R-project.org/package=MBESS}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-emmeans}{}}%
+\bibitem[\citeproctext]{ref-R-emmeans}
 Lenth, R. (2018). \emph{Emmeans: Estimated marginal means, aka least-squares means}. Retrieved from \url{https://CRAN.R-project.org/package=emmeans}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-estimability}{}}%
+\bibitem[\citeproctext]{ref-R-estimability}
 Lenth, R. V. (2015). \emph{Estimability: Tools for assessing estimability of linear predictions}. Retrieved from \url{https://CRAN.R-project.org/package=estimability}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-lsmeans}{}}%
+\bibitem[\citeproctext]{ref-R-lsmeans}
 Lenth, R. V. (2016). Least-squares means: The {R} package {lsmeans}. \emph{Journal of Statistical Software}, \emph{69}(1), 1--33. \url{https://doi.org/10.18637/jss.v069.i01}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-bindrcpp}{}}%
+\bibitem[\citeproctext]{ref-R-bindrcpp}
 Müller, K. (2017). \emph{Bindrcpp: An 'rcpp' interface to active bindings}. Retrieved from \url{https://CRAN.R-project.org/package=bindrcpp}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-base}{}}%
+\bibitem[\citeproctext]{ref-R-base}
 R Core Team. (2015). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{http://www.R-project.org/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-broom}{}}%
+\bibitem[\citeproctext]{ref-R-broom}
 Robinson, D. (2016). \emph{Broom: Convert statistical analysis objects into tidy data frames}. Retrieved from \url{https://CRAN.R-project.org/package=broom}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-afex}{}}%
+\bibitem[\citeproctext]{ref-R-afex}
 Singmann, H., Bolker, B., Westfall, J., \& Aust, F. (2016). \emph{Afex: Analysis of factorial experiments}. Retrieved from \url{https://CRAN.R-project.org/package=afex}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-reshape2}{}}%
+\bibitem[\citeproctext]{ref-R-reshape2}
 Wickham, H. (2007). Reshaping data with the {reshape} package. \emph{Journal of Statistical Software}, \emph{21}(12), 1--20. Retrieved from \url{http://www.jstatsoft.org/v21/i12/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-testthat}{}}%
+\bibitem[\citeproctext]{ref-R-testthat}
 Wickham, H. (2011). Testthat: Get started with testing. \emph{The R Journal}, \emph{3}, 5--10. Retrieved from \url{http://journal.r-project.org/archive/2011-1/RJournal_2011-1_Wickham.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-dplyr}{}}%
+\bibitem[\citeproctext]{ref-R-dplyr}
 Wickham, H., \& Francois, R. (2016). \emph{Dplyr: A grammar of data manipulation}. Retrieved from \url{https://CRAN.R-project.org/package=dplyr}
 
-\leavevmode\vadjust pre{\hypertarget{ref-R-knitr}{}}%
+\bibitem[\citeproctext]{ref-R-knitr}
 Xie, Y. (2015). \emph{Dynamic documents with {R} and knitr} (2nd ed.). Boca Raton, Florida: Chapman; Hall/CRC. Retrieved from \url{http://yihui.org/knitr/}
 
 \end{CSLReferences}

@@ -1,7 +1,7 @@
 Package: papaja
 Title: Prepare American Psychological Association Journal Articles with
   R Markdown
-Version: 0.1.1.9001
+Version: 0.1.2.9000
 Description: Tools to create dynamic, submission-ready manuscripts, which
   conform to American Psychological Association manuscript guidelines. We
   provide R Markdown document formats for manuscripts (PDF and Word) and
@@ -15,7 +15,7 @@ Authors@R: c(
     , person("Joseph V.", "Casillas", email = "joseph.casillas@rutgers.edu", role = c("ctb"))
     , person("Rudolf", "Siegel", email = "rudolf.siegel@uni-saarland.de", role = c("ctb"))
   )
-Date: 2022-07-04
+Date: 2023-09-28
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
@@ -38,7 +38,7 @@ Suggests:
   beeswarm,
   boot,
   car,
-  dplyr,
+  dplyr (>= 1.1.0),
   effectsize (>= 0.4.4),
   emmeans,
   ggforce,
@@ -58,7 +58,7 @@ SystemRequirements: Rendering the document template requires
   such as TinyTeX (>= 0.12; https://yihui.org/tinytex/)
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr, R.rsp
 Language: en-US
 Roxygen: list(markdown = TRUE)

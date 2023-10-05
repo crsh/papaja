@@ -430,12 +430,13 @@ print_p <- apa_p
 #'   should be determined for each element of `x` separately (the default),
 #'   or for the complete vector `x`.
 #' @inherit apa_num return
+#' @inheritParams base::formatC
 #' @seealso [apa_num()], [apa_p()]
 #' @examples
 #' apa_df(c(1, 1.23151))
 #' @export
 
-apa_df <- function(x, digits = 2L, elementwise = TRUE) {
+apa_df <- function(x, digits = 2L, big.mark = "", elementwise = TRUE) {
 
   if(is.null(x))    return(NULL)
   if(is.integer(x)) return(apa_num(x))
@@ -455,7 +456,7 @@ apa_df <- function(x, digits = 2L, elementwise = TRUE) {
     digits <- 0L
   }
 
-  apa_num(x, digits = digits)
+  apa_num(x, digits = digits, big.mark = big.mark)
 }
 
 #' @rdname apa_df

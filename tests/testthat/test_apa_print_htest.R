@@ -48,7 +48,14 @@ test_that(
 #     expect_equal(t_test_output$full, "$\\Delta M = 1.58$, 95\\% CI $[-3.36$, $0.20]$, $t(18) = -1.86$, $p = .079$")
 
 
-    t_test <- t.test(extra ~ group, data = sleep, paired = TRUE)
+    t_test <- with(
+      sleep
+      , t.test(
+        extra[group == "1"]
+        , extra[group == "2"]
+        , paired = TRUE
+      )
+    )
     t_test_output <- apa_print(t_test)
     expect_apa_results(
       t_test_output
@@ -136,7 +143,15 @@ test_that(
     expect_identical(wilcox_test_output$full, "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
 
 
-    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, exact = FALSE)
+    wilcox_test <- with(
+      sleep
+      , wilcox.test(
+        extra[group == "1"]
+        , extra[group == "2"]
+        , paired = TRUE
+        , exact = FALSE
+      )
+    )
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_apa_results(

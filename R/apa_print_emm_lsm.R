@@ -151,7 +151,7 @@ apa_print.summary_emm <- function(
     if(is.null(adjust)) {
       conf_level <- paste0(conf_level, "\\% CI")
     } else {
-      conf_level <- paste0("$", conf_level, "\\%\\ \\mathrm{CI}_\\mathrm{\\scriptsize ", adjust["conf.int"], "}$")
+      conf_level <- paste0("$", conf_level, "\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle ", adjust["conf.int"], "}$")
     }
   }
 
@@ -245,7 +245,7 @@ apa_print.summary_emm <- function(
     variable_labels(tidy_x[[p_value]]) <- switch(
       p_value
       , "p.value" = "$p$"
-      , "adj.p.value" = paste0("$p_\\mathrm{\\scriptsize ", adjust["p.value"], "}$")
+      , "adj.p.value" = paste0("$p_\\mathrm{\\scriptstyle ", adjust["p.value"], "}$")
     )
   }
 

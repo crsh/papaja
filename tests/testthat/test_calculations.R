@@ -118,6 +118,18 @@ test_that(
 )
 
 test_that(
+  "Within-subjects confidence intervals: Only between-subejcts factors"
+  , {
+    data <- npk
+    data$id <- seq_len(nrow(data))
+    expect_error(
+      wsci(data = data, id = "id", dv = "yield", factors = "N", method = "Morey")
+      , regexp = "No within-subjects factor"
+    )
+  }
+)
+
+test_that(
   "add_effect_sizes: Two-way between-subjects design"
   , {
     apa_variance_table <- structure(
@@ -347,5 +359,12 @@ test_that(
   , {
     expect_message(conf_int(1), "Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
     expect_message(conf_int(NA), "Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
+  }
+)
+
+test_that(
+  "add_mse(): Warn if information is not sufficient"
+  , {
+    expect_warning(papaja:::add_mse(data.frame()))
   }
 )
