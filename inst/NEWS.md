@@ -1,3 +1,10 @@
+# papaja 0.1.1.9001
+
+### Existing functions
+
+- `generate_author_yml()`
+    - Now preserves affiliation order for each author (see #569).
+
 # papaja 0.1.1
 
 - Maintenance update: Adjuted unit tests to avoid removal from CRAN
