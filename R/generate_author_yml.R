@@ -73,7 +73,8 @@ generate_author_yml <- function(
     )
 
     authors <- sapply(seq_along(researchers), function(i) {
-      i_affil = paste(affil_numeric[affil_order %in% unlist(researchers[i])], collapse = ",")
+      i_affil <- affil_numeric[match(unlist(researchers[i]), names(affil_numeric))]
+      i_affil <- paste(i_affil, collapse = ",")
 
       if (names(researchers)[i] == corres_name) {
         extra <- as.character(

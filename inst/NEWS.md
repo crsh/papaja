@@ -1,8 +1,11 @@
-
 # Upcoming release
 
 - For ANOVA methods, *MSE*s are again returned if requested by the user (reported by @Sashpta, [#562](https://github.com/crsh/papaja/issues/562)). The global default for reporting *MSE*s now depends on the [**effectsize**](https://CRAN.r-project.org/package=effectsize) package: If **effectsize** is installed, the default for reporting *MSE*s is `FALSE`, if **effectsize** is not installed, the default is `TRUE`.
 
+### Existing functions
+
+- `generate_author_yml()`
+    - Now preserves affiliation order for each author (see #569).
 
 # papaja 0.1.2
 
