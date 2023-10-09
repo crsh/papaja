@@ -452,6 +452,10 @@ add_effect_sizes <- function(x, es = "ges", observed = NULL, intercept = FALSE) 
 #' @keywords internal
 
 add_mse <- function(x) {
+  if(!inherits(x, "data.frame")) {
+    stop("The first argument to add_mse() must inherit from class 'data.frame', but ", encodeString(deparse(substitute(x)), quote = "'"), " does not.")
+  }
+
   if(!is.null(x$sumsq_err) & !is.null(x$df.residual)) {
     x$mse <- x$sumsq_err / x$df.residual
     tinylabels::variable_label(x$mse) <- "$\\mathit{MSE}$"
