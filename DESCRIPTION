@@ -52,7 +52,8 @@ Suggests:
   R.rsp,
   skimr,
   spelling,
-  testthat
+  testthat,
+  vdiffr
 SystemRequirements: Rendering the document template requires
   pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution,
   such as TinyTeX (>= 0.12; https://yihui.org/tinytex/)
