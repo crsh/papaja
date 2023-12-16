@@ -9,7 +9,7 @@
 #'   It is possible to reference sections, figures, or tables in the revised
 #'   manuscript, either by their number or by page. To do so, specify a path
 #'   to the revised manuscript (omitting the file extension) in the YAML
-#'   front matter (i.e., `manuscript-src: file_name`) and ensure that
+#'   front matter (i.e., `manuscript-tex: file_name`) and ensure that
 #'   you retain the `aux` file when rendering the revised manuscript. To do
 #'   so, set the following option in a code chunk of the revised manuscript:
 #'   `options(tinytex.clean = FALSE)`. To reference section, figure, or
@@ -134,7 +134,7 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #'   see [knitr::asis_output()].
 #' @export
 
-quote_from_tex <- function(x, file = paste0(rmarkdown::metadata[["manuscript-file"]], ".tex")) {
+quote_from_tex <- function(x, file = paste0(rmarkdown::metadata[["manuscript-tex"]], ".tex")) {
   label_warning <- paste0("Labelled quote(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file)
 
   if(length(x) > 1) {
