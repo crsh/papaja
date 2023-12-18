@@ -128,3 +128,27 @@ test_that("generate_author_yml enforces unique authors/affiliations", {
   )
 
 })
+
+test_that("generate_author_yml preserves affiliation order", {
+
+  text <- generate_author_yml(
+    researchers = list(
+      "James H. Conigrave" = c("IPPE", "UQ"),
+      "Michael Noetel" = c("UQ", "IPPE")
+    ),
+    affiliations = list("IPPE" = "Institute for Postitive Psychology and Education",
+                        "UQ" = "University of Queensland"),
+    corres_email = "james@conigrave.com",
+    corres_address = "33 Berry Street, North Sydney, NSW, Australia",
+    corres_name = "James H. Conigrave"
+  )
+
+  matches <- gregexpr("(?<=affiliation   : \")\\d+(,\\d+)*", text, perl=TRUE)
+
+  all_affiliations <- regmatches(text, matches)[[1]]
+
+  # Get the second instance
+  second_affiliation <- all_affiliations[2]
+  expect_equal("2,1", second_affiliation)
+
+})

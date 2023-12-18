@@ -9,7 +9,7 @@
     , papaja.terms = localize(lang)
     , papaja.na_string = "NA"
     , papaja.plot_colors = "greyscale"
-    , papaja.mse = TRUE
+    , papaja.mse = !package_available("effectsize")
     , papaja.sphericity_correction = "GG"
   )
 

@@ -1,7 +1,7 @@
 Package: papaja
 Title: Prepare American Psychological Association Journal Articles with
   R Markdown
-Version: 0.1.2
+Version: 0.1.2.9000
 Description: Tools to create dynamic, submission-ready manuscripts, which
   conform to American Psychological Association manuscript guidelines. We
   provide R Markdown document formats for manuscripts (PDF and Word) and

@@ -361,3 +361,12 @@ test_that(
     expect_message(conf_int(NA), "Less than two non-missing values in at least one cell of your design: Thus, no confidence interval can be computed.")
   }
 )
+
+test_that(
+  "add_mse(): Warn if information is not sufficient, error if x is not a data frame"
+  , {
+    object <- 1:4
+    expect_error(add_mse(object), "The first argument to add_mse() must inherit from class 'data.frame', but 'object' does not.", fixed = TRUE)
+    expect_warning(add_mse(data.frame()), "Mean-squared errors requested, but necessary information not available.", fixed = TRUE)
+  }
+)
