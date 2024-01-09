@@ -47,6 +47,8 @@ lookup_names <- c(
   , "delta"                     = "estimate"
   , "proportion"                = "estimate"
   , "p"                         = "estimate"
+  # binomial test:
+  , "probability.of.success"    = "estimate"
   # estimate from effectsize package
   , "Eta2"             = "estimate"
   , "Eta2_partial"     = "estimate"
@@ -167,6 +169,7 @@ lookup_labels <- c(
   , "difference.in.proportions" = "$\\Delta \\hat\\pi$"
   , "proportion"                = "$\\hat\\pi$"
   , "p"                         = "$\\hat\\pi$"
+  , "probability.of.success"    = "$\\hat\\pi$"
   , "delta"                     = "$\\delta$"
   # estimate from effectsize package
   , "Eta2"             = "$\\hat{\\eta}^2$"

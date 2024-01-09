@@ -307,6 +307,22 @@ test_that(
 )
 
 test_that(
+  "Binomial test"
+  , {
+    binom_test_output <- binom.test(10, 20, p = .8, conf.level = .9) |>
+      papaja::apa_print()
+    expect_apa_results(
+      binom_test_output
+      , labels = list(
+        estimate   = "$\\hat\\pi$"
+        , conf.int = "90\\% CI"
+        , p.value  = "$p$"
+      )
+    )
+  }
+)
+
+test_that(
   "Bartlett test"
   , {
     bartlett_test <- bartlett.test(count ~ spray, data = InsectSprays)
