@@ -131,6 +131,9 @@ apa_print.htest <- function(
     x_list
     , stringsAsFactors = FALSE
   )
+  y$number.of.successes <- NULL
+  y$number.of.trials <- NULL
+
   if(!identical(conf_int, list(NULL))) y$conf.int <- conf_int
 
   # sanitize table ----

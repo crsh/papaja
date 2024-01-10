@@ -6,6 +6,7 @@
 
 - `generate_author_yml()`
     - Now preserves affiliation order for each author (see #569).
+- `apa_print()` now supports output from `stats::binom.test()` (see [#576](https://github.com/crsh/papaja/issues/576)).
 
 # papaja 0.1.2
 
