@@ -282,8 +282,8 @@ apa_print.BFBayesFactor <- function(
     x_df <- rename_column(x_df, old_bf_colname, bf_colname)
   }
 
-  scientific <- any(x_df[[bf_colname]] < scientific_threshold["min"]) ||
-    any(x_df[[bf_colname]] > scientific_threshold["max"])
+  scientific <- isTRUE(any(x_df[[bf_colname]] < scientific_threshold["min"]) ||
+    any(x_df[[bf_colname]] > scientific_threshold["max"]))
 
   if(scientific) {
     args_stat$format <- "e"
