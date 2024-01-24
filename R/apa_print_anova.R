@@ -415,6 +415,21 @@ apa_print.anova <- function(
         , simplify = TRUE
       )
     )
+  } else if(any(grepl("Deviance", object_heading))) {
+    x$Term <-rownames(x)
+    y <- canonize(x)
+    y <- remove_residuals_row(y)
+    y <- beautify(y, ...)
+    return(
+      glue_apa_results(
+        y
+        , est_glue = construct_glue(y, "estimate")
+        , stat_glue = construct_glue(y, "statistic")
+        , in_paren = in_paren
+        , simplify = TRUE
+      )
+    )
+
   } else if(any(grepl("Satterthwaite|Kenward", object_heading))) {
     # lmerTest::anova.merModLmerTest -------------------------------------------
 

@@ -46,13 +46,16 @@ Suggests:
   latex2exp,
   lme4,
   lmerTest,
+  MASS,
   MBESS,
   multcomp,
   nlme,
+  nnet,
   R.rsp,
   skimr,
   spelling,
-  testthat
+  testthat,
+  VGAM
 SystemRequirements: Rendering the document template requires
   pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution,
   such as TinyTeX (>= 0.12; https://yihui.org/tinytex/)

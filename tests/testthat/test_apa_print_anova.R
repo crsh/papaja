@@ -512,12 +512,40 @@ test_that(
 )
 
 test_that(
-  "Analysis of deviance from VGAM package"
+  "Analysis of deviance from car"
   , {
-    fit <- VGAM::vglm( gear~ mpg, data = mtcars, family = VGAM::cumulative)
-    car::Anova(fit) |> class() # papaja::apa_print()
+    fit <- bwt.mu <- nnet::multinom(low ~ ., MASS::birthwt)
+    car_out <- papaja::apa_print(car::Anova(fit))
+    expect_apa_results(
+      car_out
+      , labels = list(
+        term          = "Term"
+        , statistic   = "$\\chi^2$"
+        , df          = "$\\mathit{df}$"
+        , p.value     = "$p$"
+      )
+    )
+    # Example 1: a proportional odds model fitted to pneumo.
+    set.seed(1)
+    pneumo <- transform(VGAM::pneumo, let = log(exposure.time), x3 = runif(8))
+    fit1 <- VGAM::vglm(cbind(normal, mild, severe) ~ let     , VGAM::propodds, pneumo)
+    fit2 <- VGAM::vglm(cbind(normal, mild, severe) ~ let + x3, VGAM::propodds, pneumo)
+    fit3 <- VGAM::vglm(cbind(normal, mild, severe) ~ let + x3, VGAM::cumulative, pneumo)
+    car_out <- apa_print(car::Anova(fit1, type = 3))
+    expect_apa_results(
+      car_out
+      , labels = list(
+        term          = "Term"
+        , statistic   = "$\\chi^2$"
+        , df          = "$\\mathit{df}$"
+        , p.value     = "$p$"
+      )
+    )
+
+
   }
 )
+
 
 # restore previous options
  options(op)

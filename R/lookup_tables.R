@@ -84,6 +84,7 @@ lookup_names <- c(
   , "F"         = "statistic"
   , "F.ratio"   = "statistic"
   , "LRT"       = "statistic"
+  , "LR.Chisq"  = "statistic"
   , "Chisq"     = "statistic"
   , "chisq"     = "statistic"
   , "X.squared" = "statistic"
@@ -151,7 +152,7 @@ lookup_labels <- c(
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
   , "alternative" = "$\\mathcal{H}_1$"
-  , "Deviance" = "$\\mathit{Dev}$"
+  , "Deviance"   = "$\\mathit{Dev}$"
   , "Resid..Dev" = "$\\mathit{Dev}_{\\mathrm{res}}$"
   # term
   , "Effect"     = "Effect"
@@ -206,6 +207,7 @@ lookup_labels <- c(
   , "F.ratio"   = "$F$"
   , "approx.F"  = "$F$"
   , "LRT"       = "$\\chi^2$"
+  , "LR.Chisq"  = "$\\chi^2$"
   , "chisq"     = "$\\chi^2$"
   , "Chisq"     = "$\\chi^2$"
   , "X.squared" = "$\\chi^2$"
@@ -245,7 +247,6 @@ lookup_labels <- c(
   , "denom.df"   = "$\\mathit{df}_{\\mathrm{res}}$"
   , "den.df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   , "Res.Df"     = "$\\mathit{df}_{\\mathrm{res}}$"
-  , "Resid..Dev" = "$\\mathit{df}_{\\mathrm{res}}$"
   # p.value
   , "p.value"     = "$p$"
   , "Pr...t.."    = "$p$"
