@@ -23,6 +23,8 @@ lookup_names <- c(
   , "BIC"     = "BIC"
   , "npar"    = "n.parameters"
   , "alternative" = "alternative"
+  , "Deviance"    = "deviance"
+  , "Resid..Dev"  = "residual.deviance" # from broom
   # term
   , "Effect"     = "term"
   , "Term"       = "term"
@@ -121,6 +123,7 @@ lookup_names <- c(
   , "denom.df"   = "df.residual"
   , "den.df"     = "df.residual"
   , "Res.Df"     = "df.residual"
+  , "Resid..Df"  = "df.residual"
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
@@ -148,6 +151,8 @@ lookup_labels <- c(
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
   , "alternative" = "$\\mathcal{H}_1$"
+  , "Deviance" = "$\\mathit{Dev}$"
+  , "Resid..Dev" = "$\\mathit{Dev}_{\\mathrm{res}}$"
   # term
   , "Effect"     = "Effect"
   , "Term"       = "Term"
@@ -240,6 +245,7 @@ lookup_labels <- c(
   , "denom.df"   = "$\\mathit{df}_{\\mathrm{res}}$"
   , "den.df"     = "$\\mathit{df}_{\\mathrm{res}}$"
   , "Res.Df"     = "$\\mathit{df}_{\\mathrm{res}}$"
+  , "Resid..Dev" = "$\\mathit{df}_{\\mathrm{res}}$"
   # p.value
   , "p.value"     = "$p$"
   , "Pr...t.."    = "$p$"

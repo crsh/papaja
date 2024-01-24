@@ -511,5 +511,13 @@ test_that(
   }
 )
 
+test_that(
+  "Analysis of deviance from VGAM package"
+  , {
+    fit <- VGAM::vglm( gear~ mpg, data = mtcars, family = VGAM::cumulative)
+    car::Anova(fit) |> class() # papaja::apa_print()
+  }
+)
+
 # restore previous options
  options(op)
