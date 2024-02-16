@@ -270,12 +270,7 @@ apa_print.summary_emm <- function(
   } else {
     stop("Could not determine names to address each result by.")
   }
-
-  terms_sanitized <- gsub(
-    pattern = "^_"
-    , replacement = ""
-    , x = sanitize_terms(contrast_row_names)
-  )
+  terms_sanitized <- sanitize_terms(contrast_row_names)
 
   ## Mark test families (see below)
   if(!is.null(attr(x, "famSize"))) {

@@ -373,8 +373,8 @@ reporting <em>MSE</em>s is <code>FALSE</code>, if
 <li><code>apa_print()</code> now supports output from
 <code>stats::binom.test()</code> (see <a href="https://github.com/crsh/papaja/issues/576">#576</a>).</li>
 <li><code>sanitize_terms()</code> now also replaces multiple consecutive
-underscores with a single underscore. This affects term names in output
-from <code>apa_print()</code>.</li>
+underscores with a single underscore and removes leading underscores.
+This affects term names in output from <code>apa_print()</code>.</li>
 <li><code>apa_print()</code> now returns an output object that is
 consistent with other output from <code>apa_print()</code>
 <ul>

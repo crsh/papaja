@@ -56,6 +56,7 @@ sanitize_terms.character <- function(x, standardized = FALSE) {
   x <- gsub(" \\+ ", "_", x)                        # Replace '+' in model names
   x <- gsub("\\W", "_", x)                          # Replace non-alphanumeric characters with "_"
   x <- gsub("_+", "_", x)                           # Replace multiple consecutive underscores with "_"
+  x <- gsub("^_", "", x)                            # Remove leading underscores
   x
 }
 
