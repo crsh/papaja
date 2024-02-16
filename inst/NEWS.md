@@ -7,6 +7,10 @@
 - `generate_author_yml()`
     - Now preserves affiliation order for each author (see #569).
 - `apa_print()` now supports output from `stats::binom.test()` (see [#576](https://github.com/crsh/papaja/issues/576)).
+- `sanitize_terms()` now also replaces multiple consecutive underscores with a single underscore and removes leading underscores. This affects term names in output from `apa_print()`.
+- `apa_print()` now returns an output object that is consistent with other output from `apa_print()`
+  - The table element does not have row names.
+  - Term names are now consistently constructed with `sanitize_terms()`.
 
 # papaja 0.1.2
 
