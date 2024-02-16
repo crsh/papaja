@@ -257,27 +257,24 @@ apa_print.summary_emm <- function(
   ## Add contrast names
   # rownames(tidy_x) <- if(!is.null(contrast_names)) contrast_names else tidy_x$contrast
   # tidy_x <- tidy_x[, which(colnames(tidy_x) != "contrast")]
+
   if(length(factors) > 1) {
     contrast_row_names <- apply(
       tidy_x[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])]
-      , 1
-      , paste
+      , MARGIN = 1L
+      , FUN = paste
       , collapse = "_"
     )
   } else if(length(factors) == 1) {
-    contrast_row_names <- tidy_x[, factors]
+    contrast_row_names <- tidy_x[, factors, drop = TRUE]
   } else {
     stop("Could not determine names to address each result by.")
   }
 
-  terms_sanitized <- sanitize_terms(
-    gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
-      "^\\_|\\_(\\_)", "\\1"
-      , gsub(
-        " |\\.", ""
-        , gsub("\\.0+$", "", contrast_row_names) # Removes trailing zero-digits for numeric predictors
-      )
-    )
+  terms_sanitized <- gsub(
+    pattern = "^_"
+    , replacement = ""
+    , x = sanitize_terms(contrast_row_names)
   )
 
   ## Mark test families (see below)
