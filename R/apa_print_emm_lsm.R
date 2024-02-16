@@ -167,7 +167,7 @@ apa_print.summary_emm <- function(
     stat_colnames <- c("statistic", df_colname, p_value)
   }
 
-  # Assamble table
+  # Assemble table
 
   ## Add split variables
   split_by <- attr(x, "by.vars") # lsmeans
@@ -270,7 +270,7 @@ apa_print.summary_emm <- function(
     stop("Could not determine names to address each result by.")
   }
 
-  rownames(tidy_x) <- sanitize_terms(
+  terms_sanitized <- sanitize_terms(
     gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
       "^\\_|\\_(\\_)", "\\1"
       , gsub(
@@ -336,7 +336,7 @@ apa_print.summary_emm <- function(
     , est_glue = est_glue(tidy_x)
     , stat_glue = stat_glue(tidy_x)
     , in_paren = in_paren
-    , term_names = make.names(rownames(tidy_x))
+    , term_names = make.names(terms_sanitized)
   )
 
   ## Mark test families
