@@ -541,8 +541,24 @@ test_that(
         , p.value     = "$p$"
       )
     )
+  }
+)
 
-
+test_that(
+  "Analysis of deviance from the stats package"
+  , {
+    # From stats::glm() examples section:
+    ## Dobson (1990) Page 93: Randomized Controlled Trial :
+    counts <- c(18,17,15,20,10,20,25,13,12)
+    outcome <- gl(3,1,9)
+    treatment <- gl(3,3)
+    data.frame(treatment, outcome, counts) # showing data
+    glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+    apa_print(anova(glm.D93, test = "Chisq"))
+    apa_print(anova(glm.D93, test = "Cp"))
+    apa_print(anova(glm.D93, test = "LRT"))
+    apa_print(car::Anova(glm.D93, test.statistic = "LR"))
+    apa_print(anova(glm.D93, test = "Rao"))
   }
 )
 

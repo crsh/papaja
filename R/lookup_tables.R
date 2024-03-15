@@ -102,6 +102,8 @@ lookup_names <- c(
   , "logbf01"      = "statistic"
   , "Bartlett.s.K.2"          = "statistic"
   , "Bartlett.s.K.squared"    = "statistic"
+  , "Rao" = "statistic"
+  , "Cp"  = "statistic"
   # df, df.residual
   , "multivariate.df1" = "multivariate.df"
   , "multivariate.df2" = "multivariate.df.residual"
@@ -128,6 +130,7 @@ lookup_names <- c(
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
+  , "Pr..Chi."   = "p.value"
   , "Pr..F."     = "p.value"
   , "Pr..PB."    = "p.value"
   , "Pr...t.."   = "p.value"
@@ -225,6 +228,8 @@ lookup_labels <- c(
   , "logbf01"      = "$\\log \\mathrm{BF}_{\\textrm{01}}$"
   , "Bartlett.s.K.2"          = "$K^2$"
   , "Bartlett.s.K.squared"    = "$K^2$"
+  , "Rao" = "$\\mathit{RS}$"
+  , "Cp"  = "$C_p$"
   # df, df.residual
   , "multivariate.df" = "$\\mathit{df}$"
   , "multivariate.df.residual" = "$\\mathit{df}_{\\mathrm{res}}$"
@@ -253,6 +258,7 @@ lookup_labels <- c(
   , "Pr...z.."    = "$p$"
   , "pvalues"     = "$p$"
   , "Pr..Chisq."  = "$p$"
+  , "Pr..Chi."    = "$p$"
   , "Pr..F."      = "$p$"
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"

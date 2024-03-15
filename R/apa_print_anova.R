@@ -1,9 +1,10 @@
-#' Typeset Statistical Results from ANOVA
+#' Typeset Statistical Results from Analysis of Variance (or Deviance)
 #'
-#' These methods take objects from various R functions that calculate ANOVA to
-#' create formatted character strings to report the results in accordance with
-#' APA manuscript guidelines. For `anova`-objects from model comparisons see
-#' \code{\link{apa_print.list}}.
+#' These methods take objects from various R functions that calculate analysis
+#' of variance (i.e., ANOVA) or analysis of deviance. They create formatted
+#' character strings to report the results in accordance with APA manuscript
+#' guidelines. For `anova`-objects from model comparisons see
+#' [apa_print.list()].
 #'
 #' @param x An object containing the results from an analysis of variance ANOVA
 #' @param correction Character. For repeated-measures ANOVA, the type of
@@ -419,6 +420,12 @@ apa_print.anova <- function(
     x$Term <-rownames(x)
     y <- canonize(x)
     y <- remove_residuals_row(y)
+    y$df.residual <- NULL
+    if(is.null(y$statistic)) {
+      y$statistic <- y$deviance
+      variable_label(y$statistic) <- "$\\chi^2$"
+      y$deviance  <- NULL
+    }
     y <- beautify(y, ...)
     return(
       glue_apa_results(
