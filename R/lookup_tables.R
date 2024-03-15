@@ -23,6 +23,8 @@ lookup_names <- c(
   , "BIC"     = "BIC"
   , "npar"    = "n.parameters"
   , "alternative" = "alternative"
+  , "Deviance"    = "deviance"
+  , "Resid..Dev"  = "residual.deviance" # from broom
   # term
   , "Effect"     = "term"
   , "Term"       = "term"
@@ -82,6 +84,7 @@ lookup_names <- c(
   , "F"         = "statistic"
   , "F.ratio"   = "statistic"
   , "LRT"       = "statistic"
+  , "LR.Chisq"  = "statistic"
   , "Chisq"     = "statistic"
   , "chisq"     = "statistic"
   , "X.squared" = "statistic"
@@ -99,6 +102,8 @@ lookup_names <- c(
   , "logbf01"      = "statistic"
   , "Bartlett.s.K.2"          = "statistic"
   , "Bartlett.s.K.squared"    = "statistic"
+  , "Rao" = "statistic"
+  , "Cp"  = "statistic"
   # df, df.residual
   , "multivariate.df1" = "multivariate.df"
   , "multivariate.df2" = "multivariate.df.residual"
@@ -121,9 +126,11 @@ lookup_names <- c(
   , "denom.df"   = "df.residual"
   , "den.df"     = "df.residual"
   , "Res.Df"     = "df.residual"
+  , "Resid..Df"  = "df.residual"
   # p.value
   , "p.value"    = "p.value"
   , "Pr..Chisq." = "p.value"
+  , "Pr..Chi."   = "p.value"
   , "Pr..F."     = "p.value"
   , "Pr..PB."    = "p.value"
   , "Pr...t.."   = "p.value"
@@ -148,6 +155,8 @@ lookup_labels <- c(
   , "BIC"     = "$\\mathit{BIC}$"
   , "npar"    = "$k$"
   , "alternative" = "$\\mathcal{H}_1$"
+  , "Deviance"   = "$\\mathit{Dev}$"
+  , "Resid..Dev" = "$\\mathit{Dev}_{\\mathrm{res}}$"
   # term
   , "Effect"     = "Effect"
   , "Term"       = "Term"
@@ -201,6 +210,7 @@ lookup_labels <- c(
   , "F.ratio"   = "$F$"
   , "approx.F"  = "$F$"
   , "LRT"       = "$\\chi^2$"
+  , "LR.Chisq"  = "$\\chi^2$"
   , "chisq"     = "$\\chi^2$"
   , "Chisq"     = "$\\chi^2$"
   , "X.squared" = "$\\chi^2$"
@@ -218,6 +228,8 @@ lookup_labels <- c(
   , "logbf01"      = "$\\log \\mathrm{BF}_{\\textrm{01}}$"
   , "Bartlett.s.K.2"          = "$K^2$"
   , "Bartlett.s.K.squared"    = "$K^2$"
+  , "Rao" = "$\\mathit{RS}$"
+  , "Cp"  = "$C_p$"
   # df, df.residual
   , "multivariate.df" = "$\\mathit{df}$"
   , "multivariate.df.residual" = "$\\mathit{df}_{\\mathrm{res}}$"
@@ -246,6 +258,7 @@ lookup_labels <- c(
   , "Pr...z.."    = "$p$"
   , "pvalues"     = "$p$"
   , "Pr..Chisq."  = "$p$"
+  , "Pr..Chi."    = "$p$"
   , "Pr..F."      = "$p$"
   , "Pr..PB."     = "$p$"
   , "adj.p.value" = "$p_\\mathrm{adj}$"

@@ -511,5 +511,57 @@ test_that(
   }
 )
 
+test_that(
+  "Analysis of deviance from car"
+  , {
+    fit <- bwt.mu <- nnet::multinom(low ~ ., MASS::birthwt)
+    car_out <- papaja::apa_print(car::Anova(fit))
+    expect_apa_results(
+      car_out
+      , labels = list(
+        term          = "Term"
+        , statistic   = "$\\chi^2$"
+        , df          = "$\\mathit{df}$"
+        , p.value     = "$p$"
+      )
+    )
+    # Example 1: a proportional odds model fitted to pneumo.
+    set.seed(1)
+    pneumo <- transform(VGAM::pneumo, let = log(exposure.time), x3 = runif(8))
+    fit1 <- VGAM::vglm(cbind(normal, mild, severe) ~ let     , VGAM::propodds, pneumo)
+    fit2 <- VGAM::vglm(cbind(normal, mild, severe) ~ let + x3, VGAM::propodds, pneumo)
+    fit3 <- VGAM::vglm(cbind(normal, mild, severe) ~ let + x3, VGAM::cumulative, pneumo)
+    car_out <- apa_print(car::Anova(fit1, type = 3))
+    expect_apa_results(
+      car_out
+      , labels = list(
+        term          = "Term"
+        , statistic   = "$\\chi^2$"
+        , df          = "$\\mathit{df}$"
+        , p.value     = "$p$"
+      )
+    )
+  }
+)
+
+test_that(
+  "Analysis of deviance from the stats package"
+  , {
+    # From stats::glm() examples section:
+    ## Dobson (1990) Page 93: Randomized Controlled Trial :
+    counts <- c(18,17,15,20,10,20,25,13,12)
+    outcome <- gl(3,1,9)
+    treatment <- gl(3,3)
+    data.frame(treatment, outcome, counts) # showing data
+    glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+    apa_print(anova(glm.D93, test = "Chisq"))
+    apa_print(anova(glm.D93, test = "Cp"))
+    apa_print(anova(glm.D93, test = "LRT"))
+    apa_print(car::Anova(glm.D93, test.statistic = "LR"))
+    apa_print(anova(glm.D93, test = "Rao"))
+  }
+)
+
+
 # restore previous options
  options(op)
