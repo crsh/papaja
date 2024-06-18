@@ -180,15 +180,15 @@ Bakeman, R. (2005). Recommended effect size statistics for repeated measures des
 \code{\link[=aov]{aov()}}, \code{\link[car:Anova]{car::Anova()}}, \code{\link[=apa_print.list]{apa_print.list()}}
 
 Other apa_print: 
+\code{\link{apa_print}()},
 \code{\link{apa_print.BFBayesFactor}()},
 \code{\link{apa_print.emmGrid}()},
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
-\code{\link{apa_print.lme}()},
 \code{\link{apa_print.lm}()},
-\code{\link{apa_print.merMod}()},
-\code{\link{apa_print}()}
+\code{\link{apa_print.lme}()},
+\code{\link{apa_print.merMod}()}
 }
 \concept{apa_print}
 \value{

@@ -1,9 +1,10 @@
-
+#' @keywords internal
 
 add_custom_effect_sizes <- function(estimate, ...) {
   UseMethod("add_custom_effect_sizes", estimate)
 }
 
+#' @keywords internal
 
 add_custom_effect_sizes.character <- function(estimate, canonical_table, .x = NULL, ...) {
 
@@ -13,6 +14,7 @@ add_custom_effect_sizes.character <- function(estimate, canonical_table, .x = NU
   add_effect_sizes(x = canonical_table, es = estimate, ...)
 }
 
+#' @keywords internal
 
 add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, intercept = FALSE, ...) {
 
@@ -32,6 +34,7 @@ add_custom_effect_sizes.data.frame <- function(estimate, canonical_table, interc
   y
 }
 
+#' @keywords internal
 
 add_custom_effect_sizes.function <- function(estimate, canonical_table, intercept = FALSE, .x = NULL, observed = NULL, ...) {
 

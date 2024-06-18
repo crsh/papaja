@@ -59,15 +59,15 @@ change in the future.
 }
 \seealso{
 Other apa_print: 
+\code{\link{apa_print}()},
 \code{\link{apa_print.BFBayesFactor}()},
 \code{\link{apa_print.aov}()},
 \code{\link{apa_print.emmGrid}()},
 \code{\link{apa_print.glht}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
-\code{\link{apa_print.lme}()},
 \code{\link{apa_print.lm}()},
-\code{\link{apa_print}()}
+\code{\link{apa_print.lme}()}
 }
 \concept{apa_print}
 \value{

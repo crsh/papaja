@@ -16,7 +16,7 @@
 \item{x}{Object from which to extract element(s).}
 
 \item{name}{
-    A literal character string or a \link[base]{name} (possibly \link[base]{backtick}
+    a literal character string or a \link[base]{name} (possibly \link[base]{backtick}
     quoted).  For extraction, this is normally (see under
     \sQuote{Environments}) partially matched to the \code{\link[base]{names}}
     of the object.
@@ -24,14 +24,14 @@
 
 \item{i, j, ...}{Indices specifying elements to extract. See \code{\link[base:Extract]{base::Extract()}} for details.}
 
-\item{exact}{Controls possible partial matching of \code{[[} when
+\item{exact}{controls possible partial matching of \code{[[} when
     extracting by a character vector (for most objects, but see under
     \sQuote{Environments}).  The default is no partial matching.  Value
     \code{NA} allows partial matching but issues a warning when it
     occurs.  Value \code{FALSE} allows partial matching without any
     warning.}
 
-\item{drop}{For matrices and arrays.  If \code{TRUE} the result is
+\item{drop}{relevant for matrices and arrays.  If \code{TRUE} the result is
     coerced to the lowest possible dimension (see the examples).  This
     only works for extracting elements, not for the replacement.  See
     \code{\link[base]{drop}} for further details.

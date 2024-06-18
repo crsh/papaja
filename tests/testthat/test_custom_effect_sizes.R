@@ -113,7 +113,7 @@ test_that(
     )
     expect_identical(
       !!apa_with_df$estimate$N_P
-      , "$\\hat{\\eta}^2_G = .031$, 90\\% CI $[.000, .229]$"
+      , "$\\hat{\\eta}^2_G = .031$, 90\\% CI $[.000, .230]$"
     )
   }
 )

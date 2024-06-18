@@ -6,7 +6,7 @@
 \usage{
 quote_from_tex(
   x,
-  file = paste0(rmarkdown::metadata[["manuscript-file"]], ".tex")
+  file = paste0(rmarkdown::metadata[["manuscript-tex"]], ".tex")
 )
 }
 \arguments{
