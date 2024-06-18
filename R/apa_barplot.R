@@ -67,6 +67,7 @@ apa_barplot.default <- function(
   , xlab = NULL
   , ylab = NULL
   , main = NULL
+  , set_par = TRUE
   , ...
 ){
   ellipsis <- defaults(
@@ -93,6 +94,7 @@ apa_barplot.default <- function(
       , xlab = xlab
       , ylab = ylab
       , main = main
+      , set_par = set_par
       , jit = .4  # add parameter 'space'
       , plot = c("bars", "error_bars")
     )
