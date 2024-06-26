@@ -1,66 +1,72 @@
-#' Plots for factorial designs that conform to APA guidelines
+#' Plots for Factorial Designs that Conform to APA Guidelines
 #'
-#' Wrapper function that creates one or more plots by sequentially calling functions from the \pkg{graphics} package.
-#' \code{apa_factorial_plot} is the workhorse function that is called by \code{\link{apa_barplot}}, \code{\link{apa_beeplot}}, and \code{\link{apa_lineplot}}.
+#' Create one or more plots by sequentially calling functions from the \pkg{graphics} package.
+#' `apa_factorial_plot()` is the workhorse function that is called by
+#' [apa_barplot()], [apa_beeplot()], and [apa_lineplot()].
 #'
-#' @param data A \code{data.frame} that contains the data or an object of class \code{afex_aov}
+#' @param data A `data.frame` that contains the data, or an object of class `afex_aov`.
 #' @param id Character. Variable name that identifies subjects.
 #' @param factors Character. A vector of up to four variable names that is used to stratify the data.
 #' @param dv Character. The name of the dependent variable.
 #' @param tendency Closure. A function that will be used as measure of central tendency.
 #' @param dispersion Closure. A function that will be used to construct error bars (i.e., whiskers). Defaults to
-#'    \code{conf_int} for 95\% between-subjects confidence intervals. See details for more options, especially for within-subjects confidence intervals.
-#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to \code{0.95}.
-#'    for 95\% confidence intervals. Ignored if \code{dispersion} is not a confidence-interval function. See details.
+#'    [conf_int()] for 95% between-subjects confidence intervals. See details for more options, especially for within-subjects confidence intervals.
+#' @param level Numeric. Defines the width of the interval if confidence intervals are plotted. Defaults to `0.95`.
+#'    for 95% confidence intervals. Ignored if `dispersion` is not a confidence-interval function. See details.
 #' @param fun_aggregate Closure. The function that will be used to aggregate observations within subjects and factors
-#'    before calculating descriptive statistics for each cell of the design. Defaults to \code{mean}.
-#' @param na.rm Logical. Specifies if missing values are removed. Defaults to \code{TRUE}.
-#' @param use Character. Specifies a method to exclude cases if there are missing values \emph{after} aggregating.
-#'    Possible options are \code{"all.obs"} or \code{"complete.obs"}.
-#' @param reference Numeric. A reference point that determines the \emph{y} coordinate of the \emph{x} axis. Useful if there exists a 'nil' value; defaults to \code{0}.
-#' @param intercept Numeric. Adds a horizontal line at height \code{intercept} to the plot. Can be either a single value or a matrix. For the matrix
+#'    before calculating descriptive statistics for each cell of the design. Defaults to `mean`.
+#' @param na.rm Logical. Specifies if missing values are removed. Defaults to `TRUE`.
+#' @param use Character. Specifies a method to exclude cases if there are missing values *after* aggregating.
+#'    Possible options are `"all.obs"` or `"complete.obs"`.
+#' @param reference Numeric. A reference point that determines the *y* coordinate of the *x* axis. Useful if there exists a 'nil' value; defaults to `0`.
+#' @param intercept Numeric. Adds a horizontal line at height `intercept` to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
-#'  \code{c("points", "error_bars", "bars", "swarms", "lines")}
-#' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to \code{0.3}, defaults to \code{0.4} if \code{plot = "bars"}.
-#' @param args_x_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{x} axis.
-#' @param args_y_axis An optional \code{list} that contains further arguments that may be passed to \code{\link{axis}} for customising the \emph{y} axis.
-#' @param args_title  An optional \code{list} that contains further arguments that may be passed to \code{\link{title}}.
-#' @param args_rect An optional \code{list} that contains further arguments that may be passed to \code{\link{rect}}.
-#' @param args_points An optional \code{list} that contains further arguments that may be passed to \code{\link{points}}.
-#' @param args_lines An optional \code{list} that contains further arguments that may be passed to \code{\link{lines}}.
-#' @param args_swarm An optional \code{list} that contains further arguments to customize the \code{\link{points}} of the beeswarm.
-#' @param args_violins An optional \code{list} that contains further arguments to customize the \code{\link{polygon}} used for violins.
-#' @param args_error_bars An optional \code{list} that contains further arguments that may be passed to \code{\link{arrows}}.
-#' @param args_legend An optional \code{list} that contains further arguments that may be passed to \code{\link{legend}}
-#' @param xlab Character or expression. Label for \emph{x} axis.
-#' @param ylab Character or expression. Label for \emph{y} axis.
+#'  `c("points", "error_bars", "bars", "swarms", "violins", "lines")`.
+#' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to `0.3`, defaults to `0.4` if `plot = "bars"`.
+#' @param args_x_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *x* axis.
+#' @param args_y_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *y* axis.
+#' @param args_title  An optional `list` that contains further arguments that may be passed to [title()].
+#' @param args_rect An optional `list` that contains further arguments that may be passed to [rect()].
+#' @param args_points An optional `list` that contains further arguments that may be passed to [points()].
+#' @param args_lines An optional `list` that contains further arguments that may be passed to [lines()].
+#' @param args_swarm An optional `list` that contains further arguments to customize the [points()] of the beeswarm.
+#' @param args_violins An optional `list` that contains further arguments to customize the [[polygon()]] used for violins.
+#' @param args_error_bars An optional `list` that contains further arguments that may be passed to [arrows()].
+#' @param args_legend An optional `list` that contains further arguments that may be passed to [legend()]
+#' @param xlab Character or expression. Label for *x* axis.
+#' @param ylab Character or expression. Label for *y* axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
-#' either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.
+#' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
+#' @return A named (nested) list of plot options including raw and derived data. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
 #' @inheritDotParams graphics::plot.window
 #' @details
-#'    The measure of dispersion can be either \code{conf_int} for between-subjects confidence intervals, \code{se} for standard errors,
-#'    or any other standard function. For within-subjects confidence intervals, specify \code{wsci} or \code{within_subjects_conf_int}.
+#'    The measure of dispersion can be either [conf_int()] for between-subjects confidence intervals, [se()] for standard errors,
+#'    or any other standard function. For within-subjects confidence intervals, specify [wsci()] or [within_subjects_conf_int()].
 #'
 #'    If between- or within-subjects confidence intervals are requested, you can also specify the area of the cumulative
-#'    distribution function that will be covered. For instance, if you want a 98\% confidence interval, specify
-#'    \code{level = 0.98}. \code{level} defaults to 0.95.
+#'    distribution function that will be covered. For instance, if you want a 98% confidence interval, specify
+#'    `level = 0.98`. The default is `level = 0.95` for 95% confidence intervals.
 #'
-#' \strong{Customisation of plot elements}
+#' ## Customization of plot elements
 #'
-#'    \code{apa_factorial_plot} and its descendants \code{apa_barplot}, \code{apa_lineplot}, and \code{apa_beeplot} are wrapper functions that sequentially call
-#' \code{\link{plot.new}},
-#' \code{\link{plot.window}},
-#' \code{\link{axis}} (once for \emph{x} axis, once for \emph{y} axis),
-#' \code{\link{title}} for axis labels and titles,
-#' \code{\link{rect}} for bars in barplots,
-#' \code{\link{points}} for bee swarms,
-#' \code{\link{lines}} for lines connecting central tendency points,
-#' \code{\link{arrows}} for error bars,
-#' \code{\link{points}} for tendency points,
-#' \code{\link{legend}} for a legend, and
-#' \code{\link{lines}} for intercepts.
-#' These calls can be customised by setting the respective parameters \code{args_***}.
+#' [apa_factorial_plot()] and its descendants [apa_barplot()], [apa_lineplot()],
+#' and [apa_beeplot()] are wrapper functions that sequentially call:
+#'
+#' - [plot.new()],
+#' - [plot.window()],
+#' - [axis()] (once for *x* axis, once for *y* axis),
+#' - [title()] for axis labels and titles,
+#' - [rect()] for bars in bar plots,
+#' - [points()] for bee swarms,
+#' - [lines()] for lines connecting central tendency points,
+#' - [arrows()] for error bars,
+#' - [points()] for tendency points,
+#' - [legend()] for a legend, and
+#' - [lines()] for intercepts.
+#'
+#' These calls can be customized by setting the respective parameters `args_*** = list(...)`.
+#'
 #' @family plots for factorial designs
 #' @examples
 #' apa_factorial_plot(
@@ -72,7 +78,6 @@
 #'   , plot = c("error_bars", "points", "swarms")
 #'   , ylim = c(0, 100)
 #' )
-#' @importFrom methods as
 #' @export
 
 
@@ -286,7 +291,7 @@ apa_factorial_plot.default <- function(
     if(use_dplyr) {
       aggregated <- fast_aggregate(data = data, dv = dv, factors = c(id, factors), fun = fun_aggregate)
     } else {
-      aggregated <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(c(id, factors), collapse = "*"))), data = data, FUN = fun_aggregate)
+      aggregated <- stats::aggregate(x = data[, dv, drop = FALSE], by = data[, c(id, factors), drop = FALSE], FUN = fun_aggregate)
     }
   } else {
     aggregated <- data
@@ -312,7 +317,11 @@ apa_factorial_plot.default <- function(
   if(use_dplyr) {
     yy <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = tendency)
   } else {
-    yy <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = tendency)
+    yy <- stats::aggregate(
+      x = aggregated[, dv, drop = FALSE]
+      , by = aggregated[, factors, drop = FALSE]
+      , FUN = tendency
+    )
   }
 
   ## Calculate dispersions -----------------------------------------------------
@@ -322,12 +331,21 @@ apa_factorial_plot.default <- function(
     ee <- wsci(data = aggregated, id = id, factors = factors, level = level, method = "Morey", dv = dv)
   } else {
     if(fun_dispersion == "conf_int") {
-      ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion, level = level)
+      ee <- stats::aggregate(
+        x = aggregated[, dv, drop = FALSE]
+        , by = aggregated[, factors, drop = FALSE]
+        , FUN = dispersion
+        , level = level
+      )
     } else {
       if(use_dplyr) {
         ee <- fast_aggregate(data = aggregated, factors = factors, dv = dv, fun = dispersion)
       } else {
-        ee <- stats::aggregate(formula = stats::as.formula(paste0(dv, "~", paste(factors, collapse = "*"))), data = aggregated, FUN = dispersion)
+        ee <- stats::aggregate(
+          x = aggregated[, dv, drop = FALSE]
+          , by = aggregated[, factors, drop = FALSE]
+          , FUN = dispersion
+        )
       }
     }
   }
@@ -346,26 +364,21 @@ apa_factorial_plot.default <- function(
   output$args <- list()
 
 
-  ## Adjust ylim to height of error bars and ensure that all points of the swarm are plotted
-  ellipsis <- defaults(
-    ellipsis
-    , set.if.null = list(
-      ylim = c(
-        min(
-          0
-          , y.values[["lower_limit"]]
-          , aggregated[[dv]]
-          , na.rm = TRUE
-        )
-        , max(
-          y.values[["upper_limit"]]
-          , aggregated[[dv]]
-          , na.rm = TRUE
-        )
-      )
-    )
+  # Default for ylim: Cover all (potentially) plotted shapes ---
+  default_ylim <- range(
+    0
+    , y.values[["lower_limit"]]
+    , y.values[["upper_limit"]]
+    , aggregated[[dv]]
+    , na.rm = TRUE
   )
 
+  # allow to partially define via, e.g. `ylim = c(20, NA)`
+  if(is.null(ellipsis$ylim)) {
+    ellipsis$ylim <- default_ylim
+  } else if (anyNA(ellipsis$ylim)){
+    ellipsis$ylim[is.na(ellipsis$ylim)] <- default_ylim[is.na(ellipsis$ylim)]
+  }
 
   ## zero to two factors
   if(length(factors) < 3){
@@ -383,7 +396,11 @@ apa_factorial_plot.default <- function(
     output$args <- do.call("apa_factorial_plot_single", ellipsis)
   }
 
-  old.mfrow <- par("mfrow") # Save original plot architecture
+  if(length(factors) > 2L) {
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  }
+
   ## Three factors
 
 
@@ -392,7 +409,7 @@ apa_factorial_plot.default <- function(
     tmp_main <- ellipsis$main
 
     # by default, only plot legend in topright plot:
-    tmp_plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
+    tmp_plot <- seq_len(nlevels(data[[factors[3]]]))==nlevels(data[[factors[3]]])
     names(tmp_plot) <- levels(data[[factors[3]]])
 
     ellipsis$args_legend <- defaults(
@@ -406,7 +423,7 @@ apa_factorial_plot.default <- function(
     )
 
     if(is.null(ellipsis$args_legend$plot)) {
-      ellipsis$args_legend$plot <- 1:nlevels(data[[factors[3]]])==nlevels(data[[factors[3]]])
+      ellipsis$args_legend$plot <- seq_len(nlevels(data[[factors[3]]]))==nlevels(data[[factors[3]]])
     }
 
     if(length(ellipsis$args_legend$plot)!=nlevels(data[[factors[3]]])) {
@@ -440,7 +457,6 @@ apa_factorial_plot.default <- function(
 
       output$args[[paste0("plot", i)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
     }
-    par(mfrow=old.mfrow)
   }
 
   ## Four factors
@@ -486,7 +502,6 @@ apa_factorial_plot.default <- function(
         output$args[[paste0("plot", i, j)]] <- do.call("apa_factorial_plot_single", ellipsis.i)
       }
     }
-    par(mfrow=old.mfrow)
   }
   invisible(output)
 }
@@ -495,14 +510,14 @@ apa_factorial_plot.default <- function(
 
 #' Plots for factorial designs that conform to APA guidelines, two-factors internal function
 #'
-#' Internal function that is called (possibly multiple times) by \code{\link{apa_factorial_plot}}.
+#' Internal function that is called (possibly multiple times) by [apa_factorial_plot()].
 #'
-#' @param aggregated A \code{data.frame}, the \emph{aggregated} data.
-#' @param y.values   A \code{data.frame} containing the measures of central tendency and of dispersion per cell of the design.
+#' @param aggregated A `data.frame`, the *aggregated* data.
+#' @param y.values   A `data.frame` containing the measures of central tendency and of dispersion per cell of the design.
 #' @param id Character. Variable name that identifies subjects.
 #' @param dv Character. The name of the dependent variable.
 #' @param factors Character. A vector of up to four variable names that is used to stratify the data.
-#' @param intercept Numeric. See details in \code{\link{apa_factorial_plot}}
+#' @param intercept Numeric. See details in [apa_factorial_plot()]
 #'
 #' @keywords internal
 
@@ -590,7 +605,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       side = 1
     )
     , set.if.null = list(
-      at = 1:nlevels(y.values[[factors[1]]]) - .5
+      at = seq_len(nlevels(y.values[[factors[1]]])) - .5
       , labels = levels(y.values[[factors[1]]])
       , tick = TRUE # ifelse(ellipsis$ylim[1]==0, FALSE, TRUE)
     )
@@ -720,7 +735,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       side = 1
     )
     , set.if.null = list(
-      at = 1:nlevels(y.values[[factors[1]]])-.5
+      at = seq_len(nlevels(y.values[[factors[1]]])) - .5
       , labels = levels(y.values[[factors[1]]])
     )
   )
@@ -754,14 +769,13 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
     args_violins <- defaults(
       args_violins
       , set.if.null = list(
-        col = args_points$col
-        , bg = brighten(args_points$bg, factor = .9)
-        , bw = "SJ"
+        border = args_points$col
+        , col  = brighten(args_points$bg, factor = .9)
       )
     )
 
-    args_violins$col <- rep(args_violins$col, each = nlevels(aggregated[[factors[1]]]))
-    args_violins$bg <- rep(args_violins$bg, each = nlevels(aggregated[[factors[1]]]))
+    args_violins$border <- rep(args_violins$border, each = nlevels(aggregated[[factors[1]]]))
+    args_violins$col    <- rep(args_violins$col,    each = nlevels(aggregated[[factors[1]]]))
 
 
     merged <- merge(x = aggregated, y.values[, c(factors, "x"), drop = FALSE], sort = FALSE)
@@ -771,7 +785,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , f = merged[, factors, drop = FALSE]
     )
 
-    x2 <- lapply(x1, density, bw = args_violins$bw)
+    x2 <- lapply(x1, density, bw = "SJ")
 
     x_offset <- lapply(
       split(
@@ -791,8 +805,8 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       polygon(
         x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density
         , y = c(x2[[i]]$x, rev(x2[[i]]$x))# / max_density
-        , col = args_violins$bg[i]
-        , border = args_violins$col[i]
+        , col = args_violins$col[i]
+        , border = args_violins$border[i]
       )
     }
   }
@@ -870,7 +884,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , set.if.null = list(
         x = "topright"
         , legend = levels(y.values[[factors[2]]])
-        , pch = args_points$pch[1:nlevels(y.values[[factors[2]]])]
+        , pch = args_points$pch[seq_len(nlevels(y.values[[factors[2]]]))]
         , lty = args_lines$lty
         , bty = "n"
         , pt.bg = args_points$bg
@@ -899,15 +913,15 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
     if(is.matrix(intercept)) {
       diff <- (args_plot_window$xlim[2] - args_plot_window$xlim[1])/(ncol(intercept)-1)
       x.vector <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff)
-      for(i in 1:nrow(intercept)) {
-        for (j in 1:ncol(intercept)) {
+      for(i in seq_len(nrow(intercept))) {
+        for (j in seq_len(ncol(intercept))) {
           lines(x = c(x.vector[j]-(diff/2), x.vector[j]+(diff/2)), y = rep(intercept[i, j], 2))
         }
       }
     } else {
       n_lines <- length(intercept)
       x_coordinates <- seq(args_plot_window$xlim[1], args_plot_window$xlim[2], diff(args_plot_window$xlim)/n_lines)
-      for (i in 1:n_lines){
+      for (i in seq_len(n_lines)){
         y_coordinates <- rep(intercept[i], 2)
         lines(x = x_coordinates[(0:1) + i], y = y_coordinates)
       }

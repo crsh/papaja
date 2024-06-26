@@ -11,7 +11,7 @@ test_that(
     apa_lme4 <- apa_print(model_lme4)
     # apa2_lme4 <-apa_print(model2_lme4)
     apa_lmerTest <- apa_print(model_lmerTest)
-    apa_lmerTest_specialties <- apa_print(model_lmerTest, in_paren = TRUE, args_confint = list(level = .96), digits = 4L, est_name = "$\\gamma")
+    apa_lmerTest_specialties <- apa_print(model_lmerTest, in_paren = TRUE, conf.int = list(level = .96), digits = 4L, est_name = "$\\gamma")
 
     expect_apa_results(
       apa_lme4
@@ -56,14 +56,14 @@ test_that(
       object = apa_lmerTest$statistic
       , expected = list(
         Intercept = "$t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$t(17.00) = 3.06$, $p = .007$"
+        , N1 = "$t(17) = 3.06$, $p = .007$"
       )
     )
     expect_identical(
       object = apa_lmerTest$full_result
       , expected = list(
         Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.29, 55.84]$, $t(8.17) = 27.06$, $p < .001$"
-        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17.00) = 3.06$, $p = .007$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.02, 9.21]$, $t(17) = 3.06$, $p = .007$"
       )
     )
 
@@ -88,7 +88,7 @@ test_that(
 
     expect_identical( # in_paren
       object = apa_lmerTest_specialties$full_result$N1
-      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17.00] = 3.06$, $p = .007$"
+      , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17] = 3.06$, $p = .007$"
     )
 
     # Test reduction of (Days | Subject) to (1 | Subject):
@@ -102,7 +102,7 @@ test_that(
     data$Days2 <- rnorm(nrow(data))
     data$Reaction2 <- data$Reaction + data$Days2*(as.integer(data$Subject)-mean(as.integer(data$Subject)))
     fm2 <- lmerTest::lmer(Reaction2 ~ Days + (Days + Days2|Subject), data)
-    lmerTest::ranova(fm2)
+    # lmerTest::ranova(fm2)
 
     expect_error(
       apa_print(ranova_out)
@@ -123,7 +123,13 @@ test_that(
       , family = stats::binomial
     )
 
-    apa_gm1 <- apa_print(gm1, args_confint = list(level = .90))
+    apa_gm1 <- apa_print(gm1, conf.int = list(level = .90))
+
+    expect_warning(
+      apa_print(gm1, args_confint = list(level = .90))
+      , "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
 
     expect_apa_results(
       apa_gm1
@@ -184,12 +190,12 @@ test_that(
     )
 
     expect_identical(
-      apa_KR$full_result
-      , expected = "$F(1, 17.00) = 45.85$, $p < .001$"
+      apa_KR$full_result$Days
+      , expected = "$F(1, 17) = 45.85$, $p < .001$"
     )
     expect_identical(
-      apa_S$full_result
-      , apa_KR$full_result
+      apa_S$full_result$Days
+      , apa_KR$full_result$Days
     )
 
     # Stop model-comparison tables
@@ -273,9 +279,9 @@ test_that(
     expect_identical(
       object = apa_KR$statistic
       , expected = list(
-        N = "$F(1, 15.00) = 9.04$, $p = .009$"
-        , P = "$F(1, 15.00) = 0.40$, $p = .536$"
-        , N_P = "$F(1, 15.00) = 1.02$, $p = .329$"
+        N = "$F(1, 15) = 9.04$, $p = .009$"
+        , P = "$F(1, 15) = 0.40$, $p = .536$"
+        , N_P = "$F(1, 15) = 1.02$, $p = .329$"
       )
     )
     expect_identical( # KR gives same results as S in this special case
@@ -297,6 +303,61 @@ test_that(
         , P = "$\\chi^2(1) = 0.48$, $p = .491$"
         , N_P = "$\\chi^2(1) = 1.18$, $p = .277$"
       )
+    )
+
+    # https://github.com/crsh/papaja/issues/154#issuecomment-892189864
+    participant<-c("vp1","vp2","vp3","vp4","vp5")
+    group<-c("intervention", "control","control","intervention","control")
+
+    library("dplyr")
+    df <- data.frame(participant,group) %>%
+      group_by(participant,group) %>%
+      reframe(session=c("t1","t2","t3","t4")) %>%
+      group_by(participant, group, session) %>%
+      reframe(task=c("a","b")) %>%
+      ungroup() %>%
+      mutate(errors=floor(runif(n=40,min=0,max=30)))
+
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, progress = interactive())
+    apa_t <- apa_print(glmm$full_model)
+
+    expect_apa_results(
+      apa_t
+      , labels = list(
+        term        = "Term"
+        , estimate  = "$\\hat{\\beta}$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+
+    glmm <- afex::mixed(errors~group*session*task+(1|participant), df, family = "poisson", method = "LRT", progress = interactive())
+    apa_LRT <- apa_print(glmm)
+
+    expect_apa_results(
+      apa_LRT
+      , labels = list(
+        term        = "Effect"
+        , statistic = "$\\chi^2$"
+        , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+  }
+)
+
+test_that(
+  "Deprecated 'args_confint' argument"
+  , {
+    data(sleepstudy, package = "lme4")
+    fm1 <- lme4::lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+
+    expect_warning(
+      apa_print(fm1, args_confint = list(level = .99, method = "profile"))
+      , regexp = "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
   }
 )

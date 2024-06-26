@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{package_available}
 \alias{package_available}
-\title{Package available}
+\title{Package Available}
 \usage{
 package_available(x)
 }

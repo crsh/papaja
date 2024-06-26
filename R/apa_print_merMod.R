@@ -1,49 +1,63 @@
-#' Format Statistics from Hierarchical (Generalized) Linear Models (APA 6th edition)
+#' Typeset Statistical Results from Hierarchical GLM
 #'
 #' These methods take objects from various R functions that calculate
-#' hierarchical (generalized) linear models to create formatted character strings
-#' to report the results in accordance with APA manuscript guidelines.
+#' hierarchical (generalized) linear models to create formatted character
+#' strings to report the results in accordance with APA manuscript guidelines.
 #'
-#' @param x A fitted hierarchical (generalized) linear model, either from [lme4::lmer()],
-#'   [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
-#' @param effects      Character. Determines which information is returned. Currently, only fixed-effects terms
-#'   (`"fixed"`) are supported.
-#' @param args_confint Named list. Additional arguments that are passed to [lme4::confint.merMod()], see details.
-#' @param est_name     An optional character. The label to be used for fixed-effects coefficients.
-#' @inheritParams print_anova
-#' @param ... Further arguments that are passed to [printnum()].
+#' @param x A fitted hierarchical (generalized) linear model, either from
+#'   [lme4::lmer()], [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
+#' @param effects Character. Determines which information is returned.
+#'   Currently, only fixed-effects terms (`"fixed"`) are supported.
+#' @param conf.int Numeric specifying the required confidence level *or* a named
+#'   list specifying additional arguments that are passed to
+#'   [lme4::confint.merMod()], see details.
+#' @param est_name An optional character. The label to be used for
+#'   fixed-effects coefficients.
+#' @inheritParams beautify
+#' @inheritParams glue_apa_results
 #' @details
-#'   Confidence intervals are calculated by calling [lme4::confint.merMod()]. By
-#'   default, *Wald* confidence intervals are calculated, but this may change in
-#'   the future.
+#'   Confidence intervals are calculated by calling [lme4::confint.merMod()].
+#'   By default, *Wald* confidence intervals are calculated, but this may
+#'   change in the future.
+#'
+#' @evalRd apa_results_return_value()
+#'
 #' @examples
+#' \donttest{
 #'   # Fit a linear mixed model using the lme4 package
-#'   # or the lmerTest package (for dfs and p values)
+#'   # or the lmerTest package (if dfs and p values are desired)
 #'   library(lmerTest)
 #'   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 #'   # Format statistics for fixed-effects terms (the default)
 #'   apa_print(fm1)
+#' }
 #'
 #' @family apa_print
 #' @rdname apa_print.merMod
 #' @method apa_print merMod
 #' @export
-#' @md
 
 apa_print.merMod <- function(
   x
   , effects = "fixed"
-  , args_confint = NULL
+  , conf.int = .95
   , in_paren = FALSE
   , est_name = NULL
   , ...
 ) {
 
   # Input validation and processing ----
-  args <- list(...)
+  ellipsis_ci <- deprecate_ci(conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
 
-  if(is.null(args_confint)) args_confint <- list()
-  validate(args_confint, check_class = "list")
+  if(is.list(conf.int)) {
+    validate(conf.int, check_class = "list")
+  } else {
+    validate(conf.int, check_class = "numeric", check_length = 1L)
+    conf.int <- list(level = conf.int)
+  }
+
   validate(effects, check_class = "character", check_length = 1L)
 
   if(!effects %in% c("fixed")) {
@@ -60,7 +74,7 @@ apa_print.merMod <- function(
   }
 
   args_confint <- defaults(
-    args_confint
+    conf.int
     , set = list(
       object = x
       , parm = "beta_"
@@ -101,15 +115,15 @@ apa_print.merMod <- function(
 
 
   # canonize, beautify, glue ----
-  canonical_table <- canonize(res_table, est_label = est_name)
-  beautiful_table <- beautify(canonical_table, ...)
+  ellipsis$x <- canonize(res_table, est_label = est_name)
+  beautiful_table <- do.call("beautify", ellipsis)
 
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(res_table$Term)
     , in_paren = in_paren
+    , simplify = FALSE
   )
 }
 

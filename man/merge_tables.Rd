@@ -21,10 +21,7 @@ element.}
 Takes a list of containing one or more \code{matrix} or \code{data.frame} and merges them into a single table.
 \emph{This function is not exported and currently unused.}
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{apa_table}}
+\code{\link[=apa_table]{apa_table()}}
 }
 \keyword{internal}

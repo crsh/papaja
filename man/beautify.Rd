@@ -4,18 +4,18 @@
 \alias{beautify}
 \title{Beautify a Canonical Table}
 \usage{
-beautify(x, standardized = FALSE, use_math = FALSE, ...)
+beautify(x, standardized = FALSE, use_math = FALSE, args_stat = NULL, ...)
 }
 \arguments{
 \item{x}{An object created by \code{\link{canonize}}.}
 
 \item{standardized}{Logical. If TRUE the name of the function \code{scale} will be removed from term names.}
 
-\item{...}{Further arguments that may be passed to \code{\link{printnum}} to format original-scale estimates (i.e., columns \code{estimate} and \code{conf.int}).}
+\item{...}{Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 }
 \description{
-Internal function that takes an object created by \code{\link{canonize}} and
+Internal function that takes an object created by \code{\link[=canonize]{canonize()}} and
 applies proper rounding. Term names are beautified by removing parentheses and replacing
-colons with \code{$\\times$}. Moreover, both rows and columns are sorted.
+colons with \code{"$\\\\times$"}. Moreover, both rows and columns are sorted.
 }
 \keyword{internal}

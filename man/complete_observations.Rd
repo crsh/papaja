@@ -17,9 +17,9 @@ complete_observations(data, id, within, dv)
 }
 \value{
 A \code{data.frame} where NAs and incomplete observations are removed.
-  It also has up to two additional attributes \code{removed_cases_explicit_NA}
-  and \code{removed_cases_implicit_NA}, carrying the subject identifiers of
-  participants whose data has been removed.
+It also has up to two additional attributes \code{removed_cases_explicit_NA}
+and \code{removed_cases_implicit_NA}, carrying the subject identifiers of
+participants whose data has been removed.
 }
 \description{
 This is an internal function that is used to remove incomplete observations

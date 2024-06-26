@@ -2,7 +2,7 @@
 % Please edit documentation in R/in_paren.R
 \name{in_paren}
 \alias{in_paren}
-\title{Replace parentheses with brackets}
+\title{Replace Parentheses with Brackets}
 \usage{
 in_paren(x)
 }
@@ -10,17 +10,20 @@ in_paren(x)
 \item{x}{Character. Single character or list of characters.}
 }
 \value{
-An object of the same type as \code{x}.
+An object of the same type as \code{x}, where all parentheses have been
+replaced by brackets.
 }
 \description{
-Takes a single character or a list of characters and replaces parentheses with brackets. Can be used to
-prepare a string of statistics (e.g. containing degrees of freedom) for reporting within paretheses.
+Takes a single character or a list of characters and replaces parentheses
+with brackets. Can be used to prepare a string of statistics (e.g. containing
+degrees of freedom) for reporting within parentheses.
 }
 \examples{
 t_stat <- t.test(extra ~ group, data = sleep)
 t_test_res <- apa_print(t_stat)
 in_paren(t_test_res$stat)
+in_paren(t_test_res[1:3])
 }
 \seealso{
-apa_print
+\code{\link[=apa_print]{apa_print()}}
 }

@@ -10,7 +10,7 @@ sort_columns(x)
 \item{x}{A \code{data.frame} with standardized column names.}
 }
 \description{
-An internal function that sorts the columns of a `data.frame` according to
+An internal function that sorts the columns of a \code{data.frame} according to
 our standards.
 }
 \keyword{internal}

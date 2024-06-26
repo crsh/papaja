@@ -1,7 +1,7 @@
-#' Lineplots for factorial designs that conform to APA guidelines
+#' Line Plots for Factorial Designs that Conform to APA Guidelines
 #'
-#' Wrapper function that creates one or more lineplots from a \code{data.frame} containing data from
-#' a factorial design and sets APA-friendly defaults.
+#' Creates one or more line plots from a `data.frame` containing data from
+#' a factorial design and set APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
 #' @inheritDotParams apa_factorial_plot

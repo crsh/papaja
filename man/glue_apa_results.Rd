@@ -3,9 +3,9 @@
 \name{glue_apa_results}
 \alias{glue_apa_results}
 \alias{add_glue_to_apa_results}
-\title{Create a new `apa_results` object}
+\title{Create a New \code{apa_results} Object}
 \usage{
-glue_apa_results(x = NULL, ...)
+glue_apa_results(x = NULL, term_names = NULL, ...)
 
 add_glue_to_apa_results(
   ...,
@@ -14,56 +14,68 @@ add_glue_to_apa_results(
   container,
   sublist = NULL,
   term_names = NULL,
-  in_paren = FALSE
+  in_paren = FALSE,
+  est_first = TRUE,
+  simplify = TRUE
 )
 }
 \arguments{
 \item{x}{An environment, list or data frame used to look up values for
 substitution.}
 
-\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expressions
+\item{term_names}{Character. Used as names for the \code{estimate}-,
+\code{statistics}-, and \code{full_result} sub-lists, if multiple estimates or
+statistics are glued. Defaults to \code{attr(x, "sanitized_term_names")}.}
+
+\item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expression
 string(s) to format. Multiple inputs are concatenated together before formatting.
-Named arguments are taken to be temporary variables available for substitution.}
+Named arguments are taken to be temporary variables available for substitution.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{For `glue_data()`, elements in `...` override the values in `.x`.
+}\if{html}{\out{</div>}}}
 
 \item{est_glue}{Character. (Named vector of) expressions string(s) to
- format. Each string creates a new (named) element in the
-`estimate`-sublist.}
+format. Each string creates a new (named) element in the
+\code{estimate} sub-list.}
 
 \item{stat_glue}{Character. (Named vector of) expressions string(s) to
- format. Each string creates a new (named) element in the
-`statistic`-sublist.}
+format. Each string creates a new (named) element in the
+\code{statistic} sub-list.}
 
-\item{container}{List of class `apa_results` to add the glued results to.}
+\item{container}{List of class \code{apa_results} to add the glued results to.}
 
-\item{sublist}{Character. Name of (new) sublist in `estimate`
-`statistics`, and `full_result` to append glued results to (e.g.,
-`modelfit`).}
-
-\item{term_names}{Character. Used as names for the `estimate`-,
-`statistics`-, and `full_result`-sublists, if multiple estimates or
-statistics are glued.}
+\item{sublist}{Character. Name of (new) sub-list in \code{estimate}
+\code{statistics}, and \code{full_result} to append glued results to (e.g.,
+\code{modelfit}).}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
-parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
 enclosing degrees of freedom) are replaced with brackets.}
+
+\item{est_first}{Logical. Determines in which order \code{estimate} and
+\code{statistic} are glued together to \code{full_result}.}
+
+\item{simplify}{Logical. Determines whether the \code{estimate}, \code{statistic}, and
+\code{full_result} sub-lists should be simplified if only one term is
+available from the model object.}
 }
 \value{
-Returns a list of class `apa_results`
+Returns a list of class \code{apa_results}, see \code{\link[=apa_print]{apa_print()}}.
 }
 \description{
 Typeset the contents of an object according to the specified expression
-strings and create a new or extend an existing `apa_results` object.
+strings and create a new or extend an existing \code{apa_results} object.
 }
 \examples{
 # Tidy and typeset output
 iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
-tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
+tidy_iris_lm$p.value <- apa_p(tidy_iris_lm$p.value)
 
 glance_iris_lm <- broom::glance(iris_lm)
-glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
-glance_iris_lm$df <- printnum(as.integer(glance_iris_lm$df))
-glance_iris_lm$df.residual <- printnum(as.integer(glance_iris_lm$df.residual))
+glance_iris_lm$p.value <- apa_p(glance_iris_lm$p.value, add_equals = TRUE)
+glance_iris_lm$df <- apa_num(as.integer(glance_iris_lm$df))
+glance_iris_lm$df.residual <- apa_num(as.integer(glance_iris_lm$df.residual))
 
 # Create `apa_results`-list
 lm_results <- glue_apa_results(
@@ -84,7 +96,7 @@ add_glue_to_apa_results(
         , aic = ""
     )
     , stat_glue = c(
-        r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<papaja:::add_equals(p.value)>>$"
+        r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<add_equals(p.value)>>$"
         , aic = "$\\\\mathrm{AIC} = <<AIC>>$"
     )
 )

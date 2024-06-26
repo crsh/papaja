@@ -5,68 +5,107 @@
 \alias{apa_print.summary_emm}
 \alias{apa_print.lsmobj}
 \alias{apa_print.summary.ref.grid}
-\title{Format statistics (APA 6th edition)}
+\title{Typeset Statistical Results from Estimated Marginal Means}
 \usage{
-\method{apa_print}{emmGrid}(x, ...)
+\method{apa_print}{emmGrid}(x, infer = TRUE, conf.int = 0.95, ...)
 
-\method{apa_print}{summary_emm}(x, contrast_names = NULL, est_name = NULL, in_paren = FALSE, ...)
+\method{apa_print}{summary_emm}(
+  x,
+  contrast_names = NULL,
+  est_name = "\\\\hat{\\\\theta}",
+  in_paren = FALSE,
+  ...
+)
 
 \method{apa_print}{lsmobj}(x, ...)
 
 \method{apa_print}{summary.ref.grid}(x, ...)
 }
 \arguments{
-\item{x}{Object
-adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the}
+\item{x}{Object}
+
+\item{infer}{A vector of one or two logical values. The first determines
+whether confidence intervals are displayed, and the second determines
+whether \emph{t} tests and \emph{P} values are displayed. If only one value
+is provided, it is used for both.}
+
+\item{conf.int}{Numeric. Confidence level for confidence intervals.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=printnum]{printnum}}
+  Arguments passed on to \code{\link[=apa_num]{apa_num}}
   \describe{
     \item{\code{}}{}
   }}
 
-\item{contrast_names}{Character. An optional vector of names to identify calculated contrasts.}
+\item{contrast_names}{Character. An optional vector of names to label the
+calculated contrasts.}
 
-\item{est_name}{Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.}
+\item{est_name}{Character. If \code{NULL} (default) the name of the estimate
+is inferred from the function call of the model object supplied to
+\pkg{emmeans}.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses.}
-}
-\value{
-\code{apa_print()} returns a list containing the following components according to the input:
-
-   \describe{
-     \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-         and \emph{p} value.}
-     \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-         % , either in units of the analyzed scale or as standardized effect size.
-     \item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
-     \item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
-   }
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 }
 \description{
-Takes various \code{lsmeans} and \code{emmeans} objects to create formatted character strings to report the results in
-accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
-considered experimental.}
+Takes various \pkg{emmeans} objects to create formatted character strings to
+report the results in accordance with APA manuscript guidelines.
+\emph{\pkg{emmeans} supports a wide range of analyses, not all
+of which are currently (fully) supported. Proceed with caution.}
 }
 \details{
-ADJUSTED CONFIDENCE INTERVALS
+When p-values and confidence intervals are adjusted for multiple testing,
+the correction method is added as an index to the output (e.g.
+\verb{p_\{Tukey(3)\}}). Values in parenthesis indicate the size of the family of
+tests or the rank of the set of linear functions (for the Scheffé method).
 
-   If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
-   of freedom, are replaced with brackets.
+If possible, each family of tests is additionally marked in the returned
+table by alphabetic superscripts.
+
+Generally, the \code{summary_emm} objects returned by \code{emmeans::summary_emm} omit
+information that may be needed to add some of the information on the
+adjustments made to p-values and confidence intervals. It is therefore
+preferable to pass \code{emmGrid}-objects if possible. For example, by using
+\code{emmeans(object, 1 ~ x1, adjust = "scheffe")}.
 }
 \examples{
-   NULL
+  # From the emmeans manual:
+  library(emmeans)
+  warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
+  warp.emm <- emmeans(warp.lm, ~ tension | wool)
+  warp.contr <- contrast(warp.emm, "poly")
+
+  apa_print(warp.contr)
+
+  # In this example, because degrees of freedom are equal across all rows
+  # of the output, it is possible to move that information to the variable
+  # labels. This is useful if a compact results table is required:
+
+  df_into_label(apa_print(warp.contr))
+
 }
 \seealso{
 Other apa_print: 
+\code{\link{apa_print}()},
 \code{\link{apa_print.BFBayesFactor}()},
 \code{\link{apa_print.aov}()},
 \code{\link{apa_print.glht}()},
-\code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
+\code{\link{apa_print.lm}()},
 \code{\link{apa_print.lme}()},
-\code{\link{apa_print.merMod}()},
-\code{\link{apa_print}()}
+\code{\link{apa_print.merMod}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

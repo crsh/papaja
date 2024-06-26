@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{defaults}
 \alias{defaults}
-\title{Set defaults}
+\title{Set Defaults}
 \usage{
 defaults(ellipsis, set = NULL, set.if.null = NULL)
 }

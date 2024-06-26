@@ -2,20 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{sort_terms}
 \alias{sort_terms}
-\title{Sort ANOVA or regression table by predictors/effects}
+\title{Sort ANOVA or Regression Table by Predictors/Effects}
 \usage{
 sort_terms(x, colname)
 }
 \arguments{
-\item{x}{data.frame. For example, a table element produced by \code{\link{apa_print}}.}
+\item{x}{A data frame. For example, the table element produced by \code{\link[=apa_print]{apa_print()}}.}
 
 \item{colname}{Character. Column name of the \code{data.frame} containing the terms to sort.}
 }
 \value{
-Returns the same data.frame with reordered rows.
+Returns the same \code{data.frame} with reordered rows.
 }
 \description{
-Sorts rows in ANOVA or regression tables produced by \code{\link{apa_print}}
+Sort rows in ANOVA or regression tables produced by \code{\link[=apa_print]{apa_print()}}
 by complexity (i.e., main effects, two-way interactions, three-way interactions, etc.).
 }
 \examples{

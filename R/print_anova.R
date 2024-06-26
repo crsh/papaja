@@ -1,8 +1,8 @@
 #' Format statistics from ANOVA (APA 6th edition)
 #'
-#' This function is the internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
+#' This function is the former internal workhorse of the \code{apa_print}-family for ANOVA. It takes a \code{data.frame}
 #' of class \code{apa_variance_table} and produces strings to report the results in accordance with APA manuscript
-#' guidelines. It is not ment to be called by the user. \emph{This function is not exported.}
+#' guidelines. It is already deprecated and will soon be defunct. \emph{This function is not exported.}
 #'
 #' @param x Data.frame. A \code{data.frame} of class \code{apa_variance_table} as returned by \code{\link{arrange_anova}}.
 #' @param intercept Logical. Indicates if intercept test should be included in output.
@@ -10,7 +10,7 @@
 #'   Note that eta-squared is calculated correctly if and only if the design is balanced.
 #' @param mse Logical. Indicates if mean squared errors should be included in output. Default is \code{TRUE}.
 #' @param observed Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses. See details.
+#' @param in_paren Logical. Indicates if the formatted string will be reported inside parentheses. See details.
 
 #' @return
 #'    A named list containing the following components:
@@ -24,14 +24,14 @@
 #'    }
 #'
 #' @keywords internal
-#' @seealso \code{\link{arrange_anova}}, \code{\link{apa_print.aov}}
-#' @examples
-#'  \dontrun{
-#'    ## From Venables and Ripley (2002) p. 165.
-#'    npk_aov <- aov(yield ~ block + N * P * K, npk)
-#'    anova_table <- arrange_anova(summary(npk_aov))
-#'    print_anova(anova_table)
-#'  }
+#' @seealso [arrange_anova()], [apa_print.aov()]
+# #' @examples
+# #'  \dontrun{
+# #'    ## From Venables and Ripley (2002) p. 165.
+# #'    npk_aov <- aov(yield ~ block + N * P * K, npk)
+# #'    anova_table <- arrange_anova(summary(npk_aov))
+# #'    print_anova(anova_table)
+# #'  }
 
 
 print_anova <- function(
@@ -42,6 +42,8 @@ print_anova <- function(
   , mse = getOption("papaja.mse")
   , in_paren = FALSE
 ) {
+
+  .Deprecated("print_anova() is deprecated")
 
   # When processing aovlist objects, the `(Intercept)` is kept to preserve the
   # SS_error of the intercept   # term to calculate generalized eta squared
@@ -65,20 +67,21 @@ print_anova <- function(
     x = x
     , es = es
     , observed = observed
-    , mse = mse
+    # , mse = mse # this is how we used to add MSE before adding add_mse() as a separate function
     , intercept = intercept
   )
+  if(isTRUE(mse)) x <- add_mse(x)
 
   # Remove intercept if the user doesn't want it:
   if(!intercept) x <- x[x$term != "(Intercept)", ]
 
   # Rounding and filling with zeros
-  x$statistic <- printnum(x$statistic, digits = 2)
-  x$p.value <- printp(x$p.value)
-  x$df <- print_df(x$df)
-  x$df.residual <- print_df(x$df.residual)
-  for(i in es) {x[[i]] <- printnum(x[[i]], digits = 3, gt1 = FALSE)}
-  if(mse) x$mse <- printnum(x$mse, digits = 2)
+  x$statistic <- apa_num(x$statistic, digits = 2)
+  x$p.value <- apa_p(x$p.value)
+  x$df <- apa_df(x$df)
+  x$df.residual <- apa_df(x$df.residual)
+  for(i in es) {x[[i]] <- apa_num(x[[i]], digits = 3, gt1 = FALSE)}
+  if(mse) x$mse <- apa_num(x$mse, digits = 2)
 
   # Assemble table -------------------------------------------------------------
   cols <- intersect(
@@ -86,7 +89,7 @@ print_anova <- function(
     , colnames(x)
   )
   anova_table <- data.frame(x[, cols], row.names = NULL)
-  anova_table[["term"]] <- prettify_terms(anova_table[["term"]])
+  anova_table[["term"]] <- beautify_terms(anova_table[["term"]])
 
   correction_type <- attr(x, "correction")
 

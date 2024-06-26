@@ -37,7 +37,7 @@ test_that(
       )
 
       # Also works for nonlinear models of class 'c("nlme", "lme")'
-      # from the example ssection of nlme::nlme()
+      # from the example section of nlme::nlme()
       fm1 <- nlme::nlme(height ~ stats::SSasymp(age, Asym, R0, lrc),
                         data = datasets::Loblolly,
                         fixed = Asym + R0 + lrc ~ 1,
@@ -64,6 +64,32 @@ test_that(
           , lrc = "$\\hat{\\beta} = -3.23$, 95\\% CI $[-3.30, -3.17]$, $t(68) = -94.36$, $p < .001$"
         )
       )
+
+      expect_warning(
+        apa_print(fm1, args_confint = .9)
+        , "deprecated. Please use 'conf.int' instead."
+      )
   }
 )
 
+test_that(
+  "Deprecated 'args_confint' argument"
+  , {
+    fm1 <- nlme::nlme(height ~ stats::SSasymp(age, Asym, R0, lrc),
+                      data = datasets::Loblolly,
+                      fixed = Asym + R0 + lrc ~ 1,
+                      random = Asym ~ 1,
+                      start = c(Asym = 103, R0 = -8.5, lrc = -3.3))
+    expect_warning(
+      nlme_model <- apa_print(fm1, args = .6)
+      , regexp = "Using argument 'args_confint' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
+    expect_identical(
+      nlme_model$estimate$Asym
+      , "$\\hat{\\beta} = 101.45$, 60\\% CI $[99.40, 103.50]$"
+    )
+
+
+  }
+)

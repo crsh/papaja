@@ -9,16 +9,13 @@ format_cells(x, format.args = NULL)
 \arguments{
 \item{x}{data.frame or matrix.}
 
-\item{format.args}{List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.}
+\item{format.args}{List. A named list of arguments to be passed to \code{\link{apa_num}} to format numeric values.}
 }
 \description{
-Format all numeric cells of a table using \code{\link{printnum}}.
+Format all numeric cells of a table using \code{\link{apa_num}}.
 \emph{This function is not exported.}
 }
-\examples{
-NULL
-}
 \seealso{
-\code{\link{printnum}}
+\code{\link[=apa_num]{apa_num()}}
 }
 \keyword{internal}

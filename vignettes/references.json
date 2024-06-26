@@ -1,0 +1,730 @@
+[
+    {
+        "URL": "http://web.stanford.edu/group/bps/cgi-bin/wordpress/wp-content/uploads/2015/09/NSF-Robust-Research-Workshop-Report.pdf",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Cacioppo",
+                "given": "John T."
+            },
+            {
+                "family": "Kaplan",
+                "given": "Robert M."
+            },
+            {
+                "family": "Krosnick",
+                "given": "Jon A."
+            },
+            {
+                "family": "Olds",
+                "given": "James L."
+            },
+            {
+                "family": "Dean",
+                "given": "Heather"
+            }
+        ],
+        "genre": "Report of the Subcommittee on Replicability in Science",
+        "id": "cacioppo_social_2015",
+        "issued": {
+            "date-parts": [
+                [
+                    2015
+                ]
+            ]
+        },
+        "key": "WXU6AAS6",
+        "libraryid": "1",
+        "note": "00000",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "National Science Foundation",
+        "publisher-place": "Arlington, VA",
+        "source": "Google Scholar",
+        "title": "Social, Behavioral, and Economic Sciences Perspectives on Robust and Reliable Science",
+        "type": "report"
+    },
+    {
+        "DOI": "10.1126/science.1213847",
+        "ISSN": "0036-8075, 1095-9203",
+        "PMID": "22144613",
+        "URL": "http://science.sciencemag.org/content/334/6060/1226",
+        "author": [
+            {
+                "family": "Peng",
+                "given": "Roger D."
+            }
+        ],
+        "container-title": "Science",
+        "id": "peng_reproducible_2011",
+        "issue": "6060",
+        "issued": {
+            "date-parts": [
+                [
+                    2011,
+                    12,
+                    2
+                ]
+            ]
+        },
+        "key": "HP7RI8S5",
+        "language": "en",
+        "libraryid": "1",
+        "page": "1226-1227",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "rights": "Copyright © 2011, American Association for the Advancement of Science",
+        "source": "science.sciencemag.org",
+        "title": "Reproducible Research in Computational Science",
+        "type": "article-journal",
+        "volume": "334"
+    },
+    {
+        "DOI": "10.1093/biostatistics/kxq028",
+        "ISSN": "1465-4644, 1468-4357",
+        "PMID": "20538873",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Donoho",
+                "given": "David L."
+            }
+        ],
+        "container-title": "Biostatistics",
+        "container-title-short": "Biostat",
+        "id": "donoho_invitation_2010",
+        "issue": "3",
+        "issued": {
+            "date-parts": [
+                [
+                    2010,
+                    7,
+                    1
+                ]
+            ]
+        },
+        "key": "N5JP7GC4",
+        "language": "en",
+        "libraryid": "1",
+        "page": "385-388",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "biostatistics.oxfordjournals.org",
+        "title": "An invitation to reproducible computational research",
+        "type": "article-journal",
+        "volume": "11"
+    },
+    {
+        "author": [
+            {
+                "family": "American Psychological Association"
+            }
+        ],
+        "edition": "6th edition",
+        "id": "american_psychological_association_publication_2010",
+        "issued": {
+            "date-parts": [
+                [
+                    2010
+                ]
+            ]
+        },
+        "key": "228GIE2K",
+        "language": "English",
+        "libraryid": "1",
+        "number-of-pages": "272",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "American Psychological Association",
+        "publisher-place": "Washington, DC",
+        "title": "Publication Manual of the American Psychological Association",
+        "type": "book"
+    },
+    {
+        "ISBN": "978-1-138-35933-8",
+        "URL": "https://bookdown.org/yihui/rmarkdown/",
+        "author": [
+            {
+                "family": "Xie",
+                "given": "Yihui"
+            },
+            {
+                "family": "Allaire",
+                "given": "J. J."
+            },
+            {
+                "family": "Grolemund",
+                "given": "Garrett"
+            }
+        ],
+        "call-number": "TK5105.8885.M39 X393 2018",
+        "id": "xie_r_2018",
+        "issued": {
+            "date-parts": [
+                [
+                    2018
+                ]
+            ]
+        },
+        "key": "BM8GM2BX",
+        "libraryid": "1",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "Taylor & Francis, CRC Press",
+        "publisher-place": "Boca Raton",
+        "source": "Library of Congress ISBN",
+        "title": "R Markdown: The Definitive Guide",
+        "title-short": "R Markdown",
+        "type": "book"
+    },
+    {
+        "DOI": "10.1126/science.359.6377.725",
+        "ISSN": "0036-8075, 1095-9203",
+        "URL": "https://www.sciencemag.org/lookup/doi/10.1126/science.359.6377.725",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Hutson",
+                "given": "Matthew"
+            }
+        ],
+        "container-title": "Science",
+        "container-title-short": "Science",
+        "id": "hutson_artificial_2018",
+        "issue": "6377",
+        "issued": {
+            "date-parts": [
+                [
+                    2018,
+                    2,
+                    16
+                ]
+            ]
+        },
+        "key": "Y2P72HD7",
+        "language": "en",
+        "libraryid": "1",
+        "page": "725-726",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "DOI.org (Crossref)",
+        "title": "Artificial intelligence faces reproducibility crisis",
+        "type": "article-journal",
+        "volume": "359"
+    },
+    {
+        "DOI": "10.3758/s13428-015-0664-2",
+        "ISSN": "1554-3528",
+        "URL": "https://link.springer.com/article/10.3758/s13428-015-0664-2",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Nuijten",
+                "given": "Michèle B."
+            },
+            {
+                "family": "Hartgerink",
+                "given": "Chris H. J."
+            },
+            {
+                "dropping-particle": "van",
+                "family": "Assen",
+                "given": "Marcel A. L. M."
+            },
+            {
+                "family": "Epskamp",
+                "given": "Sacha"
+            },
+            {
+                "family": "Wicherts",
+                "given": "Jelte M."
+            }
+        ],
+        "container-title": "Behavior Research Methods",
+        "container-title-short": "Behav Res",
+        "id": "nuijten_prevalence_2016",
+        "issue": "4",
+        "issued": {
+            "date-parts": [
+                [
+                    2016,
+                    12,
+                    1
+                ]
+            ]
+        },
+        "key": "SGGQDQGM",
+        "language": "en",
+        "libraryid": "1",
+        "page": "1205-1226",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "link.springer.com",
+        "title": "The prevalence of statistical reporting errors in psychology (1985–2013)",
+        "type": "article-journal",
+        "volume": "48"
+    },
+    {
+        "DOI": "10.1037/met0000365",
+        "ISSN": "1082-989X",
+        "URL": "https://search.ebscohost.com/login.aspx?direct=true&db=pdh&AN=2020-84997-001&site=ehost-live",
+        "accessed": {
+            "date-parts": []
+        },
+        "archive_location": "2020-84997-001",
+        "author": [
+            {
+                "family": "Artner",
+                "given": "Richard"
+            },
+            {
+                "family": "Verliefde",
+                "given": "Thomas"
+            },
+            {
+                "family": "Steegen",
+                "given": "Sara"
+            },
+            {
+                "family": "Gomes",
+                "given": "Sara"
+            },
+            {
+                "family": "Traets",
+                "given": "Frits"
+            },
+            {
+                "family": "Tuerlinckx",
+                "given": "Francis"
+            },
+            {
+                "family": "Vanpaemel",
+                "given": "Wolf"
+            }
+        ],
+        "container-title": "Psychological Methods",
+        "container-title-short": "Psychological Methods",
+        "id": "artner_reproducibility_2020",
+        "issued": {
+            "date-parts": [
+                [
+                    2020,
+                    11,
+                    12
+                ]
+            ]
+        },
+        "key": "C2DKIWBP",
+        "libraryid": "1",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "American",
+        "source": "EBSCOhost",
+        "title": "The reproducibility of statistical results in psychological research: An investigation using unpublished raw data",
+        "title-short": "The reproducibility of statistical results in psychological research",
+        "type": "article-journal"
+    },
+    {
+        "DOI": "10.1200/JCO.2015.62.0294",
+        "ISSN": "0732-183X",
+        "URL": "https://ascopubs.org/doi/full/10.1200/JCO.2015.62.0294",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Henson",
+                "given": "Katherine E."
+            },
+            {
+                "family": "Jagsi",
+                "given": "Reshma"
+            },
+            {
+                "family": "Cutter",
+                "given": "David"
+            },
+            {
+                "family": "McGale",
+                "given": "Paul"
+            },
+            {
+                "family": "Taylor",
+                "given": "Carolyn"
+            },
+            {
+                "family": "Darby",
+                "given": "Sarah C."
+            }
+        ],
+        "container-title": "Journal of Clinical Oncology",
+        "container-title-short": "JCO",
+        "id": "henson_inferring_2016",
+        "issue": "8",
+        "issued": {
+            "date-parts": [
+                [
+                    2016,
+                    1,
+                    19
+                ]
+            ]
+        },
+        "key": "TN9BN45F",
+        "libraryid": "1",
+        "page": "803-809",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "Wolters",
+        "source": "ascopubs.org (Atypon)",
+        "title": "Inferring the Effects of Cancer Treatment: Divergent Results From Early Breast Cancer Trialists’ Collaborative Group Meta-Analyses of Randomized Trials and Observational Data From SEER Registries",
+        "title-short": "Inferring the Effects of Cancer Treatment",
+        "type": "article-journal",
+        "volume": "34"
+    },
+    {
+        "DOI": "10.1186/s13742-016-0135-4",
+        "ISSN": "2047-217X",
+        "URL": "https://doi.org/10.1186/s13742-016-0135-4",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Piccolo",
+                "given": "Stephen R."
+            },
+            {
+                "family": "Frampton",
+                "given": "Michael B."
+            }
+        ],
+        "container-title": "GigaScience",
+        "container-title-short": "GigaScience",
+        "id": "piccolo_tools_2016",
+        "issued": {
+            "date-parts": [
+                [
+                    2016,
+                    7,
+                    11
+                ]
+            ]
+        },
+        "key": "CUQL4MML",
+        "libraryid": "1",
+        "page": "30",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "BioMed Central",
+        "title": "Tools and techniques for computational reproducibility",
+        "type": "article-journal",
+        "volume": "5"
+    },
+    {
+        "DOI": "10.1016/j.cels.2018.03.014",
+        "ISSN": "2405-4712",
+        "URL": "http://www.sciencedirect.com/science/article/pii/S2405471218301406",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Grüning",
+                "given": "Björn"
+            },
+            {
+                "family": "Chilton",
+                "given": "John"
+            },
+            {
+                "family": "Köster",
+                "given": "Johannes"
+            },
+            {
+                "family": "Dale",
+                "given": "Ryan"
+            },
+            {
+                "family": "Soranzo",
+                "given": "Nicola"
+            },
+            {
+                "family": "Beek",
+                "given": "Marius",
+                "non-dropping-particle": "van den"
+            },
+            {
+                "family": "Goecks",
+                "given": "Jeremy"
+            },
+            {
+                "family": "Backofen",
+                "given": "Rolf"
+            },
+            {
+                "family": "Nekrutenko",
+                "given": "Anton"
+            },
+            {
+                "family": "Taylor",
+                "given": "James"
+            }
+        ],
+        "container-title": "Cell Systems",
+        "container-title-short": "Cell Systems",
+        "id": "gruning_practical_2018",
+        "issue": "6",
+        "issued": {
+            "date-parts": [
+                [
+                    2018,
+                    6,
+                    27
+                ]
+            ]
+        },
+        "key": "LTI92ILQ",
+        "language": "en",
+        "libraryid": "1",
+        "page": "631-635",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "ScienceDirect",
+        "title": "Practical Computational Reproducibility in the Life Sciences",
+        "type": "article-journal",
+        "volume": "6"
+    },
+    {
+        "DOI": "10.1177/2515245920918872",
+        "ISSN": "2515-2459",
+        "URL": "https://doi.org/10.1177/2515245920918872",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Obels",
+                "given": "Pepijn"
+            },
+            {
+                "family": "Lakens",
+                "given": "Daniël"
+            },
+            {
+                "family": "Coles",
+                "given": "Nicholas A."
+            },
+            {
+                "family": "Gottfried",
+                "given": "Jaroslav"
+            },
+            {
+                "family": "Green",
+                "given": "Seth A."
+            }
+        ],
+        "container-title": "Advances in Methods and Practices in Psychological Science",
+        "container-title-short": "Advances in Methods and Practices in Psychological Science",
+        "id": "obels_analysis_2020",
+        "issue": "2",
+        "issued": {
+            "date-parts": [
+                [
+                    2020,
+                    6,
+                    1
+                ]
+            ]
+        },
+        "key": "YK3A9BRS",
+        "language": "en",
+        "libraryid": "1",
+        "page": "229-237",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "SAGE",
+        "source": "SAGE Journals",
+        "title": "Analysis of Open Data and Computational Reproducibility in Registered Reports in Psychology",
+        "type": "article-journal",
+        "volume": "3"
+    },
+    {
+        "URL": "http://thepoliticalmethodologist.com/2014/12/09/a-decade-of-replications-lessons-from-the-quarterly-journal-of-political-science/",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Eubank",
+                "given": "Nicholas"
+            }
+        ],
+        "container-title": "The Political Methodologist",
+        "id": "eubank_decade_2014",
+        "issued": {
+            "date-parts": [
+                [
+                    2014
+                ]
+            ]
+        },
+        "key": "AGX9G77R",
+        "libraryid": "1",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "title": "A Decade of Replications: Lessons from the Quarterly Journal of Political Science",
+        "title-short": "A Decade of Replications",
+        "type": "post-weblog"
+    },
+    {
+        "DOI": "10.1098/rsos.180448",
+        "ISSN": "2054-5703",
+        "URL": "http://rsos.royalsocietypublishing.org/lookup/doi/10.1098/rsos.180448",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Hardwicke",
+                "given": "Tom E."
+            },
+            {
+                "family": "Mathur",
+                "given": "Maya B."
+            },
+            {
+                "family": "MacDonald",
+                "given": "Kyle"
+            },
+            {
+                "family": "Nilsonne",
+                "given": "Gustav"
+            },
+            {
+                "family": "Banks",
+                "given": "George C."
+            },
+            {
+                "family": "Kidwell",
+                "given": "Mallory C."
+            },
+            {
+                "family": "Hofelich Mohr",
+                "given": "Alicia"
+            },
+            {
+                "family": "Clayton",
+                "given": "Elizabeth"
+            },
+            {
+                "family": "Yoon",
+                "given": "Erica J."
+            },
+            {
+                "family": "Henry Tessler",
+                "given": "Michael"
+            },
+            {
+                "family": "Lenne",
+                "given": "Richie L."
+            },
+            {
+                "family": "Altman",
+                "given": "Sara"
+            },
+            {
+                "family": "Long",
+                "given": "Bria"
+            },
+            {
+                "family": "Frank",
+                "given": "Michael C."
+            }
+        ],
+        "container-title": "Royal Society Open Science",
+        "id": "hardwicke_data_2018",
+        "issue": "8",
+        "issued": {
+            "date-parts": [
+                [
+                    2018,
+                    8
+                ]
+            ]
+        },
+        "key": "A9KHZM2P",
+        "language": "en",
+        "libraryid": "1",
+        "page": "180448",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "Crossref",
+        "title": "Data availability, reusability, and analytic reproducibility: evaluating the impact of a mandatory open data policy at the journal <i>Cognition</i>",
+        "title-short": "Data availability, reusability, and analytic reproducibility",
+        "type": "article-journal",
+        "volume": "5"
+    },
+    {
+        "DOI": "10.1093/comjnl/27.2.97",
+        "ISSN": "0010-4620",
+        "URL": "https://academic.oup.com/comjnl/article/27/2/97/343244/Literate-Programming",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Knuth",
+                "given": "D. E."
+            }
+        ],
+        "container-title": "The Computer Journal",
+        "container-title-short": "Comput J",
+        "id": "knuth_literate_1984",
+        "issue": "2",
+        "issued": {
+            "date-parts": [
+                [
+                    1984,
+                    1,
+                    1
+                ]
+            ]
+        },
+        "key": "Q4ZTNHH4",
+        "libraryid": "1",
+        "page": "97-111",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "academic.oup.com",
+        "title": "Literate Programming",
+        "type": "article-journal",
+        "volume": "27"
+    },
+    {
+        "DOI": "10.1017/S1049096516000196",
+        "ISSN": "1049-0965, 1537-5935",
+        "URL": "https://www.cambridge.org/core/journals/ps-political-science-and-politics/article/lessons-from-a-decade-of-replications-at-the-quarterly-journal-of-political-science/284B2830BFD99888B42D4CEABC28B9EE",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Eubank",
+                "given": "Nicholas"
+            }
+        ],
+        "container-title": "PS: Political Science & Politics",
+        "id": "eubank_lessons_2016",
+        "issue": "2",
+        "issued": {
+            "date-parts": [
+                [
+                    2016,
+                    4
+                ]
+            ]
+        },
+        "key": "6AKV2IHC",
+        "libraryid": "1",
+        "page": "273-276",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "Cambridge Core",
+        "title": "Lessons from a Decade of Replications at the Quarterly Journal of Political Science",
+        "type": "article-journal",
+        "volume": "49"
+    }
+]

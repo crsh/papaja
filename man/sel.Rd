@@ -2,21 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{sel}
 \alias{sel}
-\title{Select parameters}
+\title{Select Parameters}
 \usage{
 sel(x, i)
 }
 \arguments{
-\item{x}{List. A list of parameter values}
+\item{x}{List. A list of parameter values.}
 
 \item{i}{Integer. The i-th element of each vector that is to be extracted.}
 }
 \description{
 If a \code{list} holds vectors of parameter values, this function extracts the i-th parameter value from each vector and creates
-a new \code{list} with these values. Especially helpful if a function is call repeatedly via \code{do.call} with different
+a new \code{list} with these values. Especially helpful if a function is called repeatedly via \code{do.call} with different
 parameter values from within a function.
-}
-\examples{
-NULL
 }
 \keyword{internal}

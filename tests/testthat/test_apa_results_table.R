@@ -1,6 +1,4 @@
 
-
-
 test_that(
   "Extraction methods for apa_results_table"
   , {
@@ -101,12 +99,20 @@ test_that(
 test_that(
   "print.apa_results_table()"
   , {
-    x <- apa_print(t.test(yield ~ N, npk, paired = TRUE))$table
+    x <- with(
+      npk
+      , t.test(
+        yield[N == "0"]
+        , yield[N == "1"]
+        , paired = TRUE
+      )
+    ) |>
+    apa_print()
 
-    print_apa_results_table <- capture_output(print(x))
+    print_apa_results_table <- capture_output(print(x$table))
     expect_identical(
       print_apa_results_table
-      , "A data.frame with 5 labelled columns:\n\n  estimate       conf.int statistic df p.value\n1    -5.62 [-9.93, -1.31]     -2.87 11    .015\n\nestimate : $M_d$ \nconf.int : 95\\\\% CI \nstatistic: $t$ \ndf       : $\\\\mathit{df}$ \np.value  : $p$ "
+      , "A data.frame with 5 labelled columns:\n\n  estimate       conf.int statistic df p.value\n1    -5.62 [-9.93, -1.31]     -2.87 11    .015\n\nestimate : $M_D$ \nconf.int : 95\\\\% CI \nstatistic: $t$ \ndf       : $\\\\mathit{df}$ \np.value  : $p$ "
     )
   }
 )

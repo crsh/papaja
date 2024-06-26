@@ -48,19 +48,26 @@ test_that(
 #     expect_equal(t_test_output$full, "$\\Delta M = 1.58$, 95\\% CI $[-3.36$, $0.20]$, $t(18) = -1.86$, $p = .079$")
 
 
-    t_test <- t.test(extra ~ group, data = sleep, paired = TRUE)
+    t_test <- with(
+      sleep
+      , t.test(
+        extra[group == "1"]
+        , extra[group == "2"]
+        , paired = TRUE
+      )
+    )
     t_test_output <- apa_print(t_test)
     expect_apa_results(
       t_test_output
       , labels = list(
-        estimate = "$M_d$"
+        estimate = "$M_D$"
         , conf.int = "95\\% CI"
         , statistic = "$t$"
         , df = "$\\mathit{df}$"
         , p.value = "$p$"
       )
     )
-    expect_identical(t_test_output$full, "$M_d = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
+    expect_identical(t_test_output$full, "$M_D = -1.58$, 95\\% CI $[-2.46, -0.70]$, $t(9) = -4.06$, $p = .003$")
 
     t_test <- t.test(sleep$extra, mu = 0)
     t_test_output <- apa_print(t_test)
@@ -80,7 +87,7 @@ test_that(
     )
     # Provide a custom ci, check values and labelling
     ci <- structure(c(1.0, 2.0), "conf.level" = .7)
-    t_test_output <- apa_print(t_test, ci = ci)
+    t_test_output <- apa_print(t_test, conf.int = ci)
     expect_apa_results(
       t_test_output
       , labels = list(
@@ -126,17 +133,25 @@ test_that(
     expect_apa_results(
       wilcox_test_output
       , labels = list(
-        estimate    = "$\\mathit{Mdn}_d$"
+        estimate    = "$\\Delta \\mathit{Mdn}$"
         , conf.int  = "95\\% CI"
         , statistic = "$W$"
         , p.value   = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$est,  "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60, 0.10]$")
-    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}_d = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
+    expect_identical(wilcox_test_output$est,  "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$")
+    expect_identical(wilcox_test_output$full, "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
 
 
-    wilcox_test <- wilcox.test(extra ~ group, data = sleep, paired = TRUE, exact = FALSE)
+    wilcox_test <- with(
+      sleep
+      , wilcox.test(
+        extra[group == "1"]
+        , extra[group == "2"]
+        , paired = TRUE
+        , exact = FALSE
+      )
+    )
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_apa_results(
@@ -239,6 +254,20 @@ test_that(
 test_that(
   "Chi-squared for contingency tables"
   , {
+    prop_test <- prop.test(5, 10)
+    prop_test_output <- suppressWarnings(apa_print(prop_test, n = 10))
+
+    expect_apa_results(
+      prop_test_output
+      ,  labels = list(
+        estimate = "$\\hat\\pi$"
+        , conf.int = "95\\% CI"
+        , statistic = "$\\chi^2$"
+        , df      = "$\\mathit{df}$"
+        , p.value = "$p$"
+      )
+    )
+
     smokers  <- c(83, 90, 129, 70)
     patients <- c(86, 93, 136, 82)
     prop_test <- prop.test(smokers, patients)
@@ -262,7 +291,7 @@ test_that(
     expect_apa_results(
       two_sample_prop_test_output
       , labels = list(
-        estimate    = "\\Delta p"
+        estimate    = "$\\Delta \\hat\\pi$"
         , conf.int  = "95\\% CI"
         , statistic = "$\\chi^2$"
         , df        ="$\\mathit{df}$"
@@ -270,6 +299,26 @@ test_that(
       )
     )
 
+    expect_identical(
+      attr(two_sample_prop_test_output$table$statistic, "n")
+      , apa_num(as.integer(sum(patients[3:4])))
+    )
+  }
+)
+
+test_that(
+  "Binomial test"
+  , {
+    binom_test_output <- binom.test(10, 20, p = .8, conf.level = .9) |>
+      papaja::apa_print()
+    expect_apa_results(
+      binom_test_output
+      , labels = list(
+        estimate   = "$\\hat\\pi$"
+        , conf.int = "90\\% CI"
+        , p.value  = "$p$"
+      )
+    )
   }
 )
 
@@ -402,5 +451,16 @@ test_that(
 
     expect_error(apa_print(degenerate, est_name = "M"), "No estimate available in results table.")
     expect_error(apa_print(degenerate, stat_name = "t"), "No statistic available in results table.")
+  }
+)
+
+test_that(
+  "Deprecated 'ci' argument"
+  , {
+    expect_warning(
+      apa_print(t.test(yield ~ N, npk), ci = c(1, 2))
+      , regexp = "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
+    )
   }
 )

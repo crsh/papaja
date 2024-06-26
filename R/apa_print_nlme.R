@@ -1,21 +1,25 @@
-#' Format Statistics from Nonlinear Mixed-Effects Models (APA 6th edition)
+#' Typeset Statistical Results from Nonlinear Hierarchical Models
 #'
 #' These methods take mixed-effects models fitted with the \pkg{nlme} package
 #' and create formatted character strings report the results in accordance
 #' with APA manuscript guidelines.
 #'
-#' @param x A (non-)linear mixed-effects model fitted with [nlme::lme()] or [nlme::nlme()]
-#' @param args_confint Named list. Arguments that are passed to [nlme::intervals.lme()].
+#' @param x A (non-)linear mixed-effects model fitted with [nlme::lme()] or
+#'   [nlme::nlme()]
+#' @param conf.int Numeric specifying the required confidence level *or* a named list
+#'   of additional arguments that are passed to [nlme::intervals.lme()].
 #' @inheritParams apa_print.merMod
+#'
+#' @evalRd apa_results_return_value()
+#'
 #' @examples
 #'   library(nlme)
 #'   fm1 <- lme(distance ~ age, data = Orthodont, method = "ML") # random is ~ age
-#'   apa_print(fm1)
+#'   apa_print(fm1, conf.int = .9)
 #'   # ANOVA-like tables
 #'   single_anova <- anova(fm1)
 #'   apa_print(single_anova)
 #'
-#' @md
 #' @family apa_print
 #' @rdname apa_print.lme
 #' @method apa_print lme
@@ -23,15 +27,26 @@
 
 apa_print.lme <- function(
   x
-  , args_confint = NULL
+  , conf.int = 0.95
   , in_paren = FALSE
   , est_name = NULL
   , ...
 ) {
 
-  # Input validation ----
-  if(is.null(args_confint)) args_confint <- list()
-  validate(args_confint, check_class = "list")
+
+  # Input validation and processing ----
+  ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+  ellipsis <- ellipsis_ci$ellipsis
+  conf.int <- ellipsis_ci$conf.int
+
+
+  if(is.list(conf.int)) {
+    validate(conf.int, check_class = "list")
+  } else {
+    validate(conf.int, check_class = "numeric", check_length = 1L)
+    conf.int <- list(level = conf.int)
+  }
+
 
 
   # `in_paren` is validated in `glue_apa_results()`
@@ -53,8 +68,8 @@ apa_print.lme <- function(
     , make.names = TRUE
   )
 
-  args_confint <- defaults(
-    args_confint
+  conf.int <- defaults(
+    conf.int
     , set = list(
       object = x
       , which = "fixed"
@@ -66,7 +81,7 @@ apa_print.lme <- function(
 
   # Add confidence intervals ----
   confidence_intervals <-
-    do.call(nlme::intervals, args_confint)
+    do.call(nlme::intervals, conf.int)
 
   res_table$conf.int <- unlist(
     apply(X = confidence_intervals$fixed, MARGIN = 1, FUN = function(x) {
@@ -75,7 +90,7 @@ apa_print.lme <- function(
     , recursive = FALSE
   )
 
-  attr(res_table$conf.int, "conf.level") <- args_confint$level
+  attr(res_table$conf.int, "conf.level") <- conf.int$level
 
   res_table$Term <- rownames(res_table)
   rownames(res_table) <- NULL
@@ -84,15 +99,15 @@ apa_print.lme <- function(
   res_table$Value <- NULL
 
   # Canonize, beautify, and glue ----
-  canonical_table <- canonize(res_table, est_label = est_name)
-  beautiful_table <- beautify(canonical_table, ...)
+  ellipsis$x <- canonize(res_table, est_label = est_name)
+  beautiful_table <- do.call("beautify", ellipsis)
 
   glue_apa_results(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(res_table$Term)
     , in_paren = in_paren
+    , simplify = FALSE
   )
 }
 
@@ -125,8 +140,8 @@ apa_print.anova.lme <- function(
     beautiful_table
     , est_glue = construct_glue(beautiful_table, "estimate")
     , stat_glue = construct_glue(beautiful_table, "statistic")
-    , term_names = sanitize_terms(res_table$Term)
     , in_paren = in_paren
+    , simplify = FALSE
   )
 
 }

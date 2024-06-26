@@ -1,62 +1,64 @@
 Package: papaja
-Title: Prepare Reproducible APA Journal Articles with R Markdown
-Version: 0.1.0.9997
-Description: papaja (Preparing APA Journal Articles) provides document formats
-    and helper functions to produce complete APA manuscripts from R Markdown-files
-    (PDF and Word documents).
+Title: Prepare American Psychological Association Journal Articles with
+  R Markdown
+Version: 0.1.2.9000
+Description: Tools to create dynamic, submission-ready manuscripts, which
+  conform to American Psychological Association manuscript guidelines. We
+  provide R Markdown document formats for manuscripts (PDF and Word) and
+  revision letters (PDF). Helper functions facilitate reporting statistical
+  analyses or create publication-ready tables and plots.
 Authors@R: c(
     person("Frederik", "Aust", email = "frederik.aust@uni-koeln.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4900-788X"))
     , person("Marius", "Barth", email = "marius.barth@uni-koeln.de", role = c("aut"), comment = c(ORCID = "0000-0002-3421-6665"))
     , person("Birk", "Diedenhofen", email = "mail@birkdiedenhofen.de", role = c("ctb"))
     , person("Christoph", "Stahl", email = "christoph.stahl@uni-koeln.de", role = c("ctb"))
     , person("Joseph V.", "Casillas", email = "joseph.casillas@rutgers.edu", role = c("ctb"))
+    , person("Rudolf", "Siegel", email = "rudolf.siegel@uni-saarland.de", role = c("ctb"))
   )
-Date: 2020-11-22
+Date: 2023-09-28
 URL: https://github.com/crsh/papaja
 BugReports: https://github.com/crsh/papaja/issues
 Depends:
   R (>= 3.6),
   tinylabels (>= 0.1.0)
 Imports:
-  base64enc,
   bookdown (>= 0.9.1),
   broom (>= 0.7.0),
   glue (>= 1.4.0),
   knitr (>= 1.26),
   methods,
   rmarkdown (>= 2.4),
-  rmdfiltr (>= 0.1.2),
+  rmdfiltr (>= 0.1.3),
+  utils,
   yaml,
   zip
 Suggests:
-  tinytex,
   afex,
   BayesFactor,
   beeswarm,
   boot,
   car,
-  carData,
-  downloader,
-  dplyr,
+  dplyr (>= 1.1.0),
+  effectsize (>= 0.4.4),
   emmeans,
+  ggforce,
   ggplot2,
   latex2exp,
-  lsmeans,
-  MBESS,
-  multcomp,
-  testthat,
-  skimr,
-  spelling,
   lme4,
   lmerTest,
+  MBESS,
+  multcomp,
   nlme,
-  covr
-Remotes: 
-  tidymodels/broom
-SystemRequirements: Rendering the document template requires pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution such as TinyTeX (>= 0.12; https://yihui.name/tinytex/)
+  R.rsp,
+  skimr,
+  spelling,
+  testthat
+SystemRequirements: Rendering the document template requires
+  pandoc (>= 2.0; https://pandoc.org) and for PDFs a TeX distribution,
+  such as TinyTeX (>= 0.12; https://yihui.org/tinytex/)
 License: MIT + file LICENSE
-LazyData: yes
 Encoding: UTF-8
-RoxygenNote: 7.1.1
-VignetteBuilder: knitr
+RoxygenNote: 7.3.1
+VignetteBuilder: knitr, R.rsp
 Language: en-US
+Roxygen: list(markdown = TRUE)

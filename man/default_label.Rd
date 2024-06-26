@@ -10,7 +10,7 @@ default_label(x, ...)
 
 \method{default_label}{default}(x, ...)
 
-\method{default_label}{data.frame}(x)
+\method{default_label}{data.frame}(x, ...)
 }
 \arguments{
 \item{x}{A \code{data.frame}}
@@ -19,6 +19,7 @@ default_label(x, ...)
 Returns a \code{data.frame} with labelled columns. Labels are preserved (if already specified), otherwise generated from column names.
 }
 \description{
-This internal function creates variable labels from the column names of a data frame
+This internal function creates variable labels from the column names of a1
+data frame.
 }
 \keyword{internal}

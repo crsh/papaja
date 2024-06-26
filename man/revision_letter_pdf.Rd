@@ -2,25 +2,43 @@
 % Please edit documentation in R/revision_letter_format.R
 \name{revision_letter_pdf}
 \alias{revision_letter_pdf}
-\title{Journal revision letter}
+\title{Revision Letter}
 \usage{
-revision_letter_pdf(keep_tex = TRUE, ...)
+revision_letter_pdf(...)
 }
 \arguments{
-\item{keep_tex}{Logical. Logical. Keep the intermediate tex file used in the conversion to PDF.}
-
 \item{...}{
   Arguments passed on to \code{\link[bookdown:html_document2]{bookdown::pdf_document2}}
   \describe{
     \item{\code{}}{}
   }}
 }
+\value{
+R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}.
+}
 \description{
 Template for creating a journal revision letters.
 }
-\examples{
-NULL
+\details{
+This document format is adapted from by the
+\href{https://github.com/mschroen/review_response_letter}{revision letter template}
+by Martin Schrön.
+
+It is possible to reference sections, figures, or tables in the revised
+manuscript, either by their number or by page. To do so, specify a path
+to the revised manuscript (omitting the file extension) in the YAML
+front matter (i.e., \code{manuscript-tex: file_name}) and ensure that
+you retain the \code{aux} file when rendering the revised manuscript. To do
+so, set the following option in a code chunk of the revised manuscript:
+\code{options(tinytex.clean = FALSE)}. To reference section, figure, or
+table numbers it is possible to use LaTeX (i.e., \verb{\\ref\{label\}}) or
+\pkg{bookdown} cross-referencing syntax (i.e., \verb{\\@ref(label)}). To
+reference the corresponding page numbers you must use the LaTeX syntax
+(i.e., \verb{\\pageref\{label\}}).
+
+To quote entire paragraphs directly from the revised manuscript see
+\code{\link[=quote_from_tex]{quote_from_tex()}}.
 }
 \seealso{
-\code{\link[bookdown]{html_document2}}
+\code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}]
 }

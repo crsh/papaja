@@ -28,7 +28,7 @@ abstract: |
 keywords          : "keywords"
 wordcount         : "X"
 
-floatsintext      : no
+floatsintext      : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
@@ -58,6 +58,7 @@ apa_table(
   , caption = "0 Single row table."
   , note = "This table was created using apa_table()"
   , small = TRUE
+  , placement = NULL
 )
 ```
 

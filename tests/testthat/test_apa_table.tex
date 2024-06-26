@@ -1,39 +1,48 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[english,man]{apa6}
+\documentclass[
+  man,floatsintext]{apa6}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{hyperref}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={The title},
-            pdfkeywords={keywords},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  pdftitle={The title},
+  pdfauthor={First Author1 \& Ernst-August Doelle1,2},
+  pdflang={en-EN},
+  pdfkeywords={keywords},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -74,7 +83,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -83,16 +92,32 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{english}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -108,9 +133,9 @@
 
 % Create new environments so endfloat can handle them
 % \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
-\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+%   {\begin{landscape}\centering\begin{threeparttable}}
+%   {\end{threeparttable}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\centering\begin{ThreePartTable}}{\end{ThreePartTable}\end{landscape}}
 
 % Enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
@@ -123,71 +148,91 @@
 % \setlength{\parindent}{0.5in}
 % \setlength{\parskip}{0pt plus 0pt minus 0pt}
 
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
 % \usepackage{etoolbox}
 \makeatletter
 \patchcmd{\HyOrg@maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
 \makeatother
-\shorttitle{Title}
-\author{First Author\textsuperscript{1}\ \& Ernst-August Doelle\textsuperscript{1,2}}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
-\authornote{Complete departmental affiliations for each author (note the indentation, if you start a new paragraph).
 
-Enter author note here.
-
-
-Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: my@email.com}
-\keywords{keywords\newline\indent Word count: X}
-\DeclareDelayedFloatFlavor{ThreePartTable}{table}
-\DeclareDelayedFloatFlavor{lltable}{table}
-\DeclareDelayedFloatFlavor*{longtable}{table}
+\usepackage{xpatch}
 \makeatletter
-\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
-\makeatother
+\xapptocmd\appendix
+  {\xapptocmd\section
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {}{\InnerPatchFailed}%
+  }
+{}{\PatchFailed}
+\keywords{keywords\newline\indent Word count: X}
 \usepackage{lineno}
 
 \linenumbers
 \usepackage{csquotes}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,main=english]{babel}
-\else
-  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[]{english}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
 \title{The title}
-
+\author{First Author\textsuperscript{1} \& Ernst-August Doelle\textsuperscript{1,2}}
 \date{}
 
-\abstract{
+
+\shorttitle{Title}
+
+\authornote{
+
+Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: \href{mailto:my@email.com}{\nolinkurl{my@email.com}}
+
+}
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
+
+\abstract{%
 Enter abstract here (note the indentation, if you start a new paragraph).
 }
+
+
 
 \begin{document}
 \maketitle
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{my_table <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(cars, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\CommentTok{# Create data}
-  \KeywordTok{round}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DataTypeTok{Mean =} \KeywordTok{mean}\NormalTok{(x), }\DataTypeTok{SD =} \KeywordTok{sd}\NormalTok{(x), }\DataTypeTok{Min =} \KeywordTok{min}\NormalTok{(x), }\DataTypeTok{Max =} \KeywordTok{max}\NormalTok{(x)), }\DecValTok{2}\NormalTok{)}
+\NormalTok{my\_table }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(cars, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\CommentTok{\# Create data}
+  \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\AttributeTok{Mean =} \FunctionTok{mean}\NormalTok{(x), }\AttributeTok{SD =} \FunctionTok{sd}\NormalTok{(x), }\AttributeTok{Min =} \FunctionTok{min}\NormalTok{(x), }\AttributeTok{Max =} \FunctionTok{max}\NormalTok{(x)), }\DecValTok{2}\NormalTok{)}
 \NormalTok{)}
 
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table[}\DecValTok{1}\NormalTok{, , }\DataTypeTok{drop =} \OtherTok{FALSE}\NormalTok{]}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"0 Single row table."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{small =} \OtherTok{TRUE}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table[}\DecValTok{1}\NormalTok{, , }\AttributeTok{drop =} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"0 Single row table."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{small =} \ConstantTok{TRUE}
+\NormalTok{  , }\AttributeTok{placement =} \ConstantTok{NULL}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{table}[tbp]
+\begin{table}
 
 \begin{center}
 \begin{threeparttable}
@@ -218,14 +263,14 @@ Mean & 15.40 & 42.98\\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"1 A small table with custom number formatting."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{font_size =} \StringTok{"small"}
-\NormalTok{  , }\DataTypeTok{digits =} \DecValTok{3}
-\NormalTok{  , }\DataTypeTok{format.args =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }\DataTypeTok{big.mark =} \StringTok{""}\NormalTok{)}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"1 A small table with custom number formatting."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{font\_size =} \StringTok{"small"}
+\NormalTok{  , }\AttributeTok{digits =} \DecValTok{3}
+\NormalTok{  , }\AttributeTok{format.args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{decimal.mark =} \StringTok{","}\NormalTok{, }\AttributeTok{big.mark =} \StringTok{""}\NormalTok{)}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -264,17 +309,17 @@ Max & 25,000 & 120,000\\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{test =}\NormalTok{ my_table}
-\NormalTok{    , }\StringTok{`}\DataTypeTok{moar test}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{my_table}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{test =}\NormalTok{ my\_table}
+\NormalTok{    , }\StringTok{\textasciigrave{}}\AttributeTok{moar test}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ my\_table}
 \NormalTok{  )}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"2 A tiny merged table (list of two) with added stub heading. Not escaped."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{escape =} \OtherTok{FALSE}
-\NormalTok{  , }\DataTypeTok{font_size =} \StringTok{"tiny"}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"2 A tiny merged table (list of two) with added stub heading. Not escaped."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{escape =} \ConstantTok{FALSE}
+\NormalTok{  , }\AttributeTok{font\_size =} \StringTok{"tiny"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -319,16 +364,16 @@ moar test &  & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{test =}\NormalTok{ my_table}
-\NormalTok{    , }\StringTok{`}\DataTypeTok{moar test}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{my_table}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{test =}\NormalTok{ my\_table}
+\NormalTok{    , }\StringTok{\textasciigrave{}}\AttributeTok{moar test}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ my\_table}
 \NormalTok{  )}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"2.25 A merged table (list of two) with table spanners."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{merge_method =} \StringTok{"table_spanner"}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"2.25 A merged table (list of two) with table spanners."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{merge\_method =} \StringTok{"table\_spanner"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -369,19 +414,19 @@ Max & 25.00 & 120.00\\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{var_labelled <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(my_table)}
-\KeywordTok{variable_label}\NormalTok{(var_labelled) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{speed =} \StringTok{"$}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{alpha$"}\NormalTok{, }\DataTypeTok{dist =} \StringTok{"$}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{beta$"}\NormalTok{)}
+\NormalTok{var\_labelled }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(my\_table)}
+\FunctionTok{variable\_label}\NormalTok{(var\_labelled) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{speed =} \StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{alpha$"}\NormalTok{, }\AttributeTok{dist =} \StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta$"}\NormalTok{)}
 
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{test =}\NormalTok{ var_labelled}
-\NormalTok{    , }\StringTok{`}\DataTypeTok{moar test}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{var_labelled}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{test =}\NormalTok{ var\_labelled}
+\NormalTok{    , }\StringTok{\textasciigrave{}}\AttributeTok{moar test}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ var\_labelled}
 \NormalTok{  )}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"2.5 A merged table (list of two) with added stub heading and variable labels. Not escaped."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{escape =} \OtherTok{FALSE}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"2.5 A merged table (list of two) with added stub heading and variable labels. Not escaped."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{escape =} \ConstantTok{FALSE}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -422,14 +467,14 @@ moar test &  & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{test =}\NormalTok{ my_table}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{test =}\NormalTok{ my\_table}
 \NormalTok{  )}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"3 A 'merged' table (list of one) with added stub heading."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"3 A \textquotesingle{}merged\textquotesingle{} table (list of one) with added stub heading."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -465,15 +510,15 @@ test &  & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{my_table2 <-}\StringTok{ }\NormalTok{my_table}
-\KeywordTok{rownames}\NormalTok{(my_table2) <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(my_table2)}
+\NormalTok{my\_table2 }\OtherTok{\textless{}{-}}\NormalTok{ my\_table}
+\FunctionTok{rownames}\NormalTok{(my\_table2) }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(my\_table2)}
 
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table2}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"4 Test if simple row numbers are omitted from table."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table2}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"4 Test if simple row numbers are omitted from table."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -508,12 +553,12 @@ speed & \multicolumn{1}{c}{dist}\\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}\DataTypeTok{A =}\NormalTok{ my_table2, }\DataTypeTok{B =}\NormalTok{ my_table2)}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"5 Test if simple row numbers are omitted from merged table (list of two)."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{A =}\NormalTok{ my\_table2, }\AttributeTok{B =}\NormalTok{ my\_table2)}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"5 Test if simple row numbers are omitted from merged table (list of two)."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -554,12 +599,12 @@ B & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}\DataTypeTok{A =}\NormalTok{ my_table2[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, ], }\DataTypeTok{B =}\NormalTok{ my_table2)}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"5.25 Test if simple row numbers are omitted from merged table with unequal row numbers (list of two)."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{A =}\NormalTok{ my\_table2[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, ], }\AttributeTok{B =}\NormalTok{ my\_table2)}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"5.25 Test if simple row numbers are omitted from merged table with unequal row numbers (list of two)."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -598,12 +643,12 @@ B & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}\DataTypeTok{A =}\NormalTok{ cars[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, ], }\DataTypeTok{B =}\NormalTok{ cars[}\DecValTok{3}\OperatorTok{:}\DecValTok{6}\NormalTok{, ])}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"5.25 Test if simple continued row numbers are omitted from merged table (list of two)."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{A =}\NormalTok{ cars[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, ], }\AttributeTok{B =}\NormalTok{ cars[}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{, ])}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"5.25 Test if simple continued row numbers are omitted from merged table (list of two)."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -642,13 +687,13 @@ B & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{list}\NormalTok{(}\DataTypeTok{A =}\NormalTok{ cars[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, ], }\DataTypeTok{B =}\NormalTok{ cars[}\DecValTok{5}\OperatorTok{:}\DecValTok{7}\NormalTok{, ]}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{A =}\NormalTok{ cars[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, ], }\AttributeTok{B =}\NormalTok{ cars[}\DecValTok{5}\SpecialCharTok{:}\DecValTok{7}\NormalTok{, ]}
 \NormalTok{      )}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"5.25 Test if simple discontinued row numbers are preserved from merged table(list of two)."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()"}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"5.25 Test if simple discontinued row numbers are preserved from merged table(list of two)."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()"}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -686,15 +731,15 @@ B &  & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"6 Test of column spanner and stub indenting."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
-\NormalTok{  , }\DataTypeTok{row.names =} \OtherTok{TRUE}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{stub_indents =} \KeywordTok{list}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{3}\NormalTok{)}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"6 Test of column spanner and stub indenting."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()."}
+\NormalTok{  , }\AttributeTok{row.names =} \ConstantTok{TRUE}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{col\_spanners =} \FunctionTok{list}\NormalTok{(}\AttributeTok{Measure =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{stub\_indents =} \FunctionTok{list}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{3}\NormalTok{)}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -731,19 +776,19 @@ Max & 25.00 & 120.00\\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{my_table <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{t}\NormalTok{(my_table), }\KeywordTok{t}\NormalTok{(my_table), }\KeywordTok{t}\NormalTok{(my_table))}
-\KeywordTok{rownames}\NormalTok{(my_table) <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(my_table)}
+\NormalTok{my\_table }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{t}\NormalTok{(my\_table), }\FunctionTok{t}\NormalTok{(my\_table), }\FunctionTok{t}\NormalTok{(my\_table))}
+\FunctionTok{rownames}\NormalTok{(my\_table) }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(my\_table)}
 
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"7 Test of midurles and landscape mode and named stub indentation."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{midrules =} \DecValTok{4}
-\NormalTok{  , }\DataTypeTok{stub_indents =} \KeywordTok{list}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{), }\DataTypeTok{Jo =} \KeywordTok{c}\NormalTok{(}\DecValTok{4}\OperatorTok{:}\DecValTok{6}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{landscape =} \OtherTok{TRUE}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"7 Test of midurles and landscape mode and named stub indentation."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()."}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{col\_spanners =} \FunctionTok{list}\NormalTok{(}\AttributeTok{Measure =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{midrules =} \DecValTok{4}
+\NormalTok{  , }\AttributeTok{stub\_indents =} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{), }\AttributeTok{Jo =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\SpecialCharTok{:}\DecValTok{6}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{landscape =} \ConstantTok{TRUE}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -785,19 +830,19 @@ Jo &  &  & \\ \midrule
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{my_table <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(my_table, my_table, my_table, my_table, my_table, my_table, my_table)}
-\KeywordTok{rownames}\NormalTok{(my_table) <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(my_table)}
+\NormalTok{my\_table }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(my\_table, my\_table, my\_table, my\_table, my\_table, my\_table, my\_table)}
+\FunctionTok{rownames}\NormalTok{(my\_table) }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(my\_table)}
 
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"8 A long table."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{midrules =} \DecValTok{4}
-\NormalTok{  , }\DataTypeTok{stub_indents =} \KeywordTok{list}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{), }\DataTypeTok{Jo =} \KeywordTok{c}\NormalTok{(}\DecValTok{4}\OperatorTok{:}\DecValTok{6}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{longtable =} \OtherTok{TRUE}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"8 A long table."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()."}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{col\_spanners =} \FunctionTok{list}\NormalTok{(}\AttributeTok{Measure =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{midrules =} \DecValTok{4}
+\NormalTok{  , }\AttributeTok{stub\_indents =} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{), }\AttributeTok{Jo =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\SpecialCharTok{:}\DecValTok{6}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{longtable =} \ConstantTok{TRUE}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -877,17 +922,17 @@ Jo &  &  & \\ \midrule
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{apa_table}\NormalTok{(}
-\NormalTok{  my_table}
-\NormalTok{  , }\DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
-\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"9 A long table in landscape mode."}
-\NormalTok{  , }\DataTypeTok{note =} \StringTok{"This table was created using apa_table()."}
-\NormalTok{  , }\DataTypeTok{added_stub_head =} \StringTok{"Desciptives"}
-\NormalTok{  , }\DataTypeTok{col_spanners =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{Measure =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{midrules =} \DecValTok{4}
-\NormalTok{  , }\DataTypeTok{stub_indents =} \KeywordTok{list}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{), }\DataTypeTok{Jo =} \KeywordTok{c}\NormalTok{(}\DecValTok{4}\OperatorTok{:}\DecValTok{6}\NormalTok{))}
-\NormalTok{  , }\DataTypeTok{longtable =} \OtherTok{TRUE}
-\NormalTok{  , }\DataTypeTok{landscape =} \OtherTok{TRUE}
+\FunctionTok{apa\_table}\NormalTok{(}
+\NormalTok{  my\_table}
+\NormalTok{  , }\AttributeTok{align =} \FunctionTok{c}\NormalTok{(}\StringTok{"l"}\NormalTok{, }\StringTok{"r"}\NormalTok{, }\StringTok{"r"}\NormalTok{)}
+\NormalTok{  , }\AttributeTok{caption =} \StringTok{"9 A long table in landscape mode."}
+\NormalTok{  , }\AttributeTok{note =} \StringTok{"This table was created using apa\_table()."}
+\NormalTok{  , }\AttributeTok{added\_stub\_head =} \StringTok{"Desciptives"}
+\NormalTok{  , }\AttributeTok{col\_spanners =} \FunctionTok{list}\NormalTok{(}\AttributeTok{Measure =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{midrules =} \DecValTok{4}
+\NormalTok{  , }\AttributeTok{stub\_indents =} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{), }\AttributeTok{Jo =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\SpecialCharTok{:}\DecValTok{6}\NormalTok{))}
+\NormalTok{  , }\AttributeTok{longtable =} \ConstantTok{TRUE}
+\NormalTok{  , }\AttributeTok{landscape =} \ConstantTok{TRUE}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -965,16 +1010,16 @@ Jo &  &  & \\ \midrule
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{counts <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{18}\NormalTok{,}\DecValTok{17}\NormalTok{,}\DecValTok{15}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{25}\NormalTok{,}\DecValTok{13}\NormalTok{,}\DecValTok{12}\NormalTok{)}
-\NormalTok{outcome <-}\StringTok{ }\KeywordTok{gl}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{9}\NormalTok{)}
-\NormalTok{treatment <-}\StringTok{ }\KeywordTok{gl}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{)}
-\NormalTok{d.AD <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(treatment, outcome, counts)}
-\NormalTok{glm.D93 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(counts }\OperatorTok{~}\StringTok{ }\NormalTok{outcome }\OperatorTok{+}\StringTok{ }\NormalTok{treatment, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{())}
+\NormalTok{counts }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{18}\NormalTok{,}\DecValTok{17}\NormalTok{,}\DecValTok{15}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{25}\NormalTok{,}\DecValTok{13}\NormalTok{,}\DecValTok{12}\NormalTok{)}
+\NormalTok{outcome }\OtherTok{\textless{}{-}} \FunctionTok{gl}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{9}\NormalTok{)}
+\NormalTok{treatment }\OtherTok{\textless{}{-}} \FunctionTok{gl}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{)}
+\NormalTok{d.AD }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(treatment, outcome, counts)}
+\NormalTok{glm.D93 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(counts }\SpecialCharTok{\textasciitilde{}}\NormalTok{ outcome }\SpecialCharTok{+}\NormalTok{ treatment, }\AttributeTok{family =} \FunctionTok{poisson}\NormalTok{())}
 
-\KeywordTok{apa_table}\NormalTok{(}
-  \KeywordTok{apa_print}\NormalTok{(glm.D93)}\OperatorTok{$}\NormalTok{table}
-\NormalTok{  , }\DataTypeTok{align =} \StringTok{"lrrrr"}
-\NormalTok{  , }\DataTypeTok{escape =} \OtherTok{FALSE}
+\FunctionTok{apa\_table}\NormalTok{(}
+  \FunctionTok{apa\_print}\NormalTok{(glm.D93)}\SpecialCharTok{$}\NormalTok{table}
+\NormalTok{  , }\AttributeTok{align =} \StringTok{"lrrrr"}
+\NormalTok{  , }\AttributeTok{escape =} \ConstantTok{FALSE}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -990,11 +1035,11 @@ Jo &  &  & \\ \midrule
 \toprule
 Predictor & \multicolumn{1}{c}{$b$} & \multicolumn{1}{c}{95\% CI} & \multicolumn{1}{c}{$z$} & \multicolumn{1}{c}{$p$}\\
 \midrule
-Intercept & 3.04 & $[2.70$, $3.37]$ & 17.81 & < .001\\
-Outcome2 & -0.45 & $[-0.86$, $-0.06]$ & -2.25 & .025\\
-Outcome3 & -0.29 & $[-0.68$, $0.08]$ & -1.52 & .128\\
-Treatment2 & 0.00 & $[-0.39$, $0.39]$ & 0.00 & > .999\\
-Treatment3 & 0.00 & $[-0.39$, $0.39]$ & 0.00 & > .999\\
+Intercept & 3.04 & {}[2.70, 3.37] & 17.81 & < .001\\
+Outcome2 & -0.45 & {}[-0.86, -0.06] & -2.25 & .025\\
+Outcome3 & -0.29 & {}[-0.68, 0.08] & -1.52 & .128\\
+Treatment2 & 0.00 & {}[-0.39, 0.39] & 0.00 & > .999\\
+Treatment3 & 0.00 & {}[-0.39, 0.39] & 0.00 & > .999\\
 \bottomrule
 \end{tabular}
 
@@ -1002,5 +1047,6 @@ Treatment3 & 0.00 & $[-0.39$, $0.39]$ & 0.00 & > .999\\
 \end{center}
 
 \end{table}
+
 
 \end{document}

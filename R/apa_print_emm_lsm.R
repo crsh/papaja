@@ -1,48 +1,73 @@
-#' Format statistics (APA 6th edition)
+#' Typeset Statistical Results from Estimated Marginal Means
 #'
-#' Takes various \code{lsmeans} and \code{emmeans} objects to create formatted character strings to report the results in
-#' accordance with APA manuscript guidelines.  \emph{These methods are not properly tested and should be
-#' considered experimental.}
+#' Takes various \pkg{emmeans} objects to create formatted character strings to
+#' report the results in accordance with APA manuscript guidelines.
+#' \emph{\pkg{emmeans} supports a wide range of analyses, not all
+#' of which are currently (fully) supported. Proceed with caution.}
 #'
 #' @param x Object
-# #' @param stat_name Character. If \code{NULL} (default) the name given in \code{x} (or a formally correct
-#'    adaptation, such as \eqn{\chi^2} instead of "x-squared") is used for the \emph{test statistic}, otherwise the
-# #'    supplied name is used.
-#' @param est_name Character. If \code{NULL} (default) the name is guessed from the function call of the model object passed to \code{lsmeans}/\code{emmeans}.
-#' @param contrast_names Character. An optional vector of names to identify calculated contrasts.
-#' @param in_paren Logical. Indicates if the formated string will be reported inside parentheses.
-#' @inheritDotParams printnum
+#' @param est_name Character. If `NULL` (default) the name of the estimate
+#' is inferred from the function call of the model object supplied to
+#' \pkg{emmeans}.
+#' @param contrast_names Character. An optional vector of names to label the
+#' calculated contrasts.
+#' @param conf.int Numeric. Confidence level for confidence intervals.
+#' @inheritParams emmeans::summary.emmGrid
+#' @inheritParams glue_apa_results
+#' @inheritDotParams apa_num
 #' @details
 #'
-#'    ADJUSTED CONFIDENCE INTERVALS
+#' When p-values and confidence intervals are adjusted for multiple testing,
+#' the correction method is added as an index to the output (e.g.
+#' `p_{Tukey(3)}`). Values in parenthesis indicate the size of the family of
+#' tests or the rank of the set of linear functions (for the Scheffé method).
 #'
-#'    If \code{in_paren} is \code{TRUE} parentheses in the formated string, such as those surrounding degrees
-#'    of freedom, are replaced with brackets.
+#' If possible, each family of tests is additionally marked in the returned
+#' table by alphabetic superscripts.
 #'
-#' @return \code{apa_print()} returns a list containing the following components according to the input:
+#' Generally, the `summary_emm` objects returned by `emmeans::summary_emm` omit
+#' information that may be needed to add some of the information on the
+#' adjustments made to p-values and confidence intervals. It is therefore
+#' preferable to pass `emmGrid`-objects if possible. For example, by using
+#' `emmeans(object, 1 ~ x1, adjust = "scheffe")`.
 #'
-#'    \describe{
-#'      \item{\code{statistic}}{A character string giving the test statistic, parameters (e.g., degrees of freedom),
-#'          and \emph{p} value.}
-#'      \item{\code{estimate}}{A character string giving the descriptive estimates and confidence intervals if possible}
-#'          % , either in units of the analyzed scale or as standardized effect size.
-#'      \item{\code{full_result}}{A joint character string comprised of \code{est} and \code{stat}.}
-#'      \item{\code{table}}{A data.frame containing the complete contrast table, which can be passed to \code{\link{apa_table}}.}
-#'    }
+#' @evalRd apa_results_return_value()
 #'
 #' @family apa_print
 #' @examples
-#'    NULL
+#'   # From the emmeans manual:
+#'   library(emmeans)
+#'   warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
+#'   warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#'   warp.contr <- contrast(warp.emm, "poly")
+#'
+#'   apa_print(warp.contr)
+#'
+#'   # In this example, because degrees of freedom are equal across all rows
+#'   # of the output, it is possible to move that information to the variable
+#'   # labels. This is useful if a compact results table is required:
+#'
+#'   df_into_label(apa_print(warp.contr))
+#'
 #' @method apa_print emmGrid
 #' @export
 
-apa_print.emmGrid <- function(x, ...) {
-  ellipsis <- list(...)
+apa_print.emmGrid <- function(x, infer = TRUE, conf.int = 0.95, ...) {
+
+  ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
+  conf.int <- ellipsis_ci$conf.int
+  ellipsis <- ellipsis_ci$ellipsis
+
   if(is.null(ellipsis$est_name)) {
     ellipsis$est_name <- est_name_from_call(x)
   }
 
-  ellipsis$x <- summary(x, infer = TRUE)
+  ellipsis$x <- summary(x, infer = infer, level = conf.int)
+
+  # Add family size, because it gets lost otherwise
+  famSize <- attr(x, "misc")$famSize
+  if(!is.null(famSize)) attr(ellipsis$x, "famSize") <- famSize
+
   do.call("apa_print", ellipsis)
 }
 
@@ -55,7 +80,7 @@ apa_print.summary_emm <- function(
   x
   , contrast_names = NULL
   # , stat_name = NULL
-  , est_name = NULL
+  , est_name = "\\hat{\\theta}"
   , in_paren = FALSE
   , ...
 ) {
@@ -65,220 +90,260 @@ apa_print.summary_emm <- function(
   validate(in_paren, check_class = "logical", check_length = 1)
   if(!is.null(contrast_names)) validate(contrast_names, check_class = "character")
 
-  # # Indentify joint_tests() output
-  # if(attr(x, "estName") == "F.ratio") {
-  #   apa_res <- apa_print_summary_emm_joint_tests(x, ...)
-  #   return(apa_res)
-  # }
+  # Indentify joint_tests() output
+  if(isTRUE(attr(x, "estName") == "F.ratio")) {
+    apa_res <- apa_print_summary_emm_joint_tests(x, in_paren = in_paren, ...)
+    return(apa_res)
+  }
 
-  ci <- get_emm_conf_level(x)
-  ci_supplied <- !length(ci) == 0
+  null.value <- x$null.value
+  if(is.null(null.value)) {
+    null.value <- 0
+  }
+  # delta <- attr(x, "delta")
+  # one.sided <- attr(x, "side")
+
+
+  # Attempt to extract family size from messages for summary-objects
+  object_messages <- attr(x, "mesg")
+
+  if(!is.null(object_messages)) {
+    family_size_mesg <- .str_extract_first(
+      object_messages
+      , "for (\\d+) (estimates|tests)"
+    )
+    family_size_mesg <- family_size_mesg[!length(family_size_mesg) == 0]
+
+    if(length(family_size_mesg) > 0) {
+      fam_size <- as.numeric(.str_extract_first(family_size_mesg, "\\d+"))
+      attr(x, "famSize") <- unique(fam_size)
+    }
+  }
+
+  adjust <- parse_adjust_name(
+    attr(x, "adjust")
+    , attr(x, "famSize")
+    , object_messages
+  )
+
+  tidy_x <- data.frame(broom::tidy(x, null.value = null.value))
+
+  # Hot fix while we wait on a merge of this PR: https://github.com/tidymodels/broom/pull/1047
+  tidy_x <- rename_column(
+    tidy_x
+    , c("prob", "rate", "ratio", "odds.ratio", "asymp.LCL", "asymp.UCL", "z.ratio")
+    , c("estimate", "estimate", "estimate", "estimate", "conf.low", "conf.high", "statistic")
+  )
+
+  conf_level <- get_emm_conf_level(x)
+  ci_supplied <- !length(conf_level) == 0
   p_supplied <- "p.value" %in% colnames(x)
-  if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?lsmeans::summary' for details.")
+  # if(!ci_supplied & !p_supplied) stop("Object 'x' includes neither confidence intervals nor test statistics (i.e., p-values). See '?emmeans::summary' for details.")
 
   if(!ci_supplied) {
-    warning("Object 'x' does not include confidence intervals. APA guidelines recommend to routinely report confidence intervals for all estimates.")
+    if(p_supplied) {
+      warning("Object 'x' does not include confidence intervals. APA guidelines recommend to routinely report confidence intervals for all estimates.")
+    }
 
     conf_level <- NULL
   } else {
-    if(ci < 1) ci <- ci * 100
-    conf_level <- paste0(ci, "\\% CI")
+    if(conf_level < 1) conf_level <- conf_level * 100
+    if(is.null(adjust)) {
+      conf_level <- paste0(conf_level, "\\% CI")
+    } else {
+      conf_level <- paste0("$", conf_level, "\\%\\ \\mathrm{CI}_\\mathrm{\\scriptstyle ", adjust["conf.int"], "}$")
+    }
   }
 
   if(!p_supplied) {
-    warning("Object 'x' does not include test statistics (i.e., p-values).")
+    # warning("Object 'x' does not include test statistics (i.e., p-values).")
 
     df_colname <- NULL
     stat_colnames <- NULL
   } else {
-    dfdigits <- as.numeric(x$df %%1 > 0) * 2
-    dfdigits <- ifelse(is.na(dfdigits), 0, dfdigits) # In case df are Inf
-    multiple_df <- !isTRUE(all.equal(max(x$df), min(x$df)))
-    df_colname <- "df"
-    stat_colnames <- c("statistic", "p.value")
+    df_colname <- names(tidy_x)[grepl("df\\.*", names(tidy_x))]
+    multiple_df <- !isTRUE(all.equal(min(tidy_x[[df_colname]]), max(tidy_x[[df_colname]])))
+    p_value <- names(tidy_x)[grepl("p.value", names(tidy_x), fixed = TRUE)]
+    stat_colnames <- c("statistic", df_colname, p_value)
   }
 
+  # Assemble table
+
+  ## Add split variables
   split_by <- attr(x, "by.vars") # lsmeans
-  if(is.null(split_by)) split_by <- unlist(attr(x, "misc")[c("by.vars", "pri.vars")]) # emmeans
   pri_vars <- attr(x, "pri.vars")
-  factors <- c(pri_vars, split_by)
-
-
-  # Assamble table
-  contrast_table <- data.frame(x, check.names = FALSE)
-  contrast_table[, factors] <- printnum(contrast_table[, factors])
-
-  if("null" %in% colnames(contrast_table)) { # This could go in a table note
-    contrast_table$null <- NULL
+  if(is.null(split_by)) { # emmeans
+    split_by <- unlist(attr(x, "misc")[c("by.vars")])
   }
+  if(is.null(pri_vars)) {
+    pri_vars <- unlist(attr(x, "misc")[c("pri.vars")])
+  }
+  factors <- unique(c(pri_vars, split_by))
 
-  contrast_table <- rename_column(
-    contrast_table
-    , c("lsmean", "emmean", "ratio", "effect.size")
-    , "estimate"
-  )
-  contrast_table <- rename_column(contrast_table, "SE", "std.error")
+  # One-sided regression coefficient test via emtrends(. ~ 1, var = ...)
+  # factors <- gsub("^1$", "X1", factors)
 
-  contrast_table$estimate <- printnum(contrast_table$estimate, ...)
+  ## Typeset columns
+  tidy_x[, factors] <- beautify_terms(tidy_x[, factors], ...)
+
+  tidy_x$estimate <- apa_num(tidy_x$estimate, ...)
+
+  if(ci_supplied) {
+    tidy_x$conf.int <- unlist(
+      apa_confint(
+        tidy_x[, c("conf.low", "conf.high")]
+        , use_math = FALSE
+      )
+      , ...
+    )
+  }
 
   if(p_supplied) {
-    contrast_table <- rename_column(contrast_table, c("t.ratio", "z.ratio"), "statistic")
-    contrast_table$statistic <- printnum(contrast_table$statistic)
-    contrast_table$df <- printnum(contrast_table$df, digits = dfdigits)
-    contrast_table$p.value <- printp(contrast_table$p.value)
+    if(all(tidy_x$null.value == 0)) tidy_x$null.value <- NULL
+
+    tidy_x$statistic <- apa_num(tidy_x$statistic)
+    tidy_x$df <- apa_df(tidy_x$df)
+    tidy_x[[p_value]] <- apa_p(tidy_x[[p_value]])
+  }
+
+  if(!is.null(contrast_names)) tidy_x$contrast <- contrast_names
+
+  ## Reorder columns
+  tidy_x <- cbind(
+    tidy_x[, 1:which(colnames(tidy_x) == "estimate")]
+    , tidy_x[which(colnames(tidy_x) == "conf.int")]
+    , tidy_x[which(colnames(tidy_x) == "null.value")]
+    , tidy_x[, stat_colnames] # Will be NULL if not supplied
+  )
+
+  ## Add variable labels
+  tidy_x_labels <- c(estimate = paste0("$", est_name, "$"))
+
+  if("contrast" %in% factors) {
+    tidy_x_labels <- c(tidy_x_labels, contrast = "Contrast")
   }
 
   if(ci_supplied) {
-    contrast_table <- rename_column(contrast_table, c("lower.CL", "asymp.LCL"), "ll")
-    contrast_table <- rename_column(contrast_table, c("upper.CL", "asymp.UCL"), "ul")
-
-    ci_table <- data.frame(conf.int = unlist(print_confint(matrix(c(contrast_table$ll, contrast_table$ul), ncol = 2), margin = 2, conf_level = NULL, ...)))
-    contrast_table$std.error <- NULL
-    contrast_table$ll <- NULL
-    contrast_table$ul <- NULL
-
-    contrast_table <- cbind(
-      contrast_table[, 1:which(colnames(contrast_table) == "estimate")]
-      , ci_table
-      , contrast_table[, c(df_colname, stat_colnames)] # Will be NULL if not supplied
-    )
-    contrast_table$conf.int <- as.character(contrast_table$conf.int)
-    # contrast_table <- rename_column(contrast_table, "confint", "ci")
-  } else {
-    contrast_table$std.error <- NULL
+    tidy_x_labels <- c(tidy_x_labels, conf.int = conf_level)
   }
 
-  ## Set variable labels
   if(p_supplied) {
-    if(multiple_df) { # Put df in column heading
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "df", "p.value")
-      # contrast_table$ci <- as.character(contrast_table$ci)
-      variable_label(contrast_table) <- c(
-        estimate = paste0("$", est_name, "$")
-        , conf.int = conf_level
-        , statistic = "$t$"
-        , df = "$\\mathit{df}$"
-        , p.value = "$p$"
-      )
+    if(all(tidy_x$df == "$\\infty$")) {
+      test_stat <- "z"
+      tidy_x$df <- NULL
+    } else {
+      test_stat <- "t"
+      tidy_x_labels <- c(tidy_x_labels, df = "$\\mathit{df}$")
     }
-  } else {
-    # colnames(contrast_table) <- c("estimate", "ci")
-    # contrast_table$ci <- as.character(contrast_table$ci)
-    variable_label(contrast_table) <- c(
-      estimate = paste0("$", est_name, "$")
-      , conf.int = conf_level
+
+    tidy_x_labels <- c(tidy_x_labels, statistic = paste0("$", test_stat, "$"))
+
+    if("null.value" %in% names(tidy_x)) {
+      tidy_x_labels <- c(tidy_x_labels, null.value = "$\\theta_0$")
+    }
+
+    variable_labels(tidy_x[[p_value]]) <- switch(
+      p_value
+      , "p.value" = "$p$"
+      , "adj.p.value" = paste0("$p_\\mathrm{\\scriptstyle ", adjust["p.value"], "}$")
     )
   }
 
-  contrast_table <- default_label(contrast_table) # Add default labels for stratifying factors
+  variable_labels(tidy_x) <- tidy_x_labels
+
+  # Add default labels for stratifying factors
+  tidy_x <- default_label(tidy_x)
 
   ## Add contrast names
-  # rownames(contrast_table) <- if(!is.null(contrast_names)) contrast_names else contrast_table$contrast
-  # contrast_table <- contrast_table[, which(colnames(contrast_table) != "contrast")]
-  if(!is.null(contrast_names)) contrast_table$contrast <- contrast_names
+  # rownames(tidy_x) <- if(!is.null(contrast_names)) contrast_names else tidy_x$contrast
+  # tidy_x <- tidy_x[, which(colnames(tidy_x) != "contrast")]
+
   if(length(factors) > 1) {
-    contrast_row_names <- apply(contrast_table[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])], 1, paste, collapse = "_")
+    contrast_row_names <- apply(
+      tidy_x[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])]
+      , MARGIN = 1L
+      , FUN = paste
+      , collapse = "_"
+    )
+  } else if(length(factors) == 1) {
+    contrast_row_names <- tidy_x[, factors, drop = TRUE]
   } else {
-    contrast_row_names <- contrast_table[, factors]
+    stop("Could not determine names to address each result by.")
+  }
+  terms_sanitized <- sanitize_terms(contrast_row_names)
+
+  ## Mark test families (see below)
+  if(!is.null(attr(x, "famSize"))) {
+    if(!is.null(split_by)) {
+      family_mark <- letters[as.numeric(interaction(tidy_x[, split_by]))]
+    } else if(!attr(x, "famSize") < nrow(tidy_x)) {
+      family_mark <- letters[1:nrow(tidy_x)]
+    } else {
+      adjust <- NULL # No marks
+    }
+  } else {
+    adjust <- NULL # No marks
   }
 
-  rownames(contrast_table) <- sanitize_terms(
-    gsub( # Leading or double underscores from simple contrasts where there are dots in some columns that are replaced by ""
-      "^\\_|\\_(\\_)", "\\1"
-      , gsub(" |\\.", "", contrast_row_names)
-    )
-  )
-
   ## Add structuring columns
-  if(length(factors) > 1 && !any(contrast_table[, factors] == ".")) {
+  if(length(factors) > 1 && !any(tidy_x[, factors] == ".")) {
 
     factors[-which(factors == "contrast")] <- rev(factors[-which(factors == "contrast")])
     str_factors <- rev(c(pri_vars[-1], split_by))
-    str_cols <- contrast_table[, str_factors, drop = FALSE]
+    str_cols <- tidy_x[, str_factors, drop = FALSE]
     for(i in seq_along(str_factors)) {
       if(i > 1) {
-        tmp <- apply(contrast_table[, str_factors[1:i]], 1, paste, collapse = "_")
+        tmp <- apply(tidy_x[, str_factors[1:i]], 1, paste, collapse = "_")
       } else {
-        tmp <- contrast_table[, str_factors[i]]
+        tmp <- tidy_x[, str_factors[i]]
       }
-      str_cols[, str_factors[i]] <- as.character(contrast_table[, str_factors[i]])
+      str_cols[, str_factors[i]] <- as.character(tidy_x[, str_factors[i]])
       str_cols[duplicated(tmp), str_factors[i]] <- ""
     }
-    contrast_table[, str_factors] <- str_cols[, str_factors]
-    str_col_order <- c(str_factors, colnames(contrast_table)[!colnames(contrast_table) %in% str_factors])
-    contrast_table <- contrast_table[, str_col_order]
-    contrast_table[, pri_vars[1]] <- as.character(contrast_table[, pri_vars[1]])
-
-    # contrast_list <- split(x, x[, factors])
-    # contrast_list <- lapply(contrast_list, str_column, i)
-    # test <- do.call(rbind, contrast_list[grep(paste(levels(unlist(x[, factors[2]])), collapse = "|"), names(contrast_list))])
-    # prep_table <- merge_tables(
-    #   contrast_list
-    #   , row_names = rep(FALSE, length(contrast_list))
-    #   , added_stub_head = paste(split_by, collapse = "_")
-    # )
-    # prep_table <- lapply(prep_table, function(x) {
-    #   x[, split_by] <- x[1, split_by]
-    #   x
-    # })
-    # contrast_table <- do.call(rbind, prep_table)
-    # contrast_table <- droplevels(contrast_table)
-  # } else {
-  #   contrast_table <- x
-  # }
+    tidy_x[, str_factors] <- str_cols[, str_factors]
+    str_col_order <- c(str_factors, colnames(tidy_x)[!colnames(tidy_x) %in% str_factors])
+    tidy_x <- tidy_x[, str_col_order]
+    tidy_x[, pri_vars[1]] <- as.character(tidy_x[, pri_vars[1]])
   }
 
-  if("contrast" %in% factors) {
-    variable_label(contrast_table) <- c(contrast = "Contrast")
+  if(any(tidy_x[, factors] == ".")) {
+    tidy_x[, factors] <- apply(
+      tidy_x[, factors]
+      , 2
+      , gsub
+      , pattern = "."
+      , replacement = ""
+      , fixed = TRUE
+    )
   }
 
-  if(any(contrast_table[, factors] == ".")) {
-    contrast_table[, factors] <- apply(contrast_table[, factors], 2, gsub, pattern = "\\.", replacement = "")
-  }
+  # One-sided regression coefficient test via emtrends(. ~ 1, var = ...)
+  # tidy_x["X1"] <- NULL
 
   # Concatenate character strings and return as named list
-  apa_res <- init_apa_results()
+  class(tidy_x) <- c("apa_results_table", "data.frame")
 
-  if(ci_supplied) {
-    apa_res$estimate <- apply(contrast_table, 1, function(y) {
-      paste0("$", est_name, " = ", y["estimate"], "$, ", conf_level, " ", y["ci"])
-    })
-  } else {
-    apa_res$estimate <- apply(contrast_table, 1, function(y) {
-      paste0("$", est_name, " = ", y["estimate"], "$")
-    })
-  }
+  apa_res <- glue_apa_results(
+    tidy_x
+    , est_glue = est_glue(tidy_x)
+    , stat_glue = stat_glue(tidy_x)
+    , in_paren = in_paren
+    , term_names = make.names(terms_sanitized)
+  )
 
-  if(p_supplied) {
-    apa_res$statistic <- apply(contrast_table, 1, function(y) {
-      paste0("$t(", y["df"], ") = ", y["statistic"], "$, $p ", add_equals(y["p.value"]), "$")
-    })
-
-    # contrast_table[, df_colname] <- NULL
-
-    apa_res$full_result <- paste(apa_res$est, apa_res$stat, sep = ", ")
-    names(apa_res$full_result) <- names(apa_res$est)
-  }
-
-  apa_res[] <- lapply(apa_res, as.list) # use [] to preserve class
-
-  if(p_supplied) {
-    if(!multiple_df) { # Remove df column and put df in column heading
-      df <- contrast_table$df[1]
-      contrast_table <- contrast_table[, which(colnames(contrast_table) != "df")]
-      # colnames(contrast_table) <- c("estimate", "ci", "statistic", "p.value")
-      # contrast_table$ci <- as.character(contrast_table$ci)
-      variable_label(contrast_table) <- c(
-        estimate = paste0("$", est_name, "$")
-        , conf.int = conf_level
-        , statistic = paste0("$t(", df, ")$")
-        , p.value = "$p$"
-      )
+  ## Mark test families
+  if(!is.null(adjust)) {
+    if(ci_supplied) {
+      ci_label <- variable_label(apa_res$table$conf.int)
+      apa_res$table$conf.int <- paste0(apa_res$table$conf.int, "${}^", family_mark, "$")
+      variable_label(apa_res$table$conf.int) <- ci_label
+    }
+    if(p_supplied) {
+      p_label <- variable_label(apa_res$table[[p_value]])
+      apa_res$table[[p_value]] <- paste0(apa_res$table[[p_value]], "${}^", family_mark, "$")
+      variable_label(apa_res$table[[p_value]]) <- p_label
     }
   }
-
-  apa_res$table <- contrast_table
-  attr(apa_res$table, "class") <- c("apa_results_table", "data.frame")
 
   apa_res
 }
@@ -297,38 +362,114 @@ apa_print.lsmobj <- function(x, ...) {
 #' @export
 
 apa_print.summary.ref.grid <- function(x, ...) {
-  validate(x, check_class = "summary.ref.grid", check_NA = FALSE)
   apa_print.summary_emm(x, ...)
 }
 
 
-# apa_print_summary_emm_joint_tests <- function(x, ...) {
-#
-# }
+apa_print_summary_emm_joint_tests <- function(x, in_paren, ...) {
 
+  # Retain structuring variables
+  by_vars <- attr(x, "by.vars")
+  if(!is.null(by_vars)) {
+    canonical_table <- canonize(x[, -which(names(x) %in% by_vars)])
+    by_vars <- default_label(
+      as.data.frame(
+        lapply(x[by_vars], as.character)
+        , stringsAsFactors = FALSE
+        , check.names = FALSE
+      )
+    )
+  } else {
+    canonical_table <- canonize(x)
+  }
 
+  tinylabels::variable_labels(canonical_table) <- c(term = "Effect")
+
+  ellipsis <- list(...)
+  ellipsis <- defaults(
+    ellipsis
+    , set.if.null = list(
+      digits = 3L
+      , gt1 = FALSE
+    )
+  )
+  ellipsis$x <- canonical_table
+  beautiful_table <- do.call("beautify", ellipsis)
+  term_names <- attr(beautiful_table, "sanitized_term_names")
+
+  if(!is.null(by_vars)) {
+    beautiful_table <- as.data.frame(
+      c(by_vars, beautiful_table)
+      , stringsAsFactors = FALSE
+      , check.names = FALSE
+    )
+
+    class(beautiful_table) <- c("apa_results_table", "data.frame")
+
+    term_names <- sanitize_terms(
+      apply(cbind(term_names, by_vars), 1, paste, collapse = "_")
+    )
+  }
+
+  # Glue results
+  glue_apa_results(
+    beautiful_table
+    , est_glue = construct_glue(beautiful_table, "estimate")
+    , stat_glue = construct_glue(beautiful_table, "statistic")
+    , term_names = term_names
+    , in_paren = in_paren
+    , est_first = FALSE
+    , simplify = FALSE
+  )
+}
 
 get_emm_conf_level <- function(x) {
   lsm_messages <- attr(x, "mesg")
   conf_level_message <- lsm_messages[grepl("Confidence level", lsm_messages)]
-  ci <- unlist(regmatches(conf_level_message, gregexpr("0\\.\\d+", conf_level_message, useBytes = TRUE)))
-  as.numeric(ci)
+  conf_level <- .str_extract_first(conf_level_message, "0\\.\\d+")
+  as.numeric(conf_level)
 }
 
 est_name_from_call <- function(x) {
   # analysis_function <- as.character(attr(x, "model.info")$call[[1]])
-  contains_contrasts <- attr(x, "misc")$pri.vars[1] == "contrast" || attr(x, "misc")$estType %in% c("paris", "contrast")
 
-  # roles <- attr(x, "roles")
-  # is_multivariate <- all(roles$predictors %in% roles$multresp) ||
-  #   (roles$predictors == "contrast" & length(roles$multresp) > 0)
-  # contains_responses <- attr(x, "misc")$estType == "response"
+  misc <- x@misc
 
-  if(x@misc$inv.lbl == "ratio" && !is.null(x@misc$predict.type) && x@misc$predict.type == "response") {
-    est_name <- "Ratio" # This could certainly be refined (e.g., OR, ratio of geometric means etc.)
+  contains_contrasts <- misc$pri.vars[1] == "contrast" || misc$estType %in% c("pairs", "contrast", "rbind")
+
+  type <- misc$predict.type
+  if (is.null(type)) type <- "link"
+  inv <- (type %in% c("response", "mu", "unlink"))
+
+  link <- NULL
+  if(is.character(misc$tran) && (misc$tran != "none")) {
+    link <- misc$tran
+  } else if(is.character(misc$orig.tran) && (misc$orig.tran != "none")) {
+    link <- misc$orig.tran
+  }
+
+  # TODO: Review estimate names!
+  if ((!inv || is.null(misc$tran)) && !is.null(link)) {
+    # See https://github.com/rvlenth/emmeans/blob/be94689c22df5fae23287ce2b7ed7a21232fb32b/R/transformations.R
+    est_name <- switch(
+      link
+      , "logit"     = "\\mathrm{logit}(p)"
+      , "probit"    = "\\Phi^{-1}(p)"
+      , "cauchit"   = "\\mathrm{cauchit}(p)"
+      , "cloglog"   = "\\mathrm{cloglog}(p)"
+      , "log"       = "\\log(M)"
+      , "sqrt"      = "\\sqrt{M}"
+      , "log.o.r."  = "\\log(\\mathit{OR})"
+      , "exp"       = "\\exp(M)"
+      , "inverse"   = "1/M"
+      , "M"
+    )
   } else {
-    est_name <- "M"
-    # est_name <- switch(
+    est_name <- switch(
+      c(misc$inv.lbl, "NULL")[1] # In case it's NULL return default
+      , "prob" = "p"
+      , "odds.ratio" = "\\mathit{OR}"
+      , "M"
     #   analysis_function
     #   , aov = { "M" }
     #   , lm = ifelse(is_multivariate, "M", "b")
@@ -336,12 +477,53 @@ est_name_from_call <- function(x) {
     #   # , lmer = "b"
     #   # , mixed = "M"
     #   , { warning("apa_print() support for this model class is untested. Proceed with caution! Visit https://github.com/crsh/papaja/issues to request support for this model class."); "Estimate" }
-    # )
+    )
+  }
 
-    if(est_name != "Estimate") {
-      if(contains_contrasts) est_name <- paste("\\Delta", est_name)
+  if(contains_contrasts) {
+    if(!is.null(misc$inv.lbl) && (inv & !is.null(misc$tran))) {
+      est_name <- switch(
+        misc$inv.lbl
+        , "ratio" = "M_{i}/M_{j}"
+        , "odds.ratio" = "\\mathit{OR}"
+        , est_name
+      )
+    } else {
+      est_name <- switch(
+        c(link, "NULL")[1] # In case it's NULL return default
+        , "log.o.r." = est_name
+        , est_name <- paste("\\Delta", est_name)
+      )
     }
   }
 
   est_name
+}
+
+parse_adjust_name <- function(x, n = NULL, mesg = NULL) {
+  if(is.null(x) || x == "none") return(NULL)
+
+  res <- lookup_adjust_names(x)
+
+  # Attempt to use rank instead of family size
+  if(x == "scheffe") {
+    n <- NULL
+
+    rank_mesg <- .str_extract_first(
+      mesg
+      , "rank (\\d+)$"
+    )
+    rank_mesg <- rank_mesg[!length(rank_mesg) == 0]
+
+    if(length(rank_mesg) > 0) {
+      n <- as.numeric(.str_extract_first(rank_mesg, "\\d+"))
+    }
+  }
+
+  if(is.null(n)) {
+    message("The size of the family of tests could not be determined and will be omitted from the output. Consider passing the output of `contrast()` rather than `summary()`.")
+    return(res)
+  } else {
+    setNames(paste0(res, paste0("(", n, ")")), names(res))
+  }
 }

@@ -1,4 +1,4 @@
-#' Create a new `apa_results` object
+#' Create a New `apa_results` Object
 #'
 #' Typeset the contents of an object according to the specified expression
 #' strings and create a new or extend an existing `apa_results` object.
@@ -7,35 +7,40 @@
 #'    substitution.
 #' @param est_glue Character. (Named vector of) expressions string(s) to
 #'     format. Each string creates a new (named) element in the
-#'    `estimate`-sublist.
+#'    `estimate` sub-list.
 #' @param stat_glue Character. (Named vector of) expressions string(s) to
 #'     format. Each string creates a new (named) element in the
-#'    `statistic`-sublist.
+#'    `statistic` sub-list.
 #' @param container List of class `apa_results` to add the glued results to.
-#' @param sublist Character. Name of (new) sublist in `estimate`
+#' @param sublist Character. Name of (new) sub-list in `estimate`
 #'    `statistics`, and `full_result` to append glued results to (e.g.,
 #'    `modelfit`).
 #' @param term_names Character. Used as names for the `estimate`-,
-#'    `statistics`-, and `full_result`-sublists, if multiple estimates or
-#'    statistics are glued.
+#'    `statistics`-, and `full_result` sub-lists, if multiple estimates or
+#'    statistics are glued. Defaults to `attr(x, "sanitized_term_names")`.
 #' @param in_paren Logical. Whether the formatted string is to be reported in
 #'    parentheses. If `TRUE`, parentheses in the formatted string (e.g., those
 #'    enclosing degrees of freedom) are replaced with brackets.
+#' @param est_first Logical. Determines in which order `estimate` and
+#'    `statistic` are glued together to `full_result`.
+#' @param simplify Logical. Determines whether the `estimate`, `statistic`, and
+#'    `full_result` sub-lists should be simplified if only one term is
+#'    available from the model object.
 #' @inheritParams glue::glue
 #'
-#' @return Returns a list of class `apa_results`
+#' @return Returns a list of class `apa_results`, see [apa_print()].
 #' @export
 #'
 #' @examples
 #' # Tidy and typeset output
 #' iris_lm <- lm(Sepal.Length ~ Petal.Length + Petal.Width, iris)
 #' tidy_iris_lm <- broom::tidy(iris_lm, conf.int = TRUE)
-#' tidy_iris_lm$p.value <- printp(tidy_iris_lm$p.value)
+#' tidy_iris_lm$p.value <- apa_p(tidy_iris_lm$p.value)
 #'
 #' glance_iris_lm <- broom::glance(iris_lm)
-#' glance_iris_lm$p.value <- printp(glance_iris_lm$p.value, add_equals = TRUE)
-#' glance_iris_lm$df <- printnum(as.integer(glance_iris_lm$df))
-#' glance_iris_lm$df.residual <- printnum(as.integer(glance_iris_lm$df.residual))
+#' glance_iris_lm$p.value <- apa_p(glance_iris_lm$p.value, add_equals = TRUE)
+#' glance_iris_lm$df <- apa_num(as.integer(glance_iris_lm$df))
+#' glance_iris_lm$df.residual <- apa_num(as.integer(glance_iris_lm$df.residual))
 #'
 #' # Create `apa_results`-list
 #' lm_results <- glue_apa_results(
@@ -56,27 +61,35 @@
 #'         , aic = ""
 #'     )
 #'     , stat_glue = c(
-#'         r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<papaja:::add_equals(p.value)>>$"
+#'         r2 = "$F(<<df>>, <<df.residual>>) = <<statistic>>$, $p <<add_equals(p.value)>>$"
 #'         , aic = "$\\mathrm{AIC} = <<AIC>>$"
 #'     )
 #' )
 
-glue_apa_results <- function(x = NULL, ...) {
+glue_apa_results <- function(x = NULL, term_names = NULL, ...) {
     if(!is.null(x)) validate(x, check_class = "data.frame")
+
+    if(is.null(term_names)) {
+      term_names <- attr(x, "sanitized_term_names")
+    }
 
     apa_res <- add_glue_to_apa_results(
         .x = x
+        , term_names = term_names
         , ...
         , container = init_apa_results()
     )
 
     if(!is.null(x) && is.data.frame(x)) {
       if(!inherits(x, "apa_results_table")) {
-        if("term" %in% names(x)) x$term <- prettify_terms(x$term)
+        if("term" %in% names(x)) x$term <- beautify_terms(x$term)
       }
       if("conf.int" %in% names(x)) x$conf.int <- gsub("\\\\infty", "$\\\\infty$", x$conf.int)
       apa_res$table <- x
     }
+
+    # Remove 'sanitized_term_names' attribute from 'sort_terms()'
+    attr(apa_res$table, "sanitized_term_names") <- NULL
 
     apa_res
 }
@@ -92,8 +105,14 @@ add_glue_to_apa_results <- function(
     , sublist = NULL
     , term_names = NULL
     , in_paren = FALSE
+    , est_first = TRUE
+    , simplify = TRUE
 ) {
-    validate(container, check_class = "apa_results")
+  validate(container, check_class = "apa_results")
+
+  in_paren <- isTRUE(in_paren)
+  simplify <- isTRUE(simplify)
+
 
     est_list <- unlist(lapply(
         est_glue
@@ -115,6 +134,7 @@ add_glue_to_apa_results <- function(
     paste_pars <- list(sep = ", ")
     paste_pars$est  <- est_list
     paste_pars$stat <- stat_list
+    if(!est_first) paste_pars <- paste_pars[c("sep", "stat", "est")]
 
     full_list <- do.call("paste", paste_pars)
     names(full_list) <- names(est_list)
@@ -130,18 +150,13 @@ add_glue_to_apa_results <- function(
 
         # Remove empty elements (e.g., only estimate or statistic defined)
         x <- gsub(x, pattern = "^, |, $", replacement = "")
+        x <- x[x != ""]
 
-        if(length(x) > 1L) {
-            x <- x[!x == ""]
-
-            y <- as.list(x)
-            if(!is.null(term_names)) names(y) <- term_names
-            return(y)
+        if(!simplify | length(x) > 1L) {
+          x <- as.list(x)
+          if(!is.null(term_names) & length(x) > 0L) names(x) <- term_names
         }
-
-        if(length(x) == 1L) {
-            if(x == "") return(list()) else return(x)
-        }
+        return(x)
     })
 
     if(is.null(sublist)) {
@@ -166,14 +181,14 @@ apa_glue <- function(glue_str, ...) {
     ellipsis <- c(ellipsis, glue_str)
     if(is.null(ellipsis$.open)) ellipsis$.open <- "<<"
     if(is.null(ellipsis$.close)) ellipsis$.close <- ">>"
-    if(is.null(ellipsis$.transformer)) ellipsis$.transformer <- printnum_transformer
+    if(is.null(ellipsis$.transformer)) ellipsis$.transformer <- apa_num_transformer
 
     do.call(glue::glue_data, ellipsis)
 }
 
-printnum_transformer <- function(text, envir) {
+apa_num_transformer <- function(text, envir) {
   res <- eval(parse(text = text, keep.source = FALSE), envir)
-  printnum(res)
+  apa_num(res)
 }
 
 
@@ -189,7 +204,7 @@ est_glue <- function(x) {
   if(is.null(x$estimate)) return("")
   est_glue <- "$<<svl(estimate)>> = <<estimate>>$"
   if(!is.null(x$conf.int)) {
-      est_glue <- paste0(est_glue, ", <<svl(conf.int)>> $<<conf.int>>$")
+      est_glue <- paste0(est_glue, ", <<svl(conf.int, use_math = TRUE)>> $<<conf.int>>$")
   }
   est_glue
 }
@@ -215,9 +230,9 @@ stat_glue <- function(x) {
   if(!is.null(x$df)) {
     if(!is.null(x$df.residual)) {
       df <- "(<<df>>, <<df.residual>>)"
-    } else if( # Chi^2-Test
-      exists("n", where = parent.frame(2)) &&
-      !is.null(get("n", envir = parent.frame(2)))
+    } else if(
+      identical(variable_label(x$statistic), "$\\chi^2$") &&
+      !is.null(attr(x$statistic, "n"))
     ) {
       df <- "(<<df>>, n = <<n>>)"
     } else {
@@ -237,8 +252,26 @@ stat_glue <- function(x) {
     stat_list <- c(
       stat_list
       , glue::glue_collapse(
-        c("$<<svl(statistic)>>", df, " ", "<<add_equals(statistic)>>$")
+        c("$<<svl(statistic)>>", df, " ", "<<add_equals(strip_math_tags(statistic))>>$")
       )
+    )
+
+    if(!is.null(x$mcmc.error)) {
+    stat_list[length(stat_list)] <- glue::glue_collapse(
+        c(stat_list[length(stat_list)], "$\\pm <<mcmc.error>>\\%$")
+      )
+
+      stat_list[length(stat_list)] <- gsub(
+        "\\$\\$"
+        , " "
+        , stat_list[length(stat_list)]
+      )
+    }
+  }
+  if(!is.null(x$mse)) {
+    stat_list <- c(
+      stat_list
+      , "$<<svl(mse)>> <<add_equals(mse)>>$"
     )
   }
 
@@ -256,30 +289,4 @@ stat_glue <- function(x) {
   )
 
   unclass(constructed_glue)
-}
-
-
-#' Strip Math Tags from Variable Labels or Strings
-#'
-#' Internal function to strip math tags from variable labels or strings. `svl()`
-#' returns the stripped variable label of `x`, if available. `strip_math_tags` returns
-#' the stripped character `x`.
-#'
-#' @param x A (labelled) character string.
-#'
-#' @rdname strip_math_tags
-#' @keywords internal
-
-svl <- function(x) {
-  y <- variable_labels(x)
-  if(is.null(y)) y <- x
-
-  strip_math_tags(y)
-}
-
-#' @rdname strip_math_tags
-#' @keywords internal
-
-strip_math_tags <- function(x) {
-  gsub(pattern = "$", replacement = "", x = x, fixed = TRUE)
 }

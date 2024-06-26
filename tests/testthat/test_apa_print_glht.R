@@ -19,9 +19,10 @@ test_that(
       apa_comp
       , labels = list(
         term        = "Term"
-        , estimate  = "$b$"
+        , estimate  = "$\\Delta M$"
         , conf.int  = "95\\% CI"
-        , statistic = "$t(41)$"
+        , statistic = "$t$"
+        , df        = "$\\mathit{df}$"
         , p.value   = "$p$"
       )
     )
@@ -44,11 +45,25 @@ test_that(
       apa_comp2
       , labels = list(
         term        = "Term"
-        , estimate  = "$b$"
+        , estimate  = "$\\Delta M$"
         , conf.int  = "95\\% CI"
         , statistic = "$t(51)$"
-        , p.value   = "$p$"
+        , p.value   = "$p_{adj}$"
       )
+    )
+  }
+)
+
+test_that(
+  "Deprecated 'ci' argument"
+  , {
+    amod <- aov(breaks ~ tension, data = warpbreaks)
+    comparisons <- multcomp::glht(amod, linfct = multcomp::mcp(tension = "Tukey"))
+
+    expect_warning(
+      apa_print(comparisons, ci = .99)
+      , regexp = "Using argument 'ci' in calls to 'apa_print()' is deprecated. Please use 'conf.int' instead."
+      , fixed = TRUE
     )
   }
 )

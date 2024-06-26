@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculations.R
 \name{se}
 \alias{se}
-\title{Standard errors}
+\title{Standard Error of the Mean}
 \usage{
 se(x, na.rm = TRUE)
 }
@@ -11,6 +11,9 @@ se(x, na.rm = TRUE)
 
 \item{na.rm}{Logical. Specifies if missing values should be removed.}
 }
+\value{
+The standard error of the mean as numeric vector of length 1.
+}
 \description{
-Calculates the standard error of the mean
+Calculates the standard error of the mean.
 }

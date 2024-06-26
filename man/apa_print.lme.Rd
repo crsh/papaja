@@ -3,22 +3,27 @@
 \name{apa_print.lme}
 \alias{apa_print.lme}
 \alias{apa_print.anova.lme}
-\title{Format Statistics from Nonlinear Mixed-Effects Models (APA 6th edition)}
+\title{Typeset Statistical Results from Nonlinear Hierarchical Models}
 \usage{
-\method{apa_print}{lme}(x, args_confint = NULL, in_paren = FALSE, est_name = NULL, ...)
+\method{apa_print}{lme}(x, conf.int = 0.95, in_paren = FALSE, est_name = NULL, ...)
 
 \method{apa_print}{anova.lme}(x, in_paren = FALSE, ...)
 }
 \arguments{
-\item{x}{A (non-)linear mixed-effects model fitted with \code{\link[nlme:lme]{nlme::lme()}} or \code{\link[nlme:nlme]{nlme::nlme()}}}
+\item{x}{A (non-)linear mixed-effects model fitted with \code{\link[nlme:lme]{nlme::lme()}} or
+\code{\link[nlme:nlme]{nlme::nlme()}}}
 
-\item{args_confint}{Named list. Arguments that are passed to \code{\link[nlme:intervals.lme]{nlme::intervals.lme()}}.}
+\item{conf.int}{Numeric specifying the required confidence level \emph{or} a named list
+of additional arguments that are passed to \code{\link[nlme:intervals.lme]{nlme::intervals.lme()}}.}
 
-\item{in_paren}{Logical. Indicates if the formated string will be reported inside parentheses. See details.}
+\item{in_paren}{Logical. Whether the formatted string is to be reported in
+parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
+enclosing degrees of freedom) are replaced with brackets.}
 
-\item{est_name}{An optional character. The label to be used for fixed-effects coefficients.}
+\item{est_name}{An optional character. The label to be used for
+fixed-effects coefficients.}
 
-\item{...}{Further arguments that are passed to \code{\link[=printnum]{printnum()}}.}
+\item{...}{Further arguments that may be passed to \code{\link{apa_num}} to format estimates (i.e., columns \code{estimate} and \code{conf.int}).}
 }
 \description{
 These methods take mixed-effects models fitted with the \pkg{nlme} package
@@ -28,7 +33,7 @@ with APA manuscript guidelines.
 \examples{
   library(nlme)
   fm1 <- lme(distance ~ age, data = Orthodont, method = "ML") # random is ~ age
-  apa_print(fm1)
+  apa_print(fm1, conf.int = .9)
   # ANOVA-like tables
   single_anova <- anova(fm1)
   apa_print(single_anova)
@@ -36,14 +41,25 @@ with APA manuscript guidelines.
 }
 \seealso{
 Other apa_print: 
+\code{\link{apa_print}()},
 \code{\link{apa_print.BFBayesFactor}()},
 \code{\link{apa_print.aov}()},
 \code{\link{apa_print.emmGrid}()},
 \code{\link{apa_print.glht}()},
-\code{\link{apa_print.glm}()},
 \code{\link{apa_print.htest}()},
 \code{\link{apa_print.list}()},
-\code{\link{apa_print.merMod}()},
-\code{\link{apa_print}()}
+\code{\link{apa_print.lm}()},
+\code{\link{apa_print.merMod}()}
 }
 \concept{apa_print}
+\value{
+\code{apa_print()}-methods return a named list of class \code{apa_results} containing the following elements:
+
+\item{estimate}{One or more character strings giving point estimates, confidence intervals, and confidence level. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{statistic}{One or more character strings giving the test statistic, parameters (e.g., degrees of freedom), and p-value. A single string is returned in a vector; multiple strings are returned as a named list. If no estimate is available the element is \code{NULL}.}
+\item{full_result}{One or more character strings comprised `estimate` and `statistic`. A single string is returned in a vector; multiple strings are returned as a named list. }
+\item{table}{A \code{data.frame} of class \code{apa_results_table} that contains all elements of \code{estimate} and \code{statistics}. This table can be passed to \code{apa_table()} for reporting.}
+
+Column names in \code{apa_results_table} are standardized following the \href{https://www.tidymodels.org/learn/develop/broom/#glossary}{\pkg{broom} glossary} (e.g., \code{term}, \code{estimate} \code{conf.int}, \code{statistic}, \code{df}, \code{df.residual}, \code{p.value}). Additionally, each column is labelled (e.g., \code{$\\hat{\\eta}^2_G$} or \code{$t$}) using the \pkg{tinylabels} package and these labels are used as column names when an \code{apa_results_table} is passed to \code{apa_table()}.
+
+}

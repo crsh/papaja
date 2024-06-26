@@ -4,7 +4,8 @@ NULL
 
 #' Set Default Variable Labels from Column Names
 #'
-#' This internal function creates variable labels from the column names of a data frame
+#' This internal function creates variable labels from the column names of a1
+#' data frame.
 #'
 #' @param x A \code{data.frame}
 #' @return Returns a \code{data.frame} with labelled columns. Labels are preserved (if already specified), otherwise generated from column names.
@@ -27,7 +28,7 @@ default_label.default <- function(x, ...) no_method(x)
 #' @rdname default_label
 #' @keywords internal
 
-default_label.data.frame <- function(x) {
+default_label.data.frame <- function(x, ...) {
 
   x_out <- as.data.frame.list(
     x = mapply(
@@ -89,24 +90,23 @@ label_range <- function(y) {
 }
 
 
-#' Simple codebook
+#' Simple Codebook
 #'
-#' Generate a simple codebook in CSV-format
+#' Generate a simple codebook in CSV-format from a (labelled) `data.frame`.
 #'
-#' @param x data.frame. Data to be written.
+#' @param x data.frame. Data to be documented.
 #' @inheritDotParams utils::write.table -x
 #'
-#' @details If the \pkg{skimr} package is installed, an inline histogram is added
-#'   for all numeric variables.
-#'
-#' @seealso \code{\link[utils]{write.csv}}
+#' @details If the \pkg{skimr} package is installed, an in-line histogram is
+#'   added for all numeric variables. If columns are labelled, the labelles
+#'   are included in the codebook.
+#' @return Returns `NULL` invisibly.
+#' @seealso [utils::write.csv()]
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' variable_labels(cars) <- c(speed = "Speed [ft/s]", dist = "Distance traveled [m]")
-#' simple_codebook(cars, file = "cars_codebook.csv")
-#' }
+#' simple_codebook(cars, file = file.path(tempdir(), "cars_codebook.csv"))
 
 simple_codebook <- function(x, ...) {
   tidied_labels <- tidy_variable_lables(x)

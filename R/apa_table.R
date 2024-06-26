@@ -1,48 +1,74 @@
-#' Prepare table for printing
+#' Prepare Table for Printing and Reporting
 #'
-#' Formats \code{matrices} and \code{data.frames} to report them as tables according to APA guidelines
-#' (6th edition).
+#' Formats matrices and data frames to report them as tables in R Markdown
+#' documents according to APA guidelines.
 #'
-#' @param x Object to print, can be \code{matrix}, \code{data.frame}, or \code{list}. See details.
+#' @param x Object to print, either a `matrix`, `data.frame`, or
+#'   `list`. See details.
 #' @param caption Character. Caption to be printed above the table.
 #' @param note Character. Note to be printed below the table.
-#' @param added_stub_head Character. Used as stub head (name of first column) if \code{row.names = TRUE}
-#'    is passed to \code{\link[knitr]{kable}}; ignored if row names are omitted from the table.
-#' @param col_spanners List. A named list of vectors of length 2 that contain the first and last column to
-#'    span. The name of each list element containing the vector is used as grouping column name. Ignored
-#'    in MS Word documents.
-#' @param stub_indents List. A named list of vectors that contain indeces of the rows to indent. The name
-#'    of each list element containing the vector is used as title for indented sections.
-#' @param midrules Numeric. Vector of line numbers in table (not counting column headings) that should be
-#'    followed by a horizontal rule; ignored in MS Word documents.
-#' @param placement Character. Indicates whether table should be placed at the exact location (\code{h}),
-#'    at the top (\code{t}), bottom (\code{b}), or on a separate page (\code{p}). Arguments can be combined
-#'    to indicate order of preference (\code{htb}); ignored when \code{longtable = TRUE}, \code{landscape = TRUE},
-#'    and in MS Word documents.
-#' @param landscape Logical. If \code{TRUE} the table is printed in landscape format; ignored in MS Word
-#'    documents.
-#' @param font_size Character. Font size to use for table contents (can be \code{tiny}, \code{scriptsize}, \code{footnotesize}, \code{small}, \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE}, \code{huge}, \code{Huge}). Ignored in MS Word documents.
-#' @param escape Logical. If \code{TRUE} special LaTeX characters, such as \code{\%} or \code{_}, in
-#'    column names, row names, caption, note and table contents are escaped.
-#' @param span_text_columns Logical. If \code{TRUE} tables span across text columns
-#'    in two-column PDF documents (e.g. when setting \code{classoption: jou}).
-#'    Ignored in other documents.
-#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
-#' @param merge_method Character. Determines how to merge tables if \code{x} is a \code{list}. Can be either
-#'   \code{indent} or \code{table_spanner}.
+#' @param added_stub_head Character. Used as stub head (name of first column)
+#'   if `row.names = TRUE` is passed to \code{\link[knitr]{kable}}; ignored if
+#'   row names are omitted from the table.
+#' @param col_spanners List. A named list of vectors of length 2 that contain
+#'   the indices of the first and last column to span. The name of each list
+#'   element is used as grouping column name. Currently ignored in Word
+#'   documents.
+#' @param stub_indents List. A named list of vectors that contain indices of
+#'   rows to indent. The name of each list element containing the vector is
+#'   used as title for indented sections.
+#' @param midrules Numeric. Vector of line numbers in table (not counting
+#'   column headings) that should be followed by a horizontal rule; currently
+#'   ignored in Word documents.
+#' @param placement Character. Indicates whether table should be placed, for
+#'   example, at the current location (`h`), at the top (`t`), bottom
+#'   (`b`), or on a separate page (`p`). Arguments can be combined to
+#'   indicate order of preference (`htb`); currently ignored when
+#'   `longtable = TRUE`, `landscape = TRUE`, and in Word documents.
+#' @param landscape Logical. If `TRUE` the table is printed in landscape
+#'   mode; currently ignored in Word documents.
+#' @param font_size Character. Font size to use for table contents (can be
+#'   `tiny`, \code{scriptsize}, \code{footnotesize}, \code{small},
+#'   \code{normalsize} (default), \code{large}, \code{Large}, \code{LARGE},
+#'   \code{huge}, \code{Huge}). Ignored in Word documents.
+#' @param escape Logical. If `TRUE` special LaTeX characters, such as
+#'   \code{\%} or \code{_}, in column names, row names, caption, note and table
+#'   contents are escaped.
+#' @param span_text_columns Logical. If `TRUE` tables span across text columns
+#'   in two-column PDF documents (e.g. when setting `classoption: jou`).
+#'   Otherwise ignored.
+#' @param format.args List. A named list of arguments to be passed to
+#'   \code{\link{apa_num}} to format numeric values.
+#' @param merge_method Character. Determines how to merge tables if `x` is
+#'   a `list` of matrices or data frames with a common structure. Can be either
+#'   `indent` or `table_spanner`. See details.
 #' @inheritDotParams knitr::kable
+#' @return A character vector of the table source code of class `knit_asis`, see
+#'   [knitr::asis_output()].
 #'
 #' @details
-#'    When using \code{apa_table}, the type of the output (LaTeX or MS Word) is determined automatically
-#'    by the rendered document type. If no rendering is in progress the output default is LaTeX.
-#'    The chunk option of the enveloping chunk has to be set to \code{results = "asis"} to ensure the table
-#'    is rendered, otherwise the table-generating markup is printed.
+#'   When using `apa_table`, the type of the output (LaTeX or Word) is
+#'   determined automatically by the rendered document type. In interactive R
+#'   session the output defaults to LaTeX.
 #'
-#'    If \code{x} is a \code{list}, all list elements are merged by columns into a single table with
-#'    the first column giving the names of the list elements elements.
+#'   If `x` is a `list`, all list elements are merged by columns into a single
+#'   table and the names of list elements are added according to the setting of
+#'   `merge_method`.
 #'
+#'   By default, the width of the table is set to accommodate its contents. In
+#'   some cases, this may cause the table to exceed the page width. To address
+#'   this, tables can be rotated 90 degrees by setting `langscape = TRUE` or,
+#'   by explicitly using "paragraph columns" with fixed column widths, such
+#'   that the contents is automatically broken into multiple lines. For
+#'   example, set `align = "lm{5cm}l"` to limit the second column to a width of
+#'   5 cm. Similarly, to space columns equally use
+#'   `align = paste0("m{", 1/(ncol(x) + 1), "\\linewidth}")`
 #'
-#' @seealso \code{\link[knitr]{kable}}, \code{\link{printnum}}
+#'   Note that placement options are not supported in appendices of `apa6`
+#'   documents and will be printed to the document. To omit the printed options
+#'   set `placement = NULL`.
+#'
+#' @seealso [knitr::kable()], [apa_num()]
 #' @examples
 #'
 #' my_table <- t(apply(cars, 2, function(x) # Create data
@@ -74,6 +100,9 @@
 apa_table <- function(x, ...) {
   UseMethod("apa_table", x)
 }
+
+#' @rdname apa_table
+#' @export
 
 apa_table.default <- function(x, ...) no_method(x)
 
@@ -295,9 +324,8 @@ apa_table.data.frame <- function(
   if(!is.null(format.args)) validate(format.args, check_class = "list")
 
   validate(escape, check_class = "logical", check_length = 1)
-  validate(placement, check_class = "character", check_length = 1)
+  if(!is.null(placement)) validate(placement, check_class = "character", check_length = 1)
   validate(landscape, check_class = "logical", check_length = 1)
-
 
   # Set defaults and rename ellipsis arguments
   ellipsis <- list(...)
@@ -360,7 +388,7 @@ apa_table.data.frame <- function(
     }
 
     do.call(
-      function(...) apa_table.latex(
+      function(...) apa_table_latex(
         x = prep_table
         , caption = caption
         , note = note
@@ -376,7 +404,7 @@ apa_table.data.frame <- function(
     )
   } else {
     do.call(
-      function(...) apa_table.markdown(
+      function(...) apa_table_markdown(
         x = prep_table
         , caption = caption
         , note = note
@@ -388,7 +416,7 @@ apa_table.data.frame <- function(
 }
 
 
-apa_table.latex <- function(
+apa_table_latex <- function(
   x
   , caption = NULL
   , note = NULL
@@ -402,7 +430,7 @@ apa_table.latex <- function(
 ) {
   if(!is.null(font_size)) validate(font_size, check_class = "character", check_length = 1)
 
-  apa_terms <- options()$papaja.terms
+  apa_terms <- getOption("papaja.terms")
 
   # Parse ellipsis
   ellipsis <- list(...)
@@ -446,11 +474,31 @@ apa_table.latex <- function(
   # Fix table spanners
   table_lines <- remove_excess_table_spanner_columns(table_lines)
 
+  has_column_names <- any(grepl("\\midrule", table_lines, fixed = TRUE))
+  has_col_spanners <- !is.null(col_spanners)
+
   # Add column spanners
-  if(!is.null(col_spanners)) table_lines <- add_col_spanners(table_lines, col_spanners, n_cols)
+  if(has_col_spanners) table_lines <- add_col_spanners(
+    table_lines
+    , col_spanners
+    , n_cols
+    # suppress group midrules if no column names are present
+    , add_group_midrules = TRUE # has_column_names
+  )
 
   # Add repeating table caption (and column names) for longtables
-  table_content_start <- grep("\\\\midrule", table_lines)
+
+  # related to a bug reported in #452: If col.names = NULL, no midrules are added by knitr::kable
+  if(has_column_names) {
+    # standard case with column names
+    table_content_start <- grep("\\midrule", table_lines, fixed = TRUE)
+  } else if(has_col_spanners){
+    # special case without column names, but with column spanners
+    table_content_start <- rev(grep("\\\\multicolumn|\\\\cmidrule", table_lines))[[1L]]
+  } else {
+    # neither column names nor column spanners are present
+    table_content_start <- grep("\\toprule", table_lines, fixed = TRUE)
+  }
 
   if((longtable || landscape) & !is.null(caption)) {
     table_lines <- c(
@@ -493,6 +541,7 @@ apa_table.latex <- function(
 
   # Print table
   place_opt <- paste0("[", placement, "]")
+  if(place_opt == "[]") place_opt <- NULL
 
   table_output <- "\n\n"
 
@@ -566,8 +615,7 @@ apa_table.latex <- function(
   # cat("\n\n")
 }
 
-
-apa_table.markdown <- function(
+apa_table_markdown <- function(
   x
   , caption = NULL
   , note = NULL
@@ -584,58 +632,41 @@ apa_table.markdown <- function(
   table_output <- do.call(function(...) knitr::kable(x, format = "pandoc", ...), ellipsis)
   apa_terms <- options()$papaja.terms
 
-  caption <- paste0("*", caption, "*")
+  # This uses pandoc syntax (start line with "Table:") to define a "proper"
+  # table caption, which will receive a table caption style in DOCX
   current_chunk <- knitr::opts_current$get("label")
-  if(!is.null(current_chunk)) caption <- paste0("<caption>(\\#tab:", current_chunk, ")</caption>\n\n<div custom-style='Table Caption'>", caption, "</div>\n\n")
-
-  # Print table
-  # cat("<caption>")
-  # cat(apa_terms$table, ". ", sep = "")
-  # cat(caption)
-  # cat("</caption>\n")
-
-  # print(res_table)
+  if(!is.null(current_chunk)) caption <- paste0("Table: (\\#tab:", current_chunk, ") ", caption, "\n\n")
 
   table_output <- c(caption, table_output)
 
   if(!is.null(note)) {
-    # cat("\n")
-    # cat("<center>")
-    # cat("*", apa_terms$note, ".* ", note, sep = "")
-    # cat("</center>")
-    # cat("\n\n\n\n")
 
     table_output <- c(
       table_output
-      , "\n<div custom-style='Compact'>"
+      , "\n<div custom-style='table-note'>"
       , paste0("*", apa_terms$note, ".* ", note)
       , "</div>\n\n&nbsp;\n\n"
     )
   }
 
   knitr::asis_output(paste(table_output, collapse = "\n"))
-  # table_output <- knitr::asis_output(table_output)
-  # table_output
 }
 
 
 #' Format numeric table cells
 #'
-#' Format all numeric cells of a table using \code{\link{printnum}}.
+#' Format all numeric cells of a table using \code{\link{apa_num}}.
 #' \emph{This function is not exported.}
 #'
 #' @param x data.frame or matrix.
-#' @param format.args List. A named list of arguments to be passed to \code{\link{printnum}} to format numeric values.
+#' @param format.args List. A named list of arguments to be passed to \code{\link{apa_num}} to format numeric values.
 #'
 #' @keywords internal
-#' @seealso \code{\link{printnum}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_num()]
 
 format_cells <- function(x, format.args = NULL) {
   format.args$x <- x
-  do.call("printnum.data.frame", format.args)
+  do.call("apa_num.data.frame", format.args)
 }
 
 
@@ -648,10 +679,7 @@ format_cells <- function(x, format.args = NULL) {
 #' @param added_stub_head Character. Used as stub head (name of first column).
 #' @param force Logical. Should row names be added even if they are the numbers 1:nrow(x)?
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 add_row_names <- function(x, added_stub_head, force = FALSE) {
   if(!is.null(rownames(x)) && (all(rownames(x) != 1:nrow(x))) || force) {
@@ -683,10 +711,7 @@ add_row_names <- function(x, added_stub_head, force = FALSE) {
 #'    indent. Names of list elements will be used as titles for indented sections.
 #' @param filler Character. Symbols used to indent stubs.
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 indent_stubs <- function(x, lines, filler = "\ \ \ ") {
   # x <- lapply(x, function(y) default_label(data.frame(y, check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE)))
@@ -722,13 +747,11 @@ indent_stubs <- function(x, lines, filler = "\ \ \ ") {
 #' @param table_lines Character. Vector of characters containing one line of a LaTeX table each.
 #' @param col_spanners List. A named list containing the indices of the first and last columns to group, where the names are the headings.
 #' @param n_cols Numeric. Number of columns of the table.
+#' @param add_group_midrules Logical.Determines whether group midrules are added.
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
-add_col_spanners <- function(table_lines, col_spanners, n_cols) {
+add_col_spanners <- function(table_lines, col_spanners, n_cols, add_group_midrules = TRUE) {
 
   # Grouping column names
   multicols <- sapply(
@@ -764,14 +787,18 @@ add_col_spanners <- function(table_lines, col_spanners, n_cols) {
   }
   group_headings <- paste(leading_amps, group_headings, trailing_amps, "\\\\", sep = "")
 
-  # Grouping midrules
-  group_midrules <- sapply(
-    seq_along(col_spanners)
-    , function(i) {
-      paste0("\\cmidrule(r){", min(col_spanners[[i]]), "-", max(col_spanners[[i]]), "}")
-    }
-  )
-  group_midrules <- paste(group_midrules, collapse = " ")
+  # Grouping midrules, only add them if required
+  if(add_group_midrules) {
+    group_midrules <- sapply(
+      seq_along(col_spanners)
+      , function(i) {
+        paste0("\\cmidrule(r){", min(col_spanners[[i]]), "-", max(col_spanners[[i]]), "}")
+      }
+    )
+    group_midrules <- paste(group_midrules, collapse = " ")
+  } else {
+    group_midrules <- NULL
+  }
 
 
   table_environment <- which(grepl("\\\\toprule", table_lines))
@@ -814,10 +841,7 @@ remove_excess_table_spanner_columns <- function(x) {
 #'    element.
 #' @param added_stub_head Character. Vector of names for first unnamed columns. See \code{\link{apa_table}}.
 #' @keywords internal
-#' @seealso \code{\link{apa_table}}
-#'
-#' @examples
-#' NULL
+#' @seealso [apa_table()]
 
 merge_tables <- function(x, empty_cells, row_names, added_stub_head) {
 

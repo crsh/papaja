@@ -29,7 +29,7 @@
 
 \usepackage{titlesec}
 \titleformat{\section}{\normalfont\large}{\makebox[0pt][r]{\bf \thesection.\hspace{4mm}}}{0em}{\bfseries}
-\titleformat{\subsection}{\normalfont}{\makebox[0pt][r]{\bf \thesubsection.\hspace{4mm}}}{0em}{\bfseries}
+\titleformat{\subsection}{\normalfont}{\makebox[0pt][r]{\bf [RC \thesubsection.]\hspace{4mm}}}{0em}{\bfseries}
 \titlespacing{\subsection}{0em}{1em}{-0.3em} % left before after
 
 % Paragraph styles
@@ -38,22 +38,38 @@
 \setlength{\parindent}{0pt}%
 
 % Quotation styles
+\usepackage[usenames,dvipsnames]{xcolor}
 
-\usepackage{framed}
-\let\oldquote=\quote
-\let\endoldquote=\endquote
-\renewenvironment{quote}{\begin{fquote}\advance\leftmargini -2.4em\begin{oldquote}}{\end{oldquote}\end{fquote}}
-
+$if(cutout-quotes)$
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{decorations.pathmorphing}
+\newtcolorbox{quotebox}[1][]{enhanced,
+fonttitle=\sffamily\bfseries,boxrule=0pt,arc=0pt,colframe=white, boxsep=4mm, colback=white, left=0mm, right = 0mm, enlarge top by=0.25cm, enlarge bottom by=0.25cm,
+borderline north={0.25mm}{0mm}{black!25!white, decorate,
+decoration={coil,aspect=0}},
+borderline east={0.25mm}{0mm}{black!25!white},
+borderline south={0.25mm}{0mm}{black!25!white, decorate,
+decoration={coil,aspect=0}},
+borderline west={0.25mm}{0mm}{black!25!white},
+#1}
+$else$
 % \usepackage{xcolor}
-\newenvironment{fquote}
+\newenvironment{quotebox}
   {\def\FrameCommand{
 	\fboxsep=0.6em % box to text padding
-	\fcolorbox{black}{white}}%
+	\fcolorbox{black!25!white}{white}}%
 	% the "2" can be changed to make the box smaller
     \MakeFramed {\advance\hsize-2\width \FrameRestore}
     \begin{minipage}{\linewidth}
   }
   {\end{minipage}\endMakeFramed}
+$endif$
+
+\usepackage{framed}
+\let\oldquote=\quote
+\let\endoldquote=\endquote
+\renewenvironment{quote}{\begin{quotebox}\advance\leftmargini -2.4em\begin{oldquote}}{\end{oldquote}\end{quotebox}}
+
 
 % Table styles
 
@@ -77,6 +93,18 @@
 \WithSuffix\long\def\RC*#1\par{{\bf #1}\par} %\RC*
 % \long\def\AR#1\par{\makebox[0pt][r]{AR:\hspace{10pt}}#1\par} %\AR
 \WithSuffix\long\def\AR*#1\par{#1\par} %\AR*
+
+
+\newlength{\emptysubsection}
+\setlength{\emptysubsection}{0.9em}
+\addtolength{\emptysubsection}{\parskip}
+
+\newenvironment{reviewer}{%
+\subsection{}
+\vspace{-\emptysubsection}
+\bfseries
+}{}
+
 
 
 %%%
@@ -107,7 +135,7 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 % Add task difficulty and assignment commands from https://github.com/cdc08x/letter-2-reviewers-LaTeX-template
-\usepackage[usenames,dvipsnames]{xcolor}
+% \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{ifdraft}
 
 \newcommand{\TaskEstimationBox}[2]{%
@@ -132,6 +160,10 @@
 }{}%
 }
 
+$if(manuscript-tex)$
+\usepackage{xr}
+\externaldocument{$manuscript-tex$}
+$endif$
 
 $for(header-includes)$
   $header-includes$
@@ -141,22 +173,38 @@ $endfor$
 $if(csl-refs)$
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
-\newenvironment{cslreferences}%
-  {$if(csl-hanging-indent)$\setlength{\parindent}{0pt}%
-  \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces$endif$}%
-  {\par}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 $endif$
 
 \begin{document}
 
 {\Large\bf Author response to reviews of}\\[1em]
-$if(manuscript)$Manuscript $manuscript$\\ \\$endif$
+$if(manuscript-id)$Manuscript $manuscript-id$\\ \\$endif$
 $if(title)${\Large $title$}\\[1em]$endif$
 $if(authors)${$authors$}\\$endif$
 $if(journal)${submitted to \it $journal$ }$endif$\\
 \hrule
 
-\hfill {\bfseries RC:} \textbf{\textit{Reviewer Comment}}\(\quad\) AR: Author Response \(\quad\square\) Manuscript text
+\hfill {\bfseries [RC]\hspace{0.5em}} \textbf{Reviewer comment}%
+%\(\qquad\) AR:\hspace{0.5em} Author response%
+\(\qquad \fcolorbox{black!25!white}{white}{\hspace{0.25em}Manuscript text\hspace{0.25em}}\)
 
 \vspace{2em}
 

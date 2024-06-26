@@ -8,7 +8,7 @@
 ^cran-comments\.md$
 ^\.travis\.yml
 ^.github$
-^example$
+^inst/example$
 ^_config.yml$
 ^inst/papaja_manuscripts.bib
 ^inst/apa_source_files.csl
@@ -16,3 +16,8 @@
 ^\.github$
 ^\.vscode$
 ^update_csl.sh$
+^CITATION\.cff$
+^vignettes/papaja.Rmd$
+^vignettes/papaja.tex$
+^CRAN-SUBMISSION$
+^revdep$

@@ -2,6 +2,10 @@ context("apa_print() for ANOVA")
 
 # Data and examples from http://personality-project.org/r/r.guide.html#anova
 
+# Use our own effect-size function for these tests
+# Custom effect sizes via the 'effectsize' package are tested elsewhere
+op <- options(papaja.estimate_anova = "ges", papaja.mse = TRUE)
+
 test_that(
   "One-way between ANOVA"
   , {
@@ -242,6 +246,7 @@ test_that(
 test_that(
   "One-way repeated-measures ANOVA"
   , {
+    options(papaja.estimate_anova = "ges")
     load("data/rm_data.rdata")
     rm_aov <- aov(Recall ~ Valence + Error(Subject/Valence), rm_data)
     rm_aov_output <- apa_print(rm_aov)
@@ -399,7 +404,9 @@ test_that(
 test_that(
   "Levene test"
   , {
-    levene_test <- car::leveneTest(conformity ~ fcategory * partner.status, data = carData::Moore)
+    load("data/ow_data.rdata")
+
+    levene_test <- car::leveneTest(Alertness ~ Dosage, data = ow_data)
     levene_test_output <- apa_print(levene_test)
 
     expect_apa_results(
@@ -411,7 +418,7 @@ test_that(
         , p.value     = "$p$"
       )
     )
-    expect_identical(levene_test_output$stat, "$F(5, 39) = 1.47$, $p = .222$")
+    expect_identical(levene_test_output$stat, "$F(2, 15) = 4.17$, $p = .036$")
   }
 )
 
@@ -438,3 +445,71 @@ test_that(
     )
   }
 )
+
+
+test_that(
+  "Warn if observed factors do not match"
+  , {
+    expect_warning(
+      apa_print(afex::aov_4(yield~(N*P|block), data = npk, observed = "N"), observed = "P")
+      , regexp = "In your call to apa_print(), you specified the model terms \"P\" as observed, whereas in your call to afex::aov_car(), you specified the model terms \"N\" as observed. Make sure that this is what you want."
+      , fixed = TRUE
+    )
+  }
+)
+
+
+test_that(
+  "Ensure proper sorting of terms"
+  , {
+    load("data/mixed_data.rdata")
+    unsorted_aov <- afex::aov_4(formula = Recall ~ Gender * Dosage * (Task|Subject), data = mixed_data, fun_aggregate = mean)
+    apa_out <- apa_print(unsorted_aov)
+
+    expect_equal(
+      unlabel(gsub(apa_out$table$term, pattern = " $\\times$ ", replacement = "_", fixed = TRUE))
+      , names(apa_out$estimate)
+    )
+  }
+)
+
+test_that(
+  "Suppress MSE if requested"
+  , {
+    npk$id <- seq_len(nrow(npk))
+    out <- apa_print(
+      afex::aov_4(
+        formula = yield ~ N + (1 | id)
+        , data = npk
+        , fun_aggregate = mean
+      )
+      , estimate = "ges"
+      , mse = FALSE
+    )
+
+    expect_identical(
+      colnames(out$table)
+      , c("term", "estimate", "statistic", "df", "df.residual", "p.value")
+    )
+
+    out <- apa_print(
+      afex::aov_4(
+        formula = yield ~ (N | block)
+        , data = npk
+        , fun_aggregate = mean
+      )
+      , estimate = "ges"
+      , mse = FALSE
+    )
+
+    expect_identical(
+      colnames(out$table)
+      , c("term", "estimate", "statistic", "df", "df.residual", "p.value")
+    )
+
+
+  }
+)
+
+# restore previous options
+ options(op)

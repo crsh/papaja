@@ -4,7 +4,8 @@
     <title>American Psychological Association 6th edition (without given name disambiguation)</title>
     <title-short>APA (6th ed.)</title-short>
     <id>http://www.zotero.org/styles/apa-no-disambiguation-6th-edition</id>
-    <link href="http://www.zotero.org/styles/apa-no-disambiguation-6th-edition" rel="self"/>n    <link href="http://www.zotero.org/styles/apa" rel="template"/>
+    <link href="http://www.zotero.org/styles/apa-no-disambiguation-6th-edition" rel="self"/>
+    <link href="http://www.zotero.org/styles/apa" rel="template"/>
     <link href="http://owl.english.purdue.edu/owl/resource/560/01/" rel="documentation"/>
     <author>
       <name>Simon Kornblith</name>
@@ -289,7 +290,7 @@
             <choose>
               <if variable="container-title">
                 <choose>
-                  <if type="book entry entry-dictionary entry-encyclopedia">
+                  <if type="book entry entry-dictionary entry-encyclopedia" match="any">
                     <text macro="title"/>
                   </if>
                   <else>
@@ -400,7 +401,7 @@
             <choose>
               <if variable="container-title">
                 <choose>
-                  <if type="book entry entry-dictionary entry-encyclopedia">
+                  <if type="book entry entry-dictionary entry-encyclopedia" match="any">
                     <text variable="title" form="short" text-case="title" quotes="true"/>
                   </if>
                   <else>
@@ -964,10 +965,8 @@
         </group>
       </else-if>
       <else>
-        <group>
-          <text term="no date" form="short"/>
-          <text variable="year-suffix" prefix="-"/>
-        </group>
+        <text term="no date" form="short"/>
+        <text variable="year-suffix" prefix="-"/>
       </else>
     </choose>
   </macro>
@@ -1380,7 +1379,7 @@
       <if type="article article-journal article-magazine article-newspaper dataset" match="any">
         <text variable="container-title" font-style="italic" text-case="title"/>
       </if>
-      <else-if type="paper-conference speech">
+      <else-if type="paper-conference speech" match="any">
         <choose>
           <if variable="collection-editor container-author editor" match="any">
             <text variable="container-title" font-style="italic"/>
