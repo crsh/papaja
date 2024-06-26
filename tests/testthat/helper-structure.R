@@ -26,6 +26,7 @@ expect_apa_results <- function(
   , labels = NULL
   , term_names = NULL
   , table_terms = TRUE
+  , allow_row_names = FALSE
   , ...
 ) {
 
@@ -71,6 +72,14 @@ expect_apa_results <- function(
         , act$lab, paste(table_class, collapse = "/"), "apa_results_table/data.frame"
       )
     )
+
+    # The table element does not have row names (with the exception ofmodel comparisons)
+    if(!allow_row_names) {
+      expect(
+        identical(rownames(object$table), as.character(seq_len(nrow(object$table))))
+        , sprintf("The table element of %s has row names.", act$lab)
+      )
+    }
 
 
     for (i in colnames(object$table)) {

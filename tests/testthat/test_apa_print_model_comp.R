@@ -11,7 +11,7 @@ test_that(
     # No bootstrapped Delta R^2 CI
     model_comp <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
 
-    expect_apa_results(model_comp)
+    expect_apa_results(model_comp, allow_row_names = TRUE)
 
     # stat
     expect_identical(names(model_comp$stat), c("Length", "Both"))
@@ -60,7 +60,7 @@ test_that(
 
     # Test omission of incomplete model names & CI
     incomplete_names <- apa_print(list(mod1, Length = mod2, Both = mod3), boot_samples = 0)
-    expect_apa_results(incomplete_names)
+    expect_apa_results(incomplete_names, allow_row_names = TRUE)
 
     ## stat
     expect_identical(names(incomplete_names$stat), c("model2", "model3"))
@@ -75,7 +75,7 @@ test_that(
     expect_identical(colnames(incomplete_names$table), paste("Model", 1:3))
 
     incomplete_names2 <- apa_print(list(mod1, mod2, mod3), boot_samples = 0)
-    expect_apa_results(incomplete_names2)
+    expect_apa_results(incomplete_names2, allow_row_names = TRUE)
     expect_identical(incomplete_names, incomplete_names2)
 
 
@@ -84,14 +84,14 @@ test_that(
 
     set.seed(1337)
     model_comp_boot <- apa_print(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 1e3)
-    expect_apa_results(model_comp_boot)
+    expect_apa_results(model_comp_boot, allow_row_names = TRUE)
 
     expect_identical(model_comp_boot$est$Length, "$\\Delta R^2 = .83$, 90\\% CI $[.76, .86]$")
 
     expect_identical(model_comp_boot$est$Both, "$\\Delta R^2 = .02$, 90\\% CI $[.01, .04]$")
 
     model_comp_boot2 <- apa_print(list(Baseline = mod1, Length = mod2), boot_samples = 1e3, conf.int = 0.5)
-    expect_apa_results(model_comp_boot2)
+    expect_apa_results(model_comp_boot2, allow_row_names = TRUE)
 
     expect_identical(model_comp_boot2$est$Length, "$\\Delta R^2 = .83$, 50\\% CI $[.80, .84]$")
 
@@ -152,6 +152,7 @@ test_that(
 
     expect_apa_results(
       apa_out
+      , allow_row_names = TRUE
     )
   }
 )
