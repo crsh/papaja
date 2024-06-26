@@ -545,7 +545,7 @@ test_that(
 )
 
 test_that(
-  "Analysis of deviance from the stats package"
+  "Analysis of deviance from the stats and car packages"
   , {
     # From stats::glm() examples section:
     ## Dobson (1990) Page 93: Randomized Controlled Trial :
@@ -554,11 +554,64 @@ test_that(
     treatment <- gl(3,3)
     data.frame(treatment, outcome, counts) # showing data
     glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
-    apa_print(anova(glm.D93, test = "Chisq"))
-    apa_print(anova(glm.D93, test = "Cp"))
-    apa_print(anova(glm.D93, test = "LRT"))
-    apa_print(car::Anova(glm.D93, test.statistic = "LR"))
-    apa_print(anova(glm.D93, test = "Rao"))
+
+    chisq_out <- apa_print(anova(glm.D93, test = "Chisq"))
+    cp_out    <- apa_print(anova(glm.D93, test = "Cp"))
+    lrt_out   <- apa_print(anova(glm.D93, test = "LRT"))
+    rao_out   <- apa_print(anova(glm.D93, test = "Rao"))
+
+    expect_identical(
+      chisq_out$full_result
+      , list(
+        outcome = "$\\chi^2(2) = 5.45$, $p = .065$"
+        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+      )
+    )
+    expect_identical(
+      cp_out$full_result
+      , list(
+        outcome = "$C_p = 11.13$"
+        , treatment = "$C_p = 15.13$"
+      )
+    )
+    expect_identical(
+      lrt_out
+      , chisq_out
+    )
+    expect_identical(
+      rao_out$full_result
+      , list(
+        outcome = "$\\mathit{RS}(2) = 5.56$, $p = .062$"
+        , treatment = "$\\mathit{RS}(2) = 0.00$, $p > .999$"
+      )
+    )
+
+    car_lr_out   <- apa_print(car::Anova(glm.D93, type = 3, test.statistic = "LR"))
+    car_wald_out <- apa_print(car::Anova(glm.D93, type = 3, test.statistic = "Wald"))
+    car_f_out    <- apa_print(car::Anova(glm.D93, type = 3, test.statistic = "F"))
+
+    expect_identical(
+      car_lr_out$full_result
+      , list(
+        outcome = "$\\chi^2(2) = 5.45$, $p = .065$"
+        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+      )
+    )
+    expect_identical(
+      car_wald_out$full_result
+      , list(
+        Intercept = "$\\chi^2(1) = 317.37$, $p < .001$"
+        , outcome = "$\\chi^2(2) = 5.49$, $p = .064$"
+        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+      )
+    )
+    expect_identical(
+      car_f_out$full_result
+      , list(
+        outcome     = "$F(2, 4) = 2.11$, $p = .237$"
+        , treatment = "$F(2, 4) = 0.00$, $p > .999$"
+      )
+    )
   }
 )
 

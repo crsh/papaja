@@ -416,11 +416,14 @@ apa_print.anova <- function(
         , simplify = TRUE
       )
     )
+  # stats::anova.glm() and car::Anova.glm
   } else if(any(grepl("Deviance", object_heading))) {
     x$Term <-rownames(x)
     y <- canonize(x)
     y <- remove_residuals_row(y)
-    y$df.residual <- NULL
+    if(all(colnames(x) != "F values")) y$df.residual <- NULL
+    if(any(colnames(x) == "Cp")) y$df <- NULL
+
     if(is.null(y$statistic)) {
       y$statistic <- y$deviance
       variable_label(y$statistic) <- "$\\chi^2$"
@@ -503,7 +506,7 @@ apa_print.anova <- function(
   } else if(identical(object_heading[1], "ANOVA-like table for random-effects: Single term deletions")) {
     stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
   }
-  # anova::lm (single model) ----
+  # anova.lm() (single model) ----
   # Canonize, beautify, glue ----
   y <- as.data.frame(x, stringsAsFactors = FALSE)
   y$Effect <- trimws(rownames(y))
