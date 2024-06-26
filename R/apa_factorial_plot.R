@@ -37,6 +37,7 @@
 #' @param ylab Character or expression. Label for *y* axis.
 #' @param main Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 #' either specify a single value that will be added to automatically generated main title, *or* specify an array of multiple titles, one for each plot area.
+#' @param set_par Logical. Determines whether `par(mfrow = .)` should be set for multi-panel plots.
 #' @return A named (nested) list of plot options including raw and derived data. *Note that the structure of the return value is about to change in a forthcoming release of papaja.*
 #' @inheritDotParams graphics::plot.window
 #' @details
@@ -114,6 +115,7 @@ apa_factorial_plot.default <- function(
   , xlab = NULL
   , ylab = NULL
   , main = NULL
+  , set_par = TRUE
   , ...
 ){
   # Data validation:
@@ -148,6 +150,8 @@ apa_factorial_plot.default <- function(
   if(!is.null(xlab)) if(!is.expression(xlab)) validate(xlab, check_class = "character")
   if(!is.null(ylab)) if(!is.expression(ylab)) validate(ylab, check_class = "character")
   if(!is.null(main)) if(!is.expression(main)) if(!is.matrix(main)) validate(main, check_class = "character")
+
+  set_par <- isTRUE(set_par)
 
   # remove extraneous columns from dataset
   data <- data[, c(id, factors, dv)]
@@ -392,7 +396,7 @@ apa_factorial_plot.default <- function(
     output$args <- do.call("apa_factorial_plot_single", ellipsis)
   }
 
-  if(length(factors) > 2L) {
+  if(length(factors) > 2L && set_par) {
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
   }
@@ -401,7 +405,7 @@ apa_factorial_plot.default <- function(
 
 
   if(length(factors) == 3) {
-    par(mfrow = c(1, nlevels(data[[factors[3]]])))
+    if(set_par) par(mfrow = c(1, nlevels(data[[factors[3]]])))
     tmp_main <- ellipsis$main
 
     # by default, only plot legend in topright plot:
@@ -457,7 +461,7 @@ apa_factorial_plot.default <- function(
 
   ## Four factors
   if(length(factors)==4){
-    par(mfrow=c(nlevels(data[[factors[3]]]),nlevels(data[[factors[4]]])))
+    if(set_par) par(mfrow=c(nlevels(data[[factors[3]]]),nlevels(data[[factors[4]]])))
     tmp_main <- ellipsis$main
 
     legend.plot <- array(FALSE, dim=c(nlevels(data[[factors[3]]]), nlevels(data[[factors[4]]])))

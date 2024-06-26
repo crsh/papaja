@@ -12,8 +12,8 @@ A named list (with additional class \code{apa_results}) containing the following
 \describe{
 \item{\code{estimate}}{A (named list of) character strings giving effect-size estimates.}
 \item{\code{statistic}}{A (named list of) character strings giving test statistic, parameters, and \emph{p} values.}
-\item{\code{full_result}}{A (named list of) character strings comprised of \code{estimate} and \verb{statistic`` for each factor.\} \\item\{}table`}{A data frame containing all results; can, for example, be passed to \code{\link[=apa_table]{apa_table()}}.
-}
+\item{\code{full_result}}{A (named list of) character strings comprised of \code{estimate} and \code{statistic} for each factor.}
+\item{\code{table}}{A data frame containing all results; can, for example, be passed to \code{\link[=apa_table]{apa_table()}}.}
 }
 }
 \description{

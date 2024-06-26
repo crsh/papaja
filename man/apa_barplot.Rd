@@ -30,6 +30,7 @@ apa_barplot(data, ...)
   xlab = NULL,
   ylab = NULL,
   main = NULL,
+  set_par = TRUE,
   ...
 )
 
@@ -95,6 +96,8 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{main}{Character or expression. For up to two factors, simply specify the main title. If you stratify the data by more than two factors,
 either specify a single value that will be added to automatically generated main title, \emph{or} specify an array of multiple titles, one for each plot area.}
+
+\item{set_par}{Logical. Determines whether \code{par(mfrow = .)} should be set for multi-panel plots.}
 }
 \value{
 A named (nested) list of plot options including raw and derived data. \emph{Note that the structure of the return value is about to change in a forthcoming release of papaja.}
