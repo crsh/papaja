@@ -1,6 +1,7 @@
 # Upcoming release
 
 - For ANOVA methods, *MSE*s are again returned if requested by the user (reported by @Sashpta, [#562](https://github.com/crsh/papaja/issues/562)). The global default for reporting *MSE*s now depends on the [**effectsize**](https://CRAN.r-project.org/package=effectsize) package: If **effectsize** is installed, the default for reporting *MSE*s is `FALSE`, if **effectsize** is not installed, the default is `TRUE`.
+- `apa_factorial_plot()` gained a new experimental feature to plot density estimates ("violins") of the data.
 
 ### Existing functions
 
