@@ -32,6 +32,7 @@
 #' @param args_lines An optional `list` that contains further arguments that may be passed to [lines()].
 #' @param args_swarm An optional `list` that contains further arguments to customize the [points()] of the beeswarm.
 #' @param args_violins An optional `list` that contains further arguments to customize the [[polygon()]] used for violins.
+#' @param args_density An optional `list` that contains further arguments to customize the densities plotted as violins.
 #' @param args_error_bars An optional `list` that contains further arguments that may be passed to [arrows()].
 #' @param args_legend An optional `list` that contains further arguments that may be passed to [legend()]
 #' @param xlab Character or expression. Label for *x* axis.
@@ -109,6 +110,7 @@ apa_factorial_plot.default <- function(
   , args_lines = NULL
   , args_swarm = NULL
   , args_violins = NULL
+  , args_density = NULL
   , args_error_bars = NULL
   , args_legend = NULL
   , plot = NULL
@@ -144,6 +146,7 @@ apa_factorial_plot.default <- function(
   if(!is.null(args_lines)) validate(args_lines, check_class = "list")
   if(!is.null(args_swarm)) validate(args_swarm, check_class = "list")
   if(!is.null(args_violins)) validate(args_violins, check_class = "list")
+  if(!is.null(args_density)) validate(args_density, check_class = "list")
   if(!is.null(args_error_bars)) validate(args_error_bars, check_class = "list")
   if(!is.null(args_legend)) validate(args_legend, check_class = "list")
   if(!is.null(plot)) validate(plot, check_class = "character")
@@ -216,6 +219,7 @@ apa_factorial_plot.default <- function(
        , args_points = args_points
        , args_swarm = args_swarm
        , args_violins = args_violins
+       , args_density = args_density
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
@@ -785,7 +789,11 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , f = merged[, factors, drop = FALSE]
     )
 
-    x2 <- lapply(x1, density, bw = "SJ")
+    if(is.null(ellipsis$args_density)) ellipsis$args_density <- list()
+    x2 <- lapply(x1, function(x) {
+      args_density <- defaults(ellipsis$args_density, set.if.null = list(x = x))
+      do.call(what = "density", args_density)
+    })
 
     x_offset <- lapply(
       split(
@@ -799,12 +807,12 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       max(x$y)
     }
 
-    max_density <- max(sapply(X = x2, max_y)) * 4
+    max_density <- max(sapply(X = x2, FUN = max_y))
 
     for (i in seq_along(x2)) {
       polygon(
-        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density
-        , y = c(x2[[i]]$x, rev(x2[[i]]$x))# / max_density
+        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density * ellipsis$jit / (nlevels(data[[factors[2L]]])-1)
+        , y = c(x2[[i]]$x, rev(x2[[i]]$x))
         , col = args_violins$col[i]
         , border = args_violins$border[i]
       )
