@@ -32,7 +32,7 @@
 #' @param args_lines An optional `list` that contains further arguments that may be passed to [lines()].
 #' @param args_swarm An optional `list` that contains further arguments to customize the [points()] of the beeswarm.
 #' @param args_violins An optional `list` that contains further arguments to customize the [[polygon()]] used for violins.
-#' @param args_density An optional `list` that contains further arguments to customize the densities plotted as violins.
+#' @param args_density An optional `list` that contains further arguments to customize the [[density()]] plotted as violins.
 #' @param args_error_bars An optional `list` that contains further arguments that may be passed to [arrows()].
 #' @param args_legend An optional `list` that contains further arguments that may be passed to [legend()]
 #' @param xlab Character or expression. Label for *x* axis.

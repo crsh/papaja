@@ -104,7 +104,7 @@ case, multiple lines are drawn, where the dimensions of the matrix determine the
 
 \item{args_violins}{An optional \code{list} that contains further arguments to customize the [\code{\link[=polygon]{polygon()}}] used for violins.}
 
-\item{args_density}{An optional \code{list} that contains further arguments to customize the densities plotted as violins.}
+\item{args_density}{An optional \code{list} that contains further arguments to customize the [\code{\link[=density]{density()}}] plotted as violins.}
 
 \item{args_error_bars}{An optional \code{list} that contains further arguments that may be passed to \code{\link[=arrows]{arrows()}}.}
 
