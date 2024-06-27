@@ -791,7 +791,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
     if(is.null(ellipsis$args_density)) ellipsis$args_density <- list()
     x2 <- lapply(x1, function(x) {
-      args_density <- defaults(ellipsis$args_density, set.if.null = list(x = x))
+      args_density <- defaults(ellipsis$args_density, set = list(x = x))
       do.call(what = "density", args_density)
     })
 
