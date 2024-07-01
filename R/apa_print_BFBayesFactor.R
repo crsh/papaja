@@ -420,10 +420,15 @@ bf_sort_terms <- function(x) {
 
 # }
 
+#' @keywords internal
 
 bf_add_estimates <- function(x, ...) UseMethod("bf_add_estimates", x@numerator[[1]])
 
+#' @keywords internal
+
 bf_add_estimates.default <- function(x, data_frame, ...) data_frame
+
+#' @keywords internal
 
 bf_add_estimates.BFoneSample   <- function(
   x
@@ -462,6 +467,7 @@ bf_add_estimates.BFoneSample   <- function(
   )
 }
 
+#' @keywords internal
 
 bf_add_estimates.BFindepSample <- function(
   x
@@ -495,6 +501,8 @@ bf_add_estimates.BFindepSample <- function(
   )
 }
 
+#' @keywords internal
+
 bf_add_estimates.BFcorrelation <- function(
   x
   , data_frame
@@ -509,6 +517,8 @@ bf_add_estimates.BFcorrelation <- function(
     , ...
   )
 }
+
+#' @keywords internal
 
 bf_add_estimates.BFproportion <- function(
   x
@@ -528,6 +538,7 @@ bf_add_estimates.BFproportion <- function(
   )
 }
 
+#' @keywords internal
 
 bf_sample_summarize <- function(
   x
@@ -564,10 +575,15 @@ bf_sample_summarize <- function(
   data_frame
 }
 
+#' @keywords internal
 
 bf_add_names <- function(x, ...) UseMethod("bf_add_names", x@numerator[[1]])
 
+#' @keywords internal
+
 bf_add_names.default <- function(x, data_frame, ...) data_frame
+
+#' @keywords internal
 
 bf_add_names.BFlinearModel <- function(x, data_frame, ...) {
   cbind(

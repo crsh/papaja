@@ -84,9 +84,8 @@ validate <- function(
 #'    \describe{
 #'      \item{`estimate`}{A (named list of) character strings giving effect-size estimates.}
 #'      \item{`statistic`}{A (named list of) character strings giving test statistic, parameters, and *p* values.}
-#'      \item{`full_result`}{A (named list of) character strings comprised of `estimate` and `statistic`` for each factor.}
-#'      \item{`table`}{A data frame containing all results; can, for example, be passed to [apa_table()].
-#'      }
+#'      \item{`full_result`}{A (named list of) character strings comprised of `estimate` and `statistic` for each factor.}
+#'      \item{`table`}{A data frame containing all results; can, for example, be passed to [apa_table()].}
 #'    }
 #' @keywords internal
 

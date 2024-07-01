@@ -26,7 +26,10 @@ See details.}
 
 \item{...}{[\code{expressions}]\cr Unnamed arguments are taken to be expression
 string(s) to format. Multiple inputs are concatenated together before formatting.
-Named arguments are taken to be temporary variables available for substitution.}
+Named arguments are taken to be temporary variables available for substitution.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{For `glue_data()`, elements in `...` override the values in `.x`.
+}\if{html}{\out{</div>}}}
 }
 \value{
 \code{data.frame} of class \code{apa_regression_table}.

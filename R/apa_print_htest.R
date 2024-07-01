@@ -26,7 +26,7 @@
 #'   large number of functions that produce these objects and their
 #'   idiosyncrasies, the returned strings should be compared to the original
 #'   object. If you experience inaccuracies you may report these
-#'   [here]{https://github.com/crsh/papaja/issues} (please include
+#'   [here](https://github.com/crsh/papaja/issues) (please include
 #'   a reproducible example in your report).
 #'
 #'   `stat_name` and `est_name` are placed in the output string and are thus
