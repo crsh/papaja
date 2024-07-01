@@ -503,6 +503,7 @@ apa_factorial_plot.default <- function(
       }
     }
   }
+  class(output) <- "noprint"
   invisible(output)
 }
 
@@ -891,7 +892,6 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , args_plot_window =args_plot_window
     )
   )
-
 }
 
 
@@ -942,3 +942,4 @@ apa_factorial_plot.afex_aov <- function(
   )
   do.call("apa_factorial_plot.default", ellipsis)
 }
+
