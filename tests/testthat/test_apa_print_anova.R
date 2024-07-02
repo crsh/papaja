@@ -511,5 +511,110 @@ test_that(
   }
 )
 
+test_that(
+  "Analysis of deviance from car"
+  , {
+    fit <- bwt.mu <- nnet::multinom(low ~ ., MASS::birthwt)
+    car_out <- papaja::apa_print(car::Anova(fit))
+    expect_apa_results(
+      car_out
+      , labels = list(
+        term          = "Term"
+        , statistic   = "$\\chi^2$"
+        , df          = "$\\mathit{df}$"
+        , p.value     = "$p$"
+      )
+    )
+    # Example 1: a proportional odds model fitted to pneumo.
+    set.seed(1)
+    pneumo <- transform(VGAM::pneumo, let = log(exposure.time), x3 = runif(8))
+    fit1 <- VGAM::vglm(cbind(normal, mild, severe) ~ let     , VGAM::propodds, pneumo)
+    fit2 <- VGAM::vglm(cbind(normal, mild, severe) ~ let + x3, VGAM::propodds, pneumo)
+    fit3 <- VGAM::vglm(cbind(normal, mild, severe) ~ let + x3, VGAM::cumulative, pneumo)
+    car_out <- apa_print(car::Anova(fit1, type = 3))
+    expect_apa_results(
+      car_out
+      , labels = list(
+        term          = "Term"
+        , statistic   = "$\\chi^2$"
+        , df          = "$\\mathit{df}$"
+        , p.value     = "$p$"
+      )
+    )
+  }
+)
+
+test_that(
+  "Analysis of deviance from the stats and car packages"
+  , {
+    # From stats::glm() examples section:
+    ## Dobson (1990) Page 93: Randomized Controlled Trial :
+    counts <- c(18,17,15,20,10,20,25,13,12)
+    outcome <- gl(3,1,9)
+    treatment <- gl(3,3)
+    data.frame(treatment, outcome, counts) # showing data
+    glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+
+    chisq_out <- apa_print(anova(glm.D93, test = "Chisq"))
+    cp_out    <- apa_print(anova(glm.D93, test = "Cp"))
+    lrt_out   <- apa_print(anova(glm.D93, test = "LRT"))
+    rao_out   <- apa_print(anova(glm.D93, test = "Rao"))
+
+    expect_identical(
+      chisq_out$full_result
+      , list(
+        outcome = "$\\chi^2(2) = 5.45$, $p = .065$"
+        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+      )
+    )
+    expect_identical(
+      cp_out$full_result
+      , list(
+        outcome = "$C_p = 11.13$"
+        , treatment = "$C_p = 15.13$"
+      )
+    )
+    expect_identical(
+      lrt_out
+      , chisq_out
+    )
+    expect_identical(
+      rao_out$full_result
+      , list(
+        outcome = "$\\mathit{RS}(2) = 5.56$, $p = .062$"
+        , treatment = "$\\mathit{RS}(2) = 0.00$, $p > .999$"
+      )
+    )
+
+    car_lr_out   <- apa_print(car::Anova(glm.D93, type = 3, test.statistic = "LR"))
+    car_wald_out <- apa_print(car::Anova(glm.D93, type = 3, test.statistic = "Wald"))
+    car_f_out    <- apa_print(car::Anova(glm.D93, type = 3, test.statistic = "F"))
+
+    expect_identical(
+      car_lr_out$full_result
+      , list(
+        outcome = "$\\chi^2(2) = 5.45$, $p = .065$"
+        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+      )
+    )
+    expect_identical(
+      car_wald_out$full_result
+      , list(
+        Intercept = "$\\chi^2(1) = 317.37$, $p < .001$"
+        , outcome = "$\\chi^2(2) = 5.49$, $p = .064$"
+        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+      )
+    )
+    expect_identical(
+      car_f_out$full_result
+      , list(
+        outcome     = "$F(2, 4) = 2.11$, $p = .237$"
+        , treatment = "$F(2, 4) = 0.00$, $p > .999$"
+      )
+    )
+  }
+)
+
+
 # restore previous options
  options(op)
