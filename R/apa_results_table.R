@@ -4,6 +4,14 @@ print.apa_results_table <- function(x, ...) {
   column_labels <- variable_label(x)
   n_labels <- length(unlist(column_labels))
 
+  for (i in intersect(c("df", "df.residual"), colnames(x))) {
+    y <- x[[i]]
+    with_decimal <- grepl(y, pattern = "\\.|,")
+    if(any(with_decimal)) {
+      x[[i]][!with_decimal] <- paste0(y[!with_decimal], "   ")
+    }
+  }
+
   if(n_labels == 0) {
     base::print.data.frame(x, ...)
   } else {
