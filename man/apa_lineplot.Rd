@@ -147,7 +147,7 @@ data = npk
  , id = "block"
  , dv = "yield"
  , factors = c("N", "P")
- , args.legend = list(x = "center")
+ , args_legend = list(x = "center")
  , jit = 0
 )
 
@@ -166,6 +166,7 @@ apa_lineplot(
 Other plots for factorial designs: 
 \code{\link{apa_barplot}()},
 \code{\link{apa_beeplot}()},
-\code{\link{apa_factorial_plot}()}
+\code{\link{apa_factorial_plot}()},
+\code{\link{apa_violinplot}()}
 }
 \concept{plots for factorial designs}

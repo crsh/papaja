@@ -566,6 +566,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
   args_points <- ellipsis$args_points
   args_swarm <- ellipsis$args_swarm
   args_violins <- ellipsis$args_violins
+  args_density <- ellipsis$args_density
   args_lines <- ellipsis$args_lines
   args_x_axis <- ellipsis$args_x_axis
   args_y_axis <- ellipsis$args_y_axis
@@ -811,7 +812,7 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
 
     for (i in seq_along(x2)) {
       polygon(
-        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density * ellipsis$jit / (nlevels(data[[factors[2L]]])-1)
+        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density * ellipsis$jit / (nlevels(aggregated[[factors[2L]]])-1)
         , y = c(x2[[i]]$x, rev(x2[[i]]$x))
         , col = args_violins$col[i]
         , border = args_violins$border[i]
@@ -945,6 +946,8 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , args_rect = args_rect
       , args_points = args_points
       , args_swarm = args_swarm
+      , args_violins = args_violins
+      , args_density = args_density
       , args_lines = args_lines
       , args_error_bars = args_error_bars
       , args_legend = args_legend
