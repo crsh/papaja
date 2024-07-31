@@ -55,7 +55,7 @@ The function should work on a wide range of \code{htest} objects. Due to the
 large number of functions that produce these objects and their
 idiosyncrasies, the returned strings should be compared to the original
 object. If you experience inaccuracies you may report these
-[here]{https://github.com/crsh/papaja/issues} (please include
+\href{https://github.com/crsh/papaja/issues}{here} (please include
 a reproducible example in your report).
 
 \code{stat_name} and \code{est_name} are placed in the output string and are thus

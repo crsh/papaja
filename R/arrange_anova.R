@@ -35,6 +35,8 @@ arrange_anova <- function(x, ...) {
   UseMethod("arrange_anova")
 }
 
+#' @keywords internal
+
 arrange_anova.default <- function(x, ...) {
   stop(paste0("Objects of class '", class(x), "' are currently not supported (no method defined).
               Visit https://github.com/crsh/papaja/issues to request support for this class."))
@@ -43,6 +45,7 @@ arrange_anova.default <- function(x, ...) {
 
 #' @rdname arrange_anova
 #' @method arrange_anova anova
+#' @keywords internal
 
 arrange_anova.anova <- function(x, ...) {
 
@@ -83,6 +86,7 @@ arrange_anova.anova <- function(x, ...) {
 
 #' @rdname arrange_anova
 #' @method arrange_anova summary.aov
+#' @keywords internal
 
 arrange_anova.summary.aov <- function(x, ...) {
 
@@ -116,6 +120,8 @@ arrange_anova.summary.aov <- function(x, ...) {
   variance_table
 }
 
+#' @keywords internal
+
 arrange_anova.summary.aovlist <- function(x, ...) {
   x <- lapply(x, arrange_anova.summary.aov)
   variance_table <- do.call("rbind", x)
@@ -129,6 +135,7 @@ arrange_anova.summary.aovlist <- function(x, ...) {
 
 #' @rdname arrange_anova
 #' @method arrange_anova summary.Anova.mlm
+#' @keywords internal
 
 arrange_anova.summary.Anova.mlm <- function(x, correction = "GG", ...) {
   validate(correction, check_class = "character", check_length = 1)

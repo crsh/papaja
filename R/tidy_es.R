@@ -1,6 +1,10 @@
+#' @keywords internal
+
 tidy_es <- function(x) {
   UseMethod("tidy_es", x)
 }
+
+#' @keywords internal
 
 tidy_es.default <- function(x) {
   tryCatch(
@@ -10,6 +14,8 @@ tidy_es.default <- function(x) {
     }
   )
 }
+
+#' @keywords internal
 
 tidy_es.data.frame <- function(x) {
   es_cols <- colnames(x)
@@ -24,6 +30,8 @@ tidy_es.data.frame <- function(x) {
   x
 }
 
+#' @keywords internal
+
 tidy_es.effectsize_table <- function(x) {
 
   x <- as.data.frame(x, stringsAsFactors = FALSE)
@@ -35,9 +43,13 @@ tidy_es.effectsize_table <- function(x) {
   canonize(x)
 }
 
+#' @keywords internal
+
 tidy_es.parameters_model <- function(x) {
   tidy_es.effectsize_table(x)
 }
+
+#' @keywords internal
 
 tidy_es.parameters_distribution <- function(x) {
   tidy_es.effectsize_table(x)

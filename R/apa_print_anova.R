@@ -1,9 +1,10 @@
-#' Typeset Statistical Results from ANOVA
+#' Typeset Statistical Results from Analysis of Variance (or Deviance)
 #'
-#' These methods take objects from various R functions that calculate ANOVA to
-#' create formatted character strings to report the results in accordance with
-#' APA manuscript guidelines. For `anova`-objects from model comparisons see
-#' \code{\link{apa_print.list}}.
+#' These methods take objects from various R functions that calculate analysis
+#' of variance (i.e., ANOVA) or analysis of deviance. They create formatted
+#' character strings to report the results in accordance with APA manuscript
+#' guidelines. For `anova`-objects from model comparisons see
+#' [apa_print.list()].
 #'
 #' @param x An object containing the results from an analysis of variance ANOVA
 #' @param correction Character. For repeated-measures ANOVA, the type of
@@ -415,6 +416,30 @@ apa_print.anova <- function(
         , simplify = TRUE
       )
     )
+  # stats::anova.glm() and car::Anova.glm
+  } else if(any(grepl("Deviance", object_heading))) {
+    x$Term <-rownames(x)
+    y <- canonize(x)
+    y <- remove_residuals_row(y)
+    if(all(colnames(x) != "F values")) y$df.residual <- NULL
+    if(any(colnames(x) == "Cp")) y$df <- NULL
+
+    if(is.null(y$statistic)) {
+      y$statistic <- y$deviance
+      variable_label(y$statistic) <- "$\\chi^2$"
+      y$deviance  <- NULL
+    }
+    y <- beautify(y, ...)
+    return(
+      glue_apa_results(
+        y
+        , est_glue = construct_glue(y, "estimate")
+        , stat_glue = construct_glue(y, "statistic")
+        , in_paren = in_paren
+        , simplify = TRUE
+      )
+    )
+
   } else if(any(grepl("Satterthwaite|Kenward", object_heading))) {
     # lmerTest::anova.merModLmerTest -------------------------------------------
 
@@ -481,7 +506,7 @@ apa_print.anova <- function(
   } else if(identical(object_heading[1], "ANOVA-like table for random-effects: Single term deletions")) {
     stop("Single-term deletions are not supported, yet.\nVisit https://github.com/crsh/papaja/issues to request support.")
   }
-  # anova::lm (single model) ----
+  # anova.lm() (single model) ----
   # Canonize, beautify, glue ----
   y <- as.data.frame(x, stringsAsFactors = FALSE)
   y$Effect <- trimws(rownames(y))

@@ -71,6 +71,7 @@ apa_lineplot.default <- function(
   , xlab = NULL
   , ylab = NULL
   , main = NULL
+  , set_par = TRUE
   , ...
 ){
   ellipsis <- defaults(
@@ -97,6 +98,7 @@ apa_lineplot.default <- function(
       , xlab = xlab
       , ylab = ylab
       , main = main
+      , set_par = set_par
       , plot = c("points", "error_bars", "lines")
     )
   )
