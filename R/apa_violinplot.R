@@ -97,7 +97,7 @@ apa_violinplot.default <- function(
       , xlab = xlab
       , ylab = ylab
       , main = main
-      , plot = c("points", "violins")
+      , plot = c("points", "violins", "error_bars")
     )
   )
   do.call("apa_factorial_plot", ellipsis)
