@@ -149,18 +149,9 @@ apa_violinplot(
   , dv = "yield"
   , factors = c("N", "P")
   , args_legend = list(x = "center")
-  , jit = 0
+  , jit = 0.1
 )
 
-apa_violinplot(
-   data = npk
-   , id = "block"
-   , dv = "yield"
-   , factors = c("N", "P", "K")
-   , ylim = c(0, 80)
-   , level = .34
-   , las = 1
-)
 
 }
 \seealso{
