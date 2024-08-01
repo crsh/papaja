@@ -784,8 +784,8 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       )
     )
 
-    args_violins$border <- rep(args_violins$border, each = nlevels(aggregated[[factors[1]]]))
-    args_violins$col    <- rep(args_violins$col,    each = nlevels(aggregated[[factors[1]]]))
+    args_violins$border <- rep(args_violins$border, each = nlevels(aggregated[[factors[1L]]]))
+    args_violins$col    <- rep(args_violins$col,    each = nlevels(aggregated[[factors[1L]]]))
 
 
     merged <- merge(x = aggregated, y.values[, c(factors, "x"), drop = FALSE], sort = FALSE)
@@ -809,15 +809,11 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , FUN = mean
     )
 
-    max_y <- function(x) {
-      max(x$y)
-    }
-
-    max_density <- max(sapply(X = x2, FUN = max_y))
+    max_density <- max(sapply(X = x2, FUN = function(x) {max(x$y)}))
 
     for (i in seq_along(x2)) {
       polygon(
-        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density * ellipsis$jit / (nlevels(aggregated[[factors[2L]]])-1)
+        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density * ellipsis$jit / (if(onedim) 1 else nlevels(aggregated[[factors[2L]]])-1)
         , y = c(x2[[i]]$x, rev(x2[[i]]$x))
         , col = args_violins$col[i]
         , border = args_violins$border[i]

@@ -144,12 +144,12 @@ apa_violinplot(
 )
 
 apa_violinplot(
-data = npk
- , id = "block"
- , dv = "yield"
- , factors = c("N", "P")
- , args_legend = list(x = "center")
- , jit = 0
+  data = npk
+  , id = "block"
+  , dv = "yield"
+  , factors = c("N", "P")
+  , args_legend = list(x = "center")
+  , jit = 0
 )
 
 apa_violinplot(
