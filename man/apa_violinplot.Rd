@@ -116,7 +116,7 @@ distribution function that will be covered. For instance, if you want a 98\% con
 \subsection{Customization of plot elements}{
 
 \code{\link[=apa_factorial_plot]{apa_factorial_plot()}} and its descendants \code{\link[=apa_barplot]{apa_barplot()}}, \code{\link[=apa_lineplot]{apa_lineplot()}},
-and \code{\link[=apa_beeplot]{apa_beeplot()}} are wrapper functions that sequentially call:
+\code{\link[=apa_beeplot]{apa_beeplot()}}, and \code{\link[=apa_violinplot]{apa_violinplot()}} are wrapper functions that sequentially call:
 \itemize{
 \item \code{\link[=plot.new]{plot.new()}},
 \item \code{\link[=plot.window]{plot.window()}},
@@ -124,6 +124,7 @@ and \code{\link[=apa_beeplot]{apa_beeplot()}} are wrapper functions that sequent
 \item \code{\link[=title]{title()}} for axis labels and titles,
 \item \code{\link[=rect]{rect()}} for bars in bar plots,
 \item \code{\link[=points]{points()}} for bee swarms,
+\item \code{\link[=density]{density()}} and \code{\link[=polygon]{polygon()}} for violins,
 \item \code{\link[=lines]{lines()}} for lines connecting central tendency points,
 \item \code{\link[=arrows]{arrows()}} for error bars,
 \item \code{\link[=points]{points()}} for tendency points,

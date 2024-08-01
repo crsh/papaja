@@ -53,7 +53,7 @@
 #' ## Customization of plot elements
 #'
 #' [apa_factorial_plot()] and its descendants [apa_barplot()], [apa_lineplot()],
-#' and [apa_beeplot()] are wrapper functions that sequentially call:
+#' [apa_beeplot()], and [apa_violinplot()] are wrapper functions that sequentially call:
 #'
 #' - [plot.new()],
 #' - [plot.window()],
@@ -61,6 +61,7 @@
 #' - [title()] for axis labels and titles,
 #' - [rect()] for bars in bar plots,
 #' - [points()] for bee swarms,
+#' - [density()] and [polygon()] for violins,
 #' - [lines()] for lines connecting central tendency points,
 #' - [arrows()] for error bars,
 #' - [points()] for tendency points,
