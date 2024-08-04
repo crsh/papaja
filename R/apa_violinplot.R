@@ -110,11 +110,11 @@ apa_violinplot.afex_aov <- function(
   ellipsis <- defaults(
     ellipsis
     , set = list(
-      "data" = data
-      , "plot" = c("lines", "error_bars", "points")
-      , "tendency" = substitute(tendency)
-      , "dispersion" = substitute(dispersion)
-      , "fun_aggregate" = substitute(fun_aggregate)
+      data = data
+      , plot = c("points", "violins", "error_bars")
+      , tendency = substitute(tendency)
+      , dispersion = substitute(dispersion)
+      , fun_aggregate = substitute(fun_aggregate)
     )
   )
   do.call("apa_factorial_plot.afex_aov", ellipsis)
