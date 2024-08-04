@@ -22,7 +22,7 @@
 #' @param intercept Numeric. Adds a horizontal line at height `intercept` to the plot. Can be either a single value or a matrix. For the matrix
 #'    case, multiple lines are drawn, where the dimensions of the matrix determine the number of lines to be drawn.
 #' @param plot Character. A vector specifying which elements of the plot should be plotted. Available options are
-#'  `c("points", "error_bars", "bars", "swarms", "lines")`.
+#'  `c("points", "error_bars", "bars", "swarms", "violins", "lines")`.
 #' @param jit Numeric. Determines the amount of horizontal displacement. Defaults to `0.3`, defaults to `0.4` if `plot = "bars"`.
 #' @param args_x_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *x* axis.
 #' @param args_y_axis An optional `list` that contains further arguments that may be passed to [axis()] for customizing the *y* axis.
@@ -31,6 +31,8 @@
 #' @param args_points An optional `list` that contains further arguments that may be passed to [points()].
 #' @param args_lines An optional `list` that contains further arguments that may be passed to [lines()].
 #' @param args_swarm An optional `list` that contains further arguments to customize the [points()] of the beeswarm.
+#' @param args_violins An optional `list` that contains further arguments to customize the [[polygon()]] used for violins.
+#' @param args_density An optional `list` that contains further arguments to customize the [[density()]] plotted as violins.
 #' @param args_error_bars An optional `list` that contains further arguments that may be passed to [arrows()].
 #' @param args_legend An optional `list` that contains further arguments that may be passed to [legend()]
 #' @param xlab Character or expression. Label for *x* axis.
@@ -51,7 +53,7 @@
 #' ## Customization of plot elements
 #'
 #' [apa_factorial_plot()] and its descendants [apa_barplot()], [apa_lineplot()],
-#' and [apa_beeplot()] are wrapper functions that sequentially call:
+#' [apa_beeplot()], and [apa_violinplot()] are wrapper functions that sequentially call:
 #'
 #' - [plot.new()],
 #' - [plot.window()],
@@ -59,6 +61,7 @@
 #' - [title()] for axis labels and titles,
 #' - [rect()] for bars in bar plots,
 #' - [points()] for bee swarms,
+#' - [density()] and [polygon()] for violins,
 #' - [lines()] for lines connecting central tendency points,
 #' - [arrows()] for error bars,
 #' - [points()] for tendency points,
@@ -108,6 +111,8 @@ apa_factorial_plot.default <- function(
   , args_points = NULL
   , args_lines = NULL
   , args_swarm = NULL
+  , args_violins = NULL
+  , args_density = NULL
   , args_error_bars = NULL
   , args_legend = NULL
   , plot = NULL
@@ -143,6 +148,8 @@ apa_factorial_plot.default <- function(
   if(!is.null(args_points)) validate(args_points, check_class = "list")
   if(!is.null(args_lines)) validate(args_lines, check_class = "list")
   if(!is.null(args_swarm)) validate(args_swarm, check_class = "list")
+  if(!is.null(args_violins)) validate(args_violins, check_class = "list")
+  if(!is.null(args_density)) validate(args_density, check_class = "list")
   if(!is.null(args_error_bars)) validate(args_error_bars, check_class = "list")
   if(!is.null(args_legend)) validate(args_legend, check_class = "list")
   if(!is.null(plot)) validate(plot, check_class = "character")
@@ -216,6 +223,8 @@ apa_factorial_plot.default <- function(
        , args_rect = args_rect
        , args_points = args_points
        , args_swarm = args_swarm
+       , args_violins = args_violins
+       , args_density = args_density
        , args_lines = args_lines
        , args_error_bars = args_error_bars
        , args_legend = args_legend
@@ -556,10 +565,13 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
     aggregated$x <- aggregated$x - .5 + space/2 + (1-space)/(nlevels(aggregated[[factors[[2]]]])-1) * (as.integer(aggregated[[factors[2]]])-1)
   }
 
+
   # save parameters for multiple plot functions
   args_legend <- ellipsis$args_legend
   args_points <- ellipsis$args_points
   args_swarm <- ellipsis$args_swarm
+  args_violins <- ellipsis$args_violins
+  args_density <- ellipsis$args_density
   args_lines <- ellipsis$args_lines
   args_x_axis <- ellipsis$args_x_axis
   args_y_axis <- ellipsis$args_y_axis
@@ -571,6 +583,14 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
   whitelist <- c("xlim", "ylim", "log", "asp", "xaxs", "yaxs", "len")
   for(i in whitelist)
     args_plot_window[[i]] <- ellipsis[[i]]
+
+
+  ## default colors for tendency points (which are inherited by swarm points)
+  bg.colors <- grey(
+    seq(from = 0, to = 1, length.out = nlevels(aggregated[[factors[2]]])) ^ 0.6
+  )
+
+
 
   # new plot area
   plot.new()
@@ -740,11 +760,6 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
     agg.y <- tapply(aggregated[["swarmy"]], list(aggregated[[factors[1]]], aggregated[[factors[2]]]), as.numeric)
   }
 
-  ## default colors for tendency points (which are inherited by swarm points)
-  nc <- nlevels(aggregated[[factors[2]]])-1
-  if(nc==0) nc <- 1
-  bg.colors <- grey((0:nc/(nc)) ^ 0.6)
-
   # prepare (tendency) points
   args_points <- defaults(
     args_points
@@ -759,6 +774,53 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , cex = rep(1.0, length(l2))
     )
   )
+
+  if("violins" %in% ellipsis$plot) {
+    args_violins <- defaults(
+      args_violins
+      , set.if.null = list(
+        border = args_points$col
+        , col  = brighten(args_points$bg, factor = .9)
+      )
+    )
+
+    args_violins$border <- rep(args_violins$border, each = nlevels(aggregated[[factors[1L]]]))
+    args_violins$col    <- rep(args_violins$col,    each = nlevels(aggregated[[factors[1L]]]))
+
+
+    merged <- merge(x = aggregated, y.values[, c(factors, "x"), drop = FALSE], sort = FALSE)
+
+    x1 <- split(
+      x = merged[[dv]]
+      , f = merged[, factors, drop = FALSE]
+    )
+
+    if(is.null(ellipsis$args_density)) ellipsis$args_density <- list()
+    x2 <- lapply(x1, function(x) {
+      args_density <- defaults(ellipsis$args_density, set = list(x = x))
+      do.call(what = "density", args_density)
+    })
+
+    x_offset <- lapply(
+      split(
+        x = merged[["x"]]
+        , f = merged[, factors, drop = FALSE]
+      )
+      , FUN = mean
+    )
+
+    max_density <- max(sapply(X = x2, FUN = function(x) {max(x$y)}))
+
+    for (i in seq_along(x2)) {
+      polygon(
+        x = x_offset[[i]] + c(x2[[i]]$y, rev(-x2[[i]]$y)) / max_density * ellipsis$jit / (if(onedim) 1 else nlevels(aggregated[[factors[2L]]])-1)
+        , y = c(x2[[i]]$x, rev(x2[[i]]$x))
+        , col = args_violins$col[i]
+        , border = args_violins$border[i]
+      )
+    }
+  }
+
 
 
   if("swarms" %in% ellipsis$plot){
@@ -885,6 +947,8 @@ apa_factorial_plot_single <- function(aggregated, y.values, id, dv, factors, int
       , args_rect = args_rect
       , args_points = args_points
       , args_swarm = args_swarm
+      , args_violins = args_violins
+      , args_density = args_density
       , args_lines = args_lines
       , args_error_bars = args_error_bars
       , args_legend = args_legend
