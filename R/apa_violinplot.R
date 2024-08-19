@@ -1,54 +1,45 @@
-#' Line Plots for Factorial Designs that Conform to APA Guidelines
+#' Violin Plots for Factorial Designs that Conform to APA Guidelines
 #'
-#' Creates one or more line plots from a `data.frame` containing data from
-#' a factorial design and set APA-friendly defaults.
+#' Creates one or more violin plots from a `data.frame` containing data from
+#' a factorial design and sets APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
 #' @inheritDotParams apa_factorial_plot
 #'
 #' @family plots for factorial designs
 #' @examples
-#' apa_lineplot(
+#' apa_violinplot(
 #'    data = npk
 #'    , id = "block"
 #'    , dv = "yield"
 #'    , factors = c("N")
 #' )
 #'
-#' apa_lineplot(
-#' data = npk
-#'  , id = "block"
-#'  , dv = "yield"
-#'  , factors = c("N", "P")
-#'  , args_legend = list(x = "center")
-#'  , jit = 0
+#' apa_violinplot(
+#'   data = npk
+#'   , id = "block"
+#'   , dv = "yield"
+#'   , factors = c("N", "P")
+#'   , args_legend = list(x = "center")
+#'   , jit = 0.1
 #' )
 #'
-#' apa_lineplot(
-#'    data = npk
-#'    , id = "block"
-#'    , dv = "yield"
-#'    , factors = c("N", "P", "K")
-#'    , ylim = c(0, 80)
-#'    , level = .34
-#'    , las = 1
-#' )
 #'
 #' @import grDevices
 #' @import graphics
-#' @rdname apa_lineplot
+#' @rdname apa_violinplot
 #' @export
 
-apa_lineplot <- function(data, ...){
-  UseMethod("apa_lineplot", data)
+apa_violinplot <- function(data, ...){
+  UseMethod("apa_violinplot", data)
 }
 
 
 
-#' @rdname apa_lineplot
+#' @rdname apa_violinplot
 #' @export
 
-apa_lineplot.default <- function(
+apa_violinplot.default <- function(
   data
   , id
   , factors = NULL
@@ -71,7 +62,6 @@ apa_lineplot.default <- function(
   , xlab = NULL
   , ylab = NULL
   , main = NULL
-  , set_par = TRUE
   , ...
 ){
   ellipsis <- defaults(
@@ -98,17 +88,16 @@ apa_lineplot.default <- function(
       , xlab = xlab
       , ylab = ylab
       , main = main
-      , set_par = set_par
-      , plot = c("points", "error_bars", "lines")
+      , plot = c("points", "violins", "error_bars")
     )
   )
   do.call("apa_factorial_plot", ellipsis)
 }
 
-#' @rdname apa_lineplot
+#' @rdname apa_violinplot
 #' @export
 
-apa_lineplot.afex_aov <- function(
+apa_violinplot.afex_aov <- function(
   data
   , tendency = mean
   , dispersion = conf_int
@@ -121,11 +110,11 @@ apa_lineplot.afex_aov <- function(
   ellipsis <- defaults(
     ellipsis
     , set = list(
-      "data" = data
-      , "plot" = c("lines", "error_bars", "points")
-      , "tendency" = substitute(tendency)
-      , "dispersion" = substitute(dispersion)
-      , "fun_aggregate" = substitute(fun_aggregate)
+      data = data
+      , plot = c("points", "violins", "error_bars")
+      , tendency = substitute(tendency)
+      , dispersion = substitute(dispersion)
+      , fun_aggregate = substitute(fun_aggregate)
     )
   )
   do.call("apa_factorial_plot.afex_aov", ellipsis)

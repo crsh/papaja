@@ -11,7 +11,7 @@
 \alias{apa_print.anova}
 \alias{apa_print.manova}
 \alias{apa_print.summary.manova}
-\title{Typeset Statistical Results from ANOVA}
+\title{Typeset Statistical Results from Analysis of Variance (or Deviance)}
 \usage{
 \method{apa_print}{aov}(
   x,
@@ -136,10 +136,11 @@ or \code{"none"} for no correction.}
 reported, see \code{\link[stats]{summary.manova}}.}
 }
 \description{
-These methods take objects from various R functions that calculate ANOVA to
-create formatted character strings to report the results in accordance with
-APA manuscript guidelines. For \code{anova}-objects from model comparisons see
-\code{\link{apa_print.list}}.
+These methods take objects from various R functions that calculate analysis
+of variance (i.e., ANOVA) or analysis of deviance. They create formatted
+character strings to report the results in accordance with APA manuscript
+guidelines. For \code{anova}-objects from model comparisons see
+\code{\link[=apa_print.list]{apa_print.list()}}.
 }
 \details{
 The factor names are sanitized to facilitate their use as list names (see
