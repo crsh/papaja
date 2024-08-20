@@ -1,0 +1,21 @@
+name: Close old issues that need reply
+
+on:
+  schedule:
+    - cron: "0 18 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close old issues that need reply
+        uses: dwieeb/needs-reply@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-label: more-information-needed
+          close-message: >
+            This issue has been automatically closed because there has been no response
+            to our request for more information from OP. With the information that is
+            currently in the issue, we don't have enough information to take action.
+            Please reach out if you have or find the answers we need so that we can
+            investigate further.
