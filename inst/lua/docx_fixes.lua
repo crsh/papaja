@@ -10,30 +10,56 @@ function Header (elem)
   return elem
 end
 
-function Image (img)
-  local caption = img.caption
+function Figure (fig)
+  if fig.caption and #fig.caption.long > 0 then
 
-  if caption[1] ~= nil then
-    caption[1] = pandoc.Emph(caption[1])
-    caption[3] = pandoc.Emph(string.gsub(pandoc.utils.stringify(caption[3]), ":", ".  "))
+    local caption = fig.caption.long[1].content
+
+    if #caption >= 4 then
+      caption[2] = pandoc.Emph(caption[2])
+      -- Remove the colon from the 4th element (if it's a string)
+      if caption[4] and pandoc.utils.stringify(caption[4]):match(":") then
+        caption[4] = pandoc.Str(string.gsub(pandoc.utils.stringify(caption[4]), ":", "."))
+      end
+    end
+
+     -- Assign the modified caption back to the table
+     fig.caption.long[1].content = caption
   end
-  return img
+
+  -- Return the modified table
+  return fig
 end
 
 function Table (tbl)
-  local caption = tbl.caption.long[1].content
+  -- Check if tbl.caption.long is not empty
+  if tbl.caption and #tbl.caption.long > 0 then
 
- if caption[1] ~= nil then
-    caption[3] = pandoc.Str(string.gsub(pandoc.utils.stringify(caption[3]), ":", ""))
-    caption[4] = pandoc.LineBreak()
+    local caption = tbl.caption.long[1].content
 
-    for i = 5, (#caption) do
-      caption[i] = pandoc.Emph(caption[i])
+    -- Modify the caption only if there are enough elements
+    if #caption >= 4 then
+      -- Remove the colon from the 4th element (if it's a string)
+      if caption[4] and pandoc.utils.stringify(caption[4]):match(":") then
+        caption[4] = pandoc.Str(string.gsub(pandoc.utils.stringify(caption[4]), ":", ""))
+      end
+
+      -- Add a line break as the 5th element
+      if #caption >= 5 then
+        caption[5] = pandoc.LineBreak()
+      else
+        table.insert(caption, 5, pandoc.LineBreak())
+      end
+
+      for i = 6, (#caption) do
+        caption[i] = pandoc.Emph(caption[i])
+      end
     end
- end
 
- tbl.caption.long[1].content = caption
+     -- Assign the modified caption back to the table
+     tbl.caption.long[1].content = caption
+  end
 
- return tbl
+  -- Return the modified table
+  return tbl
 end
-
