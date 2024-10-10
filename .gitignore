@@ -18,3 +18,4 @@ example/example.tex
 inst/doc
 
 .vscode
+.luarc.json

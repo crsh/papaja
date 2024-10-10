@@ -474,3 +474,23 @@ no_method <- function(x) {
     , call. = FALSE
   )
 }
+
+#' Simple language names from BCP 47 tags
+#'
+#' Internal function to translate BCP 47 tags to simple language names.
+
+#' @param x Character. BCP 47 tag.
+#' @return Character. Simple language name.
+#' @keywords internal
+
+parse_bcp47 <- function(x) {
+  lang <- gsub("-[A-Z]{2}$", "", x)
+
+  switch(
+    lang
+    , en = "english"
+    , de = "german"
+    , nl = "dutch"
+    , "english"
+  )
+}

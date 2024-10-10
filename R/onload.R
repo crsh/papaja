@@ -1,12 +1,14 @@
 .onLoad <- function(libname, pkgname) { # nocov start
-  lang <- if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0 && !is.null(rmarkdown::metadata$lang)) {
-    rmarkdown::metadata$lang
-  } else "english"
+  if(length(knitr::opts_knit$get("rmarkdown.pandoc.to")) > 0 && !is.null(rmarkdown::metadata$lang)) {
+    lang <- parse_bcp47(rmarkdown::metadata$lang)
+  } else {
+    lang <- "english"
+  }
 
   op <- options()
   op_papaja <- list(
-    papaja.language = lang
-    , papaja.terms = localize(lang)
+    # papaja.language = lang
+    papaja.terms = localize(lang)
     , papaja.na_string = "NA"
     , papaja.plot_colors = "greyscale"
     , papaja.mse = !package_available("effectsize")

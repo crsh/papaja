@@ -322,6 +322,11 @@ localize <- function(x) {
       , note = "Note"
       , correspondence = "Correspondence concerning this article should be addressed to "
       , email = "E-mail"
+      , version = "Version"
+      , and = "and"
+      , cite_r_packages_s = "and the R-package"
+      , cite_r_packages_pl = "and the R-packages"
+      , cite_r_footnote = "We, furthermore, used the R-packages"
     )
     , german = list(
       author_note = "Anmerkung des Autors"
@@ -333,6 +338,11 @@ localize <- function(x) {
       , note = "Anmerkung"
       , correspondence = "Schriftverkehr diesen Artikel betreffend sollte adressiert sein an "
       , email = "E-Mail"
+      , version = "Version"
+      , and = "und"
+      , cite_r_packages_s = "und das R-Paket"
+      , cite_r_packages_pl = "und die R-Pakete"
+      , cite_r_footnote = "Wir verwendeten zudem die R-Pakete"
     )
     , dutch = list(
       author_note = "Over de auteur"
@@ -344,6 +354,11 @@ localize <- function(x) {
       , note = "Opmerking"
       , correspondence = "Correspondentie betreffende dit artikel wordt geadresseerd aan "
       , email = "E-mail"
+      , verion = "Versie"
+      , and = "en"
+      , cite_r_packages_s = "en het R-pakket"
+      , cite_r_packages_pl = "en de R-pakketten"
+      , cite_r_footnote = "We gebruikten bovendien de R-pakketten"
     )
   )
 }

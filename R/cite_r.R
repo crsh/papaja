@@ -27,11 +27,19 @@
 #' @examples cite_r()
 #' @export
 
-cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, omit = TRUE, ...) {
+cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, omit = TRUE, lang = NULL, ...) {
   if(!is.null(file)) validate(file, check_class = "character", check_length = 1)
   validate(prefix, check_class = "character", check_length = 1)
   validate(footnote, check_class = "logical", check_length = 1)
   if(!is.null(pkgs)) validate(pkgs, check_class = "character")
+
+  if(is.null(lang)) {
+    apa_terms <- getOption("papaja.terms")
+  } else {
+    validate(lang, check_class = "character", check_length = 1)
+    lang <- parse_bcp47(lang)
+    apa_terms <- localize(lang)
+  }
 
   ellipsis <- list(...)
   if(!is.null(ellipsis$withhold)) {
@@ -40,7 +48,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, om
   validate(omit, check_class = "logical", check_length = 1)
 
   r_version <- as.character(utils::packageVersion("base"))
-  cite_just_r <- paste0("R [Version ", r_version, "; @", prefix, "base]")
+  cite_just_r <- paste0("R [", apa_terms$version, " ", r_version, "; @", prefix, "base]")
 
   if(is.null(file) || !utils::file_test("-f", file)) { # Print R-reference if there is no .bib-file
     if(!is.null(file)) warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
@@ -100,7 +108,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, om
   pkg_names <- names(pkg_citations)
   pkg_names <- unique(gsub("\\_\\D", "", pkg_names))
   pkg_names <- gsub("survival-book", "survival", pkg_names)
-  pkg_versions <- sapply(pkg_names, function(x) if(package_available(x)) paste0("Version ", as.character(utils::packageVersion(x)), "\\; ") else "")
+  pkg_versions <- sapply(pkg_names, function(x) if(package_available(x)) paste0(apa_terms$version, " ", as.character(utils::packageVersion(x)), "\\; ") else "")
   pkg_keys <- sapply(pkg_names, function(x){
     keys <- pkg_citations[grepl(x, names(pkg_citations))]
     paste0("@", keys, collapse = "; ")
@@ -113,23 +121,25 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, om
 
   if(length(pkg_texts) > 1) {
     pkg_info <- paste(pkg_texts[1:(length(pkg_texts) - 1)], collapse = ", ")
-    pkg_info <- paste0(pkg_info, ", and ", utils::tail(pkg_texts, 1))
+    pkg_info <- paste0(pkg_info, " ", apa_terms$and, " ", utils::tail(pkg_texts, 1))
   } else {
     pkg_info <- pkg_texts
   }
 
-  complete_r_citaiton <- paste0("R [Version ", r_version, "\\; @", r_citation, "]")
+  complete_r_citation <- paste0("R [", apa_terms$version, " ", r_version, "\\; @", r_citation, "]")
 
   if(footnote) {
     res <- list()
-    res$r <- paste0(complete_r_citaiton, "[^papaja_pkg_citations]")
+    res$r <- paste0(complete_r_citation, "[^papaja_pkg_citations]")
 
-    res$pkgs <- paste0("\n\n[^papaja_pkg_citations]: We, furthermore, used the R-packages ", pkg_info, ".\n\n")
+    res$pkgs <- paste0("\n\n[^papaja_pkg_citations]: ", apa_terms$cite_r_footnote, " ", pkg_info, ".\n\n")
   } else {
-    res <- paste0(
-      complete_r_citaiton, " and the R-package"
-      , if(length(pkg_texts) > 1) "s", " " , pkg_info
-    )
+    if(length(pkg_texts) > 1) {
+      pkg_phrase <- apa_terms$cite_r_packages_pl
+    } else {
+      pkg_phrase <- apa_terms$cite_r_packages_s
+    }
+    res <- paste0(complete_r_citation, " ", pkg_phrase, " " , pkg_info)
   }
 
   res
