@@ -31,8 +31,7 @@ statistics are glued. Defaults to \code{attr(x, "sanitized_term_names")}.}
 string(s) to format. Multiple inputs are concatenated together before formatting.
 Named arguments are taken to be temporary variables available for substitution.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{For `glue_data()`, elements in `...` override the values in `.x`.
-}\if{html}{\out{</div>}}}
+For \code{glue_data()}, elements in \code{...} override the values in \code{.x}.}
 
 \item{est_glue}{Character. (Named vector of) expressions string(s) to
 format. Each string creates a new (named) element in the

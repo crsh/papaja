@@ -12,6 +12,8 @@
 #' @param omit Logical. If `TRUE`, `pkgs` constitutes a list of packages
 #'   *not* to cite (a blacklist). If `FALSE`, `pkgs` constitutes a list of
 #'   packages to cite (a whitelist).
+#' @param lang Character. Language code according to BCP 47. If `NULL`, the
+#'   defaults to the language set in the YAML front matter or to English.
 #' @param ... Additional arguments, which are currently ignored.
 #' @details
 #'   If `footnote = FALSE`, a character string citing R and R packages

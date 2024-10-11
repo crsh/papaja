@@ -10,6 +10,7 @@ cite_r(
   footnote = FALSE,
   pkgs = NULL,
   omit = TRUE,
+  lang = NULL,
   ...
 )
 }
@@ -28,6 +29,9 @@ on \code{omit}.}
 \item{omit}{Logical. If \code{TRUE}, \code{pkgs} constitutes a list of packages
 \emph{not} to cite (a blacklist). If \code{FALSE}, \code{pkgs} constitutes a list of
 packages to cite (a whitelist).}
+
+\item{lang}{Character. Language code according to BCP 47. If \code{NULL}, the
+defaults to the language set in the YAML front matter or to English.}
 
 \item{...}{Additional arguments, which are currently ignored.}
 }
