@@ -159,6 +159,10 @@ apa6_pdf <- function(
     on.exit(close(output_file_connection))
     writeLines(output_text, output_file_connection, useBytes = TRUE)
 
+    if(isTRUE(metadata$doi_citations)) {
+      rmdfiltr::replace_doi_citations(input_file, metadata$bibliography)
+    }
+
     # Apply bookdown postprocesser and pass format options
     bookdown_post_processor <- bookdown::pdf_document2()$post_processor
     pp_env <- environment(bookdown_post_processor)
@@ -376,6 +380,10 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
       , metadata = metadata
     )
     csl_specified <- is.null(args)
+
+    if(isTRUE(metadata$doi_citations)) {
+      args <- rmdfiltr::add_doi2cite_filter(args)
+    }
 
     ## Set ampersand filter
     if((is.null(metadata$replace_ampersands) || metadata$replace_ampersands)) {

@@ -19,3 +19,5 @@ inst/doc
 
 .vscode
 .luarc.json
+
+/.luarc.json
