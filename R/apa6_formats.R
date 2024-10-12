@@ -160,7 +160,7 @@ apa6_pdf <- function(
     writeLines(output_text, output_file_connection, useBytes = TRUE)
 
     if(isTRUE(metadata$doi_citations)) {
-      rmdfiltr::replace_doi_citations(input_file, metadata$bibliography)
+      rmdfiltr::post_process_doi_citations(input_file, metadata$bibliography)
     }
 
     # Apply bookdown postprocesser and pass format options
