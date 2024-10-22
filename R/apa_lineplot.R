@@ -4,7 +4,6 @@
 #' a factorial design and set APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
-#' @inheritDotParams apa_factorial_plot
 #'
 #' @family plots for factorial designs
 #' @examples
@@ -34,6 +33,7 @@
 #'    , las = 1
 #' )
 #'
+#' @param ... Further arguments passed on to [apa_factorial_plot()].
 #' @import grDevices
 #' @import graphics
 #' @rdname apa_lineplot
@@ -42,7 +42,6 @@
 apa_lineplot <- function(data, ...){
   UseMethod("apa_lineplot", data)
 }
-
 
 
 #' @rdname apa_lineplot

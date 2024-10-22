@@ -4,7 +4,7 @@
 #' a factorial design and set APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
-#' @inheritDotParams apa_factorial_plot
+#' @param ... Further arguments passed on to [apa_factorial_plot()].
 #' @family plots for factorial designs
 #'
 #' @examples
