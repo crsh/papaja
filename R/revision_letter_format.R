@@ -2,6 +2,7 @@
 #'
 #' Template for creating a journal revision letters.
 #'
+#' @param ... Further arguments passed on to [bookdown::pdf_document2()] and [rmarkdown::pdf_document()].
 #' @details This document format is adapted from by the
 #'   [revision letter template](https://github.com/mschroen/review_response_letter)
 #'   by Martin Schrön.
@@ -21,8 +22,7 @@
 #'   To quote entire paragraphs directly from the revised manuscript see
 #'   [`quote_from_tex()`].
 #'
-#' @inheritDotParams bookdown::pdf_document2
-#' @seealso [bookdown::pdf_document2()]]
+#' @seealso [bookdown::pdf_document2()]], [rmarkdown::pdf_document()]
 #' @inherit apa6_pdf return
 #' @export
 

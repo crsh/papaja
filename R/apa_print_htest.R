@@ -20,7 +20,7 @@
 #'   respectively) with attribute `conf.level` set, e.g., when calculating
 #'   bootstrapped confidence intervals.
 #' @inheritParams glue_apa_results
-#' @inheritDotParams apa_num
+#' @inheritDotParams apa_num.numeric
 #' @details
 #'   The function should work on a wide range of `htest` objects. Due to the
 #'   large number of functions that produce these objects and their

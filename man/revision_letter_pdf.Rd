@@ -7,11 +7,7 @@
 revision_letter_pdf(...)
 }
 \arguments{
-\item{...}{
-  Arguments passed on to \code{\link[bookdown:html_document2]{bookdown::pdf_document2}}
-  \describe{
-    \item{\code{}}{}
-  }}
+\item{...}{Further arguments passed on to \code{\link[bookdown:html_document2]{bookdown::pdf_document2()}} and \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}.}
 }
 \value{
 R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}.
@@ -40,5 +36,5 @@ To quote entire paragraphs directly from the revised manuscript see
 \code{\link[=quote_from_tex]{quote_from_tex()}}.
 }
 \seealso{
-\code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}]
+\code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}], \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}
 }

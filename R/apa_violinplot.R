@@ -4,7 +4,7 @@
 #' a factorial design and sets APA-friendly defaults.
 #'
 #' @inherit apa_factorial_plot
-#' @inheritDotParams apa_factorial_plot
+#' @param ... Further arguments passed on to [apa_factorial_plot()].
 #'
 #' @family plots for factorial designs
 #' @examples
@@ -119,6 +119,3 @@ apa_violinplot.afex_aov <- function(
   )
   do.call("apa_factorial_plot.afex_aov", ellipsis)
 }
-
-
-

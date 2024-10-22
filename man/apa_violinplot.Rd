@@ -45,11 +45,7 @@ apa_violinplot(data, ...)
 \arguments{
 \item{data}{A \code{data.frame} that contains the data, or an object of class \code{afex_aov}.}
 
-\item{...}{
-  Arguments passed on to \code{\link[=apa_factorial_plot]{apa_factorial_plot}}
-  \describe{
-    \item{\code{}}{}
-  }}
+\item{...}{Further arguments passed on to \code{\link[=apa_factorial_plot]{apa_factorial_plot()}}.}
 
 \item{id}{Character. Variable name that identifies subjects.}
 

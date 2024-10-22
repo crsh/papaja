@@ -5,7 +5,7 @@
 #' intervals in a table or in text.
 #'
 #' @param x An object of class \code{papaja_wsci}.
-#' @inheritDotParams apa_num
+#' @inheritDotParams apa_num.numeric
 #'
 #' @evalRd apa_results_return_value()
 #'

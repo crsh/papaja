@@ -15,18 +15,18 @@
 \usage{
 apa_interval(
   x,
-  ...,
   conf.int = NULL,
   interval_type = NULL,
-  enclose_math = FALSE
+  enclose_math = FALSE,
+  ...
 )
 
 print_interval(
   x,
-  ...,
   conf.int = NULL,
   interval_type = NULL,
-  enclose_math = FALSE
+  enclose_math = FALSE,
+  ...
 )
 
 \method{apa_interval}{numeric}(
@@ -46,27 +46,51 @@ print_interval(
   ...
 )
 
-\method{apa_interval}{data.frame}(x, ...)
+\method{apa_interval}{data.frame}(
+  x,
+  conf.int = NULL,
+  interval_type = NULL,
+  enclose_math = FALSE,
+  ...
+)
 
-\method{apa_interval}{list}(x, ...)
+\method{apa_interval}{list}(
+  x,
+  conf.int = NULL,
+  interval_type = NULL,
+  enclose_math = FALSE,
+  ...
+)
 
-apa_confint(x, ..., interval_type = "CI")
+apa_confint(
+  x,
+  conf.int = NULL,
+  interval_type = "CI",
+  enclose_math = FALSE,
+  ...
+)
 
-print_confint(x, ..., interval_type = "CI")
+print_confint(
+  x,
+  conf.int = NULL,
+  interval_type = "CI",
+  enclose_math = FALSE,
+  ...
+)
 
-apa_hdint(x, ..., interval_type = "HDI")
+apa_hdint(x, conf.int = NULL, interval_type = "HDI", enclose_math = FALSE, ...)
 
-print_hdint(x, ..., interval_type = "HDI")
+print_hdint(
+  x,
+  conf.int = NULL,
+  interval_type = "HDI",
+  enclose_math = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{Numeric. A vector (of length 2, unless \code{y} is also specified) with,
 a two-column \code{matrix}, or a \code{data.frame}, which can coerced to a \code{matrix}.}
-
-\item{...}{
-  Arguments passed on to \code{\link[=apa_num]{apa_num}}
-  \describe{
-    \item{\code{}}{}
-  }}
 
 \item{conf.int}{Numeric. Confidence level of the interval. Ignored if
 level can be inferred from attributes of \code{x}, see Details.}
@@ -76,6 +100,8 @@ estimate, e.g. \code{CI}.}
 
 \item{enclose_math}{Logical. Indicates whether the interval should be
 enclosed in \code{$} (i.e., a math environment).}
+
+\item{...}{Further arguments passed on to \code{\link[=apa_num]{apa_num()}}.}
 
 \item{y}{Numeric. An optional vector of the same length as \code{x}.}
 }

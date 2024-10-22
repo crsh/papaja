@@ -12,7 +12,7 @@
 #'   estimate, e.g. `CI`.
 #' @param enclose_math Logical. Indicates whether the interval should be
 #'   enclosed in `$` (i.e., a math environment).
-#' @inheritDotParams apa_num
+#' @param ... Further arguments passed on to [apa_num()].
 #'
 #' @details If possible the confidence level of the interval is inferred from
 #'   attributes of `x`. For a vector of length 2, the attribute `conf.level` is
@@ -37,10 +37,10 @@
 
 apa_interval <- function(
     x
-    , ...
     , conf.int = NULL
     , interval_type = NULL
     , enclose_math = FALSE
+    , ...
 ) {
     sapply(x, validate, name = "x", check_class = "numeric", check_infinite = FALSE)
     validate(enclose_math, check_class = "logical", check_length = 1)
@@ -216,7 +216,13 @@ apa_interval.matrix <- function(
 #' @method apa_interval data.frame
 #' @export
 
-apa_interval.data.frame <- function(x, ...) {
+apa_interval.data.frame <- function(
+  x
+  , conf.int = NULL
+  , interval_type = NULL
+  , enclose_math = FALSE
+  , ...
+) {
     x <- as.matrix(x)
     apa_interval(x, ...)
 }
@@ -225,7 +231,13 @@ apa_interval.data.frame <- function(x, ...) {
 #' @method apa_interval list
 #' @export
 
-apa_interval.list <- function(x, ...) {
+apa_interval.list <- function(
+  x
+  , conf.int = NULL
+  , interval_type = NULL
+  , enclose_math = FALSE
+  , ...
+) {
   x <- as.data.frame(x)
   apa_interval(x, ...)
 }
@@ -236,8 +248,10 @@ apa_interval.list <- function(x, ...) {
 
 apa_confint <- function(
   x
-  , ...
+  , conf.int = NULL
   , interval_type = "CI"
+  , enclose_math = FALSE
+  , ...
 ) {
   apa_interval(x, interval_type = interval_type, ...)
 }
@@ -252,8 +266,10 @@ print_confint <- apa_confint
 
 apa_hdint <- function(
   x
-  , ...
+  , conf.int = NULL
   , interval_type = "HDI"
+  , enclose_math = FALSE
+  , ...
 ) {
   apa_interval(x, interval_type = interval_type, ...)
 }

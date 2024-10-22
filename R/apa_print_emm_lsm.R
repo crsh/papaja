@@ -14,7 +14,7 @@
 #' @param conf.int Numeric. Confidence level for confidence intervals.
 #' @inheritParams emmeans::summary.emmGrid
 #' @inheritParams glue_apa_results
-#' @inheritDotParams apa_num
+#' @inheritDotParams apa_num.numeric
 #' @details
 #'
 #' When p-values and confidence intervals are adjusted for multiple testing,

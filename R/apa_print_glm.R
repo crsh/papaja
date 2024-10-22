@@ -20,7 +20,7 @@
 #' @param observed Logical. Indicates whether predictor variables were
 #'   observed. See details.
 #' @inheritParams glue_apa_results
-#' @inheritDotParams apa_num
+#' @inheritDotParams apa_num.numeric
 #' @details
 #'   The coefficient names are sanitized to facilitate their use as list names.
 #'   Parentheses are omitted and other non-word characters are replaced by `_`
