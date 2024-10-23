@@ -1,19 +1,40 @@
-# Upcoming release
+# papaja 0.1.3
 
-- For ANOVA methods, *MSE*s are again returned if requested by the user (reported by @Sashpta, [#562](https://github.com/crsh/papaja/issues/562)). The global default for reporting *MSE*s now depends on the [**effectsize**](https://CRAN.r-project.org/package=effectsize) package: If **effectsize** is installed, the default for reporting *MSE*s is `FALSE`, if **effectsize** is not installed, the default is `TRUE`.
-- Added `apa_print()` support for analysis of deviance from the **car** package.
+### New functions
+
 - Added new plotting function `apa_violinplot()` for violin plots.
-- Accordingly, `apa_factorial_plot()` gained arguments `args_violins` and `args_density`.
+    - Accordingly, `apa_factorial_plot()` gained arguments `args_violins` and `args_density`.
 
 ### Existing functions
 
 - `generate_author_yml()`
-    - Now preserves affiliation order for each author (see #569).
-- `apa_print()` now supports output from `stats::binom.test()` (see [#576](https://github.com/crsh/papaja/issues/576)).
+    - Now preserves affiliation order for each author (see #569, @conig).
+- `apa_print()`
+    - now returns an output object that is consistent with other output from `apa_print()`
+        - The table element does not have row names.
+        - Term names are now consistently constructed with `sanitize_terms()`.
+    - now supports output from `stats::binom.test()` (see [#576](https://github.com/crsh/papaja/issues/576)).
+    - now supports analysis of deviance from the **car** package.
+    - For ANOVA methods, *MSE*s are again returned if requested by the user (reported by @Sashpta, [#562](https://github.com/crsh/papaja/issues/562)). The global default for reporting *MSE*s now depends on the [**effectsize**](https://CRAN.r-project.org/package=effectsize) package: If **effectsize** is installed, the default for reporting *MSE*s is `FALSE`, if **effectsize** is not installed, the default is `TRUE`.
+- `apa_*plot()` functions have gained a new argument `set_par`.
 - `sanitize_terms()` now also replaces multiple consecutive underscores with a single underscore and removes leading underscores. This affects term names in output from `apa_print()`.
-- `apa_print()` now returns an output object that is consistent with other output from `apa_print()`
-  - The table element does not have row names.
-  - Term names are now consistently constructed with `sanitize_terms()`.
+- `cite_r()`
+    - gained the `lang` argument to specify the language of to-be-generated text.
+
+### Misc
+
+- Several improvements to the documentation
+
+### Templates
+
+- APA 6
+    - DOCX
+        - Fixed bugs in table and figure numbering
+    - New YAML front matter flag `doi_citations` to use DOI-based citations via the [`doi2cite`](https://github.com/korintje/pandoc-doi2cite/blob/main/doi2cite.lua) filter, see [**rmdfiltr** vignette](https://cran.r-project.org/web/packages/rmdfiltr/vignettes/doi2cite.html).
+- Revision letter
+    - LaTeX error `LaTeX Error: Lonely \item--perhaps a missing list environment` is now fixed (reported by @cjvanlissa, [#587](https://github.com/crsh/papaja/issues/587); fixed by @jvcasillas, [#593](https://github.com/crsh/papaja/pull/593))
+- Updated to latest version of CSL files
+
 
 # papaja 0.1.2
 

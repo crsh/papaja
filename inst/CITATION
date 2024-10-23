@@ -21,4 +21,5 @@ bibentry(
   , year = year
   , note = note
   , url = meta$URL
+  , doi = "10.32614/CRAN.package.papaja"
 )

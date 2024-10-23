@@ -17,6 +17,13 @@ issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=git
 [![StackOverflow
 questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
+**Sections** [Example](#example) \| [Installation](#installation) \|
+[Usage](#usage) \| [Getting help](#getting-help) \|
+[Citation](#citation) \| [papaja in the wild](#papaja-in-the-wild) \|
+[Computational reproducibility](#computational-reproducibility) \|
+[Contribute](#contribute) \| [Related R packages](#related-r-packages)
+\| [Package dependencies](#package-dependencies)
+
 **papaja** is an
 [award-winning](https://improvingpsych.org/mission/awards/) R package
 that facilitates creating computationally reproducible, submission-ready
@@ -308,6 +315,7 @@ your BibTeX file:
   year = {2024},
   note = {R package version 0.1.3},
   url = {https://github.com/crsh/papaja},
+  doi = {10.32614/CRAN.package.papaja},
 }
 ```
 
