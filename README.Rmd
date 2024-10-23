@@ -321,6 +321,7 @@ By now, there are a couple of R packages that provide convenience functions to f
 -   [**apaTables**](https://github.com/dstanley4/apaTables): Create American Psychological Association (APA) Style Tables
 -   [**rempsyc**](https://github.com/RemPsyc/rempsyc): Convenience functions for psychology
 -   [**sigr**](https://github.com/WinVector/sigr): Concise formatting of significances in R
+-   [**apaquarto**](https://github.com/wjschne/apaquarto): A quarto extension for creating APA7 documents in .docx, .html, and .pdf formats
 
 If you are looking for other journal article templates, you may be interested in the [**rticles**](https://github.com/rstudio/rticles) package.
 

@@ -5,12 +5,17 @@ Prepare APA Journal Articles<br />with R Markdown
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![CRAN/METACRAN](https://img.shields.io/cran/v/papaja?label=CRAN&logo=r)](https://cran.r-project.org/package=papaja)
-[![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-![GitHub last commit (main)](https://img.shields.io/github/last-commit/crsh/papaja/main?label=Last%20commit&logo=github)
-[![R-CMD-check](https://github.com/crsh/papaja/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/crsh/papaja/actions/workflows/R-CMD-check.yaml)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+![GitHub last commit
+(main)](https://img.shields.io/github/last-commit/crsh/papaja/main?label=Last%20commit&logo=github)
+[![R-CMD-check](https://github.com/crsh/papaja/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/crsh/papaja/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/crsh/papaja/branch/master/graph/badge.svg)](https://app.codecov.io/gh/crsh/papaja)
-[![GitHub bug issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
-[![StackOverflow questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
+[![GitHub bug
+issues](https://img.shields.io/github/issues/crsh/papaja/bug?label=Bugs&logo=github)](https://github.com/crsh/papaja/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+[![StackOverflow
+questions](https://img.shields.io/stackexchange/stackoverflow/t/papaja?label=Questions&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/papaja)
 
 **papaja** is an
 [award-winning](https://improvingpsych.org/mission/awards/) R package
@@ -248,10 +253,6 @@ p <- ggplot(
 p + theme_apa()
 ```
 
-    ## Warning: Computation failed in `stat_summary()`
-    ## Caused by error in `fun.data()`:
-    ## ! The package "Hmisc" is required.
-
 ![](README_files/figure-gfm/stroop-ggplot-1.png)<!-- -->
 
 ### Usage without RStudio
@@ -292,7 +293,7 @@ example](https://stackoverflow.com/help/minimal-reproducible-example).
 
 Please cite **papaja** if you use it.
 
-    Aust, F. & Barth, M. (2023). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.2. Retrieved from https://github.com/crsh/papaja
+    Aust, F. & Barth, M. (2024). papaja: Prepare reproducible APA journal articles with R Markdown. R package version 0.1.3. Retrieved from https://github.com/crsh/papaja
 
 For convenience, you can [use
 `cite_r()`](https://frederikaust.com/papaja_man/writing.html#citing-r-and-its-packages)
@@ -304,8 +305,8 @@ your BibTeX file:
 @Manual{,
   title = {{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}},
   author = {Frederik Aust and Marius Barth},
-  year = {2023},
-  note = {R package version 0.1.2},
+  year = {2024},
+  note = {R package version 0.1.3},
   url = {https://github.com/crsh/papaja},
 }
 ```
@@ -383,6 +384,9 @@ APA guidelines.
   functions for psychology
 - [**sigr**](https://github.com/WinVector/sigr): Concise formatting of
   significances in R
+- [**apaquarto**](https://github.com/wjschne/apaquarto): A quarto
+  extension for creating APA7 documents in .docx, .html, and .pdf
+  formats
 
 If you are looking for other journal article templates, you may be
 interested in the [**rticles**](https://github.com/rstudio/rticles)
