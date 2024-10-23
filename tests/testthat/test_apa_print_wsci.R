@@ -23,7 +23,7 @@ test_that(
     )
     expect_identical(
       apa_wsci$estimate$N0_P0
-      , "$M = 51.717$, 98\\% CI [46.603, 56.831]"
+      , "$M = 51.717$, 98\\% CI $[46.603, 56.831]$"
     )
   }
 )

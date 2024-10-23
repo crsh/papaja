@@ -35,20 +35,19 @@
 #' apa_confint(confint(lm(cars)))
 #' apa_confint(confint(lm(cars)), digits = 3)
 
-apa_interval <- function(
-    x
-    , conf.int = NULL
-    , interval_type = NULL
-    , enclose_math = FALSE
-    , ...
-) {
-    sapply(x, validate, name = "x", check_class = "numeric", check_infinite = FALSE)
-    validate(enclose_math, check_class = "logical", check_length = 1)
-    if(!is.null(interval_type)) validate(interval_type, check_class = "character", check_length = 1)
+apa_interval <- function(x, ...) {
+  ellipsis <- list(...)
+  enclose_math <- ellipsis$enclose_math
+  interval_type <- ellipsis$interval_type
+  conf.int <- ellipsis$conf.int
 
-    if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 100))
+  sapply(x, validate, name = "x", check_class = "numeric", check_infinite = FALSE)
+  if(!is.null(enclose_math)) validate(enclose_math, check_class = "logical", check_length = 1)
+  if(!is.null(interval_type)) validate(interval_type, check_class = "character", check_length = 1)
 
-    UseMethod("apa_interval", x)
+  if(!is.null(conf.int)) validate(conf.int, check_class = "numeric", check_length = 1, check_range = c(0, 100))
+
+  UseMethod("apa_interval", x)
 }
 
 #' @rdname apa_interval
@@ -70,10 +69,10 @@ apa_interval.default <- function(x, ...) {
 apa_interval.numeric <- function(
     x
     , y = NULL
+    , ...
     , conf.int = NULL
     , interval_type = NULL
     , enclose_math = FALSE
-    , ...
 ) {
     ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
     conf.int <- ellipsis_ci$conf.int
@@ -145,10 +144,10 @@ apa_interval.numeric <- function(
 
 apa_interval.matrix <- function(
     x
+    , ...
     , conf.int = NULL
     , interval_type = NULL
     , enclose_math = FALSE
-    , ...
 ) {
     ellipsis_ci <- deprecate_ci(conf.int = conf.int, ...)
     conf.int <- ellipsis_ci$conf.int
@@ -218,13 +217,19 @@ apa_interval.matrix <- function(
 
 apa_interval.data.frame <- function(
   x
+  , ...
   , conf.int = NULL
   , interval_type = NULL
   , enclose_math = FALSE
-  , ...
 ) {
     x <- as.matrix(x)
-    apa_interval(x, ...)
+    apa_interval(
+    x
+    , interval_type = interval_type
+    , conf.int = conf.int
+    , enclose_math = enclose_math
+    , ...
+  )
 }
 
 #' @rdname apa_interval
@@ -233,10 +238,10 @@ apa_interval.data.frame <- function(
 
 apa_interval.list <- function(
   x
+  , ...
   , conf.int = NULL
   , interval_type = NULL
   , enclose_math = FALSE
-  , ...
 ) {
   x <- as.data.frame(x)
   apa_interval(x, ...)
@@ -248,12 +253,18 @@ apa_interval.list <- function(
 
 apa_confint <- function(
   x
+  , ...
   , conf.int = NULL
   , interval_type = "CI"
   , enclose_math = FALSE
-  , ...
 ) {
-  apa_interval(x, interval_type = interval_type, ...)
+  apa_interval(
+    x
+    , interval_type = interval_type
+    , conf.int = conf.int
+    , enclose_math = enclose_math
+    , ...
+  )
 }
 
 #' @rdname apa_interval
@@ -266,12 +277,18 @@ print_confint <- apa_confint
 
 apa_hdint <- function(
   x
+  , ...
   , conf.int = NULL
   , interval_type = "HDI"
   , enclose_math = FALSE
-  , ...
 ) {
-  apa_interval(x, interval_type = interval_type, ...)
+  apa_interval(
+    x
+    , interval_type = interval_type
+    , conf.int = conf.int
+    , enclose_math = enclose_math
+    , ...
+  )
 }
 
 #' @rdname apa_interval

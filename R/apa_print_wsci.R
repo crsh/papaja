@@ -25,11 +25,11 @@ apa_print.papaja_wsci <- function(x, ...) {
       "$M = "
       , apa_num(summary_wsci$mean, ...)
       , "$, "
-      ,
-        apa_confint(
-          x = summary_wsci[, c("lower_limit", "upper_limit")]
-          , conf.int = attr(x, "Confidence level")
-          , ...
+      , apa_confint(
+        x = summary_wsci[, c("lower_limit", "upper_limit")]
+        , conf.int = attr(x, "Confidence level")
+        , enclose_math = TRUE
+        , ...
       )
     )
   )

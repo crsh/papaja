@@ -21,3 +21,4 @@
 ^vignettes/papaja.tex$
 ^CRAN-SUBMISSION$
 ^revdep$
+^.luarc.json$
