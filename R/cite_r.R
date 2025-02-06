@@ -50,7 +50,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, om
   validate(omit, check_class = "logical", check_length = 1)
 
   r_version <- as.character(utils::packageVersion("base"))
-  cite_just_r <- paste0("R [", apa_terms$version, " ", r_version, "; @", prefix, "base]")
+  cite_just_r <- paste0("R [", apa_terms$version, " ", r_version, "\\; @", prefix, "base]")
 
   if(is.null(file) || !utils::file_test("-f", file)) { # Print R-reference if there is no .bib-file
     if(!is.null(file)) warning("File ", file, " not found. Cannot cite R-packages. If knitting again does not solve the problem, please check file path.")
