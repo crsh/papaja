@@ -123,7 +123,7 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, om
 
   if(length(pkg_texts) > 1) {
     pkg_info <- paste(pkg_texts[1:(length(pkg_texts) - 1)], collapse = ", ")
-    pkg_info <- paste0(pkg_info, " ", apa_terms$and, " ", utils::tail(pkg_texts, 1))
+    pkg_info <- paste0(pkg_info, ", ", apa_terms$and, " ", utils::tail(pkg_texts, 1))
   } else {
     pkg_info <- pkg_texts
   }

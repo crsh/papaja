@@ -326,7 +326,7 @@ localize <- function(x) {
       , and = "and"
       , cite_r_packages_s = "and the R-package"
       , cite_r_packages_pl = "and the R-packages"
-      , cite_r_footnote = "We, furthermore, used the R-packages"
+      , cite_r_footnote = "We also used the R-packages"
     )
     , german = list(
       author_note = "Anmerkung des Autors"
