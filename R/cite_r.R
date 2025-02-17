@@ -121,9 +121,11 @@ cite_r <- function(file = NULL, prefix = "R-", footnote = FALSE, pkgs = NULL, om
     , pkg_keys, "]"
   )
 
-  if(length(pkg_texts) > 1) {
-    pkg_info <- paste(pkg_texts[1:(length(pkg_texts) - 1)], collapse = ", ")
+  if( length(pkg_texts) > 2 ) { # three or more packages: Oxford comma
+    pkg_info <- paste(pkg_texts[seq_len(length(pkg_texts) - 1)], collapse = ", ")
     pkg_info <- paste0(pkg_info, ", ", apa_terms$and, " ", utils::tail(pkg_texts, 1))
+  } else if( length(pkg_texts) == 2 ){ # two packages: no Oxford comma
+    pkg_info <- paste(pkg_texts[[1L]], apa_terms$and, pkg_texts[[2L]])
   } else {
     pkg_info <- pkg_texts
   }
