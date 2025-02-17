@@ -88,7 +88,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Restore R package cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{ env.R_LIBS_USER }}/*
