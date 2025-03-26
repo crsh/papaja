@@ -184,6 +184,7 @@ apa_print.summary_emm <- function(
   # factors <- gsub("^1$", "X1", factors)
 
   ## Typeset columns
+  keep_original_terms <- tidy_x[, factors, drop = FALSE]
   tidy_x[, factors] <- beautify_terms(tidy_x[, factors], ...)
 
   tidy_x$estimate <- apa_num(tidy_x$estimate, ...)
@@ -258,19 +259,13 @@ apa_print.summary_emm <- function(
   # rownames(tidy_x) <- if(!is.null(contrast_names)) contrast_names else tidy_x$contrast
   # tidy_x <- tidy_x[, which(colnames(tidy_x) != "contrast")]
 
-  if(length(factors) > 1) {
-    contrast_row_names <- apply(
-      tidy_x[, c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])]
-      , MARGIN = 1L
-      , FUN = paste
-      , collapse = "_"
-    )
-  } else if(length(factors) == 1) {
-    contrast_row_names <- tidy_x[, factors, drop = TRUE]
+  if(length(factors) > 0) {
+    cols <- c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])
+    contrast_row_names <- do.call(function(...) {paste(..., sep = "_")}, tidy_x[, cols, drop = FALSE])
+    terms_sanitized <- sanitize_terms(do.call(function(...) {paste(..., sep = "_")}, keep_original_terms[, cols, drop = FALSE]))
   } else {
     stop("Could not determine names to address each result by.")
   }
-  terms_sanitized <- sanitize_terms(contrast_row_names)
 
   ## Mark test families (see below)
   if(!is.null(attr(x, "famSize"))) {
