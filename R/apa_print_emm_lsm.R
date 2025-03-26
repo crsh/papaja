@@ -261,8 +261,8 @@ apa_print.summary_emm <- function(
 
   if(length(factors) > 0) {
     cols <- c(factors[which(factors != "contrast")], factors[which(factors == "contrast")])
-    contrast_row_names <- do.call(function(...) {paste(..., sep = "_")}, tidy_x[, cols, drop = FALSE])
-    terms_sanitized <- sanitize_terms(do.call(function(...) {paste(..., sep = "_")}, keep_original_terms[, cols, drop = FALSE]))
+    contrast_row_names <- paste_list(tidy_x[, cols, drop = FALSE])
+    terms_sanitized <- sanitize_terms(paste_list(keep_original_terms[, cols, drop = FALSE]))
   } else {
     stop("Could not determine names to address each result by.")
   }
