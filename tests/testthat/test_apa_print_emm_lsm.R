@@ -374,7 +374,7 @@ test_that(
 
     expect_apa_results(
       simple_pairs_output
-      , term_names = c("Control_F_M", "A_F_M", "B_F_M")
+      , term_names = c("control_F_M", "A_F_M", "B_F_M")
     )
 
     expect_identical(simple_pairs_output, simple_pairs2_output)

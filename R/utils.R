@@ -454,6 +454,12 @@ defaults <- function(ellipsis, set = NULL, set.if.null = NULL) {
   return(ellipsis)
 }
 
+#' @keywords internal
+
+paste_list <- function(x, sep = "_", collapse = NULL, recycle0 = FALSE) {
+  # .Internal(paste(x, sep, collapse, recycle0)) # this is perfect, but prohibited by CRAN policy
+  do.call(what = "paste", args = c(unname(as.list(x)), list(sep = sep, collapse = collapse, recycle0 = recycle0)))
+}
 
 #' Package Available
 #'
