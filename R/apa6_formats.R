@@ -583,6 +583,14 @@ pdf_pre_processor <- function(metadata, input_file, runtime, knit_meta, files_di
     )
   }
 
+  extra_dependencies <- metadata$extra_dependencies
+
+  if (length(extra_dependencies) || rmarkdown:::has_latex_dependencies(knit_meta)) {
+    extra_dependencies <- rmarkdown:::latex_dependencies(extra_dependencies)
+    all_dependencies <- append(extra_dependencies, rmarkdown:::flatten_latex_dependencies(knit_meta))
+    args <- c(args, rmarkdown:::append_in_header(rmarkdown:::latex_dependencies_as_string(all_dependencies)))
+  }
+
   tmp_includes_file <- function(x) {
     tmp_file <- tempfile(pattern = "includes_", tmpdir = tempdir(), fileext = ".tex")
     writeLines(x, con = tmp_file)
