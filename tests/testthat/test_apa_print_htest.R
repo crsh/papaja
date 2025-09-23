@@ -166,7 +166,17 @@ test_that(
 
 
 
-    wilcox_test <- suppressWarnings(wilcox.test(sleep$extra, mu = 0, conf.int = TRUE, conf.level = .96))
+    wilcox_test <- wilcox.test(
+      sleep$extra
+      , mu = 0
+      , conf.int = TRUE
+      , conf.level = .96
+      # In R <= 4.5.1, without the following arguments, a warning was submitted
+      # Exact tests and corrections were added with R > 4.5.1.
+      # To ensure compatibility, we added the following two arguments
+      , exact = FALSE
+      , correct = FALSE
+    )
     wilcox_test_output <- apa_print(wilcox_test)
 
     expect_apa_results(
