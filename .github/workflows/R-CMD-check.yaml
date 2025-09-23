@@ -28,9 +28,9 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-20.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest", http-user-agent: "R/4.1.0 (ubuntu-20.04) R (4.1.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
-          - {os: ubuntu-20.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
+          - {os: ubuntu-24.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest", http-user-agent: 'release' }
+          - {os: ubuntu-24.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest" }
+          - {os: ubuntu-24.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest" }
 
     env:
       RSPM: ${{ matrix.config.rspm }}
