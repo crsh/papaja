@@ -28,22 +28,22 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-24.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest", http-user-agent: 'release' }
-          - {os: ubuntu-24.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest" }
-          - {os: ubuntu-24.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest" }
+          - {os: ubuntu-24.04,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-24.04,   r: 'release'}
+          - {os: ubuntu-24.04,   r: 'oldrel'}
 
     env:
-      RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-r@v2
         id: install-r
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-tinytex@v2
