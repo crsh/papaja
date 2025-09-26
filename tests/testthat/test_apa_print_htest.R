@@ -179,6 +179,12 @@ test_that(
     )
     wilcox_test_output <- apa_print(wilcox_test)
 
+    # Currently (2025-09-26), R-devel sees many changes with respect to
+    # calculation of the median (and its confidence bounds)
+    # Therefore, we dynamically create our comparison object (at least for now).
+    estimate <- format(unname(wilcox_test$estimate), digits = 2L, nsmall = 2L)
+    conf.int <- paste(format(wilcox_test$conf.int, digits = 2L, nsmall = 2L), collapse = ", ")
+
     expect_apa_results(
       wilcox_test_output
       , labels = list(
@@ -188,7 +194,10 @@ test_that(
         , p.value   = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$full, "$\\mathit{Mdn}^* = 1.60$, 96\\% CI $[0.40, 2.70]$, $V = 162.50$, $p = .007$")
+    expect_identical(
+      wilcox_test_output$full
+      , paste0("$\\mathit{Mdn}^* = ", estimate, "$, 96\\% CI $[", conf.int, "]$, $V = 162.50$, $p = .007$")
+    )
   }
 )
 
