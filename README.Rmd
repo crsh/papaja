@@ -20,7 +20,7 @@ if(!requireNamespace("depgraph", quietly = TRUE)) remotes::install_github("crsh/
 **papaja** is an [award-winning](https://improvingpsych.org/mission/awards/) R package that facilitates creating computationally reproducible, submission-ready manuscripts which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
 **papaja** provides
 
--   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](https://posit.co/) to create PDF documents (using the [apa6](http://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
+-   an [R Markdown](https://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](https://posit.co/) to create PDF documents (using the [apa6](https://www.ctan.org/pkg/apa6) LaTeX class) or Word documents (using a .docx-reference file).
 -   Functions to **typeset** the results from **statistical analyses**,
 -   functions to create **tables**, and
 -   functions to create **figures** in accordance with APA guidelines.
@@ -297,7 +297,7 @@ For a brief primer on containers and virtual machines see [the supplementary mat
 
 [Docker](https://www.docker.com/) is the most widely used containerization approach.
 It is open source and free to use but requires some disk space.
-[CodeOcean](https://codeocean.com/) is a commercial service that builds on Docker, facilitates setting up and sharing containers and lets you run computations in the cloud.
+CodeOcean is a commercial service that builds on Docker, facilitates setting up and sharing containers and lets you run computations in the cloud.
 See the **papaja** manual on [how to get started using **papaja** with Docker or CodeOcean](https://frederikaust.com/papaja_man/tips-and-tricks.html#reproducible-software-environments) and [our Docker workflow](https://github.com/crsh/papaja_docker) tailored for easy use with **papaja**.
 
 ## Contribute

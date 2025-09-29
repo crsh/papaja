@@ -69,7 +69,7 @@ Yet, non-reproducible results are widely prevalent.
 Computational reproducibility is threatened by countless sources of errors, but among the most common problems are incomplete or incorrect reporting of statistical procedures and results [@artner_reproducibility_2020].
 **papaja** was designed to address these problems.
 The package is tailored to authors of scientific manuscripts that must adhere to the guidelines of the American Psychological Association [APA, 6th edition, @american_psychological_association_publication_2010].
-**papaja** provides [**rmarkdown**](https://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](http://www.ctan.org/pkg/apa6).
+**papaja** provides [**rmarkdown**](https://rmarkdown.rstudio.com/) [@xie_r_2018] templates to create DOCX documents and PDF documents---using \LaTeX document class [`apa6`](https://www.ctan.org/pkg/apa6).
 Moreover, **papaja** provides helper functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
 This document was written with **papaja** and provides a brief overview of the package's main features.
 For a comprehensive introduction and installation instructions, see the current draft of the [**papaja** manual](https://frederikaust.com/papaja_man/).[^1]

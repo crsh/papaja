@@ -195,13 +195,13 @@ apa_print.lm <- function(
   )
   if(in_paren) apa_res$statistic$modelfit$r2 <- in_paren(apa_res$statistic$modelfit$r2)
 
-  if(package_available("MBESS")) {
+  # if(package_available("MBESS")) {
     ci_conf_level <- 100 - ((100 - conf_level) * 2)
     # Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of Variance and Contrast Analysis.
     # Psychological Methods, 9(2), 164-182. doi: 10.1037/1082-989X.9.2.164
     # See also http://daniellakens.blogspot.de/2014/06/calculating-confidence-intervals-for.html
 
-    r2_ci <- MBESS::ci.R2(
+    r2_ci <- ci.R2( #MBESS::
       R2 = summary_x$r.squared
       , df.1 = summary_x$fstatistic[[2L]] # glance_x$df
       , df.2 = summary_x$fstatistic[[3L]]
@@ -212,9 +212,9 @@ apa_print.lm <- function(
     if(!any(is.na(c(r2_ci$Lower, r2_ci$Upper)))) { # MBESS::ci.R2 can sometimes result in NA if F is really small
       apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(summary_x$r.squared, gt1 = FALSE, zero = FALSE), "$, ", apa_confint(c(r2_ci$Lower, r2_ci$Upper), conf.int = ci_conf_level, enclose_math = TRUE))
     }
-  } else {
-    apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(summary_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
-  }
+  # } else {
+  #   apa_res$estimate$modelfit$r2 <- paste0("$R^2 = ", apa_num(summary_x$r.squared, gt1 = FALSE, zero = FALSE), "$")
+  # }
 
   apa_res$estimate$modelfit$r2_adj <- paste0("$R^2_{adj} = ", apa_num(summary_x$adj.r.squared, gt1 = FALSE, zero = FALSE), "$")
   }

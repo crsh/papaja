@@ -63,7 +63,7 @@ load("../../tests/testthat/data/mixed_data.rdata")
 Reproducible data analysis is an easy to implement and important aspect of the strive towards reproducibility in science.
 For *R* users, R Markdown has been suggested as one possible framework for reproducible analyses.
 `papaja` is a R-package in the making including a [R Markdown](https://rmarkdown.rstudio.com/) template that can be used with (or without) [RStudio](https://posit.co/) to produce documents, which conform to the American Psychological Association (APA) manuscript guidelines (6th Edition).
-The package uses the \LaTeX document class [apa6](http://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to.
+The package uses the \LaTeX document class [apa6](https://www.ctan.org/pkg/apa6) and a .docx-reference file, so you can create PDF documents, or Word documents if you have to.
 Moreover, `papaja` supplies R-functions that facilitate reporting results of your analyses in accordance with APA guidelines.
 
 Markdown is a simple formatting syntax that can be used to author HTML, PDF, and MS Word documents (among others).

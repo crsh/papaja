@@ -1,3 +1,12 @@
+# papaja 0.1.4
+
+### Existing functions
+
+- `apa_print().emm_Grid()` and friends no longer capitalize ames of contrasts in the returned `apa_results` list [#603](https://github.com/crsh/papaja/issues/603).
+- `cite_r()`
+  - Now uses Oxford comma to list of R packages
+  - Citation syntax of R itself is no longer broken ([#599](https://github.com/crsh/papaja/issues/599))
+
 # papaja 0.1.3
 
 ### New functions
@@ -30,7 +39,7 @@
 - APA 6
     - DOCX
         - Fixed bugs in table and figure numbering
-    - New YAML front matter flag `doi_citations` to use DOI-based citations via the [`doi2cite`](https://github.com/korintje/pandoc-doi2cite/blob/main/doi2cite.lua) filter, see [**rmdfiltr** vignette](https://cran.r-project.org/web/packages/rmdfiltr/vignettes/doi2cite.html).
+    - New YAML front matter flag `doi_citations` to use DOI-based citations via the [`doi2cite`](https://github.com/korintje/pandoc-doi2cite/blob/main/doi2cite.lua) filter, see [**rmdfiltr** vignette](https://CRAN.R-project.org/package=rmdfiltr/vignettes/doi2cite.html).
 - Revision letter
     - LaTeX error `LaTeX Error: Lonely \item--perhaps a missing list environment` is now fixed (reported by @cjvanlissa, [#587](https://github.com/crsh/papaja/issues/587); fixed by @jvcasillas, [#593](https://github.com/crsh/papaja/pull/593))
 - Updated to latest version of CSL files
