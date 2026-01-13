@@ -68,6 +68,7 @@ add_custom_effect_sizes.function <- function(estimate, canonical_table, intercep
   add_custom_effect_sizes(
     estimate = do.call(what = estimate, args = estimate_args)
     , canonical_table = canonical_table
+    , intercept = intercept
     , .x = .x
     , ...
   )
