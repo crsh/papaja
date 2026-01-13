@@ -180,8 +180,9 @@ apa_print.summary_emm <- function(
   }
   factors <- unique(c(pri_vars, split_by))
 
-  # One-sided regression coefficient test via emtrends(. ~ 1, var = ...)
-  # factors <- gsub("^1$", "X1", factors)
+  # One-sided regression coefficient test via emtrends(. ~ 1, var = ...) and intercept-only models
+  factors[factors == "1"] <- "Intercept"
+  if("Intercept" %in% factors) tidy_x <- rename_column(tidy_x, "X1", "Intercept")
 
   ## Typeset columns
   keep_original_terms <- tidy_x[, factors, drop = FALSE]
