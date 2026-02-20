@@ -552,6 +552,7 @@ test_that(
     counts <- c(18,17,15,20,10,20,25,13,12)
     outcome <- gl(3,1,9)
     treatment <- gl(3,3)
+    counts <- counts + as.numeric(treatment) # this is a cheap trick to avoid rank deficiency
     data.frame(treatment, outcome, counts) # showing data
     glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
 
@@ -563,15 +564,15 @@ test_that(
     expect_identical(
       chisq_out$full_result
       , list(
-        outcome = "$\\chi^2(2) = 5.45$, $p = .065$"
-        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+        outcome = "$\\chi^2(2) = 4.87$, $p = .087$"
+        , treatment = "$\\chi^2(2) = 0.32$, $p = .851$"
       )
     )
     expect_identical(
       cp_out$full_result
       , list(
-        outcome = "$C_p = 11.13$"
-        , treatment = "$C_p = 15.13$"
+        outcome = "$C_p = 10.62$"
+        , treatment = "$C_p = 14.30$"
       )
     )
     expect_identical(
@@ -581,8 +582,8 @@ test_that(
     expect_identical(
       rao_out$full_result
       , list(
-        outcome = "$\\mathit{RS}(2) = 5.56$, $p = .062$"
-        , treatment = "$\\mathit{RS}(2) = 0.00$, $p > .999$"
+        outcome = "$\\mathit{RS}(2) = 4.96$, $p = .084$"
+        , treatment = "$\\mathit{RS}(2) = 0.32$, $p = .852$"
       )
     )
 
@@ -593,23 +594,23 @@ test_that(
     expect_identical(
       car_lr_out$full_result
       , list(
-        outcome = "$\\chi^2(2) = 5.45$, $p = .065$"
-        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+        outcome = "$\\chi^2(2) = 4.87$, $p = .087$"
+        , treatment = "$\\chi^2(2) = 0.32$, $p = .851$"
       )
     )
     expect_identical(
       car_wald_out$full_result
       , list(
-        Intercept = "$\\chi^2(1) = 317.37$, $p < .001$"
-        , outcome = "$\\chi^2(2) = 5.49$, $p = .064$"
-        , treatment = "$\\chi^2(2) = 0.00$, $p > .999$"
+        Intercept = "$\\chi^2(1) = 346.21$, $p < .001$"
+        , outcome = "$\\chi^2(2) = 4.91$, $p = .086$"
+        , treatment = "$\\chi^2(2) = 0.32$, $p = .852$"
       )
     )
     expect_identical(
       car_f_out$full_result
       , list(
-        outcome     = "$F(2, 4) = 2.11$, $p = .237$"
-        , treatment = "$F(2, 4) = 0.00$, $p > .999$"
+        outcome     = "$F(2, 4) = 2.25$, $p = .222$"
+        , treatment = "$F(2, 4) = 0.15$, $p = .867$"
       )
     )
   }
