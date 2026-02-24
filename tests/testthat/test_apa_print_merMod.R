@@ -216,7 +216,7 @@ test_that(
     captured <- capture_output({
       mixed_KR  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "KR")
       mixed_S   <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "S")
-      mixed_PB  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "PB", args_test = list(nsim = 50))
+      mixed_PB  <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "PB", args_test = list(nsim = 50, cl = 1))
       mixed_LRT <- afex::mixed(formula = yield ~ N * P + (1|block), data = npk, method = "LRT")
     })
     #
