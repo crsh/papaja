@@ -95,7 +95,15 @@ apa_num.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string 
   if(!is.null(system_call[["zero"]]) && is.null(system_call[["zero_string"]])) zero_string <- "no"
   validate(zero_string, check_class = "character", check_length = 1)
 
-  if(numerals) return(as.character(x))
+  if(numerals) {
+    formatting_args <- c("big.mark", "decimal.mark", "format", "digits", "width", "flag")
+    if(any(names(list(...)) %in% formatting_args)) {
+      ellipsis <- list(...)
+      ellipsis$x <- x
+      return(do.call("formatC", ellipsis))
+    }
+    return(as.character(x))
+  }
   if(anyNA(x)) return(rep(na_string, length(x)))
 
   zero_string <- tolower(zero_string)
