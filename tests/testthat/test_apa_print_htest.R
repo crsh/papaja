@@ -130,6 +130,12 @@ test_that(
     wilcox_test <- wilcox.test(extra ~ group, data = sleep, conf.int = TRUE, exact = FALSE)
     wilcox_test_output <- apa_print(wilcox_test)
 
+    # Currently (2026-06-02), due to changes with respect to
+    # calculation of the median (and its confidence bounds),
+    # we dynamically create our comparison object (at least for now).
+    estimate <- format(unname(wilcox_test$estimate), digits = 2L, nsmall = 2L)
+    conf.int <- paste(format(wilcox_test$conf.int, digits = 2L, nsmall = 2L), collapse = ", ")
+
     expect_apa_results(
       wilcox_test_output
       , labels = list(
@@ -139,8 +145,8 @@ test_that(
         , p.value   = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$est,  "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$")
-    expect_identical(wilcox_test_output$full, "$\\Delta \\mathit{Mdn} = -1.35$, 95\\% CI $[-3.60, 0.10]$, $W = 25.50$, $p = .069$")
+    expect_identical(wilcox_test_output$est,  "$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$")
+    expect_identical(wilcox_test_output$full, "$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$, $W = 25.50$, $p = .069$")
 
 
     wilcox_test <- with(
