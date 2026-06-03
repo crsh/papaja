@@ -3,24 +3,24 @@ context("apa_table()")
 test_that(
   ""
   , {
-    load("data/mixed_data.rdata")
+    # load("data/mixed_data.rdata")
 
-    descriptives <- dplyr::group_by(mixed_data, Dosage)
+    # descriptives <- dplyr::group_by(mixed_data, Dosage)
 
-    descriptives <- dplyr::summarize(
-      descriptives
-        , Mean = apa_num( mean(Recall) )
-        , Median = apa_num( median(Recall) )
-        , SD = apa_num( sd(Recall) )
-        , Min = apa_num( min(Recall) )
-        , Max = apa_num( max(Recall) )
-      )
+    # descriptives <- dplyr::summarize(
+    #   descriptives
+    #     , Mean = apa_num( mean(Recall) )
+    #     , Median = apa_num( median(Recall) )
+    #     , SD = apa_num( sd(Recall) )
+    #     , Min = apa_num( min(Recall) )
+    #     , Max = apa_num( max(Recall) )
+    #   )
 
     skip_on_cran()
     rmarkdown::render(
       "test_apa_table.Rmd"
       , output_dir = tempdir()
-      , quiet = TRUE
+      , quiet = FALSE
     )
   }
 )
