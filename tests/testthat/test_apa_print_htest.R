@@ -133,6 +133,7 @@ test_that(
     # Currently (2026-06-02), due to changes with respect to
     # calculation of the median (and its confidence bounds),
     # we dynamically create our comparison object (at least for now).
+    statistic <- format(unname(wilcox_test$statistic), digits = 2L, nsmall = 2L)
     estimate <- format(unname(wilcox_test$estimate), digits = 2L, nsmall = 2L)
     conf.int <- paste(format(wilcox_test$conf.int, digits = 2L, nsmall = 2L, trim = TRUE), collapse = ", ")
 
@@ -146,7 +147,7 @@ test_that(
       )
     )
     expect_identical(wilcox_test_output$est,  paste0("$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$"))
-    expect_identical(wilcox_test_output$full, paste0("$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$, $W = 25.50$, $p = .069$"))
+    expect_identical(wilcox_test_output$full, paste0("$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$, $W = ", statistic, "$, $p = .069$"))
 
 
     wilcox_test <- with(
@@ -188,6 +189,7 @@ test_that(
     # Currently (2025-09-26), R-devel sees many changes with respect to
     # calculation of the median (and its confidence bounds)
     # Therefore, we dynamically create our comparison object (at least for now).
+    statistic <- format(unname(wilcox_test$statistic), digits = 2L, nsmall = 2L)
     estimate <- format(unname(wilcox_test$estimate), digits = 2L, nsmall = 2L)
     conf.int <- paste(format(wilcox_test$conf.int, digits = 2L, nsmall = 2L, trim = TRUE), collapse = ", ")
 
@@ -202,7 +204,7 @@ test_that(
     )
     expect_identical(
       wilcox_test_output$full
-      , paste0("$\\mathit{Mdn}^* = ", estimate, "$, 96\\% CI $[", conf.int, "]$, $V = 162.50$, $p = .007$")
+      , paste0("$\\mathit{Mdn}^* = ", estimate, "$, 96\\% CI $[", conf.int, "]$, $V = ", statistic, "$, $p = .007$")
     )
   }
 )
