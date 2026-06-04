@@ -134,6 +134,7 @@ test_that(
     # calculation of the median (and its confidence bounds),
     # we dynamically create our comparison object (at least for now).
     statistic <- format(unname(wilcox_test$statistic), digits = 2L, nsmall = 2L)
+    p.value <- apa_p(wilcox_test$p.value)
     estimate <- format(unname(wilcox_test$estimate), digits = 2L, nsmall = 2L)
     conf.int <- paste(format(wilcox_test$conf.int, digits = 2L, nsmall = 2L, trim = TRUE), collapse = ", ")
 
@@ -147,7 +148,7 @@ test_that(
       )
     )
     expect_identical(wilcox_test_output$est,  paste0("$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$"))
-    expect_identical(wilcox_test_output$full, paste0("$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$, $W = ", statistic, "$, $p = .069$"))
+    expect_identical(wilcox_test_output$full, paste0("$\\Delta \\mathit{Mdn} = ", estimate, "$, 95\\% CI $[", conf.int, "]$, $W = ", statistic, "$, $p = ", p.value, "$"))
 
 
     wilcox_test <- with(
@@ -168,7 +169,11 @@ test_that(
         , p.value = "$p$"
       )
     )
-    expect_identical(wilcox_test_output$stat, "$V = 0.00$, $p = .009$")
+
+    statistic <- format(unname(wilcox_test$statistic), digits = 2L, nsmall = 2L)
+    p.value <- apa_p(wilcox_test$p.value)
+
+    expect_identical(wilcox_test_output$stat, paste0("$V = ", statistic, "$, $p = ", p.value, "$"))
     expect_identical(wilcox_test_output$full, wilcox_test_output$stat)
 
 
@@ -191,6 +196,7 @@ test_that(
     # Therefore, we dynamically create our comparison object (at least for now).
     statistic <- format(unname(wilcox_test$statistic), digits = 2L, nsmall = 2L)
     estimate <- format(unname(wilcox_test$estimate), digits = 2L, nsmall = 2L)
+    p.value <- apa_p(wilcox_test$p.value)
     conf.int <- paste(format(wilcox_test$conf.int, digits = 2L, nsmall = 2L, trim = TRUE), collapse = ", ")
 
     expect_apa_results(
@@ -204,7 +210,7 @@ test_that(
     )
     expect_identical(
       wilcox_test_output$full
-      , paste0("$\\mathit{Mdn}^* = ", estimate, "$, 96\\% CI $[", conf.int, "]$, $V = ", statistic, "$, $p = .007$")
+      , paste0("$\\mathit{Mdn}^* = ", estimate, "$, 96\\% CI $[", conf.int, "]$, $V = ", statistic, "$, $p = ", p.value, "$")
     )
   }
 )
