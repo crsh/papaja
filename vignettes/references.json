@@ -142,7 +142,7 @@
     },
     {
         "ISBN": "978-1-138-35933-8",
-        "URL": "https://bookdown.org/yihui/rmarkdown/",
+        "URL": "https://pkg.yihui.org/rmarkdown-book/",
         "author": [
             {
                 "family": "Xie",
