@@ -154,7 +154,7 @@ prettify_terms <- function(...) {
 #' This function renders an R Markdown document *without* YAML header to a TeX
 #' fragment inside an `appendix` environment, or to a markdown fragment (for
 #' Word output). *This function has been defunct. Please use the appendix
-#' syntax provided by \pkg{bookdown} (see the [bookdown manual](https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html#special-headers)).*
+#' syntax provided by \pkg{bookdown} (see the [bookdown manual](https://pkg.yihui.org/bookdown/markdown-extensions-by-bookdown.html#special-headers)).*
 #'
 #' @param x Character. Path to R Markdown file.
 #' @param bibliography Character. Paths to relevant bibliography file(s).
@@ -196,7 +196,7 @@ render_appendix <- function(
   , quiet = TRUE
   , ...
 ) {
-  .Defunct(msg = "'render_appendix' is defunct as of version 0.1.0.9998 because it is no longer needed. Please use the appendix syntax provided by {bookdown}: https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html#special-headers")
+  .Defunct(msg = "'render_appendix' is defunct as of version 0.1.0.9998 because it is no longer needed. Please use the appendix syntax provided by {bookdown}: https://pkg.yihui.org/bookdown/markdown-extensions-by-bookdown.html#special-headers")
 
   validate(x, check_class = "character", check_length = 1)
   if(!is.null(csl)) validate(csl, check_class = "character", check_length = 1)

@@ -191,7 +191,7 @@ To cite a source in text simply omit the brackets.
 The `pandoc` manual provides a comprehensive overview of [`citeproc`](https://pandoc.org/MANUAL.html#citations) and the supported [citation syntax](https://pandoc.org/MANUAL.html#citation-syntax).
 
 To facilitate inserting citations, you may use the RStudio Visual Editor's [bibliography search](https://rstudio.github.io/visual-markdown-editing/citations.html#inserting-citations) and auto-completion of reference handles.
-If you use VSCode with the [R extension](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r) or RStudio without the Visual Editor, the add-in provided in [**citr**](https://github.com/crsh/citr) serves a similar purpose.
+If you use VSCode with the [R extension](https://marketplace.visualstudio.com/items?itemName=REditorSupport.r) or RStudio without the Visual Editor, the add-in provided in [**citr**](https://github.com/crsh/citr) serves a similar purpose.
 Both the Visual Editor and **citr** can also access your Zotero database directly and copy references to your bibliography file.
 
 As academics and open source developers, we believe it is important to credit the software we use for our publications.

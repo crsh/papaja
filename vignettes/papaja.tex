@@ -2,20 +2,25 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
-%
 \documentclass[
+  english,
   ,man,floatsintext]{apa6}
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -33,21 +38,29 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Prepare APA Journal Articles with R Markdown},
-  pdfauthor={Frederik Aust1,2 \& Marius Barth1},
-  pdflang={en-EN},
-  pdfkeywords={APA style, R, knitr, R markdown, papaja},
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={Blue},
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -59,13 +72,13 @@
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\BuiltInTok}[1]{#1}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
@@ -73,7 +86,7 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\ImportTok}[1]{#1}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
@@ -82,7 +95,7 @@
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
 \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
@@ -90,62 +103,63 @@
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-% Make \paragraph and \subparagraph free-standing
-\ifx\paragraph\undefined\else
-  \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-  \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
-\usepackage[bidi=basic]{babel}
+\usepackage[bidi=basic,shorthands=off]{babel}
 \else
-\usepackage[bidi=default]{babel}
+\usepackage[bidi=default,shorthands=off]{babel}
 \fi
-\babelprovide[main,import]{english}
-% get rid of language-specific shorthands (see #6817):
-\let\LanguageShortHands\languageshorthands
-\def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -190,13 +204,13 @@
   {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-% \usepackage{etoolbox}
 \makeatletter
-\patchcmd{\HyOrg@maketitle}
+\usepackage{etoolbox}
+\patchcmd{\maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
-\patchcmd{\HyOrg@maketitle}
+\patchcmd{\maketitle}
   {\section{\protect\normalfont{\@title}}}
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
@@ -206,10 +220,11 @@
 \makeatletter
 \xapptocmd\appendix
   {\xapptocmd\section
-    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi: #1}}
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
+\makeatother
 \keywords{APA style, R, knitr, R markdown, papaja\newline\indent Word count: ~3147}
 \usepackage{lineno}
 
@@ -220,9 +235,24 @@
 \usepackage{subfig}
 \renewcommand*{\thesubfigure}{\MakeUppercase{\alph{subfigure}}}
 \raggedbottom
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  pdftitle={Prepare APA Journal Articles with R Markdown},
+  pdfauthor={Frederik Aust1,2 \& Marius Barth1},
+  pdflang={en-EN},
+  pdfkeywords={\xmpquote{APA style, R, knitr, R markdown, papaja}},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Prepare APA Journal Articles with R Markdown}
 \author{Frederik Aust\textsuperscript{1,2} \& Marius Barth\textsuperscript{1}}
@@ -260,21 +290,20 @@ The package is tailored to authors of scientific manuscripts that must adhere to
 \textbf{papaja} provides \href{https://rmarkdown.rstudio.com/}{\textbf{rmarkdown}} (Xie, Allaire, \& Grolemund, 2018) templates to create DOCX documents and PDF documents---using \LaTeX document class \href{https://www.ctan.org/pkg/apa6}{\texttt{apa6}}.
 Moreover, \textbf{papaja} provides helper functions to facilitate the reporting of results of your analyses in accordance with APA guidelines.
 This document was written with \textbf{papaja} and provides a brief overview of the package's main features.
-For a comprehensive introduction and installation instructions, see the current draft of the \href{http://frederikaust.com/papaja_man/}{\textbf{papaja} manual}.\footnote{If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow using the \href{https://stackoverflow.com/questions/tagged/papaja}{\textbf{papaja} tag}.
-  If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.}
+For a comprehensive introduction and installation instructions, see the current draft of the \href{https://frederikaust.com/papaja_man/}{\textbf{papaja} manual}.\footnote{If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow using the \href{https://stackoverflow.com/questions/tagged/papaja}{\textbf{papaja} tag}.
+  If you believe you have found a bug or would like to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/minimal-reproducible-example}{minimal complete verifiable example}.}
 
-\hypertarget{the-problem-copy-paste-reporting}{%
-\section{The problem: Copy-paste reporting}\label{the-problem-copy-paste-reporting}}
+\section{The problem: Copy-paste reporting}\label{the-problem-copy-paste-reporting}
 
 Readers of scientific journal articles generally assume that numerical results and figures directly flow from the underlying data and analytic procedure.
 Execution of analyses and reporting of results are typically not considered sources of error that threaten the validity of scientific claims---the computational reproducibility of the reported results is a forgone conclusion.
 The natural assumption of computational reproducibility reflects its fundamental importance to quantitative sciences as acknowledged by the U.S.
 National Science Foundation subcommittee on Replicability in Science:
 
-\begin{quote}
+\begin{displayquote}
 {[}Computational{]} Reproducibility is a minimum necessary condition for a finding to be believable and informative.
 (p.~4, Cacioppo et al., 2015)
-\end{quote}
+\end{displayquote}
 
 Non-reproducible results are scientifically and ethically unacceptable.
 They impede an accumulation of knowledge, waste resources, and when applied could have serious consequences.
@@ -295,7 +324,7 @@ We currently see no technical solution to the first two causes.
 Incomplete reporting (1) may be partially mitigated by strictly enforcing reporting guidelines.
 However, verifying that the analytic procedure is reported faithfully (1) and was executed correctly (2) ultimately requires manual scrutiny of analysis scripts and/or reproduction and is possible only if authors share their data.
 Code rot (4), on the other hand, can be adequately addressed by conserving the software environment in which the results were produced (e.g., R and all R packages).
-Several seasoned technical solutions, such as software containers or a virtual machine, exist (Grüning et al., 2018; Piccolo \& Frampton, 2016).\footnote{\textbf{papaja} can be readily combined with these tools as documented in the section on \href{http://frederikaust.com/papaja_man/tips-and-tricks.html\#reproducible-software-environments}{reproducible software environments} in the \textbf{papaja} manual.}
+Several seasoned technical solutions, such as software containers or a virtual machine, exist (Grüning et al., 2018; Piccolo \& Frampton, 2016).\footnote{\textbf{papaja} can be readily combined with these tools as documented in the section on \href{https://frederikaust.com/papaja_man/tips-and-tricks.html\#reproducible-software-environments}{reproducible software environments} in the \textbf{papaja} manual.}
 \textbf{papaja} provides a technical safeguard for correct reporting of results (3).
 
 When it comes to reporting quantitative results, most researchers engage in what we refer to as \emph{copy-paste reporting}.
@@ -307,8 +336,7 @@ The motivation to avoid such errors should already be high because the reputatio
 Even researchers that open their data (and analysis code) to the public or anticipate systematic editorial scrutiny report non-reproducible results (Eubank, 2016; Hardwicke et al., 2018; Obels, Lakens, Coles, Gottfried, \& Green, 2020).
 Evidently, computational reproducibility is difficult to attain.
 
-\hypertarget{the-solution-dynamic-documents}{%
-\section{The solution: Dynamic documents}\label{the-solution-dynamic-documents}}
+\section{The solution: Dynamic documents}\label{the-solution-dynamic-documents}
 
 We believe copy-paste reporting is a flawed approach to reporting quantitative results.
 Hence, we believe researchers need stop copy-pasting to safeguard the computational reproducibility of their manuscripts.
@@ -317,16 +345,15 @@ Dynamic documents fuse analysis code and prose such that statistics, figures, an
 As an added benefit, dynamic documents have great potential to improve the computational reproducibility of manuscripts beyond reporting errors as they facilitate independent reproduction.
 Dynamic documents fully document the analytic procedure and establish direct links to the associated scientific claims.
 
-\textbf{papaja}, and \href{http://frederikaust.com/papaja_man/introduction.html\#document-compilation}{the software it builds on}, provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA style.
+\textbf{papaja}, and \href{https://frederikaust.com/papaja_man/introduction.html\#document-compilation}{the software it builds on}, provides researchers with the tools to create dynamic submission-ready manuscripts in the widely used APA style.
 The dominant approach to creating dynamic documents in R is to use the \href{https://rmarkdown.rstudio.com/}{\textbf{rmarkdown}} package (Xie et al., 2018).
 \textbf{papaja} provides R Markdown templates to create DOCX and PDF documents (using \LaTeX document class \texttt{apa6}).
 Moreover, \textbf{papaja} provides several functions to conveniently report analytic results according to APA guidelines.
 The remainder of this document illustrates how these functions can be used.
 
-\hypertarget{setting-up-a-new-document}{%
-\section{Setting up a new document}\label{setting-up-a-new-document}}
+\section{Setting up a new document}\label{setting-up-a-new-document}
 
-Once \textbf{papaja} and all other \href{http://frederikaust.com/papaja_man/introduction.html\#software-requirements}{required software} is installed, the APA template is available through the RStudio menu, see Figure~\ref{fig:rstudio}.
+Once \textbf{papaja} and all other \href{https://frederikaust.com/papaja_man/introduction.html\#software-requirements}{required software} is installed, the APA template is available through the RStudio menu, see Figure~\ref{fig:rstudio}.
 When you click RStudio's \emph{Knit} button, a manuscript conforming to APA style is rendered, which includes both your text and the output of any embedded R code chunks within the manuscript.
 Of course, a new document can also be created without RStudio using \texttt{rmarkdown::draft()} and rendered using \texttt{rmarkdown::render()}.
 
@@ -350,7 +377,7 @@ Of course, a new document can also be created without RStudio using \texttt{rmar
 
 \begin{figure}
 
-{\centering \includegraphics[width=3.9in]{../inst/images/template_selection} 
+{\centering \includegraphics[width=4.27in]{../inst/images/template_selection} 
 
 }
 
@@ -360,25 +387,23 @@ Of course, a new document can also be created without RStudio using \texttt{rmar
 This document is in APA manuscript style, but other styles are available for PDF documents.
 The document style can be controlled via the \texttt{classoption} field of the YAML front matter.
 For a thesis-like style change \texttt{classoption} to \texttt{doc} or use \texttt{jou} for a more polished journal-like two-column layout.
-For a comprehensive overview of other formatting options please refer to the \href{http://frederikaust.com/papaja_man/r-markdown-components.html\#rendering-options}{\textbf{papaja} manual}.
+For a comprehensive overview of other formatting options please refer to the \href{https://frederikaust.com/papaja_man/r-markdown-components.html\#rendering-options}{\textbf{papaja} manual}.
 
 To create DOCX documents, the \texttt{output} field in the YAML front matter can be set to \texttt{papaja::apa6\_docx}.
 Please note, however, that DOCX documents are somewhat less flexible and less polished than PDF documents.
 \textbf{papaja} builds on \texttt{pandoc} to render Markdown into PDF and DOCX documents.
 Unfortunately, \texttt{pandoc}'s capabilities are more limited for DOCX documents.
-This is why some \textbf{papaja} features are only available for PDF documents, for example, see the summary of \href{http://frederikaust.com/papaja_man/r-markdown-components.html\#rendering-options}{rendering options} in the manual.
-Also, DOCX documents require some \href{http://frederikaust.com/papaja_man/limitations.html\#microsoft-word-documents}{limited manual work} before they fully comply with APA guidelines.
+This is why some \textbf{papaja} features are only available for PDF documents, for example, see the summary of \href{https://frederikaust.com/papaja_man/r-markdown-components.html\#rendering-options}{rendering options} in the manual.
+Also, DOCX documents require some \href{https://frederikaust.com/papaja_man/limitations.html\#microsoft-word-documents}{limited manual work} before they fully comply with APA guidelines.
 The DOCX documents produced by \textbf{papaja} should, however, be suitable for collaboration with colleagues, who prefer Word over R Markdown and to prepare journal submissions.
 
-\hypertarget{writing}{%
-\section{Writing}\label{writing}}
+\section{Writing}\label{writing}
 
 Like \textbf{rmarkdown}, \textbf{papaja} uses Markdown syntax to format text.
 A comprehensive overview of the supported Markdown syntax is available in the \href{https://pandoc.org/MANUAL.html\#pandocs-markdown}{\texttt{pandoc} manual}.
 In the following, we will highlight a few features that are of particular relevance to the technical writing of research reports.
 
-\hypertarget{citations}{%
-\subsection{Citations}\label{citations}}
+\subsection{Citations}\label{citations}
 
 By default, citations in \textbf{papaja} are processed by the \texttt{pandoc} extension \texttt{citeproc}, which works well for both PDF and DOCX documents.
 \texttt{citeproc} takes reference information from a bibliography file, which can be in one of several formats (e.g., CSL-JSON, Bib(La)TeX, EndNote, RIS, Medline).
@@ -389,7 +414,7 @@ To cite a source in text simply omit the brackets.
 The \texttt{pandoc} manual provides a comprehensive overview of \href{https://pandoc.org/MANUAL.html\#citations}{\texttt{citeproc}} and the supported \href{https://pandoc.org/MANUAL.html\#citation-syntax}{citation syntax}.
 
 To facilitate inserting citations, you may use the RStudio Visual Editor's \href{https://rstudio.github.io/visual-markdown-editing/citations.html\#inserting-citations}{bibliography search} and auto-completion of reference handles.
-If you use VSCode with the \href{https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r}{R extension} or RStudio without the Visual Editor, the add-in provided in \href{https://github.com/crsh/citr}{\textbf{citr}} serves a similar purpose.
+If you use VSCode with the \href{https://marketplace.visualstudio.com/items?itemName=REditorSupport.r}{R extension} or RStudio without the Visual Editor, the add-in provided in \href{https://github.com/crsh/citr}{\textbf{citr}} serves a similar purpose.
 Both the Visual Editor and \textbf{citr} can also access your Zotero database directly and copy references to your bibliography file.
 
 As academics and open source developers, we believe it is important to credit the software we use for our publications.
@@ -402,11 +427,10 @@ As citations are the currency of academia, it is easy to compensate volunteers f
 \texttt{my\_citation} now contains the following text that you can use in your document:
 
 \begin{Verbatim}[breaklines=true]
-R [Version 4.1.2\; @R-base] and the R-packages *afex* [Version 1.0.1\; @R-afex], *dplyr* [Version 1.0.8\; @R-dplyr], *ggforce* [Version 0.3.3\; @R-ggforce], *ggplot2* [Version 3.3.5\; @R-ggplot2], *lme4* [Version 1.1.28\; @R-lme4], *Matrix* [Version 1.3.4\; @R-Matrix], *papaja* [Version 0.2.0\; @R-papaja], and *tinylabels* [Version 0.2.3\; @R-tinylabels]
+R [Version 4.5.3\; @R-base] and the R-packages *afex* [Version 1.5.0\; @R-afex], *dplyr* [Version 1.2.1\; @R-dplyr], *ggforce* [Version 0.5.0\; @R-ggforce], *ggplot2* [Version 4.0.0\; @R-ggplot2], *lme4* [Version 1.1.37\; @R-lme4], *Matrix* [Version 1.7.4\; @R-Matrix], *papaja* [Version 0.1.4\; @R-papaja], and *tinylabels* [Version 0.2.5\; @R-tinylabels]
 \end{Verbatim}
 
-\hypertarget{equations}{%
-\subsection{Equations}\label{equations}}
+\subsection{Equations}\label{equations}
 
 Equations can be reported using the powerful \LaTeX syntax.
 Inline math must be enclosed in \texttt{\$} or \texttt{\textbackslash{}(} and \texttt{\textbackslash{})}, for example, \texttt{\$d\textquotesingle{}\ =\ z(H)\ -\ z(\textbackslash{}mathit\{FA\})\$}, which renders to \(d' = z(H) - z(\mathit{FA})\).
@@ -416,8 +440,7 @@ For larger formulas, displayed equations are more appropriate; they are enclosed
 d' = \frac{\mu_{old} - \mu_{new}}{\sqrt{0.5(\sigma^2_{old} + \sigma^2_{new})}}.
 \]
 
-\hypertarget{reporting-results}{%
-\section{Reporting results}\label{reporting-results}}
+\section{Reporting results}\label{reporting-results}
 
 If you are not familiar with R Markdown and how it can be used to conduct and document your analyses, we recommend you familiarize yourself with R Markdown first.
 RStudio provides a \href{https://rmarkdown.rstudio.com/lesson-1.html}{concise introduction}.
@@ -481,10 +504,10 @@ The text returned by \texttt{apa\_print()} can be inserted into manuscript as us
 The above excerpt from an R Markdown document yields the following in the rendered document.
 Note that the function \texttt{in\_paren()} replaces parentheses with brackets as per APA guidelines when statistics are reported in parentheses.
 
-\begin{quote}
+\begin{displayquote}
 Item valence (\(F[1.62, 24.36] = 3.46\), \(p = .056\), \(\hat{\eta}^2_G = .008\), 90\% CI \([.000, .052]\)) and the task affected recall performance, \(F(1, 15) = 43.13\), \(p < .001\), \(\hat{\eta}^2_G = .048\), 90\% CI \([.000, .297]\); the dosage, however, had no effect on recall, \(F(2, 15) = 2.97\), \(p = .082\), \(\hat{\eta}^2_G = .267\), 90\% CI \([.000, .507]\).
 There was no significant interaction.
-\end{quote}
+\end{displayquote}
 
 
 
@@ -546,8 +569,7 @@ The column names conform to the \href{https://www.tidymodels.org/learn/develop/b
 ## ... (2 more labels)
 \end{verbatim}
 
-\hypertarget{tables}{%
-\subsection{Tables}\label{tables}}
+\subsection{Tables}\label{tables}
 
 Tables returned by \texttt{apa\_print()} can be conveniently included in a manuscript by passing them to \texttt{apa\_table()}.
 This function was designed with exemplary tables from the APA manual in mind and to work well with \texttt{apa\_print()}.
@@ -606,8 +628,7 @@ Dosage $\times$ Task $\times$ Valence & .001 & {}[.000, .000] & 0.39 & 2.69 & 20
 As required by the APA guidelines, tables are deferred to the final pages of the manuscript when creating PDF documents.\footnote{Again, this is currently not the case in DOCX documents.}
 To place tables and figures in text instead, the \texttt{floatsintext} field in the YAML header can be set to \texttt{yes}.
 
-\hypertarget{figures}{%
-\subsection{Figures}\label{figures}}
+\subsection{Figures}\label{figures}
 
 Figures generated in R are automatically inserted into the document.
 \textbf{papaja} provides a set of functions built around \texttt{apa\_factorial\_plot()} that facilitate visualizing data from factorial study designs, Figure~\ref{fig:beeplots}(A).
@@ -637,7 +658,7 @@ For \textbf{ggplot2} users, \textbf{papaja} provides \texttt{theme\_apa()}, a th
 
 \begin{figure}
 
-{\centering \subfloat[\centering Figure created using \texttt{apa\_factorial\_plot()}.\label{fig:beeplots-1}]{\includegraphics{papaja_files/figure-latex/beeplots-1} }\newline\subfloat[\centering Figure created using \texttt{ggplot()} and \texttt{theme\_apa()}.\label{fig:beeplots-2}]{\includegraphics{papaja_files/figure-latex/beeplots-2} }
+{\centering \subfloat[\centering Figure created using \texttt{apa\_factorial\_plot()}.\label{fig:beeplots-1}]{\includegraphics{papaja_files/figure-latex/beeplots-1} }\newline\subfloat[\centering Figure created using \texttt{ggplot()} and \texttt{theme\_apa()}.\label{fig:beeplots-2}]{\includegraphics{papaja_files/figure-latex/beeplots-2} }\newline
 
 }
 
@@ -646,91 +667,87 @@ For \textbf{ggplot2} users, \textbf{papaja} provides \texttt{theme\_apa()}, a th
 
 Again, as required by the APA guidelines, figures are deferred to the final pages of the document unless the \texttt{floatsintext} field in the YAML header can be set to \texttt{yes}.
 
-\hypertarget{referencing-tables-and-figures}{%
-\subsection{Referencing tables and figures}\label{referencing-tables-and-figures}}
+\subsection{Referencing tables and figures}\label{referencing-tables-and-figures}
 
 \textbf{papaja} builds on the \textbf{bookdown} package, which provides limited cross-referencing capabilities within documents.
 By default, automatically generated table and figure numbers can be inserted into the text using \texttt{\textbackslash{}@ref(tab:chunk-name)} for tables or \texttt{\textbackslash{}@ref(fig:chunk-name)} for figures.
 Note that for this syntax to work chunk names cannot include underscores (i.e., \texttt{\_}).
 
-\hypertarget{getting-help}{%
-\section{Getting help}\label{getting-help}}
+\section{Getting help}\label{getting-help}
 
-For a comprehensive introduction to \textbf{papaja}, check out the current draft of the \href{http://frederikaust.com/papaja_man/}{\textbf{papaja} manual}.
+For a comprehensive introduction to \textbf{papaja}, check out the current draft of the \href{https://frederikaust.com/papaja_man/}{\textbf{papaja} manual}.
 If you have a specific question that is not answered in the manual, feel free to ask a question on Stack Overflow \href{https://stackoverflow.com/questions/tagged/papaja}{using the \textbf{papaja} tag}.
-If you believe you have found a bug or you want to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/mcve}{minimal complete verifiable example}.
+If you believe you have found a bug or you want to request a new feature, \href{https://github.com/crsh/papaja/issues}{open an issue} on Github and provide a \href{https://stackoverflow.com/help/minimal-reproducible-example}{minimal complete verifiable example}.
 
 If you are interested to see how others use \textbf{papaja}, take a look at some of the publicly available R Markdown files.
 The file used to create this document is available at the \href{https://github.com/crsh/papaja/blob/master/vignettes/papaja.Rmd}{\textbf{papaja} GitHub repository}.
-Moreover, a \href{http://frederikaust.com/papaja_man/published-manuscripts.html}{collection of papers} written with \textbf{papaja,} including the corresponding R Markdown files, is listed in the manual.
+Moreover, a \href{https://frederikaust.com/papaja_man/published-manuscripts.html}{collection of papers} written with \textbf{papaja,} including the corresponding R Markdown files, is listed in the manual.
 If you have published a paper that was written with \textbf{papaja}, please add the reference to the \href{https://www.zotero.org/groups/2202906/papaja}{public Zotero group} yourself or send us to me.
 
-\hypertarget{contributing}{%
-\section{Contributing}\label{contributing}}
+\section{Contributing}\label{contributing}
 
 If you like \textbf{papaja} and would like to contribute, we highly appreciate any contributions to the R package or its documentation.
 Take a look at the \href{https://github.com/crsh/papaja/issues}{open issues} if you need inspiration.
 There are many additional analyses that we would like \texttt{apa\_print()} to support; new S3/S4-methods are always appreciated (e.g., for \texttt{factanal}, \texttt{fa}, \texttt{lavaan}).
 For a primer on adding new \texttt{apa\_print()}-methods, see the getting-started-vignette (\texttt{vignette("extending\_apa\_print",\ package\ =\ "papaja")}).
-Before working on a contribution, please review our brief \href{https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md}{contributing guidelines} and \href{https://github.com/crsh/papaja/blob/master/CODE_OF_CONDUCT.md}{code of conduct}.
+Before working on a contribution, please review our brief \href{https://github.com/crsh/papaja/blob/master/.github/CONTRIBUTING.md}{contributing guidelines} and \href{https://github.com/crsh/papaja/blob/main/CODE_OF_CONDUCT.md}{code of conduct}.
 
 Enjoy writing.
 :)
 
 \pagebreak
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.5in}
 
-\hypertarget{refs}{}
+\protect\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-american_psychological_association_publication_2010}{}}%
+\bibitem[\citeproctext]{ref-american_psychological_association_publication_2010}
 American Psychological Association. (2010). \emph{Publication Manual of the American Psychological Association} (6th edition). Washington, DC: American Psychological Association.
 
-\leavevmode\vadjust pre{\hypertarget{ref-artner_reproducibility_2020}{}}%
+\bibitem[\citeproctext]{ref-artner_reproducibility_2020}
 Artner, R., Verliefde, T., Steegen, S., Gomes, S., Traets, F., Tuerlinckx, F., \& Vanpaemel, W. (2020). The reproducibility of statistical results in psychological research: An investigation using unpublished raw data. \emph{Psychological Methods}. (2020-84997-001). \url{https://doi.org/10.1037/met0000365}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cacioppo_social_2015}{}}%
+\bibitem[\citeproctext]{ref-cacioppo_social_2015}
 Cacioppo, J. T., Kaplan, R. M., Krosnick, J. A., Olds, J. L., \& Dean, H. (2015). \emph{Social, Behavioral, and Economic Sciences Perspectives on Robust and Reliable Science} {[}Report of the Subcommittee on Replicability in Science{]}. Arlington, VA: National Science Foundation. Retrieved from National Science Foundation website: \url{http://web.stanford.edu/group/bps/cgi-bin/wordpress/wp-content/uploads/2015/09/NSF-Robust-Research-Workshop-Report.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-donoho_invitation_2010}{}}%
+\bibitem[\citeproctext]{ref-donoho_invitation_2010}
 Donoho, D. L. (2010). An invitation to reproducible computational research. \emph{Biostatistics}, \emph{11}(3), 385--388. \url{https://doi.org/10.1093/biostatistics/kxq028}
 
-\leavevmode\vadjust pre{\hypertarget{ref-eubank_lessons_2016}{}}%
+\bibitem[\citeproctext]{ref-eubank_lessons_2016}
 Eubank, N. (2016). Lessons from a Decade of Replications at the Quarterly Journal of Political Science. \emph{PS: Political Science \& Politics}, \emph{49}(2), 273--276. \url{https://doi.org/10.1017/S1049096516000196}
 
-\leavevmode\vadjust pre{\hypertarget{ref-gruning_practical_2018}{}}%
+\bibitem[\citeproctext]{ref-gruning_practical_2018}
 Grüning, B., Chilton, J., Köster, J., Dale, R., Soranzo, N., van den Beek, M., \ldots{} Taylor, J. (2018). Practical Computational Reproducibility in the Life Sciences. \emph{Cell Systems}, \emph{6}(6), 631--635. \url{https://doi.org/10.1016/j.cels.2018.03.014}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hardwicke_data_2018}{}}%
+\bibitem[\citeproctext]{ref-hardwicke_data_2018}
 Hardwicke, T. E., Mathur, M. B., MacDonald, K., Nilsonne, G., Banks, G. C., Kidwell, M. C., \ldots{} Frank, M. C. (2018). Data availability, reusability, and analytic reproducibility: evaluating the impact of a mandatory open data policy at the journal \emph{Cognition}. \emph{Royal Society Open Science}, \emph{5}(8), 180448. \url{https://doi.org/10.1098/rsos.180448}
 
-\leavevmode\vadjust pre{\hypertarget{ref-henson_inferring_2016}{}}%
+\bibitem[\citeproctext]{ref-henson_inferring_2016}
 Henson, K. E., Jagsi, R., Cutter, D., McGale, P., Taylor, C., \& Darby, S. C. (2016). Inferring the Effects of Cancer Treatment: Divergent Results From Early Breast Cancer Trialists' Collaborative Group Meta-Analyses of Randomized Trials and Observational Data From SEER Registries. \emph{Journal of Clinical Oncology}, \emph{34}(8), 803--809. \url{https://doi.org/10.1200/JCO.2015.62.0294}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hutson_artificial_2018}{}}%
+\bibitem[\citeproctext]{ref-hutson_artificial_2018}
 Hutson, M. (2018). Artificial intelligence faces reproducibility crisis. \emph{Science}, \emph{359}(6377), 725--726. \url{https://doi.org/10.1126/science.359.6377.725}
 
-\leavevmode\vadjust pre{\hypertarget{ref-knuth_literate_1984}{}}%
+\bibitem[\citeproctext]{ref-knuth_literate_1984}
 Knuth, D. E. (1984). Literate Programming. \emph{The Computer Journal}, \emph{27}(2), 97--111. \url{https://doi.org/10.1093/comjnl/27.2.97}
 
-\leavevmode\vadjust pre{\hypertarget{ref-nuijten_prevalence_2016}{}}%
+\bibitem[\citeproctext]{ref-nuijten_prevalence_2016}
 Nuijten, M. B., Hartgerink, C. H. J., Assen, M. A. L. M. van, Epskamp, S., \& Wicherts, J. M. (2016). The prevalence of statistical reporting errors in psychology (1985--2013). \emph{Behavior Research Methods}, \emph{48}(4), 1205--1226. \url{https://doi.org/10.3758/s13428-015-0664-2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-obels_analysis_2020}{}}%
+\bibitem[\citeproctext]{ref-obels_analysis_2020}
 Obels, P., Lakens, D., Coles, N. A., Gottfried, J., \& Green, S. A. (2020). Analysis of Open Data and Computational Reproducibility in Registered Reports in Psychology. \emph{Advances in Methods and Practices in Psychological Science}, \emph{3}(2), 229--237. \url{https://doi.org/10.1177/2515245920918872}
 
-\leavevmode\vadjust pre{\hypertarget{ref-peng_reproducible_2011}{}}%
+\bibitem[\citeproctext]{ref-peng_reproducible_2011}
 Peng, R. D. (2011). Reproducible Research in Computational Science. \emph{Science}, \emph{334}(6060), 1226--1227. \url{https://doi.org/10.1126/science.1213847}
 
-\leavevmode\vadjust pre{\hypertarget{ref-piccolo_tools_2016}{}}%
+\bibitem[\citeproctext]{ref-piccolo_tools_2016}
 Piccolo, S. R., \& Frampton, M. B. (2016). Tools and techniques for computational reproducibility. \emph{GigaScience}, \emph{5}, 30. \url{https://doi.org/10.1186/s13742-016-0135-4}
 
-\leavevmode\vadjust pre{\hypertarget{ref-xie_r_2018}{}}%
-Xie, Y., Allaire, J. J., \& Grolemund, G. (2018). \emph{R Markdown: The Definitive Guide}. Boca Raton: Taylor \& Francis, CRC Press. Retrieved from \url{https://bookdown.org/yihui/rmarkdown/}
+\bibitem[\citeproctext]{ref-xie_r_2018}
+Xie, Y., Allaire, J. J., \& Grolemund, G. (2018). \emph{R Markdown: The Definitive Guide}. Boca Raton: Taylor \& Francis, CRC Press. Retrieved from \url{https://pkg.yihui.org/rmarkdown-book/}
 
 \end{CSLReferences}
 
