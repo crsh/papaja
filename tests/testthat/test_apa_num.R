@@ -214,8 +214,8 @@ test_that(
 
     # respect formatC formatting
     expect_identical(
-      apa_num(1e3L, big.mark = "-")
-      , "1-000"
+      apa_num(1e3L, big.mark = "-", big.interval = 2L, flag = "+")
+      , "+10-00"
     )
 
 
