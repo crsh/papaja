@@ -211,6 +211,14 @@ test_that(
     expect_equal(apa_num(c(10000000L, 3L), numerals = FALSE), c("ten million", "three"))
 
     expect_equal(apa_num(100L, numerals = FALSE, capitalize = TRUE), "One hundred")
+
+    # respect formatC formatting
+    expect_identical(
+      apa_num(1e3L, big.mark = "-")
+      , "1-000"
+    )
+
+
   }
 )
 
