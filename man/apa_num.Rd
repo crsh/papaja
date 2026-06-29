@@ -29,6 +29,7 @@ print_num(x, ...)
   capitalize = FALSE,
   zero_string = "no",
   na_string = getOption("papaja.na_string"),
+  digits = 0L,
   ...
 )
 
@@ -39,6 +40,7 @@ print_num(x, ...)
   na_string = getOption("papaja.na_string"),
   use_math = TRUE,
   add_equals = FALSE,
+  digits = 2L,
   ...
 )
 
@@ -52,19 +54,8 @@ print_num(x, ...)
 \item{x}{Can be either a single value, vector, \code{matrix}, \code{data.frame}.}
 
 \item{...}{
-  Arguments passed on to \code{\link[base:formatc]{base::formatC}}
+  Arguments passed on to \code{\link[base:formatC]{base::formatC}}
   \describe{
-    \item{\code{digits}}{the desired number of digits after the decimal
-    point (\code{format = "f"}) or \emph{significant} digits
-    (\code{format = "g"}, \code{= "e"} or \code{= "fg"}).
-
-    Default: 2 for integer, 4 for real numbers.  If less than 0,
-    the C default of 6 digits is used.  If specified as more than 50, 50
-    will be used with a warning unless \code{format = "f"} where it is
-    limited to typically 324. (Not more than 15--21 digits need be
-    accurate, depending on the OS and compiler used.  This limit is
-    just a precaution against segfaults in the underlying C runtime.)
-  }
     \item{\code{width}}{the total field width; if both \code{digits} and
     \code{width} are unspecified, \code{width} defaults to 1,
     otherwise to \code{digits + 1}.  \code{width = 0} will use
@@ -96,7 +87,7 @@ print_num(x, ...)
     \code{"#"}.}
     \item{\code{flag}}{for \code{formatC}, a character string giving a
     format modifier as in
-    Kernighan and Ritchie (1988, page 243) 
+    {\if{html}{\cite{}\out{<a href="#reference+formatc.Rd+R+3AKernighan+2BRitchie+3A1988" class="citation">}}Kernighan and Ritchie (1988, page 243)\if{html}{\out{</a>}}}
     or the C+99 standard.\describe{
       \item{\code{"0"}}{pads leading zeros;}
       \item{\code{"-"}}{does left adjustment,}
@@ -128,6 +119,9 @@ print_num(x, ...)
     \item{\code{small.interval}}{see \code{small.mark} above; defaults to 5.}
     \item{\code{decimal.mark}}{the character to be used to indicate the numeric
     decimal point.}
+    \item{\code{input.d.mark}}{if \code{x} is \code{\link[base]{character}}, the
+    character known to have been used as the numeric decimal point in
+    \code{x}.}
     \item{\code{preserve.width}}{string specifying if the string widths should
     be preserved where possible in those cases where marks
     (\code{big.mark} or \code{small.mark}) are added.  \code{"common"},
@@ -137,10 +131,31 @@ print_num(x, ...)
     \item{\code{zero.print}}{logical, character string or \code{NULL} specifying
     if and how \emph{zeros} should be formatted specially.  Useful for
     pretty printing \sQuote{sparse} objects.}
+    \item{\code{replace.zero,replace}}{logical; if \code{zero.print} is a
+    character string, indicates if the exact zero entries in \code{x}
+    should be simply replaced by \code{zero.print}.  Otherwise,
+    depending on the widths of the respective strings, the (formatted)
+    zeroes are \emph{partly} replaced by \code{zero.print} and then
+    padded with \code{" "} to the right were applicable.  In that case
+    (false \code{replace[.zero]}), if the \code{zero.print} string does
+    not fit, a warning is produced (if \code{warn.non.fitting} is true).
+
+    This works via \code{prettyNum()}, which calls \code{.format.zeros(*,
+    replace=replace.zero)} three times in this case, see the \sQuote{Details}.
+  }
+    \item{\code{warn.non.fitting}}{logical; if it is true, \code{replace[.zero]} is
+    false and the \code{zero.print} string does not fit, a
+    \code{\link[base]{warning}} is signalled.}
     \item{\code{drop0trailing}}{logical, indicating if trailing zeros,
     i.e., \code{"0"} \emph{after} the decimal mark, should be removed;
     also drops \code{"e+00"} in exponential formats.  This is simply passed
     to \code{prettyNum()}, see the \sQuote{Details}.}
+    \item{\code{is.cmplx}}{optional logical, to be used when \code{x} is
+    \code{"\link[base]{character}"} to indicate if it stems from
+    \code{\link[base]{complex}} vector or not.  By default (\code{NA}),
+    \code{x} is checked to \sQuote{look like} complex.}
+    \item{\code{nx}}{numeric vector of the same length as \code{x}, typically the
+    numbers of which the character vector \code{x} is the pre-format.}
   }}
 
 \item{na_string}{Character. String to print if any element of \code{x} is \code{NA}.}
@@ -151,6 +166,8 @@ print_num(x, ...)
 Ignored if \code{numerals = TRUE}.}
 
 \item{zero_string}{Character. Word to print if \code{x} is a zero integer.}
+
+\item{digits}{Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.}
 
 \item{gt1}{Logical. Indicates if the statistic can, in principle, have an
 absolute value greater than 1. If \code{FALSE}, leading zeros are
