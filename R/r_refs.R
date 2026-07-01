@@ -102,7 +102,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         bibtypes <- unlist(cite$bibtype)
 
         pref_entry <- type_pref[tolower(type_pref) %in% tolower(bibtypes)][1]
-        cite <- if(is.na(pref_entry)) cite[[1]] else cite[[which(bibtypes %in% pref_entry)]]
+        cite <- if(is.na(pref_entry)) cite[1] else lapply(which(bibtypes %in% pref_entry), function(ent) cite[[ent]])
       }
 
       if(tweak) {
@@ -124,6 +124,14 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         }
         entry[[ent]]
       })
+      if (length(entry) > 1) {
+          warning(
+            "package {", x[pkg], "} has multiple references that match the preferred type ", pref_entry, 
+            ". The following entries have been added to the bibliography: ", 
+            paste(sapply(seq_along(entry), function(ent) paste0("- @", prefix, x[pkg], specifier[ent]), collapse = "\n")),
+            "\nIf you prefer to cite only a subset of these references, use the `pkg`-argument in `cite_r()`.\n")
+      }
+
       entry
     }
     , simplify = FALSE
