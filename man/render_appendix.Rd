@@ -48,7 +48,7 @@ Returns \code{NULL} invisibly.
 This function renders an R Markdown document \emph{without} YAML header to a TeX
 fragment inside an \code{appendix} environment, or to a markdown fragment (for
 Word output). \emph{This function has been defunct. Please use the appendix
-syntax provided by \pkg{bookdown} (see the \href{https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html#special-headers}{bookdown manual}).}
+syntax provided by \pkg{bookdown} (see the \href{https://pkg.yihui.org/bookdown/markdown-extensions-by-bookdown.html#special-headers}{bookdown manual}).}
 }
 \details{
 \strong{This function is only exported for backwards compatibility.}
