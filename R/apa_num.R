@@ -20,8 +20,8 @@
 #' @param capitalize Logical. Indicates if first letter should be capitalized.
 #'   Ignored if `numerals = TRUE`.
 #' @param zero_string Character. Word to print if `x` is a zero integer.
-#' @inheritDotParams base::formatC -x
-#'
+#' @inheritDotParams base::formatC -x -digits
+#' @inheritParams apa_p digits
 #' @details
 #'   If `x` is a vector, all arguments can be vectors according to which each
 #'   element of the vector is formatted. Parameters are recycled if length of
@@ -84,7 +84,15 @@ apa_num.list <- function(x, ...) {
 #' @rdname apa_num
 #' @export
 
-apa_num.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string = "no", na_string = getOption("papaja.na_string"), ...) {
+apa_num.integer <- function(
+  x
+  , numerals = TRUE
+  , capitalize = FALSE
+  , zero_string = "no"
+  , na_string = getOption("papaja.na_string")
+  , digits = 0L
+  , ...
+) {
   validate(x, check_integer = TRUE, check_NA = FALSE)
   validate(numerals, check_class = "logical", check_length = 1)
   validate(capitalize, check_class = "logical", check_length = 1)
@@ -95,7 +103,8 @@ apa_num.integer <- function(x, numerals = TRUE, capitalize = FALSE, zero_string 
   if(!is.null(system_call[["zero"]]) && is.null(system_call[["zero_string"]])) zero_string <- "no"
   validate(zero_string, check_class = "character", check_length = 1)
 
-  if(numerals) return(as.character(x))
+
+  if(numerals) return(apa_num(as.numeric(x), digits = digits, ...))
   if(anyNA(x)) return(rep(na_string, length(x)))
 
   zero_string <- tolower(zero_string)
@@ -190,6 +199,7 @@ apa_num.numeric <- function(
   , na_string = getOption("papaja.na_string")
   , use_math = TRUE
   , add_equals = FALSE
+  , digits = 2L
   , ...
 ) {
 
@@ -203,7 +213,7 @@ apa_num.numeric <- function(
   ellipsis <- defaults(
     list(...)
     , set.if.null = list(
-      digits = 2L
+      digits = digits
       , format = "f"
       , big.mark = ","
     )
