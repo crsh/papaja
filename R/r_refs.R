@@ -31,10 +31,11 @@
 #'   If a package provides citation information in a `CITATION` file, a
 #'   reference is selected based on the preferred order of reference types
 #'   specified in `type_pref`. By default, available articles are cited rather
-#'   than books. If no reference of the specified types is available, the first
-#'   reference is used. If multiple references of the preferred type are given
-#'   all of them are cited. Finally, if no `CITATION` file exists a reference
-#'   is generated from the `DESCRIPTION` file by \code{\link[utils]{citation}}.
+#'   than books. If no reference of the specified types is available, or if 
+#'   multiple references of the preferred type are given all of them are cited 
+#'   (and a warning is generated). Finally, if no `CITATION` file exists a 
+#'   reference is generated from the `DESCRIPTION` file by 
+#'   \code{\link[utils]{citation}}.
 #' @return Invisibly returns the bibliography written to `file`.
 #' @seealso [cite_r()], [knitr::write_bib()], [utils::citation()], [utils::toLatex()]
 #' @export
@@ -102,7 +103,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         bibtypes <- unlist(cite$bibtype)
 
         pref_entry <- type_pref[tolower(type_pref) %in% tolower(bibtypes)][1]
-        cite <- if(is.na(pref_entry)) cite[1] else lapply(which(bibtypes %in% pref_entry), function(ent) cite[[ent]])
+        cite <- if(!is.na(pref_entry)) lapply(which(bibtypes %in% pref_entry), function(ent) cite[[ent]])
       }
 
       if(tweak) {
