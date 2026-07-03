@@ -31,10 +31,10 @@
 #'   If a package provides citation information in a `CITATION` file, a
 #'   reference is selected based on the preferred order of reference types
 #'   specified in `type_pref`. By default, available articles are cited rather
-#'   than books. If no reference of the specified types is available, or if 
-#'   multiple references of the preferred type are given all of them are cited 
-#'   (and a warning is generated). Finally, if no `CITATION` file exists a 
-#'   reference is generated from the `DESCRIPTION` file by 
+#'   than books. If no reference of the specified types is available, or if
+#'   multiple references of the preferred type are given all of them are cited
+#'   (and a warning is generated). Finally, if no `CITATION` file exists a
+#'   reference is generated from the `DESCRIPTION` file by
 #'   \code{\link[utils]{citation}}.
 #' @return Invisibly returns the bibliography written to `file`.
 #' @seealso [cite_r()], [knitr::write_bib()], [utils::citation()], [utils::toLatex()]
@@ -127,8 +127,8 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
       })
       if (length(entry) > 1) {
           warning(
-            "package {", x[pkg], "} has multiple references that match the preferred type ", pref_entry, 
-            ". The following entries have been added to the bibliography: ", 
+            "package {", x[pkg], "} has multiple references that match the preferred type ", pref_entry,
+            ". The following entries have been added to the bibliography: ",
             paste(sapply(seq_along(entry), function(ent) paste0("- @", prefix, x[pkg], specifier[ent]), collapse = "\n")),
             "\nIf you prefer to cite only a subset of these references, use the `pkg`-argument in `cite_r()`.\n")
       }
