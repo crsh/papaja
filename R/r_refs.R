@@ -103,7 +103,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         bibtypes <- unlist(cite$bibtype)
 
         pref_entry <- type_pref[tolower(type_pref) %in% tolower(bibtypes)][1]
-        cite <- if(!is.na(pref_entry)) lapply(which(bibtypes %in% pref_entry), function(ent) cite[[ent]])
+        cite <- if(!is.na(pref_entry)) lapply(which(tolower(bibtypes) %in% tolower(pref_entry)), function(ent) cite[[ent]])
       }
 
       if(tweak) {
