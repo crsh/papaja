@@ -198,16 +198,16 @@ $endif$
 
 \begin{document}
 
-{\Large\bf Author response to reviews of}\\[1em]
+$if(manuscript-id)${\Large\bf Author response to reviews of}\\[1em]$manuscript-id$\\ \\$endif$
 $if(manuscript-id)$Manuscript $manuscript-id$\\ \\$endif$
 $if(title)${\Large $title$}\\[1em]$endif$
 $if(authors)${$authors$}\\$endif$
 $if(journal)${\\ submitted to \it $journal$ }$endif$\\
 \hrule
 
-\hfill {\bfseries [RC]\hspace{0.5em}} \textbf{Reviewer comment}%
+$if(manuscript-id)$\hfill {\bfseries [RC]\hspace{0.5em}} \textbf{Reviewer comment}%
 %\(\qquad\) AR:\hspace{0.5em} Author response%
-\(\qquad \fcolorbox{black!25!white}{white}{\hspace{0.25em}Manuscript text\hspace{0.25em}}\)
+\(\qquad \fcolorbox{black!25!white}{white}{\hspace{0.25em}Manuscript text\hspace{0.25em}}\)$manuscript-id$\\ \\$endif$
 
 \vspace{2em}
 
