@@ -87,7 +87,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
   # Remove packages that are not installed
   missing_packages <- mapply(system.file, package = x) == ""
   if(any(missing_packages)) {
-    warning("package(s) ", paste(x[missing_packages], collapse = ", "), " not found")
+    warning("package(s) ", paste(x[missing_packages], collapse = ", "), " not found.")
     x <- x[!missing_packages]
   }
 
@@ -103,7 +103,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         bibtypes <- unlist(cite$bibtype)
 
         pref_entry <- type_pref[tolower(type_pref) %in% tolower(bibtypes)][1]
-        cite <- if(!is.na(pref_entry)) lapply(which(tolower(bibtypes) %in% tolower(pref_entry)), function(ent) cite[[ent]])
+        cite <- if(is.na(pref_entry)) cite else lapply(which(tolower(bibtypes) %in% tolower(pref_entry)), function(ent) cite[[ent]])
       }
 
       if(tweak) {
@@ -125,11 +125,13 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         }
         entry[[ent]]
       })
-      if (length(entry) > 1) {
-          warning(
+
+
+      if (length(cite) > 1) {
+          message(
             "package {", x[pkg], "} has multiple references that match the preferred type ", pref_entry,
-            ". The following entries have been added to the bibliography: ",
-            paste(sapply(seq_along(entry), function(ent) paste0("- @", prefix, x[pkg], specifier[ent]), collapse = "\n")),
+            ". The following entries have been added to the bibliography:\n",
+            paste(sapply(seq_along(cite), function(ent) paste0("- @", prefix, x[pkg], specifier[ent])), collapse = "\n"),
             "\nIf you prefer to cite only a subset of these references, use the `pkg`-argument in `cite_r()`.\n")
       }
 
