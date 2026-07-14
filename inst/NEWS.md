@@ -1,3 +1,22 @@
+# papaja 0.1.5
+
+### Templates
+
+- Revision letter
+  - Updates template to follow latest pandoc approach to handle citations.
+
+### Existing functions
+
+- `write_bib()` and `r_refs()` now handle multiple citations more robustly ([#610](https://github.com/crsh/papaja/pull/610), @tfjaeger).
+- `add_custom_effect_sizes.function()` gained a new `intercept` parameter to ensure that intercept terms are not omitted if `intercept = TRUE`.
+- `apa_print.summary_emm()` now better handles intercepts.
+
+
+### Misc
+
+- Improvements to the robustness of unit tests (e.g., `merMod` objects, [#615](https://github.com/crsh/papaja/pull/615), @bastistician)
+
+
 # papaja 0.1.4
 
 ### Existing functions
@@ -422,7 +441,7 @@ Experimental:
 # papaja 0.1.0.9456
 
 ### Template
-- `apa6_pdf` and `apa6_word` now adapt `pdf_document2()` and `word_document2()` from the **bookdown** package. This enables the use of **bookdown** cross-referencing syntax including automatically generated table and figure labels as detailed [here](https://bookdown.org/yihui/bookdown/cross-references.html) (see #2).
+- `apa6_pdf` and `apa6_word` now adapt `pdf_document2()` and `word_document2()` from the **bookdown** package. This enables the use of **bookdown** cross-referencing syntax including automatically generated table and figure labels as detailed [here](https://pkg.yihui.org/bookdown/cross-references.html) (see #2).
 - LaTeX
     - If `numbersections: true` numbering now starts at the body of the text. The abstract is no longer a numbered heading (reported by @lnalborczyk, #85)
     - New option `footnotelist` to create list of footnotes at the end of the document (see #74)
