@@ -9,8 +9,8 @@
 #'
 #'   It is possible to reference sections, figures, or tables in the revised
 #'   manuscript, either by their number or by page. To do so, specify a path
-#'   to the revised manuscript (omitting the file extension) in the YAML
-#'   front matter (i.e., `manuscript-tex: file_name`) and ensure that
+#'   to the revised manuscript's LaTeX file (omitting the file extension) in
+#'   the YAML front matter (i.e., `manuscript-tex: file_name`) and ensure that
 #'   you retain the `aux` file when rendering the revised manuscript. To do
 #'   so, set the following option in a code chunk of the revised manuscript:
 #'   `options(tinytex.clean = FALSE)`. To reference section, figure, or
@@ -118,7 +118,7 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 
 #' Quote from TeX document
 #'
-#' Includes a labelled quote from a LaTeX document 'asis'.
+#' Includes a labelled quote from a LaTeX document as raw LaTeX 'asis'.
 #'
 #' @param x Character. One or more quote labels.
 #' @param file Character. Path to LaTeX file from which to quote.
@@ -126,8 +126,8 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 #' @details Searches the LaTeX document specified in `file` for labelled
 #'   quotes, i.e. paragraphs that are enclosed in `% <@~{#quote-label}` and
 #'   `% ~@>` tags in LaTeX comments on separate lines. The labelled quote is
-#'   then inserted and rendered `asis`. To use labelled quote-tags in a
-#'   [`apa6_pdf()`]-document, set the YAML front matter options
+#'   then inserted as raw LaTeX block and rendered `asis`. To use labelled 
+#'   quote-tags in a [`apa6_pdf()`]-document, set the YAML front matter options
 #'   `quote_labels: true`.
 #'
 #' @return A character vector of LaTeX document text of class \code{knit_asis},
@@ -137,10 +137,11 @@ revision_letter_preprocessor <- function(metadata, input_file, runtime, knit_met
 quote_from_tex <- function(x, file = paste0(rmarkdown::metadata[["manuscript-tex"]], ".tex")) {
   label_warning <- paste0("Labelled quote(s) ", paste0("'", x, "'", collapse = ", "), " not found in ", file)
 
+  tex <- read_and_cache_tex(file)
+
   if(length(x) > 1) {
     quoted_tex <- lapply(x, quote_from_tex, file = file)
   } else {
-    tex <- readLines(file)
     start <- which(grepl(paste0("<@~\\{#", x, "\\}"), x = tex))
 
     if(length(start) == 0) {
@@ -152,12 +153,31 @@ quote_from_tex <- function(x, file = paste0(rmarkdown::metadata[["manuscript-tex
       end <- which(grepl("~@>", x = tex[start:length(tex)]))[1] + start - 1
 
       quoted_tex <- paste(
-        paste("> ", tex[(start + 2)])
-        , paste(tex[(start + 3):(end - 1)], collapse = "\n")
+        "```{=latex}"
+        , "\\begin{quote}"
+        , paste(tex[(start + 2):(end - 1)], collapse = "\n")
+        , "\\end{quote}"
+        , "```"
         , "\n"
         , sep = "\n"
       )
     }
   }
   knitr::asis_output(quoted_tex)
+}
+
+quote_from_tex_cache <- new.env(parent = emptyenv())
+
+read_and_cache_tex <- function(x) {
+  file_hash <- rlang::hash(x)
+
+  if (!exists(file_hash, envir = quote_from_tex_cache, inherits = FALSE)) {
+    cat("Reading TeX file ", x, " into cache. This may take a while.")
+    tex <- readLines(x, encoding = "UTF-8")
+    assign(file_hash, tex, envir = quote_from_tex_cache)
+  } else {
+    tex <- get(file_hash, envir = quote_from_tex_cache, inherits = FALSE)
+  }
+
+  tex
 }

@@ -3,7 +3,7 @@ title          : "Manuscript title"
 authors        : "First Author & Second Author"
 journal        : "Journal title"
 manuscript-id  : "Manuscript number"
-manuscript-src : "headings"
+manuscript-tex : "manuscript"
 
 cutout-quotes  : true
 class          : "draft"
