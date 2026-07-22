@@ -31,10 +31,11 @@
 #'   If a package provides citation information in a `CITATION` file, a
 #'   reference is selected based on the preferred order of reference types
 #'   specified in `type_pref`. By default, available articles are cited rather
-#'   than books. If no reference of the specified types is available, the first
-#'   reference is used. If multiple references of the preferred type are given
-#'   all of them are cited. Finally, if no `CITATION` file exists a reference
-#'   is generated from the `DESCRIPTION` file by \code{\link[utils]{citation}}.
+#'   than books. If no reference of the specified types is available, or if
+#'   multiple references of the preferred type are given all of them are cited
+#'   (and a warning is generated). Finally, if no `CITATION` file exists a
+#'   reference is generated from the `DESCRIPTION` file by
+#'   \code{\link[utils]{citation}}.
 #' @return Invisibly returns the bibliography written to `file`.
 #' @seealso [cite_r()], [knitr::write_bib()], [utils::citation()], [utils::toLatex()]
 #' @export
@@ -86,7 +87,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
   # Remove packages that are not installed
   missing_packages <- mapply(system.file, package = x) == ""
   if(any(missing_packages)) {
-    warning("package(s) ", paste(x[missing_packages], collapse = ", "), " not found")
+    warning("package(s) ", paste(x[missing_packages], collapse = ", "), " not found.")
     x <- x[!missing_packages]
   }
 
@@ -102,7 +103,7 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         bibtypes <- unlist(cite$bibtype)
 
         pref_entry <- type_pref[tolower(type_pref) %in% tolower(bibtypes)][1]
-        cite <- if(is.na(pref_entry)) cite[[1]] else cite[[which(bibtypes %in% pref_entry)]]
+        cite <- if(is.na(pref_entry)) cite else lapply(which(tolower(bibtypes) %in% tolower(pref_entry)), function(ent) cite[[ent]])
       }
 
       if(tweak) {
@@ -124,6 +125,16 @@ create_bib <- function(x, file, append = TRUE, prefix = "R-", type_pref = c("Art
         }
         entry[[ent]]
       })
+
+
+      if (length(cite) > 1) {
+          message(
+            "package {", x[pkg], "} has multiple references that match the preferred type ", pref_entry,
+            ". The following entries have been added to the bibliography:\n",
+            paste(sapply(seq_along(cite), function(ent) paste0("- @", prefix, x[pkg], specifier[ent])), collapse = "\n"),
+            "\nIf you prefer to cite only a subset of these references, use the `pkg`-argument in `cite_r()`.\n")
+      }
+
       entry
     }
     , simplify = FALSE
