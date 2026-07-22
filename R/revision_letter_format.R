@@ -172,7 +172,6 @@ read_and_cache_tex <- function(x) {
   file_hash <- rlang::hash(x)
 
   if (!exists(file_hash, envir = quote_from_tex_cache, inherits = FALSE)) {
-    cat("Reading TeX file ", x, " into cache. This may take a while.")
     tex <- readLines(x, encoding = "UTF-8")
     assign(file_hash, tex, envir = quote_from_tex_cache)
   } else {
