@@ -5,18 +5,20 @@
 #' strings to report the results in accordance with APA manuscript guidelines.
 #'
 #' @param x A fitted hierarchical (generalized) linear model, either from
-#'   [lme4::lmer()], [lmerTest::lmer()], [afex::mixed()], or [lme4::glmer()].
+#'   [lme4::lmer()], [lmerTest::lmer()], [afex::mixed()], [lme4::glmer()], or
+#'   [glmmTMB::glmmTMB()].
 #' @param effects Character. Determines which information is returned.
 #'   Currently, only fixed-effects terms (`"fixed"`) are supported.
 #' @param conf.int Numeric specifying the required confidence level *or* a named
 #'   list specifying additional arguments that are passed to
-#'   [lme4::confint.merMod()], see details.
+#'   [lme4::confint.merMod()] or [glmmTMB::confint.glmmTMB()], see details.
 #' @param est_name An optional character. The label to be used for
 #'   fixed-effects coefficients.
 #' @inheritParams beautify
 #' @inheritParams glue_apa_results
 #' @details
-#'   Confidence intervals are calculated by calling [lme4::confint.merMod()].
+#'   Confidence intervals are calculated by calling [lme4::confint.merMod()] or
+#'   [glmmTMB::confint.glmmTMB()].
 #'   By default, *Wald* confidence intervals are calculated, but this may
 #'   change in the future.
 #'
@@ -30,6 +32,13 @@
 #'   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 #'   # Format statistics for fixed-effects terms (the default)
 #'   apa_print(fm1)
+#'
+#'   # Alternatively, use glmmTMB:
+#'   library(glmmTMB)
+#'   fm2 <- glmmTMB(Reaction ~ Days + (Days | Subject), sleepstudy)
+#'   apa_print(fm2)
+#'
+#'
 #' }
 #'
 #' @family apa_print
@@ -58,13 +67,10 @@ apa_print.merMod <- function(
     conf.int <- list(level = conf.int)
   }
 
-  validate(effects, check_class = "character", check_length = 1L)
+  effects <- match.arg(effects, several.ok = FALSE)
+  is_glmmTMB <- inherits(x, "glmmTMB")
 
-  if(!effects %in% c("fixed")) {
-    stop("Currently, only fixed-effects terms are fully supported by apa_print().")
-  }
 
-  # `in_paren` is validated in `glue_apa_results()`
 
   if(is.null(est_name)) {
     est_name <- "$\\hat{\\beta}$"
@@ -82,9 +88,14 @@ apa_print.merMod <- function(
     , set.if.null = list(
       level = .95
       , method = "Wald"
-      , nsim = 2e3L
     )
   )
+  if(is_glmmTMB) {
+    args_confint$estimate <- FALSE
+  } else {
+    if(is.null(args_confint$nsim)) args_confint$nsim <- 2e3L
+  }
+  # glmmTMB: x, parm = "beta_", level = conf.int, component = "cond", estimate = FALSE
 
   # GLMM with non-fixed scale? (cf. lme4::profile.merMod)
   # no_profile <- lme4::isGLMM(x) && x@devcomp$dims[["useSc"]]
@@ -93,24 +104,21 @@ apa_print.merMod <- function(
 
 
   # Rearrange ----
-  x_summary <- summary(x)
+  if(is_glmmTMB) {
+    res_table <- as.data.frame(summary(x)$coefficients$cond)
+  } else {
+    res_table <- as.data.frame(summary(x)$coefficients)
+  }
 
-  res_table <- as.data.frame(
-    x_summary$coefficients
-    , row.names = NULL
-  )
-
-  res_table$Term <- rownames(x_summary$coefficients)
+  res_table$Term <- rownames(res_table)
   rownames(res_table) <- NULL
 
 
   # Add confidence intervals ----
   confidence_intervals <-
-    do.call("confint", args_confint)[rownames(x_summary$coefficients), ] # ensure same arrangement as in model object
+    do.call("confint", args_confint)[res_table$Term, ] # ensure same arrangement as in model object
 
-  res_table$conf.int <- apply(X = confidence_intervals, MARGIN = 1, FUN = function(x) {
-    as.list(x)
-  })
+  res_table$conf.int <- asplit(confidence_intervals, MARGIN = 1L, drop = TRUE)
   attr(res_table$conf.int, "conf.level") <- args_confint$level
 
 
@@ -138,3 +146,10 @@ apa_print.mixed <- function(x, ...) {
   apa_print(anova_table, ...)
 }
 
+
+#' @family apa_print
+#' @rdname apa_print.merMod
+#' @method apa_print glmmTMB
+#' @export
+
+apa_print.glmmTMB <- apa_print.merMod

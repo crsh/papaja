@@ -7,11 +7,13 @@ test_that(
     model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
     # model2_lme4 <- lme4::lmer(formula = yield ~ N + P + (1|block), data = npk)
     model_lmerTest <- lmerTest::as_lmerModLmerTest(model_lme4)
+    model_glmmTMB <- glmmTMB::glmmTMB(formula = yield ~ N + (1|block), data = npk)
 
     apa_lme4 <- apa_print(model_lme4)
     # apa2_lme4 <-apa_print(model2_lme4)
     apa_lmerTest <- apa_print(model_lmerTest)
     apa_lmerTest_specialties <- apa_print(model_lmerTest, in_paren = TRUE, conf.int = list(level = .96), digits = 4L, est_name = "$\\gamma")
+    apa_glmmTMB <- apa_print(model_glmmTMB)
 
     expect_apa_results(
       apa_lme4
@@ -41,6 +43,16 @@ test_that(
         , conf.int  = "96\\% CI"
         , statistic = "$t$"
         , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+    expect_apa_results(
+      apa_glmmTMB
+      , labels = list(
+        term        = "Term"
+        , estimate  = "$\\hat{\\beta}$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$z$"
         , p.value   = "$p$"
       )
     )
