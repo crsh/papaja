@@ -130,7 +130,9 @@ import(grDevices)
 import(graphics)
 import(tinylabels)
 importFrom(methods,is)
-importFrom(stats,formula)
-importFrom(stats,median)
-importFrom(stats,setNames)
-importFrom(stats,terms)
+importFrom(stats,
+  formula,
+  median,
+  setNames,
+  terms
+)

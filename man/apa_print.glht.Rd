@@ -42,16 +42,16 @@ considered experimental.}
   df_into_label(apa_print(glht_out))
 }
 \seealso{
-Other apa_print: 
-\code{\link{apa_print}()},
-\code{\link{apa_print.BFBayesFactor}()},
-\code{\link{apa_print.aov}()},
-\code{\link{apa_print.emmGrid}()},
-\code{\link{apa_print.htest}()},
-\code{\link{apa_print.list}()},
-\code{\link{apa_print.lm}()},
-\code{\link{apa_print.lme}()},
-\code{\link{apa_print.merMod}()}
+Other apa_print:
+\code{\link[=apa_print]{apa_print()}},
+\code{\link[=apa_print.BFBayesFactor]{apa_print.BFBayesFactor()}},
+\code{\link[=apa_print.aov]{apa_print.aov()}},
+\code{\link[=apa_print.emmGrid]{apa_print.emmGrid()}},
+\code{\link[=apa_print.htest]{apa_print.htest()}},
+\code{\link[=apa_print.list]{apa_print.list()}},
+\code{\link[=apa_print.lm]{apa_print.lm()}},
+\code{\link[=apa_print.lme]{apa_print.lme()}},
+\code{\link[=apa_print.merMod]{apa_print.merMod()}}
 }
 \concept{apa_print}
 \value{

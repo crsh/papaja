@@ -10,18 +10,26 @@
 \item{x}{An object of class \code{papaja_wsci}.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=apa_num.numeric]{apa_num.numeric}}
+  Arguments passed on to \code{\link{apa_num.numeric}}
   \describe{
     \item{\code{gt1}}{Logical. Indicates if the statistic can, in principle, have an
 absolute value greater than 1. If \code{FALSE}, leading zeros are
 omitted.}
     \item{\code{zero}}{Logical. Indicates if the statistic can, in principle, be 0. If
 \code{FALSE}, a string of the form \verb{< 0.001} is returned instead of 0.}
+    \item{\code{margin}}{Integer. If \code{x} is a \code{matrix} or \code{data.frame}, the function
+is applied either across rows (\code{margin = 1}) or columns (\code{margin = 2}).
+See \code{\link[=apply]{apply()}}.}
     \item{\code{na_string}}{Character. String to print if any element of \code{x} is \code{NA}.}
     \item{\code{use_math}}{Logical. Indicates whether to use \code{$} in the output so that
 \code{Inf} or scientific notation is rendered correctly.}
     \item{\code{add_equals}}{Logical. Indicates if the output string should be
 prepended with an \code{=}.}
+    \item{\code{numerals}}{Logical. Indicates if integers should be converted to words.}
+    \item{\code{capitalize}}{Logical. Indicates if first letter should be capitalized.
+Ignored if \code{numerals = TRUE}.}
+    \item{\code{zero_string}}{Character. Word to print if \code{x} is a zero integer.}
+    \item{\code{digits}}{Integer. The desired number of digits after the decimal point, passed on to \code{\link{formatC}}.}
   }}
 }
 \description{

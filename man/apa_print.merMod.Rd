@@ -3,6 +3,7 @@
 \name{apa_print.merMod}
 \alias{apa_print.merMod}
 \alias{apa_print.mixed}
+\alias{apa_print.glmmTMB}
 \title{Typeset Statistical Results from Hierarchical GLM}
 \usage{
 \method{apa_print}{merMod}(
@@ -15,17 +16,27 @@
 )
 
 \method{apa_print}{mixed}(x, ...)
+
+\method{apa_print}{glmmTMB}(
+  x,
+  effects = "fixed",
+  conf.int = 0.95,
+  in_paren = FALSE,
+  est_name = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A fitted hierarchical (generalized) linear model, either from
-\code{\link[lme4:lmer]{lme4::lmer()}}, \code{\link[lmerTest:lmer]{lmerTest::lmer()}}, \code{\link[afex:mixed]{afex::mixed()}}, or \code{\link[lme4:glmer]{lme4::glmer()}}.}
+\code{\link[lme4:lmer]{lme4::lmer()}}, \code{\link[lmerTest:lmer]{lmerTest::lmer()}}, \code{\link[afex:mixed]{afex::mixed()}}, \code{\link[lme4:glmer]{lme4::glmer()}}, or
+\code{\link[glmmTMB:glmmTMB]{glmmTMB::glmmTMB()}}.}
 
 \item{effects}{Character. Determines which information is returned.
 Currently, only fixed-effects terms (\code{"fixed"}) are supported.}
 
 \item{conf.int}{Numeric specifying the required confidence level \emph{or} a named
 list specifying additional arguments that are passed to
-\code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}, see details.}
+\code{\link[lme4:confint.merMod]{lme4::confint.merMod()}} or \code{\link[glmmTMB:confint.glmmTMB]{glmmTMB::confint.glmmTMB()}}, see details.}
 
 \item{in_paren}{Logical. Whether the formatted string is to be reported in
 parentheses. If \code{TRUE}, parentheses in the formatted string (e.g., those
@@ -42,7 +53,8 @@ hierarchical (generalized) linear models to create formatted character
 strings to report the results in accordance with APA manuscript guidelines.
 }
 \details{
-Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}}.
+Confidence intervals are calculated by calling \code{\link[lme4:confint.merMod]{lme4::confint.merMod()}} or
+\code{\link[glmmTMB:confint.glmmTMB]{glmmTMB::confint.glmmTMB()}}.
 By default, \emph{Wald} confidence intervals are calculated, but this may
 change in the future.
 }
@@ -54,20 +66,27 @@ change in the future.
   fm1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
   # Format statistics for fixed-effects terms (the default)
   apa_print(fm1)
+
+  # Alternatively, use glmmTMB:
+  library(glmmTMB)
+  fm2 <- glmmTMB(Reaction ~ Days + (Days | Subject), sleepstudy)
+  apa_print(fm2)
+
+
 }
 
 }
 \seealso{
-Other apa_print: 
-\code{\link{apa_print}()},
-\code{\link{apa_print.BFBayesFactor}()},
-\code{\link{apa_print.aov}()},
-\code{\link{apa_print.emmGrid}()},
-\code{\link{apa_print.glht}()},
-\code{\link{apa_print.htest}()},
-\code{\link{apa_print.list}()},
-\code{\link{apa_print.lm}()},
-\code{\link{apa_print.lme}()}
+Other apa_print:
+\code{\link[=apa_print]{apa_print()}},
+\code{\link[=apa_print.BFBayesFactor]{apa_print.BFBayesFactor()}},
+\code{\link[=apa_print.aov]{apa_print.aov()}},
+\code{\link[=apa_print.emmGrid]{apa_print.emmGrid()}},
+\code{\link[=apa_print.glht]{apa_print.glht()}},
+\code{\link[=apa_print.htest]{apa_print.htest()}},
+\code{\link[=apa_print.list]{apa_print.list()}},
+\code{\link[=apa_print.lm]{apa_print.lm()}},
+\code{\link[=apa_print.lme]{apa_print.lme()}}
 }
 \concept{apa_print}
 \value{

@@ -162,10 +162,10 @@ apa_beeplot(
 
 }
 \seealso{
-Other plots for factorial designs: 
-\code{\link{apa_barplot}()},
-\code{\link{apa_factorial_plot}()},
-\code{\link{apa_lineplot}()},
-\code{\link{apa_violinplot}()}
+Other plots for factorial designs:
+\code{\link[=apa_barplot]{apa_barplot()}},
+\code{\link[=apa_factorial_plot]{apa_factorial_plot()}},
+\code{\link[=apa_lineplot]{apa_lineplot()}},
+\code{\link[=apa_violinplot]{apa_violinplot()}}
 }
 \concept{plots for factorial designs}
