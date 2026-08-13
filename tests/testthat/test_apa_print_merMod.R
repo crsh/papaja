@@ -103,6 +103,16 @@ test_that(
       , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17] = 3.06$, $p = .007$"
     )
 
+    expect_identical(
+      object = apa_glmmTMB$full_result
+      , expected = list(
+        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.57, 55.56]$, $z = 29.20$, $p < .001$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.12, 9.11]$, $z = 3.15$, $p = .002$"
+      )
+    )
+
+
+
     # Test reduction of (Days | Subject) to (1 | Subject):
     data <- lme4::sleepstudy
 
