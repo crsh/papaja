@@ -19,13 +19,13 @@ A character vector of LaTeX document text of class \code{knit_asis},
 see \code{\link[knitr:asis_output]{knitr::asis_output()}}.
 }
 \description{
-Includes a labelled quote from a LaTeX document 'asis'.
+Includes a labelled quote from a LaTeX document as raw LaTeX 'asis'.
 }
 \details{
 Searches the LaTeX document specified in \code{file} for labelled
 quotes, i.e. paragraphs that are enclosed in \verb{\% <@~\{#quote-label\}} and
 \verb{\% ~@>} tags in LaTeX comments on separate lines. The labelled quote is
-then inserted and rendered \code{asis}. To use labelled quote-tags in a
-\code{\link[=apa6_pdf]{apa6_pdf()}}-document, set the YAML front matter options
+then inserted as raw LaTeX block and rendered \code{asis}. To use labelled
+quote-tags in a \code{\link[=apa6_pdf]{apa6_pdf()}}-document, set the YAML front matter options
 \code{quote_labels: true}.
 }

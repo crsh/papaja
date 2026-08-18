@@ -22,16 +22,16 @@ depend on the \code{\link{class}} of the first argument.
 methods("apa_print")
 }
 \seealso{
-Other apa_print: 
-\code{\link{apa_print.BFBayesFactor}()},
-\code{\link{apa_print.aov}()},
-\code{\link{apa_print.emmGrid}()},
-\code{\link{apa_print.glht}()},
-\code{\link{apa_print.htest}()},
-\code{\link{apa_print.list}()},
-\code{\link{apa_print.lm}()},
-\code{\link{apa_print.lme}()},
-\code{\link{apa_print.merMod}()}
+Other apa_print:
+\code{\link[=apa_print.BFBayesFactor]{apa_print.BFBayesFactor()}},
+\code{\link[=apa_print.aov]{apa_print.aov()}},
+\code{\link[=apa_print.emmGrid]{apa_print.emmGrid()}},
+\code{\link[=apa_print.glht]{apa_print.glht()}},
+\code{\link[=apa_print.htest]{apa_print.htest()}},
+\code{\link[=apa_print.list]{apa_print.list()}},
+\code{\link[=apa_print.lm]{apa_print.lm()}},
+\code{\link[=apa_print.lme]{apa_print.lme()}},
+\code{\link[=apa_print.merMod]{apa_print.merMod()}}
 }
 \concept{apa_print}
 \value{

@@ -83,5 +83,5 @@ at a resolution of 300 dpi.
 
 }}
 \seealso{
-\code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}, \code{\link[bookdown:html_document2]{bookdown::word_document2()}}
+\code{\link[bookdown:pdf_document2]{bookdown::pdf_document2()}}, \code{\link[bookdown:word_document2]{bookdown::word_document2()}}
 }

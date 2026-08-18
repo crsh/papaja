@@ -7,11 +7,13 @@ test_that(
     model_lme4 <- lme4::lmer(formula = yield ~ N + (1|block), data = npk)
     # model2_lme4 <- lme4::lmer(formula = yield ~ N + P + (1|block), data = npk)
     model_lmerTest <- lmerTest::as_lmerModLmerTest(model_lme4)
+    model_glmmTMB <- glmmTMB::glmmTMB(formula = yield ~ N + (1|block), data = npk)
 
     apa_lme4 <- apa_print(model_lme4)
     # apa2_lme4 <-apa_print(model2_lme4)
     apa_lmerTest <- apa_print(model_lmerTest)
     apa_lmerTest_specialties <- apa_print(model_lmerTest, in_paren = TRUE, conf.int = list(level = .96), digits = 4L, est_name = "$\\gamma")
+    apa_glmmTMB <- apa_print(model_glmmTMB)
 
     expect_apa_results(
       apa_lme4
@@ -41,6 +43,16 @@ test_that(
         , conf.int  = "96\\% CI"
         , statistic = "$t$"
         , df        = "$\\mathit{df}$"
+        , p.value   = "$p$"
+      )
+    )
+    expect_apa_results(
+      apa_glmmTMB
+      , labels = list(
+        term        = "Term"
+        , estimate  = "$\\hat{\\beta}$"
+        , conf.int  = "95\\% CI"
+        , statistic = "$z$"
         , p.value   = "$p$"
       )
     )
@@ -90,6 +102,16 @@ test_that(
       object = apa_lmerTest_specialties$full_result$N1
       , expected = "$\\gamma = 5.6167$, 96\\% CI $[1.8462, 9.3871]$, $t[17] = 3.06$, $p = .007$"
     )
+
+    expect_identical(
+      object = apa_glmmTMB$full_result
+      , expected = list(
+        Intercept = "$\\hat{\\beta} = 52.07$, 95\\% CI $[48.57, 55.56]$, $z = 29.20$, $p < .001$"
+        , N1 = "$\\hat{\\beta} = 5.62$, 95\\% CI $[2.12, 9.11]$, $z = 3.15$, $p = .002$"
+      )
+    )
+
+
 
     # Test reduction of (Days | Subject) to (1 | Subject):
     data <- lme4::sleepstudy

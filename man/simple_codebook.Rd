@@ -67,5 +67,5 @@ variable_labels(cars) <- c(speed = "Speed [ft/s]", dist = "Distance traveled [m]
 simple_codebook(cars, file = file.path(tempdir(), "cars_codebook.csv"))
 }
 \seealso{
-\code{\link[utils:write.table]{utils::write.csv()}}
+\code{\link[utils:write.csv]{utils::write.csv()}}
 }

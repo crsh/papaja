@@ -62,6 +62,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Frederik Aust \email{frederik.aust@uni-koeln.de} (\href{https://orcid.org/0000-0003-4900-788X}{ORCID})
   \item Marius Barth \email{marius.barth@uni-koeln.de} (\href{https://orcid.org/0000-0002-3421-6665}{ORCID})
 }
 
