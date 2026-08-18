@@ -195,8 +195,8 @@ apa_print.summary_emm <- function(
       apa_confint(
         tidy_x[, c("conf.low", "conf.high")]
         , use_math = FALSE
+        , ...
       )
-      , ...
     )
   }
 

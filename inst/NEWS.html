@@ -352,9 +352,102 @@ display: none;
 </div>
 
 
-<div id="upcoming-release" class="section level1">
-<h1>Upcoming release</h1>
+<div id="papaja-upcoming" class="section level1">
+<h1>papaja (upcoming)</h1>
+<div id="new-functions" class="section level3">
+<h3>New functions</h3>
 <ul>
+<li>Added <code>apa_print.glmmTMB()</code> method.</li>
+</ul>
+</div>
+<div id="existing-fucntions" class="section level3">
+<h3>Existing fucntions</h3>
+<ul>
+<li>Fixed a bug that caused <code>apa_print.summary_emm()</code> to fail
+if formatting arguments such as <code>digits = 3L</code> were used. See
+issue <a href="https://github.com/crsh/papaja/issues/618">#618</a>.</li>
+</ul>
+</div>
+</div>
+<div id="papaja-0.1.5" class="section level1">
+<h1>papaja 0.1.5</h1>
+<div id="templates" class="section level3">
+<h3>Templates</h3>
+<ul>
+<li>Revision letter
+<ul>
+<li>Updates template to follow latest pandoc approach to handle
+citations.</li>
+</ul></li>
+</ul>
+</div>
+<div id="existing-functions" class="section level3">
+<h3>Existing functions</h3>
+<ul>
+<li><code>write_bib()</code> and <code>r_refs()</code> now handle
+multiple citations more robustly (<a href="https://github.com/crsh/papaja/pull/610">#610</a>, <span class="citation">@tfjaeger</span>).</li>
+<li><code>add_custom_effect_sizes.function()</code> gained a new
+<code>intercept</code> parameter to ensure that intercept terms are not
+omitted if <code>intercept = TRUE</code>.</li>
+<li><code>apa_print.summary_emm()</code> now better handles
+intercepts.</li>
+</ul>
+</div>
+<div id="misc" class="section level3">
+<h3>Misc</h3>
+<ul>
+<li>Improvements to the robustness of unit tests (e.g.,
+<code>merMod</code> objects, <a href="https://github.com/crsh/papaja/pull/615">#615</a>, <span class="citation">@bastistician</span>)</li>
+</ul>
+</div>
+</div>
+<div id="papaja-0.1.4" class="section level1">
+<h1>papaja 0.1.4</h1>
+<div id="existing-functions-1" class="section level3">
+<h3>Existing functions</h3>
+<ul>
+<li><code>apa_print().emm_Grid()</code> and friends no longer capitalize
+names of contrasts in the returned <code>apa_results</code> list <a href="https://github.com/crsh/papaja/issues/603">#603</a>.</li>
+<li><code>cite_r()</code>
+<ul>
+<li>Now uses Oxford comma to list of R packages</li>
+<li>Citation syntax of R itself is no longer broken (<a href="https://github.com/crsh/papaja/issues/599">#599</a>)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="papaja-0.1.3" class="section level1">
+<h1>papaja 0.1.3</h1>
+<div id="new-functions-1" class="section level3">
+<h3>New functions</h3>
+<ul>
+<li>Added new plotting function <code>apa_violinplot()</code> for violin
+plots.
+<ul>
+<li>Accordingly, <code>apa_factorial_plot()</code> gained arguments
+<code>args_violins</code> and <code>args_density</code>.</li>
+</ul></li>
+</ul>
+</div>
+<div id="existing-functions-2" class="section level3">
+<h3>Existing functions</h3>
+<ul>
+<li><code>generate_author_yml()</code>
+<ul>
+<li>Now preserves affiliation order for each author (see #569, <span class="citation">@conig</span>).</li>
+</ul></li>
+<li><code>apa_print()</code>
+<ul>
+<li>now returns an output object that is consistent with other output
+from <code>apa_print()</code>
+<ul>
+<li>The table element does not have row names.</li>
+<li>Term names are now consistently constructed with
+<code>sanitize_terms()</code>.</li>
+</ul></li>
+<li>now supports output from <code>stats::binom.test()</code> (see <a href="https://github.com/crsh/papaja/issues/576">#576</a>).</li>
+<li>now supports analysis of deviance from the <strong>car</strong>
+package.</li>
 <li>For ANOVA methods, <em>MSE</em>s are again returned if requested by
 the user (reported by <span class="citation">@Sashpta</span>, <a href="https://github.com/crsh/papaja/issues/562">#562</a>). The global
 default for reporting <em>MSE</em>s now depends on the <a href="https://CRAN.r-project.org/package=effectsize"><strong>effectsize</strong></a>
@@ -362,26 +455,47 @@ package: If <strong>effectsize</strong> is installed, the default for
 reporting <em>MSE</em>s is <code>FALSE</code>, if
 <strong>effectsize</strong> is not installed, the default is
 <code>TRUE</code>.</li>
-</ul>
-<div id="existing-functions" class="section level3">
-<h3>Existing functions</h3>
-<ul>
-<li><code>generate_author_yml()</code>
-<ul>
-<li>Now preserves affiliation order for each author (see #569).</li>
 </ul></li>
-<li><code>apa_print()</code> now supports output from
-<code>stats::binom.test()</code> (see <a href="https://github.com/crsh/papaja/issues/576">#576</a>).</li>
+<li><code>apa_*plot()</code> functions have gained a new argument
+<code>set_par</code>.</li>
 <li><code>sanitize_terms()</code> now also replaces multiple consecutive
 underscores with a single underscore and removes leading underscores.
 This affects term names in output from <code>apa_print()</code>.</li>
-<li><code>apa_print()</code> now returns an output object that is
-consistent with other output from <code>apa_print()</code>
+<li><code>cite_r()</code>
 <ul>
-<li>The table element does not have row names.</li>
-<li>Term names are now consistently constructed with
-<code>sanitize_terms()</code>.</li>
+<li>gained the <code>lang</code> argument to specify the language of
+to-be-generated text.</li>
 </ul></li>
+</ul>
+</div>
+<div id="misc-1" class="section level3">
+<h3>Misc</h3>
+<ul>
+<li>Several improvements to the documentation</li>
+</ul>
+</div>
+<div id="templates-1" class="section level3">
+<h3>Templates</h3>
+<ul>
+<li>APA 6
+<ul>
+<li>DOCX
+<ul>
+<li>Fixed bugs in table and figure numbering</li>
+</ul></li>
+<li>New YAML front matter flag <code>doi_citations</code> to use
+DOI-based citations via the <a href="https://github.com/korintje/pandoc-doi2cite/blob/main/doi2cite.lua"><code>doi2cite</code></a>
+filter, see <a href="https://CRAN.R-project.org/package=rmdfiltr/vignettes/doi2cite.html"><strong>rmdfiltr</strong>
+vignette</a>.</li>
+</ul></li>
+<li>Revision letter
+<ul>
+<li>LaTeX error
+<code>LaTeX Error: Lonely \item--perhaps a missing list environment</code>
+is now fixed (reported by <span class="citation">@cjvanlissa</span>, <a href="https://github.com/crsh/papaja/issues/587">#587</a>; fixed by
+<span class="citation">@jvcasillas</span>, <a href="https://github.com/crsh/papaja/pull/593">#593</a>)</li>
+</ul></li>
+<li>Updated to latest version of CSL files</li>
 </ul>
 </div>
 </div>
@@ -436,7 +550,7 @@ to be more robust (see #225).</li>
 <li>Abstract is no longer indented (reported by <span class="citation">@AdrienWitt</span>, #510)</li>
 </ul>
 </div>
-<div id="existing-functions-1" class="section level3">
+<div id="existing-functions-3" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_print()</code>
@@ -526,7 +640,7 @@ loaded.</li>
 <span class="citation">@marklhc</span>, #442)</li>
 </ul>
 </div>
-<div id="new-functions" class="section level3">
+<div id="new-functions-2" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><p><code>apa_print.lme()</code>, <code>apa_print.merMod()</code>,
@@ -579,7 +693,7 @@ head)</li>
 </ul></li>
 </ul>
 </div>
-<div id="existing-functions-2" class="section level3">
+<div id="existing-functions-4" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_print()</code>
@@ -616,7 +730,7 @@ missing columns.</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-1" class="section level3">
+<div id="new-functions-3" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>apa_print.manova()</code>
@@ -634,7 +748,7 @@ the output of <code>wsci()</code> (suggested by <span class="citation">@jstevens
 <li><code>remove_comments()</code></li>
 </ul>
 </div>
-<div id="misc" class="section level3">
+<div id="misc-2" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li><strong>papaja</strong> now depends on
@@ -682,7 +796,7 @@ requested otherwise (reported by <span class="citation">@saladspices</span>, #52
 </ul></li>
 </ul>
 </div>
-<div id="existing-functions-3" class="section level3">
+<div id="existing-functions-5" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_table()</code>
@@ -718,7 +832,7 @@ when <code>x</code> is <code>0</code> (suggested by <span class="citation">@e-sc
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-2" class="section level3">
+<div id="new-functions-4" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>label_variable()</code>/<code>label_variables()</code>:
@@ -768,7 +882,7 @@ be ignored (reported by <span class="citation">@doomlab</span>,
 </ul></li>
 </ul>
 </div>
-<div id="existing-functions-4" class="section level3">
+<div id="existing-functions-6" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>printnum.numeric()</code>
@@ -836,7 +950,7 @@ presence of implicitly or explicitly missing data (#191)</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-3" class="section level3">
+<div id="new-functions-5" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>apa6_docx()</code></li>
@@ -848,7 +962,7 @@ presence of implicitly or explicitly missing data (#191)</li>
 <li><code>revision_letter_pdf()</code></li>
 </ul>
 </div>
-<div id="misc-1" class="section level3">
+<div id="misc-3" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li>Improved support for labelled variables in
@@ -883,7 +997,7 @@ introduction in Word documents</li>
 when tables were included (reported by <span class="citation">@ericpgreen</span>, #179)</li>
 </ul>
 </div>
-<div id="existing-functions-5" class="section level3">
+<div id="existing-functions-7" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li>Switched implementation of <code>variable_labels()</code> and
@@ -902,13 +1016,13 @@ compatibility with the previous release.</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-4" class="section level3">
+<div id="new-functions-6" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>printnum.integer()</code> (suggested by <span class="citation">@LorcanKenny</span>, #178)</li>
 </ul>
 </div>
-<div id="misc-2" class="section level3">
+<div id="misc-4" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li><strong>papaja</strong> now depends on <strong>bookdown</strong> 0.6
@@ -940,7 +1054,7 @@ compatible with current <code>pandoc</code> versions (reimplementation
 needed)</li>
 </ul>
 </div>
-<div id="existing-functions-6" class="section level3">
+<div id="existing-functions-8" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_barplot()</code>
@@ -999,7 +1113,7 @@ printing.</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-5" class="section level3">
+<div id="new-functions-7" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>apa_factorial_plot()</code></li>
@@ -1038,7 +1152,7 @@ default</li>
 author note text is provided (reported by <span class="citation">@jacob-long</span>, #108; fixed by <span class="citation">@jacob-long</span>, #109)</li>
 </ul>
 </div>
-<div id="existing-functions-7" class="section level3">
+<div id="existing-functions-9" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_print.aov()</code>
@@ -1074,7 +1188,7 @@ reference</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-6" class="section level3">
+<div id="new-functions-8" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>apa_print.lsmobj()</code></li>
@@ -1083,7 +1197,7 @@ reference</li>
 <li><code>apa_print.summary.glht()</code></li>
 </ul>
 </div>
-<div id="misc-3" class="section level3">
+<div id="misc-5" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li>New global option <code>papaja.na_string</code> with default value
@@ -1105,7 +1219,7 @@ to fully adhere to APA citation guidelines; (see #53)</li>
 <code>include = FALSE</code>.</li>
 </ul>
 </div>
-<div id="existing-functions-8" class="section level3">
+<div id="existing-functions-10" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_table.latex()</code>
@@ -1146,7 +1260,7 @@ now has to be called within an R Markdown document. (reported by <span class="ci
 <code>pdf_document2()</code> and <code>word_document2()</code> from the
 <strong>bookdown</strong> package. This enables the use of
 <strong>bookdown</strong> cross-referencing syntax including
-automatically generated table and figure labels as detailed <a href="https://bookdown.org/yihui/bookdown/cross-references.html">here</a>
+automatically generated table and figure labels as detailed <a href="https://pkg.yihui.org/bookdown/cross-references.html">here</a>
 (see #2).</li>
 <li>LaTeX
 <ul>
@@ -1163,7 +1277,7 @@ on the title page of Word documents (reported by <span class="citation">@TobiasK
 </ul></li>
 </ul>
 </div>
-<div id="existing-functions-9" class="section level3">
+<div id="existing-functions-11" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_table.latex()</code>
@@ -1195,7 +1309,7 @@ All unescaped <code>%</code> are now automatically escaped even if
 #77)</li>
 </ul>
 </div>
-<div id="existing-functions-10" class="section level3">
+<div id="existing-functions-12" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_barplot()</code> can calculate <code>ylim</code> when
@@ -1215,7 +1329,7 @@ transparency</li>
 intervals</li>
 </ul>
 </div>
-<div id="misc-4" class="section level3">
+<div id="misc-6" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li>MBESS package is now suggested and not imported</li>
@@ -1258,7 +1372,7 @@ create lists of figure or table captions at the end of the document</li>
 </ul></li>
 </ul>
 </div>
-<div id="existing-functions-11" class="section level3">
+<div id="existing-functions-13" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_print()</code>
@@ -1329,7 +1443,7 @@ found</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-7" class="section level3">
+<div id="new-functions-9" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>apa_print.afex_aov()</code> (#47)</li>
@@ -1351,7 +1465,7 @@ found</li>
 <li><code>apa_prepare_doc()</code> is no longer needed</li>
 </ul>
 </div>
-<div id="misc-5" class="section level3">
+<div id="misc-7" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li>papaja sets global options <code>papaja.mse</code> and
@@ -1376,7 +1490,7 @@ affiliation information (requires updates of existing Rmd-files)</li>
 line when no note is provided</li>
 </ul>
 </div>
-<div id="existing-functions-12" class="section level3">
+<div id="existing-functions-14" class="section level3">
 <h3>Existing functions</h3>
 <ul>
 <li><code>apa_print()</code>
@@ -1427,7 +1541,7 @@ intervals</li>
 </ul></li>
 </ul>
 </div>
-<div id="new-functions-8" class="section level3">
+<div id="new-functions-10" class="section level3">
 <h3>New functions</h3>
 <ul>
 <li><code>apa_print.anova.mlm()</code></li>
@@ -1436,7 +1550,7 @@ intervals</li>
 <li><code>fetch_web_refs()</code></li>
 </ul>
 </div>
-<div id="misc-6" class="section level3">
+<div id="misc-8" class="section level3">
 <h3>Misc</h3>
 <ul>
 <li>Set up proper package structure for automatic unit testing</li>
