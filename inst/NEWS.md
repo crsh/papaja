@@ -5,6 +5,9 @@
 
 - Added `apa_print.glmmTMB()` method.
 
+### Existing fucntions
+
+- Fixed a bug that caused `apa_print.summary_emm()` to fail if formatting arguments such as `digits = 3L` were used. See issue [#618](https://github.com/crsh/papaja/issues/618).
 
 
 # papaja 0.1.5
