@@ -948,3 +948,23 @@ test_that(
     # broom::tidy(summary(cars_em, infer = TRUE, side = ">"))
   }
 )
+
+test_that(
+  "Bug fix for #618"
+  , {
+    apa_out <- apa_print(
+      summary(
+        emmeans::emmeans(
+          lm(yield~N * P, npk)
+          , specs = ~ N
+        )
+        , infer = TRUE
+      )
+      , digits = 3L
+    )
+    expect_identical(
+      apa_out$estimate$X0
+      , "$\\hat{\\theta} = 52.067$, 95\\% CI $[48.614, 55.519]$"
+    )
+  }
+)
