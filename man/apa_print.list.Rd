@@ -16,7 +16,7 @@
 )
 }
 \arguments{
-\item{x}{List. A \code{list} containing to-be-compared \link[=lm]{lm} objects.
+\item{x}{List. A \code{list} containing to-be-compared \link{lm} objects.
 If the list is completely named, element names are used as model names in
 the output object.}
 
@@ -43,7 +43,7 @@ enclosing degrees of freedom) are replaced with brackets.}
 \code{anova_fun}.}
 }
 \description{
-This method performs comparisons of \link[=lm]{lm}-objects and creates formatted
+This method performs comparisons of \link{lm}-objects and creates formatted
 character strings and a model comparison table to report the results in
 accordance with APA manuscript guidelines.
 }
@@ -106,16 +106,16 @@ doi: \doi{10.18637/jss.v020.i08}
 \seealso{
 \code{\link[stats:anova]{stats::anova()}}
 
-Other apa_print: 
-\code{\link{apa_print}()},
-\code{\link{apa_print.BFBayesFactor}()},
-\code{\link{apa_print.aov}()},
-\code{\link{apa_print.emmGrid}()},
-\code{\link{apa_print.glht}()},
-\code{\link{apa_print.htest}()},
-\code{\link{apa_print.lm}()},
-\code{\link{apa_print.lme}()},
-\code{\link{apa_print.merMod}()}
+Other apa_print:
+\code{\link[=apa_print]{apa_print()}},
+\code{\link[=apa_print.BFBayesFactor]{apa_print.BFBayesFactor()}},
+\code{\link[=apa_print.aov]{apa_print.aov()}},
+\code{\link[=apa_print.emmGrid]{apa_print.emmGrid()}},
+\code{\link[=apa_print.glht]{apa_print.glht()}},
+\code{\link[=apa_print.htest]{apa_print.htest()}},
+\code{\link[=apa_print.lm]{apa_print.lm()}},
+\code{\link[=apa_print.lme]{apa_print.lme()}},
+\code{\link[=apa_print.merMod]{apa_print.merMod()}}
 }
 \concept{apa_print}
 \value{

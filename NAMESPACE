@@ -35,6 +35,7 @@ S3method(apa_print,default)
 S3method(apa_print,emmGrid)
 S3method(apa_print,glht)
 S3method(apa_print,glm)
+S3method(apa_print,glmmTMB)
 S3method(apa_print,htest)
 S3method(apa_print,list)
 S3method(apa_print,lm)
@@ -129,7 +130,9 @@ import(grDevices)
 import(graphics)
 import(tinylabels)
 importFrom(methods,is)
-importFrom(stats,formula)
-importFrom(stats,median)
-importFrom(stats,setNames)
-importFrom(stats,terms)
+importFrom(stats,
+  formula,
+  median,
+  setNames,
+  terms
+)

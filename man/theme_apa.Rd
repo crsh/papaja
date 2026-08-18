@@ -47,5 +47,5 @@ and legend titles, and increased text padding for better readability.
  }
 }
 \seealso{
-\code{\link[ggplot2:ggtheme]{ggplot2::theme_bw()}}, \code{\link[ggplot2:theme]{ggplot2::theme()}}
+\code{\link[ggplot2:theme_bw]{ggplot2::theme_bw()}}, \code{\link[ggplot2:theme]{ggplot2::theme()}}
 }

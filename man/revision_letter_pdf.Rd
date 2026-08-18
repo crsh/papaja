@@ -7,7 +7,7 @@
 revision_letter_pdf(...)
 }
 \arguments{
-\item{...}{Further arguments passed on to \code{\link[bookdown:html_document2]{bookdown::pdf_document2()}} and \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}.}
+\item{...}{Further arguments passed on to \code{\link[bookdown:pdf_document2]{bookdown::pdf_document2()}} and \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}.}
 }
 \value{
 R Markdown output format to pass to \code{\link[rmarkdown:render]{rmarkdown::render()}}.
@@ -22,8 +22,8 @@ by Martin Schrön.
 
 It is possible to reference sections, figures, or tables in the revised
 manuscript, either by their number or by page. To do so, specify a path
-to the revised manuscript (omitting the file extension) in the YAML
-front matter (i.e., \code{manuscript-tex: file_name}) and ensure that
+to the revised manuscript's LaTeX file (omitting the file extension) in
+the YAML front matter (i.e., \code{manuscript-tex: file_name}) and ensure that
 you retain the \code{aux} file when rendering the revised manuscript. To do
 so, set the following option in a code chunk of the revised manuscript:
 \code{options(tinytex.clean = FALSE)}. To reference section, figure, or
@@ -36,5 +36,5 @@ To quote entire paragraphs directly from the revised manuscript see
 \code{\link[=quote_from_tex]{quote_from_tex()}}.
 }
 \seealso{
-\code{\link[bookdown:html_document2]{bookdown::pdf_document2()}}], \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}
+\code{\link[bookdown:pdf_document2]{bookdown::pdf_document2()}}], \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}
 }
