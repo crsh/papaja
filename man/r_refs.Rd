@@ -64,10 +64,11 @@ when using \code{\link{cite_r}}.
 If a package provides citation information in a \code{CITATION} file, a
 reference is selected based on the preferred order of reference types
 specified in \code{type_pref}. By default, available articles are cited rather
-than books. If no reference of the specified types is available, the first
-reference is used. If multiple references of the preferred type are given
-all of them are cited. Finally, if no \code{CITATION} file exists a reference
-is generated from the \code{DESCRIPTION} file by \code{\link[utils]{citation}}.
+than books. If no reference of the specified types is available, or if
+multiple references of the preferred type are given all of them are cited
+(and a message is generated). Finally, if no \code{CITATION} file exists a
+reference is generated from the \code{DESCRIPTION} file by
+\code{\link[utils]{citation}}.
 }
 \seealso{
 \code{\link[=cite_r]{cite_r()}}, \code{\link[knitr:write_bib]{knitr::write_bib()}}, \code{\link[utils:citation]{utils::citation()}}, \code{\link[utils:toLatex]{utils::toLatex()}}
